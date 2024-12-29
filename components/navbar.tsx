@@ -1,13 +1,7 @@
 import { ModeToggle } from '@/components/mode-toggle';
 import { SheetMenu } from '@/components/dashboard-layout/sheet-menu';
-import KindeUserComponent from './KindeUserComponent';
-import {
-  ClerkProvider,
-  SignInButton,
-  SignedIn,
-  SignedOut,
-  UserButton,
-} from '@clerk/nextjs';
+// import KindeUserComponent from './KindeUserComponent';
+import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
 
 interface NavbarProps {
   title: string;

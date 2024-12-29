@@ -1,6 +1,5 @@
 'use client';
 import Image from 'next/image';
-import { redirect } from 'next/navigation';
 import React from 'react';
 import {
   DropdownMenu,
@@ -19,7 +18,7 @@ import { ModeToggle } from './mode-toggle';
 import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
 
 const KindeUserComponent = () => {
-  const { user, getUser } = useKindeBrowserClient();
+  const { user } = useKindeBrowserClient();
 
   // if (!user) {
   //   redirect('/api/auth/login');
