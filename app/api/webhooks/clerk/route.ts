@@ -1,6 +1,7 @@
 import { Webhook } from 'svix';
 import { headers } from 'next/headers';
 import { WebhookEvent } from '@clerk/nextjs/server';
+import prisma from '@/lib/db';
 
 export async function POST(req: Request) {
   const SIGNING_SECRET = process.env.SIGNING_SECRET;
@@ -53,8 +54,16 @@ export async function POST(req: Request) {
   const eventType = evt.type;
 
   if (eventType === 'user.created') {
-    const { first_name, last_name, id, email_addresses, image_url, username } =
-      evt.data;
+    const {
+      first_name,
+      last_name,
+      created_at,
+      updated_at,
+      id,
+      email_addresses,
+      image_url,
+      username,
+    } = evt.data;
 
     const user = {
       clerkId: id,
@@ -65,6 +74,22 @@ export async function POST(req: Request) {
       username,
     };
     console.log('user created', user);
+
+    await prisma.user.upsert({
+      where: { id: id },
+      update: {},
+      create: {
+        firstName: first_name || '',
+        lastName: last_name || '',
+        email: email_addresses[0].email_address,
+        profileImage: image_url,
+        id: id,
+        role: 'STUDENT',
+        createdAt: new Date(created_at * 1000),
+        updatedAt: new Date(updated_at * 1000),
+        clerkId: id,
+      },
+    });
   }
 
   console.log(`Received webhook with ID ${id} and event type of ${eventType}`);

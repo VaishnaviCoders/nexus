@@ -15,16 +15,17 @@ datasource db {
 }
 
 model User {
-  id             String   @id @default(cuid())
-  firstName      String
-  lastName       String
-  email          String   @unique
-  profileImage   String
-  role           Role     @default(STUDENT)
+  id           String   @id @default(cuid())
+  clerkId      String   @unique
+  firstName    String
+  lastName     String
+  email        String   @unique
+  profileImage String
+  role         Role     @default(STUDENT)
   // organization   Organization @relation(fields: [organizationId], references: [id])
-  organizationId String
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  // organizationId String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
 enum Role {
