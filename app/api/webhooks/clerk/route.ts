@@ -85,8 +85,8 @@ export async function POST(req: Request) {
         profileImage: image_url,
         id: id,
         role: 'STUDENT',
-        createdAt: new Date(created_at * 1000),
-        updatedAt: new Date(updated_at * 1000),
+        createdAt: new Date(created_at),
+        updatedAt: new Date(updated_at),
         clerkId: id,
       },
     });

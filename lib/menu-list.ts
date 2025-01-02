@@ -45,22 +45,22 @@ export function getMenuList(pathname: string): Group[] {
       menus: [
         {
           href: '',
-          label: 'Posts',
+          label: 'Lead',
           icon: SquarePen,
           submenus: [
             {
-              href: '/posts',
-              label: 'All Posts',
+              href: '/leads',
+              label: 'All Leads',
             },
             {
-              href: '/posts/new',
-              label: 'New Post',
+              href: '/leads/new',
+              label: 'New Lead',
             },
           ],
         },
         {
-          href: '/categories',
-          label: 'Categories',
+          href: '/dashboard/students',
+          label: 'Students',
           icon: Bookmark,
         },
         {
@@ -79,8 +79,8 @@ export function getMenuList(pathname: string): Group[] {
           icon: Users,
         },
         {
-          href: '/account',
-          label: 'Account',
+          href: 'dashboard/settings',
+          label: 'Settings',
           icon: Settings,
         },
       ],
