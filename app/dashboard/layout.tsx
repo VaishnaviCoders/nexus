@@ -1,9 +1,11 @@
 import AdminPanelLayout from '@/components/dashboard-layout/dashboard-panel-layout';
+import { getUserRole } from '@/lib/role';
 
-export default function DemoLayout({
+export default async function DemoLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return <AdminPanelLayout>{children}</AdminPanelLayout>;
+  const role = await getUserRole();
+  return <AdminPanelLayout role={role}>{children}</AdminPanelLayout>;
 }

@@ -5,19 +5,23 @@ import { Separator } from '@/components/ui/separator';
 import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
 import React from 'react';
 import BreadCrumbNavigation from './BreadCrumbNavigation';
+import { currentUser } from '@clerk/nextjs/server';
+import { WelcomeMessage } from './dashboard-layout/WelcomeMessage';
+import { syncClerk } from '@/actions';
+import { ClerkUserComponent } from './ClerkUserComponent';
 
-interface NavbarProps {
-  title: string;
-}
+export async function Navbar() {
+  const user = await currentUser();
+  await syncClerk();
 
-export function Navbar({ title }: NavbarProps) {
   return (
     <>
       <header className="flex h-16 shrink-0 items-center px-4">
         <div className="flex items-center space-x-4 lg:space-x-6">
           <SheetMenu />
           <div className="flex flex-col">
-            <h1 className="text-lg font-bold">{title}</h1>
+            <ClerkUserComponent />
+
             <BreadCrumbNavigation />
           </div>
         </div>
@@ -37,6 +41,10 @@ export function Navbar({ title }: NavbarProps) {
         </div>
       </header>
       <Separator orientation="horizontal" className="my-1" />
+      <WelcomeMessage
+        userName={user?.firstName ?? 'Guest'}
+        lastVisit={user?.lastSignInAt ? new Date(user.lastSignInAt) : null}
+      />
     </>
   );
 }

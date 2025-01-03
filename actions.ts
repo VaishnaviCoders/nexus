@@ -9,16 +9,17 @@ export const syncClerk = async () => {
   if (!user) {
     return null;
   }
-  console.log('syncing user', user);
+  console.log('syncing user');
 
   await prisma.user.upsert({
     where: {
-      clerkId: user.id,
+      id: user.id,
     },
     update: {
       profileImage: user.imageUrl,
     },
     create: {
+      id: user.id,
       clerkId: user.id,
       firstName: user.firstName ?? '',
       lastName: user.lastName ?? '',

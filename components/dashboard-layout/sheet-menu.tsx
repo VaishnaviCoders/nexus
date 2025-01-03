@@ -10,8 +10,20 @@ import {
   SheetTitle,
 } from '@/components/ui/sheet';
 import { Menu } from './menu';
+import { auth } from '@clerk/nextjs/server';
+import prisma from '@/lib/db';
 
-export function SheetMenu() {
+export async function SheetMenu() {
+  const { userId } = await auth();
+  if (!userId) return null;
+
+  const orgRole = await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+  });
+
+  // console.log('orgRole', orgRole);
   return (
     <Sheet>
       <SheetTrigger className="lg:hidden" asChild>
@@ -28,11 +40,11 @@ export function SheetMenu() {
           >
             <Link href="/dashboard" className="flex items-center gap-2">
               <PanelsTopLeft className="w-6 h-6 mr-1" />
-              <SheetTitle className="font-bold text-lg">Brand</SheetTitle>
+              <SheetTitle className="font-bold text-lg">Nexus</SheetTitle>
             </Link>
           </Button>
         </SheetHeader>
-        <Menu isOpen />
+        <Menu isOpen role={orgRole?.role as 'ADMIN' | 'TEACHER' | 'STUDENT'} />
       </SheetContent>
     </Sheet>
   );

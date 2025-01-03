@@ -5,7 +5,7 @@ import { Ellipsis, LogOut } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 
 import { cn } from '@/lib/utils';
-import { getMenuList } from '@/lib/menu-list';
+import { roleMenus } from '@/lib/menu-list';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import {
@@ -19,11 +19,12 @@ import { SignOutButton } from '@clerk/nextjs';
 
 interface MenuProps {
   isOpen: boolean | undefined;
+  role: 'ADMIN' | 'TEACHER' | 'STUDENT';
 }
 
-export function Menu({ isOpen }: MenuProps) {
+export function Menu({ isOpen, role }: MenuProps) {
   const pathname = usePathname();
-  const menuList = getMenuList(pathname);
+  const menuList = roleMenus[role] || [];
 
   return (
     <ScrollArea className="[&>div>div[style]]:!block">
@@ -71,7 +72,7 @@ export function Menu({ isOpen }: MenuProps) {
                             >
                               <Link href={href}>
                                 <span
-                                  className={cn(isOpen === false ? '' : 'mr-4')}
+                                  className={cn(isOpen === false ? '' : 'mr-2')}
                                 >
                                   <Icon size={18} />
                                 </span>
@@ -121,7 +122,7 @@ export function Menu({ isOpen }: MenuProps) {
                 variant="outline"
                 className="w-full justify-center h-10 mt-5"
               >
-                <span className={cn(isOpen === false ? '' : 'mr-4')}>
+                <span className={cn(isOpen === false ? '' : 'mr-2')}>
                   <LogOut size={18} />
                 </span>
                 <p
@@ -136,7 +137,7 @@ export function Menu({ isOpen }: MenuProps) {
             </SignOutButton>
 
             {isOpen === false && (
-              <SignOutButton>
+              <SignOutButton redirectUrl="/">
                 <LogOut size={18} />
               </SignOutButton>
             )}

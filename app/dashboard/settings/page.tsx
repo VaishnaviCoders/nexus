@@ -26,7 +26,7 @@ export default function SettingPage() {
   const { settings, setSettings } = sidebar;
 
   return (
-    <ContentLayout title="Dashboard">
+    <>
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -74,6 +74,6 @@ export default function SettingPage() {
           </Tooltip>
         </div>
       </TooltipProvider>
-    </ContentLayout>
+    </>
   );
 }

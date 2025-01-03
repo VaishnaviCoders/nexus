@@ -62,20 +62,9 @@ export async function POST(req: Request) {
       id,
       email_addresses,
       image_url,
-      username,
     } = evt.data;
 
-    const user = {
-      clerkId: id,
-      firstName: first_name,
-      lastName: last_name,
-      email: email_addresses[0].email_address,
-      imageUrl: image_url,
-      username,
-    };
-    console.log('user created', user);
-
-    await prisma.user.upsert({
+    const userData = await prisma.user.upsert({
       where: { id: id },
       update: {},
       create: {
@@ -90,10 +79,11 @@ export async function POST(req: Request) {
         clerkId: id,
       },
     });
+    console.log('user Updated or Created in DB', userData);
   }
 
   console.log(`Received webhook with ID ${id} and event type of ${eventType}`);
   console.log('Webhook payload:', body);
 
-  return new Response('Webhook received', { status: 200 });
+  return new Response('Webhook received successfully', { status: 200 });
 }

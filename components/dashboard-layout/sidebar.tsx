@@ -9,7 +9,10 @@ import { SidebarToggle } from './sidebar-toggle';
 import { Menu } from './menu';
 import { OrganizationSwitcher } from '@clerk/nextjs';
 
-export function Sidebar() {
+interface SidebarProps {
+  role: 'ADMIN' | 'TEACHER' | 'STUDENT';
+}
+export function Sidebar({ role }: SidebarProps) {
   const sidebar = useStore(useSidebar, (x) => x);
   if (!sidebar) return null;
   const { isOpen, toggleOpen, getOpenState, setIsHover, settings } = sidebar;
@@ -50,7 +53,7 @@ export function Sidebar() {
           </Link>
         </Button> */}
         <OrganizationSwitcher />
-        <Menu isOpen={getOpenState()} />
+        <Menu isOpen={getOpenState()} role={role} />
       </div>
     </aside>
   );
