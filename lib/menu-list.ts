@@ -28,6 +28,7 @@ import {
   LucideIcon,
   Settings2,
   FileWarning,
+  User2,
 } from 'lucide-react';
 
 export const roleMenus: Record<string, Group[]> = {
@@ -47,7 +48,7 @@ export const roleMenus: Record<string, Group[]> = {
       groupLabel: 'Contents',
       menus: [
         {
-          href: '',
+          href: '/leads',
           label: 'Lead',
           icon: SquarePen,
           submenus: [
@@ -55,11 +56,19 @@ export const roleMenus: Record<string, Group[]> = {
             { href: '/leads/new', label: 'New Lead' },
           ],
         },
+        {
+          href: '/teachers',
+          label: 'Teacher',
+          icon: User2,
+          submenus: [
+            { href: '/dashboard/teachers', label: 'All Teachers' },
+            { href: '/teacher/create', label: 'Create Teacher' },
+            { href: '/dashboard/salary', label: 'Teacher Salary' },
+          ],
+        },
         { href: '/dashboard/admin', label: 'Admin', icon: Settings },
         { href: '/dashboard/students', label: 'Students', icon: Users },
         { href: '/dashboard/courses', label: 'Courses', icon: Bookmark },
-        { href: '/dashboard/salary', label: 'Salary', icon: FileWarning },
-        { href: '/dashboard/teachers', label: 'Teachers', icon: Users },
       ],
     },
     {
@@ -88,6 +97,7 @@ export const roleMenus: Record<string, Group[]> = {
         { href: '/dashboard/students', label: 'Students', icon: Bookmark },
         { href: '/dashboard/courses', label: 'Courses', icon: Tag },
         { href: '/dashboard/teachers', label: 'Teachers', icon: Tag },
+        { href: '/dashboard/my-salary', label: 'Salary', icon: Tag },
       ],
     },
     {

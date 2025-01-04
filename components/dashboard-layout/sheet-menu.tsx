@@ -11,19 +11,20 @@ import {
 } from '@/components/ui/sheet';
 import { Menu } from './menu';
 import { auth } from '@clerk/nextjs/server';
-import prisma from '@/lib/db';
 
 export async function SheetMenu() {
-  const { userId } = await auth();
+  const { userId, orgRole } = await auth();
   if (!userId) return null;
 
-  const orgRole = await prisma.user.findUnique({
-    where: {
-      id: userId,
-    },
-  });
+  const roleMap: Record<string, 'ADMIN' | 'TEACHER' | 'STUDENT'> = {
+    'org:admin': 'ADMIN',
+    'org:teacher': 'TEACHER',
+    'org:student': 'STUDENT',
+  };
 
-  // console.log('orgRole', orgRole);
+  const role = orgRole && roleMap[orgRole] ? roleMap[orgRole] : 'STUDENT';
+  console.log('Detected Clerk Role:', role);
+
   return (
     <Sheet>
       <SheetTrigger className="lg:hidden" asChild>
@@ -44,7 +45,12 @@ export async function SheetMenu() {
             </Link>
           </Button>
         </SheetHeader>
-        <Menu isOpen role={orgRole?.role as 'ADMIN' | 'TEACHER' | 'STUDENT'} />
+
+        {role ? (
+          <Menu isOpen role={role} />
+        ) : (
+          <div className="text-red-500">Role not assigned. Contact admin.</div>
+        )}
       </SheetContent>
     </Sheet>
   );
