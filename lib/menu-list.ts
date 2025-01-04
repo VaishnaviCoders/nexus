@@ -1,3 +1,22 @@
+import {
+  LayoutGrid,
+  Users,
+  Settings,
+  LucideIcon,
+  FileText,
+  Calendar,
+  Bell,
+  DollarSign,
+  ClipboardList,
+  UserPlus,
+  MessageSquare,
+  FileWarning,
+  Backpack,
+  GraduationCap,
+  ScrollText,
+  FileCheck,
+} from 'lucide-react';
+
 type Submenu = {
   href: string;
   label: string;
@@ -17,20 +36,6 @@ type Group = {
   menus: Menu[];
 };
 
-// roleMenus.ts
-import {
-  LayoutGrid,
-  SquarePen,
-  Bookmark,
-  Tag,
-  Users,
-  Settings,
-  LucideIcon,
-  Settings2,
-  FileWarning,
-  User2,
-} from 'lucide-react';
-
 export const roleMenus: Record<string, Group[]> = {
   ADMIN: [
     {
@@ -45,38 +50,67 @@ export const roleMenus: Record<string, Group[]> = {
       ],
     },
     {
-      groupLabel: 'Contents',
+      groupLabel: 'Management',
       menus: [
         {
           href: '/leads',
-          label: 'Lead',
-          icon: SquarePen,
+          label: 'Lead Management',
+          icon: UserPlus,
           submenus: [
             { href: '/dashboard/leads', label: 'All Leads' },
             { href: '/leads/new', label: 'New Lead' },
+            { href: '/leads/convert', label: 'Convert Lead' },
           ],
         },
         {
           href: '/teachers',
-          label: 'Teacher',
-          icon: User2,
+          label: 'Teacher Management',
+          icon: GraduationCap,
           submenus: [
             { href: '/dashboard/teachers', label: 'All Teachers' },
-            { href: '/teacher/create', label: 'Create Teacher' },
-            { href: '/dashboard/salary', label: 'Teacher Salary' },
+            { href: '/teachers/attendance', label: 'Attendance' },
+            { href: '/teachers/salary', label: 'Salary' },
+            { href: '/teachers/leaves', label: 'Leave Management' },
           ],
         },
-        { href: '/dashboard/admin', label: 'Admin', icon: Settings },
-        { href: '/dashboard/students', label: 'Students', icon: Users },
-        { href: '/dashboard/courses', label: 'Courses', icon: Bookmark },
+        {
+          href: '/students',
+          label: 'Student Management',
+          icon: Users,
+          submenus: [
+            { href: '/dashboard/students', label: 'All Students' },
+            { href: '/students/import', label: 'Bulk Import' },
+            { href: '/students/documents', label: 'Documents' },
+          ],
+        },
+      ],
+    },
+    {
+      groupLabel: 'Monitoring',
+      menus: [
+        {
+          href: '/attendance',
+          label: 'Attendance Monitor',
+          icon: Calendar,
+          submenus: [
+            { href: '/attendance/checkin', label: 'Check-in Times' },
+            { href: '/attendance/checkout', label: 'Check-out Times' },
+          ],
+        },
+        {
+          href: '/notice-board',
+          label: 'Notice Board',
+          icon: Bell,
+          submenus: [
+            { href: '/notices/pending', label: 'Pending Approval' },
+            { href: '/notices/approved', label: 'Approved Notices' },
+          ],
+        },
       ],
     },
     {
       groupLabel: 'Settings',
-      menus: [
-        { href: '/users', label: 'Users', icon: Users },
-        { href: '/dashboard/settings', label: 'Settings', icon: Settings },
-      ],
+      menus: [{ href: '/settings', label: 'Settings', icon: Settings }],
     },
   ],
   TEACHER: [
@@ -92,19 +126,51 @@ export const roleMenus: Record<string, Group[]> = {
       ],
     },
     {
-      groupLabel: 'Contents',
+      groupLabel: 'Management',
       menus: [
-        { href: '/dashboard/students', label: 'Students', icon: Bookmark },
-        { href: '/dashboard/courses', label: 'Courses', icon: Tag },
-        { href: '/dashboard/teachers', label: 'Teachers', icon: Tag },
-        { href: '/dashboard/my-salary', label: 'Salary', icon: Tag },
+        {
+          href: '/leads',
+          label: 'Lead Management',
+          icon: UserPlus,
+          submenus: [
+            { href: '/leads/view', label: 'View Leads' },
+            { href: '/leads/new', label: 'New Lead' },
+            { href: '/leads/convert', label: 'Convert Lead' },
+          ],
+        },
+        {
+          href: '/students',
+          label: 'Student Management',
+          icon: Users,
+          submenus: [
+            { href: '/students/view', label: 'View Students' },
+            { href: '/students/import', label: 'Bulk Import' },
+            { href: '/students/fees', label: 'Send Reminders' },
+          ],
+        },
       ],
     },
     {
-      groupLabel: 'Settings',
+      groupLabel: 'Personal',
       menus: [
-        { href: '/dashboard/settings', label: 'Settings', icon: Settings2 },
-        { href: '/dashboard/support', label: 'Support', icon: FileWarning },
+        {
+          href: '/leaves',
+          label: 'Leave Management',
+          icon: Calendar,
+          submenus: [
+            { href: '/leaves/request', label: 'Request Leave' },
+            { href: '/leaves/status', label: 'Leave Status' },
+          ],
+        },
+        {
+          href: '/notices',
+          label: 'Notice Board',
+          icon: Bell,
+          submenus: [
+            { href: '/notices/create', label: 'Create Notice' },
+            { href: '/notices/view', label: 'View Notices' },
+          ],
+        },
       ],
     },
   ],
@@ -114,25 +180,68 @@ export const roleMenus: Record<string, Group[]> = {
       menus: [
         {
           href: '/dashboard',
-          label: 'Dashboard',
-          icon: LayoutGrid,
+          label: 'Student Portal',
+          icon: Backpack,
           submenus: [],
         },
       ],
     },
     {
-      groupLabel: 'Learning',
+      groupLabel: 'Academic',
       menus: [
-        { href: '/dashboard/courses', label: 'Courses', icon: Tag },
-        { href: '/dashboard/attendance', label: 'Attendance', icon: Tag },
-        { href: '/dashboard/Student-profile', label: 'Student', icon: Tag },
+        {
+          href: '/assignments',
+          label: 'Assignments',
+          icon: ScrollText,
+          submenus: [{ href: '/assignments/view', label: 'View Assignments' }],
+        },
+        {
+          href: '/attendance',
+          label: 'Attendance',
+          icon: Calendar,
+          submenus: [{ href: '/attendance/view', label: 'View Records' }],
+        },
+        {
+          href: '/fees',
+          label: 'Fees Management',
+          icon: DollarSign,
+          submenus: [
+            { href: '/fees/history', label: 'Payment History' },
+            { href: '/fees/upcoming', label: 'Upcoming Fees' },
+            { href: '/fees/download', label: 'Download Receipt' },
+          ],
+        },
       ],
     },
     {
-      groupLabel: 'Settings',
+      groupLabel: 'Communication',
       menus: [
-        { href: '/dashboard/settings', label: 'Settings', icon: Settings2 },
-        { href: '/dashboard/support', label: 'Support', icon: FileWarning },
+        {
+          href: '/complaints',
+          label: 'Teacher Feedback',
+          icon: MessageSquare,
+          submenus: [{ href: '/complaints/submit', label: 'Submit Feedback' }],
+        },
+        {
+          href: '/notices',
+          label: 'Notice Board',
+          icon: Bell,
+          submenus: [{ href: '/notices/view', label: 'View Notices' }],
+        },
+      ],
+    },
+    {
+      groupLabel: 'Documents',
+      menus: [
+        {
+          href: '/documents',
+          label: 'My Documents',
+          icon: FileCheck,
+          submenus: [
+            { href: '/documents/upload', label: 'Upload Documents' },
+            { href: '/documents/view', label: 'View Documents' },
+          ],
+        },
       ],
     },
   ],
