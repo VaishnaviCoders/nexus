@@ -39,7 +39,6 @@ export function Sidebar({ role }: SidebarProps) {
           asChild
         >
           <Link href="/dashboard" className="flex items-center gap-2">
-            <PanelsTopLeft className="w-6 h-6 mr-1" />
             <h1
               className={cn(
                 'font-bold text-lg whitespace-nowrap transition-[transform,opacity,display] ease-in-out duration-300',
@@ -52,7 +51,17 @@ export function Sidebar({ role }: SidebarProps) {
             </h1>
           </Link>
         </Button> */}
-        <OrganizationSwitcher />
+        <OrganizationSwitcher
+          hidePersonal={true}
+          appearance={{
+            elements: {
+              organizationSwitcherPopoverActionButton__createOrganization: {
+                display: 'none',
+              },
+            },
+          }}
+        />
+
         <Menu isOpen={getOpenState()} role={role} />
       </div>
     </aside>

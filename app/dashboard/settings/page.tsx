@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/tooltip';
 import { useSidebar } from '@/hooks/use-sidebar';
 import { useStore } from '@/hooks/use-store';
-import { ContentLayout } from '@/components/dashboard-layout/content-layout';
+// import { ContentLayout } from '@/components/dashboard-layout/content-layout';
 
 export default function SettingPage() {
   const sidebar = useStore(useSidebar, (x) => x);

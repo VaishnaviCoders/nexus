@@ -9,10 +9,14 @@ import { currentUser } from '@clerk/nextjs/server';
 import { WelcomeMessage } from './dashboard-layout/WelcomeMessage';
 import { syncClerk } from '@/actions';
 import { ClerkUserComponent } from './ClerkUserComponent';
+import { getUserRole } from '@/lib/role';
 
 export async function Navbar() {
   const user = await currentUser();
   await syncClerk();
+  const userRole = await getUserRole();
+
+  console.log('User Role ', userRole);
 
   return (
     <>

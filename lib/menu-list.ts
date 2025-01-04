@@ -55,8 +55,11 @@ export const roleMenus: Record<string, Group[]> = {
             { href: '/leads/new', label: 'New Lead' },
           ],
         },
-        { href: '/dashboard/students', label: 'Students', icon: Bookmark },
-        { href: '/dashboard/courses', label: 'Courses', icon: Tag },
+        { href: '/dashboard/admin', label: 'Admin', icon: Settings },
+        { href: '/dashboard/students', label: 'Students', icon: Users },
+        { href: '/dashboard/courses', label: 'Courses', icon: Bookmark },
+        { href: '/dashboard/salary', label: 'Salary', icon: FileWarning },
+        { href: '/dashboard/teachers', label: 'Teachers', icon: Users },
       ],
     },
     {
@@ -87,6 +90,13 @@ export const roleMenus: Record<string, Group[]> = {
         { href: '/dashboard/teachers', label: 'Teachers', icon: Tag },
       ],
     },
+    {
+      groupLabel: 'Settings',
+      menus: [
+        { href: '/dashboard/settings', label: 'Settings', icon: Settings2 },
+        { href: '/dashboard/support', label: 'Support', icon: FileWarning },
+      ],
+    },
   ],
   STUDENT: [
     {
@@ -100,12 +110,12 @@ export const roleMenus: Record<string, Group[]> = {
         },
       ],
     },
-
     {
       groupLabel: 'Learning',
       menus: [
         { href: '/dashboard/courses', label: 'Courses', icon: Tag },
         { href: '/dashboard/attendance', label: 'Attendance', icon: Tag },
+        { href: '/dashboard/Student-profile', label: 'Student', icon: Tag },
       ],
     },
     {

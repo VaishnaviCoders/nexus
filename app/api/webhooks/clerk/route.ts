@@ -2,6 +2,7 @@ import { Webhook } from 'svix';
 import { headers } from 'next/headers';
 import { WebhookEvent } from '@clerk/nextjs/server';
 import prisma from '@/lib/db';
+import { Role } from '@prisma/client';
 
 export async function POST(req: Request) {
   const SIGNING_SECRET = process.env.SIGNING_SECRET;
@@ -62,18 +63,22 @@ export async function POST(req: Request) {
       id,
       email_addresses,
       image_url,
+      public_metadata,
     } = evt.data;
 
+    const roleFromMetadata = (public_metadata.role as Role) || 'STUDENT';
     const userData = await prisma.user.upsert({
       where: { id: id },
-      update: {},
+      update: {
+        role: roleFromMetadata,
+      },
       create: {
         firstName: first_name || '',
         lastName: last_name || '',
         email: email_addresses[0].email_address,
         profileImage: image_url,
         id: id,
-        role: 'STUDENT',
+        role: roleFromMetadata,
         createdAt: new Date(created_at),
         updatedAt: new Date(updated_at),
         clerkId: id,

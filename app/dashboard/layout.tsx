@@ -7,5 +7,6 @@ export default async function DemoLayout({
   children: React.ReactNode;
 }) {
   const role = await getUserRole();
+  console.log('role', role);
   return <AdminPanelLayout role={role}>{children}</AdminPanelLayout>;
 }
