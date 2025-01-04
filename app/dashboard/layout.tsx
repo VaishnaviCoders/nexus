@@ -1,12 +1,24 @@
 import AdminPanelLayout from '@/components/dashboard-layout/dashboard-panel-layout';
-import { getUserRole } from '@/lib/role';
+// import { getUserRole } from '@/lib/role';
+import { auth } from '@clerk/nextjs/server';
 
 export default async function DemoLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const role = await getUserRole();
+  const { userId, orgRole } = await auth();
+  if (!userId) return null;
+
+  const roleMap: Record<string, 'ADMIN' | 'TEACHER' | 'STUDENT'> = {
+    'org:admin': 'ADMIN',
+    'org:teacher': 'TEACHER',
+    'org:student': 'STUDENT',
+  };
+
+  const role = orgRole && roleMap[orgRole] ? roleMap[orgRole] : 'STUDENT';
+  console.log('Detected Clerk Role:', role);
   console.log('role', role);
+
   return <AdminPanelLayout role={role}>{children}</AdminPanelLayout>;
 }
