@@ -242,4 +242,46 @@ export const roleMenus: Record<string, Group[]> = {
       ],
     },
   ],
+  PARENT: [
+    {
+      groupLabel: '',
+      menus: [
+        {
+          href: '/dashboard',
+          label: 'Dashboard',
+          icon: LayoutGrid,
+          submenus: [],
+        },
+      ],
+    },
+    {
+      groupLabel: 'Monitoring',
+
+      menus: [
+        {
+          href: '/my-children',
+          label: 'My Children',
+          icon: Users,
+        },
+        {
+          href: '/attendance',
+          label: 'Attendance Monitor',
+          icon: Calendar,
+          submenus: [
+            { href: '/attendance/checkin', label: 'Check-in Times' },
+            { href: '/attendance/checkout', label: 'Check-out Times' },
+          ],
+        },
+        {
+          href: '/notice-board',
+          label: 'Notice Board',
+          icon: Bell,
+        },
+      ],
+    },
+    {
+      groupLabel: 'Settings',
+      menus: [{ href: '/settings', label: 'Settings', icon: Settings }],
+    },
+  ],
 };

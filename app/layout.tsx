@@ -3,7 +3,7 @@ import { GeistSans } from 'geist/font/sans';
 
 import './globals.css';
 import { ThemeProvider } from '@/components/theme-provider';
-import { ClerkProvider } from '@clerk/nextjs';
+import { ClerkProvider, GoogleOneTap } from '@clerk/nextjs';
 
 export const metadata: Metadata = {
   metadataBase: new URL(
@@ -26,16 +26,14 @@ export const metadata: Metadata = {
   },
   openGraph: {
     url: '/',
-    title: 'shadcn/ui sidebar',
-    description:
-      'A stunning and functional retractable sidebar for Next.js built on top of shadcn/ui complete with desktop and mobile responsiveness.',
+    title: 'School CRM',
+    description: 'Entire School Management Software',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'shadcn/ui sidebar',
-    description:
-      'A stunning and functional retractable sidebar for Next.js built on top of shadcn/ui complete with desktop and mobile responsiveness.',
+    title: 'School CRM',
+    description: 'Entire School Management Software',
   },
 };
 
@@ -48,6 +46,8 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
         <body className={GeistSans.className}>
+          <GoogleOneTap />
+
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             {children}
           </ThemeProvider>

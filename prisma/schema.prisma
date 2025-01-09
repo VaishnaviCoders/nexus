@@ -9,19 +9,34 @@ datasource db {
 }
 
 model User {
-  id           String   @id @default(cuid())
+  id           String @id @default(cuid())
   firstName    String
   lastName     String
-  email        String   @unique
+  email        String @unique
   profileImage String
-  role         Role     @default(STUDENT)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  clerkId      String   @unique
+  role         Role   @default(STUDENT)
+  clerkId      String @unique
+
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+  organizationId String?
+}
+
+model Organization {
+  id               String   @id @default(cuid())
+  name             String
+  organizationSlug String   @unique
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  isActive         Boolean  @default(true)
+  isPaid           Boolean  @default(false)
+  users            User[]
 }
 
 enum Role {
   ADMIN
   TEACHER
   STUDENT
+  PARENT
 }

@@ -1,6 +1,10 @@
 import { ContentLayout } from '@/components/dashboard-layout/content-layout';
+import { RedirectToSignIn } from '@clerk/nextjs';
+import { auth } from '@clerk/nextjs/server';
 
 export default async function Page() {
+  const { userId } = await auth();
+  if (!userId) return <RedirectToSignIn />;
   return (
     <ContentLayout>
       <div className="flex flex-1 flex-col gap-4 p-4">

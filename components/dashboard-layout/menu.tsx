@@ -18,8 +18,8 @@ import { CollapseMenuButton } from './collapse-menu-button';
 import { SignOutButton } from '@clerk/nextjs';
 
 interface MenuProps {
-  isOpen: boolean | undefined;
-  role: 'ADMIN' | 'TEACHER' | 'STUDENT';
+  isOpen?: boolean;
+  role: 'ADMIN' | 'TEACHER' | 'STUDENT' | 'PARENT';
 }
 
 export function Menu({ isOpen, role }: MenuProps) {
@@ -27,7 +27,7 @@ export function Menu({ isOpen, role }: MenuProps) {
   const menuList = roleMenus[role] || [];
 
   return (
-    <ScrollArea className="[&>div>div[style]]:!block">
+    <ScrollArea>
       <nav className="mt-8 h-full w-full">
         <ul className="flex flex-col min-h-[calc(100vh-48px-36px-16px-32px)] lg:min-h-[calc(100vh-32px-40px-32px)] items-start space-y-1 px-2">
           {menuList.map(({ groupLabel, menus }, index) => (
@@ -45,7 +45,7 @@ export function Menu({ isOpen, role }: MenuProps) {
                       </div>
                     </TooltipTrigger>
                     <TooltipContent side="right">
-                      <p>{groupLabel}</p>
+                      <p className="text-red-600">{groupLabel}</p>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>

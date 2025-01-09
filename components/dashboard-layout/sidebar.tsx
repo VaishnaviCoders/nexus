@@ -8,9 +8,10 @@ import { cn } from '@/lib/utils';
 import { SidebarToggle } from './sidebar-toggle';
 import { Menu } from './menu';
 import { OrganizationSwitcher } from '@clerk/nextjs';
+import { Role } from '@prisma/client';
 
 interface SidebarProps {
-  role: 'ADMIN' | 'TEACHER' | 'STUDENT';
+  role: Role;
 }
 export function Sidebar({ role }: SidebarProps) {
   const sidebar = useStore(useSidebar, (x) => x);

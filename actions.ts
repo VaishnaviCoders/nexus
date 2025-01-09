@@ -1,12 +1,13 @@
 'use server';
 
 import prisma from '@/lib/db';
-import { currentUser } from '@clerk/nextjs/server';
+import { auth, currentUser } from '@clerk/nextjs/server';
 import { Role } from '@prisma/client';
 
-export const syncClerk = async () => {
-  const user = await currentUser();
+const user = await currentUser();
+const { orgId, orgSlug } = await auth();
 
+export const syncClerk = async () => {
   if (!user) {
     console.error('No user found during Clerk sync');
     return null;
@@ -31,6 +32,7 @@ export const syncClerk = async () => {
         profileImage: user?.imageUrl,
         role: UserPublicMetadataRole,
         createdAt: new Date(user.createdAt),
+        organizationId: orgId,
       },
     });
     console.log(`User synced: ${user.id}`);
@@ -38,4 +40,23 @@ export const syncClerk = async () => {
     console.error('Error syncing Clerk user to DB:', error);
     throw new Error('Failed to sync Clerk user');
   }
+};
+
+export const syncOrganization = async () => {
+  if (!orgId) throw new Error('No organization found during Clerk sync');
+  await prisma.organization.upsert({
+    where: {
+      id: orgId,
+    },
+    update: {},
+    create: {
+      id: orgId,
+      name: orgSlug?.toUpperCase() || '',
+      organizationSlug: orgSlug || '',
+      isActive: true,
+      isPaid: false,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
+  });
 };

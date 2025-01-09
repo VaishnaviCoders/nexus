@@ -8,7 +8,7 @@ import { Sidebar } from './sidebar';
 
 interface AdminPanelLayoutProps {
   children: React.ReactNode;
-  role: 'ADMIN' | 'TEACHER' | 'STUDENT'; // Add role as a prop
+  role: 'ADMIN' | 'TEACHER' | 'STUDENT' | 'PARENT'; // Add role as a prop
 }
 
 export default function AdminPanelLayout({

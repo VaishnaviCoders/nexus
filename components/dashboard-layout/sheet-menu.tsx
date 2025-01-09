@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { MenuIcon, PanelsTopLeft } from 'lucide-react';
+import { MenuIcon } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/sheet';
 import { Menu } from './menu';
 import { auth } from '@clerk/nextjs/server';
+import { OrganizationSwitcher } from '@clerk/nextjs';
 
 export async function SheetMenu() {
   const { userId, orgRole } = await auth();
@@ -40,8 +41,21 @@ export async function SheetMenu() {
             asChild
           >
             <Link href="/dashboard" className="flex items-center gap-2">
-              <PanelsTopLeft className="w-6 h-6 mr-1" />
-              <SheetTitle className="font-bold text-lg">Nexus</SheetTitle>
+              {/* <PanelsTopLeft className="w-6 h-6 mr-1" /> */}
+              <SheetTitle className="font-bold text-lg">
+                <OrganizationSwitcher
+                  hidePersonal={true}
+                  afterSelectOrganizationUrl="/orgs/:slug"
+                  appearance={{
+                    elements: {
+                      organizationSwitcherPopoverActionButton__createOrganization:
+                        {
+                          display: 'none',
+                        },
+                    },
+                  }}
+                />
+              </SheetTitle>
             </Link>
           </Button>
         </SheetHeader>

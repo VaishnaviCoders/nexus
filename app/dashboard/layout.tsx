@@ -10,10 +10,11 @@ export default async function DemoLayout({
   const { userId, orgRole } = await auth();
   if (!userId) return null;
 
-  const roleMap: Record<string, 'ADMIN' | 'TEACHER' | 'STUDENT'> = {
+  const roleMap: Record<string, 'ADMIN' | 'TEACHER' | 'STUDENT' | 'PARENT'> = {
     'org:admin': 'ADMIN',
     'org:teacher': 'TEACHER',
     'org:student': 'STUDENT',
+    'org:parent': 'PARENT',
   };
 
   const role = orgRole && roleMap[orgRole] ? roleMap[orgRole] : 'STUDENT';
