@@ -43,14 +43,14 @@ export default function Globe({
   let phi = 0;
   let width = 0;
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const pointerInteracting = useRef(null);
+  const pointerInteracting = useRef<number | null>(null);
   const pointerInteractionMovement = useRef(0);
   const [r, setR] = useState(0);
 
-  const updatePointerInteraction = (value: any) => {
+  const updatePointerInteraction = (value: number | null) => {
     pointerInteracting.current = value;
     if (canvasRef.current) {
-      canvasRef.current.style.cursor = value ? 'grabbing' : 'grab';
+      canvasRef.current.style.cursor = value !== null ? 'grabbing' : 'grab';
     }
   };
 
