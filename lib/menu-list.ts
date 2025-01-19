@@ -50,17 +50,12 @@ export const roleMenus: Record<string, Group[]> = {
       groupLabel: 'Management',
       menus: [
         {
-          href: '/leads',
+          href: '/dashboard/leads',
           label: 'Lead Management',
           icon: UserPlus,
-          submenus: [
-            { href: '/dashboard/leads', label: 'All Leads' },
-            { href: '/leads/new', label: 'New Lead' },
-            { href: '/leads/convert', label: 'Convert Lead' },
-          ],
         },
         {
-          href: '/teachers',
+          href: '/dashboard/teachers',
           label: 'Teacher Management',
           icon: GraduationCap,
           submenus: [
@@ -71,7 +66,7 @@ export const roleMenus: Record<string, Group[]> = {
           ],
         },
         {
-          href: '/students',
+          href: '/dashboard/students',
           label: 'Student Management',
           icon: Users,
           submenus: [
@@ -86,7 +81,7 @@ export const roleMenus: Record<string, Group[]> = {
       groupLabel: 'Monitoring',
       menus: [
         {
-          href: '/attendance',
+          href: '/dashboard/attendance',
           label: 'Attendance Monitor',
           icon: Calendar,
           submenus: [
@@ -95,7 +90,7 @@ export const roleMenus: Record<string, Group[]> = {
           ],
         },
         {
-          href: '/notice-board',
+          href: '/dashboard/notice',
           label: 'Notice Board',
           icon: Bell,
           submenus: [
@@ -248,7 +243,7 @@ export const roleMenus: Record<string, Group[]> = {
       menus: [
         {
           href: '/dashboard',
-          label: 'Dashboard',
+          label: 'Parent Dashboard',
           icon: LayoutGrid,
           submenus: [],
         },
@@ -273,7 +268,7 @@ export const roleMenus: Record<string, Group[]> = {
           ],
         },
         {
-          href: '/notice-board',
+          href: 'dashboard/notice',
           label: 'Notice Board',
           icon: Bell,
         },

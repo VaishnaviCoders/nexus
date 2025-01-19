@@ -9,14 +9,13 @@ datasource db {
 }
 
 model User {
-  id           String @id @default(cuid())
-  firstName    String
-  lastName     String
-  email        String @unique
-  profileImage String
-  role         Role   @default(STUDENT)
-  clerkId      String @unique
-
+  id             String        @id @default(cuid())
+  firstName      String
+  lastName       String
+  email          String        @unique
+  profileImage   String
+  role           Role          @default(STUDENT)
+  clerkId        String        @unique
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
   organization   Organization? @relation(fields: [organizationId], references: [id])
@@ -32,6 +31,32 @@ model Organization {
   isActive         Boolean  @default(true)
   isPaid           Boolean  @default(false)
   users            User[]
+  notices          Notice[]
+}
+
+model Notice {
+  id         String   @id @default(uuid())
+  noticeType String
+  title      String
+  startDate  DateTime
+  endDate    DateTime
+  content    String
+
+  isNoticeApproved Boolean @default(false)
+  isDraft          Boolean @default(false)
+  isPublished      Boolean @default(false)
+
+  emailNotification Boolean @default(true)
+  pushNotification  Boolean @default(false)
+  inAppNotification Boolean @default(false)
+
+  targetAudience String[] // String[]
+  attachments    String[] // String[] // Any[]
+
+  Organization   Organization? @relation(fields: [organizationId], references: [id])
+  organizationId String?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
 }
 
 enum Role {

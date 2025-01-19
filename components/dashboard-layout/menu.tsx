@@ -27,7 +27,7 @@ export function Menu({ isOpen, role }: MenuProps) {
   const menuList = roleMenus[role] || [];
 
   return (
-    <ScrollArea>
+    <ScrollArea className="[&>div>div[style]]:!block">
       <nav className="mt-8 h-full w-full">
         <ul className="flex flex-col min-h-[calc(100vh-48px-36px-16px-32px)] lg:min-h-[calc(100vh-32px-40px-32px)] items-start space-y-1 px-2">
           {menuList.map(({ groupLabel, menus }, index) => (
@@ -45,7 +45,7 @@ export function Menu({ isOpen, role }: MenuProps) {
                       </div>
                     </TooltipTrigger>
                     <TooltipContent side="right">
-                      <p className="text-red-600">{groupLabel}</p>
+                      <p>{groupLabel}</p>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
@@ -72,7 +72,7 @@ export function Menu({ isOpen, role }: MenuProps) {
                             >
                               <Link href={href}>
                                 <span
-                                  className={cn(isOpen === false ? '' : 'mr-2')}
+                                  className={cn(isOpen === false ? '' : 'mr-4')}
                                 >
                                   <Icon size={18} />
                                 </span>
@@ -122,7 +122,7 @@ export function Menu({ isOpen, role }: MenuProps) {
                 variant="outline"
                 className="w-full justify-center h-10 mt-5"
               >
-                <span className={cn(isOpen === false ? '' : 'mr-2')}>
+                <span className={cn(isOpen === false ? '' : 'mr-4')}>
                   <LogOut size={18} />
                 </span>
                 <p

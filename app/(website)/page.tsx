@@ -23,7 +23,7 @@ import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
 
 export default async function IndexPage() {
   return (
-    <main className="p-5">
+    <main className="">
       <Spotlight className="" />
       <header className="flex items-center justify-between my-3">
         <div>
@@ -86,7 +86,7 @@ export default async function IndexPage() {
       <Features />
 
       <Testimonials />
-      <div className="my-5">{/* <BentoGrid /> */}</div>
+
       <Footer />
     </main>
   );

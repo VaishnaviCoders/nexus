@@ -9,10 +9,14 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
+import { useOrganization } from '@clerk/nextjs';
 
 const BreadCrumbNavigation = () => {
   const pathname = usePathname();
   const pathNames = pathname.split('/').filter((path) => path);
+
+  const { organization, membership } = useOrganization();
+  console.log(organization?.name, membership?.publicMetadata);
   return (
     <Breadcrumb>
       <BreadcrumbList>

@@ -1,5 +1,6 @@
 import AdminPanelLayout from '@/components/dashboard-layout/dashboard-panel-layout';
-// import { getUserRole } from '@/lib/role';
+import { Navbar } from '@/components/navbar';
+import { RedirectToSignIn } from '@clerk/nextjs';
 import { auth } from '@clerk/nextjs/server';
 
 export default async function DemoLayout({
@@ -8,7 +9,7 @@ export default async function DemoLayout({
   children: React.ReactNode;
 }) {
   const { userId, orgRole } = await auth();
-  if (!userId) return null;
+  if (!userId) return <RedirectToSignIn />;
 
   const roleMap: Record<string, 'ADMIN' | 'TEACHER' | 'STUDENT' | 'PARENT'> = {
     'org:admin': 'ADMIN',
@@ -18,8 +19,12 @@ export default async function DemoLayout({
   };
 
   const role = orgRole && roleMap[orgRole] ? roleMap[orgRole] : 'STUDENT';
-  console.log('Detected Clerk Role:', role);
-  console.log('role', role);
 
-  return <AdminPanelLayout role={role}>{children}</AdminPanelLayout>;
+  return (
+    <AdminPanelLayout role={role}>
+      <Navbar />
+      <div className="container pt-8 pb-8 px-0 sm:px-4">{children}</div>
+      {/* {children} */}
+    </AdminPanelLayout>
+  );
 }

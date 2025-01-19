@@ -82,6 +82,7 @@ export async function POST(req: Request) {
         createdAt: new Date(created_at),
         updatedAt: new Date(updated_at),
         clerkId: id,
+        organizationId: null,
       },
     });
     console.log('user Updated or Created in DB', userData);

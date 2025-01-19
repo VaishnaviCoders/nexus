@@ -1,10 +1,9 @@
 'use client';
-// import { Button } from '@/components/ui/button';
 import { useSidebar } from '@/hooks/use-sidebar';
 import { useStore } from '@/hooks/use-store';
 import { cn } from '@/lib/utils';
-// import Link from 'next/link';
-// import { PanelsTopLeft } from 'lucide-react';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 import { SidebarToggle } from './sidebar-toggle';
 import { Menu } from './menu';
 import { OrganizationSwitcher } from '@clerk/nextjs';
@@ -29,39 +28,29 @@ export function Sidebar({ role }: SidebarProps) {
       <div
         onMouseEnter={() => setIsHover(true)}
         onMouseLeave={() => setIsHover(false)}
-        className="relative h-full flex flex-col px-3 py-4 overflow-y-auto shadow-md dark:shadow-zinc-800 overflow-hidden"
+        className="relative h-full flex flex-col px-3 py-4 overflow-y-auto shadow-md dark:shadow-zinc-800 "
       >
-        {/* <Button
+        <Button
           className={cn(
-            'transition-transform ease-in-out duration-300 mb-1',
+            'transition-transform ease-in-out duration-300 mb-1 z-10',
             !getOpenState() ? 'translate-x-1' : 'translate-x-0'
           )}
-          variant="link"
+          variant="ghost"
           asChild
         >
           <Link href="/dashboard" className="flex items-center gap-2">
-            <h1
-              className={cn(
-                'font-bold text-lg whitespace-nowrap transition-[transform,opacity,display] ease-in-out duration-300',
-                !getOpenState()
-                  ? '-translate-x-96 opacity-0 hidden'
-                  : 'translate-x-0 opacity-100'
-              )}
-            >
-              Brand
-            </h1>
+            <OrganizationSwitcher
+              hidePersonal={true}
+              appearance={{
+                elements: {
+                  organizationSwitcherPopoverActionButton__createOrganization: {
+                    display: 'none',
+                  },
+                },
+              }}
+            />
           </Link>
-        </Button> */}
-        <OrganizationSwitcher
-          hidePersonal={true}
-          appearance={{
-            elements: {
-              organizationSwitcherPopoverActionButton__createOrganization: {
-                display: 'none',
-              },
-            },
-          }}
-        />
+        </Button>
 
         <Menu isOpen={getOpenState()} role={role} />
       </div>

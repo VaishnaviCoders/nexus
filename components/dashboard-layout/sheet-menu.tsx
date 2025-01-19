@@ -12,19 +12,21 @@ import {
 import { Menu } from './menu';
 import { auth } from '@clerk/nextjs/server';
 import { OrganizationSwitcher } from '@clerk/nextjs';
+import { Role } from '@prisma/client';
 
 export async function SheetMenu() {
   const { userId, orgRole } = await auth();
   if (!userId) return null;
 
-  const roleMap: Record<string, 'ADMIN' | 'TEACHER' | 'STUDENT'> = {
+  const roleMap: Record<string, Role> = {
     'org:admin': 'ADMIN',
     'org:teacher': 'TEACHER',
     'org:student': 'STUDENT',
+    'org:parent': 'PARENT',
   };
 
   const role = orgRole && roleMap[orgRole] ? roleMap[orgRole] : 'STUDENT';
-  console.log('Detected Clerk Role:', role);
+  // console.log('Detected Clerk Role:', role);
 
   return (
     <Sheet>

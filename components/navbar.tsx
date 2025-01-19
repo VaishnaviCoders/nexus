@@ -5,18 +5,23 @@ import { Separator } from '@/components/ui/separator';
 import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
 import React from 'react';
 import BreadCrumbNavigation from './BreadCrumbNavigation';
-import { currentUser } from '@clerk/nextjs/server';
+import { auth, currentUser } from '@clerk/nextjs/server';
 import { WelcomeMessage } from './dashboard-layout/WelcomeMessage';
-// import { syncClerk } from '@/actions';
 import { ClerkUserComponent } from './ClerkUserComponent';
-// import { getUserRole } from '@/lib/role';
+import { syncUser } from '@/lib/syncUser';
 
 export async function Navbar() {
   const user = await currentUser();
-  // await syncClerk();
-  // const userRole = await getUserRole();
+  const { orgId, orgRole } = await auth();
 
-  // console.log('User Role ', userRole);
+  if (!user || !orgId || !orgRole) {
+    console.error('User and User Role or Organization ID is missing');
+    return;
+  }
+
+  if (user) {
+    await syncUser(user, orgId, orgRole);
+  }
 
   return (
     <>
@@ -25,7 +30,6 @@ export async function Navbar() {
           <SheetMenu />
           <div className="flex flex-col">
             <ClerkUserComponent />
-
             <BreadCrumbNavigation />
           </div>
         </div>
@@ -38,7 +42,6 @@ export async function Navbar() {
               </button>
             </SignInButton>
           </SignedOut>
-
           <SignedIn>
             <UserButton />
           </SignedIn>

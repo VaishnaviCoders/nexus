@@ -1,20 +1,12 @@
-import { ContentLayout } from '@/components/dashboard-layout/content-layout';
-import { RedirectToSignIn } from '@clerk/nextjs';
-import { auth } from '@clerk/nextjs/server';
-
 export default async function Page() {
-  const { userId } = await auth();
-  if (!userId) return <RedirectToSignIn />;
   return (
-    <ContentLayout>
-      <div className="flex flex-1 flex-col gap-4 p-4">
-        <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-          <div className="aspect-video rounded-xl bg-muted/50" />
-          <div className="aspect-video rounded-xl bg-muted/50" />
-          <div className="aspect-video rounded-xl bg-muted/50" />
-        </div>
-        <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" />
+    <div className="flex flex-1 flex-col gap-4 p-4">
+      <div className="grid auto-rows-min gap-4 md:grid-cols-3">
+        <div className="aspect-video rounded-xl bg-muted/50" />
+        <div className="aspect-video rounded-xl bg-muted/50" />
+        <div className="aspect-video rounded-xl bg-muted/50" />
       </div>
-    </ContentLayout>
+      <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" />
+    </div>
   );
 }

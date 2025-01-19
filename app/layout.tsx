@@ -4,6 +4,7 @@ import { GeistSans } from 'geist/font/sans';
 import './globals.css';
 import { ThemeProvider } from '@/components/theme-provider';
 import { ClerkProvider, GoogleOneTap } from '@clerk/nextjs';
+import { Toaster } from 'sonner';
 
 export const metadata: Metadata = {
   metadataBase: new URL(
@@ -43,13 +44,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
+    <ClerkProvider dynamic>
       <html lang="en" suppressHydrationWarning>
         <body className={GeistSans.className}>
           <GoogleOneTap />
 
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             {children}
+            <Toaster position="bottom-right" />
           </ThemeProvider>
         </body>
       </html>
