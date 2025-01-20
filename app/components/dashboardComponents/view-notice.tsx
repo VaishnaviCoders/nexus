@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { format } from 'date-fns';
+// import { format } from 'date-fns';
 import { CalendarIcon, Users, Bell, Paperclip } from 'lucide-react';
 import {
   Card,
@@ -64,8 +64,8 @@ export default function ViewNotice({ notice }: { notice: Notice }) {
         <div className="flex items-center space-x-2 text-sm text-muted-foreground">
           <CalendarIcon className="h-4 w-4" />
           <span>
-            {format(new Date(notice.startDate), 'PPP')} -{' '}
-            {format(new Date(notice.endDate), 'PPP')}
+            {new Intl.DateTimeFormat('en-US').format(notice.startDate)} -{' '}
+            {new Intl.DateTimeFormat('en-US').format(notice.endDate)}
           </span>
         </div>
         <div className="prose max-w-none">{notice.content}</div>
@@ -76,7 +76,7 @@ export default function ViewNotice({ notice }: { notice: Notice }) {
           </span>
           <div className="flex flex-wrap gap-2">
             {notice.targetAudience.map((audience) => (
-              <Badge key={audience} variant="outline">
+              <Badge key={audience} variant="outline" className="capitalize">
                 {audience}
               </Badge>
             ))}
@@ -128,8 +128,10 @@ export default function ViewNotice({ notice }: { notice: Notice }) {
         )}
       </CardContent>
       <CardFooter className="flex justify-between text-sm text-muted-foreground">
-        <div>Created: {format(new Date(notice.createdAt), 'PPP')}</div>
-        <div>Last updated: {format(new Date(notice.updatedAt), 'PPP')}</div>
+        <div>
+          Created: {new Intl.DateTimeFormat('en-US').format(notice.createdAt)}
+        </div>
+        <div>Last updated: {notice.publishedBy}</div>
       </CardFooter>
     </Card>
   );

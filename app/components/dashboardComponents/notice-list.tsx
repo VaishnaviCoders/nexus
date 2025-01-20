@@ -220,8 +220,13 @@ export default function NoticeList({
                 {/* <TableCell className="font-medium">{notice.id}</TableCell> */}
                 <TableCell>{notice.title}</TableCell>
                 <TableCell>{notice.noticeType}</TableCell>
-                <TableCell>{format(notice.startDate, 'MMM d, yyyy')}</TableCell>
-                <TableCell>{format(notice.endDate, 'MMM d, yyyy')}</TableCell>
+                <TableCell>
+                  {new Intl.DateTimeFormat('en-US').format(notice.startDate)}
+                </TableCell>
+                <TableCell>
+                  {new Intl.DateTimeFormat('en-US').format(notice.endDate)}
+                </TableCell>
+
                 <TableCell>
                   <Badge
                     variant={

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { format } from 'date-fns';
+// import { format as formatDate } from 'date-fns';
 import { CalendarIcon, Eye, Save, Send } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -191,7 +191,9 @@ export default function CreateNotice() {
                             )}
                           >
                             {field.value ? (
-                              format(field.value, 'PPP')
+                              new Intl.DateTimeFormat('en-US').format(
+                                field.value
+                              )
                             ) : (
                               <span>Pick a date</span>
                             )}
@@ -205,7 +207,7 @@ export default function CreateNotice() {
                           selected={field.value}
                           onSelect={field.onChange}
                           disabled={(date) =>
-                            date < new Date() || date < new Date('1900-01-01')
+                            date < new Date() || date < new Date('2000-01-01')
                           }
                           initialFocus
                         />
@@ -232,7 +234,9 @@ export default function CreateNotice() {
                             )}
                           >
                             {field.value ? (
-                              format(field.value, 'PPP')
+                              new Intl.DateTimeFormat('en-US').format(
+                                field.value
+                              )
                             ) : (
                               <span>Pick a date</span>
                             )}
@@ -465,8 +469,13 @@ export default function CreateNotice() {
                         {form.watch('title')}
                       </h3>
                       <p className="text-sm text-gray-500 mt-1">
-                        {format(form.watch('startDate'), 'PPP')} -{' '}
-                        {format(form.watch('endDate'), 'PPP')}
+                        {new Intl.DateTimeFormat('en-US').format(
+                          form.watch('startDate')
+                        )}{' '}
+                        -{' '}
+                        {new Intl.DateTimeFormat('en-US').format(
+                          form.watch('endDate')
+                        )}
                       </p>
                       <div className="my-4 whitespace-pre-wrap ">
                         {form.watch('content')}
