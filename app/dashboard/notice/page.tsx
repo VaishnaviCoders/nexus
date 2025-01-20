@@ -6,6 +6,9 @@ import React from 'react';
 
 const page = async () => {
   const { orgId, orgRole } = await auth();
+
+  if (!orgId) return <div>Organization not found</div>;
+
   const notices = await prisma.notice.findMany({
     where: {
       organizationId: orgId,

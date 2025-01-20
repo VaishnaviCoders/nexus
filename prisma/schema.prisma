@@ -50,11 +50,12 @@ model Notice {
   pushNotification  Boolean @default(false)
   inAppNotification Boolean @default(false)
 
-  targetAudience String[] // String[]
-  attachments    String[] // String[] // Any[]
+  targetAudience String[] // String[] Array of Target Audience
+  attachments    Json?
 
+  publishedBy    String
   Organization   Organization? @relation(fields: [organizationId], references: [id])
-  organizationId String?
+  organizationId String
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
 }

@@ -20,6 +20,7 @@ import { TextScramble } from '@/components/ui/text-scramble';
 import DotPattern from '@/components/ui/dot-pattern';
 import { TextEffectWithExit } from '@/components/ui/TextEffectWithExit';
 import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
+import IntegrationComponent from '../components/websiteComp/IntegrationComponent';
 
 export default async function IndexPage() {
   return (
@@ -84,7 +85,7 @@ export default async function IndexPage() {
       <BentoGrid />
 
       <Features />
-
+      <IntegrationComponent />
       <Testimonials />
 
       <Footer />

@@ -2,10 +2,12 @@ import { z } from 'zod';
 
 export const CreateNoticeFormSchema = z.object({
   noticeType: z.string(),
-  title: z.string().min(2, {
-    message: 'Title must be at least 2 characters.',
+  title: z.string().min(3, {
+    message: 'Title must be at least 3 characters.',
   }),
-  startDate: z.date(),
+  startDate: z
+    .date()
+    .min(new Date(), { message: 'Start date must be in the future' }),
   endDate: z.date(),
   content: z.string().min(10, {
     message: 'Content must be at least 10 characters.',
@@ -18,5 +20,12 @@ export const CreateNoticeFormSchema = z.object({
   targetAudience: z.array(z.string()).min(1, {
     message: 'Select at least one audience group.',
   }),
-  attachments: z.array(z.any()).optional(),
+  attachments: z.array(
+    z.object({
+      name: z.string(),
+      url: z.string(),
+      type: z.string(),
+      size: z.number(),
+    })
+  ),
 });

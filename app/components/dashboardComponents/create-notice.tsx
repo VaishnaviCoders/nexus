@@ -2,18 +2,8 @@
 
 import { useState } from 'react';
 import { format } from 'date-fns';
-import {
-  CalendarIcon,
-  Clock,
-  Users,
-  Bell,
-  Paperclip,
-  Tag,
-  Eye,
-  Save,
-  Send,
-} from 'lucide-react';
-import { useForm, Controller } from 'react-hook-form';
+import { CalendarIcon, Eye, Save, Send } from 'lucide-react';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { cn } from '@/lib/utils';
@@ -48,7 +38,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
@@ -67,6 +56,14 @@ import { UploadedFilesCard } from '@/components/ui/uploaded-files-card';
 import { useUploadFile } from '@/hooks/use-upload-file';
 import { CreateNoticeFormSchema } from '@/lib/schemas';
 import { toast } from 'sonner';
+import { LoadingButton } from '@/components/loading-button';
+
+type Attachment = {
+  name: string;
+  url: string;
+  type: string;
+  size: number;
+};
 
 const noticeTypes = [
   { value: 'holiday', label: 'Holiday' },
@@ -111,20 +108,17 @@ export default function CreateNotice() {
   });
 
   async function onSubmit(data: z.infer<typeof CreateNoticeFormSchema>) {
-    await createNotice(data);
-    toast.success('Notice Is published');
+    try {
+      // Ensure that attachments are correctly typed
+      const attachments: Attachment[] = data.attachments || []; // Default to an empty array if attachments is undefined
 
-    if (data.attachments?.length) {
-      toast.promise(onUpload(data.attachments as File[]), {
-        loading: 'Uploading images...',
-        success: () => {
-          form.reset();
-          return 'Images uploaded';
-        },
-        error: (err) => err,
-      });
-    } else {
+      // Create a new notice with the updated attachments
+      await createNotice({ ...data, attachments });
+      toast.success('Notice created successfully');
       form.reset();
+    } catch (error) {
+      toast.error('Something went wrong');
+      console.error(error);
     }
   }
 
@@ -336,9 +330,25 @@ export default function CreateNotice() {
                   <FormLabel>Attachments</FormLabel>
                   <FormControl>
                     <FileUploader
-                      value={field.value}
-                      onValueChange={field.onChange}
-                      maxFileCount={4}
+                      value={field.value as any[]}
+                      onValueChange={(files) => {
+                        // Call onUpload to upload the files
+                        onUpload(files).then((uploadedFiles) => {
+                          // Ensure uploadedFiles is defined and has the expected structure
+                          if (uploadedFiles) {
+                            const attachments: Attachment[] = uploadedFiles.map(
+                              (file) => ({
+                                name: file.name,
+                                url: file.url,
+                                type: file.type,
+                                size: file.size || 0,
+                              })
+                            );
+                            field.onChange(attachments); // Update the form field with the attachments
+                          }
+                        });
+                      }}
+                      maxFileCount={8}
                       maxSize={4 * 1024 * 1024}
                       progresses={progresses}
                       // pass the onUpload function here for direct upload
@@ -429,7 +439,10 @@ export default function CreateNotice() {
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => form.setValue('isDraft', true)}
+                onClick={() => {
+                  form.setValue('isPublished', false);
+                  form.setValue('isDraft', true);
+                }}
               >
                 <Save className="mr-2 h-4 w-4" /> Save as Draft
               </Button>
@@ -447,7 +460,7 @@ export default function CreateNotice() {
                         This is how your notice will appear to recipients.
                       </DialogDescription>
                     </DialogHeader>
-                    <div className="mt-4">
+                    <div className="mt-4 overflow-x-scroll">
                       <h3 className="text-lg font-semibold">
                         {form.watch('title')}
                       </h3>
@@ -455,19 +468,27 @@ export default function CreateNotice() {
                         {format(form.watch('startDate'), 'PPP')} -{' '}
                         {format(form.watch('endDate'), 'PPP')}
                       </p>
-                      <div className="mt-4 prose">{form.watch('content')}</div>
+                      <div className="my-4 whitespace-pre-wrap ">
+                        {form.watch('content')}
+                      </div>
+                      {uploadedFiles.length > 0 ? (
+                        <UploadedFilesCard uploadedFiles={uploadedFiles} />
+                      ) : null}
                     </div>
                   </DialogContent>
                 </Dialog>
-                <Button
+
+                <LoadingButton
                   type="submit"
                   onClick={() => {
                     form.setValue('isPublished', true);
                     form.setValue('isDraft', false);
                   }}
+                  action="create"
+                  disabled={isUploading}
                 >
                   <Send className="mr-2 h-4 w-4" /> Publish Notice
-                </Button>
+                </LoadingButton>
               </div>
             </div>
           </form>

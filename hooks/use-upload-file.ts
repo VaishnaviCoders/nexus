@@ -45,8 +45,9 @@ export function useUploadFile(
       });
 
       setUploadedFiles((prev) => (prev ? [...prev, ...res] : res));
+      return res;
     } catch (err) {
-      toast.error("Couldn't upload file");
+      toast.error('err');
     } finally {
       setProgresses({});
       setIsUploading(false);

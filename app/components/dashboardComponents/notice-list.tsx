@@ -29,10 +29,8 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+
 import { Role } from '@prisma/client';
 
 interface Notice {
@@ -49,8 +47,9 @@ interface Notice {
   pushNotification: boolean;
   inAppNotification: boolean;
   targetAudience: string[];
-  attachments: string[];
-  organizationId?: string | null;
+  attachments: any;
+  publishedBy: string;
+  organizationId: string | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -259,7 +258,8 @@ export default function NoticeList({
             </DialogTitle>
             <DialogDescription>
               This action cannot be undone. This will permanently delete the
-              notice "{noticeToDelete?.title}" and remove it from our servers.
+              notice &quot;{noticeToDelete?.title}&quot; and remove it from our
+              servers.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>

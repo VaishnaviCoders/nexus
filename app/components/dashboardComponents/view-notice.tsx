@@ -34,10 +34,12 @@ interface Notice {
   isPublished: boolean;
   emailNotification: boolean;
   pushNotification: boolean;
+
   inAppNotification: boolean;
   targetAudience: string[];
-  attachments: string[];
-  organizationId: string | null;
+  attachments: any;
+  publishedBy: string;
+  organizationId: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -112,14 +114,14 @@ export default function ViewNotice({ notice }: { notice: Notice }) {
                     Files attached to this notice
                   </DialogDescription>
                 </DialogHeader>
-                <div className="grid gap-4 py-4">
+                {/* <div className="grid gap-4 py-4">
                   {notice.attachments.map((attachment, index) => (
                     <div key={index} className="flex items-center space-x-2">
                       <Paperclip className="h-4 w-4" />
                       <span>{attachment}</span>
                     </div>
                   ))}
-                </div>
+                </div> */}
               </DialogContent>
             </Dialog>
           </div>
