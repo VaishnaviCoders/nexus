@@ -19,16 +19,21 @@ export const syncUser = async (user: any, orgId: string, orgRole: string) => {
   }
 
   try {
-    const organization = await prisma.organization.findUnique({
-      where: { id: user.organizationId || orgId },
-    });
+    // const organization = await prisma.organization.findUnique({
+    //   where: { id: user.organizationId || orgId },
+    // });
 
-    if (!organization) {
-      console.error(
-        `Organization not found with ID: ${user.organizationId || orgId}`
-      );
-      throw new Error('Organization not found');
-    }
+    console.log('Environment:', process.env.NODE_ENV);
+    console.log('Database URL:', process.env.DATABASE_URL);
+
+    console.log('Finding organization with ID:', user.organizationId || orgId);
+
+    // if (!organization) {
+    //   console.error(
+    //     `Organization not found with ID: ${user.organizationId || orgId}`
+    //   );
+    //   throw new Error('Organization not found');
+    // }
 
     await prisma.user.upsert({
       where: { id: user.id },
