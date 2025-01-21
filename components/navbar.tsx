@@ -5,23 +5,23 @@ import { Separator } from '@/components/ui/separator';
 import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
 import React from 'react';
 import BreadCrumbNavigation from './BreadCrumbNavigation';
-import { currentUser } from '@clerk/nextjs/server';
+import { auth, currentUser } from '@clerk/nextjs/server';
 import { WelcomeMessage } from './dashboard-layout/WelcomeMessage';
 import { ClerkUserComponent } from './ClerkUserComponent';
-// import { syncUser } from '@/lib/syncUser';
+import { syncUser } from '@/lib/syncUser';
 
 export async function Navbar() {
   const user = await currentUser();
-  // const { orgId, orgRole } = await auth();
+  const { orgId, orgRole } = await auth();
 
-  // if (!user || !orgId || !orgRole) {
-  //   console.error('User and User Role or Organization ID is missing');
-  //   return;
-  // }
+  if (!user || !orgId || !orgRole) {
+    console.error('User and User Role or Organization ID is missing');
+    return;
+  }
 
-  // if (user) {
-  //   await syncUser(user, orgId, orgRole);
-  // }
+  if (user) {
+    await syncUser(user, orgId, orgRole);
+  }
 
   return (
     <>
