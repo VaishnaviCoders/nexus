@@ -4,10 +4,8 @@ import { SheetMenu } from '@/components/dashboard-layout/sheet-menu';
 import { Separator } from '@/components/ui/separator';
 import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
 import React from 'react';
-import BreadCrumbNavigation from './BreadCrumbNavigation';
 import { auth, currentUser } from '@clerk/nextjs/server';
 import { WelcomeMessage } from './dashboard-layout/WelcomeMessage';
-import { ClerkUserComponent } from './ClerkUserComponent';
 import { syncUser } from '@/lib/syncUser';
 
 export async function Navbar() {
@@ -28,9 +26,11 @@ export async function Navbar() {
       <header className="flex h-16 shrink-0 items-center px-4">
         <div className="flex items-center space-x-4 lg:space-x-6">
           <SheetMenu />
-          <div className="flex flex-col">
-            <ClerkUserComponent />
-            <BreadCrumbNavigation />
+          <div className="flex space-x-2 items-center">
+            <h1 className="text-lg font-bold flex items-center">
+              Welcome {user?.firstName ?? 'Guest'}{' '}
+            </h1>
+            <span className="hidden text-lg font-bold sm:flex">{orgRole}</span>
           </div>
         </div>
         <div className="ml-auto flex items-center space-x-4">

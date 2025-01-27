@@ -16,7 +16,7 @@ export const CreateNoticeFormSchema = z.object({
   isPublished: z.boolean().default(false),
   emailNotification: z.boolean().default(true),
   pushNotification: z.boolean().default(false),
-  inAppNotification: z.boolean().default(true),
+  WhatsAppNotification: z.boolean().default(true),
   targetAudience: z.array(z.string()).min(1, {
     message: 'Select at least one audience group.',
   }),

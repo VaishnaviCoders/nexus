@@ -1,3 +1,4 @@
+import BreadCrumbNavigation from '@/components/BreadCrumbNavigation';
 import AdminPanelLayout from '@/components/dashboard-layout/dashboard-panel-layout';
 import { Navbar } from '@/components/navbar';
 import { RedirectToSignIn } from '@clerk/nextjs';
@@ -23,7 +24,8 @@ export default async function DemoLayout({
   return (
     <AdminPanelLayout role={role}>
       <Navbar />
-      <div className="container pt-8 pb-8 px-0 sm:px-4">{children}</div>
+      <BreadCrumbNavigation />
+      <div className="container px-0 sm:px-4">{children}</div>
       {/* {children} */}
     </AdminPanelLayout>
   );

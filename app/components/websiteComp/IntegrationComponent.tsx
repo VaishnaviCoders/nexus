@@ -6,6 +6,9 @@ import Ripple from '@/components/ui/ripple';
 import Container from '@/components/ui/container';
 import Images from './images';
 import Icons from './icons';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { ArrowRightIcon } from 'lucide-react';
 
 const SOCIAL_PLATFORMS = [
   {
@@ -23,7 +26,7 @@ const SOCIAL_PLATFORMS = [
   },
   { icon: Icons.insta, position: 'left-1', size: 'large', iconSize: 'large' },
   {
-    icon: Icons.youtube,
+    icon: Icons.Youtube,
     position: 'right-1',
     size: 'large',
     iconSize: 'large',
@@ -38,7 +41,7 @@ const SOCIAL_PLATFORMS = [
   },
 ];
 
-const IntegrationComponent = () => {
+const Integration = () => {
   const getPositionClasses = (position: string) => {
     switch (position) {
       case 'left-3':
@@ -90,7 +93,7 @@ const IntegrationComponent = () => {
         <div className="relative flex flex-col lg:hidden items-center justify-center overflow-visible">
           <div className="absolute top-1/2 -translate-y-1/2 right-1/4 w-3/5 h-14 lg:h-20 bg-gradient-to-r from-blue-400 to-indigo-500 rounded-full -rotate-12 blur-[6.5rem] -z-10"></div>
 
-          <div className="max-w-sm w-full h-auto mx-auto mt-8">
+          <div className="max-w-xs sm:max-w-sm w-full h-auto mx-auto mt-8">
             <Image
               src="/images/integration.svg"
               alt="Integration"
@@ -107,14 +110,14 @@ const IntegrationComponent = () => {
           Social Media Integration
         </h2>
       </div>
-      {/* <div className="flex flex-col items-center text-center max-w-3xl mx-auto lg:absolute lg:bottom-1/4 inset-x-0 z-20 mt-8 lg:mt-0">
+      <div className="flex flex-col items-center text-center max-w-3xl mx-auto lg:absolute lg:bottom-1/4 inset-x-0 z-20 mt-8 lg:mt-0">
         <Link href="#">
-          <Button>
+          <Button size="lg">
             See all Integrations
             <ArrowRightIcon className="size-4" />
           </Button>
         </Link>
-      </div> */}
+      </div>
 
       <Container delay={0.3}>
         <div className="relative hidden lg:flex items-center justify-center overflow-visible">
@@ -152,4 +155,4 @@ const IntegrationComponent = () => {
   );
 };
 
-export default IntegrationComponent;
+export default Integration;

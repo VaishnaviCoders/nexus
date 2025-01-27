@@ -15,17 +15,18 @@ import Features from '../components/websiteComp/Features';
 import BentoGrid from '../components/websiteComp/BentoGrid';
 import Testimonials from '../components/websiteComp/Testimonials';
 import Footer from '../components/websiteComp/Footer';
-import { Spotlight } from '@/components/ui/Spotlight';
+// import { Spotlight } from '@/components/ui/Spotlight';
 import { TextScramble } from '@/components/ui/text-scramble';
 import DotPattern from '@/components/ui/dot-pattern';
 import { TextEffectWithExit } from '@/components/ui/TextEffectWithExit';
 import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
 import IntegrationComponent from '../components/websiteComp/IntegrationComponent';
+// import MagicBentoGrid from '../components/websiteComp/magic-bento';
 
 export default async function IndexPage() {
   return (
     <main className="">
-      <Spotlight className="" />
+      {/* <Spotlight className="" /> */}
       <header className="flex items-center justify-between my-3">
         <div>
           <h1>Next.js + NEXUS CRM</h1>
@@ -82,9 +83,14 @@ export default async function IndexPage() {
           )}
         />
       </div>
+      <Features />
+
       <BentoGrid />
 
-      <Features />
+      {/* <div className="w-full mx-auto lg:max-w-screen-xl lg:mx-auto px-4 md:px-12">
+        <MagicBentoGrid />
+      </div> */}
+
       <IntegrationComponent />
       <Testimonials />
 

@@ -88,7 +88,7 @@ export function AnimatedListGrid({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        'relative flex h-[500px] w-full flex-col p-6 overflow-hidden rounded-lg border bg-background md:shadow-xl',
+        'relative flex h-full max-h-[500px] w-full flex-col overflow-hidden rounded-lg bg-transparent md:shadow-xl',
         className
       )}
     >

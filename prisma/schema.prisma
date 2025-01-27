@@ -26,6 +26,7 @@ model Organization {
   id               String   @id @default(cuid())
   name             String
   organizationSlug String   @unique
+  organizationLogo String?
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
   isActive         Boolean  @default(true)
@@ -46,9 +47,9 @@ model Notice {
   isDraft          Boolean @default(false)
   isPublished      Boolean @default(false)
 
-  emailNotification Boolean @default(true)
-  pushNotification  Boolean @default(false)
-  inAppNotification Boolean @default(false)
+  emailNotification    Boolean @default(true)
+  pushNotification     Boolean @default(false)
+  WhatsAppNotification Boolean @default(false)
 
   targetAudience String[] // String[] Array of Target Audience
   attachments    Json?

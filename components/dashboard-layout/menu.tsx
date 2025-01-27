@@ -70,7 +70,10 @@ export function Menu({ isOpen, role }: MenuProps) {
                               className="w-full justify-start h-10 mb-1"
                               asChild
                             >
-                              <Link href={href}>
+                              <Link
+                                href={href.startsWith('/') ? href : `/${href}`} // Ensures `href` is absolute
+                                passHref
+                              >
                                 <span
                                   className={cn(isOpen === false ? '' : 'mr-4')}
                                 >

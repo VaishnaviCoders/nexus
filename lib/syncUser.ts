@@ -23,11 +23,6 @@ export const syncUser = async (user: any, orgId: string, orgRole: string) => {
       where: { id: user.organizationId || orgId },
     });
 
-    console.log('Environment:', process.env.NODE_ENV);
-    console.log('Database URL:', process.env.DATABASE_URL);
-
-    console.log('Finding organization with ID:', user.organizationId || orgId);
-
     if (!organization) {
       console.error(
         `Organization not found with ID: ${user.organizationId || orgId}`

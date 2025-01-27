@@ -147,7 +147,7 @@ const Icons = {
       </defs>
     </svg>
   ),
-  youtube: (props: LucideProps) => (
+  Youtube: (props: LucideProps) => (
     <svg
       {...props}
       width="48"

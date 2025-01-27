@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 // import { format as formatDate } from 'date-fns';
-import { CalendarIcon, Eye, Save, Send } from 'lucide-react';
+import { CalendarIcon, Eye, Save } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -56,7 +56,8 @@ import { UploadedFilesCard } from '@/components/ui/uploaded-files-card';
 import { useUploadFile } from '@/hooks/use-upload-file';
 import { CreateNoticeFormSchema } from '@/lib/schemas';
 import { toast } from 'sonner';
-import { LoadingButton } from '@/components/loading-button';
+import { format } from 'date-fns';
+import { CreateNoticeButton } from '@/lib/SubmitButton';
 
 type Attachment = {
   name: string;
@@ -75,19 +76,17 @@ const noticeTypes = [
 ];
 
 const audienceOptions = [
-  { id: 'all', label: 'All' },
   { id: 'students', label: 'Students' },
   { id: 'parents', label: 'Parents' },
   { id: 'teachers', label: 'Teachers' },
   { id: 'staff', label: 'Staff' },
+  { id: 'admins', label: 'Admins' },
 ];
 
 export default function CreateNotice() {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
-  const { onUpload, progresses, uploadedFiles, isUploading } = useUploadFile(
-    'imageUploader',
-    { defaultUploadedFiles: [] }
-  );
+  const { onUpload, progresses, uploadedFiles, isUploading, resetUploadState } =
+    useUploadFile('imageUploader', { defaultUploadedFiles: [] });
 
   const form = useForm<z.infer<typeof CreateNoticeFormSchema>>({
     resolver: zodResolver(CreateNoticeFormSchema),
@@ -101,7 +100,7 @@ export default function CreateNotice() {
       isPublished: false,
       emailNotification: true,
       pushNotification: true,
-      inAppNotification: false,
+      WhatsAppNotification: false,
       targetAudience: [],
       attachments: [],
     },
@@ -116,6 +115,8 @@ export default function CreateNotice() {
       await createNotice({ ...data, attachments });
       toast.success('Notice created successfully');
       form.reset();
+      // Add this simple reset function
+      resetUploadState();
     } catch (error) {
       toast.error('Something went wrong');
       console.error(error);
@@ -123,7 +124,7 @@ export default function CreateNotice() {
   }
 
   return (
-    <Card className="w-full mx-auto">
+    <Card className="w-full ">
       <CardHeader>
         <CardTitle>Create New Notice</CardTitle>
         <CardDescription>
@@ -186,14 +187,12 @@ export default function CreateNotice() {
                           <Button
                             variant={'outline'}
                             className={cn(
-                              'w-[240px] pl-3 text-left font-normal',
+                              'w-[240px] pl-3 text-left font-normal flex items-center gap-2',
                               !field.value && 'text-muted-foreground'
                             )}
                           >
                             {field.value ? (
-                              new Intl.DateTimeFormat('en-US').format(
-                                field.value
-                              )
+                              format(field.value, 'PPP')
                             ) : (
                               <span>Pick a date</span>
                             )}
@@ -209,7 +208,7 @@ export default function CreateNotice() {
                           disabled={(date) =>
                             date < new Date() || date < new Date('2000-01-01')
                           }
-                          initialFocus
+                          autoFocus
                         />
                       </PopoverContent>
                     </Popover>
@@ -234,9 +233,7 @@ export default function CreateNotice() {
                             )}
                           >
                             {field.value ? (
-                              new Intl.DateTimeFormat('en-US').format(
-                                field.value
-                              )
+                              format(field.value, 'PPP')
                             ) : (
                               <span>Pick a date</span>
                             )}
@@ -252,7 +249,7 @@ export default function CreateNotice() {
                           disabled={(date) =>
                             date < new Date() || date < new Date('1900-01-01')
                           }
-                          initialFocus
+                          autoFocus
                         />
                       </PopoverContent>
                     </Popover>
@@ -289,39 +286,45 @@ export default function CreateNotice() {
                       Select who should receive this notice
                     </FormDescription>
                   </div>
-                  {audienceOptions.map((item) => (
-                    <FormField
-                      key={item.id}
-                      control={form.control}
-                      name="targetAudience"
-                      render={({ field }) => {
-                        return (
-                          <FormItem
-                            key={item.id}
-                            className="flex flex-row items-start space-x-3 space-y-0"
-                          >
-                            <FormControl>
-                              <Checkbox
-                                checked={field.value?.includes(item.id)}
-                                onCheckedChange={(checked) => {
-                                  return checked
-                                    ? field.onChange([...field.value, item.id])
-                                    : field.onChange(
-                                        field.value?.filter(
-                                          (value) => value !== item.id
-                                        )
-                                      );
-                                }}
-                              />
-                            </FormControl>
-                            <FormLabel className="font-normal">
-                              {item.label}
-                            </FormLabel>
-                          </FormItem>
-                        );
-                      }}
-                    />
-                  ))}
+                  <div className="flex space-x-3">
+                    {' '}
+                    {audienceOptions.map((item) => (
+                      <FormField
+                        key={item.id}
+                        control={form.control}
+                        name="targetAudience"
+                        render={({ field }) => {
+                          return (
+                            <FormItem
+                              key={item.id}
+                              className="flex flex-row items-start space-x-3 space-y-0"
+                            >
+                              <FormControl>
+                                <Checkbox
+                                  checked={field.value?.includes(item.id)}
+                                  onCheckedChange={(checked) => {
+                                    return checked
+                                      ? field.onChange([
+                                          ...field.value,
+                                          item.id,
+                                        ])
+                                      : field.onChange(
+                                          field.value?.filter(
+                                            (value) => value !== item.id
+                                          )
+                                        );
+                                  }}
+                                />
+                              </FormControl>
+                              <FormLabel className="font-normal">
+                                {item.label}
+                              </FormLabel>
+                            </FormItem>
+                          );
+                        }}
+                      />
+                    ))}
+                  </div>
                   <FormMessage />
                 </FormItem>
               )}
@@ -418,15 +421,15 @@ export default function CreateNotice() {
               />
               <FormField
                 control={form.control}
-                name="inAppNotification"
+                name="WhatsAppNotification"
                 render={({ field }) => (
                   <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                     <div className="space-y-0.5">
                       <FormLabel className="text-base">
-                        In-App Notification
+                        WhatsApp Notification
                       </FormLabel>
                       <FormDescription>
-                        Show this notice as an in-app notification
+                        Send this notice as a WhatsApp notification
                       </FormDescription>
                     </div>
                     <FormControl>
@@ -448,7 +451,7 @@ export default function CreateNotice() {
                   form.setValue('isDraft', true);
                 }}
               >
-                <Save className="mr-2 h-4 w-4" /> Save as Draft
+                <Save className="mr-2 h-4 w-4" /> Save as Draft (Beta)
               </Button>
               <div className="space-x-2 max-sm:flex justify-between">
                 <Dialog open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
@@ -487,7 +490,7 @@ export default function CreateNotice() {
                   </DialogContent>
                 </Dialog>
 
-                <LoadingButton
+                {/* <LoadingButton
                   type="submit"
                   onClick={() => {
                     form.setValue('isPublished', true);
@@ -497,7 +500,13 @@ export default function CreateNotice() {
                   disabled={isUploading}
                 >
                   <Send className="mr-2 h-4 w-4" /> Publish Notice
-                </LoadingButton>
+                </LoadingButton> */}
+                <CreateNoticeButton
+                  onClick={() => {
+                    form.setValue('isPublished', true);
+                    form.setValue('isDraft', false);
+                  }}
+                />
               </div>
             </div>
           </form>

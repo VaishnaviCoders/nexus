@@ -28,6 +28,11 @@ export function useUploadFile(
   );
   const [isUploading, setIsUploading] = React.useState(false);
 
+  // Add this simple reset function
+  const resetUploadState = () => {
+    setUploadedFiles([]);
+  };
+
   async function onUpload(files: File[]) {
     setIsUploading(true);
     try {
@@ -59,5 +64,6 @@ export function useUploadFile(
     uploadedFiles,
     progresses,
     isUploading,
+    resetUploadState,
   };
 }

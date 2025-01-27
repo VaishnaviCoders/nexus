@@ -4,6 +4,10 @@ import { auth, currentUser } from '@clerk/nextjs/server';
 import prisma from '../lib/db';
 import { CreateNoticeFormSchema } from '../lib/schemas';
 import { z } from 'zod';
+import { revalidatePath } from 'next/cache';
+import { Resend } from 'resend';
+import { NoticeEmailTemp } from '@/components/email-templates/noticeMail';
+import { Role } from '@prisma/client';
 
 // export const syncOrganization = async () => {
 //   const { orgId, orgSlug } = await auth();
@@ -64,10 +68,134 @@ export const createNotice = async (
 
       emailNotification: data.emailNotification,
       pushNotification: data.pushNotification,
-      inAppNotification: data.inAppNotification,
+      WhatsAppNotification: data.WhatsAppNotification,
 
       createdAt: new Date(),
       updatedAt: new Date(),
     },
   });
 };
+
+export const deleteNotice = async (noticeId: string) => {
+  await prisma.notice.delete({
+    where: {
+      id: noticeId,
+    },
+  });
+
+  revalidatePath('/dashboard/notice');
+};
+
+const mapTargetAudienceToRole = (audience: string): Role | null => {
+  switch (audience.toLowerCase()) {
+    case 'admins':
+      return 'ADMIN';
+    case 'students':
+      return 'STUDENT';
+    case 'teachers':
+      return 'TEACHER';
+    case 'parents':
+      return 'PARENT';
+    case 'staff':
+      return 'TEACHER'; // Assuming staff maps to TEACHER role
+    default:
+      return null;
+  }
+};
+export const toggleNoticeApproval = async (
+  noticeId: string,
+  currentStatus: boolean
+) => {
+  console.log('clicked toggleNoticeApproval', noticeId);
+
+  const notice = await prisma.notice.update({
+    where: {
+      id: noticeId,
+    },
+    data: {
+      isNoticeApproved: !currentStatus,
+    },
+    include: {
+      Organization: true,
+    },
+  });
+
+  // Check can we send emails
+  if (!currentStatus && notice.isNoticeApproved && notice.emailNotification) {
+    let rolesToInclude: Role[] = [];
+
+    if (notice.targetAudience.includes('all')) {
+      rolesToInclude = ['STUDENT', 'TEACHER', 'PARENT', 'ADMIN'];
+    } else {
+      // Map each target audience to corresponding roles
+      rolesToInclude = notice.targetAudience
+        .map(mapTargetAudienceToRole)
+        .filter((role): role is Role => role !== null);
+    }
+
+    const recipientEmails = await prisma.user.findMany({
+      where: {
+        organizationId: notice.organizationId,
+        role: {
+          in: rolesToInclude,
+        },
+      },
+      select: {
+        email: true,
+      },
+    });
+
+    if (recipientEmails.length > 0) {
+      // 5. Send emails
+      const resend = new Resend(process.env.RESEND_API_KEY);
+
+      await resend.emails.send({
+        from: 'onboarding@resend.dev',
+        to: recipientEmails.map((user) => user.email),
+        subject: `Notice: ${notice.title}`,
+        react: NoticeEmailTemp({
+          title: notice.title,
+          organizationImage:
+            notice.Organization?.organizationLogo ||
+            'https://supabase.com/dashboard/img/supabase-logo.svg',
+          content: notice.content,
+          noticeType: notice.noticeType,
+          startDate: notice.startDate,
+          endDate: notice.endDate,
+          targetAudience: notice.targetAudience,
+          organizationName: notice.Organization?.name || '',
+          publishedBy: notice.publishedBy,
+          noticeUrl: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/notice/${notice.id}`,
+        }),
+      });
+      console.log('Email sent:', recipientEmails);
+    }
+  }
+
+  revalidatePath('/dashboard/notice');
+};
+
+// export async function sendMail() {
+//   const resend = new Resend(process.env.RESEND_API_KEY);
+
+//   const emails = ['vaishnaviraykar768@gmail.com'];
+
+//   const emailPromises = [...new Set(emails)].map((recipientEmail) => {
+//     return resend.emails.send({
+//       from: 'onboarding@resend.dev',
+//       to: recipientEmail,
+//       subject: 'Welcome to Resend!',
+//       react: NoticeEmailTemp({
+//         title: 'John',
+//         content: 'John',
+//         noticeType: 'holiday',
+//         startDate: new Date(),
+//         endDate: new Date(),
+//         targetAudience: ['all'],
+//         organizationName: 'John',
+//         publishedBy: 'John',
+//         noticeUrl: '/dashboard/notice/9c61423f-449f-4e6e-94cc-463cb42955c7',
+//       }),
+//     });
+//   });
+// }

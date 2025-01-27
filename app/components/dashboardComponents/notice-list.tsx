@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { format } from 'date-fns';
-import { Eye, Edit, Trash2, ChevronDown, ChevronUp } from 'lucide-react';
+
+import { Eye, Trash2, ChevronDown, ChevronUp } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import {
   Table,
@@ -32,6 +32,9 @@ import {
 } from '@/components/ui/dialog';
 
 import { Role } from '@prisma/client';
+import { cn } from '@/lib/utils';
+import { deleteNotice } from '@/app/actions';
+import { DeleteNoticeButton } from '@/lib/SubmitButton';
 
 interface Notice {
   id: string;
@@ -45,7 +48,7 @@ interface Notice {
   isPublished: boolean;
   emailNotification: boolean;
   pushNotification: boolean;
-  inAppNotification: boolean;
+  WhatsAppNotification: boolean;
   targetAudience: string[];
   attachments: any;
   publishedBy: string;
@@ -111,21 +114,22 @@ export default function NoticeList({
   };
 
   const handleView = (id: string) => {
-    router.push(`/dashboard/notice/${id}`);
+    router.push(`/dashboard/notices/${id}`);
   };
 
-  const handleEdit = (id: string) => {
-    router.push(`/dashboard/notice/${id}`);
-  };
+  // const handleEdit = (id: string) => {
+  //   router.push(`/dashboard/notices/${id}`);
+  // };
 
   const handleDelete = (notice: Notice) => {
     setNoticeToDelete(notice);
     setDeleteDialogOpen(true);
   };
 
-  const confirmDelete = () => {
+  const confirmDelete = async () => {
     if (noticeToDelete) {
       setNotices(notices.filter((notice) => notice.id !== noticeToDelete.id));
+      await deleteNotice(noticeToDelete.id);
       setDeleteDialogOpen(false);
       setNoticeToDelete(null);
     }
@@ -145,10 +149,10 @@ export default function NoticeList({
           <Eye className="mr-2 h-4 w-4" />
           View
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => handleEdit(notice.id)}>
+        {/* <DropdownMenuItem onClick={() => handleEdit(notice.id)}>
           <Edit className="mr-2 h-4 w-4" />
           Edit
-        </DropdownMenuItem>
+        </DropdownMenuItem> */}
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={() => handleDelete(notice)}
@@ -169,8 +173,7 @@ export default function NoticeList({
   );
 
   return (
-    <div className="container mx-auto py-10">
-      <h1 className="text-2xl font-bold mb-4">All Notices</h1>
+    <div className="">
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -211,6 +214,7 @@ export default function NoticeList({
               </TableHead>
               <TableHead>End Date</TableHead>
               <TableHead>Status</TableHead>
+              {orgRole === 'ADMIN' && <TableHead>Approved</TableHead>}
               <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -229,21 +233,53 @@ export default function NoticeList({
 
                 <TableCell>
                   <Badge
+                    className={cn(
+                      notice.isPublished
+                        ? 'text-blue-500 bg-blue-50 hover:bg-blue-100'
+                        : notice.isDraft
+                          ? 'text-gray-500 bg-gray-50 hover:bg-gray-100'
+                          : 'text-yellow-500 bg-yellow-50 hover:bg-yellow-100'
+                    )}
                     variant={
                       notice.isPublished
                         ? 'default'
                         : notice.isDraft
-                        ? 'secondary'
-                        : 'outline'
+                          ? 'secondary'
+                          : 'outline'
                     }
                   >
                     {notice.isPublished
                       ? 'Published'
                       : notice.isDraft
-                      ? 'Draft'
-                      : 'Pending Approval'}
+                        ? 'Draft'
+                        : 'Pending Approval'}
                   </Badge>
                 </TableCell>
+                {userRole === 'ADMIN' || userRole === 'TEACHER' ? (
+                  <TableCell>
+                    <Badge
+                      className={cn(
+                        notice.isNoticeApproved
+                          ? 'text-green-500 bg-green-50 hover:bg-green-100'
+                          : 'text-red-500 bg-red-50 hover:bg-red-100'
+                      )}
+                      variant={
+                        notice.isNoticeApproved
+                          ? 'default'
+                          : notice.isNoticeApproved
+                            ? 'secondary'
+                            : 'outline'
+                      }
+                    >
+                      {notice.isNoticeApproved
+                        ? 'Approved'
+                        : notice.isDraft
+                          ? 'Draft'
+                          : 'Pending Approval'}
+                    </Badge>
+                  </TableCell>
+                ) : null}
+
                 <TableCell>
                   {userRole === 'ADMIN' || userRole === 'TEACHER'
                     ? renderAdminActions(notice)
@@ -274,9 +310,7 @@ export default function NoticeList({
             >
               Cancel
             </Button>
-            <Button variant="destructive" onClick={confirmDelete}>
-              Delete
-            </Button>
+            <DeleteNoticeButton onClick={confirmDelete} />
           </DialogFooter>
         </DialogContent>
       </Dialog>

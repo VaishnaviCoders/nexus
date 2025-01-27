@@ -90,13 +90,9 @@ export const roleMenus: Record<string, Group[]> = {
           ],
         },
         {
-          href: '/dashboard/notice',
+          href: 'dashboard/notices',
           label: 'Notice Board',
           icon: Bell,
-          submenus: [
-            { href: '/notices/pending', label: 'Pending Approval' },
-            { href: '/notices/approved', label: 'Approved Notices' },
-          ],
         },
       ],
     },
@@ -215,10 +211,9 @@ export const roleMenus: Record<string, Group[]> = {
           submenus: [{ href: '/complaints/submit', label: 'Submit Feedback' }],
         },
         {
-          href: '/notices',
+          href: 'dashboard/notices',
           label: 'Notice Board',
           icon: Bell,
-          submenus: [{ href: '/notices/view', label: 'View Notices' }],
         },
       ],
     },
@@ -268,7 +263,7 @@ export const roleMenus: Record<string, Group[]> = {
           ],
         },
         {
-          href: 'dashboard/notice',
+          href: 'dashboard/notices',
           label: 'Notice Board',
           icon: Bell,
         },

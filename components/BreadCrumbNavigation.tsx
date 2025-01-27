@@ -15,7 +15,7 @@ const BreadCrumbNavigation = () => {
   const pathNames = pathname.split('/').filter((path) => path);
 
   return (
-    <Breadcrumb>
+    <Breadcrumb className="flex shrink-0 items-center px-4 my-5">
       <BreadcrumbList>
         {pathNames.map((path, index) => {
           const fullPath = `/${pathNames.slice(0, index + 1).join('/')}`; // Build the full URL for each breadcrumb

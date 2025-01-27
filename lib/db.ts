@@ -1,11 +1,14 @@
 import { PrismaClient } from '@prisma/client';
 
 const prismaClientSingleton = () => {
-  return new PrismaClient({
-    log: ['query', 'info', 'warn', 'error'],
-  });
+  return new PrismaClient();
 };
-console.log = console.info;
+
+// ! Use This commit code to debug the issue with prisma
+// {
+//   log: ['query', 'info', 'warn', 'error'],
+// }
+// console.log = console.info;
 
 declare const globalThis: {
   prismaGlobal: ReturnType<typeof prismaClientSingleton>;
