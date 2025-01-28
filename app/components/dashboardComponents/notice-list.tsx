@@ -82,6 +82,10 @@ export default function NoticeList({
     setNotices(processedNotices);
   }, [initialNotices]);
 
+  const today = new Date();
+  const upcomingNotices = notices.filter((notice) => notice.endDate >= today);
+  const pastNotices = notices.filter((notice) => notice.endDate < today);
+
   const [sortConfig, setSortConfig] = useState<{
     key: keyof Notice;
     direction: 'ascending' | 'descending';
@@ -135,6 +139,15 @@ export default function NoticeList({
     }
   };
 
+  const noticeTypes = [
+    { value: 'holiday', label: 'Holiday' },
+    { value: 'event', label: 'Event' },
+    { value: 'ptm', label: 'Parent-Teacher Meeting' },
+    { value: 'trip', label: 'School Trip' },
+    { value: 'exam', label: 'Examination' },
+    { value: 'announcement', label: 'General Announcement' },
+  ];
+
   const renderAdminActions = (notice: Notice) => (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -173,7 +186,7 @@ export default function NoticeList({
   );
 
   return (
-    <div className="">
+    <div className="w-full">
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -222,8 +235,13 @@ export default function NoticeList({
             {sortedNotices.map((notice) => (
               <TableRow key={notice.id}>
                 {/* <TableCell className="font-medium">{notice.id}</TableCell> */}
-                <TableCell>{notice.title}</TableCell>
-                <TableCell>{notice.noticeType}</TableCell>
+                <TableCell className="truncate  text-clip">
+                  {notice.title}
+                </TableCell>
+                <TableCell>
+                  {noticeTypes.find((type) => type.value === notice.noticeType)
+                    ?.label || notice.noticeType}
+                </TableCell>
                 <TableCell>
                   {new Intl.DateTimeFormat('en-US').format(notice.startDate)}
                 </TableCell>

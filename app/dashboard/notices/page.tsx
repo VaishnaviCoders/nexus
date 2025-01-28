@@ -1,11 +1,12 @@
 import NoticeList from '@/app/components/dashboardComponents/notice-list';
-import AnimatedLoadingSkeleton from '@/components/ui/animated-skeleton-loading';
+
 import { Button } from '@/components/ui/button';
 import prisma from '@/lib/db';
 import { auth } from '@clerk/nextjs/server';
 import { Role } from '@prisma/client';
 import Link from 'next/link';
 import React, { Suspense } from 'react';
+import Loading from './loading';
 
 // const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -37,17 +38,16 @@ const page = async () => {
   // console.log('Detected Clerk Role:', role);
 
   return (
-    <div className="container mx-auto">
+    <div className="w-full mx-auto">
       <div className="flex justify-between items-center px-4 pb-5">
         <h1 className="text-2xl font-bold ">All Notices</h1>
         <Button>
           <Link href={`/dashboard/notices/create`}>Create Notice</Link>
         </Button>
       </div>
-      <Suspense fallback={<AnimatedLoadingSkeleton />}>
+      <Suspense fallback={<Loading />}>
         <NoticeList notices={notices} orgRole={role} />
       </Suspense>
-      <AnimatedLoadingSkeleton />
     </div>
   );
 };

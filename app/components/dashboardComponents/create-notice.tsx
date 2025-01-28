@@ -502,6 +502,7 @@ export default function CreateNotice() {
                   <Send className="mr-2 h-4 w-4" /> Publish Notice
                 </LoadingButton> */}
                 <CreateNoticeButton
+                  disabled={isUploading}
                   onClick={() => {
                     form.setValue('isPublished', true);
                     form.setValue('isDraft', false);

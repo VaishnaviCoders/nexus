@@ -14,11 +14,13 @@ export const metadata: Metadata = {
     process.env.APP_URL
       ? `${process.env.APP_URL}`
       : process.env.VERCEL_URL
-      ? `https://${process.env.VERCEL_URL}`
-      : `http://localhost:${process.env.PORT || 3000}`
+        ? `https://${process.env.VERCEL_URL}`
+        : `http://localhost:${process.env.PORT || 3000}`
   ),
   title: 'School CRM',
   description: 'Entire School Management Software',
+  generator: 'Next.js',
+  manifest: '/manifest.json',
   keywords:
     'Sameer Kad, School CRM, Full-Stack Developer, School Management Software, Educational CRM, Attendance Tracker, Fee Management, Next.js Developer',
   authors: [{ name: 'Sameer Kad', url: 'https://github.com/DevSammyKad' }],

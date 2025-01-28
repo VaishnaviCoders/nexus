@@ -155,6 +155,7 @@ const Icons = {
       viewBox="0 0 48 48"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      className="text-black dark:text-white"
     >
       <g clipPath="url(#clip0_17_47)">
         <path
@@ -163,7 +164,7 @@ const Icons = {
         />
         <path
           d="M19.1385 31.1373V16.8628L31.684 24.0001L19.1385 31.1373Z"
-          fill="black"
+          fill="currentColor"
         />
       </g>
       <defs>

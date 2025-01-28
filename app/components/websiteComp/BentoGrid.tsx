@@ -36,10 +36,7 @@ const BentoGrid = () => {
           </AnimatedShinyText>
         </div>
       </div>
-      <div
-        className="md: mx-5 flex grid-cols-3 flex-col gap-10 p-2 md:grid"
-        style={{ gridAutoRows: '142px' }}
-      >
+      <div className="md:mx-5 flex grid-cols-3 flex-col gap-10 p-2 md:grid">
         <div className="row-start-1 row-end-4 rounded-lg">
           <MagicCard
             gradientFrom="#38bdf8"
@@ -70,9 +67,8 @@ const BentoGrid = () => {
             <AnimatedBeamMultipleOutput />
           </MagicCard>
         </div>
-        <div className="row-start-4 row-end-6 rounded-2xl border ">
-          <DisplayCardsDemo />
-        </div>
+
+        <DisplayCardsDemo />
         <MagicCard
           gradientFrom="#38bdf8"
           gradientTo="#3b82f6"
@@ -91,13 +87,13 @@ const BentoGrid = () => {
             paperwork and endless email reminders. There`s now a new way of
             accounting.
           </p>
-          <div className="w-full bg-card/50 overflow-hidden">
+          <div className="w-full mt-6 bg-card/50 overflow-hidden">
             <Image
               src={RealTimeImage}
               alt={'Feature Four'}
               width={500}
               height={500}
-              className="w-fit h-[400px] object-contain"
+              className="w-fit object-contain"
             />
           </div>
         </MagicCard>

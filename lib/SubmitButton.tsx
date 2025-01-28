@@ -20,7 +20,13 @@ export function SubmitButton({ text }: { text: string }) {
     </>
   );
 }
-export function CreateNoticeButton({ onClick }: { onClick: () => void }) {
+export function CreateNoticeButton({
+  onClick,
+  disabled,
+}: {
+  onClick: () => void;
+  disabled?: boolean;
+}) {
   const { pending } = useFormStatus();
   return (
     <>
@@ -30,7 +36,7 @@ export function CreateNoticeButton({ onClick }: { onClick: () => void }) {
           Please wait
         </Button>
       ) : (
-        <Button type="submit" onClick={onClick}>
+        <Button type="submit" onClick={onClick} disabled={disabled}>
           <Send className="mr-2 h-4 w-4" /> Publish Notice
         </Button>
       )}

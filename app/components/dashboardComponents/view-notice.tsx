@@ -87,10 +87,12 @@ export default function ViewNotice({
   return (
     <Card className="w-full max-w-4xl ">
       <CardHeader>
-        <div className="flex justify-between items-start">
+        <div className="flex max-sm:flex-col justify-between items-start">
           <div>
             <CardTitle>{notice.title}</CardTitle>
-            <CardDescription>{notice.noticeType}</CardDescription>
+            <CardDescription className="my-3">
+              {notice.noticeType}
+            </CardDescription>
           </div>
           <div className="space-x-5">
             {orgRole === 'ADMIN' ? (

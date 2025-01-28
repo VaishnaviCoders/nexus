@@ -18,7 +18,7 @@ import Footer from '../components/websiteComp/Footer';
 // import { Spotlight } from '@/components/ui/Spotlight';
 import { TextScramble } from '@/components/ui/text-scramble';
 import DotPattern from '@/components/ui/dot-pattern';
-import { TextEffectWithExit } from '@/components/ui/TextEffectWithExit';
+// import { TextEffectWithExit } from '@/components/ui/TextEffectWithExit';
 import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
 import IntegrationComponent from '../components/websiteComp/IntegrationComponent';
 // import MagicBentoGrid from '../components/websiteComp/magic-bento';
@@ -55,9 +55,9 @@ export default async function IndexPage() {
           Simplify Operations, Foster Growth, Empower Success
         </TextScramble>
 
-        <div className="h-5">
+        {/* <div className="h-5">
           <TextEffectWithExit />
-        </div>
+        </div> */}
 
         <div className="my-4 z-10 flex items-center justify-between gap-3">
           <Dialog>
@@ -83,9 +83,9 @@ export default async function IndexPage() {
           )}
         />
       </div>
-      <Features />
-
       <BentoGrid />
+
+      <Features />
 
       {/* <div className="w-full mx-auto lg:max-w-screen-xl lg:mx-auto px-4 md:px-12">
         <MagicBentoGrid />

@@ -136,25 +136,25 @@ const Features = () => {
           </div>
           <div className="bottom-0 flex items-center w-full mt-20 pb- justify-evenly lg:mt-auto">
             <div className="flex flex-col items-center">
-              <h3 className="text-2xl font-medium text-transparent md:text-4xl bg-gradient-to-b from-neutral-50 to-neutral-600 bg-clip-text">
+              <h1 className="text-2xl font-medium text-transparent md:text-4xl bg-gradient-to-b from-neutral-950 dark:from-neutral-50 to-neutral-500 dark:to-neutral-600 bg-clip-text">
                 5+
-              </h3>
+              </h1>
               <span className="text-sm text-muted-foreground">
                 Organizations
               </span>
             </div>
             <div className="flex flex-col items-center">
-              <h3 className="text-2xl font-medium text-transparent md:text-4xl bg-gradient-to-b from-neutral-50 to-neutral-600 bg-clip-text">
+              <h1 className="text-2xl font-medium text-transparent md:text-4xl bg-gradient-to-b from-neutral-950 dark:from-neutral-50 to-neutral-500 dark:to-neutral-600 bg-clip-text">
                 21.2k
-              </h3>
+              </h1>
               <span className="text-sm text-muted-foreground">
                 Active Users
               </span>
             </div>
             <div className="flex flex-col items-center">
-              <h3 className="text-2xl font-medium text-transparent md:text-4xl bg-gradient-to-b from-neutral-50 to-neutral-600 bg-clip-text">
+              <h1 className="text-2xl font-medium text-transparent md:text-4xl bg-gradient-to-b from-neutral-950 dark:from-neutral-50 to-neutral-500 dark:to-neutral-600 bg-clip-text">
                 10.5k
-              </h3>
+              </h1>
               <span className="text-sm text-muted-foreground">Projects</span>
             </div>
           </div>

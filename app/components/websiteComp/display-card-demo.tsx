@@ -42,7 +42,7 @@ function DisplayCardsDemo() {
     <MagicCard
       gradientFrom="#38bdf8"
       gradientTo="#3b82f6"
-      className="p-4 lg:p-6 lg:rounded-3xl"
+      className="p-4 lg:p-6 lg:rounded-3xl  row-start-4 row-end-6 rounded-2xl border "
       gradientColor="rgba(59,130,246,0.1)"
     >
       <div className="flex items-center space-x-4 mb-4">
@@ -55,7 +55,7 @@ function DisplayCardsDemo() {
         Take the pain out of book keeping! Wave goodbye to mountains of
         paperwork and endless email reminders.
       </p>
-      <div className="w-full max-sm:overflow-hidden">
+      <div className="w-full max-md:overflow-hidden mt-20 max-sm:mt-10">
         <DisplayCards cards={defaultCards} />
       </div>
     </MagicCard>

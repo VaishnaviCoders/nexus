@@ -1,7 +1,7 @@
 'use client';
 import { usePathname } from 'next/navigation';
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -9,10 +9,14 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
+import Link from 'next/link';
 
 const BreadCrumbNavigation = () => {
   const pathname = usePathname();
-  const pathNames = pathname.split('/').filter((path) => path);
+  const pathNames = useMemo(
+    () => pathname.split('/').filter((path) => path),
+    [pathname]
+  );
 
   return (
     <Breadcrumb className="flex shrink-0 items-center px-4 my-5">
@@ -24,7 +28,7 @@ const BreadCrumbNavigation = () => {
             <React.Fragment key={fullPath}>
               {index > 0 && <BreadcrumbSeparator />}
               <BreadcrumbItem className="cursor-pointer capitalize">
-                <BreadcrumbLink href={fullPath}>{path}</BreadcrumbLink>
+                <Link href={fullPath}>{path}</Link>
               </BreadcrumbItem>
             </React.Fragment>
           );
