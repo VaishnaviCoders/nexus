@@ -3,7 +3,7 @@ import type { NextConfig } from 'next';
 const withPWA = require('next-pwa');
 
 const nextConfig: NextConfig = {
-  distDir: 'build',
+  distDir: '.next',
   swcMinify: true,
   reactStrictMode: true,
   compiler: {
