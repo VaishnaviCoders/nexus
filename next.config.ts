@@ -1,11 +1,26 @@
-import { register } from 'module';
 import type { NextConfig } from 'next';
-const withPWA = require('next-pwa');
+const withPWA = require('next-pwa')({
+  dest: 'public',
+  register: true,
+  skipWaiting: true,
+  disable: process.env.NODE_ENV === 'development',
+});
 
 const nextConfig: NextConfig = {
+  experimental: {
+    turbo: {
+      minify: true,
+      rules: {
+        '*.svg': {
+          loaders: ['@svgr/webpack'],
+          as: '*.js',
+        },
+      },
+    },
+  },
   distDir: '.next',
-  swcMinify: true,
   reactStrictMode: true,
+
   compiler: {
     removeConsole: process.env.NODE_ENV === 'development',
   },
@@ -30,9 +45,5 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withPWA({
-  dest: 'public',
-  register: true,
-  skipWaiting: true,
-  disable: process.env.NODE_ENV === 'development',
-})(nextConfig);
+// Export with PWA settings
+export default withPWA(nextConfig);

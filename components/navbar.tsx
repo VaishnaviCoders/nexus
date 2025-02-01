@@ -7,6 +7,7 @@ import React from 'react';
 import { auth, currentUser } from '@clerk/nextjs/server';
 import { WelcomeMessage } from './dashboard-layout/WelcomeMessage';
 import { syncUser } from '@/lib/syncUser';
+import NotificationFeed from '@/app/components/dashboardComponents/NotificationFeed';
 
 export async function Navbar() {
   const user = await currentUser();
@@ -42,6 +43,7 @@ export async function Navbar() {
               </button>
             </SignInButton>
           </SignedOut>
+          <NotificationFeed />
           <SignedIn>
             <UserButton />
           </SignedIn>

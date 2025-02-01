@@ -82,9 +82,9 @@ export default function NoticeList({
     setNotices(processedNotices);
   }, [initialNotices]);
 
-  const today = new Date();
-  const upcomingNotices = notices.filter((notice) => notice.endDate >= today);
-  const pastNotices = notices.filter((notice) => notice.endDate < today);
+  // const today = new Date();
+  // const upcomingNotices = notices.filter((notice) => notice.endDate >= today);
+  // const pastNotices = notices.filter((notice) => notice.endDate < today);
 
   const [sortConfig, setSortConfig] = useState<{
     key: keyof Notice;

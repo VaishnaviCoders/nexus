@@ -6,8 +6,9 @@ import { CreateNoticeFormSchema } from '../lib/schemas';
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
 import { Resend } from 'resend';
-import { NoticeEmailTemp } from '@/components/email-templates/noticeMail';
+import { NoticeEmailTemplate } from '@/components/email-templates/noticeMail';
 import { Role } from '@prisma/client';
+import { Knock } from '@knocklabs/node';
 
 // export const syncOrganization = async () => {
 //   const { orgId, orgSlug } = await auth();
@@ -108,6 +109,8 @@ export const toggleNoticeApproval = async (
 ) => {
   console.log('clicked toggleNoticeApproval', noticeId);
 
+  const user = await currentUser();
+  if (!user) return;
   const notice = await prisma.notice.update({
     where: {
       id: noticeId,
@@ -148,12 +151,27 @@ export const toggleNoticeApproval = async (
     if (recipientEmails.length > 0) {
       // 5. Send emails
       const resend = new Resend(process.env.RESEND_API_KEY);
+      const knock = new Knock(process.env.KNOCK_API_SECRET);
+
+      await knock.workflows.trigger('notice-created', {
+        recipients: recipientEmails.map((recipient) => ({
+          id: user.id,
+          email: recipient.email,
+          name: user.firstName || '',
+        })),
+        data: {
+          title: notice.title,
+
+          email: user.emailAddresses[0].emailAddress,
+          name: user.firstName,
+        },
+      });
 
       await resend.emails.send({
         from: 'onboarding@resend.dev',
         to: recipientEmails.map((user) => user.email),
         subject: `Notice: ${notice.title}`,
-        react: NoticeEmailTemp({
+        react: NoticeEmailTemplate({
           title: notice.title,
           organizationImage:
             notice.Organization?.organizationLogo ||
@@ -165,7 +183,7 @@ export const toggleNoticeApproval = async (
           targetAudience: notice.targetAudience,
           organizationName: notice.Organization?.name || '',
           publishedBy: notice.publishedBy,
-          noticeUrl: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/notice/${notice.id}`,
+          noticeUrl: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/notices/${notice.id}`,
         }),
       });
       console.log('Email sent:', recipientEmails);

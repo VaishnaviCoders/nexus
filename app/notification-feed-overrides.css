@@ -1,0 +1,7 @@
+:root {
+  --rnf-unread-badge-bg-color: #000000;
+
+  /* Font family */
+  --rnf-font-family-sanserif: Inter, -apple-system, BlinkMacSystemFont,
+    'Segoe UI', Roboto, Ubuntu, 'Helvetica Neue', sans-serif;
+}

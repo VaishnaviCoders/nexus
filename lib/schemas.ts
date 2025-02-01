@@ -1,10 +1,15 @@
 import { z } from 'zod';
 
 export const CreateNoticeFormSchema = z.object({
-  noticeType: z.string(),
-  title: z.string().min(3, {
-    message: 'Title must be at least 3 characters.',
-  }),
+  noticeType: z.string().min(1, { message: 'Notice type is required' }),
+  title: z
+    .string()
+    .min(3, {
+      message: 'Title must be at least 3 characters.',
+    })
+    .max(18, {
+      message: 'Title must be at most 18 characters.',
+    }),
   startDate: z
     .date()
     .min(new Date(), { message: 'Start date must be in the future' }),

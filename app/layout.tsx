@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import { GeistSans } from 'geist/font/sans';
 
 import './globals.css';
+import './notification-feed-overrides.css';
+
 import { ThemeProvider } from '@/components/theme-provider';
 import { ClerkProvider, GoogleOneTap } from '@clerk/nextjs';
 import { Toaster } from 'sonner';

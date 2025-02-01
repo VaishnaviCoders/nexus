@@ -79,7 +79,6 @@ const audienceOptions = [
   { id: 'students', label: 'Students' },
   { id: 'parents', label: 'Parents' },
   { id: 'teachers', label: 'Teachers' },
-  { id: 'staff', label: 'Staff' },
   { id: 'admins', label: 'Admins' },
 ];
 
@@ -205,9 +204,7 @@ export default function CreateNotice() {
                           mode="single"
                           selected={field.value}
                           onSelect={field.onChange}
-                          disabled={(date) =>
-                            date < new Date() || date < new Date('2000-01-01')
-                          }
+                          disabled={(date) => date < new Date('2023-01-01')}
                           autoFocus
                         />
                       </PopoverContent>
@@ -246,9 +243,7 @@ export default function CreateNotice() {
                           mode="single"
                           selected={field.value}
                           onSelect={field.onChange}
-                          disabled={(date) =>
-                            date < new Date() || date < new Date('1900-01-01')
-                          }
+                          disabled={(date) => date < new Date('1900-01-01')}
                           autoFocus
                         />
                       </PopoverContent>
@@ -286,8 +281,7 @@ export default function CreateNotice() {
                       Select who should receive this notice
                     </FormDescription>
                   </div>
-                  <div className="flex space-x-3">
-                    {' '}
+                  <div className="flex space-x-3 ">
                     {audienceOptions.map((item) => (
                       <FormField
                         key={item.id}
@@ -467,19 +461,22 @@ export default function CreateNotice() {
                         This is how your notice will appear to recipients.
                       </DialogDescription>
                     </DialogHeader>
-                    <div className="mt-4 overflow-x-scroll">
+                    <div className="mt-3 overflow-x-scroll">
                       <h3 className="text-lg font-semibold">
                         {form.watch('title')}
                       </h3>
                       <p className="text-sm text-gray-500 mt-1">
-                        {new Intl.DateTimeFormat('en-US').format(
+                        {new Intl.DateTimeFormat('en-IN').format(
                           form.watch('startDate')
                         )}{' '}
                         -{' '}
-                        {new Intl.DateTimeFormat('en-US').format(
+                        {new Intl.DateTimeFormat('en-IN').format(
                           form.watch('endDate')
                         )}
                       </p>
+                      <div className="my-4 whitespace-pre-wrap ">
+                        Notice For : {form.watch('targetAudience').join(', ')}
+                      </div>
                       <div className="my-4 whitespace-pre-wrap ">
                         {form.watch('content')}
                       </div>
