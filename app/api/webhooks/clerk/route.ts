@@ -5,16 +5,16 @@ import prisma from '@/lib/db';
 import { Role } from '@prisma/client';
 
 export async function POST(req: Request) {
-  const SIGNING_SECRET = process.env.SIGNING_SECRET;
+  const WEBHOOK_SIGNING_SECRET = process.env.WEBHOOK_SIGNING_SECRET;
 
-  if (!SIGNING_SECRET) {
+  if (!WEBHOOK_SIGNING_SECRET) {
     throw new Error(
-      'Error: Please add SIGNING_SECRET from Clerk Dashboard to .env or .env.local'
+      'Error: Please add WEBHOOK_SIGNING_SECRET from Clerk Dashboard to .env or .env.local'
     );
   }
 
   // Create new Svix instance with secret
-  const wh = new Webhook(SIGNING_SECRET);
+  const wh = new Webhook(WEBHOOK_SIGNING_SECRET);
 
   // Get headers
   const headerPayload = await headers();
@@ -54,7 +54,7 @@ export async function POST(req: Request) {
   const { id } = evt.data;
   const eventType = evt.type;
 
-  if (eventType === 'user.created') {
+  if (eventType === 'user.created' || eventType === 'user.updated') {
     const {
       first_name,
       last_name,

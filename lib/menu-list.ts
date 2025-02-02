@@ -98,7 +98,9 @@ export const roleMenus: Record<string, Group[]> = {
     },
     {
       groupLabel: 'Settings',
-      menus: [{ href: '/settings', label: 'Settings', icon: Settings }],
+      menus: [
+        { href: 'dashboard/settings', label: 'Settings', icon: Settings },
+      ],
     },
   ],
   TEACHER: [
@@ -159,6 +161,12 @@ export const roleMenus: Record<string, Group[]> = {
             { href: '/notices/view', label: 'View Notices' },
           ],
         },
+      ],
+    },
+    {
+      groupLabel: 'Settings',
+      menus: [
+        { href: 'dashboard/settings', label: 'Settings', icon: Settings },
       ],
     },
   ],
@@ -268,7 +276,9 @@ export const roleMenus: Record<string, Group[]> = {
     },
     {
       groupLabel: 'Settings',
-      menus: [{ href: '/settings', label: 'Settings', icon: Settings }],
+      menus: [
+        { href: 'dashboard/settings', label: 'Settings', icon: Settings },
+      ],
     },
   ],
 };

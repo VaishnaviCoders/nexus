@@ -1,6 +1,6 @@
 'use server';
 
-import { auth, currentUser } from '@clerk/nextjs/server';
+import { auth, currentUser, User } from '@clerk/nextjs/server';
 import prisma from '../lib/db';
 import { CreateNoticeFormSchema } from '../lib/schemas';
 import { z } from 'zod';
@@ -9,6 +9,7 @@ import { Resend } from 'resend';
 import { NoticeEmailTemplate } from '@/components/email-templates/noticeMail';
 import { Role } from '@prisma/client';
 import { Knock } from '@knocklabs/node';
+import { redirect } from 'next/navigation';
 
 // export const syncOrganization = async () => {
 //   const { orgId, orgSlug } = await auth();
@@ -75,6 +76,7 @@ export const createNotice = async (
       updatedAt: new Date(),
     },
   });
+  redirect('/dashboard/notices');
 };
 
 export const deleteNotice = async (noticeId: string) => {
@@ -88,20 +90,87 @@ export const deleteNotice = async (noticeId: string) => {
 };
 
 const mapTargetAudienceToRole = (audience: string): Role | null => {
-  switch (audience.toLowerCase()) {
-    case 'admins':
-      return 'ADMIN';
-    case 'students':
-      return 'STUDENT';
-    case 'teachers':
-      return 'TEACHER';
-    case 'parents':
-      return 'PARENT';
-    case 'staff':
-      return 'TEACHER'; // Assuming staff maps to TEACHER role
-    default:
-      return null;
+  const audienceMap: { [key: string]: Role } = {
+    admins: Role.ADMIN,
+    students: Role.STUDENT,
+    teachers: Role.TEACHER,
+    parents: Role.PARENT,
+    staff: Role.TEACHER, // Assuming staff maps to TEACHER role
+  };
+  return audienceMap[audience.toLowerCase()] || null;
+};
+
+const getRecipientEmails = async (
+  organizationId: string,
+  targetAudience: string[]
+): Promise<string[]> => {
+  let rolesToInclude: Role[] = [];
+
+  if (targetAudience.includes('all')) {
+    rolesToInclude = [Role.STUDENT, Role.TEACHER, Role.PARENT, Role.ADMIN];
+  } else {
+    rolesToInclude = targetAudience
+      .map(mapTargetAudienceToRole)
+      .filter((role): role is Role => role !== null);
   }
+
+  const recipients = await prisma.user.findMany({
+    where: {
+      organizationId,
+      role: {
+        in: rolesToInclude,
+      },
+    },
+    select: {
+      email: true,
+    },
+  });
+
+  return recipients.map((user) => user.email);
+};
+const sendNotifications = async (
+  notice: any,
+  recipientEmails: string[],
+  user: User
+) => {
+  const resend = new Resend(process.env.RESEND_API_KEY);
+  const knock = new Knock(process.env.KNOCK_API_SECRET);
+
+  const [knockResponse, resendResponse] = await Promise.all([
+    knock.workflows.trigger('notice-created', {
+      recipients: recipientEmails.map((email) => ({
+        id: user.id,
+        email,
+        name: user.firstName || '',
+      })),
+      data: {
+        title: notice.title,
+        email: user.emailAddresses[0].emailAddress,
+        name: user.firstName,
+      },
+    }),
+    resend.emails.send({
+      from: 'onboarding@resend.dev',
+      to: recipientEmails,
+      subject: `Notice: ${notice.title}`,
+      react: NoticeEmailTemplate({
+        title: notice.title,
+        organizationImage:
+          notice.Organization?.organizationLogo ||
+          'https://supabase.com/dashboard/img/supabase-logo.svg',
+        content: notice.content,
+        noticeType: notice.noticeType,
+        startDate: notice.startDate,
+        endDate: notice.endDate,
+        targetAudience: notice.targetAudience,
+        organizationName: notice.Organization?.name || '',
+        publishedBy: notice.publishedBy,
+        noticeUrl: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/notices/${notice.id}`,
+      }),
+    }),
+  ]);
+
+  console.log('Notifications sent:', { knockResponse, resendResponse });
 };
 export const toggleNoticeApproval = async (
   noticeId: string,
@@ -125,71 +194,14 @@ export const toggleNoticeApproval = async (
 
   // Check can we send emails
   if (!currentStatus && notice.isNoticeApproved && notice.emailNotification) {
-    let rolesToInclude: Role[] = [];
-
-    if (notice.targetAudience.includes('all')) {
-      rolesToInclude = ['STUDENT', 'TEACHER', 'PARENT', 'ADMIN'];
-    } else {
-      // Map each target audience to corresponding roles
-      rolesToInclude = notice.targetAudience
-        .map(mapTargetAudienceToRole)
-        .filter((role): role is Role => role !== null);
-    }
-
-    const recipientEmails = await prisma.user.findMany({
-      where: {
-        organizationId: notice.organizationId,
-        role: {
-          in: rolesToInclude,
-        },
-      },
-      select: {
-        email: true,
-      },
-    });
-
+    const recipientEmails = await getRecipientEmails(
+      notice.organizationId,
+      notice.targetAudience
+    );
     if (recipientEmails.length > 0) {
-      // 5. Send emails
-      const resend = new Resend(process.env.RESEND_API_KEY);
-      const knock = new Knock(process.env.KNOCK_API_SECRET);
-
-      await knock.workflows.trigger('notice-created', {
-        recipients: recipientEmails.map((recipient) => ({
-          id: user.id,
-          email: recipient.email,
-          name: user.firstName || '',
-        })),
-        data: {
-          title: notice.title,
-
-          email: user.emailAddresses[0].emailAddress,
-          name: user.firstName,
-        },
-      });
-
-      await resend.emails.send({
-        from: 'onboarding@resend.dev',
-        to: recipientEmails.map((user) => user.email),
-        subject: `Notice: ${notice.title}`,
-        react: NoticeEmailTemplate({
-          title: notice.title,
-          organizationImage:
-            notice.Organization?.organizationLogo ||
-            'https://supabase.com/dashboard/img/supabase-logo.svg',
-          content: notice.content,
-          noticeType: notice.noticeType,
-          startDate: notice.startDate,
-          endDate: notice.endDate,
-          targetAudience: notice.targetAudience,
-          organizationName: notice.Organization?.name || '',
-          publishedBy: notice.publishedBy,
-          noticeUrl: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/notices/${notice.id}`,
-        }),
-      });
-      console.log('Email sent:', recipientEmails);
+      await sendNotifications(notice, recipientEmails, user);
     }
   }
-
   revalidatePath('/dashboard/notice');
 };
 
