@@ -7,7 +7,7 @@ import {
   NotificationIconButton,
   NotificationFeedPopover,
 } from '@knocklabs/react';
-
+import { JSXElementConstructor, ReactElement } from 'react';
 // Required CSS import, unless you're overriding the styling
 import '@knocklabs/react/dist/index.css';
 // import '../../notification-feed-overrides.css';
@@ -25,6 +25,9 @@ const NotificationFeed = () => {
     process.env.NEXT_PUBLIC_KNOCK_FEED_CHANNEL_ID
   );
 
+  const NotificationIconButtonComponent =
+    NotificationIconButton as JSXElementConstructor<any>;
+
   return (
     <KnockProvider
       apiKey={String(process.env.NEXT_PUBLIC_KNOCK_API_KEY)}
@@ -34,9 +37,9 @@ const NotificationFeed = () => {
         feedId={String(process.env.NEXT_PUBLIC_KNOCK_FEED_CHANNEL_ID)}
       >
         <>
-          <NotificationIconButton
+          <NotificationIconButtonComponent
             ref={notifButtonRef as React.RefObject<HTMLButtonElement>}
-            onClick={(e) => setIsVisible(!isVisible)}
+            onClick={(e: any) => setIsVisible(!isVisible)}
           />
           <NotificationFeedPopover
             buttonRef={notifButtonRef as React.RefObject<HTMLElement>}
