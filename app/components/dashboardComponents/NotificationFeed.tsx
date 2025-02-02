@@ -1,24 +1,27 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, type JSXElementConstructor } from 'react';
 import {
   KnockProvider,
   KnockFeedProvider,
   NotificationIconButton,
   NotificationFeedPopover,
 } from '@knocklabs/react';
-
-// Required CSS import, unless you're overriding the styling
 import '@knocklabs/react/dist/index.css';
-// import '../../notification-feed-overrides.css';
 import { useUser } from '@clerk/nextjs';
+
+// Type assertion for Knock components
+const TypedNotificationIconButton =
+  NotificationIconButton as JSXElementConstructor<any>;
+const TypedNotificationFeedPopover =
+  NotificationFeedPopover as JSXElementConstructor<any>;
 
 const NotificationFeed = () => {
   const [isVisible, setIsVisible] = useState(false);
   const notifButtonRef = useRef<HTMLButtonElement>(null);
 
   const { user } = useUser();
-  if (!user) return;
+  if (!user) return null;
 
   return (
     <KnockProvider
@@ -26,21 +29,18 @@ const NotificationFeed = () => {
       userId={user.id}
     >
       <KnockFeedProvider
-        feedId={String(process.env.NEXT_PUBLIC_KNOCK_FEED_CHANNEL_ID)}
+        feedId={process.env.NEXT_PUBLIC_KNOCK_FEED_CHANNEL_ID || ''}
       >
         <>
-          <NotificationIconButton
+          <TypedNotificationIconButton
             ref={notifButtonRef}
             onClick={() => setIsVisible(!isVisible)}
           />
-
-          {notifButtonRef.current && (
-            <NotificationFeedPopover
-              buttonRef={notifButtonRef as React.RefObject<HTMLButtonElement>}
-              isVisible={isVisible}
-              onClose={() => setIsVisible(false)}
-            />
-          )}
+          <TypedNotificationFeedPopover
+            buttonRef={notifButtonRef}
+            isVisible={isVisible}
+            onClose={() => setIsVisible(false)}
+          />
         </>
       </KnockFeedProvider>
     </KnockProvider>
