@@ -179,7 +179,11 @@ export default function NoticeList({
   );
 
   const renderViewButton = (notice: Notice) => (
-    <Button onClick={() => handleView(notice.id)} variant="outline">
+    <Button
+      onClick={() => handleView(notice.id)}
+      variant="outline"
+      className="cursor-pointer"
+    >
       <Eye className="mr-2 h-4 w-4" />
       View
     </Button>

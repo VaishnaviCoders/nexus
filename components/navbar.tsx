@@ -8,10 +8,13 @@ import { auth, currentUser } from '@clerk/nextjs/server';
 import { WelcomeMessage } from './dashboard-layout/WelcomeMessage';
 import { syncUser } from '@/lib/syncUser';
 import NotificationFeed from '@/app/components/dashboardComponents/NotificationFeed';
+import { SyncActiveOrganization } from './SyncActiveOrganization';
 
 export async function Navbar() {
   const user = await currentUser();
-  const { orgId, orgRole } = await auth();
+  const { orgId, orgRole, sessionClaims } = await auth();
+
+  console.log('Clerk Session Claims', sessionClaims);
 
   if (!user || !orgId || !orgRole) {
     console.error('User and User Role or Organization ID is missing');
@@ -25,6 +28,7 @@ export async function Navbar() {
   return (
     <>
       <header className="flex h-16 shrink-0 items-center px-4">
+        <SyncActiveOrganization membership={sessionClaims?.membership} />
         <div className="flex items-center space-x-4 lg:space-x-6">
           <SheetMenu />
           <div className="flex space-x-2 items-center">

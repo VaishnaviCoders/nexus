@@ -12,9 +12,13 @@ import Loading from './loading';
 
 const page = async () => {
   const { orgId, orgRole } = await auth();
+  console.log('orgId', orgId);
   // await delay(5000);
 
-  if (!orgId) return <div>Organization not found</div>;
+  if (!orgId)
+    return (
+      <div>Organization not found , Select a organization from the sidebar</div>
+    );
 
   const notices = await prisma.notice.findMany({
     where: {

@@ -1,7 +1,8 @@
 import prisma from '@/lib/db';
+import { User } from '@clerk/nextjs/server';
 import { Role } from '@prisma/client';
 
-export const syncUser = async (user: any, orgId: string, orgRole: string) => {
+export const syncUser = async (user: User, orgId: string, orgRole: string) => {
   // const roleMap: Record<string, 'ADMIN' | 'TEACHER' | 'STUDENT' | 'PARENT'> = {
   const roleMap: Record<string, Role> = {
     'org:admin': 'ADMIN',
@@ -14,19 +15,17 @@ export const syncUser = async (user: any, orgId: string, orgRole: string) => {
 
   console.log('User Role from Clerk:', role);
 
-  if (!user.organizationId && !orgId) {
-    throw new Error('Organization ID is missing.');
-  }
+  // if (orgId) {
+  //   throw new Error('Organization ID is missing.');
+  // }
 
   try {
     const organization = await prisma.organization.findUnique({
-      where: { id: user.organizationId || orgId },
+      where: { id: orgId },
     });
 
     if (!organization) {
-      console.error(
-        `Organization not found with ID: ${user.organizationId || orgId}`
-      );
+      console.error(`Organization not found with ID: ${orgId}`);
       throw new Error('Organization not found');
     }
 

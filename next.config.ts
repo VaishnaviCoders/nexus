@@ -7,6 +7,9 @@ const withPWA = require('next-pwa')({
 });
 
 const nextConfig: NextConfig = {
+  api: {
+    bodyParser: false,
+  },
   experimental: {
     turbo: {
       minify: true,
@@ -21,9 +24,9 @@ const nextConfig: NextConfig = {
   distDir: '.next',
   reactStrictMode: true,
 
-  compiler: {
-    removeConsole: process.env.NODE_ENV === 'development',
-  },
+  // compiler: {
+  //   removeConsole: process.env.NODE_ENV === 'development',
+  // },
   eslint: {
     ignoreDuringBuilds: true,
   },

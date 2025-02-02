@@ -357,7 +357,7 @@ export default function CreateNotice() {
                 <FormItem>
                   <FormLabel>Attachments</FormLabel>
                   <FormControl>
-                    {/* <FileUploader
+                    <FileUploader
                       value={field.value as any[]}
                       onValueChange={(files) => {
                         // Call onUpload to upload the files
@@ -382,7 +382,7 @@ export default function CreateNotice() {
                       // pass the onUpload function here for direct upload
                       // onUpload={uploadFiles}
                       disabled={isUploading}
-                    /> */}
+                    />
                   </FormControl>
                   <FormDescription>
                     Upload any relevant documents or images
