@@ -7,6 +7,7 @@ import { Role } from '@prisma/client';
 import Link from 'next/link';
 import React, { Suspense } from 'react';
 import Loading from './loading';
+import { OrganizationSwitcher } from '@clerk/nextjs';
 
 // const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -17,7 +18,10 @@ const page = async () => {
 
   if (!orgId)
     return (
-      <div>Organization not found , Select a organization from the sidebar</div>
+      <div>
+        <h1>Organization not found , Select a organization from the sidebar</h1>{' '}
+        <OrganizationSwitcher />
+      </div>
     );
 
   const notices = await prisma.notice.findMany({
