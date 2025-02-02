@@ -8,7 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { Calendar } from '@/components/ui/calendar';
+// import { Calendar } from '@/components/ui/calendar';
 import {
   Form,
   FormControl,
@@ -43,21 +43,44 @@ import {
 } from '@/components/ui/card';
 import {
   Dialog,
-  DialogContent,
+  // DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { createNotice } from '@/app/actions';
-import { FileUploader } from '@/components/ui/file-uploader';
+// import { FileUploader } from '@/components/ui/file-uploader';
 
 import { UploadedFilesCard } from '@/components/ui/uploaded-files-card';
 import { useUploadFile } from '@/hooks/use-upload-file';
 import { CreateNoticeFormSchema } from '@/lib/schemas';
 import { toast } from 'sonner';
-import { format } from 'date-fns';
 import { CreateNoticeButton } from '@/lib/SubmitButton';
+import dynamic from 'next/dynamic';
+
+// Lazy load heavy components
+const Calendar = dynamic(
+  () => import('@/components/ui/calendar').then((mod) => mod.Calendar),
+  {
+    loading: () => (
+      <div className="h-[240px] w-[240px] animate-pulse bg-muted" />
+    ),
+  }
+);
+
+const DialogContent = dynamic(
+  () => import('@/components/ui/dialog').then((mod) => mod.DialogContent),
+  { ssr: false }
+);
+
+const FileUploader = dynamic(
+  () => import('@/components/ui/file-uploader').then((mod) => mod.FileUploader),
+  {
+    ssr: false,
+    loading: () => <div className="h-32 animate-pulse bg-muted rounded-lg" />,
+  }
+);
 
 type Attachment = {
   name: string;
@@ -191,7 +214,9 @@ export default function CreateNotice() {
                             )}
                           >
                             {field.value ? (
-                              format(field.value, 'PPP')
+                              new Intl.DateTimeFormat('en-IN', {
+                                dateStyle: 'long',
+                              }).format(field.value)
                             ) : (
                               <span>Pick a date</span>
                             )}
@@ -230,7 +255,9 @@ export default function CreateNotice() {
                             )}
                           >
                             {field.value ? (
-                              format(field.value, 'PPP')
+                              new Intl.DateTimeFormat('en-IN', {
+                                dateStyle: 'long',
+                              }).format(field.value)
                             ) : (
                               <span>Pick a date</span>
                             )}
@@ -330,7 +357,7 @@ export default function CreateNotice() {
                 <FormItem>
                   <FormLabel>Attachments</FormLabel>
                   <FormControl>
-                    <FileUploader
+                    {/* <FileUploader
                       value={field.value as any[]}
                       onValueChange={(files) => {
                         // Call onUpload to upload the files
@@ -355,7 +382,7 @@ export default function CreateNotice() {
                       // pass the onUpload function here for direct upload
                       // onUpload={uploadFiles}
                       disabled={isUploading}
-                    />
+                    /> */}
                   </FormControl>
                   <FormDescription>
                     Upload any relevant documents or images

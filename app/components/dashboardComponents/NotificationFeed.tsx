@@ -15,7 +15,7 @@ import { useUser } from '@clerk/nextjs';
 
 const NotificationFeed = () => {
   const [isVisible, setIsVisible] = useState(false);
-  const notifButtonRef = useRef<HTMLButtonElement | null>(null);
+  const notifButtonRef = useRef<HTMLElement | null>(null);
 
   const { user } = useUser();
   if (!user) return;
@@ -35,11 +35,11 @@ const NotificationFeed = () => {
       >
         <>
           <NotificationIconButton
-            ref={notifButtonRef}
+            ref={notifButtonRef as React.RefObject<HTMLButtonElement>}
             onClick={(e) => setIsVisible(!isVisible)}
           />
           <NotificationFeedPopover
-            buttonRef={notifButtonRef}
+            buttonRef={notifButtonRef as React.RefObject<HTMLElement>}
             isVisible={isVisible}
             onClose={() => setIsVisible(false)}
           />
