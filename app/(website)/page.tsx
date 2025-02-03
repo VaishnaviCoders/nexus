@@ -25,7 +25,7 @@ import IntegrationComponent from '../components/websiteComp/IntegrationComponent
 
 export default async function IndexPage() {
   return (
-    <main className="">
+    <main className="mx-2">
       {/* <Spotlight className="" /> */}
       <header className="flex items-center justify-between my-3">
         <div>
@@ -34,8 +34,11 @@ export default async function IndexPage() {
 
         <div className="flex items-center space-x-2">
           <ModeToggle />
+
           <SignedOut>
-            <SignInButton />
+            <Button className="">
+              <SignInButton />
+            </Button>
           </SignedOut>
           <SignedIn>
             <UserButton />

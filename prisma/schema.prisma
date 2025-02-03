@@ -20,6 +20,8 @@ model User {
   updatedAt      DateTime      @updatedAt
   organization   Organization? @relation(fields: [organizationId], references: [id])
   organizationId String?
+
+  @@index([id, clerkId])
 }
 
 model Organization {

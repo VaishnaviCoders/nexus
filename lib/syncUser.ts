@@ -36,6 +36,10 @@ export const syncUser = async (user: User, orgId: string, orgRole: string) => {
         role,
         updatedAt: new Date(),
         organizationId: orgId,
+        email: user.emailAddresses[0]?.emailAddress,
+        firstName: user.firstName ?? '',
+        lastName: user.lastName ?? '',
+        clerkId: user.id,
       },
       create: {
         id: user.id,

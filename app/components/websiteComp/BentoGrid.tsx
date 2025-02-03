@@ -5,9 +5,9 @@ import AnimatedShinyText from '@/components/ui/animated-shiny-text';
 import Globe from '@/components/ui/globe';
 import { AnimatedListGrid } from './AnimatedListGrid';
 import { AnimatedBeamMultipleOutput } from './AnimatedBeamMultipleOutput';
-import Image from 'next/image';
+// import Image from 'next/image';
 
-import RealTimeImage from '@/public/images/feature-four.svg';
+// import RealTimeImage from '@/public/images/feature-four.svg';
 import { MagicCard } from '@/components/ui/magic-card';
 import { DisplayCardsDemo } from './display-card-demo';
 
@@ -88,13 +88,13 @@ const BentoGrid = () => {
             accounting.
           </p>
           <div className="w-full mt-6 bg-card/50 overflow-hidden">
-            <Image
+            {/* <Image
               src={RealTimeImage}
               alt={'Feature Four'}
               width={500}
               height={500}
-              className="w-fit object-contain"
-            />
+              className="w-fit h-full object-contain"
+            /> */}
           </div>
         </MagicCard>
         <div className="row-start-3 row-end-4 rounded-2xl border  ">
