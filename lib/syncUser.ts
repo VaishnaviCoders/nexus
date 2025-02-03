@@ -30,7 +30,7 @@ export const syncUser = async (user: User, orgId: string, orgRole: string) => {
     }
 
     await prisma.user.upsert({
-      where: { id: user.id },
+      where: { email: user.emailAddresses[0]?.emailAddress },
       update: {
         profileImage: user.imageUrl,
         role,
