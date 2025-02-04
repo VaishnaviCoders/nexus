@@ -2,7 +2,11 @@
 
 import { auth, currentUser, User } from '@clerk/nextjs/server';
 import prisma from '../lib/db';
-import { CreateNoticeFormSchema } from '../lib/schemas';
+import {
+  CreateNoticeFormSchema,
+  gradeSchema,
+  sectionSchema,
+} from '../lib/schemas';
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
 import { Resend } from 'resend';
@@ -10,6 +14,7 @@ import { NoticeEmailTemplate } from '@/components/email-templates/noticeMail';
 import { Role } from '@prisma/client';
 import { Knock } from '@knocklabs/node';
 import { redirect } from 'next/navigation';
+import { parseWithZod } from '@conform-to/zod';
 
 // export const syncOrganization = async () => {
 //   const { orgId, orgSlug } = await auth();
@@ -32,6 +37,7 @@ import { redirect } from 'next/navigation';
 //   });
 // };
 
+//  * NOTICE
 export const createNotice = async (
   data: z.infer<typeof CreateNoticeFormSchema>
 ) => {
@@ -205,27 +211,70 @@ export const toggleNoticeApproval = async (
   revalidatePath('/dashboard/notice');
 };
 
-// export async function sendMail() {
-//   const resend = new Resend(process.env.RESEND_API_KEY);
+// * CLASSES && GRADES
 
-//   const emails = ['vaishnaviraykar768@gmail.com'];
+export async function createGrade(prevState: any, formData: FormData) {
+  const { orgId } = await auth();
 
-//   const emailPromises = [...new Set(emails)].map((recipientEmail) => {
-//     return resend.emails.send({
-//       from: 'onboarding@resend.dev',
-//       to: recipientEmail,
-//       subject: 'Welcome to Resend!',
-//       react: NoticeEmailTemp({
-//         title: 'John',
-//         content: 'John',
-//         noticeType: 'holiday',
-//         startDate: new Date(),
-//         endDate: new Date(),
-//         targetAudience: ['all'],
-//         organizationName: 'John',
-//         publishedBy: 'John',
-//         noticeUrl: '/dashboard/notice/9c61423f-449f-4e6e-94cc-463cb42955c7',
-//       }),
-//     });
-//   });
-// }
+  if (!orgId) throw new Error('No organization found during Create Grade');
+  const submission = parseWithZod(formData, {
+    schema: gradeSchema,
+  });
+  if (submission.status !== 'success') {
+    console.log('Validation failed:', submission.error);
+    return submission.reply();
+  }
+
+  console.log('Grade creation data:', submission.value);
+  await prisma.grade.create({
+    data: {
+      grade: submission.value.grade,
+      organizationId: orgId,
+    },
+  });
+
+  redirect('/dashboard/grades');
+}
+export async function deleteGrade(formData: FormData) {
+  const gradeId = formData.get('gradeId') as string;
+
+  await prisma.grade.delete({
+    where: { id: gradeId },
+  });
+
+  redirect('/dashboard/grades');
+}
+
+export async function deleteSection(formData: FormData) {
+  const sectionId = formData.get('sectionId')?.toString();
+
+  await prisma.section.delete({
+    where: { id: sectionId },
+  });
+
+  redirect('/dashboard/grades');
+}
+
+export async function createSection(prevState: any, formData: FormData) {
+  const { orgId } = await auth();
+
+  if (!orgId) throw new Error('No organization found during Create Grade');
+
+  const gradeId = formData.get('gradeId');
+  const submission = parseWithZod(formData, {
+    schema: sectionSchema,
+  });
+  if (submission.status !== 'success') {
+    return submission.reply();
+  }
+
+  await prisma.section.create({
+    data: {
+      name: submission.value.name,
+      gradeId: submission.value.gradeId,
+      organizationId: orgId,
+    },
+  });
+
+  redirect(`/dashboard/grades/${gradeId}`);
+}

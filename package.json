@@ -14,6 +14,8 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^6.10.6",
+    "@conform-to/react": "^1.2.2",
+    "@conform-to/zod": "^1.2.2",
     "@hookform/resolvers": "^3.10.0",
     "@knocklabs/node": "^0.6.17",
     "@knocklabs/react": "^0.4.0",

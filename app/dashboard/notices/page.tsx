@@ -49,9 +49,11 @@ const page = async () => {
     <div className="w-full mx-auto">
       <div className="flex justify-between items-center px-4 pb-5">
         <h1 className="text-2xl font-bold ">All Notices</h1>
-        <Button>
-          <Link href={`/dashboard/notices/create`}>Create Notice</Link>
-        </Button>
+        {role === 'ADMIN' || role === 'TEACHER' ? (
+          <Button>
+            <Link href={`/dashboard/notices/create`}>Create Notice</Link>
+          </Button>
+        ) : null}
       </div>
       <Suspense fallback={<Loading />}>
         <NoticeList notices={notices} orgRole={role} />

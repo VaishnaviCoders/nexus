@@ -34,3 +34,11 @@ export const CreateNoticeFormSchema = z.object({
     })
   ),
 });
+
+export const gradeSchema = z.object({
+  grade: z.string().min(1, 'Grade name is required'),
+});
+export const sectionSchema = z.object({
+  gradeId: z.string(),
+  name: z.string().min(1, 'Section name is required'),
+});

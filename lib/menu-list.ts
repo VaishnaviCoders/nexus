@@ -55,25 +55,19 @@ export const roleMenus: Record<string, Group[]> = {
           icon: UserPlus,
         },
         {
+          href: '/dashboard/grades',
+          label: 'Class Management',
+          icon: UserPlus,
+        },
+        {
           href: '/dashboard/teachers',
           label: 'Teacher Management',
           icon: GraduationCap,
-          submenus: [
-            { href: '/dashboard/teachers', label: 'All Teachers' },
-            { href: '/teachers/attendance', label: 'Attendance' },
-            { href: '/teachers/salary', label: 'Salary' },
-            { href: '/teachers/leaves', label: 'Leave Management' },
-          ],
         },
         {
           href: '/dashboard/students',
           label: 'Student Management',
           icon: Users,
-          submenus: [
-            { href: '/dashboard/students', label: 'All Students' },
-            { href: '/students/import', label: 'Bulk Import' },
-            { href: '/students/documents', label: 'Documents' },
-          ],
         },
       ],
     },

@@ -60,3 +60,65 @@ export function DeleteNoticeButton({ onClick }: { onClick: () => void }) {
     </>
   );
 }
+
+export function CreateGradeButton() {
+  const { pending } = useFormStatus();
+  return (
+    <Button size="lg" type="submit" disabled={pending}>
+      {pending ? 'Creating Grade' : 'Create Grade'}
+    </Button>
+  );
+}
+export function DeleteGradeButton() {
+  const { pending } = useFormStatus();
+  return (
+    <>
+      {pending ? (
+        <Button variant="destructive" type="submit" disabled={pending}>
+          <Loader2 className="animate-spin" />
+          Deleting...
+        </Button>
+      ) : (
+        <Button variant="destructive" type="submit" disabled={pending}>
+          Delete Grade
+        </Button>
+      )}
+    </>
+  );
+}
+
+export function CreateSectionButton() {
+  const { pending } = useFormStatus();
+  return (
+    <>
+      {pending ? (
+        <Button variant="destructive" type="submit" disabled={pending}>
+          <Loader2 className="animate-spin" />
+          Creating...
+        </Button>
+      ) : (
+        <Button variant="destructive" type="submit" disabled={pending}>
+          Create Section
+        </Button>
+      )}
+    </>
+  );
+}
+export function DeleteSectionButton() {
+  const { pending } = useFormStatus();
+
+  return (
+    <>
+      {pending ? (
+        <Button variant="destructive" type="submit" disabled={pending}>
+          <Loader2 className="animate-spin" />
+          Deleting...
+        </Button>
+      ) : (
+        <Button variant="destructive" type="submit" disabled={pending}>
+          Delete Section
+        </Button>
+      )}
+    </>
+  );
+}

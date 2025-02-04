@@ -209,7 +209,7 @@ export default function CreateNotice() {
                           <Button
                             variant={'outline'}
                             className={cn(
-                              'w-[240px] pl-3 text-left font-normal flex items-center gap-2',
+                              'w-[205px] pl-3 text-left font-normal flex items-center gap-2',
                               !field.value && 'text-muted-foreground'
                             )}
                           >
@@ -250,7 +250,7 @@ export default function CreateNotice() {
                           <Button
                             variant={'outline'}
                             className={cn(
-                              'w-[240px] pl-3 text-left font-normal',
+                              'w-[205px] pl-3 text-left font-normal',
                               !field.value && 'text-muted-foreground'
                             )}
                           >

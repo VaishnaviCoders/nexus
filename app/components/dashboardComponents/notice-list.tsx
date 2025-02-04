@@ -158,7 +158,10 @@ export default function NoticeList({
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
-        <DropdownMenuItem onClick={() => handleView(notice.id)}>
+        <DropdownMenuItem
+          onClick={() => handleView(notice.id)}
+          className="cursor-pointer"
+        >
           <Eye className="mr-2 h-4 w-4" />
           View
         </DropdownMenuItem>
@@ -169,7 +172,7 @@ export default function NoticeList({
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={() => handleDelete(notice)}
-          className="text-red-600"
+          className="text-red-600 cursor-pointer hover:text-red-800"
         >
           <Trash2 className="mr-2 h-4 w-4" />
           Delete
@@ -297,7 +300,7 @@ export default function NoticeList({
                         ? 'Approved'
                         : notice.isDraft
                           ? 'Draft'
-                          : 'Pending Approval'}
+                          : 'Pending'}
                     </Badge>
                   </TableCell>
                 ) : null}

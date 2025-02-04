@@ -24,17 +24,87 @@ model User {
   @@index([id, clerkId])
 }
 
+model Student {
+  id           String            @id @default(cuid())
+  firstName    String
+  lastName     String
+  middleName   String?
+  motherName   String?
+  fullName     String?
+  dateOfBirth  DateTime
+  profileImage String?
+  rollNumber   String            @unique
+  address      String
+  phoneNumber  String
+  parentName   String
+  parentEmail  String
+  parentPhone  String
+  section      Section?          @relation(fields: [sectionId], references: [id])
+  sectionId    String?
+  gradeId      String
+  grade        Grade             @relation(fields: [gradeId], references: [id])
+  documents    StudentDocument[]
+
+  // attendance     Attendance[]
+  // fees           Fee[]
+  // performances   Performance[]
+  // assignments    Assignment[]
+  // complaints     Complaint[]
+  // marks          Mark[]
+
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  organizationId String
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@index([id, rollNumber])
+}
+
+model StudentDocument {
+  id          String       @id @default(cuid())
+  type        DocumentType
+  documentUrl String
+  student     Student      @relation(fields: [studentId], references: [id])
+  studentId   String
+  verified    Boolean      @default(false)
+  verifiedBy  String?
+  verifiedAt  DateTime?
+}
+
+model Grade {
+  id             String       @id @default(cuid())
+  grade          String
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  students       Student[]
+  // subjects       Subject[]
+  section        Section[]
+}
+
+model Section {
+  id             String       @id @default(cuid())
+  name           String // e.g., "A", "B", "C"
+  gradeId        String
+  organizationId String
+  grade          Grade        @relation(fields: [gradeId], references: [id], onDelete: Cascade)
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  students       Student[] // Students in this section
+}
+
 model Organization {
-  id               String   @id @default(cuid())
+  id               String    @id @default(cuid())
   name             String
-  organizationSlug String   @unique
+  organizationSlug String    @unique
   organizationLogo String?
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
-  isActive         Boolean  @default(true)
-  isPaid           Boolean  @default(false)
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  isActive         Boolean   @default(true)
+  isPaid           Boolean   @default(false)
   users            User[]
   notices          Notice[]
+  Student          Student[]
+  Grade            Grade[]
+  Section          Section[]
 }
 
 model Notice {
@@ -57,10 +127,10 @@ model Notice {
   attachments    Json?
 
   publishedBy    String
-  Organization   Organization? @relation(fields: [organizationId], references: [id])
+  Organization   Organization @relation(fields: [organizationId], references: [id])
   organizationId String
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
 }
 
 enum Role {
@@ -68,4 +138,15 @@ enum Role {
   TEACHER
   STUDENT
   PARENT
+}
+
+enum DocumentType {
+  AADHAAR
+  PAN
+  PASSPORT
+  BIRTH_CERTIFICATE
+  TRANSFER_CERTIFICATE
+  BANK_PASSBOOK
+  PARENT_ID
+  AGREEMENT
 }
