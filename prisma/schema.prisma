@@ -25,25 +25,25 @@ model User {
 }
 
 model Student {
-  id           String            @id @default(cuid())
-  firstName    String
-  lastName     String
-  middleName   String?
-  motherName   String?
-  fullName     String?
-  dateOfBirth  DateTime
-  profileImage String?
-  rollNumber   String            @unique
-  address      String
-  phoneNumber  String
-  parentName   String
-  parentEmail  String
-  parentPhone  String
-  section      Section?          @relation(fields: [sectionId], references: [id])
-  sectionId    String?
-  gradeId      String
-  grade        Grade             @relation(fields: [gradeId], references: [id])
-  documents    StudentDocument[]
+  id               String            @id @default(cuid())
+  firstName        String
+  lastName         String
+  middleName       String?
+  motherName       String?
+  fullName         String?
+  dateOfBirth      DateTime
+  profileImage     String?
+  rollNumber       String            @unique
+  address          String
+  phoneNumber      String
+  email            String
+  parents          ParentStudent[]
+  emergencyContact String
+  section          Section?          @relation(fields: [sectionId], references: [id])
+  sectionId        String?
+  gradeId          String
+  grade            Grade             @relation(fields: [gradeId], references: [id])
+  documents        StudentDocument[]
 
   // attendance     Attendance[]
   // fees           Fee[]
@@ -56,8 +56,48 @@ model Student {
   organizationId String
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
+  Fee            Fee[]
 
   @@index([id, rollNumber])
+}
+
+model Fee {
+  id          String      @id @default(cuid())
+  totalFee    Float
+  paidAmount  Float       @default(0)
+  dueDate     DateTime
+  status      FeeStatus   @default(UNPAID)
+  studentId   String
+  student     Student     @relation(fields: [studentId], references: [id])
+  categoryId  String
+  feeCategory FeeCategory @relation(fields: [categoryId], references: [id])
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model FeeCategory {
+  id          String   @id @default(cuid())
+  name        String // e.g., "Yearly Fee", "Exam Fee", "Lab Fee", etc.
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  fees        Fee[]
+}
+
+enum FeeStatus {
+  PAID
+  UNPAID
+  OVERDUE
+}
+
+model ParentStudent {
+  id           String   @id @default(cuid())
+  parentName   String
+  parentEmail  String
+  parentPhone  String
+  relationship String
+  Student      Student? @relation(fields: [studentId], references: [id])
+  studentId    String?
 }
 
 model StudentDocument {

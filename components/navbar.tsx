@@ -14,7 +14,7 @@ export async function Navbar() {
   const user = await currentUser();
   const { orgId, orgRole, sessionClaims } = await auth();
 
-  console.log('Clerk Session Claims', sessionClaims);
+  // console.log('Clerk Session Claims', sessionClaims);
 
   if (!user || !orgId || !orgRole) {
     console.error('User and User Role or Organization ID is missing');

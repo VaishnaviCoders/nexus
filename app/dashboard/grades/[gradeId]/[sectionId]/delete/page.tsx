@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/card';
 import { DeleteSectionButton } from '@/lib/SubmitButton';
 import Link from 'next/link';
-import React from 'react';
+import { use } from 'react';
 
 export default function SectionDeleteRoute({
   params,
@@ -19,13 +19,13 @@ export default function SectionDeleteRoute({
   params: Promise<{ sectionId: string }>;
 }) {
   // Unwrap the params promise
-  const { sectionId } = React.use(params);
+  const { sectionId } = use(params);
 
-  const handleDelete = async () => {
-    const formData = new FormData();
-    formData.append('sectionId', sectionId);
-    await deleteSection(formData);
-  };
+  // const handleDelete = async () => {
+  //   const formData = new FormData();
+  //   formData.append('sectionId', sectionId);
+  //   await deleteSection(formData);
+  // };
 
   return (
     <div className="flex justify-center items-center w-full p-4">
@@ -45,7 +45,8 @@ export default function SectionDeleteRoute({
               Cancel
             </Button>
           </Link>
-          <form action={handleDelete}>
+          <form action={deleteSection}>
+            <input type="hidden" name="sectionId" value={sectionId} />
             <DeleteSectionButton />
           </form>
         </CardFooter>

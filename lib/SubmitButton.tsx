@@ -64,9 +64,18 @@ export function DeleteNoticeButton({ onClick }: { onClick: () => void }) {
 export function CreateGradeButton() {
   const { pending } = useFormStatus();
   return (
-    <Button size="lg" type="submit" disabled={pending}>
-      {pending ? 'Creating Grade' : 'Create Grade'}
-    </Button>
+    <>
+      {pending ? (
+        <Button variant="destructive" type="submit" disabled={pending}>
+          <Loader2 className="animate-spin" />
+          Creating Grade...
+        </Button>
+      ) : (
+        <Button variant="destructive" type="submit" disabled={pending}>
+          Create Grade
+        </Button>
+      )}
+    </>
   );
 }
 export function DeleteGradeButton() {

@@ -27,6 +27,20 @@ const nextConfig: NextConfig = {
   // compiler: {
   //   removeConsole: process.env.NODE_ENV === 'development',
   // },
+  headers: async () => {
+    return [
+      {
+        // Cache the manifest file (default: public, max-age=0, must-revalidate)
+        headers: [
+          {
+            key: 'cache-control',
+            value: 'public, max-age=3600',
+          },
+        ],
+        source: '/no/api/manifest',
+      },
+    ];
+  },
   eslint: {
     ignoreDuringBuilds: true,
   },

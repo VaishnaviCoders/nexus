@@ -11,6 +11,8 @@ import { NextSSRPlugin } from '@uploadthing/react/next-ssr-plugin';
 import { extractRouterConfig } from 'uploadthing/server';
 import { ourFileRouter } from '@/app/api/uploadthing/core';
 
+import { NuqsAdapter } from 'nuqs/adapters/next/app';
+
 export const metadata: Metadata = {
   metadataBase: new URL(
     process.env.APP_URL
@@ -66,7 +68,7 @@ export default function RootLayout({
                */
               routerConfig={extractRouterConfig(ourFileRouter)}
             />
-            {children}
+            <NuqsAdapter>{children}</NuqsAdapter>
             <Toaster position="bottom-right" />
           </ThemeProvider>
         </body>
