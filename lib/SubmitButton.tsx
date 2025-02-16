@@ -95,7 +95,6 @@ export function DeleteGradeButton() {
     </>
   );
 }
-
 export function CreateSectionButton() {
   const { pending } = useFormStatus();
   return (
@@ -126,6 +125,24 @@ export function DeleteSectionButton() {
       ) : (
         <Button variant="destructive" type="submit" disabled={pending}>
           Delete Section
+        </Button>
+      )}
+    </>
+  );
+}
+
+export function CreateStudentButton() {
+  const { pending } = useFormStatus();
+  return (
+    <>
+      {pending ? (
+        <Button variant="default" type="submit" disabled={pending}>
+          <Loader2 className="animate-spin" />
+          Creating...
+        </Button>
+      ) : (
+        <Button variant="default" type="submit" disabled={pending}>
+          Create Student
         </Button>
       )}
     </>

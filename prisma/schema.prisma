@@ -20,30 +20,37 @@ model User {
   updatedAt      DateTime      @updatedAt
   organization   Organization? @relation(fields: [organizationId], references: [id])
   organizationId String?
+  student        Student?      @relation(fields: [studentId], references: [id])
+  // Parent         Parent[]
+  studentId      String?
 
   @@index([id, clerkId])
+  @@index([organizationId])
 }
 
 model Student {
-  id               String            @id @default(cuid())
+  id               String   @id @default(cuid())
   firstName        String
   lastName         String
   middleName       String?
   motherName       String?
   fullName         String?
   dateOfBirth      DateTime
-  profileImage     String?
-  rollNumber       String            @unique
-  address          String
+  // profileImage     String?
+  rollNumber       String   @unique
   phoneNumber      String
+  whatsAppNumber   String
   email            String
-  parents          ParentStudent[]
+  // parents          ParentStudent[]
   emergencyContact String
-  section          Section?          @relation(fields: [sectionId], references: [id])
+  // clerkId          String   @unique
+  // user             User     @relation(fields: [clerkId], references: [id])
+  section          Section? @relation(fields: [sectionId], references: [id])
   sectionId        String?
   gradeId          String
-  grade            Grade             @relation(fields: [gradeId], references: [id])
-  documents        StudentDocument[]
+  grade            Grade    @relation(fields: [gradeId], references: [id])
+  // documents        StudentDocument[]
+  gender           Gender?
 
   // attendance     Attendance[]
   // fees           Fee[]
@@ -57,8 +64,70 @@ model Student {
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
   Fee            Fee[]
+  // ParentStudent   ParentStudent[]
+  // StudentDocument StudentDocument[]
+  User           User[]
 
   @@index([id, rollNumber])
+  @@index([gradeId])
+  @@index([sectionId])
+}
+
+// model Parent {
+//   id             String          @id @default(cuid())
+//   firstName      String
+//   lastName       String
+//   email          String          @unique
+//   phoneNumber    String
+//   whatsAppNumber String
+//   user           User?           @relation(fields: [userId], references: [id])
+//   userId         String?
+//   students       ParentStudent[]
+//   createdAt      DateTime        @default(now())
+//   updatedAt      DateTime        @updatedAt
+// }
+
+// model ParentStudent {
+//   id           String  @id @default(cuid())
+//   relationship String
+//   student      Student @relation(fields: [studentId], references: [id])
+//   studentId    String
+//   parent       Parent  @relation(fields: [parentId], references: [id])
+//   parentId     String
+
+//   @@index([studentId])
+//   @@index([parentId])
+// }
+
+// model StudentDocument {
+//   id          String       @id @default(cuid())
+//   type        DocumentType
+//   documentUrl String
+//   student     Student      @relation(fields: [studentId], references: [id])
+//   studentId   String
+//   verified    Boolean      @default(false)
+//   verifiedBy  String?
+//   verifiedAt  DateTime?
+// }
+
+model Grade {
+  id             String       @id @default(cuid())
+  grade          String
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  students       Student[]
+  // subjects       Subject[]
+  section        Section[]
+}
+
+model Section {
+  id             String       @id @default(cuid())
+  name           String // e.g., "A", "B", "C"
+  gradeId        String
+  organizationId String
+  grade          Grade        @relation(fields: [gradeId], references: [id], onDelete: Cascade)
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  students       Student[] // Students in this section
 }
 
 model Fee {
@@ -88,47 +157,6 @@ enum FeeStatus {
   PAID
   UNPAID
   OVERDUE
-}
-
-model ParentStudent {
-  id           String   @id @default(cuid())
-  parentName   String
-  parentEmail  String
-  parentPhone  String
-  relationship String
-  Student      Student? @relation(fields: [studentId], references: [id])
-  studentId    String?
-}
-
-model StudentDocument {
-  id          String       @id @default(cuid())
-  type        DocumentType
-  documentUrl String
-  student     Student      @relation(fields: [studentId], references: [id])
-  studentId   String
-  verified    Boolean      @default(false)
-  verifiedBy  String?
-  verifiedAt  DateTime?
-}
-
-model Grade {
-  id             String       @id @default(cuid())
-  grade          String
-  organizationId String
-  organization   Organization @relation(fields: [organizationId], references: [id])
-  students       Student[]
-  // subjects       Subject[]
-  section        Section[]
-}
-
-model Section {
-  id             String       @id @default(cuid())
-  name           String // e.g., "A", "B", "C"
-  gradeId        String
-  organizationId String
-  grade          Grade        @relation(fields: [gradeId], references: [id], onDelete: Cascade)
-  organization   Organization @relation(fields: [organizationId], references: [id])
-  students       Student[] // Students in this section
 }
 
 model Organization {
@@ -189,4 +217,10 @@ enum DocumentType {
   BANK_PASSBOOK
   PARENT_ID
   AGREEMENT
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
 }

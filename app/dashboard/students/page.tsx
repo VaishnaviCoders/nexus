@@ -6,14 +6,16 @@ import { Card, CardContent } from '@/components/ui/card';
 
 import { Award } from 'lucide-react';
 
-import Image from 'next/image';
+// import Image from 'next/image';
 import { Separator } from '@/components/ui/separator';
 
-import placeholderImage from '../../../public/images/User.svg';
+// import placeholderImage from '../../../public/images/User.svg';
+// import placeholderImage from '../../../public/images/integration.svg';
+
 import SearchStudents from '@/app/components/dashboardComponents/SearchStudents';
 import StudentFilter from '@/app/components/dashboardComponents/StudentFilter';
 import { auth } from '@clerk/nextjs/server';
-import { searchParamsCache } from '@/lib/searchParams';
+// import { searchParamsCache } from '@/lib/searchParams';
 
 export const dynamic = 'force-dynamic'; // Ensures dynamic rendering
 
@@ -27,18 +29,6 @@ export default async function Students() {
   const students = await prisma.student.findMany({
     where: {
       organizationId: orgId,
-      // AND: [
-      //   grade ? { gradeId: grade } : {},
-      //   section ? { section: { id: section } } : {},
-      //   query
-      //     ? {
-      //         OR: [
-      //           { firstName: { contains: query, mode: 'insensitive' } },
-      //           { lastName: { contains: query, mode: 'insensitive' } },
-      //         ],
-      //       }
-      //     : {},
-      // ],
     },
     include: {
       section: true,
@@ -50,7 +40,7 @@ export default async function Students() {
   return (
     <div className="p-4 ">
       <header className="flex justify-between items-center mb-6">
-        <h1 className="text-xl font-bold">Students Dashboard</h1>
+        <h1 className="text-xl font-bold">Students </h1>
         <div className="flex gap-2">
           <Link href="/dashboard/students/create">
             <Button type="button" variant="outline">
@@ -65,7 +55,9 @@ export default async function Students() {
       <Separator />
       <div className="flex flex-col sm:flex-row w-full justify-between sm:items-center gap-4 my-10">
         <SearchStudents />
-        <div className="flex gap-2">{/* <StudentFilter /> */}</div>
+        <div className="flex gap-2">
+          <StudentFilter />
+        </div>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <Suspense fallback={<StudentLoading />}>
@@ -77,7 +69,7 @@ export default async function Students() {
               <CardContent className="p-0">
                 <div className="relative">
                   {/* <Image
-                    src={student.profileImage || placeholderImage}
+                    src={student?.profileImage || placeholderImage}
                     alt="student"
                     width={500}
                     height={500}

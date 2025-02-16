@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+// import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -98,10 +98,10 @@ const StudentIdRoute = async ({
   // console.log(pendingFees);
   return (
     <div>
-      <div className=" space-y-8">
-        <div className="flex justify-between items-center">
+      <div className="mx-2 space-y-8">
+        <div className="flex justify-between items-center mx-2">
           <div className="flex items-center space-x-4">
-            <Avatar className="w-10 h-10 md:w-16 md:h-16">
+            {/* <Avatar className="w-10 h-10 md:w-16 md:h-16">
               <AvatarImage
                 src={
                   data?.profileImage || '/placeholder.svg?height=80&width=80'
@@ -109,7 +109,7 @@ const StudentIdRoute = async ({
                 alt="Student"
               />
               <AvatarFallback>JD</AvatarFallback>
-            </Avatar>
+            </Avatar> */}
             <div>
               <h1 className="text-lg font-bold">
                 {data?.firstName} {data?.lastName}

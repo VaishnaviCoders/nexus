@@ -39,14 +39,16 @@ async function main() {
 
   await prisma.student.create({
     data: {
-      address: '123 Main St',
+      // address: '123 Main St',
       firstName: 'Alice',
       lastName: 'Prisma',
       middleName: 'M',
       motherName: 'Mother',
       fullName: 'Alice Prisma',
       dateOfBirth: new Date(),
-      profileImage: '',
+      // profileImage: '',
+      whatsAppNumber: '123456789',
+      sectionId: 'cm6qocmag0005vh54134m9fuo',
       rollNumber: '123456789',
       email: 'alice@prisma.io',
       // parents: null || '[]',

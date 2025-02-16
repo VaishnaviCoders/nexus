@@ -6,6 +6,7 @@ import {
   CreateNoticeFormSchema,
   gradeSchema,
   sectionSchema,
+  studentSchema,
 } from '../lib/schemas';
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
@@ -15,7 +16,6 @@ import { Role } from '@prisma/client';
 import { Knock } from '@knocklabs/node';
 import { redirect } from 'next/navigation';
 import { parseWithZod } from '@conform-to/zod';
-
 // export const syncOrganization = async () => {
 //   const { orgId, orgSlug } = await auth();
 
@@ -277,4 +277,45 @@ export async function createSection(prevState: any, formData: FormData) {
   });
 
   redirect(`/dashboard/grades/${gradeId}`);
+}
+
+// Students Actions
+
+export async function createStudent(data: z.infer<typeof studentSchema>) {
+  const { orgId } = await auth();
+
+  if (!orgId) throw new Error('Organization ID is required');
+
+  const validateData = studentSchema.parse(data);
+  console.log('Student data', validateData);
+
+  await prisma.student.create({
+    data: {
+      organizationId: orgId,
+      rollNumber: validateData.rollNumber,
+      firstName: validateData.firstName,
+      lastName: validateData.lastName,
+      email: validateData.email,
+      phoneNumber: validateData.phoneNumber,
+      whatsAppNumber: validateData.whatsAppNumber,
+      middleName: validateData.middleName,
+
+      sectionId: validateData.sectionId,
+      gradeId: validateData.gradeId,
+      gender: validateData.gender,
+      motherName: validateData.motherName,
+      // profileImage: validateData.profileImage,
+      dateOfBirth: new Date(validateData.dateOfBirth),
+      emergencyContact: validateData.emergencyContact,
+      // documents: {
+      //   create: documents,
+      // },
+      // parents: {
+      //   create: parents,
+      // },
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
+  });
+  redirect('/dashboard/students');
 }

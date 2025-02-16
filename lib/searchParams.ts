@@ -7,7 +7,8 @@ import {
 } from 'nuqs/server';
 
 export const searchParams = {
-  category: parseAsArrayOf(parseAsString).withDefault([]),
+  gradeFilter: parseAsArrayOf(parseAsString).withDefault([]),
+  sectionFilter: parseAsArrayOf(parseAsString).withDefault([]),
   q: parseAsString.withDefault(''),
 };
 export const searchParamsCache = createSearchParamsCache(searchParams);
