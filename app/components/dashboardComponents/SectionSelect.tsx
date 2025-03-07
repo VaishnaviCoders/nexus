@@ -60,7 +60,7 @@ const SectionSelect: React.FC<SectionSelectProps> = ({
   return (
     <div>
       <Select onValueChange={handleSectionSelect}>
-        <SelectTrigger className="w-[180px]">
+        <SelectTrigger className="w-[180px] max-sm:w[100px]">
           <SelectValue placeholder="Select Section" />
         </SelectTrigger>
         <SelectContent>

@@ -11,7 +11,7 @@ import { DeleteGradeButton } from '@/lib/SubmitButton';
 import Link from 'next/link';
 import { use } from 'react';
 
-export default async function DeleteGradePage({
+export default function DeleteGradePage({
   params,
 }: {
   params: Promise<{ gradeId: string }>;
@@ -25,7 +25,6 @@ export default async function DeleteGradePage({
   //   formData.append('gradeId', gradeId);
   //   await deleteGrade(formData);
   // };
-
   return (
     <div className=" flex justify-center items-center w-full">
       <Card className="max-w-xl">

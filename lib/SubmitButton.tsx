@@ -66,12 +66,12 @@ export function CreateGradeButton() {
   return (
     <>
       {pending ? (
-        <Button variant="destructive" type="submit" disabled={pending}>
+        <Button type="submit" disabled={pending}>
           <Loader2 className="animate-spin" />
           Creating Grade...
         </Button>
       ) : (
-        <Button variant="destructive" type="submit" disabled={pending}>
+        <Button type="submit" disabled={pending}>
           Create Grade
         </Button>
       )}
@@ -100,12 +100,12 @@ export function CreateSectionButton() {
   return (
     <>
       {pending ? (
-        <Button variant="destructive" type="submit" disabled={pending}>
+        <Button type="submit" disabled={pending}>
           <Loader2 className="animate-spin" />
           Creating...
         </Button>
       ) : (
-        <Button variant="destructive" type="submit" disabled={pending}>
+        <Button type="submit" disabled={pending}>
           Create Section
         </Button>
       )}

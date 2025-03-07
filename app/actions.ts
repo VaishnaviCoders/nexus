@@ -1,6 +1,7 @@
 'use server';
 
 import { auth, currentUser, User } from '@clerk/nextjs/server';
+import { clerkClient } from '@clerk/nextjs/server';
 import prisma from '../lib/db';
 import {
   CreateNoticeFormSchema,
@@ -283,39 +284,74 @@ export async function createSection(prevState: any, formData: FormData) {
 
 export async function createStudent(data: z.infer<typeof studentSchema>) {
   const { orgId } = await auth();
+  const { users: client } = await clerkClient();
 
   if (!orgId) throw new Error('Organization ID is required');
 
   const validateData = studentSchema.parse(data);
-  console.log('Student data', validateData);
-
-  await prisma.student.create({
-    data: {
-      organizationId: orgId,
-      rollNumber: validateData.rollNumber,
+  console.log('Student data', validateData.email);
+  try {
+    const clerkUser = await client.createUser({
+      emailAddress: [validateData.email],
       firstName: validateData.firstName,
       lastName: validateData.lastName,
-      email: validateData.email,
-      phoneNumber: validateData.phoneNumber,
-      whatsAppNumber: validateData.whatsAppNumber,
-      middleName: validateData.middleName,
+      password: validateData.phoneNumber, // Ensure no password requirement
+      skipPasswordChecks: true, // Skip password validation
+      externalId: `student_${validateData.rollNumber}`,
+    });
 
-      sectionId: validateData.sectionId,
-      gradeId: validateData.gradeId,
-      gender: validateData.gender,
-      motherName: validateData.motherName,
-      // profileImage: validateData.profileImage,
-      dateOfBirth: new Date(validateData.dateOfBirth),
-      emergencyContact: validateData.emergencyContact,
-      // documents: {
-      //   create: documents,
-      // },
-      // parents: {
-      //   create: parents,
-      // },
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    },
-  });
-  redirect('/dashboard/students');
+    console.log('Clerk User Response:', JSON.stringify(clerkUser, null, 2));
+    const student = await prisma.student.create({
+      data: {
+        clerkId: clerkUser.id,
+        organizationId: orgId,
+        rollNumber: validateData.rollNumber,
+        firstName: validateData.firstName,
+        lastName: validateData.lastName,
+        email: validateData.email,
+        phoneNumber: validateData.phoneNumber,
+        whatsAppNumber: validateData.whatsAppNumber,
+        middleName: validateData.middleName,
+        fullName:
+          `${validateData.firstName} ${validateData.middleName ?? ''} ${validateData.lastName}`.trim(),
+        motherName:
+          validateData.parent?.relationship === 'MOTHER'
+            ? `${validateData.parent.firstName} ${validateData.parent.lastName}`.trim()
+            : null,
+        sectionId: validateData.sectionId,
+        gradeId: validateData.gradeId,
+        gender: validateData.gender,
+        profileImage: validateData.profileImage,
+        dateOfBirth: new Date(validateData.dateOfBirth),
+        emergencyContact: validateData.emergencyContact,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+    });
+
+    if (validateData.parent) {
+      const parent = await prisma.parent.create({
+        data: {
+          firstName: validateData.parent.firstName,
+          lastName: validateData.parent.lastName,
+          email: validateData.parent.email,
+          phoneNumber: validateData.parent.phoneNumber,
+          whatsAppNumber: validateData.parent.whatsAppNumber || '',
+        },
+      });
+      // Create ParentStudent Relationship
+      await prisma.parentStudent.create({
+        data: {
+          relationship: validateData.parent.relationship,
+          studentId: student.id,
+          parentId: parent.id,
+        },
+      });
+    }
+  } catch (error) {
+    console.error('❌ Error in createStudent:', JSON.stringify(error, null, 2));
+    throw new Error(
+      `❌ Failed to create student: ${JSON.stringify(error, null, 2)}`
+    );
+  }
 }

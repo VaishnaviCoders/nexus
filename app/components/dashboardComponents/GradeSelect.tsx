@@ -54,7 +54,7 @@ const GradeSelect: React.FC<GradeSelectProps> = ({
   return (
     <div>
       <Select onValueChange={handleSelect} defaultValue={defaultGrade}>
-        <SelectTrigger className="w-[180px]">
+        <SelectTrigger className="w-[180px] max-sm:w[100px]">
           <SelectValue placeholder="Select Grade" />
         </SelectTrigger>
         <SelectContent>

@@ -43,7 +43,14 @@ export const sectionSchema = z.object({
   name: z.string().min(1, 'Section name is required'),
 });
 
-// ... existing code ...
+export const parentSchema = z.object({
+  firstName: z.string().min(2, 'First name must be at least 2 characters'),
+  lastName: z.string().min(2, 'Last name must be at least 2 characters'),
+  email: z.string().email('Invalid email address'),
+  phoneNumber: z.string().min(10, 'Phone number must be at least 10 digits'),
+  whatsAppNumber: z.string().optional(),
+  relationship: z.enum(['FATHER', 'MOTHER', 'GUARDIAN', 'OTHER']),
+});
 
 export const studentSchema = z.object({
   firstName: z.string().min(1, 'First name is required'),
@@ -63,27 +70,14 @@ export const studentSchema = z.object({
     .max(new Date(), { message: 'Date of birth must be in the past' }),
 
   gender: z.enum(['MALE', 'FEMALE', 'OTHER']),
-  sectionId: z.string().optional(),
-  gradeId: z.string(),
+  sectionId: z.string().min(1, 'Section ID is required'),
+  gradeId: z.string().min(1, 'Grade ID is required'),
 
   emergencyContact: z.string().min(1, 'Emergency contact is required'),
 
-  // profileImage: z.string().url().optional(),
+  profileImage: z.string().url().optional(),
 
   motherName: z.string().optional(),
   fullName: z.string().optional(),
-  // documents: z
-  //   .array(
-  //     z.object({
-  //       // Define document validation schema if needed
-  //     })
-  //   )
-  //   .optional(),
-  // parents: z
-  //   .array(
-  //     z.object({
-  //       // Define parent validation schema if needed
-  //     })
-  //   )
-  //   .optional(),
+  parent: parentSchema.optional(),
 });

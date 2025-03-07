@@ -9,7 +9,7 @@ import { searchParams } from '@/lib/searchParams';
 import { useQueryState } from 'nuqs';
 
 export default function SearchStudents() {
-  const params = useParams();
+  // const params = useParams();
   const [isPending, startTransition] = useTransition();
 
   const [q, setQ] = useQueryState(

@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearchPostgres"]
 }
 
 datasource db {
@@ -21,7 +22,7 @@ model User {
   organization   Organization? @relation(fields: [organizationId], references: [id])
   organizationId String?
   student        Student?      @relation(fields: [studentId], references: [id])
-  // Parent         Parent[]
+  Parent         Parent[]
   studentId      String?
 
   @@index([id, clerkId])
@@ -29,75 +30,71 @@ model User {
 }
 
 model Student {
-  id               String   @id @default(cuid())
+  id               String          @id @default(cuid())
   firstName        String
   lastName         String
   middleName       String?
   motherName       String?
   fullName         String?
   dateOfBirth      DateTime
-  // profileImage     String?
-  rollNumber       String   @unique
+  profileImage     String?
+  rollNumber       String          @unique
   phoneNumber      String
   whatsAppNumber   String
   email            String
-  // parents          ParentStudent[]
   emergencyContact String
-  // clerkId          String   @unique
-  // user             User     @relation(fields: [clerkId], references: [id])
-  section          Section? @relation(fields: [sectionId], references: [id])
+  clerkId          String          @unique @default("")
+  section          Section?        @relation(fields: [sectionId], references: [id])
   sectionId        String?
   gradeId          String
-  grade            Grade    @relation(fields: [gradeId], references: [id])
-  // documents        StudentDocument[]
-  gender           Gender?
-
+  grade            Grade           @relation(fields: [gradeId], references: [id])
+  gender           Gender
   // attendance     Attendance[]
-  // fees           Fee[]
   // performances   Performance[]
   // assignments    Assignment[]
   // complaints     Complaint[]
   // marks          Mark[]
-
-  organization   Organization @relation(fields: [organizationId], references: [id])
-  organizationId String
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
-  Fee            Fee[]
-  // ParentStudent   ParentStudent[]
+  organization     Organization    @relation(fields: [organizationId], references: [id])
+  organizationId   String
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  Fee              Fee[]
   // StudentDocument StudentDocument[]
-  User           User[]
+  User             User[]
+  ParentStudent    ParentStudent[]
 
-  @@index([id, rollNumber])
+  @@index([email]) // User lookup
+  @@index([phoneNumber])
+  @@index([rollNumber])
   @@index([gradeId])
   @@index([sectionId])
 }
 
-// model Parent {
-//   id             String          @id @default(cuid())
-//   firstName      String
-//   lastName       String
-//   email          String          @unique
-//   phoneNumber    String
-//   whatsAppNumber String
-//   user           User?           @relation(fields: [userId], references: [id])
-//   userId         String?
-//   students       ParentStudent[]
-//   createdAt      DateTime        @default(now())
-//   updatedAt      DateTime        @updatedAt
-// }
+model Parent {
+  id             String          @id @default(cuid())
+  firstName      String
+  lastName       String
+  email          String          @unique
+  phoneNumber    String
+  whatsAppNumber String
+  user           User?           @relation(fields: [userId], references: [id])
+  userId         String?
+  students       ParentStudent[]
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+}
 
-// model ParentStudent {
-//   id           String  @id @default(cuid())
-//   relationship String
-//   student      Student @relation(fields: [studentId], references: [id])
-//   studentId    String
-//   parent       Parent  @relation(fields: [parentId], references: [id])
-//   parentId     String
+model ParentStudent {
+  id           String  @id @default(cuid())
+  relationship String
+  student      Student @relation(fields: [studentId], references: [id])
+  studentId    String
+  parent       Parent  @relation(fields: [parentId], references: [id])
+  parentId     String
 
-//   @@index([studentId])
-//   @@index([parentId])
-// }
+  @@index([relationship])
+  @@index([parentId, studentId])
+}
 
 // model StudentDocument {
 //   id          String       @id @default(cuid())

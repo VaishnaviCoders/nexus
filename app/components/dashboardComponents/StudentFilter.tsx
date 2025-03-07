@@ -49,7 +49,7 @@ export default function StudentFilter() {
         selectedGradeId={selectedGrade}
         onSelectSection={setSelectedSection}
       />
-      <Button onClick={handleFilter} disabled={!selectedGrade || isPending}>
+      {/* <Button onClick={handleFilter} disabled={!selectedGrade || isPending}>
         <>
           {isPending ? (
             <>
@@ -63,7 +63,7 @@ export default function StudentFilter() {
             </>
           )}
         </>
-      </Button>
+      </Button> */}
     </div>
   );
 }

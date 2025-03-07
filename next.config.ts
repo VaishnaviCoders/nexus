@@ -7,9 +7,6 @@ const withPWA = require('next-pwa')({
 });
 
 const nextConfig: NextConfig = {
-  api: {
-    bodyParser: false,
-  },
   experimental: {
     turbo: {
       minify: true,

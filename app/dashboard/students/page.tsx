@@ -2,11 +2,10 @@ import React, { Suspense } from 'react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import prisma from '@/lib/db';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 
-import { Award } from 'lucide-react';
+import { Hash, Mail, Phone } from 'lucide-react';
 
-// import Image from 'next/image';
 import { Separator } from '@/components/ui/separator';
 
 // import placeholderImage from '../../../public/images/User.svg';
@@ -15,27 +14,39 @@ import { Separator } from '@/components/ui/separator';
 import SearchStudents from '@/app/components/dashboardComponents/SearchStudents';
 import StudentFilter from '@/app/components/dashboardComponents/StudentFilter';
 import { auth } from '@clerk/nextjs/server';
-// import { searchParamsCache } from '@/lib/searchParams';
+import { searchParamsCache } from '@/lib/searchParams';
+import { SearchParams } from 'nuqs';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
 
 export const dynamic = 'force-dynamic'; // Ensures dynamic rendering
 
-// interface Props {
-//   searchParams: Record<string, string | string[] | undefined>;
-// }
-export default async function Students() {
+interface Props {
+  searchParams: Promise<SearchParams>;
+}
+export default async function Students({ searchParams }: Props) {
   const { orgId } = await auth();
   if (!orgId) return null;
-  // const parsedParams = searchParamsCache.parse(searchParams);
+  const parsedParams = await searchParamsCache.parse(searchParams);
+
   const students = await prisma.student.findMany({
     where: {
       organizationId: orgId,
+      OR: parsedParams.q
+        ? [
+            { firstName: { contains: parsedParams.q, mode: 'insensitive' } },
+            { lastName: { contains: parsedParams.q, mode: 'insensitive' } },
+            { email: { contains: parsedParams.q, mode: 'insensitive' } },
+            { rollNumber: { contains: parsedParams.q, mode: 'insensitive' } },
+          ]
+        : undefined,
     },
     include: {
       section: true,
       grade: true,
     },
   });
-  // console.log('Parse', parsedParams.category);
+  console.log('Parsed Search Query', parsedParams.q);
 
   return (
     <div className="p-4 ">
@@ -64,41 +75,54 @@ export default async function Students() {
           {students.map((student) => (
             <Card
               key={student.id}
-              className="overflow-hidden transition-all duration-300 hover:shadow-lg p-4"
+              className="overflow-hidden transition-all hover:shadow-md"
             >
-              <CardContent className="p-0">
-                <div className="relative">
-                  {/* <Image
-                    src={student?.profileImage || placeholderImage}
-                    alt="student"
-                    width={500}
-                    height={500}
-                    className="w-full h-48 object-cover rounded-lg"
-                  /> */}
-                  <div className="absolute top-0 right-0 bg-white bg-opacity-90 h-10 m-2 rounded-full flex justify-center items-center">
-                    <span className="text-sm font-semibold ">
+              <CardHeader className="p-0">
+                <div className="bg-muted h-12"></div>
+              </CardHeader>
+              <CardContent className="p-4 pt-0">
+                <div className="flex flex-col items-center -mt-6 mb-4">
+                  <Avatar className="h-16 w-16 border-4 border-background">
+                    <AvatarImage
+                      src={student.profileImage || ''}
+                      alt={`${student.fullName} || ${student.firstName} ${student.lastName}`}
+                    />
+                    <AvatarFallback className="text-lg font-medium">
+                      {`${student.firstName.charAt(0)}${student.lastName.charAt(0)}`}
+                    </AvatarFallback>
+                  </Avatar>
+                  <h3 className="font-medium text-lg mt-2">{`${student.firstName}  ${student.lastName}`}</h3>
+                  <div className="flex items-center gap-2 mt-1">
+                    <Badge variant="outline" className="text-xs font-normal">
                       {student.grade.grade}
-                    </span>
+                    </Badge>
+                    {student.section && (
+                      <Badge variant="outline" className="text-xs font-normal">
+                        {student.section.name}
+                      </Badge>
+                    )}
                   </div>
                 </div>
-                <div className="py-2">
-                  <h3 className="font-semibold text-lg mb-1">
-                    {student.firstName} {student.lastName}
-                  </h3>
-                  <p className="text-sm text-muted-foreground mb-2">
-                    Section {student.section?.name}
-                  </p>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center">
-                      <Award className="h-4 w-4 text-yellow-500 mr-1" />
-                      <span className="text-sm font-medium">
-                        GPA: {student.lastName || '-'}
-                      </span>
-                    </div>
-                    <Link href={`/dashboard/students/${student.id}`}>
-                      <Button variant="outline" size="sm">
-                        View Profile
-                      </Button>
+
+                <div className="space-y-3 text-sm">
+                  <div className="flex items-center gap-2">
+                    <Hash className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                    <span className="text-muted-foreground">Roll Number:</span>
+                    <span className="font-medium">{student.rollNumber}</span>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <Mail className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                    <span className="truncate">{student.email}</span>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <Phone className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                    <Link
+                      href={`tel:${student.phoneNumber}`}
+                      className="text-blue-500 hover:text-blue-700"
+                    >
+                      {student.phoneNumber}
                     </Link>
                   </div>
                 </div>
@@ -142,3 +166,48 @@ const StudentLoading = () => {
     </div>
   );
 };
+
+{
+  /* <Card
+key={student.id}
+className="overflow-hidden transition-all duration-300 hover:shadow-lg p-4"
+>
+<CardContent className="p-0">
+  <div className="relative">
+    <Image
+      src={student?.profileImage || '/vercel.svg'}
+      alt="student"
+      width={500}
+      height={500}
+      className="w-full h-48 object-cover rounded-lg"
+    />
+    <div className="absolute top-0 right-0 bg-white bg-opacity-90 h-10 m-2 rounded-full flex justify-center items-center">
+      <span className="text-sm font-semibold ">
+        {student.grade.grade}
+      </span>
+    </div>
+  </div>
+  <div className="py-2">
+    <h3 className="font-semibold text-lg mb-1">
+      {student.firstName} {student.lastName}
+    </h3>
+    <p className="text-sm text-muted-foreground mb-2">
+      Section {student.section?.name}
+    </p>
+    <div className="flex items-center justify-between">
+      <div className="flex items-center">
+        <Award className="h-4 w-4 text-yellow-500 mr-1" />
+        <span className="text-sm font-medium">
+          GPA: {student.lastName || '-'}
+        </span>
+      </div>
+      <Link href={`/dashboard/students/${student.id}`}>
+        <Button variant="outline" size="sm">
+          View Profile
+        </Button>
+      </Link>
+    </div>
+  </div>
+</CardContent>
+</Card> */
+}
