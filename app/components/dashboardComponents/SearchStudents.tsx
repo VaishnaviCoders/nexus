@@ -23,20 +23,24 @@ export default function SearchStudents() {
   return (
     <form className="">
       <div className="relative w-full flex items-center lg:w-[500px]">
-        <Search className="absolute left-2 top-[50%] -translate-y-[50%] h-4 w-4 text-muted-foreground" />
+        {/* <Search className="absolute left-2 top-[50%] -translate-y-[50%] h-4 w-4 text-muted-foreground" /> */}
         <Input
           id="search"
           autoComplete="off"
-          className="w-full pl-8 focus:outline-none"
+          className="w-full pr-10 focus:outline-none"
           placeholder="Search students"
           onChange={(e) => {
             setQ(e.target.value);
           }}
           name="q"
           defaultValue={q}
-          type="search"
         />
-        {isPending && <Loader2 className="animate-spin" />}
+        {isPending && (
+          <Search
+            className="absolute animate-pulse right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground"
+            size={18}
+          />
+        )}
       </div>
     </form>
   );
