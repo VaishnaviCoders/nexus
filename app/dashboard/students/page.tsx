@@ -54,6 +54,9 @@ export default async function Students({ searchParams }: Props) {
         : undefined,
       // firstName: parsedParams.q ?? undefined,
     },
+    orderBy: {
+      createdAt: 'desc',
+    },
     include: {
       section: true,
       grade: true,

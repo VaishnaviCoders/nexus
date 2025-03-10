@@ -602,14 +602,14 @@ export default function CreateStudentForm() {
             </div>
           </CardContent>
         </Card>
-        <div className="flex justify-end">
+        <div className="flex justify-end space-x-3">
           <Button variant="outline"> Cancel</Button>
           <Button type="submit" disabled={pending} className="">
             {pending ? 'Creating...' : 'Create Student'}
           </Button>
-        </div>
 
-        {/* <CreateStudentButton /> */}
+          {/* <CreateStudentButton /> */}
+        </div>
       </form>
     </Form>
   );

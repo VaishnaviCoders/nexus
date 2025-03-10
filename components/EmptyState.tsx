@@ -38,13 +38,15 @@ export function EmptyState({
       <div className="flex justify-center items-center ">
         {image ? (
           <>
-            <Image
-              src={image}
-              alt="student"
-              width={500}
-              height={500}
-              className="h-48 w-48 object-contain rounded-lg "
-            />
+            <div className="h-48 w-48 flex items-center justify-center">
+              <Image
+                src={image}
+                alt="student"
+                width={200}
+                height={200}
+                className="h-48 w-48 object-contain rounded-lg "
+              />
+            </div>
           </>
         ) : null}
       </div>
