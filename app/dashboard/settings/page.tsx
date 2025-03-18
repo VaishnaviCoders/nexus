@@ -1,13 +1,5 @@
 'use client';
-import Link from 'next/link';
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
+
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import {
@@ -29,8 +21,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { MailIcon } from 'lucide-react';
-import { Input } from '@/components/ui/input';
+
 export default function SettingPage() {
   const sidebar = useStore(useSidebar, (x) => x);
   if (!sidebar) return null;

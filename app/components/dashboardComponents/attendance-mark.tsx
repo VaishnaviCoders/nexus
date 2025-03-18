@@ -489,7 +489,7 @@ export default function AttendanceMark({ students }: Props) {
               </div>
               <Progress
                 value={attendanceStats.percentage}
-                className="h-2 mb-2"
+                className="h-2 mb-2 rounded-full"
               />
               <div className="grid grid-cols-3 gap-2 text-sm">
                 <div className="flex items-center gap-1">

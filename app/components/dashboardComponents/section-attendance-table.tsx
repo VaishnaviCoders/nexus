@@ -87,11 +87,11 @@ const sectionData = [
 ];
 
 export function SectionAttendanceTable() {
-  const getProgressColor = (percentage: number) => {
-    if (percentage >= 95) return 'bg-green-600';
-    if (percentage >= 90) return 'bg-yellow-600';
-    return 'bg-red-600';
-  };
+  // const getProgressColor = (percentage: number) => {
+  //   if (percentage >= 95) return 'bg-green-600';
+  //   if (percentage >= 90) return 'bg-yellow-600';
+  //   return 'bg-red-600';
+  // };
 
   return (
     <div className="rounded-md border">
@@ -123,7 +123,7 @@ export function SectionAttendanceTable() {
                   value={section.percentage}
                   max={100}
                   className="h-2"
-                  indicatorClassName={getProgressColor(section.percentage)}
+                  // indicatorClassName={getProgressColor(section.percentage)}
                 />
               </TableCell>
             </TableRow>

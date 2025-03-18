@@ -1,8 +1,7 @@
 'use client';
 
 import { Input } from '@/components/ui/input';
-import { Loader2, Search } from 'lucide-react';
-import { useParams } from 'next/navigation';
+import { Search } from 'lucide-react';
 import { useTransition } from 'react';
 import { searchParams } from '@/lib/searchParams';
 
