@@ -75,7 +75,7 @@ export const roleMenus: Record<string, Group[]> = {
       groupLabel: 'Monitoring',
       menus: [
         {
-          href: '/dashboard/attendance',
+          href: '/dashboard/student-attendance',
           label: 'Attendance Monitor',
           icon: Calendar,
           submenus: [

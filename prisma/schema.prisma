@@ -14,6 +14,7 @@ model User {
   firstName      String
   lastName       String
   email          String        @unique
+  password       String?
   profileImage   String
   role           Role          @default(STUDENT)
   clerkId        String        @unique
@@ -30,7 +31,7 @@ model User {
 }
 
 model Student {
-  id               String          @id @default(cuid())
+  id               String   @id @default(cuid())
   firstName        String
   lastName         String
   middleName       String?
@@ -38,36 +39,54 @@ model Student {
   fullName         String?
   dateOfBirth      DateTime
   profileImage     String?
-  rollNumber       String          @unique
+  rollNumber       String   @unique
   phoneNumber      String
   whatsAppNumber   String
   email            String
   emergencyContact String
-  clerkId          String          @unique @default("")
-  section          Section?        @relation(fields: [sectionId], references: [id])
+  clerkId          String   @unique @default("")
+  section          Section? @relation(fields: [sectionId], references: [id])
   sectionId        String?
   gradeId          String
-  grade            Grade           @relation(fields: [gradeId], references: [id])
+  grade            Grade    @relation(fields: [gradeId], references: [id])
   gender           Gender
-  // attendance     Attendance[]
+
   // performances   Performance[]
   // assignments    Assignment[]
   // complaints     Complaint[]
   // marks          Mark[]
-  organization     Organization    @relation(fields: [organizationId], references: [id])
-  organizationId   String
-  createdAt        DateTime        @default(now())
-  updatedAt        DateTime        @updatedAt
-  Fee              Fee[]
+  organization      Organization        @relation(fields: [organizationId], references: [id])
+  organizationId    String
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  Fee               Fee[]
   // StudentDocument StudentDocument[]
-  User             User[]
-  ParentStudent    ParentStudent[]
+  User              User[]
+  ParentStudent     ParentStudent[]
+  StudentAttendance StudentAttendance[]
 
   @@index([email]) // User lookup
   @@index([phoneNumber])
   @@index([rollNumber])
   @@index([gradeId])
   @@index([sectionId])
+}
+
+model StudentAttendance {
+  id         String           @id @default(cuid())
+  studentId  String
+  present    Boolean          @default(false)
+  date       DateTime
+  status     AttendanceStatus
+  notes      String?
+  recordedBy String
+  sectionId  String
+  section    Section          @relation(fields: [sectionId], references: [id])
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+  student    Student          @relation(fields: [studentId], references: [id])
+
+  @@unique([studentId, date])
 }
 
 model Parent {
@@ -118,13 +137,14 @@ model Grade {
 }
 
 model Section {
-  id             String       @id @default(cuid())
-  name           String // e.g., "A", "B", "C"
-  gradeId        String
-  organizationId String
-  grade          Grade        @relation(fields: [gradeId], references: [id], onDelete: Cascade)
-  organization   Organization @relation(fields: [organizationId], references: [id])
-  students       Student[] // Students in this section
+  id                String              @id @default(cuid())
+  name              String // e.g., "A", "B", "C"
+  gradeId           String
+  organizationId    String
+  grade             Grade               @relation(fields: [gradeId], references: [id], onDelete: Cascade)
+  organization      Organization        @relation(fields: [organizationId], references: [id])
+  students          Student[] // Students in this section
+  StudentAttendance StudentAttendance[]
 }
 
 model Fee {
@@ -148,6 +168,12 @@ model FeeCategory {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   fees        Fee[]
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+  LATE
 }
 
 enum FeeStatus {

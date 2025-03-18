@@ -93,7 +93,7 @@ export default async function Students({ searchParams }: Props) {
               Add New Student
             </Button>
           </Link>
-          <Link href="/dashboard/studentsAttendance">
+          <Link href="/dashboard/student-attendance">
             <Button type="button">Take Attendance</Button>
           </Link>
         </div>

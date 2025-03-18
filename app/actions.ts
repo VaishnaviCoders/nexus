@@ -356,6 +356,7 @@ export async function createStudent(data: z.infer<typeof studentSchema>) {
         data: {
           clerkId: clerkUser.id,
           organizationId: orgId,
+
           rollNumber: validateData.rollNumber,
           firstName: validateData.firstName,
           lastName: validateData.lastName,
@@ -375,10 +376,26 @@ export async function createStudent(data: z.infer<typeof studentSchema>) {
           profileImage: validateData.profileImage,
           dateOfBirth: new Date(validateData.dateOfBirth),
           emergencyContact: validateData.emergencyContact,
+
           createdAt: new Date(),
           updatedAt: new Date(),
         },
       });
+      // await tx.user.create({
+      //   data: {
+      //     clerkId: clerkUser.id,
+      //     organizationId: orgId,
+      //     role: 'STUDENT',
+      //     firstName: validateData.firstName,
+      //     lastName: validateData.lastName,
+      //     email: validateData.email,
+      //     studentId: student.id,
+      //     createdAt: new Date(),
+      //     updatedAt: new Date(),
+      //     profileImage: validateData.profileImage || '',
+      //     password: validateData.phoneNumber,
+      //   },
+      // });
 
       if (validateData.parent) {
         const parent = await tx.parent.upsert({
@@ -413,5 +430,59 @@ export async function createStudent(data: z.infer<typeof studentSchema>) {
     throw new Error(
       `❌ Failed to create student: ${JSON.stringify(error, null, 2)}`
     );
+  }
+}
+
+// # Student Attendance
+
+type AttendanceStatus = 'PRESENT' | 'ABSENT' | 'LATE';
+
+export async function markAttendance(
+  sectionId: string,
+  date: Date,
+  attendanceData: { studentId: string; status: AttendanceStatus }[]
+) {
+  const { orgId } = await auth();
+  const user = await currentUser();
+
+  if (!orgId) throw new Error('Organization ID is required');
+
+  const section = await prisma.section.findUnique({
+    where: { id: sectionId, organizationId: orgId },
+    select: { id: true },
+  });
+
+  if (!section) {
+    throw new Error(
+      'Invalid sectionId: The referenced Section does not exist.'
+    );
+  }
+
+  for (const record of attendanceData) {
+    await prisma.studentAttendance.upsert({
+      where: {
+        studentId_date: {
+          // Ensure you have a unique constraint on (studentId, date)
+          studentId: record.studentId,
+          date,
+        },
+      },
+      update: {
+        status: record.status,
+        present: record.status === 'PRESENT',
+        updatedAt: new Date(),
+      },
+      create: {
+        studentId: record.studentId,
+        present: record.status === 'PRESENT',
+        date,
+        status: record.status,
+        notes: null,
+        recordedBy: user?.firstName || '',
+        sectionId,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+    });
   }
 }
