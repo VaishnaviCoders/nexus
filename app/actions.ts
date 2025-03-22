@@ -17,7 +17,6 @@ import { Role } from '@prisma/client';
 import { Knock } from '@knocklabs/node';
 import { redirect } from 'next/navigation';
 import { parseWithZod } from '@conform-to/zod';
-import { log } from 'console';
 // export const syncOrganization = async () => {
 //   const { orgId, orgSlug } = await auth();
 
@@ -439,13 +438,15 @@ type AttendanceStatus = 'PRESENT' | 'ABSENT' | 'LATE';
 
 export async function markAttendance(
   sectionId: string,
-  date: Date,
   attendanceData: { studentId: string; status: AttendanceStatus }[]
 ) {
   const { orgId } = await auth();
   const user = await currentUser();
 
   if (!orgId) throw new Error('Organization ID is required');
+  if (!user) throw new Error('User Not Found Please Logout And Log In');
+  if (!attendanceData.length)
+    throw new Error('Attendance data cannot be empty');
 
   const section = await prisma.section.findUnique({
     where: { id: sectionId, organizationId: orgId },
@@ -458,31 +459,44 @@ export async function markAttendance(
     );
   }
 
-  for (const record of attendanceData) {
-    await prisma.studentAttendance.upsert({
-      where: {
-        studentId_date: {
-          // Ensure you have a unique constraint on (studentId, date)
-          studentId: record.studentId,
-          date,
-        },
-      },
-      update: {
-        status: record.status,
-        present: record.status === 'PRESENT',
-        updatedAt: new Date(),
-      },
-      create: {
-        studentId: record.studentId,
-        present: record.status === 'PRESENT',
-        date,
-        status: record.status,
-        notes: null,
-        recordedBy: user?.firstName || '',
-        sectionId,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-    });
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  if (new Date().setHours(0, 0, 0, 0) !== today.getTime()) {
+    throw new Error('Attendance can only be marked for today.');
   }
+
+  const recordedBy = `${user.firstName} ${user.lastName}`.trim() || 'Unknown';
+
+  const attendanceUpdates = attendanceData.map((record) => ({
+    where: {
+      studentId_date: {
+        studentId: record.studentId,
+        date: today,
+      },
+    },
+    update: {
+      status: record.status,
+      present: record.status === 'PRESENT',
+      updatedAt: new Date(),
+      recordedBy,
+    },
+    create: {
+      studentId: record.studentId,
+      present: record.status === 'PRESENT',
+      date: new Date(),
+      status: record.status,
+      notes: null,
+      recordedBy,
+      sectionId,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
+  }));
+
+  await prisma.$transaction(
+    attendanceUpdates.map((update) => prisma.studentAttendance.upsert(update))
+  );
+
+  console.log('Attendance data updated:', attendanceUpdates);
 }

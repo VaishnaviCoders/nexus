@@ -52,8 +52,9 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
-import { useUser } from '@clerk/nextjs';
+import { useAuth } from '@clerk/nextjs';
 import { toast } from 'sonner';
+import { markAttendance } from '@/app/actions';
 
 // Define types based on the Prisma schema
 type AttendanceStatus = 'PRESENT' | 'ABSENT' | 'LATE';
@@ -83,7 +84,6 @@ type AttendanceRecord = {
   present: boolean;
   status: AttendanceStatus;
   notes: string;
-  date: Date;
   sectionId: string;
   recordedBy: string;
 };
@@ -94,7 +94,7 @@ type Props = {
 
 export default function AttendanceMark({ students }: Props) {
   const router = useRouter();
-  const { user } = useUser();
+  const { orgRole } = useAuth();
   const [date, setDate] = useState<Date>(new Date());
   const [selectedSection, setSelectedSection] = useState<string>('');
   const [sections, setSections] = useState<{ id: string; name: string }[]>([]);
@@ -284,37 +284,14 @@ export default function AttendanceMark({ students }: Props) {
 
   const confirmSubmit = async () => {
     try {
-      if (!user?.id) {
-        throw new Error('User not authenticated');
-      }
+      const sectionId = selectedSection;
 
-      const formattedDate = new Date(date);
-      formattedDate.setHours(0, 0, 0, 0);
+      const records = attendanceData.map((student) => ({
+        studentId: student.id,
+        status: student.status, // 'PRESENT', 'ABSENT', or 'LATE'
+      }));
 
-      const attendanceRecords: AttendanceRecord[] = attendanceData.map(
-        (student) => ({
-          studentId: student.id,
-          present: student.status === 'PRESENT',
-          status: student.status,
-          notes: student.notes,
-          date: formattedDate,
-          sectionId: selectedSection,
-          recordedBy: user.id,
-        })
-      );
-
-      // Submit attendance data to API
-      const response = await fetch('/api/attendance', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ records: attendanceRecords }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to save attendance');
-      }
+      await markAttendance(sectionId, records);
 
       toast.success('Attendance saved', {
         description: `Attendance for ${format(date, 'PPP')} has been recorded successfully.`,
@@ -322,7 +299,7 @@ export default function AttendanceMark({ students }: Props) {
 
       // Close dialog and redirect
       setShowConfirmation(false);
-      router.push('/dashboard/attendance');
+      router.push('/dashboard/student-attendance/student-attendance-dashboard');
       router.refresh();
     } catch (error) {
       console.error('Error saving attendance:', error);
@@ -373,47 +350,40 @@ export default function AttendanceMark({ students }: Props) {
   };
 
   return (
-    <main className="flex-1 p-4 md:p-6 space-y-6">
-      <div className="flex flex-col md:flex-row justify-between gap-4 md:items-center">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Mark Attendance</h1>
-          <p className="text-muted-foreground">
-            Record student attendance for a specific date and section.
-          </p>
-        </div>
-      </div>
-
+    <main className="flex-1 p-2 md:p-6 space-y-3">
       <Card>
         <CardHeader>
-          <CardTitle>Attendance Details</CardTitle>
+          <CardTitle>Mark Attendance</CardTitle>
           <CardDescription>
             Select the date and section to mark attendance
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid gap-6 md:grid-cols-2">
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Date</label>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className="w-full justify-start text-left font-normal"
-                  >
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {date ? format(date, 'PPP') : <span>Pick a date</span>}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0">
-                  <Calendar
-                    mode="single"
-                    selected={date}
-                    onSelect={(date) => date && setDate(date)}
-                    initialFocus
-                  />
-                </PopoverContent>
-              </Popover>
-            </div>
+            {orgRole === 'ADMIN' && (
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Date</label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className="w-full justify-start text-left font-normal"
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {date ? format(date, 'PPP') : <span>Pick a date</span>}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0">
+                    <Calendar
+                      mode="single"
+                      selected={date}
+                      onSelect={(date) => date && setDate(date)}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
+            )}
             <div className="space-y-2">
               <label className="text-sm font-medium">Section</label>
               <Select
@@ -458,20 +428,6 @@ export default function AttendanceMark({ students }: Props) {
                 <CheckIcon className="mr-2 h-4 w-4" />
                 All Present
               </Button>
-              {/* <Button
-                variant="outline"
-                onClick={() => markAllWithStatus('ABSENT')}
-              >
-                <XIcon className="mr-2 h-4 w-4" />
-                All Absent
-              </Button> */}
-              {/* <Button
-                variant="outline"
-                onClick={() => markAllWithStatus('LATE')}
-              >
-                <Clock className="mr-2 h-4 w-4" />
-                All Late
-              </Button> */}
             </div>
           </CardHeader>
 
@@ -663,7 +619,7 @@ export default function AttendanceMark({ students }: Props) {
                       </div>
 
                       {/* Notes section */}
-                      <div className="px-4 pb-4">
+                      {/* <div className="px-4 pb-4">
                         <Textarea
                           placeholder="Add notes (optional)"
                           value={student.notes}
@@ -672,7 +628,7 @@ export default function AttendanceMark({ students }: Props) {
                           }
                           className="h-20 resize-none"
                         />
-                      </div>
+                      </div> */}
                     </div>
                   );
                 })}
@@ -752,9 +708,12 @@ export default function AttendanceMark({ students }: Props) {
 
             <div className="mt-4 p-3 bg-muted rounded-lg flex items-center gap-2">
               <AlertTriangle className="h-5 w-5 text-yellow-500" />
-              <p className="text-sm">
-                This action will record attendance for all students in{' '}
-                {sections.find((s) => s.id === selectedSection)?.name}.
+              <p className="text-sm flex flex-col gap-2">
+                This action will record attendance for all students in
+                <span className="text-center text-blue-500">
+                  {' '}
+                  {sections.find((s) => s.id === selectedSection)?.name}
+                </span>
               </p>
             </div>
           </div>

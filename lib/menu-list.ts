@@ -130,6 +130,10 @@ export const roleMenus: Record<string, Group[]> = {
             { href: '/students/view', label: 'View Students' },
             { href: '/students/import', label: 'Bulk Import' },
             { href: '/students/fees', label: 'Send Reminders' },
+            {
+              href: '/dashboard/student-attendance/mark',
+              label: 'Take Attendance',
+            },
           ],
         },
       ],
