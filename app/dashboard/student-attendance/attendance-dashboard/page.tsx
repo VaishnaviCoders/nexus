@@ -31,7 +31,17 @@ import prisma from '@/lib/db';
 import { auth } from '@clerk/nextjs/server';
 // import { AttendanceStats } from "@/components/attendance/attendance-stats"
 
-// Mock data - in a real app, this would come from an API
+interface SectionAttendance {
+  id: string;
+  section: string;
+  grade: string;
+  date: string;
+  reportedBy: string;
+  status: 'completed' | 'in-progress' | 'pending';
+  percentage: number;
+  studentsPresent: number;
+  totalStudents: number;
+}
 
 const mockSectionAttendance = [
   {
@@ -91,11 +101,36 @@ const mockSectionAttendance = [
   },
 ];
 
-export default async function AttendanceOverview() {
-  // const [showStats, setShowStats] = useState(false);
+// Get all sections Count
+async function getSectionCount() {
   const { orgId } = await auth();
 
   if (!orgId) return null;
+  return prisma.section.count({
+    where: {
+      organizationId: orgId,
+    },
+  });
+}
+// Get Completion Rate =>> 3 of 5 sections completed
+
+// Attendance Rate =>> 89 of 128 students present
+async function getAttendanceRate() {
+  const { orgId } = await auth();
+  if (!orgId) return null;
+  return prisma.studentAttendance.count({
+    where: {},
+  });
+}
+
+async function getAttendanceCompletionStats(date = new Date()) {
+  const { orgId } = await auth();
+  if (!orgId) return null;
+
+  const formattedDate = new Date(date);
+  formattedDate.setHours(0, 0, 0, 0);
+  const nextDay = new Date(formattedDate);
+  nextDay.setDate(nextDay.getDate() + 1);
 
   const sections = await prisma.section.findMany({
     where: {
@@ -103,45 +138,133 @@ export default async function AttendanceOverview() {
     },
     include: {
       grade: true,
-      StudentAttendance: true,
-      students: true,
-    },
-  });
-
-  const attendanceRecords = await prisma.studentAttendance.findMany({
-    include: {
-      student: {
-        select: {
-          id: true,
-          firstName: true,
-          lastName: true,
+      students: {
+        select: { id: true },
+      },
+      StudentAttendance: {
+        where: {
+          date: {
+            gte: formattedDate,
+            lt: nextDay,
+          },
+        },
+        include: {
+          student: {
+            select: { firstName: true, lastName: true },
+          },
         },
       },
     },
   });
 
-  // console.log(sections.map((s) => s.grade.grade));
-  // console.log(attendanceRecords);
+  const users = await prisma.user.findMany({
+    where: {
+      organizationId: orgId,
+    },
+    select: {
+      id: true,
+      firstName: true,
+      lastName: true,
+    },
+  });
+
+  const userMap = users.reduce<Record<string, string>>((map, user) => {
+    map[user.id] = `${user.firstName} ${user.lastName}`;
+    return map;
+  }, {});
+
+  const sectionAttendanceData: SectionAttendance[] = sections.map((section) => {
+    const totalStudents = section.students.length;
+    const recordedAttendances = section.StudentAttendance.length;
+    const studentsPresent = section.StudentAttendance.filter(
+      (a) => a.present
+    ).length;
+    const percentage =
+      totalStudents > 0
+        ? Math.round((recordedAttendances / totalStudents) * 100)
+        : 0;
+
+    // Determine status based on attendance records
+    let status: 'completed' | 'in-progress' | 'pending' = 'pending';
+    if (recordedAttendances === 0) {
+      status = 'pending';
+    } else if (recordedAttendances < totalStudents) {
+      status = 'in-progress';
+    } else {
+      status = 'completed';
+    }
+
+    // Get the most recent recorder's name
+    let reportedBy = 'Not reported';
+    if (section.StudentAttendance.length > 0) {
+      const recordedById = section.StudentAttendance[0].recordedBy;
+      reportedBy = userMap[recordedById] || 'Unknown';
+    }
+
+    return {
+      id: section.id,
+      section: `${section.grade.grade} - Section ${section.name}`,
+      grade: section.grade.grade,
+      date: formattedDate.toISOString().split('T')[0],
+      reportedBy,
+      status,
+      percentage,
+      studentsPresent,
+      totalStudents,
+    };
+  });
+
   // Calculate overall stats
-  const totalSections = mockSectionAttendance.length;
-  const completedSections = mockSectionAttendance.filter(
+  const totalSections = sectionAttendanceData.length;
+  const completedSections = sectionAttendanceData.filter(
     (s) => s.status === 'completed'
   ).length;
-  const overallCompletionPercentage = Math.round(
-    (completedSections / totalSections) * 100
-  );
-
-  const totalStudents = mockSectionAttendance.reduce(
+  const totalStudents = sectionAttendanceData.reduce(
     (acc, curr) => acc + curr.totalStudents,
     0
   );
-  const totalPresent = mockSectionAttendance.reduce(
+  const totalPresent = sectionAttendanceData.reduce(
     (acc, curr) => acc + curr.studentsPresent,
     0
   );
-  const overallAttendancePercentage = Math.round(
-    (totalPresent / totalStudents) * 100
-  );
+
+  return {
+    sections: sectionAttendanceData,
+    stats: {
+      totalSections,
+      completedSections,
+      completionPercentage:
+        totalSections > 0
+          ? Math.round((completedSections / totalSections) * 100)
+          : 0,
+      totalStudents,
+      totalPresent,
+      attendancePercentage:
+        totalStudents > 0
+          ? Math.round((totalPresent / totalStudents) * 100)
+          : 0,
+      pendingSections: totalSections - completedSections,
+    },
+  };
+}
+
+// Pending Sections => { 2 } => Sections awaiting completion
+
+export default async function AttendanceOverview() {
+  const sectionCount = await getSectionCount();
+  const attendanceData = await getAttendanceCompletionStats();
+  // const [showStats, setShowStats] = useState(false);
+
+  if (!attendanceData) {
+    return (
+      <div>
+        Unable to fetch attendance data. Please check your organization
+        settings.
+      </div>
+    );
+  }
+
+  const { sections, stats } = attendanceData;
 
   return (
     <div className="space-y-6">
@@ -156,7 +279,7 @@ export default async function AttendanceOverview() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{totalSections}</div>
+            <div className="text-2xl font-bold">{sectionCount}</div>
             <p className="text-xs text-muted-foreground">
               Sections being tracked
             </p>
@@ -174,14 +297,12 @@ export default async function AttendanceOverview() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {overallCompletionPercentage}%
+              {stats.completionPercentage}%
             </div>
-            <Progress
-              value={overallCompletionPercentage}
-              className="h-2 mt-2"
-            />
+            <Progress value={stats.completionPercentage} className="h-2 mt-2" />
             <p className="text-xs text-muted-foreground mt-2">
-              {completedSections} of {totalSections} sections completed
+              {stats.completionPercentage}% of {stats.totalSections} sections
+              completed
             </p>
           </CardContent>
         </Card>
@@ -197,14 +318,11 @@ export default async function AttendanceOverview() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {overallAttendancePercentage}%
+              {stats.attendancePercentage}%
             </div>
-            <Progress
-              value={overallAttendancePercentage}
-              className="h-2 mt-2"
-            />
+            <Progress value={stats.attendancePercentage} className="h-2 mt-2" />
             <p className="text-xs text-muted-foreground mt-2">
-              {totalPresent} of {totalStudents} students present
+              {stats.totalPresent} of {stats.totalStudents} students present
             </p>
           </CardContent>
         </Card>
@@ -219,16 +337,13 @@ export default async function AttendanceOverview() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
-              {totalSections - completedSections}
-            </div>
+            <div className="text-2xl font-bold">{stats.pendingSections}</div>
             <p className="text-xs text-muted-foreground">
               Sections awaiting completion
             </p>
           </CardContent>
         </Card>
       </div>
-
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
@@ -238,6 +353,7 @@ export default async function AttendanceOverview() {
                 Overview of attendance status for all sections
               </CardDescription>
             </div>
+
             {/* <Button
               variant="outline"
               size="sm"
@@ -272,7 +388,7 @@ export default async function AttendanceOverview() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {mockSectionAttendance.map((section) => (
+              {sections.map((section) => (
                 <TableRow key={section.id}>
                   <TableCell className="font-medium">
                     {section.section}

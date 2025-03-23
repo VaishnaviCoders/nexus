@@ -77,6 +77,8 @@ type Student = {
   section: { id: string; name: string } | null;
   profileImage: string | null;
   StudentAttendance: StudentAttendance[];
+  gradeId: string;
+  grade?: { grade: string } | null;
 };
 
 type AttendanceRecord = {
@@ -97,7 +99,9 @@ export default function AttendanceMark({ students }: Props) {
   const { orgRole } = useAuth();
   const [date, setDate] = useState<Date>(new Date());
   const [selectedSection, setSelectedSection] = useState<string>('');
-  const [sections, setSections] = useState<{ id: string; name: string }[]>([]);
+  const [sections, setSections] = useState<
+    { id: string; name: string; gradeId: string; grade: string }[]
+  >([]);
   const [attendanceData, setAttendanceData] = useState<
     {
       id: string;
@@ -128,17 +132,28 @@ export default function AttendanceMark({ students }: Props) {
   useEffect(() => {
     const uniqueSections = students.reduce(
       (acc, student) => {
-        if (student.section && !acc.some((s) => s.id === student.section?.id)) {
-          acc.push({ id: student.section.id, name: student.section.name });
+        if (
+          student.section &&
+          !acc.some(
+            (s) => s.id === student.section?.id && s.gradeId === student.gradeId
+          )
+        ) {
+          acc.push({
+            id: student.section.id,
+            name: student.section.name,
+            gradeId: student.gradeId,
+            grade: student.grade?.grade || '',
+          });
         }
         return acc;
       },
-      [] as { id: string; name: string }[]
+      [] as { id: string; name: string; gradeId: string; grade: string }[]
     );
+    console.log(uniqueSections);
 
     setSections(uniqueSections);
 
-    // Set default section if available
+    // Set default section only if selectedSection is not already set
     if (uniqueSections.length > 0 && !selectedSection) {
       setSelectedSection(uniqueSections[0].id);
     }
@@ -220,7 +235,6 @@ export default function AttendanceMark({ students }: Props) {
       )
     );
   };
-
   const handleNotesChange = (id: string, notes: string) => {
     setAttendanceData(
       attendanceData.map((student) =>
@@ -228,7 +242,6 @@ export default function AttendanceMark({ students }: Props) {
       )
     );
   };
-
   const markAllWithStatus = (status: AttendanceStatus) => {
     setAttendanceData(
       attendanceData.map((student) => ({ ...student, status, marked: true }))
@@ -299,7 +312,7 @@ export default function AttendanceMark({ students }: Props) {
 
       // Close dialog and redirect
       setShowConfirmation(false);
-      router.push('/dashboard/student-attendance/student-attendance-dashboard');
+      router.push('/dashboard/student-attendance/attendance-dashboard');
       router.refresh();
     } catch (error) {
       console.error('Error saving attendance:', error);
@@ -396,7 +409,7 @@ export default function AttendanceMark({ students }: Props) {
                 <SelectContent>
                   {sections.map((section) => (
                     <SelectItem key={section.id} value={section.id}>
-                      {section.name}
+                      {`Grade ${section.grade} - Section ${section.name}`}
                     </SelectItem>
                   ))}
                 </SelectContent>

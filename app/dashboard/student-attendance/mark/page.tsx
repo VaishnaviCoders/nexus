@@ -18,6 +18,13 @@ async function getStudents() {
       rollNumber: true,
       section: true,
       profileImage: true,
+      gradeId: true,
+      grade: {
+        select: {
+          id: true,
+          grade: true,
+        },
+      },
       StudentAttendance: {
         select: {
           id: true,
@@ -27,6 +34,7 @@ async function getStudents() {
           notes: true,
           recordedBy: true,
           sectionId: true,
+          createdAt: true,
         },
       },
     },
