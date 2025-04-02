@@ -34,9 +34,9 @@ export default function SectionDeleteRoute({
           <CardTitle>Are you absolutely sure?</CardTitle>
           <CardDescription>
             This action cannot be undone. This will permanently delete this{' '}
-            <strong className="text-destructive"> Grade </strong> and all its
+            <strong className="text-destructive"> Section </strong> and all its
             data, including{' '}
-            <strong className="text-destructive">Sections and Students</strong>.
+            <strong className="text-destructive">Students</strong>.
           </CardDescription>
         </CardHeader>
         <CardFooter className="justify-end flex gap-3 items-center">

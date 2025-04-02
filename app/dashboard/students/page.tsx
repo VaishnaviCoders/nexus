@@ -93,7 +93,7 @@ export default async function Students({ searchParams }: Props) {
               Add New Student
             </Button>
           </Link>
-          <Link href="/dashboard/student-attendance">
+          <Link href="/dashboard/attendance">
             <Button type="button">Take Attendance</Button>
           </Link>
         </div>
@@ -109,66 +109,70 @@ export default async function Students({ searchParams }: Props) {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           <Suspense fallback={<StudentLoading />}>
             {students.map((student) => (
-              <Card
-                key={student.id}
-                className="overflow-hidden transition-all hover:shadow-md"
-              >
-                <CardHeader className="p-0">
-                  <div className="bg-muted h-12"></div>
-                </CardHeader>
-                <CardContent className="p-4 pt-0">
-                  <div className="flex flex-col items-center -mt-6 mb-4">
-                    <Avatar className="h-16 w-16 border-4 border-background">
-                      <AvatarImage
-                        src={student.profileImage || ''}
-                        alt={`${student.fullName} || ${student.firstName} ${student.lastName}`}
-                      />
-                      <AvatarFallback className="text-lg font-medium">
-                        {`${student.firstName.charAt(0)}${student.lastName.charAt(0)}`}
-                      </AvatarFallback>
-                    </Avatar>
-                    <h3 className="font-medium text-lg mt-2">{`${student.firstName}  ${student.lastName}`}</h3>
-                    <div className="flex items-center gap-2 mt-1">
-                      <Badge variant="outline" className="text-xs font-normal">
-                        {student.grade.grade}
-                      </Badge>
-                      {student.section && (
+              <Link href={`/dashboard/students/${student.id}`} key={student.id}>
+                <Card className="overflow-hidden transition-all hover:shadow-md">
+                  <CardHeader className="p-0">
+                    <div className="bg-muted h-12"></div>
+                  </CardHeader>
+                  <CardContent className="p-4 pt-0">
+                    <div className="flex flex-col items-center -mt-6 mb-4">
+                      <Avatar className="h-16 w-16 border-4 border-background">
+                        <AvatarImage
+                          src={student.profileImage || ''}
+                          alt={`${student.fullName} || ${student.firstName} ${student.lastName}`}
+                        />
+                        <AvatarFallback className="text-lg font-medium">
+                          {`${student.firstName.charAt(0)}${student.lastName.charAt(0)}`}
+                        </AvatarFallback>
+                      </Avatar>
+                      <h3 className="font-medium text-lg mt-2">{`${student.firstName}  ${student.lastName}`}</h3>
+                      <div className="flex items-center gap-2 mt-1">
                         <Badge
                           variant="outline"
                           className="text-xs font-normal"
                         >
-                          {student.section.name}
+                          {student.grade.grade}
                         </Badge>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="space-y-3 text-sm">
-                    <div className="flex items-center gap-2">
-                      <Hash className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-                      <span className="text-muted-foreground">
-                        Roll Number:
-                      </span>
-                      <span className="font-medium">{student.rollNumber}</span>
+                        {student.section && (
+                          <Badge
+                            variant="outline"
+                            className="text-xs font-normal"
+                          >
+                            {student.section.name}
+                          </Badge>
+                        )}
+                      </div>
                     </div>
 
-                    <div className="flex items-center gap-2">
-                      <Mail className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-                      <span className="truncate">{student.email}</span>
-                    </div>
+                    <div className="space-y-3 text-sm">
+                      <div className="flex items-center gap-2">
+                        <Hash className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                        <span className="text-muted-foreground">
+                          Roll Number:
+                        </span>
+                        <span className="font-medium">
+                          {student.rollNumber}
+                        </span>
+                      </div>
 
-                    <div className="flex items-center gap-2">
-                      <Phone className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-                      <Link
-                        href={`tel:${student.phoneNumber}`}
-                        className="text-blue-500 hover:text-blue-700"
-                      >
-                        {student.phoneNumber}
-                      </Link>
+                      <div className="flex items-center gap-2">
+                        <Mail className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                        <span className="truncate">{student.email}</span>
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        <Phone className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                        <Link
+                          href={`tel:${student.phoneNumber}`}
+                          className="text-blue-500 hover:text-blue-700"
+                        >
+                          {student.phoneNumber}
+                        </Link>
+                      </div>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
+              </Link>
             ))}
           </Suspense>
         </div>

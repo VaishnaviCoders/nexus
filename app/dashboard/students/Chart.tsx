@@ -27,19 +27,6 @@ import {
 
 export const description = 'A bar chart with a label';
 
-const attendanceData = [
-  { month: 'June', attendance: 22 },
-  { month: 'July', attendance: 24 },
-  { month: 'August', attendance: 23 },
-  { month: 'September', attendance: 26 },
-  { month: 'October', attendance: 20 },
-  { month: 'November', attendance: 25 },
-  { month: 'December', attendance: 18 },
-  { month: 'January', attendance: 23 },
-  { month: 'February', attendance: 22 },
-  { month: 'March', attendance: 19 },
-];
-
 const chartConfig = {
   desktop: {
     label: 'Desktop',
@@ -47,7 +34,12 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function ChartComponent() {
+interface ChartComponentProps {
+  data: { month: string; attendance: number }[];
+}
+
+export function ChartComponent({ data }: ChartComponentProps) {
+  // console.log('Attendance data', data);
   return (
     <Card>
       <CardHeader>
@@ -57,7 +49,7 @@ export function ChartComponent() {
       <CardContent>
         <ChartContainer config={chartConfig} className="h-72 w-full">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={attendanceData} margin={{ top: 20 }}>
+            <BarChart data={data} margin={{ top: 20 }}>
               <CartesianGrid vertical={false} />
               <XAxis
                 dataKey="month"

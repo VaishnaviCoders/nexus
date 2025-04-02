@@ -11,5 +11,13 @@ export const searchParams = {
   q: parseAsString.withDefault(''),
   pageIndex: parseAsIndex.withDefault(1),
   limit: parseAsIndex.withDefault(2),
+
+  search: parseAsString.withDefault(''),
+  sectionId: parseAsString.withDefault('all'),
+  status: parseAsString.withDefault('all'),
+  grade: parseAsString.withDefault('all'),
+  startDate: parseAsString.withDefault(''),
+  endDate: parseAsString.withDefault(''),
 };
+
 export const searchParamsCache = createSearchParamsCache(searchParams);

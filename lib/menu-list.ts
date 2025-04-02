@@ -79,8 +79,11 @@ export const roleMenus: Record<string, Group[]> = {
           label: 'Attendance Monitor',
           icon: Calendar,
           submenus: [
-            { href: '/attendance/checkin', label: 'Check-in Times' },
-            { href: '/attendance/checkout', label: 'Check-out Times' },
+            { href: '/dashboard/attendance', label: 'Student Attendance' },
+            {
+              href: '/dashboard/teacher-attendance',
+              label: 'Teacher Attendance',
+            },
           ],
         },
         {
@@ -111,7 +114,13 @@ export const roleMenus: Record<string, Group[]> = {
     },
     {
       groupLabel: 'Management',
+
       menus: [
+        {
+          href: 'dashboard/grades',
+          label: 'Grades Management',
+          icon: Settings,
+        },
         {
           href: '/leads',
           label: 'Lead Management',
@@ -127,17 +136,18 @@ export const roleMenus: Record<string, Group[]> = {
           label: 'Student Management',
           icon: Users,
           submenus: [
-            { href: '/students/view', label: 'View Students' },
-            { href: '/students/import', label: 'Bulk Import' },
-            { href: '/students/fees', label: 'Send Reminders' },
+            { href: '/dashboard/students', label: 'View Students' },
+            { href: '/dashboard/students/import', label: 'Bulk Import' },
+            { href: '/dashboard/students/fees', label: 'Send Reminders' },
             {
-              href: '/dashboard/student-attendance/mark',
+              href: '/dashboard/attendance/mark',
               label: 'Take Attendance',
             },
           ],
         },
       ],
     },
+
     {
       groupLabel: 'Personal',
       menus: [
@@ -155,8 +165,8 @@ export const roleMenus: Record<string, Group[]> = {
           label: 'Notice Board',
           icon: Bell,
           submenus: [
-            { href: '/notices/create', label: 'Create Notice' },
-            { href: '/notices/view', label: 'View Notices' },
+            { href: '/dashboard/notices/create', label: 'Create Notice' },
+            { href: '/dashboard/notices', label: 'View Notices' },
           ],
         },
       ],

@@ -25,6 +25,10 @@ import {
 import { ChartComponent } from '../Chart';
 import { ProgressCircle } from '@/components/Charts/ProgressCircle';
 import Link from 'next/link';
+import {
+  getStudentMonthlyAttendance,
+  WeeklyStudentAttendance,
+} from '@/app/actions';
 
 const performanceData = [
   { subject: 'Math', score: 85 },
@@ -87,6 +91,12 @@ const StudentIdRoute = async ({
 }) => {
   const studentId = (await params).id;
   const data = await getStudentData(studentId);
+  const studentMonthlyAttendanceData =
+    await getStudentMonthlyAttendance(studentId);
+  const weeklyStudentAttendance = await WeeklyStudentAttendance(studentId);
+
+  // console.log('Attendance data', studentMonthlyAttendanceData);
+  // console.log('weeklyStudentAttendance', weeklyStudentAttendance);
 
   const fees = await getFees(studentId);
   const totalFees = fees.reduce((acc, fee) => acc + fee.totalFee, 0);
@@ -149,7 +159,7 @@ const StudentIdRoute = async ({
               </Card>
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">
+                  <CardTitle className="text-rsm font-medium">
                     Current GPA
                   </CardTitle>
                   <GraduationCap className="h-4 w-4 text-muted-foreground" />
@@ -235,7 +245,7 @@ const StudentIdRoute = async ({
           </TabsContent>
 
           <TabsContent value="attendance" className="space-y-4">
-            <ChartComponent />
+            <ChartComponent data={studentMonthlyAttendanceData} />
             {/* <Card>
               <CardHeader>
                 <CardTitle>Attendance Details</CardTitle>

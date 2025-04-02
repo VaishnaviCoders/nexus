@@ -1,13 +1,6 @@
 // 'use client';
 
-import {
-  CheckCircle,
-  AlertCircle,
-  Clock,
-  ChevronDown,
-  ChevronUp,
-  BarChart3,
-} from 'lucide-react';
+import { CheckCircle, AlertCircle, Clock, BarChart3 } from 'lucide-react';
 import {
   Card,
   CardContent,
@@ -17,7 +10,6 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { Button } from '@/components/ui/button';
 import {
   Table,
   TableBody,
@@ -29,13 +21,14 @@ import {
 import { Badge } from '@/components/ui/badge';
 import prisma from '@/lib/db';
 import { auth } from '@clerk/nextjs/server';
+import Link from 'next/link';
 // import { AttendanceStats } from "@/components/attendance/attendance-stats"
 
 interface SectionAttendance {
   id: string;
   section: string;
   grade: string;
-  date: string;
+  date: Date;
   reportedBy: string;
   status: 'completed' | 'in-progress' | 'pending';
   percentage: number;
@@ -43,104 +36,40 @@ interface SectionAttendance {
   totalStudents: number;
 }
 
-const mockSectionAttendance = [
-  {
-    id: '1',
-    section: 'Grade 1 - Section A',
-    grade: 'Grade 1',
-    date: '2025-03-20',
-    reportedBy: 'John Smith',
-    status: 'completed',
-    percentage: 100,
-    studentsPresent: 25,
-    totalStudents: 25,
-  },
-  {
-    id: '2',
-    section: 'Grade 1 - Section B',
-    grade: 'Grade 1',
-    date: '2025-03-20',
-    reportedBy: 'Jane Doe',
-    status: 'completed',
-    percentage: 96,
-    studentsPresent: 24,
-    totalStudents: 25,
-  },
-  {
-    id: '3',
-    section: 'Grade 2 - Section A',
-    grade: 'Grade 2',
-    date: '2025-03-20',
-    reportedBy: 'Michael Johnson',
-    status: 'pending',
-    percentage: 0,
-    studentsPresent: 0,
-    totalStudents: 28,
-  },
-  {
-    id: '4',
-    section: 'Grade 2 - Section B',
-    grade: 'Grade 2',
-    date: '2025-03-20',
-    reportedBy: 'Sarah Williams',
-    status: 'in-progress',
-    percentage: 68,
-    studentsPresent: 17,
-    totalStudents: 25,
-  },
-  {
-    id: '5',
-    section: 'Grade 3 - Section A',
-    grade: 'Grade 3',
-    date: '2025-03-20',
-    reportedBy: 'Robert Brown',
-    status: 'completed',
-    percentage: 92,
-    studentsPresent: 23,
-    totalStudents: 25,
-  },
-];
-
-// Get all sections Count
-async function getSectionCount() {
-  const { orgId } = await auth();
-
-  if (!orgId) return null;
-  return prisma.section.count({
-    where: {
-      organizationId: orgId,
-    },
-  });
-}
-// Get Completion Rate =>> 3 of 5 sections completed
-
-// Attendance Rate =>> 89 of 128 students present
-async function getAttendanceRate() {
-  const { orgId } = await auth();
-  if (!orgId) return null;
-  return prisma.studentAttendance.count({
-    where: {},
-  });
+// Helper function to calculate percentage
+function calculatePercentage(numerator: number, denominator: number): number {
+  return denominator > 0 ? Math.round((numerator / denominator) * 100) : 0;
 }
 
-async function getAttendanceCompletionStats(date = new Date()) {
+// Helper function to determine status
+function getAttendanceStatus(
+  recordedAttendances: number,
+  totalStudents: number
+): 'completed' | 'in-progress' | 'pending' {
+  if (recordedAttendances === 0) {
+    return 'pending';
+  }
+  if (recordedAttendances < totalStudents) {
+    return 'in-progress';
+  }
+  return 'completed';
+}
+
+async function getAttendanceCompletionStats(date: Date = new Date()) {
   const { orgId } = await auth();
   if (!orgId) return null;
 
   const formattedDate = new Date(date);
-  formattedDate.setHours(0, 0, 0, 0);
+  formattedDate.setHours(0, 0, 0, 0); // Start of the day
   const nextDay = new Date(formattedDate);
-  nextDay.setDate(nextDay.getDate() + 1);
+  nextDay.setDate(nextDay.getDate() + 1); // End of the day
 
+  // Fetch sections and attendance data
   const sections = await prisma.section.findMany({
-    where: {
-      organizationId: orgId,
-    },
+    where: { organizationId: orgId },
     include: {
       grade: true,
-      students: {
-        select: { id: true },
-      },
+      students: { select: { id: true } },
       StudentAttendance: {
         where: {
           date: {
@@ -148,65 +77,40 @@ async function getAttendanceCompletionStats(date = new Date()) {
             lt: nextDay,
           },
         },
-        include: {
-          student: {
-            select: { firstName: true, lastName: true },
-          },
-        },
+        include: { student: { select: { firstName: true, lastName: true } } },
       },
     },
   });
 
+  // console.log(
+  //   '------------------------',
+  //   sections.map((s) => s.StudentAttendance)
+  // );
+
+  // Fetch the user data (optional, as needed for 'reportedBy' if it's part of your logic)
   const users = await prisma.user.findMany({
-    where: {
-      organizationId: orgId,
-    },
-    select: {
-      id: true,
-      firstName: true,
-      lastName: true,
-    },
+    where: { organizationId: orgId },
+    select: { id: true, firstName: true, lastName: true },
   });
 
-  const userMap = users.reduce<Record<string, string>>((map, user) => {
-    map[user.id] = `${user.firstName} ${user.lastName}`;
-    return map;
-  }, {});
-
+  // Process each section and calculate stats
   const sectionAttendanceData: SectionAttendance[] = sections.map((section) => {
     const totalStudents = section.students.length;
     const recordedAttendances = section.StudentAttendance.length;
     const studentsPresent = section.StudentAttendance.filter(
       (a) => a.present
     ).length;
-    const percentage =
-      totalStudents > 0
-        ? Math.round((recordedAttendances / totalStudents) * 100)
-        : 0;
 
-    // Determine status based on attendance records
-    let status: 'completed' | 'in-progress' | 'pending' = 'pending';
-    if (recordedAttendances === 0) {
-      status = 'pending';
-    } else if (recordedAttendances < totalStudents) {
-      status = 'in-progress';
-    } else {
-      status = 'completed';
-    }
-
-    // Get the most recent recorder's name
-    let reportedBy = 'Not reported';
-    if (section.StudentAttendance.length > 0) {
-      const recordedById = section.StudentAttendance[0].recordedBy;
-      reportedBy = userMap[recordedById] || 'Unknown';
-    }
+    // Calculate percentages and status
+    const percentage = calculatePercentage(recordedAttendances, totalStudents);
+    const status = getAttendanceStatus(recordedAttendances, totalStudents);
 
     return {
       id: section.id,
       section: `${section.grade.grade} - Section ${section.name}`,
       grade: section.grade.grade,
-      date: formattedDate.toISOString().split('T')[0],
-      reportedBy,
+      date: formattedDate,
+      reportedBy: section.StudentAttendance.map((a) => a.recordedBy).join(', '), // Assuming 'recordedBy' is an array
       status,
       percentage,
       studentsPresent,
@@ -233,26 +137,31 @@ async function getAttendanceCompletionStats(date = new Date()) {
     stats: {
       totalSections,
       completedSections,
-      completionPercentage:
-        totalSections > 0
-          ? Math.round((completedSections / totalSections) * 100)
-          : 0,
+      completionPercentage: calculatePercentage(
+        completedSections,
+        totalSections
+      ),
       totalStudents,
       totalPresent,
-      attendancePercentage:
-        totalStudents > 0
-          ? Math.round((totalPresent / totalStudents) * 100)
-          : 0,
+      attendancePercentage: calculatePercentage(totalPresent, totalStudents),
       pendingSections: totalSections - completedSections,
     },
   };
 }
 
-// Pending Sections => { 2 } => Sections awaiting completion
+async function getSectionCount() {
+  const { orgId } = await auth();
+  if (!orgId) return null;
+
+  return prisma.section.count({
+    where: { organizationId: orgId },
+  });
+}
 
 export default async function AttendanceOverview() {
   const sectionCount = await getSectionCount();
   const attendanceData = await getAttendanceCompletionStats();
+
   // const [showStats, setShowStats] = useState(false);
 
   if (!attendanceData) {
@@ -265,6 +174,8 @@ export default async function AttendanceOverview() {
   }
 
   const { sections, stats } = attendanceData;
+
+  // console.log('attendance section ', sections);
 
   return (
     <div className="space-y-6">
@@ -279,7 +190,11 @@ export default async function AttendanceOverview() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{sectionCount}</div>
+            <div className="text-xl font-bold">
+              {sectionCount
+                ? `${sectionCount} sections available.`
+                : 'No sections found.'}
+            </div>
             <p className="text-xs text-muted-foreground">
               Sections being tracked
             </p>
@@ -301,8 +216,8 @@ export default async function AttendanceOverview() {
             </div>
             <Progress value={stats.completionPercentage} className="h-2 mt-2" />
             <p className="text-xs text-muted-foreground mt-2">
-              {stats.completionPercentage}% of {stats.totalSections} sections
-              completed
+              {`${stats.completedSections} / ${stats.totalSections} section completed `}{' '}
+              sections completed
             </p>
           </CardContent>
         </Card>
@@ -320,9 +235,10 @@ export default async function AttendanceOverview() {
             <div className="text-2xl font-bold">
               {stats.attendancePercentage}%
             </div>
+
             <Progress value={stats.attendancePercentage} className="h-2 mt-2" />
             <p className="text-xs text-muted-foreground mt-2">
-              {stats.totalPresent} of {stats.totalStudents} students present
+              {`${stats.totalPresent} / ${stats.totalStudents} students present`}
             </p>
           </CardContent>
         </Card>
@@ -344,6 +260,7 @@ export default async function AttendanceOverview() {
           </CardContent>
         </Card>
       </div>
+
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
@@ -394,7 +311,9 @@ export default async function AttendanceOverview() {
                     {section.section}
                   </TableCell>
                   <TableCell>
-                    {new Date(section.date).toLocaleDateString()}
+                    {new Intl.DateTimeFormat('en-IN', {
+                      timeZone: 'Asia/Kolkata',
+                    }).format(new Date(section.date))}
                   </TableCell>
                   <TableCell>{section.reportedBy}</TableCell>
                   <TableCell>
@@ -437,6 +356,13 @@ export default async function AttendanceOverview() {
                       />
                     </div>
                   </TableCell>
+                  <TableCell className="font-medium">
+                    <Link
+                      href={`/dashboard/attendance/attendance-dashboard/${section.id}`}
+                    >
+                      View{' '}
+                    </Link>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -444,7 +370,7 @@ export default async function AttendanceOverview() {
         </CardContent>
         <CardFooter className="flex justify-between">
           <div className="text-sm text-muted-foreground">
-            Showing {mockSectionAttendance.length} sections
+            Showing {sections.length} sections
           </div>
         </CardFooter>
       </Card>

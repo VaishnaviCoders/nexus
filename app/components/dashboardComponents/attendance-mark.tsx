@@ -25,7 +25,9 @@ import {
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
@@ -57,7 +59,7 @@ import { toast } from 'sonner';
 import { markAttendance } from '@/app/actions';
 
 // Define types based on the Prisma schema
-type AttendanceStatus = 'PRESENT' | 'ABSENT' | 'LATE';
+type AttendanceStatus = 'PRESENT' | 'ABSENT' | 'LATE' | null;
 
 type StudentAttendance = {
   id: string;
@@ -79,15 +81,6 @@ type Student = {
   StudentAttendance: StudentAttendance[];
   gradeId: string;
   grade?: { grade: string } | null;
-};
-
-type AttendanceRecord = {
-  studentId: string;
-  present: boolean;
-  status: AttendanceStatus;
-  notes: string;
-  sectionId: string;
-  recordedBy: string;
 };
 
 type Props = {
@@ -126,7 +119,23 @@ export default function AttendanceMark({ students }: Props) {
     absent: 0,
     late: 0,
     percentage: 0,
+    unmarked: 0,
   });
+
+  const groupedSections = sections.reduce(
+    (acc, section) => {
+      if (!acc[section.grade]) acc[section.grade] = [];
+      acc[section.grade].push(section);
+      return acc;
+    },
+    {} as Record<string, { id: string; name: string; gradeId: string }[]>
+  );
+
+  console.log('groupedSections', groupedSections);
+
+  const handleValueChange = (value: string) => {
+    setSelectedSection(value);
+  };
 
   // Extract unique sections from students
   useEffect(() => {
@@ -190,7 +199,7 @@ export default function AttendanceMark({ students }: Props) {
           rollNumber: student.rollNumber,
           profileImage: student.profileImage,
           sectionId: student.section?.id || null,
-          status: existingAttendance?.status || 'PRESENT',
+          status: existingAttendance?.status || null,
           notes: existingAttendance?.notes || '',
           marked: !!existingAttendance,
           lastAttendance: lastAttendance
@@ -216,6 +225,9 @@ export default function AttendanceMark({ students }: Props) {
     const late = attendanceData.filter(
       (student) => student.status === 'LATE'
     ).length;
+    const unmarked = attendanceData.filter(
+      (student) => student.status === null
+    ).length;
 
     const total = attendanceData.length;
 
@@ -223,7 +235,7 @@ export default function AttendanceMark({ students }: Props) {
       present,
       absent,
       late,
-
+      unmarked,
       percentage: total > 0 ? Math.round((present / total) * 100) : 0,
     });
   }, [attendanceData]);
@@ -235,6 +247,7 @@ export default function AttendanceMark({ students }: Props) {
       )
     );
   };
+
   const handleNotesChange = (id: string, notes: string) => {
     setAttendanceData(
       attendanceData.map((student) =>
@@ -292,6 +305,17 @@ export default function AttendanceMark({ students }: Props) {
   };
 
   const handleSubmit = () => {
+    // const unmarkedStudents = attendanceData.filter(
+    //   (student) => student.status === null
+    // );
+    // if (unmarkedStudents.length > 0) {
+    //   toast.warning(`${unmarkedStudents.length} students still unmarked`, {
+    //     description:
+    //       'Please mark attendance for all students before submitting.',
+    //   });
+    //   return;
+    // }
+
     setShowConfirmation(true);
   };
 
@@ -299,10 +323,12 @@ export default function AttendanceMark({ students }: Props) {
     try {
       const sectionId = selectedSection;
 
-      const records = attendanceData.map((student) => ({
-        studentId: student.id,
-        status: student.status, // 'PRESENT', 'ABSENT', or 'LATE'
-      }));
+      const records = attendanceData
+        .filter((student) => student.status !== null) // Filter out null statuses
+        .map((student) => ({
+          studentId: student.id,
+          status: student.status as 'PRESENT' | 'ABSENT' | 'LATE', // Type assertion
+        }));
 
       await markAttendance(sectionId, records);
 
@@ -312,7 +338,7 @@ export default function AttendanceMark({ students }: Props) {
 
       // Close dialog and redirect
       setShowConfirmation(false);
-      router.push('/dashboard/student-attendance/attendance-dashboard');
+      router.push('/dashboard/attendance/attendance-dashboard');
       router.refresh();
     } catch (error) {
       console.error('Error saving attendance:', error);
@@ -398,19 +424,20 @@ export default function AttendanceMark({ students }: Props) {
               </div>
             )}
             <div className="space-y-2">
-              <label className="text-sm font-medium">Section</label>
-              <Select
-                value={selectedSection}
-                onValueChange={setSelectedSection}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select section" />
+              <Select onValueChange={handleValueChange} value={selectedSection}>
+                <SelectTrigger className="w-[280px]">
+                  <SelectValue placeholder="Select a section" />
                 </SelectTrigger>
                 <SelectContent>
-                  {sections.map((section) => (
-                    <SelectItem key={section.id} value={section.id}>
-                      {`Grade ${section.grade} - Section ${section.name}`}
-                    </SelectItem>
+                  {Object.entries(groupedSections).map(([grade, sections]) => (
+                    <SelectGroup key={grade}>
+                      <SelectLabel className="font-bold ">{grade}</SelectLabel>
+                      {sections.map((section) => (
+                        <SelectItem key={section.id} value={section.id}>
+                          {section.name}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
                   ))}
                 </SelectContent>
               </Select>

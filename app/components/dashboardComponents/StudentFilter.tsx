@@ -1,7 +1,5 @@
-'use client'; // This makes it a client-side component
+'use client';
 
-// import { Button } from '@/components/ui/button';
-// import { Loader2, Search } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 import { useState, useTransition } from 'react';

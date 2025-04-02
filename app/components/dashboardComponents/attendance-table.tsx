@@ -1,16 +1,10 @@
 'use client';
 
-import { useState } from 'react';
-import { Edit, MoreHorizontal } from 'lucide-react';
+import { Mail, Phone, Trash2, User } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+
 import {
   Table,
   TableBody,
@@ -27,188 +21,149 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination';
+import { EmptyState } from '@/components/EmptyState';
+import { useState, useTransition } from 'react';
+import { deleteAttendance } from '@/app/actions';
 
-// Mock attendance data
-const attendanceData = [
-  {
-    id: 1,
-    date: '2025-03-10',
-    student: 'Alex Johnson',
-    rollNumber: 'S001',
-    section: 'A',
-    status: 'present',
-  },
-  {
-    id: 2,
-    date: '2025-03-10',
-    student: 'Maria Garcia',
-    rollNumber: 'S002',
-    section: 'A',
-    status: 'absent',
-  },
-  {
-    id: 3,
-    date: '2025-03-10',
-    student: 'James Wilson',
-    rollNumber: 'S003',
-    section: 'A',
-    status: 'late',
-  },
-  {
-    id: 4,
-    date: '2025-03-10',
-    student: 'Sarah Brown',
-    rollNumber: 'S004',
-    section: 'A',
-    status: 'present',
-  },
-  {
-    id: 5,
-    date: '2025-03-10',
-    student: 'David Lee',
-    rollNumber: 'S005',
-    section: 'A',
-    status: 'present',
-  },
-  {
-    id: 6,
-    date: '2025-03-09',
-    student: 'Alex Johnson',
-    rollNumber: 'S001',
-    section: 'A',
-    status: 'present',
-  },
-  {
-    id: 7,
-    date: '2025-03-09',
-    student: 'Maria Garcia',
-    rollNumber: 'S002',
-    section: 'A',
-    status: 'present',
-  },
-  {
-    id: 8,
-    date: '2025-03-09',
-    student: 'James Wilson',
-    rollNumber: 'S003',
-    section: 'A',
-    status: 'present',
-  },
-  {
-    id: 9,
-    date: '2025-03-09',
-    student: 'Sarah Brown',
-    rollNumber: 'S004',
-    section: 'A',
-    status: 'absent',
-  },
-  {
-    id: 10,
-    date: '2025-03-09',
-    student: 'David Lee',
-    rollNumber: 'S005',
-    section: 'A',
-    status: 'late',
-  },
-];
+interface AttendanceRecord {
+  id: string;
+  studentId: string;
+  date: Date;
+  status: AttendanceStatus;
+  present: boolean;
+  notes: string | null;
+  recordedBy: string;
+  sectionId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  section: {
+    id: string;
+    name: string;
+    gradeId: string;
+  };
+  student: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    rollNumber: string;
+    section: { name: string } | null;
+  };
+}
 
-export function AttendanceTable() {
-  const [selectedRows, setSelectedRows] = useState<number[]>([]);
+type AttendanceStatus = 'PRESENT' | 'ABSENT' | 'LATE';
 
-  const toggleRow = (id: number) => {
-    setSelectedRows((prev) =>
-      prev.includes(id) ? prev.filter((rowId) => rowId !== id) : [...prev, id]
+interface AttendanceRecordsProps {
+  records: AttendanceRecord[];
+}
+
+export function AttendanceTable({ records }: AttendanceRecordsProps) {
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [isPending, startTransition] = useTransition();
+
+  const toggleSelection = (id: string) => {
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     );
   };
-
-  const toggleAll = () => {
-    setSelectedRows((prev) =>
-      prev.length === attendanceData.length
-        ? []
-        : attendanceData.map((row) => row.id)
-    );
+  const handleDelete = (id: string) => {
+    startTransition(async () => {
+      await deleteAttendance([id]);
+      // Optionally, refetch data or update UI
+    });
   };
 
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'present':
-        return (
-          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-800/20 dark:text-green-400">
-            Present
-          </span>
-        );
-      case 'absent':
-        return (
-          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-800/20 dark:text-red-400">
-            Absent
-          </span>
-        );
-      case 'late':
-        return (
-          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-800/20 dark:text-yellow-400">
-            Late
-          </span>
-        );
-      default:
-        return null;
-    }
+  const handleBulkDelete = () => {
+    if (selectedIds.length === 0) return;
+    startTransition(async () => {
+      await deleteAttendance(selectedIds);
+      setSelectedIds([]); // Clear selection after delete
+      // Optionally, refetch data or update UI
+    });
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4  rounded-md border">
       <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[50px]">
-                <Checkbox
-                  checked={selectedRows.length === attendanceData.length}
-                  onCheckedChange={toggleAll}
-                />
-              </TableHead>
-              <TableHead>Date</TableHead>
-              <TableHead>Student</TableHead>
-              <TableHead>Roll Number</TableHead>
-              <TableHead>Section</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className="w-[80px]">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {attendanceData.map((row) => (
-              <TableRow key={row.id}>
-                <TableCell>
+        {records.length > 0 ? (
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[50px]">
                   <Checkbox
-                    checked={selectedRows.includes(row.id)}
-                    onCheckedChange={() => toggleRow(row.id)}
+                    checked={selectedIds.length === records.length}
+                    onCheckedChange={() =>
+                      setSelectedIds(
+                        selectedIds.length === records.length
+                          ? []
+                          : records.map((r) => r.id)
+                      )
+                    }
                   />
-                </TableCell>
-                <TableCell>{row.date}</TableCell>
-                <TableCell className="font-medium">{row.student}</TableCell>
-                <TableCell>{row.rollNumber}</TableCell>
-                <TableCell>Section {row.section}</TableCell>
-                <TableCell>{getStatusBadge(row.status)}</TableCell>
-                <TableCell>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon">
-                        <MoreHorizontal className="h-4 w-4" />
-                        <span className="sr-only">Open menu</span>
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem>
-                        <Edit className="mr-2 h-4 w-4" />
-                        Edit
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
+                  {records.length}
+                </TableHead>
+                <TableHead>Date</TableHead>
+                <TableHead>Student</TableHead>
+                <TableHead>Roll Number</TableHead>
+                <TableHead>Section</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead className="w-[80px]">Actions</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody>
+              {records.map((row) => (
+                <TableRow key={row.id}>
+                  <TableCell>
+                    <Checkbox
+                      checked={selectedIds.includes(row.id)}
+                      onCheckedChange={() => toggleSelection(row.id)}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    {new Intl.DateTimeFormat('en-IN').format(row.date)}
+                  </TableCell>
+                  <TableCell className="font-medium">
+                    {row.student.firstName} {row.student.lastName}
+                  </TableCell>
+                  <TableCell>{row.student.rollNumber}</TableCell>
+                  <TableCell>
+                    {row.section.gradeId}
+                    {row.section.name}
+                  </TableCell>
+                  <TableCell>{getStatusBadge(row.status)}</TableCell>
+                  <TableCell>
+                    <Button
+                      onClick={() => handleDelete(row.id)}
+                      className="flex justify-center items-center"
+                      variant={'outline'}
+                    >
+                      <Trash2 color="red" className="h-4 w-4 " />
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        ) : (
+          <div className="flex justify-center items-center  my-5">
+            <EmptyState
+              title="No Students Found"
+              description="No students attendance found with the given search query."
+              icons={[User, Mail, Phone]}
+              image="/EmptyState.png"
+              action={{
+                label: 'Take Attendance',
+                href: '/dashboard/attendance/mark',
+              }}
+            />
+          </div>
+        )}
       </div>
+      {selectedIds.length > 0 && (
+        <Button onClick={handleBulkDelete} variant="destructive">
+          <Trash2 color="white" className="h-4 w-4 " />
+          Delete Selected
+        </Button>
+      )}
 
       <Pagination>
         <PaginationContent>
@@ -234,3 +189,28 @@ export function AttendanceTable() {
     </div>
   );
 }
+
+const getStatusBadge = (status: AttendanceStatus) => {
+  switch (status) {
+    case 'PRESENT':
+      return (
+        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-800/20 dark:text-green-400">
+          Present
+        </span>
+      );
+    case 'ABSENT':
+      return (
+        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-800/20 dark:text-red-400">
+          Absent
+        </span>
+      );
+    case 'LATE':
+      return (
+        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-800/20 dark:text-yellow-400">
+          Late
+        </span>
+      );
+    default:
+      return null;
+  }
+};

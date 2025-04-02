@@ -236,6 +236,18 @@ export async function createGrade(prevState: any, formData: FormData) {
 
   redirect('/dashboard/grades');
 }
+export async function fetchGradesAndSections(organizationId: string) {
+  const grades = await prisma.grade.findMany({
+    where: { organizationId },
+    include: { section: true },
+  });
+
+  return grades.map((grade) => ({
+    id: grade.id,
+    name: grade.grade,
+    sections: grade.section.map((sec) => ({ id: sec.id, name: sec.name })),
+  }));
+}
 export async function deleteGrade(formData: FormData) {
   const gradeId = formData.get('gradeId') as string;
 
@@ -245,7 +257,6 @@ export async function deleteGrade(formData: FormData) {
 
   redirect('/dashboard/grades');
 }
-
 export async function deleteSection(formData: FormData) {
   const sectionId = formData.get('sectionId')?.toString();
 
@@ -255,7 +266,6 @@ export async function deleteSection(formData: FormData) {
 
   redirect('/dashboard/grades');
 }
-
 export async function createSection(prevState: any, formData: FormData) {
   const { orgId } = await auth();
 
@@ -484,7 +494,7 @@ export async function markAttendance(
     create: {
       studentId: record.studentId,
       present: record.status === 'PRESENT',
-      date: new Date(),
+      date: today,
       status: record.status,
       notes: null,
       recordedBy,
@@ -500,3 +510,104 @@ export async function markAttendance(
 
   console.log('Attendance data updated:', attendanceUpdates);
 }
+export async function deleteAttendance(ids: string[]) {
+  await prisma.studentAttendance.deleteMany({
+    where: { id: { in: ids } },
+  });
+  revalidatePath('/dashboard/attendance');
+}
+
+export async function getStudentMonthlyAttendance(studentId: string) {
+  const attendanceRecords = await prisma.studentAttendance.findMany({
+    where: {
+      studentId: studentId,
+    },
+    select: {
+      date: true,
+      status: true,
+      sectionId: true,
+    },
+  });
+
+  const allMonths = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
+
+  // Initialize monthly attendance with 0s
+  const monthlyAttendance = allMonths.reduce(
+    (acc, month) => {
+      acc[month] = { month, attendance: 0 };
+      return acc;
+    },
+    {} as Record<string, { month: string; attendance: number }>
+  );
+
+  // Process attendance data
+  attendanceRecords.forEach((record) => {
+    const month = new Date(record.date).toLocaleString('default', {
+      month: 'long',
+    });
+    if (record.status === 'PRESENT') {
+      monthlyAttendance[month].attendance += 1;
+    }
+  });
+
+  // Convert to an array
+  return Object.values(monthlyAttendance);
+}
+export async function WeeklyStudentAttendance(studentId: string) {
+  const attendanceRecords = await prisma.studentAttendance.findMany({
+    where: { studentId },
+    select: { date: true, status: true },
+  });
+
+  const weeklyAttendance: Record<number, { week: number; attendance: number }> =
+    {};
+
+  attendanceRecords.forEach((record) => {
+    const date = new Date(record.date);
+    const weekNumber = Math.ceil(date.getDate() / 7); // Week 1-4 in a month
+
+    if (!weeklyAttendance[weekNumber]) {
+      weeklyAttendance[weekNumber] = { week: weekNumber, attendance: 0 };
+    }
+
+    if (record.status === 'PRESENT') {
+      weeklyAttendance[weekNumber].attendance += 1;
+    }
+  });
+
+  return Object.values(weeklyAttendance);
+}
+export async function yearlyStudentAttendance(studentId: string) {
+  const attendanceRecords = await prisma.studentAttendance.count({
+    where: { studentId, status: 'PRESENT' },
+  });
+
+  return { year: new Date().getFullYear(), attendance: attendanceRecords };
+}
+export async function CustomDatesStudentAttendance(
+  studentId: string,
+  startDate: Date,
+  endDate: Date
+) {}
+
+export async function getSectionIdMonthlyAttendance(sectionId: string) {}
+export async function WeeklySectionAttendance(sectionId: string) {}
+export async function yearlySectionAttendance(sectionId: string) {}
+export async function CustomDatesSectionAttendance(
+  sectionId: string,
+  startDate: Date,
+  endDate: Date
+) {}
