@@ -1,6 +1,5 @@
 import NoticeList from '@/app/components/dashboardComponents/notice-list';
 
-import { Button } from '@/components/ui/button';
 import prisma from '@/lib/db';
 import { auth } from '@clerk/nextjs/server';
 import { Role } from '@prisma/client';

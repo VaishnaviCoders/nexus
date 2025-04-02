@@ -360,6 +360,19 @@ export async function createStudent(data: z.infer<typeof studentSchema>) {
     } catch (orgError) {
       console.error('❌ Failed to add student to organization:', orgError);
     }
+
+    const imageFile = validateData.profileImage as File | null;
+
+    if (!imageFile || imageFile.name === 'undefined') {
+      return console.log('File is not proper');
+    }
+
+    const arrayBuffer = await imageFile.arrayBuffer();
+
+    const buffer = Buffer.from(arrayBuffer);
+
+    // const uploadResult
+
     const result = await prisma.$transaction(async (tx) => {
       const student = await tx.student.create({
         data: {
