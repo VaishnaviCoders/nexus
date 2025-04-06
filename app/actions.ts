@@ -17,6 +17,14 @@ import { Role } from '@prisma/client';
 import { Knock } from '@knocklabs/node';
 import { redirect } from 'next/navigation';
 import { parseWithZod } from '@conform-to/zod';
+
+import { v2 as cloudinary, UploadApiResponse } from 'cloudinary';
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 // export const syncOrganization = async () => {
 //   const { orgId, orgSlug } = await auth();
 
@@ -135,50 +143,48 @@ const getRecipientEmails = async (
 
   return recipients.map((user) => user.email);
 };
-const sendNotifications = async (
-  notice: any,
-  recipientEmails: string[],
-  user: User
-) => {
-  const resend = new Resend(process.env.RESEND_API_KEY);
-  const knock = new Knock(process.env.KNOCK_API_SECRET);
-
-  const [knockResponse, resendResponse] = await Promise.all([
-    knock.workflows.trigger('notice-created', {
-      recipients: recipientEmails.map((email) => ({
-        id: user.id,
-        email,
-        name: user.firstName || '',
-      })),
-      data: {
-        title: notice.title,
-        email: user.emailAddresses[0].emailAddress,
-        name: user.firstName,
-      },
-    }),
-    resend.emails.send({
-      from: 'onboarding@resend.dev',
-      to: recipientEmails,
-      subject: `Notice: ${notice.title}`,
-      react: NoticeEmailTemplate({
-        title: notice.title,
-        organizationImage:
-          notice.Organization?.organizationLogo ||
-          'https://supabase.com/dashboard/img/supabase-logo.svg',
-        content: notice.content,
-        noticeType: notice.noticeType,
-        startDate: notice.startDate,
-        endDate: notice.endDate,
-        targetAudience: notice.targetAudience,
-        organizationName: notice.Organization?.name || '',
-        publishedBy: notice.publishedBy,
-        noticeUrl: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/notices/${notice.id}`,
-      }),
-    }),
-  ]);
-
-  console.log('Notifications sent:', { knockResponse, resendResponse });
-};
+// const sendNotifications = async (
+//   notice: any,
+//   recipientEmails: string[],
+//   user: User
+// ) => {
+//   const resend = new Resend(process.env.RESEND_API_KEY);
+//   const knock = new Knock(process.env.KNOCK_API_SECRET);
+//   const [knockResponse, resendResponse] = await Promise.all([
+//     knock.workflows.trigger('notice-created', {
+//       recipients: recipientEmails.map((email) => ({
+//         id: user.id,
+//         email,
+//         name: user.firstName || '',
+//       })),
+//       data: {
+//         title: notice.title,
+//         email: user.emailAddresses[0].emailAddress,
+//         name: user.firstName,
+//       },
+//     }),
+//     resend.emails.send({
+//       from: 'onboarding@resend.dev',
+//       to: recipientEmails,
+//       subject: `Notice: ${notice.title}`,
+//       react: NoticeEmailTemplate({
+//         title: notice.title,
+//         organizationImage:
+//           notice.Organization?.organizationLogo ||
+//           'https://supabase.com/dashboard/img/supabase-logo.svg',
+//         content: notice.content,
+//         noticeType: notice.noticeType,
+//         startDate: notice.startDate,
+//         endDate: notice.endDate,
+//         targetAudience: notice.targetAudience,
+//         organizationName: notice.Organization?.name || '',
+//         publishedBy: notice.publishedBy,
+//         noticeUrl: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/notices/${notice.id}`,
+//       }),
+//     }),
+//   ]);
+//   console.log('Notifications sent:', { knockResponse, resendResponse });
+// };
 export const toggleNoticeApproval = async (
   noticeId: string,
   currentStatus: boolean
@@ -199,16 +205,16 @@ export const toggleNoticeApproval = async (
     },
   });
 
-  // Check can we send emails
-  if (!currentStatus && notice.isNoticeApproved && notice.emailNotification) {
-    const recipientEmails = await getRecipientEmails(
-      notice.organizationId,
-      notice.targetAudience
-    );
-    if (recipientEmails.length > 0) {
-      await sendNotifications(notice, recipientEmails, user);
-    }
-  }
+  // // Check can we send emails
+  // if (!currentStatus && notice.isNoticeApproved && notice.emailNotification) {
+  //   const recipientEmails = await getRecipientEmails(
+  //     notice.organizationId,
+  //     notice.targetAudience
+  //   );
+  //   if (recipientEmails.length > 0) {
+  //     await sendNotifications(notice, recipientEmails, user);
+  //   }
+  // }
   revalidatePath('/dashboard/notice');
 };
 
@@ -343,42 +349,63 @@ export async function createStudent(data: z.infer<typeof studentSchema>) {
       const organization = await client.organizations.getOrganization({
         organizationId: orgId,
       });
-      console.log('Verified organization:', organization);
+      // console.log('Verified organization:', organization);
     } catch (error) {
       console.error('❌ Organization verification failed:', error);
       throw new Error('Organization not found in Clerk system');
     }
-    console.log('Clerk User Response:', JSON.stringify(clerkUser, null, 2));
-    console.log('Adding to Organization ID:', orgId);
+    // console.log('Clerk User Response:', JSON.stringify(clerkUser, null, 2));
+    // console.log('Adding to Organization ID:', orgId);
     try {
       await client.organizations.createOrganizationMembership({
         organizationId: orgId,
         userId: clerkUser.id,
         role: 'org:student',
       });
-      console.log(`✅ Added student ${validateData.email} to organization`);
+      // console.log(`✅ Added student ${validateData.email} to organization`);
     } catch (orgError) {
       console.error('❌ Failed to add student to organization:', orgError);
     }
 
-    const imageFile = validateData.profileImage as File | null;
+    // const imageFile = validateData.profileImage as File | null;
 
-    if (!imageFile || imageFile.name === 'undefined') {
-      return console.log('File is not proper');
-    }
+    // if (!imageFile || imageFile.name === 'undefined') {
+    //   return console.log('File is not proper');
+    // }
 
-    const arrayBuffer = await imageFile.arrayBuffer();
+    // const arrayBuffer = await imageFile.arrayBuffer();
 
-    const buffer = Buffer.from(arrayBuffer);
+    // console.log('arrayBuffer', arrayBuffer);
 
-    // const uploadResult
+    // const buffer = Buffer.from(arrayBuffer);
+
+    // const uploadResponse: UploadApiResponse | undefined = await new Promise(
+    //   (resolve, reject) => {
+    //     const uploadStream = cloudinary.uploader.upload_stream(
+    //       { resource_type: 'auto' },
+    //       (error, result) => {
+    //         if (error) {
+    //           reject(error);
+    //         } else {
+    //           resolve(result);
+    //         }
+    //       }
+    //     );
+    //     uploadStream.end(buffer);
+    //   }
+    // );
+
+    // const imageUrl = uploadResponse?.secure_url;
+
+    // if (!imageUrl) {
+    //   return console.log('Image URL Failed');
+    // }
 
     const result = await prisma.$transaction(async (tx) => {
       const student = await tx.student.create({
         data: {
           clerkId: clerkUser.id,
           organizationId: orgId,
-
           rollNumber: validateData.rollNumber,
           firstName: validateData.firstName,
           lastName: validateData.lastName,
@@ -386,8 +413,9 @@ export async function createStudent(data: z.infer<typeof studentSchema>) {
           phoneNumber: validateData.phoneNumber,
           whatsAppNumber: validateData.whatsAppNumber,
           middleName: validateData.middleName,
-          fullName:
-            `${validateData.firstName} ${validateData.middleName ?? ''} ${validateData.lastName}`.trim(),
+          fullName: `${validateData.firstName} ${
+            validateData.middleName ?? ''
+          } ${validateData.lastName}`.trim(),
           motherName:
             validateData.parent?.relationship === 'MOTHER'
               ? `${validateData.parent.firstName} ${validateData.parent.lastName}`.trim()
@@ -558,13 +586,10 @@ export async function getStudentMonthlyAttendance(studentId: string) {
   ];
 
   // Initialize monthly attendance with 0s
-  const monthlyAttendance = allMonths.reduce(
-    (acc, month) => {
-      acc[month] = { month, attendance: 0 };
-      return acc;
-    },
-    {} as Record<string, { month: string; attendance: number }>
-  );
+  const monthlyAttendance = allMonths.reduce((acc, month) => {
+    acc[month] = { month, attendance: 0 };
+    return acc;
+  }, {} as Record<string, { month: string; attendance: number }>);
 
   // Process attendance data
   attendanceRecords.forEach((record) => {

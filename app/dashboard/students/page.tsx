@@ -106,7 +106,7 @@ export default async function Students({ searchParams }: Props) {
         </div>
       </div>
       {students && students.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2  md:grid-cols-3 xl:grid-cols-4 gap-6">
           <Suspense fallback={<StudentLoading />}>
             {students.map((student) => (
               <Link href={`/dashboard/students/${student.id}`} key={student.id}>
@@ -122,7 +122,9 @@ export default async function Students({ searchParams }: Props) {
                           alt={`${student.fullName} || ${student.firstName} ${student.lastName}`}
                         />
                         <AvatarFallback className="text-lg font-medium">
-                          {`${student.firstName.charAt(0)}${student.lastName.charAt(0)}`}
+                          {`${student.firstName.charAt(
+                            0
+                          )}${student.lastName.charAt(0)}`}
                         </AvatarFallback>
                       </Avatar>
                       <h3 className="font-medium text-lg mt-2">{`${student.firstName}  ${student.lastName}`}</h3>

@@ -14,7 +14,7 @@ import {
   Tailwind,
 } from '@react-email/components';
 
-interface NoticeEmailTempProps {
+export interface NoticeEmailTempProps {
   title: string;
   content: string;
   noticeType: string;

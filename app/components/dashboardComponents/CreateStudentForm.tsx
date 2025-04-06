@@ -9,9 +9,8 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 // import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { useState } from 'react';
+import { useActionState, useState } from 'react';
 import { createStudent } from '@/app/actions';
-
 import { studentSchema } from '@/lib/schemas';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -46,14 +45,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { useUploadFile } from '@/hooks/use-upload-file';
 
 export default function CreateStudentForm() {
   const [selectedGradeId, setSelectedGradeId] = useState<string | null>(null);
   const [image, setImage] = useState<string | null>(null);
-
-  const { onUpload, progresses, uploadedFiles, isUploading, resetUploadState } =
-    useUploadFile('studentProfileImage', { defaultUploadedFiles: [] });
 
   const form = useForm<z.infer<typeof studentSchema>>({
     resolver: zodResolver(studentSchema),
@@ -87,26 +82,40 @@ export default function CreateStudentForm() {
       },
     },
   });
-  console.log('Form errors:', form.formState.errors);
+  // console.log('Form errors:', form.formState.errors);
 
   const [pending, setPending] = useState(false);
 
-  async function onSubmit(data: z.infer<typeof studentSchema>) {
+  async function uploadToCloudinary(file: File) {
+    const formData = new FormData();
+
+    const uploadPreset = 'student_uploads';
+    formData.append('file', file);
+    formData.append('upload_preset', uploadPreset);
+
+    const response = await fetch(
+      'https://api.cloudinary.com/v1_1/ddws0tfqz/upload',
+      {
+        method: 'POST',
+        body: formData,
+      }
+    );
+    const data = await response.json();
+    console.log('Cloudinary response:', data);
+    return data.secure_url;
+  }
+
+  const onSubmit = async (data: z.infer<typeof studentSchema>) => {
     try {
-      console.log('Submitting...', data);
       setPending(true);
       await createStudent(data);
-      toast.success('Student created successfully!');
+      toast.success('Student created!');
       form.reset();
-    } catch (error) {
-      toast.error('Error creating student');
-      if (error instanceof Error && error.message !== 'NEXT_REDIRECT') {
-        console.error(error.message);
-      }
-    } finally {
-      setPending(false);
+    } catch (err) {
+      console.error(err);
+      toast.error('Failed to create student');
     }
-  }
+  };
 
   const genderOptions = [
     { id: 'MALE', label: 'Male' },
@@ -120,19 +129,6 @@ export default function CreateStudentForm() {
     selectedGradeId ? `/api/section/${selectedGradeId}` : [],
     fetcher
   );
-
-  const fileRef = form.register('profileImage', { required: true });
-
-  // const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const file = e.target.files?.[0];
-  //   if (file) {
-  //     const reader = new FileReader();
-  //     reader.onloadend = () => {
-  //       setImage(reader.result as string);
-  //     };
-  //     reader.readAsDataURL(file);
-  //   }
-  // };
 
   return (
     <Form {...form}>
@@ -348,20 +344,16 @@ export default function CreateStudentForm() {
                               <Input
                                 type="file"
                                 accept="image/*"
-                                onChange={(event) => {
-                                  const file = event.target.files?.[0];
-                                  if (file) {
-                                    const reader = new FileReader();
-                                    reader.onloadend = () => {
-                                      const imageData = reader.result as string;
-                                      setImage(imageData); // To display image preview
-                                      field.onChange(imageData); // Set Base64 string in form field
-                                    };
-                                    reader.readAsDataURL(file);
-                                  }
-                                }}
                                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer p-4"
                                 aria-label="Upload profile picture"
+                                onChange={async (e) => {
+                                  const file = e.target.files?.[0];
+                                  if (file) {
+                                    const url = await uploadToCloudinary(file);
+                                    setImage(url);
+                                    field.onChange(url);
+                                  }
+                                }}
                               />
                               {image ? (
                                 <img
