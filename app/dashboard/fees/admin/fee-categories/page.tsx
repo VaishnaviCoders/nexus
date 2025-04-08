@@ -32,8 +32,13 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { Plus, Pencil, Trash2 } from 'lucide-react';
 
+type FeeCategoryType = {
+  id: string;
+  name: string;
+  description?: string;
+};
 // Sample data
-const initialCategories = [
+const initialCategories: FeeCategoryType[] = [
   {
     id: '1',
     name: 'Annual Fee',
@@ -73,13 +78,21 @@ const initialCategories = [
 ];
 
 export default function FeeCategories() {
-  const [categories, setCategories] = useState(initialCategories);
-  const [newCategory, setNewCategory] = useState({ name: '', description: '' });
-  const [editCategory, setEditCategory] = useState(null);
+  const [categories, setCategories] =
+    useState<FeeCategoryType[]>(initialCategories);
+  const [newCategory, setNewCategory] = useState<Omit<FeeCategoryType, 'id'>>({
+    name: '',
+    description: '',
+  });
+  const [editCategory, setEditCategory] = useState<FeeCategoryType | null>(
+    null
+  );
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [categoryToDelete, setCategoryToDelete] = useState(null);
+
+  const [categoryToDelete, setCategoryToDelete] =
+    useState<FeeCategoryType | null>(null);
 
   const handleAddCategory = () => {
     if (newCategory.name.trim() === '') return;
@@ -106,12 +119,12 @@ export default function FeeCategories() {
     setIsDeleteDialogOpen(false);
   };
 
-  const openEditDialog = (category) => {
+  const openEditDialog = (category: FeeCategoryType) => {
     setEditCategory({ ...category });
     setIsEditDialogOpen(true);
   };
 
-  const openDeleteDialog = (category) => {
+  const openDeleteDialog = (category: FeeCategoryType) => {
     setCategoryToDelete(category);
     setIsDeleteDialogOpen(true);
   };
