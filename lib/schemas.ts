@@ -88,3 +88,10 @@ export const studentSchema = z.object({
   fullName: z.string().optional(),
   parent: parentSchema.optional(),
 });
+
+// Fees
+
+export const feeCategorySchema = z.object({
+  categoryName: z.string().min(1, 'Fee Category is required'),
+  description: z.string().min(1, 'Description is required'),
+});

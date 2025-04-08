@@ -12,6 +12,8 @@ import {
   GraduationCap,
   ScrollText,
   FileCheck,
+  IndianRupee,
+  School,
 } from 'lucide-react';
 
 type Submenu = {
@@ -57,7 +59,7 @@ export const roleMenus: Record<string, Group[]> = {
         {
           href: '/dashboard/grades',
           label: 'Class Management',
-          icon: UserPlus,
+          icon: School,
         },
         {
           href: '/dashboard/teachers',
@@ -68,6 +70,11 @@ export const roleMenus: Record<string, Group[]> = {
           href: '/dashboard/students',
           label: 'Student Management',
           icon: Users,
+        },
+        {
+          href: '/dashboard/fees/admin',
+          label: 'Fees Management',
+          icon: IndianRupee,
         },
       ],
     },
@@ -114,11 +121,15 @@ export const roleMenus: Record<string, Group[]> = {
     },
     {
       groupLabel: 'Management',
-
       menus: [
         {
           href: 'dashboard/grades',
-          label: 'Grades Management',
+          label: 'Class Management',
+          icon: Settings,
+        },
+        {
+          href: 'dashboard/fees/teacher',
+          label: 'Fees Management',
           icon: Settings,
         },
         {
@@ -133,7 +144,7 @@ export const roleMenus: Record<string, Group[]> = {
         },
         {
           href: '/students',
-          label: 'Student Management',
+          label: 'Students Management',
           icon: Users,
           submenus: [
             { href: '/dashboard/students', label: 'View Students' },
@@ -204,7 +215,7 @@ export const roleMenus: Record<string, Group[]> = {
           icon: Calendar,
         },
         {
-          href: '/fees',
+          href: '/dashboard/fees/teacher',
           label: 'Fees Management',
           icon: DollarSign,
         },
@@ -265,6 +276,11 @@ export const roleMenus: Record<string, Group[]> = {
           href: '/my-children',
           label: 'My Children',
           icon: Users,
+        },
+        {
+          href: '/dashboard/fees/parent',
+          label: 'Fees ',
+          icon: Settings,
         },
         {
           href: '/attendance',

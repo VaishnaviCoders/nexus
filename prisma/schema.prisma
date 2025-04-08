@@ -148,17 +148,19 @@ model Section {
 }
 
 model Fee {
-  id          String      @id @default(cuid())
-  totalFee    Float
-  paidAmount  Float       @default(0)
-  dueDate     DateTime
-  status      FeeStatus   @default(UNPAID)
-  studentId   String
-  student     Student     @relation(fields: [studentId], references: [id])
-  categoryId  String
-  feeCategory FeeCategory @relation(fields: [categoryId], references: [id])
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  id             String        @id @default(cuid())
+  totalFee       Float
+  paidAmount     Float         @default(0)
+  dueDate        DateTime
+  status         FeeStatus     @default(UNPAID)
+  studentId      String
+  student        Student       @relation(fields: [studentId], references: [id])
+  categoryId     String
+  feeCategory    FeeCategory   @relation(fields: [categoryId], references: [id])
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  Organization   Organization? @relation(fields: [organizationId], references: [id])
+  organizationId String?
 }
 
 model FeeCategory {
@@ -170,16 +172,16 @@ model FeeCategory {
   fees        Fee[]
 }
 
-enum AttendanceStatus {
-  PRESENT
-  ABSENT
-  LATE
-}
-
 enum FeeStatus {
   PAID
   UNPAID
   OVERDUE
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+  LATE
 }
 
 model Organization {
@@ -196,6 +198,7 @@ model Organization {
   Student          Student[]
   Grade            Grade[]
   Section          Section[]
+  Fee              Fee[]
 }
 
 model Notice {

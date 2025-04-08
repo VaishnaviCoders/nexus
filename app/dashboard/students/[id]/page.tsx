@@ -90,15 +90,22 @@ const StudentIdRoute = async ({
   params: Promise<{ id: string }>;
 }) => {
   const studentId = (await params).id;
-  const data = await getStudentData(studentId);
-  const studentMonthlyAttendanceData =
-    await getStudentMonthlyAttendance(studentId);
-  const weeklyStudentAttendance = await WeeklyStudentAttendance(studentId);
+
+  // await new Promise((r) => setTimeout(r, 50000));
+
+  await new Promise((r) => setTimeout(r, 50000));
+  const [data, studentMonthlyAttendanceData, weeklyStudentAttendance, fees] =
+    await Promise.all([
+      getStudentData(studentId),
+      getStudentMonthlyAttendance(studentId),
+      WeeklyStudentAttendance(studentId),
+      getFees(studentId),
+    ]);
 
   // console.log('Attendance data', studentMonthlyAttendanceData);
   // console.log('weeklyStudentAttendance', weeklyStudentAttendance);
 
-  const fees = await getFees(studentId);
+  // const fees = await getFees(studentId);
   const totalFees = fees.reduce((acc, fee) => acc + fee.totalFee, 0);
   const paidFees = fees.reduce((acc, fee) => acc + fee.paidAmount, 0);
   const pendingFees = totalFees - paidFees;

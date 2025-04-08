@@ -110,6 +110,7 @@ export default function CreateStudentForm() {
       setPending(true);
       await createStudent(data);
       toast.success('Student created!');
+      setImage(null);
       form.reset();
     } catch (err) {
       console.error(err);
