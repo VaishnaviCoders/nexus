@@ -7,10 +7,12 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import prisma from '@/lib/db';
+import { getOrganizationId } from '@/lib/organization';
 import {
   CalendarDays,
   CreditCard,
-  DollarSign,
+  IndianRupee,
   Users,
   BookOpen,
   School,
@@ -21,15 +23,55 @@ import Link from 'next/link';
 // import { RecentPayments } from '@/components/dashboard/recent-payments';
 // import { FeeStatusOverview } from '@/components/dashboard/fee-status-overview';
 
-export default function Dashboard() {
+export const getDashboardStats = async (organizationId: string) => {
+  const [totalRevenue, totalPending, studentCount, feeCategoryCount] =
+    await Promise.all([
+      prisma.fee.aggregate({
+        where: { organizationId },
+        _sum: { paidAmount: true },
+      }),
+      prisma.fee.aggregate({
+        where: { organizationId },
+        _sum: { pendingAmount: true },
+      }),
+      prisma.student.count({
+        where: { organizationId },
+      }),
+      prisma.feeCategory.count({
+        where: { organizationId },
+      }),
+    ]);
+
+  return {
+    totalRevenue: totalRevenue._sum.paidAmount || 0,
+    pendingFees: totalPending._sum.pendingAmount || 0,
+    totalStudents: studentCount,
+    feeCategoryCount,
+  };
+};
+
+export default async function Dashboard() {
+  const orgId = await getOrganizationId();
+
+  const { feeCategoryCount, totalRevenue, pendingFees, totalStudents } =
+    await getDashboardStats(orgId);
+
   return (
     <div className="">
       <main className="flex flex-1 flex-col gap-4 ">
         <div className="flex items-center justify-between mx-2">
-          <h1 className="text-2xl font-bold tracking-tight">Fees Dashboard</h1>
+          <h1 className="text-xl sm:text-2xl font-bold tracking-tight">
+            Fees Dashboard
+          </h1>
           <div className="flex items-center gap-2">
             <Button asChild>
-              <Link href="/admin/fees/assign">
+              <Link href="/dashboard/fees/admin/fee-categories">
+                <CreditCard className="mr-2 h-2 w-2" />
+                Fee Category
+              </Link>
+            </Button>
+            <Button asChild>
+              <Link href="/dashboard/fees/admin/assign">
                 <CreditCard className="mr-2 h-4 w-4" />
                 Assign Fees
               </Link>
@@ -49,10 +91,12 @@ export default function Dashboard() {
                   <CardTitle className="text-sm font-medium">
                     Total Revenue
                   </CardTitle>
-                  <DollarSign className="h-4 w-4 text-muted-foreground" />
+                  <IndianRupee className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">₹1,25,000</div>
+                  <div className="text-2xl font-bold">
+                    ₹{new Intl.NumberFormat('en-IN').format(totalRevenue)}
+                  </div>
                   <p className="text-xs text-muted-foreground">
                     +20.1% from last month
                   </p>
@@ -63,10 +107,12 @@ export default function Dashboard() {
                   <CardTitle className="text-sm font-medium">
                     Pending Fees
                   </CardTitle>
-                  <AlertTriangle className="h-4 w-4 text-muted-foreground" />
+                  <AlertTriangle className="h-4 w-4 animate-pulse fill-yellow-500  text-muted-foreground " />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">₹45,000</div>
+                  <div className="text-2xl font-bold">
+                    ₹{new Intl.NumberFormat('en-IN').format(pendingFees)}
+                  </div>
                   <p className="text-xs text-muted-foreground">
                     42 students with pending fees
                   </p>
@@ -80,7 +126,7 @@ export default function Dashboard() {
                   <Users className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">245</div>
+                  <div className="text-2xl font-bold">{totalStudents}</div>
                   <p className="text-xs text-muted-foreground">
                     +3 new this month
                   </p>
@@ -94,7 +140,7 @@ export default function Dashboard() {
                   <BookOpen className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">8</div>
+                  <div className="text-2xl font-bold">{feeCategoryCount}</div>
                   <p className="text-xs text-muted-foreground">
                     Across all grades
                   </p>

@@ -45,8 +45,8 @@ model Student {
   email            String
   emergencyContact String
   clerkId          String   @unique @default("")
-  section          Section? @relation(fields: [sectionId], references: [id])
-  sectionId        String?
+  section          Section  @relation(fields: [sectionId], references: [id])
+  sectionId        String
   gradeId          String
   grade            Grade    @relation(fields: [gradeId], references: [id])
   gender           Gender
@@ -115,6 +115,13 @@ model ParentStudent {
   @@index([parentId, studentId])
 }
 
+enum ParentRelationship {
+  FATHER
+  MOTHER
+  GUARDIAN
+  OTHER
+}
+
 // model StudentDocument {
 //   id          String       @id @default(cuid())
 //   type        DocumentType
@@ -151,25 +158,32 @@ model Fee {
   id             String        @id @default(cuid())
   totalFee       Float
   paidAmount     Float         @default(0)
+  pendingAmount  Float?
   dueDate        DateTime
   status         FeeStatus     @default(UNPAID)
   studentId      String
   student        Student       @relation(fields: [studentId], references: [id])
-  categoryId     String
-  feeCategory    FeeCategory   @relation(fields: [categoryId], references: [id])
+  feeCategoryId  String
+  feeCategory    FeeCategory   @relation(fields: [feeCategoryId], references: [id])
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
   Organization   Organization? @relation(fields: [organizationId], references: [id])
-  organizationId String?
+  organizationId String
+
+  @@index([studentId])
+  @@index([status])
+  @@index([dueDate])
 }
 
 model FeeCategory {
-  id          String   @id @default(cuid())
-  name        String // e.g., "Yearly Fee", "Exam Fee", "Lab Fee", etc.
-  description String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  fees        Fee[]
+  id             String        @id @default(cuid())
+  name           String // e.g., "Yearly Fee", "Exam Fee", "Lab Fee", etc.
+  description    String?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  fees           Fee[]
+  Organization   Organization? @relation(fields: [organizationId], references: [id])
+  organizationId String?
 }
 
 enum FeeStatus {
@@ -185,20 +199,21 @@ enum AttendanceStatus {
 }
 
 model Organization {
-  id               String    @id @default(cuid())
+  id               String        @id @default(cuid())
   name             String
-  organizationSlug String    @unique
+  organizationSlug String        @unique
   organizationLogo String?
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
-  isActive         Boolean   @default(true)
-  isPaid           Boolean   @default(false)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  isActive         Boolean       @default(true)
+  isPaid           Boolean       @default(false)
   users            User[]
   notices          Notice[]
   Student          Student[]
   Grade            Grade[]
   Section          Section[]
   Fee              Fee[]
+  FeeCategory      FeeCategory[]
 }
 
 model Notice {
@@ -249,4 +264,13 @@ enum Gender {
   MALE
   FEMALE
   OTHER
+}
+
+enum PaymentMethod {
+  CASH
+  UPI
+  CARD
+  BANK_TRANSFER
+  CHEQUE
+  ONLINE
 }

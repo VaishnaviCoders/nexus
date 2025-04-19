@@ -148,3 +148,27 @@ export function CreateStudentButton() {
     </>
   );
 }
+
+// Fees Buttons
+
+export function CreateFeeAssignmentButton({
+  disabled,
+}: {
+  disabled?: boolean;
+}) {
+  const { pending } = useFormStatus();
+  return (
+    <>
+      {pending ? (
+        <Button disabled>
+          <Loader2 className="mr-2 w-4 h-4 animate-spin" />
+          Please wait
+        </Button>
+      ) : (
+        <Button type="submit">
+          <Send className="mr-2 h-4 w-4" /> Assign Fees
+        </Button>
+      )}
+    </>
+  );
+}

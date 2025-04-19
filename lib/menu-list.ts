@@ -273,7 +273,7 @@ export const roleMenus: Record<string, Group[]> = {
 
       menus: [
         {
-          href: '/my-children',
+          href: '/dashboard/my-children',
           label: 'My Children',
           icon: Users,
         },
@@ -286,10 +286,6 @@ export const roleMenus: Record<string, Group[]> = {
           href: '/attendance',
           label: 'Attendance Monitor',
           icon: Calendar,
-          submenus: [
-            { href: '/attendance/checkin', label: 'Check-in Times' },
-            { href: '/attendance/checkout', label: 'Check-out Times' },
-          ],
         },
         {
           href: 'dashboard/notices',

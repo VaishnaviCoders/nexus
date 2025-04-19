@@ -91,9 +91,6 @@ const StudentIdRoute = async ({
 }) => {
   const studentId = (await params).id;
 
-  // await new Promise((r) => setTimeout(r, 50000));
-
-  await new Promise((r) => setTimeout(r, 50000));
   const [data, studentMonthlyAttendanceData, weeklyStudentAttendance, fees] =
     await Promise.all([
       getStudentData(studentId),

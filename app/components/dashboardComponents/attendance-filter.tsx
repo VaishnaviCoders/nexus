@@ -71,14 +71,14 @@ export default function AttendanceFilters({
     async function loadGrades() {
       const data = await fetchGradesAndSections(organizationId);
       setGrades(data || []);
-      console.log('data', data);
-      console.log('grades', grades);
+      // console.log('data', data);
+      // console.log('grades', grades);
     }
     loadGrades();
   }, [organizationId]);
 
   useEffect(() => {
-    console.log('Updated grades:', grades);
+    // console.log('Updated grades:', grades);
   }, [grades]);
 
   useEffect(() => {

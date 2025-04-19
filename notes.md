@@ -38,7 +38,7 @@ Grade =>
 - Need Solution : If Section Delete then Attendance Data will Delete {SOFT DELETE}
 - Rules for create grade and section for structure and uniqueness :
   Don't use Section- A, sectionA
-  Use only Section name like : A B C CUBE, CHESS 
+  Use only Section name like : A B C CUBE, CHESS
 
 <!-- FEATURES -->
 
@@ -49,6 +49,15 @@ Grade =>
 - Search Function
 - Validation To Create And Delete
 - Grade ID showing on breadcrumbs But Want Grade Name
+
+Fees Management=>
+
+- Need Solution : If Section Delete then Attendance Data will Delete {SOFT DELETE}
+-
+
+<!-- FEATURES -->
+
+- Empty State For Fees and Assign Students to fees
 
 Editor Or Designer Work
 

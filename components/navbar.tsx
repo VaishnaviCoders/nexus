@@ -3,12 +3,13 @@ import { SheetMenu } from '@/components/dashboard-layout/sheet-menu';
 
 import { Separator } from '@/components/ui/separator';
 import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
-import React from 'react';
+import React, { Suspense } from 'react';
 import { auth, currentUser } from '@clerk/nextjs/server';
 import { WelcomeMessage } from './dashboard-layout/WelcomeMessage';
 import { syncUser } from '@/lib/syncUser';
 import NotificationFeed from '@/app/components/dashboardComponents/NotificationFeed';
 import { SyncActiveOrganization } from './SyncActiveOrganization';
+import { Bell } from 'lucide-react';
 
 export async function Navbar() {
   const user = await currentUser();
@@ -21,14 +22,14 @@ export async function Navbar() {
     return;
   }
 
-  if (user) {
-    await syncUser(user, orgId, orgRole);
-  }
+  // if (user) {
+  //   await syncUser(user, orgId, orgRole);
+  // }
 
   return (
     <>
       <header className="flex h-16 shrink-0 items-center px-4">
-        <SyncActiveOrganization membership={sessionClaims?.membership} />
+        {/* <SyncActiveOrganization membership={sessionClaims?.membership} /> */}
         <div className="flex items-center space-x-4 lg:space-x-6">
           <SheetMenu />
           <div className="flex space-x-2 items-center">
@@ -47,7 +48,9 @@ export async function Navbar() {
               </button>
             </SignInButton>
           </SignedOut>
-          <NotificationFeed />
+          {/* <Suspense fallback={<Bell />}>
+            <NotificationFeed />
+          </Suspense> */}
           <SignedIn>
             <UserButton />
           </SignedIn>

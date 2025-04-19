@@ -95,3 +95,22 @@ export const feeCategorySchema = z.object({
   categoryName: z.string().min(1, 'Fee Category is required'),
   description: z.string().min(1, 'Description is required'),
 });
+
+export const feeAssignmentSchema = z.object({
+  feeCategoryId: z.string().min(1, 'Fee Category ID is required'),
+
+  feeAmount: z
+    .string()
+    .min(1, 'Fee Amount is required')
+    .transform((val) => Number(val))
+    .refine((val) => val > 0, {
+      message: 'Fee Amount must be greater than 0',
+    }),
+  dueDate: z.date({
+    required_error: 'A due date is required',
+  }),
+  studentIds: z.union([
+    z.string().min(1), // for single student
+    z.array(z.string().min(1)), // for multiple students
+  ]),
+});

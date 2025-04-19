@@ -652,28 +652,3 @@ export async function CustomDatesSectionAttendance(
 ) {}
 
 // Fees
-
-// Create Fee Category
-
-export async function createFeeCategory(prevState: any, formData: FormData) {
-  const { orgId } = await auth();
-
-  if (!orgId)
-    throw new Error('No organization found during Create Fee Category');
-  const submission = parseWithZod(formData, {
-    schema: feeCategorySchema,
-  });
-  if (submission.status !== 'success') {
-    console.log('Validation failed:', submission.error);
-    return submission.reply();
-  }
-
-  console.log('Fee Category creation data:', submission.value);
-  await prisma.feeCategory.create({
-    data: {
-      name: submission.value.categoryName,
-      description: submission.value.description,
-    },
-  });
-  redirect('/dashboard/fees/admin');
-}

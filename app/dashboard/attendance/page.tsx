@@ -19,7 +19,7 @@ interface FilterAttendanceProps {
   search: string;
   sectionId?: string;
   status?: AttendanceStatus;
-  grade?: string;
+  gradeId?: string;
   startDate?: string;
   endDate?: string;
 }
@@ -27,7 +27,7 @@ const FilterAttendance = async ({
   search,
   sectionId,
   status,
-  grade,
+  gradeId,
   startDate,
   endDate,
 }: FilterAttendanceProps) => {
@@ -55,8 +55,8 @@ const FilterAttendance = async ({
   }
 
   // Add grade filter if provided and not 'all'
-  if (grade && grade !== 'all') {
-    whereClause.student.gradeId = grade;
+  if (gradeId && gradeId !== 'all') {
+    whereClause.student.gradeId = gradeId;
   }
 
   // Add status filter if provided and not 'all'
@@ -111,17 +111,16 @@ export default async function AttendancePage({ searchParams }: PageProps) {
 
   if (!orgId) throw new Error('No organization found during Attendance Page');
 
-  const { search, sectionId, status, grade } =
-    await searchParamsCache.parse(searchParams);
+  const { search, sectionId, status, gradeId } = await searchParamsCache.parse(
+    searchParams
+  );
 
   const records = await FilterAttendance({
     search,
     sectionId,
-    grade,
+    gradeId,
     status: status as AttendanceStatus,
   });
-
-  console.log('records', records);
 
   return (
     <div className="flex flex-col">

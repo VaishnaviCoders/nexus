@@ -27,7 +27,6 @@ export default async function DemoLayout({
       <BreadCrumbNavigation />
 
       <div className="px-0 sm:px-4">{children}</div>
-      {/* {children} */}
     </AdminPanelLayout>
   );
 }
