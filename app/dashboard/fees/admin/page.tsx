@@ -1,3 +1,4 @@
+import { getDashboardStats } from '@/app/actions';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -22,33 +23,6 @@ import Link from 'next/link';
 // import { RevenueChart } from '@/components/dashboard/revenue-chart';
 // import { RecentPayments } from '@/components/dashboard/recent-payments';
 // import { FeeStatusOverview } from '@/components/dashboard/fee-status-overview';
-
-export const getDashboardStats = async (organizationId: string) => {
-  const [totalRevenue, totalPending, studentCount, feeCategoryCount] =
-    await Promise.all([
-      prisma.fee.aggregate({
-        where: { organizationId },
-        _sum: { paidAmount: true },
-      }),
-      prisma.fee.aggregate({
-        where: { organizationId },
-        _sum: { pendingAmount: true },
-      }),
-      prisma.student.count({
-        where: { organizationId },
-      }),
-      prisma.feeCategory.count({
-        where: { organizationId },
-      }),
-    ]);
-
-  return {
-    totalRevenue: totalRevenue._sum.paidAmount || 0,
-    pendingFees: totalPending._sum.pendingAmount || 0,
-    totalStudents: studentCount,
-    feeCategoryCount,
-  };
-};
 
 export default async function Dashboard() {
   const orgId = await getOrganizationId();

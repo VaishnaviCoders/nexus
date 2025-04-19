@@ -3,16 +3,14 @@ import { Suspense } from 'react';
 import { getFeeCategory } from '@/lib/data/fee-categories';
 import { EditFeeCategoryForm } from '@/app/components/dashboardComponents/Fees/EditFeeCategoryForm';
 
-interface EditFeeCategoryPageProps {
-  params: {
-    id: string;
-  };
-}
-
 export default async function EditFeeCategoryPage({
   params,
-}: EditFeeCategoryPageProps) {
-  const category = await getFeeCategory(params.id);
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+
+  const category = await getFeeCategory(id);
 
   if (!category) {
     notFound();

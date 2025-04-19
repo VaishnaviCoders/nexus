@@ -652,3 +652,30 @@ export async function CustomDatesSectionAttendance(
 ) {}
 
 // Fees
+
+export async function getDashboardStats(organizationId: string) {
+  const [totalRevenue, totalPending, studentCount, feeCategoryCount] =
+    await Promise.all([
+      prisma.fee.aggregate({
+        where: { organizationId },
+        _sum: { paidAmount: true },
+      }),
+      prisma.fee.aggregate({
+        where: { organizationId },
+        _sum: { pendingAmount: true },
+      }),
+      prisma.student.count({
+        where: { organizationId },
+      }),
+      prisma.feeCategory.count({
+        where: { organizationId },
+      }),
+    ]);
+
+  return {
+    totalRevenue: totalRevenue._sum.paidAmount || 0,
+    pendingFees: totalPending._sum.pendingAmount || 0,
+    totalStudents: studentCount,
+    feeCategoryCount,
+  };
+}

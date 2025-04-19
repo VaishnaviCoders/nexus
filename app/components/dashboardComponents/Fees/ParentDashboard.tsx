@@ -67,6 +67,8 @@ interface ParentData {
 const ParentFeeHistory = ({ parentData }: { parentData: ParentData }) => {
   const [selectedChild, setSelectedChild] = useState(parentData.children[0].id);
 
+  console.log('Parent Data', parentData);
+
   const currentChild = parentData.children.find(
     (child) => child.id === selectedChild
   );

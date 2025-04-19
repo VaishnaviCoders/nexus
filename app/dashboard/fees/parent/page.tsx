@@ -57,11 +57,6 @@ const data = await prisma.parent.findUnique({
   },
 });
 
-// console.log(
-//   'data',
-//   data?.students.map((s) => s.student.Fee.map((f) => f.totalFee))
-// );
-
 const parentData = {
   name: `Mr. ${data?.firstName} ${data?.lastName}`,
   email: data?.email || '',
