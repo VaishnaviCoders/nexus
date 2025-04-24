@@ -67,7 +67,7 @@ export function Menu({ isOpen, role }: MenuProps) {
                                   ? 'secondary'
                                   : 'ghost'
                               }
-                              className="w-full justify-start h-10 mb-1"
+                              className="w-full justify-start h-10 mb-1 "
                               asChild
                             >
                               <Link

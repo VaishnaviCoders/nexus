@@ -1,7 +1,9 @@
+import { performance } from 'perf_hooks';
 import prisma from '../db';
 
 export default async function getAllChildrenByParentId(parentId: string) {
-  return await prisma.parent.findUnique({
+  const start = performance.now();
+  const data = await prisma.parent.findUnique({
     where: { id: parentId },
     select: {
       students: {
@@ -31,4 +33,13 @@ export default async function getAllChildrenByParentId(parentId: string) {
       },
     },
   });
+
+  const end = performance.now();
+  console.log(
+    `⏱️ Fully Optimized getAllChildrenByParentId took ${(end - start).toFixed(
+      2
+    )} ms`
+  );
+
+  return data;
 }

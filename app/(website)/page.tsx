@@ -11,16 +11,16 @@ import {
 } from '@/components/ui/dialog';
 import { ModeToggle } from '@/components/mode-toggle';
 import { CreateOrganization } from '@clerk/nextjs';
-import Features from '../components/websiteComp/Features';
-import BentoGrid from '../components/websiteComp/BentoGrid';
-import Testimonials from '../components/websiteComp/Testimonials';
-import Footer from '../components/websiteComp/Footer';
+import Features from '../../components/websiteComp/Features';
+import BentoGrid from '../../components/websiteComp/BentoGrid';
+import Testimonials from '../../components/websiteComp/Testimonials';
+import Footer from '../../components/websiteComp/Footer';
 // import { Spotlight } from '@/components/ui/Spotlight';
 import { TextScramble } from '@/components/ui/text-scramble';
 import DotPattern from '@/components/ui/dot-pattern';
 // import { TextEffectWithExit } from '@/components/ui/TextEffectWithExit';
 import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
-import IntegrationComponent from '../components/websiteComp/IntegrationComponent';
+import IntegrationComponent from '../../components/websiteComp/IntegrationComponent';
 // import MagicBentoGrid from '../components/websiteComp/magic-bento';
 
 export default async function IndexPage() {

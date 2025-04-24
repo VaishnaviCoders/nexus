@@ -1,4 +1,3 @@
-// import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -22,45 +21,43 @@ import {
   Bell,
   IndianRupee,
 } from 'lucide-react';
-import { ChartComponent } from '../Chart';
-import { ProgressCircle } from '@/components/Charts/ProgressCircle';
 import Link from 'next/link';
 import {
   getStudentMonthlyAttendance,
   WeeklyStudentAttendance,
 } from '@/app/actions';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import StudentPerformance from '@/app/components/dashboardComponents/Student/StudentPerformance';
+import StudentAssignment from '@/app/components/dashboardComponents/Student/StudentAssignment';
+import { StudentAttendanceChart } from '@/app/components/dashboardComponents/Student/StudentAttendanceChart';
 
-const performanceData = [
-  { subject: 'Math', score: 85 },
-  { subject: 'Science', score: 92 },
-  { subject: 'English', score: 78 },
-  { subject: 'History', score: 88 },
-  { subject: 'Art', score: 95 },
-];
+const getStudentDashboardData = async (studentId: string) => {
+  const [student, attendance, weeklyAttendance, fees] = await Promise.all([
+    prisma.student.findUnique({
+      where: { id: studentId },
+      include: { grade: true, section: true },
+    }),
+    getStudentMonthlyAttendance(studentId),
+    WeeklyStudentAttendance(studentId),
+    prisma.fee.findMany({
+      where: { studentId },
+      include: { feeCategory: true },
+    }),
+  ]);
 
-async function getStudentData(studentId: string) {
-  const data = await prisma.student.findUnique({
-    where: {
-      id: studentId,
-    },
-    include: {
-      grade: true,
-      section: true,
-    },
-  });
-  return data;
-}
+  const totalFees = fees.reduce((sum, fee) => sum + fee.totalFee, 0);
+  const paidFees = fees.reduce((sum, fee) => sum + fee.paidAmount, 0);
 
-async function getFees(studentId: string) {
-  return await prisma.fee.findMany({
-    where: {
-      studentId: studentId,
-    },
-    include: {
-      feeCategory: true,
-    },
-  });
-}
+  return {
+    student,
+    attendance,
+    weeklyAttendance,
+    fees,
+    totalFees,
+    paidFees,
+    pendingFees: totalFees - paidFees,
+  };
+};
 
 // async function getPendingFeeByStudentId(studentId: string) {
 //   const pendingFeesData = await prisma.fee.aggregate({
@@ -89,47 +86,39 @@ const StudentIdRoute = async ({
 }: {
   params: Promise<{ id: string }>;
 }) => {
-  const studentId = (await params).id;
+  const { id } = await params;
 
-  const [data, studentMonthlyAttendanceData, weeklyStudentAttendance, fees] =
-    await Promise.all([
-      getStudentData(studentId),
-      getStudentMonthlyAttendance(studentId),
-      WeeklyStudentAttendance(studentId),
-      getFees(studentId),
-    ]);
+  const studentId = id;
 
-  // console.log('Attendance data', studentMonthlyAttendanceData);
-  // console.log('weeklyStudentAttendance', weeklyStudentAttendance);
+  const {
+    student,
+    attendance,
+    weeklyAttendance,
+    totalFees,
+    paidFees,
+    pendingFees,
+  } = await getStudentDashboardData(studentId);
 
-  // const fees = await getFees(studentId);
-  const totalFees = fees.reduce((acc, fee) => acc + fee.totalFee, 0);
-  const paidFees = fees.reduce((acc, fee) => acc + fee.paidAmount, 0);
-  const pendingFees = totalFees - paidFees;
-
-  // const pendingFees = await getPendingFeeByStudentId(studentId);
-
-  // console.log(pendingFees);
   return (
     <div>
       <div className="mx-2 space-y-8">
         <div className="flex justify-between items-center mx-2">
           <div className="flex items-center space-x-4">
-            {/* <Avatar className="w-10 h-10 md:w-16 md:h-16">
+            <Avatar className="w-10 h-10 md:w-16 md:h-16">
               <AvatarImage
                 src={
-                  data?.profileImage || '/placeholder.svg?height=80&width=80'
+                  student?.profileImage || '/placeholder.svg?height=80&width=80'
                 }
                 alt="Student"
               />
               <AvatarFallback>JD</AvatarFallback>
-            </Avatar> */}
+            </Avatar>
             <div>
               <h1 className="text-lg font-bold">
-                {data?.firstName} {data?.lastName}
+                {student?.firstName} {student?.lastName}
               </h1>
               <p className="text-gray-500">
-                {data?.grade.grade} - {data?.section?.name}
+                {student?.grade.grade} - {student?.section?.name}
               </p>
             </div>
           </div>
@@ -163,7 +152,7 @@ const StudentIdRoute = async ({
               </Card>
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-rsm font-medium">
+                  <CardTitle className="text-sm font-medium">
                     Current GPA
                   </CardTitle>
                   <GraduationCap className="h-4 w-4 text-muted-foreground" />
@@ -206,188 +195,28 @@ const StudentIdRoute = async ({
                 <CardHeader>
                   <CardTitle>Yearly Attendance</CardTitle>
                 </CardHeader>
-                <CardContent className="pl-2">
-                  {/* <ResponsiveContainer width="100%" height={350}>
-                    <BarChart data={attendanceData}>
-                      <XAxis dataKey="month" stroke="#888888" />
-                      <YAxis stroke="#888888" />
-                      <Bar
-                        dataKey="present"
-                        fill="#adfa1d"
-                        radius={[4, 4, 0, 0]}
-                      />
-                      <Bar
-                        dataKey="absent"
-                        fill="#f43f5e"
-                        radius={[4, 4, 0, 0]}
-                      />
-                      <Bar
-                        dataKey="leave"
-                        fill="#fbbf24"
-                        radius={[4, 4, 0, 0]}
-                      />
-                    </BarChart>
-                  </ResponsiveContainer> */}
-                </CardContent>
+                <CardContent className="pl-2"></CardContent>
               </Card>
               <Card className="col-span-3">
                 <CardHeader>
                   <CardTitle>Academic Performance</CardTitle>
                   <CardDescription>Subject-wise scores</CardDescription>
                 </CardHeader>
-                <CardContent>
-                  {/* <ResponsiveContainer width="100%" height={350}>
-                    <LineChart data={performanceData}>
-                      <XAxis dataKey="subject" stroke="#888888" />
-                      <YAxis stroke="#888888" />
-                      <Line type="monotone" dataKey="score" stroke="#8884d8" />
-                    </LineChart>
-                  </ResponsiveContainer> */}
-                </CardContent>
+                <CardContent></CardContent>
               </Card>
             </div>
           </TabsContent>
 
           <TabsContent value="attendance" className="space-y-4">
-            <ChartComponent data={studentMonthlyAttendanceData} />
-            {/* <Card>
-              <CardHeader>
-                <CardTitle>Attendance Details</CardTitle>
-                <CardDescription>Monthly attendance summary</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  {attendanceData.map((month) => (
-                    <div key={month.month} className="flex items-center">
-                      <div className="w-20">{month.month}</div>
-                      <div className="flex-1">
-                        <Progress
-                          value={
-                            (month.present /
-                              (month.present + month.absent + month.leave)) *
-                            100
-                          }
-                          className="h-2"
-                        />
-                      </div>
-                      <div className="w-20 text-right">
-                        {month.present} days
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card> */}
-
-            <Button>
-              <Download className="mr-2 h-4 w-4" /> Download Attendance Report
-            </Button>
+            <StudentAttendanceChart data={attendance} />
           </TabsContent>
 
           <TabsContent value="performance" className="space-y-4 ">
-            <div className="flex items-start md:space-x-5 max-md:space-y-5 justify-center w-full max-md:flex-col">
-              {' '}
-              <Card className="w-full min-h-[280px]">
-                <CardHeader>
-                  <CardTitle>Academic Performance</CardTitle>
-                  <CardDescription>
-                    Subject-wise grades and overall rank
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="flex items-center space-x-4">
-                  <ProgressCircle
-                    value={45}
-                    width={100}
-                    height={100}
-                    className="flex justify-center items-center"
-                  >
-                    <span className="text-sm font-medium text-gray-900 dark:text-gray-50">
-                      45%
-                    </span>
-                  </ProgressCircle>
-                  <div>
-                    <p className="text-sm font-medium text-gray-900 dark:text-gray-50">
-                      45/100
-                    </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-500">
-                      Participation Rate Analysis
-                    </p>
-                  </div>
-                  <ProgressCircle
-                    value={75}
-                    width={100}
-                    height={100}
-                    className="flex justify-center items-center"
-                  >
-                    <span className="text-sm font-medium text-gray-900 dark:text-gray-50">
-                      75%
-                    </span>
-                  </ProgressCircle>
-                  <div>
-                    <p className="text-sm font-medium text-gray-900 dark:text-gray-50">
-                      75/100
-                    </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-500">
-                      Performance
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-              <Card className="w-full min-h-[280px]">
-                <CardHeader>
-                  <CardTitle>Academic Performance</CardTitle>
-                  <CardDescription>
-                    Subject-wise grades and overall rank
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    {performanceData.map((subject) => (
-                      <div key={subject.subject} className="flex items-center">
-                        <div className="w-32">{subject.subject}</div>
-                        <div className="flex-1">
-                          <Progress value={subject.score} className="h-2" />
-                        </div>
-                        <div className="w-20 text-right">{subject.score}%</div>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-            <Button>
-              <Download className="mr-2 h-4 w-4" /> Download Performance Report
-            </Button>
+            <StudentPerformance />
           </TabsContent>
 
           <TabsContent value="assignments" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Upcoming Assignments</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <h3 className="font-semibold">Math Problem Set</h3>
-                      <p className="text-sm text-muted-foreground">
-                        Due: May 20, 2023
-                      </p>
-                    </div>
-                    <Button variant="outline">Submit</Button>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <h3 className="font-semibold">Science Lab Report</h3>
-                      <p className="text-sm text-muted-foreground">
-                        Due: May 25, 2023
-                      </p>
-                    </div>
-                    <Button variant="outline">Submit</Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            <StudentAssignment />
           </TabsContent>
 
           <TabsContent value="communication" className="space-y-4">
@@ -490,7 +319,7 @@ const StudentIdRoute = async ({
             </CardContent>
           </Card>
 
-          <Card>
+          {/* <Card>
             <CardHeader>
               <CardTitle>Quick Links</CardTitle>
             </CardHeader>
@@ -502,7 +331,7 @@ const StudentIdRoute = async ({
                 <Button variant="outline">Student Handbook</Button>
               </div>
             </CardContent>
-          </Card>
+          </Card> */}
         </div>
       </div>
     </div>

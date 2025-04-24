@@ -44,8 +44,10 @@ const page = async () => {
             View and manage your children's information
           </CardDescription>
           <CardContent className="p-0">
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              <ChildrenList parentId={parentId} />
+            <div className="grid gap-6 grid-cols-1 md:grid-cols-2 xl:grid-cols-2 my-5">
+              <div className="max-w-xl">
+                <ChildrenList parentId={parentId} />
+              </div>
             </div>
           </CardContent>
         </CardHeader>

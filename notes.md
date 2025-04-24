@@ -2,6 +2,8 @@
 
 Generate a modern, high-performance Next.js 15 application using server actions, client components, and server components where necessary. Follow a design system inspired by Vercel, ShadCN, Clerk, Neon, and Supabase—clean UI, minimal aesthetics, and well-structured components. Ensure seamless authentication handling (Clerk), database integration (Neon/Supabase), and responsive UI. Code should be modular, maintainable, and optimized for production.
 
+Lead Management : https://tnks-data-table.vercel.app/
+For Big Calender: https://big-calendar.vercel.app/month-view
 Need To Buy : RFID biometric retina reader
 Alpha shop Pimpri arket
 

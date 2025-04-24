@@ -1,6 +1,6 @@
 'use client';
 
-import { TrendingUp } from 'lucide-react';
+import { Download, TrendingUp } from 'lucide-react';
 import {
   Bar,
   BarChart,
@@ -24,6 +24,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from '@/components/ui/chart';
+import { Button } from '@/components/ui/button';
 
 export const description = 'A bar chart with a label';
 
@@ -38,7 +39,7 @@ interface ChartComponentProps {
   data: { month: string; attendance: number }[];
 }
 
-export function ChartComponent({ data }: ChartComponentProps) {
+export function StudentAttendanceChart({ data }: ChartComponentProps) {
   // console.log('Attendance data', data);
   return (
     <Card>
@@ -74,13 +75,10 @@ export function ChartComponent({ data }: ChartComponentProps) {
           </ResponsiveContainer>
         </ChartContainer>
       </CardContent>
-      <CardFooter className="flex-col items-start gap-2 text-sm">
-        <div className="flex gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-        </div>
-        <div className="leading-none text-muted-foreground">
-          Showing total visitors for the last 6 months
-        </div>
+      <CardFooter className="text-sm">
+        <Button className="">
+          <Download className="my-2 h-4 w-4" /> Download Attendance Report
+        </Button>
       </CardFooter>
     </Card>
   );

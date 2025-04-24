@@ -10,9 +10,10 @@ import { syncUser } from '@/lib/syncUser';
 import NotificationFeed from '@/app/components/dashboardComponents/NotificationFeed';
 import { SyncActiveOrganization } from './SyncActiveOrganization';
 import { Bell } from 'lucide-react';
+import { getCurrentUserId } from '@/lib/user';
 
 export async function Navbar() {
-  const user = await currentUser();
+  const user = await getCurrentUserId();
   const { orgId, orgRole, sessionClaims } = await auth();
 
   // console.log('Clerk Session Claims', sessionClaims);

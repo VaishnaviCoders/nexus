@@ -8,9 +8,8 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-  CardFooter,
 } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+
 import {
   Table,
   TableBody,
@@ -21,16 +20,36 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import {
-  CreditCard,
-  Download,
-  Receipt,
-  Calendar,
-  User,
-  Check,
-} from 'lucide-react';
+import { CreditCard, Download, Receipt, Check, View } from 'lucide-react';
 import { format } from 'date-fns';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import FeeReceiptCard from './FeeReceiptCard';
+import { payFeesAction } from '@/lib/data/fee/payFeesAction';
+import { toast } from 'sonner';
+
+interface ReceiptData {
+  receiptNumber: string;
+  studentName: string;
+  rollNumber: string;
+  feeCategory: string;
+  totalAmount: number;
+  paidAmount: number;
+  pendingAmount: number;
+  paymentDate: string;
+  paymentMethod: string;
+  transactionId: string;
+  payerName: string;
+  organizationName: string;
+}
 
 interface ParentData {
   name: string;
@@ -45,22 +64,24 @@ interface ParentData {
     totalFees: number;
     paidFees: number;
     pendingFees: number;
-    pendingPayments: {
+    unpaidFees: {
       id: string;
       dueDate: Date;
       amount: number;
       category: string;
-      status: string;
+      status: string | 'PAID' | 'UNPAID' | 'OVERDUE';
     }[];
-  }[];
-  paymentHistory: {
-    id: string;
-    date: Date;
-    amount: number;
-    category: string;
-    receiptNo: string;
-    paymentMethod: string;
-    childName: string;
+    paymentHistory: {
+      id: string;
+      date: Date;
+      childName: string;
+      amount: number;
+      category: string;
+      receiptNumber: string;
+      method: string;
+      payerName: string | null;
+      payerPhone: string | null;
+    }[];
   }[];
 }
 
@@ -72,6 +93,20 @@ const ParentFeeHistory = ({ parentData }: { parentData: ParentData }) => {
   const currentChild = parentData.children.find(
     (child) => child.id === selectedChild
   );
+
+  const handlePayment = async (feeId: string) => {
+    try {
+      const unpaid = currentChild?.unpaidFees.find((f) => f.id === feeId);
+      if (!unpaid) return toast.error('Fee not found');
+
+      const res = await payFeesAction(unpaid.id, unpaid.amount);
+      toast.success('Payment successful');
+      // Optional: refresh data or revalidate
+    } catch (err: any) {
+      console.error('Payment failed:', err);
+      toast.error('Payment failed');
+    }
+  };
 
   type PaymentStatus = 'PAID' | 'UNPAID' | 'OVERDUE';
   const getStatusBadgeVariant = (status: PaymentStatus) => {
@@ -86,6 +121,9 @@ const ParentFeeHistory = ({ parentData }: { parentData: ParentData }) => {
         return 'default';
     }
   };
+
+  if (!currentChild || !currentChild.paymentHistory?.length) return null;
+
   return (
     <div>
       <Card>
@@ -127,15 +165,15 @@ const ParentFeeHistory = ({ parentData }: { parentData: ParentData }) => {
       </Card>
 
       {currentChild && (
-        <Card>
+        <Card className="mt-3">
           <CardHeader>
             <CardTitle>{currentChild.name}'s Fee Overview</CardTitle>
             <CardDescription>
               Fee details for {currentChild.grade} {currentChild.section}
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-8">
-            <div className="grid gap-4 md:grid-cols-3">
+          <CardContent className="space-y-8 ">
+            <div className="grid gap-4 md:grid-cols-3 ">
               <div className="space-y-2">
                 <p className="text-sm font-medium">Total Fees</p>
                 <p className="text-2xl font-bold">
@@ -156,7 +194,7 @@ const ParentFeeHistory = ({ parentData }: { parentData: ParentData }) => {
               </div>
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-2  ">
               <div className="flex items-center justify-between text-sm">
                 <span>Payment Progress</span>
                 <span>
@@ -174,12 +212,13 @@ const ParentFeeHistory = ({ parentData }: { parentData: ParentData }) => {
               />
             </div>
 
-            {currentChild.pendingPayments.length > 0 ? (
-              <div className="space-y-4">
+            {currentChild.unpaidFees.length > 0 ? (
+              <div className="space-y-4 ">
                 <h3 className="text-lg font-medium">Pending Payments</h3>
                 <Table>
                   <TableHeader>
                     <TableRow>
+                      <TableHead>Child</TableHead>
                       <TableHead>Category</TableHead>
                       <TableHead>Due Date</TableHead>
                       <TableHead>Amount</TableHead>
@@ -188,18 +227,19 @@ const ParentFeeHistory = ({ parentData }: { parentData: ParentData }) => {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {currentChild.pendingPayments.length === 0 ? (
+                    {currentChild.unpaidFees.length === 0 ? (
                       <TableRow>
-                        <TableCell colSpan={5} className="text-center">
-                          No pending payments
+                        <TableCell colSpan={6} className="text-center">
+                          No pending payments for {currentChild.name}
                         </TableCell>
                       </TableRow>
                     ) : (
-                      currentChild.pendingPayments.map((payment) => (
+                      currentChild.unpaidFees.map((payment) => (
                         <TableRow key={payment.id}>
                           <TableCell className="font-medium">
-                            {payment.category}
+                            {currentChild.name}
                           </TableCell>
+                          <TableCell>{payment.category}</TableCell>
                           <TableCell>
                             {format(payment.dueDate, 'PPP')}
                           </TableCell>
@@ -218,7 +258,12 @@ const ParentFeeHistory = ({ parentData }: { parentData: ParentData }) => {
                             </Badge>
                           </TableCell>
                           <TableCell className="text-right">
-                            <Button size="sm">Pay Now</Button>
+                            <Button
+                              size="sm"
+                              onClick={() => handlePayment(payment.id)}
+                            >
+                              Pay Now
+                            </Button>
                           </TableCell>
                         </TableRow>
                       ))
@@ -262,168 +307,76 @@ const ParentFeeHistory = ({ parentData }: { parentData: ParentData }) => {
         </Card>
       )}
 
-      <Tabs defaultValue="pending" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="pending">Pending Payments</TabsTrigger>
-          <TabsTrigger value="history">Payment History</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="pending" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>All Pending Payments</CardTitle>
-              <CardDescription>
-                Pending payments for all children
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
+      {currentChild?.paymentHistory.length > 0 && (
+        <Card className="mt-3">
+          <CardHeader>
+            <CardTitle>Payment History</CardTitle>
+            <CardDescription>
+              Record of all previous fee payments
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Date</TableHead>
+                  <TableHead>Child</TableHead>
+                  <TableHead>Receipt No</TableHead>
+                  <TableHead>Category</TableHead>
+                  <TableHead>Amount</TableHead>
+                  <TableHead>Payment Method</TableHead>
+                  <TableHead className="text-right">Receipt</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {currentChild?.paymentHistory.length === 0 ? (
                   <TableRow>
-                    <TableHead>Child</TableHead>
-                    <TableHead>Category</TableHead>
-                    <TableHead>Due Date</TableHead>
-                    <TableHead>Amount</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead className="text-right">Action</TableHead>
+                    <TableCell colSpan={7} className="text-center">
+                      No payment history
+                    </TableCell>
                   </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {parentData.children.flatMap((child) =>
-                    child.pendingPayments.map((payment) => (
-                      <TableRow key={`${child.id}-${payment.id}`}>
-                        <TableCell className="font-medium">
-                          {child.name}
-                        </TableCell>
-                        <TableCell>{payment.category}</TableCell>
-                        <TableCell>{format(payment.dueDate, 'PPP')}</TableCell>
-                        <TableCell>
-                          ₹{payment.amount.toLocaleString()}
-                        </TableCell>
-                        <TableCell>
-                          <Badge
-                            variant={getStatusBadgeVariant(
-                              payment.status as PaymentStatus
-                            )}
+                ) : (
+                  currentChild?.paymentHistory.map((payment) => (
+                    <TableRow key={payment.id}>
+                      <TableCell>{format(payment.date, 'PPP')}</TableCell>
+                      <TableCell className="font-medium">
+                        {payment.childName}
+                      </TableCell>
+                      <TableCell>{payment.receiptNumber}</TableCell>
+                      <TableCell>{payment.category}</TableCell>
+                      <TableCell>₹{payment.amount.toLocaleString()}</TableCell>
+                      <TableCell>{payment.method}</TableCell>
+                      <TableCell className="text-right">
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <Button variant="outline">
+                              <View />
+                              View
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent
+                            className={
+                              ' p-0 m-0  overflow-y-scroll max-h-screen'
+                            }
                           >
-                            {payment.status === 'UNPAID' ? 'Unpaid' : 'Overdue'}
-                          </Badge>
-                        </TableCell>
-                        <TableCell className="text-right">
-                          <Button size="sm">Pay Now</Button>
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  ).length === 0 ? (
-                    <TableRow>
-                      <TableCell colSpan={6} className="text-center">
-                        No pending payments for any children
+                            <DialogHeader className="p-2">
+                              <DialogTitle>View Receipt</DialogTitle>
+                              <DialogDescription>
+                                View the receipt for this payment
+                              </DialogDescription>
+                            </DialogHeader>
+                            {/* <FeeReceiptCard receiptData={receiptData} /> */}
+                          </DialogContent>
+                        </Dialog>
                       </TableCell>
                     </TableRow>
-                  ) : (
-                    parentData.children.flatMap((child) =>
-                      child.pendingPayments.map((payment) => (
-                        <TableRow key={`${child.id}-${payment.id}`}>
-                          <TableCell className="font-medium">
-                            {child.name}
-                          </TableCell>
-                          <TableCell>{payment.category}</TableCell>
-                          <TableCell>
-                            {format(payment.dueDate, 'PPP')}
-                          </TableCell>
-                          <TableCell>
-                            ₹{payment.amount.toLocaleString()}
-                          </TableCell>
-                          <TableCell>
-                            <Badge
-                              variant={getStatusBadgeVariant(
-                                payment.status as PaymentStatus
-                              )}
-                            >
-                              {payment.status === 'UNPAID'
-                                ? 'Unpaid'
-                                : 'Overdue'}
-                            </Badge>
-                          </TableCell>
-                          <TableCell className="text-right">
-                            <Button size="sm">Pay Now</Button>
-                          </TableCell>
-                        </TableRow>
-                      ))
-                    )
-                  )}
-                </TableBody>
-              </Table>
-            </CardContent>
-            <CardFooter className="flex justify-end">
-              {parentData.children.some(
-                (child) => child.pendingPayments.length > 0
-              ) && (
-                <Button>
-                  <CreditCard className="mr-2 h-4 w-4" />
-                  Pay All Pending Fees
-                </Button>
-              )}
-            </CardFooter>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="history" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Payment History</CardTitle>
-              <CardDescription>
-                Record of all previous fee payments
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Date</TableHead>
-                    <TableHead>Child</TableHead>
-                    <TableHead>Receipt No</TableHead>
-                    <TableHead>Category</TableHead>
-                    <TableHead>Amount</TableHead>
-                    <TableHead>Payment Method</TableHead>
-                    <TableHead className="text-right">Receipt</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {parentData.paymentHistory.length === 0 ? (
-                    <TableRow>
-                      <TableCell colSpan={7} className="text-center">
-                        No payment history
-                      </TableCell>
-                    </TableRow>
-                  ) : (
-                    parentData.paymentHistory.map((payment) => (
-                      <TableRow key={payment.id}>
-                        <TableCell>{format(payment.date, 'PPP')}</TableCell>
-                        <TableCell className="font-medium">
-                          {payment.childName}
-                        </TableCell>
-                        <TableCell>{payment.receiptNo}</TableCell>
-                        <TableCell>{payment.category}</TableCell>
-                        <TableCell>
-                          ₹{payment.amount.toLocaleString()}
-                        </TableCell>
-                        <TableCell>{payment.paymentMethod}</TableCell>
-                        <TableCell className="text-right">
-                          <Button variant="ghost" size="sm">
-                            <Download className="h-4 w-4" />
-                            <span className="sr-only">Download</span>
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  )}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 };

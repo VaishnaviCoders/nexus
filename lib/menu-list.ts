@@ -136,25 +136,11 @@ export const roleMenus: Record<string, Group[]> = {
           href: '/leads',
           label: 'Lead Management',
           icon: UserPlus,
-          submenus: [
-            { href: '/leads/view', label: 'View Leads' },
-            { href: '/leads/new', label: 'New Lead' },
-            { href: '/leads/convert', label: 'Convert Lead' },
-          ],
         },
         {
           href: '/students',
           label: 'Students Management',
           icon: Users,
-          submenus: [
-            { href: '/dashboard/students', label: 'View Students' },
-            { href: '/dashboard/students/import', label: 'Bulk Import' },
-            { href: '/dashboard/students/fees', label: 'Send Reminders' },
-            {
-              href: '/dashboard/attendance/mark',
-              label: 'Take Attendance',
-            },
-          ],
         },
       ],
     },
@@ -162,23 +148,15 @@ export const roleMenus: Record<string, Group[]> = {
     {
       groupLabel: 'Personal',
       menus: [
-        {
-          href: '/leaves',
-          label: 'Leave Management',
-          icon: Calendar,
-          submenus: [
-            { href: '/leaves/request', label: 'Request Leave' },
-            { href: '/leaves/status', label: 'Leave Status' },
-          ],
-        },
+        // {
+        //   href: '/leaves',
+        //   label: 'Leave Management',
+        //   icon: Calendar,
+        // },
         {
           href: '/notices',
           label: 'Notice Board',
           icon: Bell,
-          submenus: [
-            { href: '/dashboard/notices/create', label: 'Create Notice' },
-            { href: '/dashboard/notices', label: 'View Notices' },
-          ],
         },
       ],
     },
@@ -210,12 +188,12 @@ export const roleMenus: Record<string, Group[]> = {
           icon: ScrollText,
         },
         {
-          href: '/attendance',
+          href: '/dashboard/child-attendance',
           label: 'Attendance',
           icon: Calendar,
         },
         {
-          href: '/dashboard/fees/teacher',
+          href: '/dashboard/fees/student',
           label: 'Fees Management',
           icon: DollarSign,
         },
@@ -280,16 +258,21 @@ export const roleMenus: Record<string, Group[]> = {
         {
           href: '/dashboard/fees/parent',
           label: 'Fees ',
-          icon: Settings,
+          icon: IndianRupee,
         },
         {
-          href: '/attendance',
+          href: '/dashboard/child-attendance',
           label: 'Attendance Monitor',
           icon: Calendar,
         },
         {
           href: 'dashboard/notices',
           label: 'Notice Board',
+          icon: Bell,
+        },
+        {
+          href: 'dashboard/remark',
+          label: 'Remark ',
           icon: Bell,
         },
       ],

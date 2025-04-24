@@ -169,10 +169,36 @@ model Fee {
   updatedAt      DateTime      @updatedAt
   Organization   Organization? @relation(fields: [organizationId], references: [id])
   organizationId String
+  FeePayment     FeePayment[]
 
   @@index([studentId])
   @@index([status])
   @@index([dueDate])
+}
+
+model FeePayment {
+  id            String        @id @default(cuid())
+  amountPaid    Float
+  paymentDate   DateTime      @default(now())
+  paymentMethod PaymentMethod
+  receiptNumber String        @unique
+  notes         String?
+  transactionId String? // From payment gateway (UPI ref, bank ref, etc.)
+  payerName     String? // Useful when a parent/guardian pays
+  payerPhone    String?
+  feeId         String
+  fee           Fee           @relation(fields: [feeId], references: [id])
+
+  recordedBy     String // Admin ID (optional, if needed)
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([feeId])
+  @@index([paymentMethod])
+  @@index([paymentDate])
 }
 
 model FeeCategory {
@@ -214,6 +240,7 @@ model Organization {
   Section          Section[]
   Fee              Fee[]
   FeeCategory      FeeCategory[]
+  FeePayment       FeePayment[]
 }
 
 model Notice {
