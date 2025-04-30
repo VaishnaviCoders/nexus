@@ -9,14 +9,13 @@ import {
 } from '@/components/ui/card';
 import { DeleteGradeButton } from '@/lib/SubmitButton';
 import Link from 'next/link';
-import { use } from 'react';
 
-export default function DeleteGradePage({
+export default async function DeleteGradePage({
   params,
 }: {
   params: Promise<{ gradeId: string }>;
 }) {
-  const { gradeId } = use(params);
+  const { gradeId } = await params;
 
   // const handleDelete = async () => {
   //   'use server';

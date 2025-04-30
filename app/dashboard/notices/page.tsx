@@ -1,4 +1,4 @@
-import NoticeList from '@/app/components/dashboardComponents/notice-list';
+import NoticeList from '@/components/dashboard/notice/notice-list';
 
 import prisma from '@/lib/db';
 import { auth } from '@clerk/nextjs/server';

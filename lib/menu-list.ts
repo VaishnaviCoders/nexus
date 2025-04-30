@@ -82,16 +82,16 @@ export const roleMenus: Record<string, Group[]> = {
       groupLabel: 'Monitoring',
       menus: [
         {
-          href: '/dashboard/student-attendance',
+          href: '/dashboard/attendance',
           label: 'Attendance Monitor',
           icon: Calendar,
-          submenus: [
-            { href: '/dashboard/attendance', label: 'Student Attendance' },
-            {
-              href: '/dashboard/teacher-attendance',
-              label: 'Teacher Attendance',
-            },
-          ],
+          // submenus: [
+          //   { href: '/dashboard/attendance', label: 'Student Attendance' },
+          //   {
+          //     href: '/dashboard/teacher-attendance',
+          //     label: 'Teacher Attendance',
+          //   },
+          // ],
         },
         {
           href: 'dashboard/notices',
@@ -122,6 +122,11 @@ export const roleMenus: Record<string, Group[]> = {
     {
       groupLabel: 'Management',
       menus: [
+        {
+          href: 'dashboard/attendance/mark',
+          label: 'Class Management',
+          icon: Settings,
+        },
         {
           href: 'dashboard/grades',
           label: 'Class Management',

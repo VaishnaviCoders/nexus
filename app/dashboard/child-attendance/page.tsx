@@ -1,5 +1,5 @@
-import { AttendanceSummary } from '@/app/components/dashboardComponents/StudentAttendance/AttendanceSummary';
-import { AttendanceTable } from '@/app/components/dashboardComponents/StudentAttendance/AttendanceTable';
+import { AttendanceSummary } from '@/components/dashboard/StudentAttendance/AttendanceSummary';
+import { AttendanceTable } from '@/components/dashboard/StudentAttendance/AttendanceTable';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Suspense } from 'react';
 // import { AttendanceSummary } from './components/attendance-summary';

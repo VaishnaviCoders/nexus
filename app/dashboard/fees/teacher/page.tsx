@@ -28,7 +28,14 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Search, Mail, Check, AlertTriangle } from 'lucide-react';
+import {
+  Search,
+  Mail,
+  Check,
+  AlertTriangle,
+  IndianRupeeIcon,
+  XCircleIcon,
+} from 'lucide-react';
 
 // Sample data
 const students = [
@@ -141,53 +148,91 @@ export default function TeacherDashboard() {
         </div>
 
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          <Card>
+          <Card className="overflow-hidden border-border/50 transition-all hover:border-primary/20 hover:shadow-md">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
+                {' '}
                 Total Students
               </CardTitle>
-              <div className="h-4 w-4 text-muted-foreground">5</div>
+              <div className="rounded-md bg-primary/10 p-1">
+                <IndianRupeeIcon className="h-4 w-4 text-primary" />
+              </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">5</div>
-              <p className="text-xs text-muted-foreground">In your class</p>
+              <div className="flex items-baseline space-x-1">
+                <IndianRupeeIcon className="h-4 w-4 text-muted-foreground" />
+                <span className="text-2xl font-bold">
+                  {/* {collectedFees.toLocaleString('en-IN')}  */} 0
+                </span>
+              </div>
+              <p className="text-xs text-muted-foreground mt-1">
+                {/* {((collectedFees / totalFees) * 100).toFixed(1)}  */}In your
+                class
+              </p>
             </CardContent>
           </Card>
-          <Card>
+
+          <Card className="overflow-hidden border-border/50 transition-all hover:border-primary/20 hover:shadow-md">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Paid Fees</CardTitle>
-              <Check className="h-4 w-4 text-muted-foreground" />
+              <div className="rounded-md bg-primary/10 p-1">
+                <IndianRupeeIcon className="h-4 w-4 text-primary" />
+              </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">2</div>
-              <p className="text-xs text-muted-foreground">
-                Students with paid fees
+              <div className="flex items-baseline space-x-1">
+                <IndianRupeeIcon className="h-4 w-4 text-muted-foreground" />
+                <span className="text-2xl font-bold">
+                  {/* {collectedFees.toLocaleString('en-IN')}  */} 0
+                </span>
+              </div>
+              <p className="text-xs text-muted-foreground mt-1">
+                {/* {((collectedFees / totalFees) * 100).toFixed(1)}  */}% of
+                total fees
               </p>
             </CardContent>
           </Card>
-          <Card>
+
+          <Card className="overflow-hidden border-border/50 transition-all hover:border-amber-500/20 hover:shadow-md">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Unpaid Fees</CardTitle>
-              <AlertTriangle className="h-4 w-4 text-muted-foreground" />
+              <div className="rounded-md bg-amber-500/10 p-1">
+                <IndianRupeeIcon className="h-4 w-4 text-amber-500" />
+              </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">2</div>
-              <p className="text-xs text-muted-foreground">
-                Students with unpaid fees
+              <div className="flex items-baseline space-x-1">
+                <IndianRupeeIcon className="h-4 w-4 text-muted-foreground" />
+                <span className="text-2xl font-bold">
+                  {/* {pendingFees.toLocaleString('en-IN')} 0 */} 0
+                </span>
+              </div>
+              <p className="text-xs text-muted-foreground mt-1">
+                {/* {unpaidStudents}  */} 0 Students with unpaid fees
               </p>
             </CardContent>
           </Card>
-          <Card>
+
+          <Card className="overflow-hidden border-border/50 transition-all hover:border-red-500/20 hover:shadow-md">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
                 Overdue Fees
               </CardTitle>
-              <AlertTriangle className="h-4 w-4 text-muted-foreground" />
+              <div className="rounded-md bg-red-500/10 p-1">
+                <XCircleIcon className="h-4 w-4 text-red-500" />
+              </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">1</div>
-              <p className="text-xs text-muted-foreground">
-                Students with overdue fees
+              <div className="flex items-baseline space-x-1">
+                <IndianRupeeIcon className="h-4 w-4 text-muted-foreground" />
+                <span className="text-2xl font-bold">
+                  <p className="text-xs text-muted-foreground">
+                    Students with overdue fees
+                  </p>
+                </span>
+              </div>
+              <p className="text-xs text-muted-foreground mt-1">
+                Fees past due date requiring action
               </p>
             </CardContent>
           </Card>

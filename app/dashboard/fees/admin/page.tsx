@@ -1,4 +1,14 @@
-import { getDashboardStats } from '@/app/actions';
+'use server';
+import { cn } from '@/lib/utils';
+
+import {
+  DownloadIcon,
+  IndianRupeeIcon,
+  PlusIcon,
+  UsersIcon,
+  XCircleIcon,
+} from 'lucide-react';
+
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -7,180 +17,131 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import prisma from '@/lib/db';
-import { getOrganizationId } from '@/lib/organization';
-import {
-  CalendarDays,
-  CreditCard,
-  IndianRupee,
-  Users,
-  BookOpen,
-  School,
-  AlertTriangle,
-} from 'lucide-react';
+
+import { MonthlyFeeCollection } from '@/components/dashboard/Fees/MonthlyFeeCollection';
+import FeeDistributionByCategory from '@/components/dashboard/Fees/FeeDistributionByCategory';
+import AllFeesHistory from '@/components/dashboard/Fees/AllFeesHistory';
+import { getFeesSummary } from '@/app/actions';
+import AdminFeesSummaryCards from '@/components/dashboard/Fees/AdminFeesSummaryCards';
+import { Suspense } from 'react';
 import Link from 'next/link';
-// import { RevenueChart } from '@/components/dashboard/revenue-chart';
-// import { RecentPayments } from '@/components/dashboard/recent-payments';
-// import { FeeStatusOverview } from '@/components/dashboard/fee-status-overview';
+import prisma from '@/lib/db';
+import { auth } from '@clerk/nextjs/server';
+import { getOrganizationId } from '@/lib/organization';
+import { getMonthlyFeeData } from '@/lib/data/fee/getMonthlyFeeData';
+import { Skeleton } from '@/components/ui/skeleton';
 
-export default async function Dashboard() {
-  const orgId = await getOrganizationId();
+const mockFeeCategories = [
+  { name: 'Tuition Fee', amount: 650000 },
+  { name: 'Exam Fee', amount: 75000 },
+  { name: 'Library Fee', amount: 50000 },
+  { name: 'Lab Fee', amount: 60000 },
+  { name: 'Sports Fee', amount: 40000 },
+];
 
-  const { feeCategoryCount, totalRevenue, pendingFees, totalStudents } =
-    await getDashboardStats(orgId);
+const mockMonthlyData = [
+  { month: 0, year: 2023, amount: 95000, count: 42 },
+  { month: 1, year: 2023, amount: 105000, count: 51 },
+  { month: 2, year: 2023, amount: 85000, count: 38 },
+  { month: 3, year: 2023, amount: 110000, count: 55 },
+  { month: 4, year: 2023, amount: 75000, count: 32 },
+  { month: 5, year: 2023, amount: 65000, count: 28 },
+  { month: 6, year: 2023, amount: 90000, count: 41 },
+  { month: 7, year: 2023, amount: 100000, count: 47 },
+  { month: 8, year: 2023, amount: 115000, count: 53 },
+  { month: 9, year: 2023, amount: 95000, count: 44 },
+  { month: 10, year: 2023, amount: 80000, count: 36 },
+  { month: 11, year: 2023, amount: 120000, count: 58 },
+  // Previous year data
+  { month: 0, year: 2022, amount: 85000, count: 38 },
+  { month: 1, year: 2022, amount: 90000, count: 42 },
+  { month: 2, year: 2022, amount: 75000, count: 35 },
+  { month: 3, year: 2022, amount: 0, count: 0 },
+  { month: 4, year: 2022, amount: 65000, count: 30 },
+  { month: 5, year: 2022, amount: 60000, count: 25 },
+  { month: 6, year: 2022, amount: 80000, count: 37 },
+  { month: 7, year: 2022, amount: 85000, count: 40 },
+  { month: 8, year: 2022, amount: 100000, count: 48 },
+  { month: 9, year: 2022, amount: 85000, count: 39 },
+  { month: 10, year: 2022, amount: 70000, count: 32 },
+  { month: 11, year: 2022, amount: 105000, count: 50 },
+];
 
+export default async function AdminFeeDashboard() {
+  const data = await getMonthlyFeeData(2025);
+
+  console.log(data);
   return (
-    <div className="">
-      <main className="flex flex-1 flex-col gap-4 ">
-        <div className="flex items-center justify-between mx-2">
-          <h1 className="text-xl sm:text-2xl font-bold tracking-tight">
-            Fees Dashboard
-          </h1>
-          <div className="flex items-center gap-2">
-            <Button asChild>
-              <Link href="/dashboard/fees/admin/fee-categories">
-                <CreditCard className="mr-2 h-2 w-2" />
-                Fee Category
-              </Link>
-            </Button>
-            <Button asChild>
-              <Link href="/dashboard/fees/admin/assign">
-                <CreditCard className="mr-2 h-4 w-4" />
-                Assign Fees
-              </Link>
-            </Button>
-          </div>
+    <div className="flex flex-col space-y-8 ">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-xl font-bold tracking-tight">Fee Management</h1>
+          <p className="text-muted-foreground">
+            Manage and track fee collection across all students
+          </p>
         </div>
-        <Tabs defaultValue="overview" className="space-y-4">
-          <TabsList>
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="analytics">Analytics</TabsTrigger>
-            <TabsTrigger value="reports">Reports</TabsTrigger>
-          </TabsList>
-          <TabsContent value="overview" className="space-y-4">
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">
-                    Total Revenue
-                  </CardTitle>
-                  <IndianRupee className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">
-                    ₹{new Intl.NumberFormat('en-IN').format(totalRevenue)}
-                  </div>
-                  <p className="text-xs text-muted-foreground">
-                    +20.1% from last month
-                  </p>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">
-                    Pending Fees
-                  </CardTitle>
-                  <AlertTriangle className="h-4 w-4 animate-pulse fill-yellow-500  text-muted-foreground " />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">
-                    ₹{new Intl.NumberFormat('en-IN').format(pendingFees)}
-                  </div>
-                  <p className="text-xs text-muted-foreground">
-                    42 students with pending fees
-                  </p>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">
-                    Total Students
-                  </CardTitle>
-                  <Users className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{totalStudents}</div>
-                  <p className="text-xs text-muted-foreground">
-                    +3 new this month
-                  </p>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">
-                    Fee Categories
-                  </CardTitle>
-                  <BookOpen className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{feeCategoryCount}</div>
-                  <p className="text-xs text-muted-foreground">
-                    Across all grades
-                  </p>
-                </CardContent>
-              </Card>
-            </div>
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-              <Card className="col-span-4">
-                <CardHeader>
-                  <CardTitle>Revenue Overview</CardTitle>
-                </CardHeader>
-                <CardContent className="pl-2">
-                  {/* <RevenueChart /> */}
-                </CardContent>
-              </Card>
-              <Card className="col-span-3">
-                <CardHeader>
-                  <CardTitle>Fee Status Overview</CardTitle>
-                  <CardDescription>
-                    Distribution of fee payment status
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>{/* <FeeStatusOverview /> */}</CardContent>
-              </Card>
-            </div>
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-1">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Recent Payments</CardTitle>
-                  <CardDescription>
-                    Latest fee payments across all grades
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>{/* <RecentPayments /> */}</CardContent>
-              </Card>
-            </div>
-          </TabsContent>
-          <TabsContent value="analytics" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Fee Collection Analytics</CardTitle>
-                <CardDescription>
-                  Detailed analysis of fee collection across grades and
-                  categories
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p>Analytics content will be displayed here</p>
-              </CardContent>
-            </Card>
-          </TabsContent>
-          <TabsContent value="reports" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Fee Reports</CardTitle>
-                <CardDescription>
-                  Generate and download detailed fee reports
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p>Reports content will be displayed here</p>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
-      </main>
+        <div className="flex items-center gap-2">
+          <Button>
+            <DownloadIcon className="mr-2 h-4 w-4" />
+            Export Data
+          </Button>
+          <Link href={'/dashboard/fees/admin/assign'}>
+            <Button type="button">
+              {' '}
+              <PlusIcon className="mr-2 h-4 w-4" />
+              Assign Fees
+            </Button>
+          </Link>
+        </div>
+      </div>
+
+      {/* Summary Cards */}
+      <AdminFeesSummaryCards />
+
+      {/* Charts and Analytics */}
+      <div className="grid gap-4 lg:grid-cols-2">
+        <Suspense fallback={<FeeDistributionByCategorySkeleton />}>
+          <MonthlyFeeCollection data={mockMonthlyData} />
+        </Suspense>
+
+        <Suspense fallback={<FeeDistributionByCategorySkeleton />}>
+          <FeeDistributionByCategory data={mockFeeCategories} />
+        </Suspense>
+      </div>
+
+      {/* Fee Records */}
+      <AllFeesHistory />
     </div>
   );
 }
+
+const FeeDistributionByCategorySkeleton = () => {
+  return (
+    <>
+      <Card className="p-0">
+        <CardHeader>
+          <CardTitle>
+            <Skeleton className="w-full bg-gray-100 h-5 max-w-full mb-2" />
+          </CardTitle>
+          <CardDescription>
+            <Skeleton className="w-[30%] bg-gray-100 h-3 max-w-full mb-2" />
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {Array.from({ length: 6 }, (_, i) => (
+            <div key={i} className="my-4">
+              <div className="space-y-2 flex flex-col my-3">
+                <span>
+                  <Skeleton className="w-[120px] h-4 max-w-full" />
+                </span>
+                <span>
+                  <Skeleton className="w-[624px]  h-4 max-w-full" />
+                </span>
+              </div>
+            </div>
+          ))}
+        </CardContent>
+      </Card>
+    </>
+  );
+};

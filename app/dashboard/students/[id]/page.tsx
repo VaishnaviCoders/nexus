@@ -12,7 +12,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import prisma from '@/lib/db';
 import {
   CalendarDays,
-  Download,
   GraduationCap,
   BookOpen,
   FileText,
@@ -27,11 +26,13 @@ import {
   WeeklyStudentAttendance,
 } from '@/app/actions';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import StudentPerformance from '@/app/components/dashboardComponents/Student/StudentPerformance';
-import StudentAssignment from '@/app/components/dashboardComponents/Student/StudentAssignment';
-import { StudentAttendanceChart } from '@/app/components/dashboardComponents/Student/StudentAttendanceChart';
+import StudentPerformance from '@/components/dashboard/Student/StudentPerformance';
+import StudentAssignment from '@/components/dashboard/Student/StudentAssignment';
+import { StudentAttendanceChart } from '@/components/dashboard/Student/StudentAttendanceChart';
 
 const getStudentDashboardData = async (studentId: string) => {
+  const start = performance.now();
+
   const [student, attendance, weeklyAttendance, fees] = await Promise.all([
     prisma.student.findUnique({
       where: { id: studentId },
@@ -44,6 +45,9 @@ const getStudentDashboardData = async (studentId: string) => {
       include: { feeCategory: true },
     }),
   ]);
+  const end = performance.now();
+
+  console.log('getDashboardStats took', end - start, 'ms');
 
   const totalFees = fees.reduce((sum, fee) => sum + fee.totalFee, 0);
   const paidFees = fees.reduce((sum, fee) => sum + fee.paidAmount, 0);

@@ -36,9 +36,7 @@ export default async function IndexPage() {
           <ModeToggle />
 
           <SignedOut>
-            <Button className="">
-              <SignInButton />
-            </Button>
+            <SignInButton />
           </SignedOut>
           <SignedIn>
             <UserButton />

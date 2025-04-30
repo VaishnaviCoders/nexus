@@ -1,5 +1,5 @@
+import prisma from '@/lib/db';
 import { auth } from '@clerk/nextjs/server';
-import prisma from '../db';
 
 export async function getFeeCategories() {
   const { orgId } = await auth();

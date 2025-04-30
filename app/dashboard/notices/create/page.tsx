@@ -3,7 +3,7 @@ import React from 'react';
 import Loading from '../loading';
 
 const CreateNotice = dynamic(
-  () => import('@/app/components/dashboardComponents/create-notice'),
+  () => import('@/components/dashboard/notice/create-notice'),
   {
     // ssr: false,
     loading: () => <Loading />,

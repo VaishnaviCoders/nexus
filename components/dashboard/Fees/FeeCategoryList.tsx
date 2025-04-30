@@ -1,7 +1,7 @@
 import { EmptyState } from '@/components/EmptyState';
-import { getFeeCategories } from '@/lib/data/fee-categories';
 import { FeeCategoryItem } from './FeeCategoryItem';
 import { Activity, Pin, User } from 'lucide-react';
+import { getFeeCategories } from '@/lib/data/fee/fee-categories';
 
 export async function FeeCategoryList() {
   const categories = await getFeeCategories();

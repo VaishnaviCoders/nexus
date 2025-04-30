@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
-import { getFeeCategory } from '@/lib/data/fee-categories';
-import { EditFeeCategoryForm } from '@/app/components/dashboardComponents/Fees/EditFeeCategoryForm';
+import { EditFeeCategoryForm } from '@/components/dashboard/Fees/EditFeeCategoryForm';
+import { getFeeCategory } from '@/lib/data/fee/fee-categories';
 
 export default async function EditFeeCategoryPage({
   params,

@@ -5,9 +5,9 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { AttendanceTable } from '@/app/components/dashboardComponents/attendance-table';
+import { AttendanceTable } from '@/components/dashboard/StudentAttendance/attendance-table';
 
-import AttendanceFilters from '@/app/components/dashboardComponents/attendance-filter';
+import AttendanceFilters from '@/components/dashboard/StudentAttendance/attendance-filter';
 import { auth } from '@clerk/nextjs/server';
 import prisma from '@/lib/db';
 import { searchParamsCache } from '@/lib/searchParams';

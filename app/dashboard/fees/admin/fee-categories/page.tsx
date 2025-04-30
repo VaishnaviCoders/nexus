@@ -2,8 +2,8 @@ import { Suspense } from 'react';
 // import { FeeCategoryList } from '@/components/fee-categories/fee-category-list';
 // import { FeeCategoryFormSkeleton } from '@/components/fee-categories/fee-category-form-skeleton';
 // import { getOrganizations } from '@/lib/data/organizations';
-import { FeeCategoryForm } from '@/app/components/dashboardComponents/Fees/FeeCategoryForm';
-import { FeeCategoryList } from '@/app/components/dashboardComponents/Fees/FeeCategoryList';
+import { FeeCategoryForm } from '@/components/dashboard/Fees/FeeCategoryForm';
+import { FeeCategoryList } from '@/components/dashboard/Fees/FeeCategoryList';
 
 export default async function FeeCategoriesPage() {
   return (

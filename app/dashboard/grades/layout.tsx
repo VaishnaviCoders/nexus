@@ -1,4 +1,4 @@
-import GradeListing from '@/app/components/dashboardComponents/GradeListing';
+import GradeListing from '@/components/dashboard/class-management/GradeListing';
 import prisma from '@/lib/db';
 import { auth } from '@clerk/nextjs/server';
 

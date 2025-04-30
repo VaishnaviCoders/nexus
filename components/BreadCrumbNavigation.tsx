@@ -12,10 +12,11 @@ import Link from 'next/link';
 
 const BreadCrumbNavigation = () => {
   const pathname = usePathname();
-  const pathNames = useMemo(
-    () => pathname.split('/').filter((path) => path),
-    [pathname]
-  );
+  const pathNames = useMemo(() => {
+    return pathname
+      .split('/')
+      .filter((path) => path && !/^[a-zA-Z0-9_-]{10,}$/.test(path)); // skip UUID-ish paths
+  }, [pathname]);
 
   return (
     <Breadcrumb className="flex shrink-0 items-center px-4 my-5">

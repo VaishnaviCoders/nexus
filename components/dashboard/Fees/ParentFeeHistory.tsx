@@ -122,7 +122,7 @@ const ParentFeeHistory = ({ parentData }: { parentData: ParentData }) => {
     }
   };
 
-  if (!currentChild || !currentChild.paymentHistory?.length) return null;
+  if (!currentChild) return null;
 
   return (
     <div>

@@ -1,6 +1,6 @@
 import prisma from '@/lib/db';
 import { auth } from '@clerk/nextjs/server';
-import AttendanceMark from '@/app/components/dashboardComponents/attendance-mark';
+import AttendanceMark from '@/components/dashboard/StudentAttendance/attendance-mark';
 
 async function getStudents() {
   const { orgId } = await auth();

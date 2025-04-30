@@ -1,4 +1,4 @@
-import ViewNotice from '@/app/components/dashboardComponents/view-notice';
+import ViewNotice from '@/components/dashboard/notice/view-notice';
 import prisma from '@/lib/db';
 import { auth } from '@clerk/nextjs/server';
 import { Role } from '@prisma/client';
@@ -8,6 +8,7 @@ export default async function NoticePage({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  const { id } = await params;
   const { orgRole } = await auth();
 
   const roleMap: Record<string, Role> = {
@@ -19,7 +20,7 @@ export default async function NoticePage({
 
   const role = orgRole && roleMap[orgRole] ? roleMap[orgRole] : 'STUDENT';
 
-  const noticeId = (await params).id as string;
+  const noticeId = id;
   const notice = await prisma.notice.findUnique({
     where: {
       id: noticeId,

@@ -1,13 +1,16 @@
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   Card,
-  CardDescription,
   CardContent,
+  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import React from 'react';
-
+import { Separator } from '@/components/ui/separator';
+import { cn } from '@/lib/utils';
+import prisma from '@/lib/db';
 import {
   Activity,
   CreditCard,
@@ -15,10 +18,6 @@ import {
   IndianRupee,
   PercentDiamond,
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { cn } from '@/lib/utils';
-import prisma from '@/lib/db';
 
 async function getFees(studentId: string) {
   return await prisma.fee.findMany({
@@ -30,6 +29,7 @@ async function getFees(studentId: string) {
     },
   });
 }
+
 async function getStudentData(studentId: string) {
   return await prisma.student.findMany({
     where: {
@@ -41,8 +41,14 @@ async function getStudentData(studentId: string) {
   });
 }
 
-const page = async ({ params }: { params: Promise<{ id: string }> }) => {
-  const studentId = (await params).id;
+export default async function StudentFeePage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const studentId = id;
+
   const fees = await getFees(studentId);
   const studentData = await getStudentData(studentId);
 
@@ -51,150 +57,218 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
   const pendingFees = totalFees - paidFees;
 
   return (
-    <div className="">
-      <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
-        <Card
-          x-chunk="dashboard-01-chunk-0 "
-          className=" hover:border-[#4EFFCA] hover:animate-pulse"
-        >
+    <div className="space-y-8">
+      <div>
+        <h2 className="text-2xl font-bold tracking-tight">Fee Dashboard</h2>
+        <p className="text-muted-foreground">
+          Manage and track student fee information
+        </p>
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <Card className="overflow-hidden border-border/50 transition-all hover:border-primary/20 hover:shadow-md">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Fees</CardTitle>
-            <IndianRupee className="custom_color h-4 w-4" />
+            <div className="rounded-md bg-primary/10 p-1">
+              <IndianRupee className="h-4 w-4 text-primary" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold flex items-center space-x-3">
-              <IndianRupee className="custom_color h-4 w-4" />
-              {totalFees}
+            <div className="flex items-baseline space-x-1">
+              <IndianRupee className="h-4 w-4 text-muted-foreground" />
+              <span className="text-2xl font-bold">
+                {totalFees.toLocaleString('en-IN')}
+              </span>
             </div>
-            <p className="text-xs text-muted-foreground">
-              +20.1% from last month
-            </p>
-          </CardContent>
-        </Card>
-        <Card x-chunk="dashboard-01-chunk-2">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Paid Fees</CardTitle>
-            <CreditCard className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold flex items-center space-x-3">
-              <IndianRupee className="custom_color h-4 w-4" />
-              {paidFees}
-            </div>
-            <p className="text-xs text-muted-foreground">
-              +19% from last month
-            </p>
-          </CardContent>
-        </Card>
-        <Card x-chunk="dashboard-01-chunk-1">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Pending Fee</CardTitle>
-            <PercentDiamond className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold flex items-center space-x-3">
-              <IndianRupee className="custom_color h-4 w-4" />
-              {pendingFees}
-            </div>
-            <p className="text-xs text-muted-foreground">
-              +180.1% from last month
+            <p className="text-xs text-muted-foreground mt-1">
+              {fees.length} fee records total
             </p>
           </CardContent>
         </Card>
 
-        <Card x-chunk="dashboard-01-chunk-3">
+        <Card className="overflow-hidden border-border/50 transition-all hover:border-emerald-500/20 hover:shadow-md">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Paid Fees</CardTitle>
+            <div className="rounded-md bg-emerald-500/10 p-1">
+              <CreditCard className="h-4 w-4 text-emerald-500" />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-baseline space-x-1">
+              <IndianRupee className="h-4 w-4 text-muted-foreground" />
+              <span className="text-2xl font-bold">
+                {paidFees.toLocaleString('en-IN')}
+              </span>
+            </div>
+            <p className="text-xs text-muted-foreground mt-1">
+              {((paidFees / totalFees) * 100).toFixed(1)}% of total fees
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card className="overflow-hidden border-border/50 transition-all hover:border-amber-500/20 hover:shadow-md">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Pending Fee</CardTitle>
+            <div className="rounded-md bg-amber-500/10 p-1">
+              <PercentDiamond className="h-4 w-4 text-amber-500" />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-baseline space-x-1">
+              <IndianRupee className="h-4 w-4 text-muted-foreground" />
+              <span className="text-2xl font-bold">
+                {pendingFees.toLocaleString('en-IN')}
+              </span>
+            </div>
+            <p className="text-xs text-muted-foreground mt-1">
+              {fees.filter((fee) => fee.status === 'UNPAID').length} unpaid
+              invoices
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card className="overflow-hidden border-border/50 transition-all hover:border-violet-500/20 hover:shadow-md">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
               Admission Date
             </CardTitle>
-            <Activity className="h-4 w-4 text-muted-foreground" />
+            <div className="rounded-md bg-violet-500/10 p-1">
+              <Activity className="h-4 w-4 text-violet-500" />
+            </div>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {new Intl.DateTimeFormat('en-IN').format(
-                studentData[0].createdAt
-              )}
+              {new Intl.DateTimeFormat('en-IN', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric',
+              }).format(studentData[0].createdAt)}
             </div>
-            <p className="text-xs text-muted-foreground">
-              +201 since last hour
+            <p className="text-xs text-muted-foreground mt-1">
+              {Math.floor(
+                (new Date().getTime() -
+                  new Date(studentData[0].createdAt).getTime()) /
+                  (1000 * 60 * 60 * 24 * 30)
+              )}{' '}
+              months enrolled
             </p>
           </CardContent>
         </Card>
       </div>
-      {fees.map((fee) => (
-        <Card key={fee.id} className="hover:shadow-md transition-shadow my-5">
-          <CardHeader className="">
-            <CardTitle className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <div> Fee Id: {fee.id} </div>
-              <div>
-                <Badge
-                  className={cn(
-                    fee.status === 'PAID'
-                      ? 'bg-green-50 text-green-500 hover:bg-green-50'
-                      : fee.status === 'UNPAID'
-                        ? 'bg-red-50 text-red-500 hover:bg-red-50'
-                        : ''
-                  )}
-                >
-                  {fee.status}
-                </Badge>
-              </div>
-            </CardTitle>
 
-            <CardDescription>{fee.feeCategory.description}</CardDescription>
-          </CardHeader>
+      <div>
+        <div className="flex items-center justify-between">
+          <h3 className="text-lg font-medium">Fee Records</h3>
+          <Badge variant="outline" className="text-xs">
+            {fees.length} Records
+          </Badge>
+        </div>
+        <Separator className="my-4" />
 
-          <CardContent>
-            <div className="grid grid-cols-4 gap-4">
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">
-                  Date
-                </p>
-                <p className="text-base">
-                  {new Intl.DateTimeFormat('en-IN').format(fee.createdAt)}
-                </p>
-              </div>
-              <div className="">
-                <p className="text-sm font-medium text-muted-foreground">
-                  Last Date
-                </p>
-                <p className="text-base">
-                  {' '}
-                  {new Intl.DateTimeFormat('en-IN').format(fee.dueDate)}
-                </p>
-              </div>
-              <div className="">
-                <p className="text-sm font-medium text-muted-foreground">
-                  Category
-                </p>
-                <p className="text-base">{fee.feeCategory.name}</p>
-              </div>
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">
-                  Amount
-                </p>
-                <p className="text-base font-semibold">
-                  {new Intl.NumberFormat('en-IN').format(fee.totalFee)}
-                </p>
-              </div>
-            </div>
-          </CardContent>
-          <CardFooter className="flex justify-end">
-            {fee.status === 'UNPAID' ? (
-              <Button>
-                <CreditCard className="mr-2 h-4 w-4" /> Pay Fees
-              </Button>
-            ) : (
-              <Button>
-                <Download className="mr-2 h-4 w-4" />
-                Download Receipt
-              </Button>
-            )}
-          </CardFooter>
-        </Card>
-      ))}
+        <div className="space-y-4">
+          {fees.map((fee) => (
+            <Card
+              key={fee.id}
+              className="overflow-hidden border-border/50 transition-all hover:shadow-md"
+            >
+              <CardHeader className="pb-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <CardTitle className="text-base">
+                      Fee ID: {fee.id}
+                    </CardTitle>
+                    <Badge
+                      variant="outline"
+                      className={cn(
+                        'font-normal',
+                        fee.status === 'PAID'
+                          ? 'bg-emerald-50 text-emerald-700 hover:bg-emerald-50 border-emerald-200'
+                          : fee.status === 'UNPAID'
+                          ? 'bg-red-50 text-red-700 hover:bg-red-50 border-red-200'
+                          : ''
+                      )}
+                    >
+                      {fee.status}
+                    </Badge>
+                  </div>
+                  <div className="text-sm font-medium text-muted-foreground">
+                    {new Intl.NumberFormat('en-IN', {
+                      style: 'currency',
+                      currency: 'INR',
+                      maximumFractionDigits: 0,
+                    }).format(fee.totalFee)}
+                  </div>
+                </div>
+                <CardDescription className="mt-1.5">
+                  {fee.feeCategory.description}
+                </CardDescription>
+              </CardHeader>
+
+              <CardContent>
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground">
+                      Issue Date
+                    </p>
+                    <p className="text-sm mt-1">
+                      {new Intl.DateTimeFormat('en-IN', {
+                        day: '2-digit',
+                        month: 'short',
+                        year: 'numeric',
+                      }).format(fee.createdAt)}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground">
+                      Due Date
+                    </p>
+                    <p className="text-sm mt-1">
+                      {new Intl.DateTimeFormat('en-IN', {
+                        day: '2-digit',
+                        month: 'short',
+                        year: 'numeric',
+                      }).format(fee.dueDate)}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground">
+                      Category
+                    </p>
+                    <p className="text-sm mt-1">{fee.feeCategory.name}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground">
+                      Payment Status
+                    </p>
+                    <p className="text-sm mt-1">
+                      {fee.status === 'PAID'
+                        ? `Paid ${new Intl.NumberFormat('en-IN', {
+                            style: 'currency',
+                            currency: 'INR',
+                            maximumFractionDigits: 0,
+                          }).format(fee.paidAmount)}`
+                        : 'Not paid yet'}
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+
+              <CardFooter className="flex justify-end pt-3 pb-4">
+                {fee.status === 'UNPAID' ? (
+                  <Button className="bg-primary hover:bg-primary/90">
+                    <CreditCard className="mr-2 h-4 w-4" /> Pay Fees
+                  </Button>
+                ) : (
+                  <Button variant="outline">
+                    <Download className="mr-2 h-4 w-4" />
+                    Download Receipt
+                  </Button>
+                )}
+              </CardFooter>
+            </Card>
+          ))}
+        </div>
+      </div>
     </div>
   );
-};
-
-export default page;
+}

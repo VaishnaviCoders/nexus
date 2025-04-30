@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import prisma from '@/lib/db';
 import { Separator } from '@/components/ui/separator';
-import { AddSection } from '@/app/components/dashboardComponents/AddSection';
+import { AddSection } from '@/components/dashboard/class-management/AddSection';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 async function getGradeWithSections(gradeId: string) {

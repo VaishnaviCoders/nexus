@@ -20,6 +20,8 @@ import { redirect } from 'next/navigation';
 import { parseWithZod } from '@conform-to/zod';
 
 import { v2 as cloudinary, UploadApiResponse } from 'cloudinary';
+import { performance } from 'perf_hooks';
+import { getOrganizationId } from '@/lib/organization';
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -654,6 +656,7 @@ export async function CustomDatesSectionAttendance(
 // Fees
 
 export async function getDashboardStats(organizationId: string) {
+  const start = performance.now();
   const [totalRevenue, totalPending, studentCount, feeCategoryCount] =
     await Promise.all([
       prisma.fee.aggregate({
@@ -672,10 +675,124 @@ export async function getDashboardStats(organizationId: string) {
       }),
     ]);
 
+  const end = performance.now();
+
+  console.log('getDashboardStats took', end - start, 'ms');
+
   return {
     totalRevenue: totalRevenue._sum.paidAmount || 0,
     pendingFees: totalPending._sum.pendingAmount || 0,
     totalStudents: studentCount,
     feeCategoryCount,
   };
+}
+
+const mockSummary = {
+  totalFees: 1250000,
+  collectedFees: 875000,
+  pendingFees: 375000,
+  totalStudents: 250,
+  paidStudents: 175,
+  unpaidStudents: 75,
+  overdueFees: 125000,
+};
+
+export async function getFeesSummary() {
+  const orgId = await getOrganizationId();
+
+  const [feeAgg, studentCount, studentGroupedFees, overdueAmount] =
+    await Promise.all([
+      prisma.fee.aggregate({
+        where: { organizationId: orgId },
+        _sum: {
+          totalFee: true,
+          paidAmount: true,
+          pendingAmount: true,
+        },
+      }),
+
+      prisma.student.count({
+        where: { organizationId: orgId },
+      }),
+
+      prisma.fee.groupBy({
+        by: ['studentId'],
+        where: {
+          organizationId: orgId,
+        },
+        _sum: {
+          pendingAmount: true,
+        },
+      }),
+
+      prisma.fee.aggregate({
+        where: {
+          organizationId: orgId,
+          status: 'OVERDUE',
+        },
+        _sum: {
+          pendingAmount: true,
+        },
+      }),
+    ]);
+
+  const paidStudents = studentGroupedFees.filter(
+    (s) => Number(s._sum.pendingAmount) === 0
+  ).length;
+
+  const totalStudents = studentCount;
+  const unpaidStudents = totalStudents - paidStudents;
+
+  return {
+    totalFees: feeAgg._sum.totalFee || 0,
+    collectedFees: feeAgg._sum.paidAmount || 0,
+    pendingFees: feeAgg._sum.pendingAmount || 0,
+    totalStudents,
+    paidStudents,
+    unpaidStudents,
+    overdueFees: overdueAmount._sum.pendingAmount || 0,
+  };
+}
+
+import { startOfMonth, endOfMonth, subMonths } from 'date-fns';
+
+export async function getMonthlyFeeCollection(monthsBack: number) {
+  const start = performance.now();
+  const orgId = await getOrganizationId();
+  const now = new Date();
+
+  // Generate a range of past months
+  const results = await prisma.feePayment.groupBy({
+    by: ['paymentDate'],
+    where: {
+      organizationId: orgId,
+      paymentDate: {
+        gte: subMonths(now, monthsBack),
+        lte: now,
+      },
+    },
+    _sum: {
+      amountPaid: true,
+    },
+  });
+
+  // Group and format by month
+  const monthlyCollection: Record<string, number> = {};
+
+  for (const r of results) {
+    const monthKey = `${r.paymentDate.getFullYear()}-${(
+      r.paymentDate.getMonth() + 1
+    )
+      .toString()
+      .padStart(2, '0')}`;
+    if (!monthlyCollection[monthKey]) {
+      monthlyCollection[monthKey] = 0;
+    }
+    monthlyCollection[monthKey] += r._sum.amountPaid ?? 0;
+  }
+  const end = performance.now();
+
+  console.log('getMonthlyFeeCollection took', end - start, 'ms');
+
+  return monthlyCollection;
 }

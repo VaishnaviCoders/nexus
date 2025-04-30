@@ -1,10 +1,10 @@
 import prisma from '@/lib/db';
-import FeeAssignmentFilter from '@/app/components/dashboardComponents/Fees/FeeAssignmentFilter';
+import FeeAssignmentFilter from '@/components/dashboard/Fees/FeeAssignmentFilter';
 import { getOrganizationId } from '@/lib/organization';
-import FeeAssignmentDataTable from '@/app/components/dashboardComponents/Fees/FeeAssignmentDataTable';
+import FeeAssignmentDataTable from '@/components/dashboard/Fees/FeeAssignmentDataTable';
 import { searchParamsCache } from '@/lib/searchParams';
 import { SearchParams } from 'nuqs';
-import FeeAssignmentPagination from '@/app/components/dashboardComponents/Fees/FeeAssignmentPagination';
+import FeeAssignmentPagination from '@/components/dashboard/Fees/FeeAssignmentPagination';
 
 interface FilterAssignFeesProps {
   search: string;
