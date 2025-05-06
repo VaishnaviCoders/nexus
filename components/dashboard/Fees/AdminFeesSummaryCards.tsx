@@ -94,7 +94,7 @@ const AdminFeesSummaryCards = async () => {
       <Card className="overflow-hidden border-border/50 transition-all hover:border-emerald-500/20 hover:shadow-md">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">
-            Student Payment Status
+            Students Paid in Full
           </CardTitle>
           <div className="rounded-md bg-emerald-500/10 p-1">
             <UsersIcon className="h-4 w-4 text-emerald-500" />
@@ -105,8 +105,8 @@ const AdminFeesSummaryCards = async () => {
             {paidStudents}/{totalStudents}
           </div>
           <p className="text-xs text-muted-foreground mt-1">
-            {((paidStudents / totalStudents) * 100).toFixed(1)}% students paid
-            in full
+            `${paidStudents.toLocaleString()}/${totalStudents.toLocaleString()}`
+            % students paid in full
           </p>
         </CardContent>
       </Card>

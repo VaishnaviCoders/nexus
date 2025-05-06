@@ -11,7 +11,8 @@ import { getFeesSummary } from '@/app/actions';
 
 interface FeeCategory {
   name: string;
-  amount: number;
+  paidAmount: number;
+  pendingAmount: number;
 }
 
 interface FeeDistributionByCategoryProps {
@@ -21,12 +22,18 @@ interface FeeDistributionByCategoryProps {
 const FeeDistributionByCategory: React.FC<
   FeeDistributionByCategoryProps
 > = async ({ data }: FeeDistributionByCategoryProps) => {
-  const { totalFees } = await getFeesSummary();
+  const totalFees = data.reduce(
+    (acc, category) => acc + category.paidAmount + category.pendingAmount,
+    0
+  );
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Fee Distribution by Category</CardTitle>
-        <CardDescription>Breakdown of fees by category</CardDescription>
+        <CardTitle>Fee Collection by Category</CardTitle>
+        <CardDescription>
+          Shows paid vs pending fees within each category
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
@@ -35,11 +42,14 @@ const FeeDistributionByCategory: React.FC<
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium">{category.name}</span>
                 <span className="text-sm text-muted-foreground">
-                  ₹{category.amount.toLocaleString('en-IN')}
+                  ₹
+                  {(
+                    category.paidAmount + category.pendingAmount
+                  ).toLocaleString('en-IN')}
                 </span>
               </div>
               <Progress
-                value={(category.amount / totalFees) * 100}
+                value={(category.paidAmount + category.pendingAmount) / 100}
                 className="h-2"
               />
             </div>

@@ -36,12 +36,16 @@ const GetFeesByParentId = async () => {
                   FeePayment: {
                     select: {
                       id: true,
+                      organizationId: true,
                       amountPaid: true,
                       paymentDate: true,
                       paymentMethod: true,
                       receiptNumber: true,
                       payerName: true,
                       payerPhone: true,
+                      transactionId: true,
+                      note: true,
+                      createdAt: true,
                     },
                     orderBy: { paymentDate: 'asc' },
                   },
@@ -81,17 +85,20 @@ const GetFeesByParentId = async () => {
       })
     );
 
-    const allPayments = student.Fee.flatMap((fee) =>
+    const paymentHistory = student.Fee.flatMap((fee) =>
       fee.FeePayment.map((payment) => ({
         id: payment.id,
+        organizationId: payment.organizationId,
         amount: payment.amountPaid,
         childName: student.firstName + ' ' + student.lastName,
         date: payment.paymentDate,
-        method: payment.paymentMethod,
+        paymentMethod: payment.paymentMethod,
         category: fee.feeCategory?.name || 'Unknown',
         receiptNumber: payment.receiptNumber,
         payerName: payment.payerName,
         payerPhone: payment.payerPhone,
+        transactionId: payment.transactionId,
+        notes: payment.note,
       }))
     );
 
@@ -105,7 +112,7 @@ const GetFeesByParentId = async () => {
       paidFees,
       pendingFees,
       unpaidFees,
-      paymentHistory: allPayments,
+      paymentHistory: paymentHistory,
     };
   });
 

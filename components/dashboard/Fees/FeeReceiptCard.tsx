@@ -68,7 +68,12 @@ interface ReceiptData {
   organizationName: string;
 }
 
-export default function FeeReceiptCard() {
+interface FeeReceiptCardProps {
+  receiptData: ReceiptData;
+}
+
+export default function FeeReceiptCard(data: any) {
+  console.log('Receipt Data', data);
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
   const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -88,23 +93,10 @@ export default function FeeReceiptCard() {
     organizationName: 'Springfield School',
   };
 
-  // const handleCopy = () => {
-  //   if (copied) return;
-  //   navigator.clipboard.writeText(receiptData.receiptNumber);
-  //   setCopied(true);
-  // };
-
   const handleDownload = async () => {
     setIsGeneratingPdf(true);
 
-    // Mock PDF generation delay
-    // await new Promise((resolve) => setTimeout(resolve, 1500));
-
     setIsGeneratingPdf(false);
-    // toast({
-    //   title: 'Receipt Downloaded',
-    //   description: 'Your receipt has been downloaded successfully.',
-    // });
 
     toast.success('Receipt Downloaded');
   };
@@ -128,7 +120,6 @@ export default function FeeReceiptCard() {
     if (inputRef.current) {
       navigator.clipboard.writeText(inputRef.current.value);
       setCopied(true);
-      setTimeout(() => setCopied(false), 1500);
     }
   };
 

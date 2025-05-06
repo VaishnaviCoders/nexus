@@ -182,14 +182,14 @@ model FeePayment {
   paymentDate   DateTime      @default(now())
   paymentMethod PaymentMethod
   receiptNumber String        @unique
-  notes         String?
+  note          String?
   transactionId String? // From payment gateway (UPI ref, bank ref, etc.)
   payerName     String? // Useful when a parent/guardian pays
   payerPhone    String?
   feeId         String
   fee           Fee           @relation(fields: [feeId], references: [id])
 
-  recordedBy     String // Admin ID (optional, if needed)
+  recordedBy     String? // Admin ID (optional, if needed) 
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id])
 

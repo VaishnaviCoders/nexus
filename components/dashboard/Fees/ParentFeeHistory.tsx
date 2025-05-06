@@ -78,7 +78,7 @@ interface ParentData {
       amount: number;
       category: string;
       receiptNumber: string;
-      method: string;
+      paymentMethod: string;
       payerName: string | null;
       payerPhone: string | null;
     }[];
@@ -345,7 +345,7 @@ const ParentFeeHistory = ({ parentData }: { parentData: ParentData }) => {
                       <TableCell>{payment.receiptNumber}</TableCell>
                       <TableCell>{payment.category}</TableCell>
                       <TableCell>₹{payment.amount.toLocaleString()}</TableCell>
-                      <TableCell>{payment.method}</TableCell>
+                      <TableCell>{payment.paymentMethod}</TableCell>
                       <TableCell className="text-right">
                         <Dialog>
                           <DialogTrigger asChild>
@@ -365,7 +365,9 @@ const ParentFeeHistory = ({ parentData }: { parentData: ParentData }) => {
                                 View the receipt for this payment
                               </DialogDescription>
                             </DialogHeader>
-                            {/* <FeeReceiptCard receiptData={receiptData} /> */}
+                            <FeeReceiptCard
+                              receiptData={currentChild.paymentHistory}
+                            />
                           </DialogContent>
                         </Dialog>
                       </TableCell>

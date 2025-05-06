@@ -31,7 +31,10 @@ export default async function ParentDashboard() {
     return <div>No data found for this parent.</div>;
   }
 
-  // console.log('Client Parent Data', parentData);
+  console.log(
+    'Client Parent Data',
+    parentData.children.map((c) => c.paymentHistory)
+  );
 
   return (
     <div className="">

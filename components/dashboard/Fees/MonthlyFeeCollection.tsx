@@ -134,7 +134,7 @@ export function MonthlyFeeCollection({
         </div>
       </CardHeader>
 
-      <CardContent className="pb-0">
+      <CardContent className="pb-0 min-h-[250px]">
         <div className="h-[230px] pt-6 ">
           <div className="flex items-end justify-between gap-1 md:gap-2 border-b pb-2">
             {monthlyData.map((item, index) => (

@@ -494,8 +494,7 @@ export async function markAttendance(
   sectionId: string,
   attendanceData: { studentId: string; status: AttendanceStatus }[]
 ) {
-  const { orgId } = await auth();
-  const user = await currentUser();
+  const [{ orgId }, user] = await Promise.all([auth(), currentUser()]);
 
   if (!orgId) throw new Error('Organization ID is required');
   if (!user) throw new Error('User Not Found Please Logout And Log In');
@@ -520,7 +519,8 @@ export async function markAttendance(
     throw new Error('Attendance can only be marked for today.');
   }
 
-  const recordedBy = `${user.firstName} ${user.lastName}`.trim() || 'Unknown';
+  const recordedBy =
+    [user.firstName, user.lastName].filter(Boolean).join(' ') || 'Unknown';
 
   const attendanceUpdates = attendanceData.map((record) => ({
     where: {
@@ -548,11 +548,13 @@ export async function markAttendance(
     },
   }));
 
-  await prisma.$transaction(
-    attendanceUpdates.map((update) => prisma.studentAttendance.upsert(update))
+  const data = await prisma.$transaction(
+    attendanceUpdates.map((data) => prisma.studentAttendance.upsert(data))
   );
 
-  console.log('Attendance data updated:', attendanceUpdates);
+  console.log('Attendance data updated:', data);
+
+  redirect('/dashboard/attendance/attendance-dashboard');
 }
 export async function deleteAttendance(ids: string[]) {
   await prisma.studentAttendance.deleteMany({
@@ -687,19 +689,9 @@ export async function getDashboardStats(organizationId: string) {
   };
 }
 
-const mockSummary = {
-  totalFees: 1250000,
-  collectedFees: 875000,
-  pendingFees: 375000,
-  totalStudents: 250,
-  paidStudents: 175,
-  unpaidStudents: 75,
-  overdueFees: 125000,
-};
-
 export async function getFeesSummary() {
   const orgId = await getOrganizationId();
-
+  const today = new Date();
   const [feeAgg, studentCount, studentGroupedFees, overdueAmount] =
     await Promise.all([
       prisma.fee.aggregate({
@@ -728,7 +720,8 @@ export async function getFeesSummary() {
       prisma.fee.aggregate({
         where: {
           organizationId: orgId,
-          status: 'OVERDUE',
+          dueDate: { lt: today },
+          pendingAmount: { gt: 0 },
         },
         _sum: {
           pendingAmount: true,

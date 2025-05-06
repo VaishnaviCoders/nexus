@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   CalendarIcon,
@@ -83,6 +83,37 @@ type Student = {
   grade?: { grade: string } | null;
 };
 
+type AttendanceRecord = {
+  id: string;
+  firstName: string;
+  lastName: string;
+  rollNumber: string;
+  profileImage: string | null;
+  sectionId: string | null;
+  status: AttendanceStatus;
+  notes: string;
+  marked: boolean;
+  lastAttendance?: {
+    status: AttendanceStatus;
+    date: Date;
+  };
+};
+
+type AttendanceStats = {
+  present: number;
+  absent: number;
+  late: number;
+  percentage: number;
+  unmarked: number;
+};
+
+type Section = {
+  id: string;
+  name: string;
+  gradeId: string;
+  grade: string;
+};
+
 type Props = {
   students: Student[];
 };
@@ -90,31 +121,14 @@ type Props = {
 export default function AttendanceMark({ students }: Props) {
   const router = useRouter();
   const { orgRole } = useAuth();
+
   const [date, setDate] = useState<Date>(new Date());
   const [selectedSection, setSelectedSection] = useState<string>('');
-  const [sections, setSections] = useState<
-    { id: string; name: string; gradeId: string; grade: string }[]
-  >([]);
-  const [attendanceData, setAttendanceData] = useState<
-    {
-      id: string;
-      firstName: string;
-      lastName: string;
-      rollNumber: string;
-      profileImage: string | null;
-      sectionId: string | null;
-      status: AttendanceStatus;
-      notes: string;
-      marked: boolean;
-      lastAttendance?: {
-        status: AttendanceStatus;
-        date: Date;
-      };
-    }[]
-  >([]);
+  const [sections, setSections] = useState<Section[]>([]);
+  const [attendanceData, setAttendanceData] = useState<AttendanceRecord[]>([]);
 
   const [showConfirmation, setShowConfirmation] = useState(false);
-  const [attendanceStats, setAttendanceStats] = useState({
+  const [attendanceStats, setAttendanceStats] = useState<AttendanceStats>({
     present: 0,
     absent: 0,
     late: 0,
@@ -122,14 +136,18 @@ export default function AttendanceMark({ students }: Props) {
     unmarked: 0,
   });
 
-  const groupedSections = sections.reduce(
-    (acc, section) => {
+  // Memoized values for better performance
+  const groupedSections = useMemo(() => {
+    return sections.reduce((acc, section) => {
       if (!acc[section.grade]) acc[section.grade] = [];
       acc[section.grade].push(section);
       return acc;
-    },
-    {} as Record<string, { id: string; name: string; gradeId: string }[]>
-  );
+    }, {} as Record<string, Section[]>);
+  }, [sections]);
+
+  const selectedSectionName = useMemo(() => {
+    return sections.find((s) => s.id === selectedSection)?.name || '';
+  }, [sections, selectedSection]);
 
   console.log('groupedSections', groupedSections);
 
@@ -139,30 +157,25 @@ export default function AttendanceMark({ students }: Props) {
 
   // Extract unique sections from students
   useEffect(() => {
-    const uniqueSections = students.reduce(
-      (acc, student) => {
-        if (
-          student.section &&
-          !acc.some(
-            (s) => s.id === student.section?.id && s.gradeId === student.gradeId
-          )
-        ) {
-          acc.push({
-            id: student.section.id,
-            name: student.section.name,
-            gradeId: student.gradeId,
-            grade: student.grade?.grade || '',
-          });
-        }
-        return acc;
-      },
-      [] as { id: string; name: string; gradeId: string; grade: string }[]
-    );
-    console.log(uniqueSections);
+    const uniqueSections = students.reduce((acc, student) => {
+      if (
+        student.section &&
+        !acc.some(
+          (s) => s.id === student.section?.id && s.gradeId === student.gradeId
+        )
+      ) {
+        acc.push({
+          id: student.section.id,
+          name: student.section.name,
+          gradeId: student.gradeId,
+          grade: student.grade?.grade || '',
+        });
+      }
+      return acc;
+    }, [] as Section[]);
 
     setSections(uniqueSections);
-
-    // Set default section only if selectedSection is not already set
+    // Set default section only if needed
     if (uniqueSections.length > 0 && !selectedSection) {
       setSelectedSection(uniqueSections[0].id);
     }
@@ -214,7 +227,7 @@ export default function AttendanceMark({ students }: Props) {
     setAttendanceData(initialData);
   }, [students, selectedSection, date]);
 
-  // Calculate attendance statistics whenever attendance data changes
+  // Calculate attendance statistics
   useEffect(() => {
     const present = attendanceData.filter(
       (student) => student.status === 'PRESENT'
@@ -228,7 +241,6 @@ export default function AttendanceMark({ students }: Props) {
     const unmarked = attendanceData.filter(
       (student) => student.status === null
     ).length;
-
     const total = attendanceData.length;
 
     setAttendanceStats({
@@ -296,7 +308,10 @@ export default function AttendanceMark({ students }: Props) {
       );
 
       toast("Previous day's attendance copied", {
-        description: `Attendance data from ${format(previousDay, 'PPP')} has been applied.`,
+        description: `Attendance data from ${format(
+          previousDay,
+          'PPP'
+        )} has been applied.`,
       });
     } catch (error) {
       console.error('Error copying previous day attendance:', error);
@@ -333,13 +348,16 @@ export default function AttendanceMark({ students }: Props) {
       await markAttendance(sectionId, records);
 
       toast.success('Attendance saved', {
-        description: `Attendance for ${format(date, 'PPP')} has been recorded successfully.`,
+        description: `Attendance for ${format(
+          date,
+          'PPP'
+        )} has been recorded successfully.`,
       });
 
       // Close dialog and redirect
       setShowConfirmation(false);
-      router.push('/dashboard/attendance/attendance-dashboard');
-      router.refresh();
+      // router.push('/dashboard/attendance/attendance-dashboard');
+      // router.refresh();
     } catch (error) {
       console.error('Error saving attendance:', error);
       toast.error('Error', {
@@ -592,8 +610,8 @@ export default function AttendanceMark({ students }: Props) {
                                   attendancePercentage >= 95
                                     ? 'text-green-600 dark:text-green-400'
                                     : attendancePercentage >= 90
-                                      ? 'text-yellow-600 dark:text-yellow-400'
-                                      : 'text-red-600 dark:text-red-400'
+                                    ? 'text-yellow-600 dark:text-yellow-400'
+                                    : 'text-red-600 dark:text-red-400'
                                 )}
                               >
                                 {attendancePercentage}%
@@ -657,18 +675,18 @@ export default function AttendanceMark({ students }: Props) {
                           </Button>
                         </div>
                       </div>
-
                       {/* Notes section */}
-                      {/* <div className="px-4 pb-4">
+                      {/* Open only when student is absent or late */}
+                      <div className="px-4 pb-4">
                         <Textarea
-                          placeholder="Add notes (optional)"
+                          placeholder="Add note (optional)"
                           value={student.notes}
                           onChange={(e) =>
                             handleNotesChange(student.id, e.target.value)
                           }
                           className="h-20 resize-none"
                         />
-                      </div> */}
+                      </div>
                     </div>
                   );
                 })}
