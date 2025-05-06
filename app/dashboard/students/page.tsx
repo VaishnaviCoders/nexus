@@ -1,8 +1,6 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import prisma from '@/lib/db';
-
 import { Separator } from '@/components/ui/separator';
 
 import StudentFilter from '@/app/components/dashboardComponents/StudentFilter';
@@ -10,8 +8,7 @@ import { searchParamsCache } from '@/lib/searchParams';
 import { SearchParams } from 'nuqs';
 
 import { getOrganizationId } from '@/lib/organization';
-import StudentsGridList from '@/components/dashboard/Student/StudentsGridList';
-import { performance } from 'perf_hooks';
+
 import FilterStudents from '@/lib/data/student/FilterStudents';
 
 export const dynamic = 'force-dynamic'; // Ensures dynamic rendering
@@ -19,12 +16,6 @@ export const dynamic = 'force-dynamic'; // Ensures dynamic rendering
 type PageProps = {
   searchParams: Promise<SearchParams>;
 };
-
-interface FilterStudentsProps {
-  search: string;
-  gradeId?: string;
-  sectionId?: string;
-}
 
 export default async function Students({ searchParams }: PageProps) {
   const orgId = await getOrganizationId();
