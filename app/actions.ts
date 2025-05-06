@@ -748,6 +748,7 @@ export async function getFeesSummary() {
 }
 
 import { startOfMonth, endOfMonth, subMonths } from 'date-fns';
+import FilterStudents from '@/lib/data/student/FilterStudents';
 
 export async function getMonthlyFeeCollection(monthsBack: number) {
   const start = performance.now();
@@ -788,4 +789,16 @@ export async function getMonthlyFeeCollection(monthsBack: number) {
   console.log('getMonthlyFeeCollection took', end - start, 'ms');
 
   return monthlyCollection;
+}
+
+export async function fetchFilteredStudents({
+  search = '',
+  gradeId = 'all',
+  sectionId = 'all',
+}: {
+  search?: string;
+  gradeId?: string;
+  sectionId?: string;
+}) {
+  return await FilterStudents({ search, gradeId, sectionId });
 }
