@@ -20,13 +20,9 @@ type PageProps = {
 export default async function Students({ searchParams }: PageProps) {
   const orgId = await getOrganizationId();
 
-  const rawSearchParams = await searchParams;
-  console.log('Raw searchParams:', rawSearchParams);
-
   const { search, sectionId, gradeId } = await searchParamsCache.parse(
     searchParams
   );
-  console.log('Parsed searchParams:', { search, gradeId, sectionId });
 
   const students = await FilterStudents({ search, gradeId, sectionId });
   return (
@@ -47,7 +43,6 @@ export default async function Students({ searchParams }: PageProps) {
       <Separator />
 
       <StudentFilter organizationId={orgId} initialStudents={students} />
-      {/* <StudentsGridList students={students} /> */}
     </div>
   );
 }

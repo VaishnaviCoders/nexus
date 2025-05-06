@@ -13,7 +13,7 @@ import { Bell } from 'lucide-react';
 import { getCurrentUserId } from '@/lib/user';
 
 export async function Navbar() {
-  const user = await getCurrentUserId();
+  const user = await currentUser();
   const { orgId, orgRole, sessionClaims } = await auth();
 
   // console.log('Clerk Session Claims', sessionClaims);
