@@ -12,14 +12,15 @@ import { extractRouterConfig } from 'uploadthing/server';
 import { ourFileRouter } from '@/app/api/uploadthing/core';
 
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 export const metadata: Metadata = {
   metadataBase: new URL(
     process.env.APP_URL
       ? `${process.env.APP_URL}`
       : process.env.VERCEL_URL
-        ? `https://${process.env.VERCEL_URL}`
-        : `http://localhost:${process.env.PORT || 3000}`
+      ? `https://${process.env.VERCEL_URL}`
+      : `http://localhost:${process.env.PORT || 3000}`
   ),
   title: 'School CRM',
   description: 'Entire School Management Software',
@@ -71,6 +72,8 @@ export default function RootLayout({
             <NuqsAdapter>{children}</NuqsAdapter>
             <Toaster position="bottom-right" />
           </ThemeProvider>
+
+          <SpeedInsights />
         </body>
       </html>
     </ClerkProvider>
