@@ -1,10 +1,18 @@
 'use client';
 
-import { Mail, Phone, Trash2, User } from 'lucide-react';
-
+import { useState, useTransition, useMemo } from 'react';
+import {
+  CheckCircle,
+  Clock,
+  Mail,
+  MoreHorizontal,
+  Phone,
+  Trash2,
+  User,
+  XCircle,
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-
 import {
   Table,
   TableBody,
@@ -13,17 +21,18 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from '@/components/ui/pagination';
 import { EmptyState } from '@/components/EmptyState';
-import { useState, useTransition } from 'react';
 import { deleteAttendance } from '@/app/actions';
+import { toast } from 'sonner';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import Link from 'next/link';
+
+type AttendanceStatus = 'PRESENT' | 'ABSENT' | 'LATE';
 
 interface AttendanceRecord {
   id: string;
@@ -36,6 +45,10 @@ interface AttendanceRecord {
   sectionId: string;
   createdAt: Date;
   updatedAt: Date;
+  grade: {
+    id: string;
+    grade: string;
+  };
   section: {
     id: string;
     name: string;
@@ -50,8 +63,6 @@ interface AttendanceRecord {
   };
 }
 
-type AttendanceStatus = 'PRESENT' | 'ABSENT' | 'LATE';
-
 interface AttendanceRecordsProps {
   records: AttendanceRecord[];
 }
@@ -59,156 +70,250 @@ interface AttendanceRecordsProps {
 export function AttendanceTable({ records }: AttendanceRecordsProps) {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [isPending, startTransition] = useTransition();
+  const [sortConfig, setSortConfig] = useState<{
+    key: keyof AttendanceRecord | 'studentName' | 'date';
+    direction: 'asc' | 'desc';
+  }>({ key: 'date', direction: 'desc' });
+
+  // Memoize the sorted records to improve performance
+  const sortedRecords = useMemo(() => {
+    const recordsCopy = [...records];
+
+    return recordsCopy.sort((a, b) => {
+      if (sortConfig.key === 'studentName') {
+        const nameA =
+          `${a.student.firstName} ${a.student.lastName}`.toLowerCase();
+        const nameB =
+          `${b.student.firstName} ${b.student.lastName}`.toLowerCase();
+        return sortConfig.direction === 'asc'
+          ? nameA.localeCompare(nameB)
+          : nameB.localeCompare(nameA);
+      }
+
+      if (sortConfig.key === 'date') {
+        const dateA = new Date(a.date).getTime();
+        const dateB = new Date(b.date).getTime();
+        return sortConfig.direction === 'asc' ? dateA - dateB : dateB - dateA;
+      }
+
+      // Handle other sortable fields
+      return 0;
+    });
+  }, [records, sortConfig]);
 
   const toggleSelection = (id: string) => {
     setSelectedIds((prev) =>
       prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     );
   };
+
+  const handleSort = (key: keyof AttendanceRecord | 'studentName' | 'date') => {
+    setSortConfig((prev) => ({
+      key,
+      direction: prev.key === key && prev.direction === 'asc' ? 'desc' : 'asc',
+    }));
+  };
+
   const handleDelete = (id: string) => {
     startTransition(async () => {
-      await deleteAttendance([id]);
-      // Optionally, refetch data or update UI
+      try {
+        await deleteAttendance([id]);
+        toast.success('Attendance record deleted successfully!');
+      } catch (error) {
+        toast.error('Failed to delete attendance record');
+      }
     });
   };
 
   const handleBulkDelete = () => {
     if (selectedIds.length === 0) return;
+
     startTransition(async () => {
-      await deleteAttendance(selectedIds);
-      setSelectedIds([]); // Clear selection after delete
-      // Optionally, refetch data or update UI
+      try {
+        await deleteAttendance(selectedIds);
+        toast.success(
+          `${selectedIds.length} attendance records deleted successfully!`
+        );
+        setSelectedIds([]); // Clear selection after delete
+      } catch (error) {
+        toast.error('Failed to delete attendance records');
+      }
     });
   };
 
-  return (
-    <div className="space-y-4  rounded-md border">
-      <div className="rounded-md border">
-        {records.length > 0 ? (
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-[50px]">
-                  <Checkbox
-                    checked={selectedIds.length === records.length}
-                    onCheckedChange={() =>
-                      setSelectedIds(
-                        selectedIds.length === records.length
-                          ? []
-                          : records.map((r) => r.id)
-                      )
-                    }
-                  />
-                  {records.length}
-                </TableHead>
-                <TableHead>Date</TableHead>
-                <TableHead>Student</TableHead>
-                <TableHead>Roll Number</TableHead>
-                <TableHead>Section</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="w-[80px]">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {records.map((row) => (
-                <TableRow key={row.id}>
-                  <TableCell>
-                    <Checkbox
-                      checked={selectedIds.includes(row.id)}
-                      onCheckedChange={() => toggleSelection(row.id)}
-                    />
-                  </TableCell>
-                  <TableCell>
-                    {new Intl.DateTimeFormat('en-IN').format(row.date)}
-                  </TableCell>
-                  <TableCell className="font-medium">
-                    {row.student.firstName} {row.student.lastName}
-                  </TableCell>
-                  <TableCell>{row.student.rollNumber}</TableCell>
-                  <TableCell>
-                    {row.section.gradeId}
-                    {row.section.name}
-                  </TableCell>
-                  <TableCell>{getStatusBadge(row.status)}</TableCell>
-                  <TableCell>
-                    <Button
-                      onClick={() => handleDelete(row.id)}
-                      className="flex justify-center items-center"
-                      variant={'outline'}
-                    >
-                      <Trash2 color="red" className="h-4 w-4 " />
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        ) : (
-          <div className="flex justify-center items-center  my-5">
-            <EmptyState
-              title="No Students Found"
-              description="No students attendance found with the given search query."
-              icons={[User, Mail, Phone]}
-              image="/EmptyState.png"
-              action={{
-                label: 'Take Attendance',
-                href: '/dashboard/attendance/mark',
-              }}
-            />
-          </div>
-        )}
-      </div>
-      {selectedIds.length > 0 && (
-        <Button onClick={handleBulkDelete} variant="destructive">
-          <Trash2 color="white" className="h-4 w-4 " />
-          Delete Selected
-        </Button>
-      )}
+  const getSortIcon = (
+    key: keyof AttendanceRecord | 'studentName' | 'date'
+  ) => {
+    if (sortConfig.key !== key) return null;
+    return sortConfig.direction === 'asc' ? '↑' : '↓';
+  };
 
-      <Pagination>
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious href="#" />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#">1</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#" isActive>
-              2
-            </PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#">3</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationNext href="#" />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
+  if (records.length === 0) {
+    return (
+      <div className="flex justify-center items-center my-5 rounded-md border p-8">
+        <EmptyState
+          title="No Attendance Records Found"
+          description="No attendance records match your current filters."
+          icons={[User, Mail, Phone]}
+          image="/EmptyState.png"
+          action={{
+            label: 'Take Attendance',
+            href: '/dashboard/attendance/mark',
+          }}
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-4">
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-[50px]">
+                <Checkbox
+                  checked={
+                    selectedIds.length === records.length && records.length > 0
+                  }
+                  onCheckedChange={(checked) => {
+                    setSelectedIds(checked ? records.map((r) => r.id) : []);
+                  }}
+                />
+              </TableHead>
+              <TableHead
+                className="cursor-pointer hover:bg-muted/50 transition-colors"
+                onClick={() => handleSort('date')}
+              >
+                Date {getSortIcon('date')}
+              </TableHead>
+              <TableHead
+                className="cursor-pointer hover:bg-muted/50 transition-colors"
+                onClick={() => handleSort('studentName')}
+              >
+                Student {getSortIcon('studentName')}
+              </TableHead>
+              <TableHead>Grade</TableHead>
+              <TableHead>Section</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Note</TableHead>
+              <TableHead className="w-[80px]">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {sortedRecords.map((row) => (
+              <TableRow key={row.id} className="group">
+                <TableCell>
+                  <Checkbox
+                    checked={selectedIds.includes(row.id)}
+                    onCheckedChange={() => toggleSelection(row.id)}
+                  />
+                </TableCell>
+                <TableCell>
+                  {new Intl.DateTimeFormat('en-IN', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                  }).format(new Date(row.date))}
+                </TableCell>
+                <TableCell>
+                  <div className="font-medium capitalize">
+                    {row.student.firstName} {row.student.lastName}
+                  </div>
+                  <div className="text-sm text-muted-foreground">
+                    #{row.student.rollNumber}
+                  </div>
+                </TableCell>
+                <TableCell>{row.grade.grade}</TableCell>
+                <TableCell>{row.section.name}</TableCell>
+                <TableCell>{getStatusBadgeWithIcon(row.status)}</TableCell>
+                <TableCell>
+                  <div
+                    className="max-w-[200px] truncate"
+                    title={row.notes || ''}
+                  >
+                    {row.notes || '-'}
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline" size="icon" className="h-8 w-8">
+                        <span className="sr-only">Open menu</span>
+                        <MoreHorizontal />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem
+                        className="text-destructive focus:text-destructive"
+                        onClick={() => handleDelete(row.id)}
+                      >
+                        <Trash2 className="h-4 w-4 mr-2" />
+                        Delete
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        className=""
+                        onClick={() => handleDelete(row.id)}
+                      >
+                        <Link
+                          href={`/dashboard/students/${row.studentId}`}
+                          className="p-0 flex items-center gap-2"
+                        >
+                          <User className="h-4 w-4 mr-2" />
+                          View Student
+                        </Link>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+
+      {selectedIds.length > 0 && (
+        <div className="flex items-center gap-2 p-2 bg-muted/50 rounded-md">
+          <span className="text-sm font-medium">
+            {selectedIds.length} items selected
+          </span>
+          <Button
+            onClick={handleBulkDelete}
+            variant="destructive"
+            size="sm"
+            disabled={isPending}
+          >
+            <Trash2 className="h-4 w-4 mr-2" />
+            Delete Selected
+          </Button>
+        </div>
+      )}
     </div>
   );
 }
 
-const getStatusBadge = (status: AttendanceStatus) => {
+const getStatusBadgeWithIcon = (status: AttendanceStatus) => {
   switch (status) {
     case 'PRESENT':
       return (
-        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-800/20 dark:text-green-400">
+        <div className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-800/20 dark:text-green-400">
+          <CheckCircle className="h-3 w-3 mr-1" />
           Present
-        </span>
+        </div>
       );
     case 'ABSENT':
       return (
-        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-800/20 dark:text-red-400">
+        <div className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-800/20 dark:text-red-400">
+          <XCircle className="h-3 w-3 mr-1" />
           Absent
-        </span>
+        </div>
       );
     case 'LATE':
       return (
-        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-800/20 dark:text-yellow-400">
+        <div className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-800/20 dark:text-yellow-400">
+          <Clock className="h-3 w-3 mr-1" />
           Late
-        </span>
+        </div>
       );
     default:
       return null;

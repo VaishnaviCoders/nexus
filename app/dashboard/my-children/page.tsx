@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/card';
 
 import getAllChildrenByParentId from '@/lib/actions/my-children-action';
-import { ChildCard } from '@/app/components/dashboardComponents/ChildCard';
+import { ChildCard } from '@/components/dashboard/parent/ChildCard';
 
 const parentId = 'cm838j5oe0009vhnoehp1elg6';
 
@@ -41,7 +41,7 @@ const page = async () => {
         <CardHeader className="pb-0">
           <CardTitle>My Children</CardTitle>
           <CardDescription>
-            View and manage your children's information
+            View and manage your children&apos;s information
           </CardDescription>
           <CardContent className="p-0">
             <div className="grid gap-6 grid-cols-1 md:grid-cols-2 xl:grid-cols-2 my-5">

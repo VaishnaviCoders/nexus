@@ -8,12 +8,10 @@ import {
 } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
-  CalendarDays,
   CreditCard,
   DollarSign,
   Users,
   BookOpen,
-  School,
   AlertTriangle,
 } from 'lucide-react';
 import Link from 'next/link';

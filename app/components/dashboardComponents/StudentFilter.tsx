@@ -71,6 +71,8 @@ export default function StudentFilter({
   });
   const [searchQuery, setSearchQuery] = useQueryState('search', {
     defaultValue: '',
+    shallow: true,
+    throttleMs: 80,
   });
 
   const router = useRouter();
@@ -96,11 +98,17 @@ export default function StudentFilter({
   }, [selectedGrade, selectedSection, searchQuery]);
 
   // Reset section when grade changes
+
   useEffect(() => {
-    if (selectedGrade !== 'all') {
-      setSection('all');
-    }
-  }, [selectedGrade, setSection]);
+    setSection('all');
+  }, [selectedGrade]);
+
+  // Use this if above not working
+  // useEffect(() => {
+  //   if (selectedGrade !== 'all') {
+  //     setSection('all');
+  //   }
+  // }, [selectedGrade, setSection]);
 
   // Fetch students with debouncing
   const fetchStudents = useCallback(
@@ -129,7 +137,12 @@ export default function StudentFilter({
     if (selectedGrade !== 'all') query.set('gradeId', selectedGrade);
     if (selectedSection !== 'all') query.set('sectionId', selectedSection);
 
-    router.push(`/dashboard/students?${query.toString()}`, { scroll: false });
+    // router.push(`/dashboard/students?${query.toString()}`, { scroll: false });
+
+    router.replace(`/dashboard/students?${query.toString()}`, {
+      scroll: false,
+    });
+
     fetchStudents(searchQuery, selectedGrade, selectedSection);
   }, [selectedGrade, selectedSection, searchQuery, router, fetchStudents]);
 
@@ -139,15 +152,23 @@ export default function StudentFilter({
     setSearchQuery('');
   };
 
-  const selectedGradeName =
-    grades.find((g) => g.id === selectedGrade)?.name || 'All Grades';
-  const selectedSectionName =
-    selectedGrade !== 'all'
-      ? grades
-          .find((g) => g.id === selectedGrade)
-          ?.sections.find((s) => s.id === selectedSection)?.name ||
-        'All Sections'
-      : 'All Sections';
+  const selectedGradeObj = grades.find((g) => g.id === selectedGrade);
+  const selectedSectionObj = selectedGradeObj?.sections.find(
+    (s) => s.id === selectedSection
+  );
+
+  const selectedGradeName = selectedGradeObj?.name || 'All Grades';
+  const selectedSectionName = selectedSectionObj?.name || 'All Sections';
+
+  // const selectedGradeName =
+  //   grades.find((g) => g.id === selectedGrade)?.name || 'All Grades';
+  // const selectedSectionName =
+  //   selectedGrade !== 'all'
+  //     ? grades
+  //         .find((g) => g.id === selectedGrade)
+  //         ?.sections.find((s) => s.id === selectedSection)?.name ||
+  //       'All Sections'
+  //     : 'All Sections';
 
   return (
     <>

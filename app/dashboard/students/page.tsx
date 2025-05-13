@@ -11,7 +11,7 @@ import { getOrganizationId } from '@/lib/organization';
 
 import FilterStudents from '@/lib/data/student/FilterStudents';
 
-export const dynamic = 'force-dynamic'; // Ensures dynamic rendering
+export const revalidate = 30; // or 'force-cache' if data doesn't change often
 
 type PageProps = {
   searchParams: Promise<SearchParams>;

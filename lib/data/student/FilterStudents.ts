@@ -15,7 +15,7 @@ export default async function FilterStudents({
 }: FilterStudentsProps) {
   const orgId = await getOrganizationId();
   const start = performance.now();
-  console.log('FilterStudents inputs:', { orgId, search, gradeId, sectionId });
+  // console.log('FilterStudents inputs:', { orgId, search, gradeId, sectionId });
 
   const where: any = {
     organizationId: orgId,
@@ -75,10 +75,10 @@ export default async function FilterStudents({
 
     const end = performance.now();
     console.log('Fetched students in', end - start, 'ms');
-    console.log(
-      'Fetched students:',
-      students.map((s) => s.firstName)
-    );
+    // console.log(
+    //   'Fetched students:',
+    //   students.map((s) => s.firstName)
+    // );
 
     return students;
   } catch (error) {

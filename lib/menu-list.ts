@@ -44,7 +44,6 @@ export const roleMenus: Record<string, Group[]> = {
           href: '/dashboard',
           label: 'Dashboard',
           icon: LayoutGrid,
-          submenus: [],
         },
       ],
     },
@@ -103,7 +102,7 @@ export const roleMenus: Record<string, Group[]> = {
     {
       groupLabel: 'Settings',
       menus: [
-        { href: 'dashboard/settings', label: 'Settings', icon: Settings },
+        { href: '/dashboard/settings', label: 'Settings', icon: Settings },
       ],
     },
   ],
@@ -115,7 +114,6 @@ export const roleMenus: Record<string, Group[]> = {
           href: '/dashboard',
           label: 'Dashboard',
           icon: LayoutGrid,
-          submenus: [],
         },
       ],
     },
@@ -124,18 +122,18 @@ export const roleMenus: Record<string, Group[]> = {
       menus: [
         {
           href: 'dashboard/attendance/mark',
-          label: 'Class Management',
-          icon: Settings,
+          label: 'Take Attendance',
+          icon: Calendar,
         },
         {
           href: 'dashboard/grades',
           label: 'Class Management',
-          icon: Settings,
+          icon: School,
         },
         {
           href: 'dashboard/fees/teacher',
           label: 'Fees Management',
-          icon: Settings,
+          icon: IndianRupee,
         },
         {
           href: '/leads',
@@ -168,7 +166,7 @@ export const roleMenus: Record<string, Group[]> = {
     {
       groupLabel: 'Settings',
       menus: [
-        { href: 'dashboard/settings', label: 'Settings', icon: Settings },
+        { href: '/dashboard/settings', label: 'Settings', icon: Settings },
       ],
     },
   ],
@@ -271,12 +269,12 @@ export const roleMenus: Record<string, Group[]> = {
           icon: Calendar,
         },
         {
-          href: 'dashboard/notices',
+          href: '/dashboard/notices',
           label: 'Notice Board',
           icon: Bell,
         },
         {
-          href: 'dashboard/remark',
+          href: '/dashboard/remark',
           label: 'Remark ',
           icon: Bell,
         },
@@ -285,7 +283,7 @@ export const roleMenus: Record<string, Group[]> = {
     {
       groupLabel: 'Settings',
       menus: [
-        { href: 'dashboard/settings', label: 'Settings', icon: Settings },
+        { href: '/dashboard/settings', label: 'Settings', icon: Settings },
       ],
     },
   ],
