@@ -81,7 +81,7 @@ export const roleMenus: Record<string, Group[]> = {
       groupLabel: 'Monitoring',
       menus: [
         {
-          href: '/dashboard/attendance',
+          href: '/dashboard/attendance/analytics',
           label: 'Attendance Monitor',
           icon: Calendar,
           // submenus: [
@@ -93,7 +93,7 @@ export const roleMenus: Record<string, Group[]> = {
           // ],
         },
         {
-          href: 'dashboard/notices',
+          href: '/dashboard/notices',
           label: 'Notice Board',
           icon: Bell,
         },
@@ -121,17 +121,17 @@ export const roleMenus: Record<string, Group[]> = {
       groupLabel: 'Management',
       menus: [
         {
-          href: 'dashboard/attendance/mark',
+          href: '/dashboard/attendance/mark',
           label: 'Take Attendance',
           icon: Calendar,
         },
         {
-          href: 'dashboard/grades',
+          href: '/dashboard/grades',
           label: 'Class Management',
           icon: School,
         },
         {
-          href: 'dashboard/fees/teacher',
+          href: '/dashboard/fees/teacher',
           label: 'Fees Management',
           icon: IndianRupee,
         },
@@ -211,12 +211,12 @@ export const roleMenus: Record<string, Group[]> = {
           icon: MessageSquare,
         },
         {
-          href: 'dashboard/notices',
+          href: '/dashboard/notices',
           label: 'Notice Board',
           icon: Bell,
         },
         {
-          href: 'dashboard/complaints',
+          href: '/dashboard/complaints',
           label: 'Anonymous complaints',
           icon: Bell,
         },

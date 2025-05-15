@@ -193,8 +193,7 @@ export function AttendanceTable({ records }: AttendanceRecordsProps) {
               >
                 Student {getSortIcon('studentName')}
               </TableHead>
-              <TableHead>Grade</TableHead>
-              <TableHead>Section</TableHead>
+              <TableHead>Grade/Section</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Note</TableHead>
               <TableHead className="w-[80px]">Actions</TableHead>
@@ -209,7 +208,7 @@ export function AttendanceTable({ records }: AttendanceRecordsProps) {
                     onCheckedChange={() => toggleSelection(row.id)}
                   />
                 </TableCell>
-                <TableCell>
+                <TableCell className="whitespace-nowrap">
                   {new Intl.DateTimeFormat('en-IN', {
                     year: 'numeric',
                     month: 'short',
@@ -217,15 +216,24 @@ export function AttendanceTable({ records }: AttendanceRecordsProps) {
                   }).format(new Date(row.date))}
                 </TableCell>
                 <TableCell>
-                  <div className="font-medium capitalize">
+                  <div className="font-medium capitalize whitespace-nowrap">
                     {row.student.firstName} {row.student.lastName}
                   </div>
                   <div className="text-sm text-muted-foreground">
                     #{row.student.rollNumber}
                   </div>
                 </TableCell>
-                <TableCell>{row.grade.grade}</TableCell>
-                <TableCell>{row.section.name}</TableCell>
+                <TableCell className="whitespace-nowrap">
+                  <div className="flex flex-col leading-tight">
+                    <span className="font-medium text-sm text-foreground">
+                      {row.grade.grade}
+                    </span>
+                    <span className="text-xs text-muted-foreground">
+                      {row.section.name}
+                    </span>
+                  </div>
+                </TableCell>
+
                 <TableCell>{getStatusBadgeWithIcon(row.status)}</TableCell>
                 <TableCell>
                   <div

@@ -56,7 +56,6 @@ import {
   Info,
   Plus,
 } from 'lucide-react';
-import { Calendar } from '@/components/ui/calendar';
 import {
   Popover,
   PopoverContent,
@@ -77,6 +76,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from '@/components/ui/hover-card';
+import { Calendar } from '@/components/ui/calendar';
 
 type FeeCategory = {
   id: string;
@@ -149,23 +149,11 @@ const FeeAssignmentDataTable = ({
       case 'UNPAID':
         return <CreditCard className="h-4 w-4 text-amber-600" />;
       case 'OVERDUE':
-        return <Calendar className="h-4 w-4 text-red-600" />;
+        return <CalendarIcon className="h-4 w-4 text-red-600" />;
       default:
         return null;
     }
   };
-  // const getFeeStatusColor = (status: string) => {
-  //   switch (status) {
-  //     case 'PAID':
-  //       return 'bg-green-100 text-green-500 border-green-500';
-  //     case 'UNPAID':
-  //       return 'bg-yellow-100 text-yellow-500 border-yellow-500';
-  //     case 'OVERDUE':
-  //       return 'bg-red-100 text-red-500 border-red-500';
-  //     default:
-  //       return 'bg-gray-100 text-gray-500 border-gray-500';
-  //   }
-  // };
 
   const form = useForm<z.infer<typeof feeAssignmentSchema>>({
     resolver: zodResolver(feeAssignmentSchema),

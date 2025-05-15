@@ -1,9 +1,17 @@
-import { Card, CardContent } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { CheckCircle, Clock, BarChart3 } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 
 import { SectionAttendanceTable } from '@/components/dashboard/StudentAttendance/sectionwise-attendance-table';
 import { getAttendanceCompletionStats } from '@/lib/data/attendance/get-attendance-completion-stats';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 
 export default async function AttendancePage() {
   const today = new Date();
@@ -45,6 +53,25 @@ export default async function AttendancePage() {
 
   return (
     <div className="space-y-6 ">
+      <Card className="flex items-center justify-between p-6">
+        <div>
+          <CardTitle className="text-lg">Section Attendance</CardTitle>
+          <CardDescription>Today's attendance overview</CardDescription>
+        </div>
+        <div className="flex space-x-2">
+          <Link href="/dashboard/attendance" passHref>
+            <Button variant="outline" size="sm">
+              View History
+            </Button>
+          </Link>
+          <Link href="/dashboard/attendance/mark" passHref>
+            <Button size="sm" variant={'default'}>
+              Take Attendance
+            </Button>
+          </Link>
+        </div>
+      </Card>
+
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardContent className="pt-6">

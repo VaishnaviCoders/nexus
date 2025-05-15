@@ -1,6 +1,3 @@
-// lib/data/attendance/get-attendance-completion-stats.ts
-
-import { Prisma } from '@prisma/client';
 import prisma from '@/lib/db';
 import { getOrganizationId } from '@/lib/organization';
 

@@ -28,7 +28,7 @@
     ".next/types/**/*.ts",
     "next-env.d.ts",
     "build/types/**/*.ts",
-    "app/dashboard/attendance/attendance-dashboard"
+    "app/dashboard/attendance/analytics"
   ],
   "exclude": ["node_modules"]
 }

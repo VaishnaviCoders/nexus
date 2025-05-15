@@ -1,6 +1,6 @@
 'use client';
 
-import { Download, TrendingUp } from 'lucide-react';
+import { Download } from 'lucide-react';
 import {
   Bar,
   BarChart,

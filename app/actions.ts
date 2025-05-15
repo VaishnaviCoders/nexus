@@ -554,7 +554,7 @@ export async function markAttendance(
 
   console.log('Attendance data updated:', data);
 
-  redirect('/dashboard/attendance/attendance-dashboard');
+  redirect('/dashboard/attendance/analytics');
 }
 export async function deleteAttendance(ids: string[]) {
   await prisma.studentAttendance.deleteMany({

@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Separator } from '@/components/ui/separator';
 
-import StudentFilter from '@/app/components/dashboardComponents/StudentFilter';
+import StudentFilter from '@/components/dashboard/Student/StudentFilter';
 import { searchParamsCache } from '@/lib/searchParams';
 import { SearchParams } from 'nuqs';
 
@@ -35,9 +35,9 @@ export default async function Students({ searchParams }: PageProps) {
               Add New Student
             </Button>
           </Link>
-          <Link href="/dashboard/attendance">
+          {/* <Link href="/dashboard/attendance">
             <Button type="button">Take Attendance</Button>
-          </Link>
+          </Link> */}
         </div>
       </header>
       <Separator />

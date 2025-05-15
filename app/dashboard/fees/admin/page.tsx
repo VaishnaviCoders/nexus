@@ -13,7 +13,6 @@ import {
 
 import { MonthlyFeeCollection } from '@/components/dashboard/Fees/MonthlyFeeCollection';
 import FeeDistributionByCategory from '@/components/dashboard/Fees/FeeDistributionByCategory';
-import AllFeesHistory from '@/components/dashboard/Fees/AllFeesHistory';
 import AdminFeesSummaryCards from '@/components/dashboard/Fees/AdminFeesSummaryCards';
 import { Suspense } from 'react';
 import Link from 'next/link';
@@ -22,6 +21,9 @@ import { getOrganizationId } from '@/lib/organization';
 import { getMonthlyFeeData } from '@/lib/data/fee/getMonthlyFeeData';
 import { Skeleton } from '@/components/ui/skeleton';
 import StudentPaymentHistoryTable from '@/components/dashboard/Fees/StudentPaymentHistoryTable';
+
+import { getFeeRecords } from '@/lib/data/fee/get-all-students-fees';
+// import fixIncorrectFeeStatuses from '@/lib/data/fee/payFeesAction';
 
 const getFeeCategoryAggregates = async () => {
   const orgId = await getOrganizationId();
@@ -63,9 +65,11 @@ const getFeeCategoryAggregates = async () => {
 export default async function AdminFeeDashboard() {
   const feeCategories = await getFeeCategoryAggregates();
   const data = await getMonthlyFeeData(2025);
-  console.log('Fee Categories', feeCategories);
-
-  // console.log(data);
+  const feeRecords = await getFeeRecords();
+  // Call this function in your migration or admin script
+  // fixIncorrectFeeStatuses().then((result) => {
+  //   console.log('Updated incorrect fee statuses:', result.updated);
+  // });
   return (
     <div className="flex flex-col space-y-8 ">
       <div className="flex items-center justify-between">
@@ -104,10 +108,7 @@ export default async function AdminFeeDashboard() {
         </Suspense>
       </div>
 
-      <StudentPaymentHistoryTable />
-
-      {/* Fee Records */}
-      <AllFeesHistory />
+      <StudentPaymentHistoryTable feeRecords={feeRecords} />
     </div>
   );
 }

@@ -7,6 +7,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import {
+  AlertCircleIcon,
   DownloadIcon,
   IndianRupeeIcon,
   PlusIcon,
@@ -79,15 +80,16 @@ const AdminFeesSummaryCards = async () => {
           </div>
         </CardHeader>
         <CardContent>
-          <div className="flex items-baseline space-x-1">
-            <IndianRupeeIcon className="h-4 w-4 text-muted-foreground" />
+          <div className="flex items-baseline space-x-1 text-2xl font-bold text-red-600">
+            <IndianRupeeIcon className="h-3 w-3 text-red-500 mr-1" />
             <span className="text-2xl font-bold">
               {overdueFees.toLocaleString('en-IN')}
             </span>
           </div>
-          <p className="text-xs text-muted-foreground mt-1">
-            Fees past due date requiring action
-          </p>
+          <div className="flex items-center mt-1">
+            <AlertCircleIcon className="h-3 w-3 text-red-500 mr-1" />
+            <p className="text-xs text-red-500">Requires immediate attention</p>
+          </div>
         </CardContent>
       </Card>
 
@@ -105,8 +107,8 @@ const AdminFeesSummaryCards = async () => {
             {paidStudents}/{totalStudents}
           </div>
           <p className="text-xs text-muted-foreground mt-1">
-            `${paidStudents.toLocaleString()}/${totalStudents.toLocaleString()}`
-            % students paid in full
+            {`${paidStudents.toLocaleString()}/${totalStudents.toLocaleString()} 
+            students paid in full`}
           </p>
         </CardContent>
       </Card>

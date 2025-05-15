@@ -36,6 +36,7 @@ import {
   IndianRupeeIcon,
   XCircleIcon,
 } from 'lucide-react';
+import { SendFeesReminderDialog } from '@/components/dashboard/Fees/SendFeesReminderDialog';
 
 // Sample data
 const students = [

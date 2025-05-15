@@ -19,6 +19,7 @@ import { fetchFilteredStudents } from '@/app/actions';
 import StudentsGridList from '@/components/dashboard/Student/StudentsGridList';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
+import debounce from 'lodash.debounce';
 
 type GradeAndSection = {
   id: string;
@@ -112,7 +113,7 @@ export default function StudentFilter({
 
   // Fetch students with debouncing
   const fetchStudents = useCallback(
-    async (search: string, gradeId: string, sectionId: string) => {
+    debounce(async (search: string, gradeId: string, sectionId: string) => {
       setIsLoading(true);
       try {
         const data = await fetchFilteredStudents({
@@ -126,9 +127,16 @@ export default function StudentFilter({
       } finally {
         setIsLoading(false);
       }
-    },
+    }, 300),
     []
   );
+
+  // Cancel debounce on unmount
+  useEffect(() => {
+    return () => {
+      fetchStudents.cancel();
+    };
+  }, [fetchStudents]);
 
   // Update URL and fetch students
   useEffect(() => {
@@ -173,10 +181,10 @@ export default function StudentFilter({
   return (
     <>
       <div className="space-y-4 mb-5 bg-white dark:bg-gray-950 rounded-lg p-4 shadow-sm border">
-        <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
-          <h3 className="text-lg font-medium">Student Filters</h3>
+        <div className="flex w-full gap-3 items-center justify-between">
+          <h3 className="text-lg font-medium w-full">Student Filters</h3>
 
-          <div className="flex items-center gap-2 w-full sm:w-auto">
+          <div className="flex ">
             <Button
               variant="outline"
               size="sm"
@@ -184,7 +192,7 @@ export default function StudentFilter({
               className="flex items-center gap-1.5"
             >
               <Filter className="h-4 w-4" />
-              <span className="hidden sm:inline">Filters</span>
+              <span className="">Filters</span>
               {activeFiltersCount > 0 && (
                 <Badge
                   variant="secondary"

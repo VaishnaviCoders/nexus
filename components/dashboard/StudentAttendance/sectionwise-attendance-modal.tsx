@@ -29,6 +29,7 @@ import {
   UserCheck,
   UserX,
 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 interface Students {
   id: string;
@@ -83,6 +84,8 @@ export function SectionWiseAttendanceViewModal({
 
   console.log('Section data (modal):', sectionData);
   console.log('Student data (modal):', students);
+
+  const router = useRouter();
 
   // console.log(sectionData, 'section data');
 
@@ -340,7 +343,12 @@ export function SectionWiseAttendanceViewModal({
               >
                 Back to Overview
               </Button>
-              <Button variant="default">Update Attendance</Button>
+              <Button
+                variant="default"
+                onClick={() => router.push('/dashboard/attendance/mark')}
+              >
+                Update Attendance
+              </Button>
             </div>
           </TabsContent>
         </Tabs>

@@ -12,6 +12,9 @@ import { auth } from '@clerk/nextjs/server';
 import { searchParamsCache } from '@/lib/searchParams';
 import { SearchParams } from 'nuqs';
 import { FilterAttendance } from '@/lib/data/attendance/FilterAttendance';
+import { Button } from '@/components/ui/button';
+import { DownloadIcon, PlusIcon } from 'lucide-react';
+import Link from 'next/link';
 type AttendanceStatus = 'PRESENT' | 'ABSENT' | 'LATE' | 'all';
 
 type PageProps = {
@@ -36,12 +39,29 @@ export default async function AttendancePage({ searchParams }: PageProps) {
 
   return (
     <div className="flex flex-col">
-      <Card className="p-0 m-0 mb-4">
+      <Card>
         <CardHeader>
-          <CardTitle>Attendance Records</CardTitle>
-          <CardDescription>
-            Overview of attendance status for all sections
-          </CardDescription>
+          <div className="flex items-center justify-between max-sm:flex-col max-sm:items-start gap-2">
+            <div className="flex flex-col">
+              <h1 className="text-xl font-bold tracking-tight">Attendance</h1>
+              <p className="text-muted-foreground">
+                Manage and track attendance across all students
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              <Button variant={'secondary'}>
+                <DownloadIcon className="mr-2 h-4 w-4" />
+                Export Data
+              </Button>
+              <Link href={'/dashboard/fees/admin/assign'}>
+                <Button type="button">
+                  {' '}
+                  <PlusIcon className="mr-2 h-4 w-4" />
+                  Mark Attendance
+                </Button>
+              </Link>
+            </div>
+          </div>
         </CardHeader>
         <CardContent className="p-2 md:p-6 m-0">
           <AttendanceFilters organizationId={orgId} />
