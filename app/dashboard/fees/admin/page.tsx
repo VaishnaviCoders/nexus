@@ -66,6 +66,8 @@ export default async function AdminFeeDashboard() {
   const feeCategories = await getFeeCategoryAggregates();
   const data = await getMonthlyFeeData(2025);
   const feeRecords = await getFeeRecords();
+
+  console.log('Fee records:', data);
   // Call this function in your migration or admin script
   // fixIncorrectFeeStatuses().then((result) => {
   //   console.log('Updated incorrect fee statuses:', result.updated);
@@ -108,10 +110,41 @@ export default async function AdminFeeDashboard() {
         </Suspense>
       </div>
 
-      <StudentPaymentHistoryTable feeRecords={feeRecords} />
+      <Suspense fallback={<StudentPaymentHistoryTableSkeleton />}>
+        <StudentPaymentHistoryTable feeRecords={feeRecords} />
+      </Suspense>
     </div>
   );
 }
+
+const StudentPaymentHistoryTableSkeleton = () => (
+  <Card>
+    <CardContent className="p-0">
+      <table className="w-full">
+        <thead>
+          <tr>
+            {Array.from({ length: 8 }).map((_, i) => (
+              <th key={i} className="p-4">
+                <Skeleton className="h-5 w-20" />
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {Array.from({ length: 10 }).map((_, i) => (
+            <tr key={i}>
+              {Array.from({ length: 8 }).map((__, j) => (
+                <td key={j} className="p-4">
+                  <Skeleton className="h-5 w-full" />
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </CardContent>
+  </Card>
+);
 
 const FeeDistributionByCategorySkeleton = () => {
   return (

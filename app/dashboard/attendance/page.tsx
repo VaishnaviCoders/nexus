@@ -53,7 +53,7 @@ export default async function AttendancePage({ searchParams }: PageProps) {
                 <DownloadIcon className="mr-2 h-4 w-4" />
                 Export Data
               </Button>
-              <Link href={'/dashboard/fees/admin/assign'}>
+              <Link href={'/dashboard/attendance/mark'}>
                 <Button type="button">
                   {' '}
                   <PlusIcon className="mr-2 h-4 w-4" />

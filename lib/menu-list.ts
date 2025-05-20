@@ -5,7 +5,6 @@ import {
   LucideIcon,
   Calendar,
   Bell,
-  DollarSign,
   UserPlus,
   MessageSquare,
   Backpack,
@@ -136,12 +135,12 @@ export const roleMenus: Record<string, Group[]> = {
           icon: IndianRupee,
         },
         {
-          href: '/leads',
+          href: '/dashboard/leads',
           label: 'Lead Management',
           icon: UserPlus,
         },
         {
-          href: '/students',
+          href: '/dashboard/students',
           label: 'Students Management',
           icon: Users,
         },
@@ -157,7 +156,7 @@ export const roleMenus: Record<string, Group[]> = {
         //   icon: Calendar,
         // },
         {
-          href: '/notices',
+          href: '/dashboard/notices',
           label: 'Notice Board',
           icon: Bell,
         },
@@ -186,7 +185,7 @@ export const roleMenus: Record<string, Group[]> = {
       groupLabel: 'Academic',
       menus: [
         {
-          href: '/assignments',
+          href: '/dashboard/assignments',
           label: 'Assignments',
           icon: ScrollText,
         },
@@ -198,7 +197,7 @@ export const roleMenus: Record<string, Group[]> = {
         {
           href: '/dashboard/fees/student',
           label: 'Fees Management',
-          icon: DollarSign,
+          icon: IndianRupee,
         },
       ],
     },
@@ -206,7 +205,7 @@ export const roleMenus: Record<string, Group[]> = {
       groupLabel: 'Communication',
       menus: [
         {
-          href: '/complaints',
+          href: '/dashboard/complaints',
           label: 'Teacher Feedback',
           icon: MessageSquare,
         },
@@ -226,7 +225,7 @@ export const roleMenus: Record<string, Group[]> = {
       groupLabel: 'Documents',
       menus: [
         {
-          href: '/documents',
+          href: '/dashboard/documents',
           label: 'My Documents',
           icon: FileCheck,
           submenus: [

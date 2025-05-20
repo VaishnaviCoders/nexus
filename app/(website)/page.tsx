@@ -21,6 +21,7 @@ import DotPattern from '@/components/ui/dot-pattern';
 // import { TextEffectWithExit } from '@/components/ui/TextEffectWithExit';
 import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
 import IntegrationComponent from '../../components/websiteComp/IntegrationComponent';
+import Link from 'next/link';
 // import MagicBentoGrid from '../components/websiteComp/magic-bento';
 
 export default async function IndexPage() {
@@ -39,6 +40,9 @@ export default async function IndexPage() {
             <SignInButton />
           </SignedOut>
           <SignedIn>
+            <Button variant="outline" className="z-10" size={'sm'}>
+              <Link href="/dashboard">Dashboard</Link>
+            </Button>
             <UserButton />
           </SignedIn>
         </div>

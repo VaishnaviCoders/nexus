@@ -104,12 +104,13 @@ model Parent {
 }
 
 model ParentStudent {
-  id           String  @id @default(cuid())
+  id           String   @id @default(cuid())
   relationship String
-  student      Student @relation(fields: [studentId], references: [id])
+  student      Student  @relation(fields: [studentId], references: [id])
   studentId    String
-  parent       Parent  @relation(fields: [parentId], references: [id])
+  parent       Parent   @relation(fields: [parentId], references: [id])
   parentId     String
+  isPrimary    Boolean? @default(false)
 
   @@index([relationship])
   @@index([parentId, studentId])

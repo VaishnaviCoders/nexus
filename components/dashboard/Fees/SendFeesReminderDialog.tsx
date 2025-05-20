@@ -59,8 +59,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import { FeeReminderTemplates } from '@/components/Templates/FeeReminder';
 import { toast } from 'sonner';
-
-// Types for fee reminders
+import { WhatsAppIcon } from '@/public/icons/WhatsAppIcon';
 
 export interface FeeReminderRecipient {
   id: string;
@@ -75,6 +74,7 @@ export interface FeeReminderRecipient {
   amountDue: number;
   dueDate: Date;
   avatar?: string;
+  organizationName?: string;
 }
 
 export interface FeeReminderHistory {
@@ -92,8 +92,8 @@ export interface SendReminderData {
   channels: ('email' | 'sms' | 'whatsapp')[];
   subject: string;
   message: string;
-  scheduleDate: Date | null;
-  scheduleTime: string | null;
+  scheduleDate?: Date | null;
+  scheduleTime?: string | null;
 }
 
 export interface ReminderResult {
@@ -109,8 +109,7 @@ const reminderFormSchema = z.object({
     .array(z.enum(['email', 'sms', 'whatsapp']))
     .min(1, 'Select at least one channel'),
   templateId: z.string().min(1, 'Please select a template'),
-  customSubject: z.string().optional(),
-  customMessage: z.string().optional(),
+
   scheduleDate: z.date().optional(),
   scheduleTime: z.string().optional(),
   sendNow: z.boolean().default(true),
@@ -142,39 +141,35 @@ export function SendFeesReminderDialog({
       recipients: initialRecipients.map((r) => r.id),
       channels: ['email'],
       templateId: 'friendly-reminder',
-      customSubject: '',
-      customMessage: '',
       sendNow: true,
     },
   });
 
   // Watch form values for preview
   const watchTemplateId = form.watch('templateId');
-  const watchCustomMessage = form.watch('customMessage');
-  const watchCustomSubject = form.watch('customSubject');
   const watchSendNow = form.watch('sendNow');
 
-  // Update preview when template or custom message changes
   useEffect(() => {
     const selectedTemplate = FeeReminderTemplates.find(
       (t) => t.id === watchTemplateId
     );
-
     if (selectedTemplate) {
-      if (watchTemplateId === 'custom') {
-        setPreviewSubject(watchCustomSubject || '');
-        setPreviewMessage(watchCustomMessage || '');
-      } else {
-        setPreviewSubject(selectedTemplate.subject);
-        setPreviewMessage(selectedTemplate.message);
-      }
+      setPreviewSubject(selectedTemplate.subject);
+      setPreviewMessage(selectedTemplate.message);
     }
-  }, [watchTemplateId, watchCustomMessage, watchCustomSubject]);
+  }, [watchTemplateId]);
 
   // Replace placeholders in the message with actual values
-  const getPersonalizedMessage = (recipient: FeeReminderRecipient) => {
-    return previewMessage
+  const getPersonalizedMessage = (
+    recipient: FeeReminderRecipient,
+    channel?: string
+  ) => {
+    let message = previewMessage
       .replace('{STUDENT_NAME}', recipient.studentName)
+      .replace(
+        '{ORGANIZATION_NAME}',
+        recipient.organizationName || 'School Administration'
+      )
       .replace(
         '{AMOUNT}',
         recipient.amountDue.toLocaleString('en-IN', {
@@ -183,6 +178,10 @@ export function SendFeesReminderDialog({
           maximumFractionDigits: 0,
         })
       );
+    if (channel === 'sms' && message.length > 160) {
+      message = message.substring(0, 157) + '...';
+    }
+    return message;
   };
 
   // Handle form submission
@@ -197,13 +196,12 @@ export function SendFeesReminderDialog({
       );
 
       // Prepare the reminder data
-      const reminderData = {
+      // Prepare the reminder data
+      const reminderData: SendReminderData = {
         recipients: selectedRecipients,
         channels: data.channels,
-        subject:
-          data.templateId === 'custom' ? data.customSubject! : previewSubject,
-        message:
-          data.templateId === 'custom' ? data.customMessage! : previewMessage,
+        subject: previewSubject,
+        message: previewMessage,
         scheduleDate: data.sendNow ? null : data.scheduleDate,
         scheduleTime: data.sendNow ? null : data.scheduleTime,
       };
@@ -222,6 +220,11 @@ export function SendFeesReminderDialog({
       //   } else {
       //     setError(result.error || 'Failed to send reminders');
       //   }
+      setSuccess(true);
+      setTimeout(() => {
+        onOpenChange(false);
+        setSuccess(false);
+      }, 2000);
     } catch (err) {
       setError('An unexpected error occurred');
       console.error(err);
@@ -241,7 +244,7 @@ export function SendFeesReminderDialog({
         </DialogHeader>
 
         {success ? (
-          <div className="py-6 flex flex-col items-center justify-center">
+          <div className="py-6 flex flex-col items-center justify-center mx-2 px-2">
             <div className="rounded-full bg-green-100 p-3 mb-4">
               <Check className="h-8 w-8 text-green-600" />
             </div>
@@ -290,7 +293,7 @@ export function SendFeesReminderDialog({
                               render={({ field }) => (
                                 <FormItem
                                   key={recipient.id}
-                                  className="flex flex-row items-center space-x-3 space-y-0 mb-4 pb-4 border-b last:border-0"
+                                  className="flex flex-row items-center space-x-3 space-y-0 mb-4 pb-4 px-2 border-b last:border-0"
                                 >
                                   <FormControl>
                                     <Checkbox
@@ -333,11 +336,14 @@ export function SendFeesReminderDialog({
                                           {recipient.studentName}
                                         </p>
                                         <Badge
-                                          variant={
-                                            recipient.status === 'OVERDUE'
-                                              ? 'destructive'
-                                              : 'secondary'
-                                          }
+                                          variant="outline"
+                                          className={cn(
+                                            'font-normal',
+                                            recipient.status === 'UNPAID' &&
+                                              'bg-amber-50 text-amber-700 border-amber-200',
+                                            recipient.status === 'OVERDUE' &&
+                                              'bg-red-50 text-red-700 border-red-200'
+                                          )}
                                         >
                                           {recipient.status}
                                         </Badge>
@@ -428,7 +434,7 @@ export function SendFeesReminderDialog({
                               />
                             </FormControl>
                             <FormLabel className="text-sm font-normal cursor-pointer flex items-center">
-                              <Phone className="h-4 w-4 mr-1.5" />
+                              <Phone className="h-4 w-4 mr-1.5 " color="blue" />
                               SMS
                             </FormLabel>
                           </FormItem>
@@ -458,7 +464,7 @@ export function SendFeesReminderDialog({
                               />
                             </FormControl>
                             <FormLabel className="text-sm font-normal cursor-pointer flex items-center">
-                              <MessageSquare className="h-4 w-4 mr-1.5" />
+                              <WhatsAppIcon />
                               WhatsApp
                             </FormLabel>
                           </FormItem>
@@ -498,48 +504,6 @@ export function SendFeesReminderDialog({
                   </FormItem>
                 )}
               />
-
-              {/* Custom Message (if custom template is selected) */}
-              {watchTemplateId === 'custom' && (
-                <>
-                  <FormField
-                    control={form.control}
-                    name="customSubject"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Subject</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter email subject" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="customMessage"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Custom Message</FormLabel>
-                        <FormControl>
-                          <Textarea
-                            placeholder="Enter your custom message"
-                            className="min-h-[150px]"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormDescription>
-                          Use {'{STUDENT_NAME}'} and {'{AMOUNT}'} as
-                          placeholders.
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </>
-              )}
-
               {/* Scheduling Options */}
               <FormField
                 control={form.control}
@@ -661,8 +625,21 @@ export function SendFeesReminderDialog({
                           <span className="text-sm">{previewSubject}</span>
                         </div>
                       )}
-                      <div className="text-sm whitespace-pre-wrap">
-                        {previewMessage}
+                      <div className="text-sm whitespace-pre-wrap leading-relaxed">
+                        {previewMessage
+                          .split(/(\{\{.*?\}\})/g)
+                          .map((part, idx) =>
+                            part.startsWith('{{') && part.endsWith('}}') ? (
+                              <span
+                                key={idx}
+                                className="text-blue-600 underline font-medium"
+                              >
+                                {part}
+                              </span>
+                            ) : (
+                              <span key={idx}>{part}</span>
+                            )
+                          )}
                       </div>
                     </div>
                   </TabsContent>
@@ -734,3 +711,37 @@ export function SendFeesReminderDialog({
     </Dialog>
   );
 }
+
+const stylePlaceholders = (
+  text: string,
+  isPersonalized: boolean = false,
+  recipient?: FeeReminderRecipient
+) => {
+  const parts = text.split(/(\{STUDENT_NAME\}|\{AMOUNT\})/);
+  return parts.map((part, index) => {
+    if (part === '{STUDENT_NAME}') {
+      return (
+        <span
+          key={`student-name-${index}`}
+          className="text-blue-600 font-semibold"
+        >
+          {isPersonalized && recipient ? recipient.studentName : part}
+        </span>
+      );
+    }
+    if (part === '{AMOUNT}') {
+      return (
+        <span key={`amount-${index}`} className="text-red-600 font-semibold">
+          {isPersonalized && recipient
+            ? recipient.amountDue.toLocaleString('en-IN', {
+                style: 'currency',
+                currency: 'INR',
+                maximumFractionDigits: 0,
+              })
+            : part}
+        </span>
+      );
+    }
+    return part;
+  });
+};

@@ -19,6 +19,7 @@ export async function getFeeRecords(count: number = 50): Promise<FeeRecord[]> {
             phoneNumber: true,
             gradeId: true,
             sectionId: true,
+
             section: {
               select: {
                 name: true,
@@ -74,9 +75,6 @@ export async function getFeeRecords(count: number = 50): Promise<FeeRecord[]> {
         id: fee.student.id,
         firstName: fee.student.firstName,
         lastName: fee.student.lastName,
-        fullName:
-          fee.student.fullName ??
-          `${fee.student.firstName} ${fee.student.lastName}`,
         rollNumber: fee.student.rollNumber,
         email: fee.student.email,
         phoneNumber: fee.student.phoneNumber,

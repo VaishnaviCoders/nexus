@@ -50,7 +50,6 @@ export function MonthlyFeeCollection({
   const [selectedYear, setSelectedYear] = useState<number>(currentYear);
 
   // Filter data for the selected year
-  const yearData = data.filter((item) => item.year === selectedYear);
 
   // Create an array for all months, filling in zeros for months with no data
   const monthNames = [
@@ -68,8 +67,9 @@ export function MonthlyFeeCollection({
     'Dec',
   ];
 
+  const yearData = data.filter((item) => item.year === selectedYear);
   const monthlyData = monthNames.map((month, index) => {
-    const monthData = yearData.find((item) => item.month === index);
+    const monthData = yearData.find((item) => item.month === index + 1);
     return {
       month,
       amount: monthData?.amount || 0,
@@ -77,11 +77,10 @@ export function MonthlyFeeCollection({
     };
   });
 
-  // Calculate the highest monthly collection for the chart scaling
   const maxMonthlyCollection = Math.max(
     ...monthlyData.map((item) => item.amount),
     1
-  ); // Ensure non-zero
+  );
 
   // Calculate totals
   const totalCollection = monthlyData.reduce(
@@ -165,20 +164,21 @@ export function MonthlyFeeCollection({
                   <HoverCardContent
                     side="top"
                     align="center"
-                    className="rounded-xl border bg-background px-4 py-3 shadow-xl w-auto animate-in fade-in zoom-in-75"
+                    className="rounded-lg border border-border/50 bg-background/95 backdrop-blur-sm p-3 shadow-lg w-auto transition-all duration-200 ease-in-out transform hover:scale-105"
                   >
                     <div className="space-y-1 text-center">
                       {item.amount > 0 ? (
                         <>
-                          <div className="text-xl font-semibold text-foreground">
-                            ₹{item.amount.toLocaleString('en-IN')}
+                          <div className="text-lg font-bold text-foreground flex items-center justify-center gap-1">
+                            <IndianRupeeIcon className="h-4 w-4 text-foreground/80" />
+                            {item.amount.toLocaleString('en-IN')}
                           </div>
-                          <div className="text-sm text-muted-foreground">
+                          <div className="text-xs text-muted-foreground font-medium">
                             {item.count} payment{item.count !== 1 ? 's' : ''}
                           </div>
                         </>
                       ) : (
-                        <div className="text-sm text-muted-foreground">
+                        <div className="text-xs text-muted-foreground font-medium">
                           No data
                         </div>
                       )}

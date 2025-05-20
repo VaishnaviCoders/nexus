@@ -22,7 +22,6 @@ export interface FeeRecord {
     id: string;
     firstName: string;
     lastName: string;
-    fullName: string;
     rollNumber: string;
     email: string;
     phoneNumber: string;
@@ -57,4 +56,19 @@ export interface FeeRecord {
     transactionId: string | undefined;
     feeId: string;
   }[];
+}
+
+export interface FeeReminderRecipient {
+  id: string; // unique for this reminder
+  studentId: string;
+  studentName: string;
+  parentId: string;
+  parentName: string;
+  parentEmail?: string;
+  parentPhone?: string;
+  parentWhatsapp?: string;
+  relation: string;
+  pendingFees: Array<{ category: string; amount: number }>;
+  dueDate: Date;
+  channels: ('email' | 'sms' | 'whatsapp')[];
 }
