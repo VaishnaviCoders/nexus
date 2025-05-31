@@ -10,13 +10,16 @@ export default async function getAllChildrenByParentId(parentId: string) {
         select: {
           student: {
             select: {
+              id: true,
               profileImage: true,
               firstName: true,
               lastName: true,
               dateOfBirth: true,
               phoneNumber: true,
               rollNumber: true,
-              StudentAttendance: true,
+              StudentAttendance: {
+                take: 7,
+              },
               section: {
                 select: {
                   name: true,

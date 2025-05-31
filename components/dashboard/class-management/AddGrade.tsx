@@ -33,9 +33,8 @@ export function AddGrade() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button>
-          <Plus className="h-4 w-4 mr-2" />
-          Create Grade
+        <Button aria-label="Add Grade">
+          <Plus className="h-4 w-4 " />
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">

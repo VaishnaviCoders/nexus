@@ -69,10 +69,16 @@ export const roleMenus: Record<string, Group[]> = {
           label: 'Student Management',
           icon: Users,
         },
+
         {
           href: '/dashboard/fees/admin',
           label: 'Fees Management',
           icon: IndianRupee,
+        },
+        {
+          href: '/dashboard/holidays',
+          label: 'Holidays Management',
+          icon: Users,
         },
       ],
     },
@@ -142,6 +148,11 @@ export const roleMenus: Record<string, Group[]> = {
         {
           href: '/dashboard/students',
           label: 'Students Management',
+          icon: Users,
+        },
+        {
+          href: '/dashboard/holidays',
+          label: 'Holidays Management',
           icon: Users,
         },
       ],

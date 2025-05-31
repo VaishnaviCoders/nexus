@@ -43,6 +43,15 @@ export function Sidebar({ role }: SidebarProps) {
               hidePersonal={true}
               appearance={{
                 elements: {
+                  organizationPreviewMainIdentifier: cn(
+                    'transition-opacity duration-300',
+                    !getOpenState() && 'opacity-0 hidden' // Hide organization name when collapsed
+                  ),
+
+                  organizationSwitcherTrigger: cn(
+                    'w-full flex items-center rounded-md',
+                    !getOpenState() ? 'justify-center p-2' : 'justify-start p-3'
+                  ),
                   organizationSwitcherPopoverActionButton__createOrganization: {
                     display: 'none',
                   },

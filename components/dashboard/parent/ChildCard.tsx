@@ -81,12 +81,12 @@ export function ChildCard({ child }: ChildCardProps) {
             <div className="flex flex-wrap items-center gap-2">
               {child.grade?.grade && (
                 <Badge variant="secondary" className="font-normal">
-                  Grade {child.grade.grade}
+                  {child.grade.grade}
                 </Badge>
               )}
               {child.section?.name && (
                 <Badge variant="outline" className="font-normal">
-                  Section {child.section.name}
+                  {child.section.name}
                 </Badge>
               )}
             </div>
@@ -122,7 +122,7 @@ export function ChildCard({ child }: ChildCardProps) {
               label="Class"
             >
               {child.grade?.grade
-                ? `Grade ${child.grade.grade}${
+                ? `${child.grade.grade}${
                     child.section?.name ? ` - ${child.section.name}` : ''
                   }`
                 : 'Not assigned'}

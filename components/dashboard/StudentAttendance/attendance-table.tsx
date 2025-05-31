@@ -40,7 +40,7 @@ interface AttendanceRecord {
   date: Date;
   status: AttendanceStatus;
   present: boolean;
-  notes: string | null;
+  note: string | null;
   recordedBy: string;
   sectionId: string;
   createdAt: Date;
@@ -238,9 +238,9 @@ export function AttendanceTable({ records }: AttendanceRecordsProps) {
                 <TableCell>
                   <div
                     className="max-w-[200px] truncate"
-                    title={row.notes || ''}
+                    title={row.note || ''}
                   >
-                    {row.notes || '-'}
+                    {row.note || '-'}
                   </div>
                 </TableCell>
                 <TableCell>

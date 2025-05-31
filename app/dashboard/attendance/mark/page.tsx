@@ -1,15 +1,13 @@
 import prisma from '@/lib/db';
-import { auth } from '@clerk/nextjs/server';
 import AttendanceMark from '@/components/dashboard/StudentAttendance/attendance-mark';
+import { getOrganizationId } from '@/lib/organization';
 
 async function getStudents() {
-  const { orgId } = await auth();
-
-  if (!orgId) throw new Error('No organization found during Get Students');
+  const organizationId = await getOrganizationId();
 
   const data = await prisma.student.findMany({
     where: {
-      organizationId: orgId,
+      organizationId: organizationId,
     },
     select: {
       id: true,
@@ -31,7 +29,7 @@ async function getStudents() {
           present: true,
           date: true,
           status: true,
-          notes: true,
+          note: true,
           recordedBy: true,
           sectionId: true,
           createdAt: true,

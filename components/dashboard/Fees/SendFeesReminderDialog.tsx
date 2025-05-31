@@ -60,6 +60,8 @@ import { cn } from '@/lib/utils';
 import { FeeReminderTemplates } from '@/components/Templates/FeeReminder';
 import { toast } from 'sonner';
 import { WhatsAppIcon } from '@/public/icons/WhatsAppIcon';
+import { sendFeeReminders } from '@/lib/data/fee/fee-reminder';
+// import { Card, CardContent, CardFooter } from '@/components/ui/card';
 
 export interface FeeReminderRecipient {
   id: string;
@@ -77,7 +79,7 @@ export interface FeeReminderRecipient {
   organizationName?: string;
 }
 
-export interface FeeReminderHistory {
+interface FeeReminderHistory {
   id: string;
   studentId: string;
   sentAt: Date;
@@ -118,14 +120,10 @@ const reminderFormSchema = z.object({
 type ReminderFormValues = z.infer<typeof reminderFormSchema>;
 
 interface SendReminderDialogProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
   initialRecipients: FeeReminderRecipient[];
 }
 
 export function SendFeesReminderDialog({
-  open,
-  onOpenChange,
   initialRecipients = [],
 }: SendReminderDialogProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -195,8 +193,6 @@ export function SendFeesReminderDialog({
         data.recipients.includes(r.id)
       );
 
-      // Prepare the reminder data
-      // Prepare the reminder data
       const reminderData: SendReminderData = {
         recipients: selectedRecipients,
         channels: data.channels,
@@ -207,9 +203,11 @@ export function SendFeesReminderDialog({
       };
 
       //   // Send the reminders
-      //   const result = await sendFeeReminders(reminderData);
+      const result = await sendFeeReminders(reminderData);
 
       toast.success('Reminders sent successfully!');
+
+      // console.log('Reminder data:', reminderData);
 
       //   if (result.success) {
       //     setSuccess(true);
@@ -222,7 +220,6 @@ export function SendFeesReminderDialog({
       //   }
       setSuccess(true);
       setTimeout(() => {
-        onOpenChange(false);
         setSuccess(false);
       }, 2000);
     } catch (err) {
@@ -234,15 +231,8 @@ export function SendFeesReminderDialog({
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-3xl max-h-[90vh] overflow-hidden flex flex-col">
-        <DialogHeader>
-          <DialogTitle>Send Fee Reminders</DialogTitle>
-          <DialogDescription>
-            Send payment reminders to students or parents with outstanding fees
-          </DialogDescription>
-        </DialogHeader>
-
+    <div>
+      <div className="p-0">
         {success ? (
           <div className="py-6 flex flex-col items-center justify-center mx-2 px-2">
             <div className="rounded-full bg-green-100 p-3 mb-4">
@@ -318,12 +308,7 @@ export function SendFeesReminderDialog({
                                   </FormControl>
                                   <div className="flex flex-1 items-center gap-3">
                                     <Avatar>
-                                      <AvatarImage
-                                        src={
-                                          recipient.avatar ||
-                                          `/placeholder.svg?height=40&width=40`
-                                        }
-                                      />
+                                      <AvatarImage src={recipient.avatar} />
                                       <AvatarFallback>
                                         {recipient.studentName
                                           .substring(0, 2)
@@ -532,7 +517,8 @@ export function SendFeesReminderDialog({
                             <RadioGroupItem value="schedule" />
                           </FormControl>
                           <FormLabel className="font-normal">
-                            Schedule for later
+                            Schedule for later{' '}
+                            <Badge variant={'meta'}>Meta Feature</Badge>
                           </FormLabel>
                         </FormItem>
                       </RadioGroup>
@@ -626,20 +612,11 @@ export function SendFeesReminderDialog({
                         </div>
                       )}
                       <div className="text-sm whitespace-pre-wrap leading-relaxed">
-                        {previewMessage
-                          .split(/(\{\{.*?\}\})/g)
-                          .map((part, idx) =>
-                            part.startsWith('{{') && part.endsWith('}}') ? (
-                              <span
-                                key={idx}
-                                className="text-blue-600 underline font-medium"
-                              >
-                                {part}
-                              </span>
-                            ) : (
-                              <span key={idx}>{part}</span>
-                            )
-                          )}
+                        {previewMessage ? (
+                          <HighlightedMessage message={previewMessage} />
+                        ) : (
+                          <span>No message content</span>
+                        )}
                       </div>
                     </div>
                   </TabsContent>
@@ -674,15 +651,12 @@ export function SendFeesReminderDialog({
             </form>
           </Form>
         )}
-
-        <DialogFooter className="pt-4">
-          {!success && (
-            <>
-              <Button
-                variant="outline"
-                onClick={() => onOpenChange(false)}
-                disabled={isSubmitting}
-              >
+      </div>
+      <div className="flex-grow">
+        {!success && (
+          <>
+            <div className="flex justify-end space-x-4 mt-5">
+              <Button variant="outline" disabled={isSubmitting}>
                 Cancel
               </Button>
               <Button
@@ -704,44 +678,25 @@ export function SendFeesReminderDialog({
                   </>
                 )}
               </Button>
-            </>
-          )}
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
   );
 }
 
-const stylePlaceholders = (
-  text: string,
-  isPersonalized: boolean = false,
-  recipient?: FeeReminderRecipient
-) => {
-  const parts = text.split(/(\{STUDENT_NAME\}|\{AMOUNT\})/);
-  return parts.map((part, index) => {
-    if (part === '{STUDENT_NAME}') {
+function HighlightedMessage({ message }: { message: string }) {
+  const formatted = message.split(/({\w+})/g).map((part, index) => {
+    if (/{\w+}/.test(part)) {
       return (
-        <span
-          key={`student-name-${index}`}
-          className="text-blue-600 font-semibold"
-        >
-          {isPersonalized && recipient ? recipient.studentName : part}
+        <span key={index} className="font-medium text-blue-500">
+          {part}
         </span>
       );
     }
-    if (part === '{AMOUNT}') {
-      return (
-        <span key={`amount-${index}`} className="text-red-600 font-semibold">
-          {isPersonalized && recipient
-            ? recipient.amountDue.toLocaleString('en-IN', {
-                style: 'currency',
-                currency: 'INR',
-                maximumFractionDigits: 0,
-              })
-            : part}
-        </span>
-      );
-    }
-    return part;
+    return <span key={index}>{part}</span>;
   });
-};
+
+  return <>{formatted}</>;
+}

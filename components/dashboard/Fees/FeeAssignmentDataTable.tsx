@@ -70,7 +70,7 @@ import { feeAssignmentSchema } from '@/lib/schemas';
 import { toast } from 'sonner';
 import { CreateFeeAssignmentButton } from '@/lib/SubmitButton';
 import Link from 'next/link';
-import { AssignFeeToStudents } from '@/lib/actions/FeeAssignmentAction';
+import { AssignFeeToStudents } from '@/lib/data/fee/FeeAssignmentAction';
 import {
   HoverCard,
   HoverCardContent,

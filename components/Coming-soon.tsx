@@ -5,7 +5,7 @@ import Image from 'next/image';
 const ComingSoon = () => {
   const targetDate = new Date('2025-06-20T00:00:00');
   return (
-    <div className="w-full min-h-screen mx-auto flex flex-col items-center gap-8 py-20">
+    <div className="w-full min-h-screen mx-auto flex flex-col items-center gap-8 py-10">
       <div className="space-y-6">
         <p className="text-3xl font-semibold text-primary text-center">
           Seems Like you are a little early

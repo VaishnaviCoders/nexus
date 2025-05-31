@@ -1,5 +1,4 @@
 import { notFound } from 'next/navigation';
-import { Suspense } from 'react';
 import { EditFeeCategoryForm } from '@/components/dashboard/Fees/EditFeeCategoryForm';
 import { getFeeCategory } from '@/lib/data/fee/fee-categories';
 

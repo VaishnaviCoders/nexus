@@ -57,7 +57,7 @@ export async function getAttendanceCompletionStats(
         select: {
           studentId: true,
           present: true,
-          notes: true,
+          note: true,
           recordedBy: true,
         },
       },
@@ -82,7 +82,7 @@ export async function getAttendanceCompletionStats(
             ? 'present'
             : 'absent'
           : 'not-recorded',
-        notes: attendance?.notes,
+        note: attendance?.note,
       };
     });
 

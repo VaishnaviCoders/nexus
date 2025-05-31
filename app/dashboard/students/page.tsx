@@ -35,9 +35,9 @@ export default async function Students({ searchParams }: PageProps) {
               Add New Student
             </Button>
           </Link>
-          {/* <Link href="/dashboard/attendance">
+          <Link href="/dashboard/attendance/mark">
             <Button type="button">Take Attendance</Button>
-          </Link> */}
+          </Link>
         </div>
       </header>
       <Separator />

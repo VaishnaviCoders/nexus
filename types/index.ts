@@ -72,3 +72,41 @@ export interface FeeReminderRecipient {
   dueDate: Date;
   channels: ('email' | 'sms' | 'whatsapp')[];
 }
+
+// Parent Child Attendance Monitor
+
+export type ParentData = {
+  firstName: string;
+  lastName: string;
+  students: {
+    student: {
+      id: string;
+      firstName: string;
+      lastName: string;
+      profileImage: string | null;
+      grade: {
+        grade: string;
+      };
+      section: {
+        name: string;
+      };
+      StudentAttendance: {
+        id: string;
+        date: Date;
+        status: string;
+        note: string | null;
+        recordedBy: string;
+        present: boolean;
+      }[];
+    };
+  }[];
+};
+
+export interface AttendanceRecord {
+  id: string;
+  date: Date;
+  studentId: string;
+  status: 'PRESENT' | 'ABSENT' | 'LATE';
+  note: string | null;
+  recordedBy: string;
+}

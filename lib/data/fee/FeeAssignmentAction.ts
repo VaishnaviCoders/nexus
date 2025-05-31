@@ -1,9 +1,9 @@
 'use server';
 
-import { feeAssignmentSchema } from '../schemas';
+import { feeAssignmentSchema } from '../../schemas';
 import prisma from '@/lib/db';
 import { z } from 'zod';
-import { getOrganizationId } from '../organization';
+import { getOrganizationId } from '../../organization';
 import { revalidatePath } from 'next/cache';
 
 export async function AssignFeeToStudents(

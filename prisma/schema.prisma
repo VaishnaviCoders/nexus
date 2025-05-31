@@ -23,8 +23,9 @@ model User {
   organization   Organization? @relation(fields: [organizationId], references: [id])
   organizationId String?
   student        Student?      @relation(fields: [studentId], references: [id])
-  Parent         Parent[]
+  Parent         Parent?       @relation(fields: [parentId], references: [id])
   studentId      String?
+  parentId       String?
 
   @@index([id, clerkId])
   @@index([organizationId])
@@ -78,7 +79,7 @@ model StudentAttendance {
   present    Boolean          @default(false)
   date       DateTime
   status     AttendanceStatus
-  notes      String?
+  note       String?
   recordedBy String
   sectionId  String
   section    Section          @relation(fields: [sectionId], references: [id])
@@ -96,7 +97,7 @@ model Parent {
   email          String          @unique
   phoneNumber    String
   whatsAppNumber String
-  user           User?           @relation(fields: [userId], references: [id])
+  user           User[]
   userId         String?
   students       ParentStudent[]
   createdAt      DateTime        @default(now())
@@ -225,15 +226,39 @@ enum AttendanceStatus {
   LATE
 }
 
+model AcademicCalendar {
+  id             String            @id @default(cuid())
+  organizationId String
+  organization   Organization      @relation(fields: [organizationId], references: [id])
+  name           String // e.g., "Diwali Break", "Emergency Closure", "Tech Fest"
+  startDate      DateTime // Start date of the holiday or event
+  endDate        DateTime // End date of the holiday or event
+  type           CalendarEventType // PLANNED, SUDDEN, INSTITUTION_SPECIFIC
+  reason         String? // e.g., "Festival", "Weather Emergency", "Exam Prep"
+  isRecurring    Boolean           @default(false) // Whether the event repeats annually
+  createdBy      String // ID of the user who created the entry (admin/teacher)
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  @@unique([organizationId, startDate, endDate]) // Prevent duplicate entries for the same date range
+  @@index([organizationId, startDate, endDate]) // Optimize queries for date ranges
+}
+
+enum CalendarEventType {
+  PLANNED // Standard holidays (e.g., festivals, semester breaks)
+  SUDDEN // Emergency closures (e.g., weather, strikes)
+  INSTITUTION_SPECIFIC // Custom events (e.g., college fests, coaching workshops)
+}
+
 model Organization {
-  id               String        @id @default(cuid())
+  id               String             @id @default(cuid())
   name             String
-  organizationSlug String        @unique
+  organizationSlug String             @unique
   organizationLogo String?
-  createdAt        DateTime      @default(now())
-  updatedAt        DateTime      @updatedAt
-  isActive         Boolean       @default(true)
-  isPaid           Boolean       @default(false)
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  isActive         Boolean            @default(true)
+  isPaid           Boolean            @default(false)
   users            User[]
   notices          Notice[]
   Student          Student[]
@@ -242,6 +267,7 @@ model Organization {
   Fee              Fee[]
   FeeCategory      FeeCategory[]
   FeePayment       FeePayment[]
+  AcademicCalendar AcademicCalendar[]
 }
 
 model Notice {

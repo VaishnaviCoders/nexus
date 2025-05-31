@@ -14,7 +14,7 @@ import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
 import { Resend } from 'resend';
 import { NoticeEmailTemplate } from '@/components/email-templates/noticeMail';
-import { Role } from '@prisma/client';
+import { Role, StudentAttendance } from '@prisma/client';
 import { Knock } from '@knocklabs/node';
 import { redirect } from 'next/navigation';
 import { parseWithZod } from '@conform-to/zod';
@@ -492,8 +492,13 @@ type AttendanceStatus = 'PRESENT' | 'ABSENT' | 'LATE';
 
 export async function markAttendance(
   sectionId: string,
-  attendanceData: { studentId: string; status: AttendanceStatus }[]
+  attendanceData: {
+    studentId: string;
+    status: AttendanceStatus;
+    note?: string;
+  }[]
 ) {
+  console.log('Marking attendance:', attendanceData);
   const [{ orgId }, user] = await Promise.all([auth(), currentUser()]);
 
   if (!orgId) throw new Error('Organization ID is required');
@@ -531,16 +536,19 @@ export async function markAttendance(
     },
     update: {
       status: record.status,
-      present: record.status === 'PRESENT',
+      present: record.status === 'PRESENT' || record.status === 'LATE',
+
       updatedAt: new Date(),
       recordedBy,
+      note: record.note,
     },
     create: {
       studentId: record.studentId,
-      present: record.status === 'PRESENT',
+      present: record.status === 'PRESENT' || record.status === 'LATE',
+
       date: today,
       status: record.status,
-      notes: null,
+      note: record.note,
       recordedBy,
       sectionId,
       createdAt: new Date(),
@@ -554,7 +562,45 @@ export async function markAttendance(
 
   console.log('Attendance data updated:', data);
 
-  redirect('/dashboard/attendance/analytics');
+  // redirect('/dashboard/attendance/analytics');
+}
+
+export async function getPreviousDayAttendance(
+  studentId: string,
+  targetDate: Date
+): Promise<StudentAttendance | null> {
+  try {
+    const previousDay = subDays(targetDate, 1);
+
+    const attendanceRecord = await prisma.studentAttendance.findFirst({
+      where: {
+        studentId,
+        date: {
+          gte: startOfDay(previousDay),
+          lt: endOfDay(previousDay),
+        },
+      },
+      select: {
+        id: true,
+        studentId: true,
+        recordedBy: true,
+        note: true,
+        date: true,
+        status: true,
+        present: true,
+        sectionId: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    console.log('Previous day attendance record:', attendanceRecord);
+
+    return attendanceRecord;
+  } catch (error) {
+    console.error('Error fetching previous day attendance:', error);
+    throw new Error('Failed to fetch previous day attendance');
+  }
 }
 export async function deleteAttendance(ids: string[]) {
   await prisma.studentAttendance.deleteMany({
@@ -747,7 +793,14 @@ export async function getFeesSummary() {
   };
 }
 
-import { startOfMonth, endOfMonth, subMonths } from 'date-fns';
+import {
+  startOfMonth,
+  endOfMonth,
+  subMonths,
+  subDays,
+  startOfDay,
+  endOfDay,
+} from 'date-fns';
 import FilterStudents from '@/lib/data/student/FilterStudents';
 
 export async function getMonthlyFeeCollection(monthsBack: number) {

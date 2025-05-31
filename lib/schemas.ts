@@ -114,3 +114,23 @@ export const feeAssignmentSchema = z.object({
     z.array(z.string().min(1)), // for multiple students
   ]),
 });
+
+export const singleHolidayFormSchema = z.object({
+  name: z.string().min(1, { message: 'Holiday name is required' }),
+  startDate: z.date(),
+  endDate: z.date(),
+  type: z.enum(['PLANNED', 'SUDDEN', 'INSTITUTION_SPECIFIC']),
+  reason: z.string().min(1, { message: 'Reason is required' }),
+  isRecurring: z.boolean().default(false),
+});
+
+export const goggleImportHolidayFormSchema = z.array(
+  z.object({
+    name: z.string().min(1, { message: 'Holiday name is required' }),
+    startDate: z.date(),
+    endDate: z.date(),
+    type: z.enum(['PLANNED', 'SUDDEN', 'INSTITUTION_SPECIFIC']),
+    reason: z.string().min(1, { message: 'Reason is required' }),
+    isRecurring: z.boolean().default(false),
+  })
+);

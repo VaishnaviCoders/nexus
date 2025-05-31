@@ -19,6 +19,10 @@ import {
   CreditCard,
   Bell,
   IndianRupee,
+  CheckCircle,
+  TrendingUp,
+  Clock,
+  AlertCircle,
 } from 'lucide-react';
 import Link from 'next/link';
 import {
@@ -29,6 +33,8 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import StudentPerformance from '@/components/dashboard/Student/StudentPerformance';
 import StudentAssignment from '@/components/dashboard/Student/StudentAssignment';
 import { StudentAttendanceChart } from '@/components/dashboard/Student/StudentAttendanceChart';
+import { Badge } from '@/components/ui/badge';
+import { getOrganizationId } from '@/lib/organization';
 
 const getStudentDashboardData = async (studentId: string) => {
   const start = performance.now();
@@ -52,6 +58,13 @@ const getStudentDashboardData = async (studentId: string) => {
   const totalFees = fees.reduce((sum, fee) => sum + fee.totalFee, 0);
   const paidFees = fees.reduce((sum, fee) => sum + fee.paidAmount, 0);
 
+  // let yearlyAttendanceRate = 0;
+  // if (attendance && attendance.length > 0) {
+  //   const totalDays = attendance.reduce((sum, month) => sum + (month.totalDays || 0), 0);
+  //   const presentDays = attendance.reduce((sum, month) => sum + (month.presentDays || 0), 0);
+  //   yearlyAttendanceRate = totalDays > 0 ? (presentDays / totalDays) * 100 : 0;
+  // }
+
   return {
     student,
     attendance,
@@ -63,27 +76,17 @@ const getStudentDashboardData = async (studentId: string) => {
   };
 };
 
-// async function getPendingFeeByStudentId(studentId: string) {
-//   const pendingFeesData = await prisma.fee.aggregate({
-//     _sum: {
-//       totalFee: true,
-//       paidAmount: true,
-//     },
-//     where: {
-//       studentId: studentId,
-//       status: 'UNPAID',
-//     },
-//   });
-
-//   const remainingBalance =
-//     (pendingFeesData._sum.totalFee || 0) -
-//     (pendingFeesData._sum.paidAmount || 0);
-//   return {
-//     totalPendingFees: pendingFeesData._sum.totalFee,
-//     totalPaidAmount: pendingFeesData._sum.paidAmount,
-//     remainingBalance: remainingBalance,
-//   };
-// }
+const getNotices = async (organizationId: string) => {
+  const notices = await prisma.notice.findMany({
+    where: {
+      organizationId: organizationId,
+    },
+    orderBy: {
+      startDate: 'asc',
+    },
+  });
+  return notices;
+};
 
 const StudentIdRoute = async ({
   params,
@@ -92,6 +95,9 @@ const StudentIdRoute = async ({
 }) => {
   const { id } = await params;
 
+  const organizationId = await getOrganizationId();
+
+  const notices = await getNotices(organizationId);
   const studentId = id;
 
   const {
@@ -102,6 +108,11 @@ const StudentIdRoute = async ({
     paidFees,
     pendingFees,
   } = await getStudentDashboardData(studentId);
+
+  const attendanceRate = 95;
+  const gpa = 3.8;
+  const upcomingExams = 3;
+  const pendingAssignments = 2;
 
   return (
     <div>
@@ -129,6 +140,92 @@ const StudentIdRoute = async ({
           <Button>Edit Profile</Button>
         </div>
 
+        {/* Enhanced Stats Cards */}
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <Card className="border-2 border-green-200/50 dark:border-green-800/50 bg-gradient-to-br from-white to-green-50/30 dark:from-gray-900 dark:to-green-950/10 hover:shadow-lg transition-all duration-300">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 rounded-t-lg">
+              <CardTitle className="text-sm font-medium">
+                Attendance Rate
+              </CardTitle>
+              <div className="p-2 rounded-lg bg-green-100 dark:bg-green-900/50">
+                <CalendarDays className="h-4 w-4 text-green-600 dark:text-green-400" />
+              </div>
+            </CardHeader>
+            <CardContent className="pt-4">
+              <div className="text-2xl font-bold text-green-700 dark:text-green-300">
+                {attendanceRate}%
+              </div>
+              <Progress value={attendanceRate} className="mt-2 h-2" />
+              <p className="text-xs text-muted-foreground mt-2 flex items-center">
+                <CheckCircle className="w-3 h-3 mr-1 text-green-500" />
+                Excellent attendance
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="border-2 border-purple-200/50 dark:border-purple-800/50 bg-gradient-to-br from-white to-purple-50/30 dark:from-gray-900 dark:to-purple-950/10 hover:shadow-lg transition-all duration-300">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-950/20 dark:to-indigo-950/20 rounded-t-lg">
+              <CardTitle className="text-sm font-medium">Current GPA</CardTitle>
+              <div className="p-2 rounded-lg bg-purple-100 dark:bg-purple-900/50">
+                <GraduationCap className="h-4 w-4 text-purple-600 dark:text-purple-400" />
+              </div>
+            </CardHeader>
+            <CardContent className="pt-4">
+              <div className="text-2xl font-bold text-purple-700 dark:text-purple-300">
+                {gpa}
+              </div>
+              <p className="text-xs text-muted-foreground">Out of 4.0</p>
+              <div className="mt-2 flex items-center text-xs text-purple-600 dark:text-purple-400">
+                <TrendingUp className="w-3 h-3 mr-1" />
+                Above average
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="border-2 border-blue-200/50 dark:border-blue-800/50 bg-gradient-to-br from-white to-blue-50/30 dark:from-gray-900 dark:to-blue-950/10 hover:shadow-lg transition-all duration-300">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-950/20 dark:to-cyan-950/20 rounded-t-lg">
+              <CardTitle className="text-sm font-medium">
+                Upcoming Exams
+              </CardTitle>
+              <div className="p-2 rounded-lg bg-blue-100 dark:bg-blue-900/50">
+                <BookOpen className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+              </div>
+            </CardHeader>
+            <CardContent className="pt-4">
+              <div className="text-2xl font-bold text-blue-700 dark:text-blue-300">
+                {upcomingExams}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Next: Math (May 15)
+              </p>
+              <div className="mt-2 flex items-center text-xs text-blue-600 dark:text-blue-400">
+                <Clock className="w-3 h-3 mr-1" />2 days remaining
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="border-2 border-orange-200/50 dark:border-orange-800/50 bg-gradient-to-br from-white to-orange-50/30 dark:from-gray-900 dark:to-orange-950/10 hover:shadow-lg transition-all duration-300">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-950/20 dark:to-red-950/20 rounded-t-lg">
+              <CardTitle className="text-sm font-medium">
+                Pending Assignments
+              </CardTitle>
+              <div className="p-2 rounded-lg bg-orange-100 dark:bg-orange-900/50">
+                <FileText className="h-4 w-4 text-orange-600 dark:text-orange-400" />
+              </div>
+            </CardHeader>
+            <CardContent className="pt-4">
+              <div className="text-2xl font-bold text-orange-700 dark:text-orange-300">
+                {pendingAssignments}
+              </div>
+              <p className="text-xs text-muted-foreground">Due this week</p>
+              <div className="mt-2 flex items-center text-xs text-orange-600 dark:text-orange-400">
+                <AlertCircle className="w-3 h-3 mr-1" />
+                Action required
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
         <Tabs defaultValue="overview" className="space-y-4">
           <TabsList className="overflow-x-auto whitespace-nowrap flex">
             <TabsTrigger value="overview">Overview</TabsTrigger>
@@ -140,73 +237,88 @@ const StudentIdRoute = async ({
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="overview" className="space-y-4">
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">
-                    Attendance Rate
+          <TabsContent value="overview" className="space-y-6 mt-6">
+            <div className="grid gap-6 lg:grid-cols-7">
+              <Card className="lg:col-span-4 border-slate-200/50 dark:border-slate-700/50">
+                <CardHeader className="pb-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 rounded-t-lg border-b border-blue-200/30 dark:border-blue-800/30">
+                  <CardTitle className="text-lg font-semibold">
+                    Weekly Attendance Overview
                   </CardTitle>
-                  <CalendarDays className="h-4 w-4 text-muted-foreground" />
+                  <CardDescription>
+                    Your attendance pattern for the current month
+                  </CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">95%</div>
-                  <Progress value={85} className="mt-2" />
+                <CardContent className="pt-6">
+                  <div className="h-64 flex items-center justify-center text-slate-500 dark:text-slate-400">
+                    <div className="text-center">
+                      <CalendarDays className="w-12 h-12 mx-auto mb-2 opacity-50" />
+                      <p>Attendance chart will be displayed here</p>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">
-                    Current GPA
-                  </CardTitle>
-                  <GraduationCap className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">3.8</div>
-                  <p className="text-xs text-muted-foreground">Out of 4.0</p>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">
-                    Upcoming Exams
-                  </CardTitle>
-                  <BookOpen className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">3</div>
-                  <p className="text-xs text-muted-foreground">
-                    Next: Math (May 15)
-                  </p>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">
-                    Pending Assignments
-                  </CardTitle>
-                  <FileText className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">2</div>
-                  <p className="text-xs text-muted-foreground">Due this week</p>
-                </CardContent>
-              </Card>
-            </div>
 
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-              <Card className="col-span-4">
-                <CardHeader>
-                  <CardTitle>Yearly Attendance</CardTitle>
+              <Card className="lg:col-span-3 border-slate-200/50 dark:border-slate-700/50">
+                <CardHeader className="pb-4 bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-950/20 dark:to-teal-950/20 rounded-t-lg border-b border-emerald-200/30 dark:border-emerald-800/30">
+                  <CardTitle className="text-lg font-semibold">
+                    Subject Performance
+                  </CardTitle>
+                  <CardDescription>
+                    Recent test scores and grades
+                  </CardDescription>
                 </CardHeader>
-                <CardContent className="pl-2"></CardContent>
-              </Card>
-              <Card className="col-span-3">
-                <CardHeader>
-                  <CardTitle>Academic Performance</CardTitle>
-                  <CardDescription>Subject-wise scores</CardDescription>
-                </CardHeader>
-                <CardContent></CardContent>
+                <CardContent className="pt-6">
+                  <div className="space-y-4">
+                    {[
+                      {
+                        subject: 'Mathematics',
+                        score: 92,
+                        grade: 'A',
+                        color: 'bg-blue-500',
+                      },
+                      {
+                        subject: 'Science',
+                        score: 88,
+                        grade: 'A-',
+                        color: 'bg-emerald-500',
+                      },
+                      {
+                        subject: 'English',
+                        score: 85,
+                        grade: 'B+',
+                        color: 'bg-amber-500',
+                      },
+                      {
+                        subject: 'History',
+                        score: 90,
+                        grade: 'A',
+                        color: 'bg-purple-500',
+                      },
+                    ].map((item, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg"
+                      >
+                        <div className="flex items-center gap-3">
+                          <div
+                            className={`w-3 h-3 rounded-full ${item.color}`}
+                          ></div>
+                          <span className="font-medium text-sm">
+                            {item.subject}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-semibold">
+                            {item.score}%
+                          </span>
+                          <Badge variant="secondary" className="text-xs">
+                            {item.grade}
+                          </Badge>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
               </Card>
             </div>
           </TabsContent>
@@ -298,27 +410,44 @@ const StudentIdRoute = async ({
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Announcements</CardTitle>
+          {/* Announcements */}
+          <Card className="bg-gradient-to-br from-white to-amber-50/30 dark:from-slate-900 dark:to-amber-950/20 border-amber-200/50 dark:border-amber-800/30 shadow-lg">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-lg font-semibold flex items-center gap-2">
+                <Bell className="w-5 h-5 text-amber-600" />
+                Recent Notices
+              </CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div>
-                  <h3 className="font-semibold">Summer Break</h3>
-                  <p className="text-sm text-muted-foreground">
-                    School closes from June 15 to July 15
-                  </p>
-                </div>
-                <div>
-                  <h3 className="font-semibold">Annual Sports Day</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Scheduled for May 30, 2023
-                  </p>
-                </div>
+            <CardContent className="space-y-4">
+              <div className="space-y-3">
+                {notices.map((notice, index) => (
+                  <div
+                    key={index}
+                    className="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg border-l-4 border-amber-500"
+                  >
+                    <div className="flex justify-between items-start mb-1">
+                      <h3 className="font-semibold text-slate-900 dark:text-slate-100 text-sm">
+                        {notice.title}
+                      </h3>
+                      <span className="text-xs text-slate-500 dark:text-slate-400">
+                        {new Intl.DateTimeFormat('en-in').format(
+                          notice.startDate
+                        )}
+                      </span>
+                    </div>
+                    <p className="text-sm text-slate-700 dark:text-slate-300">
+                      {notice.content}
+                    </p>
+                  </div>
+                ))}
               </div>
-              <Button variant="outline" className="w-full mt-4">
-                <Bell className="mr-2 h-4 w-4" /> View All Announcements
+
+              <Button
+                variant="outline"
+                className="w-full border-amber-200 hover:bg-amber-50 dark:border-amber-800 dark:hover:bg-amber-950/20"
+              >
+                <Bell className="mr-2 h-4 w-4" />
+                View All Announcements
               </Button>
             </CardContent>
           </Card>

@@ -17,6 +17,8 @@ import {
   InfoIcon,
   PrinterIcon,
   BellIcon,
+  Eye,
+  XIcon,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
@@ -56,6 +58,7 @@ import {
 } from '@/components/ui/tooltip';
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -74,6 +77,15 @@ import {
 } from './SendFeesReminderDialog';
 import { ReminderHistoryButton } from './ReminderHistoryButton';
 
+const formatCurrency = (amount: number) =>
+  new Intl.NumberFormat('en-IN', {
+    style: 'currency',
+    currency: 'INR',
+    maximumFractionDigits: 0,
+  }).format(amount);
+
+const formatDate = (date: Date) => format(new Date(date), 'dd MMM yyyy');
+
 // Schemas
 const PaymentMethodSchema = z.enum([
   'CASH',
@@ -88,10 +100,13 @@ const PaymentFormSchema = z.object({
   amount: z
     .number()
     .positive('Amount must be positive')
-    .max(1000000, 'Amount too large'),
+    .max(
+      1000000,
+      'Amount too large (Contact your administrator for assistance)'
+    ),
   method: PaymentMethodSchema,
   transactionId: z.string().optional(),
-  notes: z.string().optional(),
+  note: z.string().optional(),
 });
 
 interface FilterState {
@@ -121,11 +136,8 @@ export default function StudentPaymentHistoryTable({
   const [recordsPerPage, setRecordsPerPage] = useState(10);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState<FeeRecord | null>(null);
-  const [showPaymentDialog, setShowPaymentDialog] = useState(false);
   const [localFeeRecords, setLocalFeeRecords] =
     useState<FeeRecord[]>(feeRecords);
-  const [sendFeeReminderDialogIsOpen, setSendFeeReminderDialogIsOpen] =
-    useState(false);
 
   // Sync local records with props
   useEffect(() => {
@@ -202,10 +214,224 @@ export default function StudentPaymentHistoryTable({
     });
   };
 
+  return (
+    <div className="flex flex-col space-y-8">
+      <ReminderHistoryButton studentId="123" />
+      <Tabs value={currentTab} onValueChange={setCurrentTab} className="w-full">
+        <FilterControls
+          filters={filters}
+          setFilters={setFilters}
+          filterOptions={filterOptions}
+          resetFilters={resetFilters}
+          feeRecords={localFeeRecords}
+          currentTab={currentTab}
+        />
+        {['all', 'paid', 'unpaid', 'overdue'].map((tab) => (
+          <TabsContent key={tab} value={tab} className="m-0">
+            <FeeTable
+              records={currentRecords}
+              isLoading={isLoading}
+              recordsPerPage={recordsPerPage}
+              setSelectedRecord={setSelectedRecord}
+              resetFilters={resetFilters}
+            />
+            <PaginationControls
+              currentPage={currentPage}
+              totalPages={totalPages}
+              recordsPerPage={recordsPerPage}
+              setCurrentPage={setCurrentPage}
+              setRecordsPerPage={setRecordsPerPage}
+              filteredRecordsCount={filteredRecords.length}
+              isLoading={isLoading}
+            />
+          </TabsContent>
+        ))}
+      </Tabs>
+    </div>
+  );
+}
+
+// Record Payment Dialog Component
+interface RecordPaymentCardProps {
+  selectedRecord: FeeRecord | null;
+}
+
+const RecordPaymentCard = ({ selectedRecord }: RecordPaymentCardProps) => {
+  console.log('selectedRecord', selectedRecord?.fee.id);
+  const [formErrors, setFormErrors] = useState<{ amount?: string }>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!selectedRecord) return;
+
+    setIsSubmitting(true);
+    setFormErrors({});
+
+    const formData = new FormData(e.currentTarget);
+    const data = {
+      amount: parseFloat(formData.get('amount') as string),
+      method: formData.get('method') as string,
+      transactionId: formData.get('transaction') as string,
+      note: formData.get('note') as string,
+    };
+
+    try {
+      const parsed = PaymentFormSchema.safeParse(data);
+      if (!parsed.success) {
+        const errors = parsed.error.flatten().fieldErrors;
+        setFormErrors({
+          amount: errors.amount?.[0],
+        });
+        setIsSubmitting(false);
+        return;
+      }
+
+      await payFeesAction(selectedRecord.fee.id, parsed.data.amount);
+
+      toast.success(
+        `Successfully recorded payment of ${formatCurrency(
+          parsed.data.amount
+        )}.`
+      );
+    } catch (error) {
+      console.error('Error recording payment:', error);
+      toast.error('Failed to record payment. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <Card>
+      <CardContent className="max-w-md">
+        {selectedRecord && (
+          <form onSubmit={handleSubmit}>
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-2 gap-4 items-center">
+                <div className="font-medium text-muted-foreground">
+                  Total Fee:
+                </div>
+                <div className="font-medium">
+                  {formatCurrency(selectedRecord.fee.totalFee)}
+                </div>
+                <div className="font-medium text-muted-foreground">
+                  Paid Amount:
+                </div>
+                <div className="text-emerald-600">
+                  {formatCurrency(selectedRecord.fee.paidAmount)}
+                </div>
+                <div className="font-medium text-muted-foreground">
+                  Pending Amount:
+                </div>
+                <div className="text-amber-600">
+                  {formatCurrency(selectedRecord.fee.pendingAmount ?? 0)}
+                </div>
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="amount">Payment Amount</Label>
+                <Input
+                  id="amount"
+                  name="amount"
+                  type="number"
+                  placeholder="Enter amount"
+                  defaultValue={
+                    selectedRecord.fee.pendingAmount?.toString() ?? ''
+                  }
+                  required
+                  disabled={isSubmitting}
+                  aria-invalid={!!formErrors.amount}
+                  aria-describedby={
+                    formErrors.amount ? 'amount-error' : undefined
+                  }
+                />
+                {formErrors.amount && (
+                  <p id="amount-error" className="text-sm text-destructive">
+                    {formErrors.amount}
+                  </p>
+                )}
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="method">Payment Method</Label>
+                <Select
+                  name="method"
+                  defaultValue="CASH"
+                  disabled={isSubmitting}
+                  required
+                  aria-label="Payment method"
+                >
+                  <SelectTrigger id="method">
+                    <SelectValue placeholder="Select payment method" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {PaymentMethodSchema.options.map((method) => (
+                      <SelectItem key={method} value={method}>
+                        {method.charAt(0) + method.slice(1).toLowerCase()}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="transaction">Transaction ID (Optional)</Label>
+                <Input
+                  id="transaction"
+                  name="transaction"
+                  placeholder="Enter transaction reference"
+                  disabled={isSubmitting}
+                  aria-label="Transaction ID"
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="note">Note (Optional)</Label>
+                <Input
+                  id="note"
+                  name="note"
+                  placeholder="Add any additional note"
+                  disabled={isSubmitting}
+                  aria-label="Payment note"
+                />
+              </div>
+            </div>
+            <CardFooter className="w-full  flex justify-center items-center p-0 mx-0">
+              <Button
+                type="submit"
+                disabled={isSubmitting}
+                aria-label="Record payment"
+                className="px-4 py-2 w-full mx-0"
+              >
+                {isSubmitting ? 'Recording...' : 'Record Payment'}
+              </Button>
+            </CardFooter>
+          </form>
+        )}
+      </CardContent>
+    </Card>
+  );
+};
+
+// Filter Controls Component
+interface FilterControlsProps {
+  filters: FilterState;
+  setFilters: (filters: FilterState) => void;
+  filterOptions: { grades: string[]; sections: string[]; categories: string[] };
+  resetFilters: () => void;
+  feeRecords: FeeRecord[];
+  currentTab: string;
+}
+
+function FilterControls({
+  filters,
+  setFilters,
+  filterOptions,
+  resetFilters,
+  feeRecords,
+  currentTab,
+}: FilterControlsProps) {
   // Map feeRecords to initialRecipients for unpaid or overdue fees
   const initialRecipients: FeeReminderRecipient[] = useMemo(
     () =>
-      localFeeRecords
+      feeRecords
         .filter(
           (record) =>
             record.fee.status === 'UNPAID' || record.fee.status === 'OVERDUE'
@@ -223,87 +449,8 @@ export default function StudentPaymentHistoryTable({
           amountDue: record.fee.pendingAmount ?? record.fee.totalFee,
           dueDate: record.fee.dueDate,
         })),
-    [localFeeRecords]
+    [feeRecords]
   );
-
-  return (
-    <div className="flex flex-col space-y-8">
-      {/* Removed unused Dialog */}
-      <ReminderHistoryButton studentId="123" />
-      <Tabs value={currentTab} onValueChange={setCurrentTab} className="w-full">
-        <FilterControls
-          filters={filters}
-          setFilters={setFilters}
-          filterOptions={filterOptions}
-          resetFilters={resetFilters}
-          feeRecords={localFeeRecords}
-          currentTab={currentTab}
-          setSendFeeReminderDialogIsOpen={setSendFeeReminderDialogIsOpen}
-        />
-        {['all', 'paid', 'unpaid', 'overdue'].map((tab) => (
-          <TabsContent key={tab} value={tab} className="m-0">
-            <FeeTable
-              records={currentRecords}
-              isLoading={isLoading}
-              recordsPerPage={recordsPerPage}
-              setSelectedRecord={setSelectedRecord}
-              setShowPaymentDialog={setShowPaymentDialog}
-              resetFilters={resetFilters}
-            />
-            <PaginationControls
-              currentPage={currentPage}
-              totalPages={totalPages}
-              recordsPerPage={recordsPerPage}
-              setCurrentPage={setCurrentPage}
-              setRecordsPerPage={setRecordsPerPage}
-              filteredRecordsCount={filteredRecords.length}
-              isLoading={isLoading}
-            />
-          </TabsContent>
-        ))}
-      </Tabs>
-      <FeeDetailsDialog
-        selectedRecord={selectedRecord}
-        setSelectedRecord={setSelectedRecord}
-        showPaymentDialog={showPaymentDialog}
-        setShowPaymentDialog={setShowPaymentDialog}
-      />
-      <RecordPaymentDialog
-        selectedRecord={selectedRecord}
-        showPaymentDialog={showPaymentDialog}
-        setShowPaymentDialog={setShowPaymentDialog}
-        setSelectedRecord={setSelectedRecord}
-        setLocalFeeRecords={setLocalFeeRecords}
-      />
-      <SendFeesReminderDialog
-        open={sendFeeReminderDialogIsOpen}
-        onOpenChange={setSendFeeReminderDialogIsOpen}
-        initialRecipients={initialRecipients}
-      />
-    </div>
-  );
-}
-
-// Filter Controls Component
-interface FilterControlsProps {
-  filters: FilterState;
-  setFilters: (filters: FilterState) => void;
-  filterOptions: { grades: string[]; sections: string[]; categories: string[] };
-  resetFilters: () => void;
-  feeRecords: FeeRecord[];
-  currentTab: string;
-  setSendFeeReminderDialogIsOpen: (open: boolean) => void;
-}
-
-function FilterControls({
-  filters,
-  setFilters,
-  filterOptions,
-  resetFilters,
-  feeRecords,
-  currentTab,
-  setSendFeeReminderDialogIsOpen,
-}: FilterControlsProps) {
   return (
     <div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0 mb-4">
       <TabsList className="flex-wrap">
@@ -422,23 +569,38 @@ function FilterControls({
               <SlidersHorizontalIcon className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
+          <DropdownMenuContent align="end" className="w-56">
             <DropdownMenuLabel>Options</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <PrinterIcon className="mr-2 h-4 w-4" />
-              Print Report
+            <DropdownMenuItem className="flex items-center gap-2">
+              <PrinterIcon className="h-4 w-4" />
+              <span>Print Report</span>
             </DropdownMenuItem>
-            <DropdownMenuItem>
-              <DownloadIcon className="mr-2 h-4 w-4" />
-              Export to Excel
+            <DropdownMenuItem className="flex items-center gap-2">
+              <DownloadIcon className="h-4 w-4" />
+              <span>Export to Excel</span>
             </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => setSendFeeReminderDialogIsOpen(true)}
-            >
-              <BellIcon className="mr-2 h-4 w-4" />
-              Send Reminders
-            </DropdownMenuItem>
+            <Dialog>
+              <DialogTrigger asChild>
+                <DropdownMenuItem
+                  className="flex items-center gap-2"
+                  onSelect={(e) => e.preventDefault()}
+                >
+                  <BellIcon className="h-4 w-4" />
+                  <span>Send Reminders</span>
+                </DropdownMenuItem>
+              </DialogTrigger>
+              <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+                <DialogHeader>
+                  <DialogTitle>Send Fee Reminders</DialogTitle>
+                  <DialogDescription>
+                    Send payment reminders to students or parents with
+                    outstanding fees
+                  </DialogDescription>
+                </DialogHeader>
+                <SendFeesReminderDialog initialRecipients={initialRecipients} />
+              </DialogContent>
+            </Dialog>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
@@ -491,27 +653,15 @@ interface FeeTableProps {
   isLoading: boolean;
   recordsPerPage: number;
   setSelectedRecord: (record: FeeRecord | null) => void;
-  setShowPaymentDialog: (value: boolean) => void;
+
   resetFilters: () => void;
 }
-
 function FeeTable({
   records,
   isLoading,
   recordsPerPage,
-  setSelectedRecord,
-  setShowPaymentDialog,
   resetFilters,
 }: FeeTableProps) {
-  const formatCurrency = (amount: number) =>
-    new Intl.NumberFormat('en-IN', {
-      style: 'currency',
-      currency: 'INR',
-      maximumFractionDigits: 0,
-    }).format(amount);
-
-  const formatDate = (date: Date) => format(new Date(date), 'dd MMM yyyy');
-
   return (
     <Card>
       <CardContent className="p-0">
@@ -544,14 +694,7 @@ function FeeTable({
               </TableRow>
             ) : (
               records.map((record) => (
-                <FeeTableRow
-                  key={record.fee.id}
-                  record={record}
-                  formatCurrency={formatCurrency}
-                  formatDate={formatDate}
-                  setSelectedRecord={setSelectedRecord}
-                  setShowPaymentDialog={setShowPaymentDialog}
-                />
+                <FeeTableRow key={record.fee.id} record={record} />
               ))
             )}
           </TableBody>
@@ -560,8 +703,6 @@ function FeeTable({
     </Card>
   );
 }
-
-// Fee Table Header Component
 function FeeTableHeader() {
   return (
     <TableRow>
@@ -572,27 +713,14 @@ function FeeTableHeader() {
       <TableHead className="text-right">Amount</TableHead>
       <TableHead>Due Date</TableHead>
       <TableHead>Status</TableHead>
-      <TableHead className="text-right">Actions</TableHead>
+      <TableHead>Actions</TableHead>
     </TableRow>
   );
 }
-
-// Fee Table Row Component
 interface FeeTableRowProps {
   record: FeeRecord;
-  formatCurrency: (amount: number) => string;
-  formatDate: (date: Date) => string;
-  setSelectedRecord: (record: FeeRecord | null) => void;
-  setShowPaymentDialog: (value: boolean) => void;
 }
-
-function FeeTableRow({
-  record,
-  formatCurrency,
-  formatDate,
-  setSelectedRecord,
-  setShowPaymentDialog,
-}: FeeTableRowProps) {
+function FeeTableRow({ record }: FeeTableRowProps) {
   return (
     <TableRow className="group">
       <TableCell className="font-medium">{record.fee.id.slice(0, 8)}</TableCell>
@@ -659,496 +787,222 @@ function FeeTableRow({
           {record.fee.status}
         </Badge>
       </TableCell>
-      <TableCell className="text-right">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="opacity-0 group-hover:opacity-100 transition-opacity"
-              aria-label="Row actions"
-            >
-              <SlidersHorizontalIcon className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => setSelectedRecord(record)}>
-              <FileEditIcon className="mr-2 h-4 w-4" />
-              View Details
-            </DropdownMenuItem>
-            {record.fee.status !== 'PAID' ? (
-              <DropdownMenuItem
-                onClick={() => {
-                  setSelectedRecord(record);
-                  setShowPaymentDialog(true);
-                }}
-              >
-                <CreditCardIcon className="mr-2 h-4 w-4" />
-                Record Payment
-              </DropdownMenuItem>
-            ) : (
-              <DropdownMenuItem>
-                <DownloadIcon className="mr-2 h-4 w-4" />
-                Download Receipt
-              </DropdownMenuItem>
-            )}
-            <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-red-600">
-              Delete Fee
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+      <TableCell>
+        <Dialog>
+          <DialogTrigger className="flex items-center space-x-2">
+            <Eye className="mr-2 h-4 w-4" />
+            View
+          </DialogTrigger>
+          <DialogContent className="max-w-3xl">
+            <DialogHeader>
+              <DialogTitle>Fee Details</DialogTitle>
+              <DialogDescription>
+                Detailed information about fee {record?.fee.id}
+              </DialogDescription>
+            </DialogHeader>
+            <FeeDetailsContent selectedRecord={record} />
+          </DialogContent>
+        </Dialog>
       </TableCell>
     </TableRow>
   );
 }
 
-// Fee Details Dialog Component
-interface FeeDetailsDialogProps {
-  selectedRecord: FeeRecord | null;
-  setSelectedRecord: (record: FeeRecord | null) => void;
-  showPaymentDialog: boolean;
-  setShowPaymentDialog: (value: boolean) => void;
-}
-
-function FeeDetailsDialog({
+const FeeDetailsContent = ({
   selectedRecord,
-  setSelectedRecord,
-  showPaymentDialog,
-  setShowPaymentDialog,
-}: FeeDetailsDialogProps) {
-  const formatCurrency = (amount: number) =>
-    new Intl.NumberFormat('en-IN', {
-      style: 'currency',
-      currency: 'INR',
-      maximumFractionDigits: 0,
-    }).format(amount);
-
-  const formatDate = (date: Date) => format(new Date(date), 'dd MMM yyyy');
-
+}: {
+  selectedRecord: FeeRecord | null;
+}) => {
   return (
-    <Dialog
-      open={!!selectedRecord && !showPaymentDialog}
-      onOpenChange={(open) => {
-        if (!open) {
-          setSelectedRecord(null);
-          setShowPaymentDialog(false);
-        }
-      }}
-    >
-      <DialogContent className="max-w-3xl">
-        <DialogHeader>
-          <DialogTitle>Fee Details</DialogTitle>
-          <DialogDescription>
-            Detailed information about fee {selectedRecord?.fee.id}
-          </DialogDescription>
-        </DialogHeader>
-        {selectedRecord && (
-          <>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <h3 className="text-sm font-medium mb-2">
-                  Student Information
-                </h3>
-                <Card>
-                  <CardContent className="p-4">
-                    <dl className="grid grid-cols-[1fr_2fr] gap-2 text-sm">
-                      <dt className="font-medium text-muted-foreground">
-                        Name:
-                      </dt>
-                      <dd>{`${selectedRecord.student.firstName} ${selectedRecord.student.lastName}`}</dd>
-                      <dt className="font-medium text-muted-foreground">
-                        Roll Number:
-                      </dt>
-                      <dd>{selectedRecord.student.rollNumber}</dd>
-                      <dt className="font-medium text-muted-foreground">
-                        Class:
-                      </dt>
-                      <dd>{`${selectedRecord.grade.grade} - ${selectedRecord.section.name}`}</dd>
-                      <dt className="font-medium text-muted-foreground">
-                        Email:
-                      </dt>
-                      <dd className="truncate">
-                        {selectedRecord.student.email || 'N/A'}
-                      </dd>
-                      <dt className="font-medium text-muted-foreground">
-                        Phone:
-                      </dt>
-                      <dd>{selectedRecord.student.phoneNumber || 'N/A'}</dd>
-                    </dl>
-                  </CardContent>
-                </Card>
-              </div>
-              <div>
-                <h3 className="text-sm font-medium mb-2">Fee Information</h3>
-                <Card>
-                  <CardContent className="p-4">
-                    <dl className="grid grid-cols-[1fr_2fr] gap-2 text-sm">
-                      <dt className="font-medium text-muted-foreground">
-                        Fee ID:
-                      </dt>
-                      <dd>{selectedRecord.fee.id}</dd>
-                      <dt className="font-medium text-muted-foreground">
-                        Category:
-                      </dt>
-                      <dd>{selectedRecord.feeCategory.name}</dd>
-                      <dt className="font-medium text-muted-foreground">
-                        Total Amount:
-                      </dt>
-                      <dd className="font-medium">
-                        {formatCurrency(selectedRecord.fee.totalFee)}
-                      </dd>
-                      <dt className="font-medium text-muted-foreground">
-                        Paid Amount:
-                      </dt>
-                      <dd className="text-emerald-600">
-                        {formatCurrency(selectedRecord.fee.paidAmount)}
-                      </dd>
-                      <dt className="font-medium text-muted-foreground">
-                        Pending Amount:
-                      </dt>
-                      <dd
-                        className={
-                          selectedRecord.fee.pendingAmount
-                            ? 'text-amber-600'
-                            : ''
-                        }
-                      >
-                        {formatCurrency(selectedRecord.fee.pendingAmount ?? 0)}
-                      </dd>
-                      <dt className="font-medium text-muted-foreground">
-                        Due Date:
-                      </dt>
-                      <dd>{formatDate(selectedRecord.fee.dueDate)}</dd>
-                      <dt className="font-medium text-muted-foreground">
-                        Status:
-                      </dt>
-                      <dd>
-                        <Badge
-                          variant="outline"
-                          className={cn(
-                            'font-normal',
-                            selectedRecord.fee.status === 'PAID' &&
-                              'bg-emerald-50 text-emerald-700 border-emerald-200',
-                            selectedRecord.fee.status === 'UNPAID' &&
-                              'bg-amber-50 text-amber-700 border-amber-200',
-                            selectedRecord.fee.status === 'OVERDUE' &&
-                              'bg-red-50 text-red-700 border-red-200'
-                          )}
-                        >
-                          {selectedRecord.fee.status === 'PAID' && (
-                            <CheckCircle2Icon className="mr-1 h-3 w-3" />
-                          )}
-                          {selectedRecord.fee.status === 'OVERDUE' && (
-                            <XCircleIcon className="mr-1 h-3 w-3" />
-                          )}
-                          {selectedRecord.fee.status}
-                        </Badge>
-                      </dd>
-                    </dl>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
+    <>
+      {selectedRecord && (
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <h3 className="text-sm font-medium mb-2">Payment History</h3>
+              <h3 className="text-sm font-medium mb-2">Student Information</h3>
               <Card>
-                <CardContent className="p-0">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Receipt No.</TableHead>
-                        <TableHead>Date</TableHead>
-                        <TableHead>Method</TableHead>
-                        <TableHead className="text-right">Amount</TableHead>
-                        <TableHead className="text-right">Actions</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {selectedRecord.payments?.length ? (
-                        selectedRecord.payments.map((payment) => (
-                          <TableRow key={payment.id}>
-                            <TableCell>{payment.receiptNumber}</TableCell>
-                            <TableCell>
-                              {formatDate(payment.paymentDate)}
-                            </TableCell>
-                            <TableCell>{payment.paymentMethod}</TableCell>
-                            <TableCell className="text-right">
-                              {formatCurrency(payment.amountPaid)}
-                            </TableCell>
-                            <TableCell className="text-right">
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                aria-label="Download receipt"
-                              >
-                                <DownloadIcon className="h-4 w-4 mr-1" />
-                                Receipt
-                              </Button>
-                            </TableCell>
-                          </TableRow>
-                        ))
-                      ) : (
-                        <TableRow>
-                          <TableCell
-                            colSpan={5}
-                            className="text-center py-6 text-muted-foreground"
-                          >
-                            No payment records found
-                          </TableCell>
-                        </TableRow>
-                      )}
-                    </TableBody>
-                  </Table>
+                <CardContent className="p-4">
+                  <dl className="grid grid-cols-[1fr_2fr] gap-2 text-sm">
+                    <dt className="font-medium text-muted-foreground">Name:</dt>
+                    <dd>{`${selectedRecord.student.firstName} ${selectedRecord.student.lastName}`}</dd>
+                    <dt className="font-medium text-muted-foreground">
+                      Roll Number:
+                    </dt>
+                    <dd>{selectedRecord.student.rollNumber}</dd>
+                    <dt className="font-medium text-muted-foreground">
+                      Class:
+                    </dt>
+                    <dd>{`${selectedRecord.grade.grade} - ${selectedRecord.section.name}`}</dd>
+                    <dt className="font-medium text-muted-foreground">
+                      Email:
+                    </dt>
+                    <dd className="truncate">
+                      {selectedRecord.student.email || 'N/A'}
+                    </dd>
+                    <dt className="font-medium text-muted-foreground">
+                      Phone:
+                    </dt>
+                    <dd>{selectedRecord.student.phoneNumber || 'N/A'}</dd>
+                  </dl>
                 </CardContent>
               </Card>
             </div>
-            <DialogFooter className="gap-2 sm:gap-0">
-              {selectedRecord.fee.status !== 'PAID' && (
-                <Button
-                  onClick={() => setShowPaymentDialog(true)}
-                  aria-label="Record payment"
-                >
-                  <CreditCardIcon className="h-4 w-4 mr-2" />
-                  Record Payment
-                </Button>
-              )}
-              <Button variant="outline" aria-label="Download details">
-                <DownloadIcon className="h-4 w-4 mr-2" />
-                Download Details
-              </Button>
-            </DialogFooter>
-          </>
-        )}
-      </DialogContent>
-    </Dialog>
-  );
-}
-
-// Record Payment Dialog Component
-interface RecordPaymentDialogProps {
-  selectedRecord: FeeRecord | null;
-  showPaymentDialog: boolean;
-  setShowPaymentDialog: (value: boolean) => void;
-  setSelectedRecord: (record: FeeRecord | null) => void;
-  setLocalFeeRecords: (records: FeeRecord[]) => void;
-}
-
-function RecordPaymentDialog({
-  selectedRecord,
-  showPaymentDialog,
-  setShowPaymentDialog,
-  setSelectedRecord,
-  setLocalFeeRecords,
-}: RecordPaymentDialogProps) {
-  const [formErrors, setFormErrors] = useState<{ amount?: string }>({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const formatCurrency = (amount: number) =>
-    new Intl.NumberFormat('en-IN', {
-      style: 'currency',
-      currency: 'INR',
-      maximumFractionDigits: 0,
-    }).format(amount);
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!selectedRecord) return;
-
-    setIsSubmitting(true);
-    setFormErrors({});
-
-    const formData = new FormData(e.currentTarget);
-    const data = {
-      amount: parseFloat(formData.get('amount') as string),
-      method: formData.get('method') as string,
-      transactionId: formData.get('transaction') as string,
-      notes: formData.get('notes') as string,
-    };
-
-    try {
-      const parsed = PaymentFormSchema.safeParse(data);
-      if (!parsed.success) {
-        const errors = parsed.error.flatten().fieldErrors;
-        setFormErrors({
-          amount: errors.amount?.[0],
-        });
-        setIsSubmitting(false);
-        return;
-      }
-
-      await payFeesAction(selectedRecord.fee.id, parsed.data.amount);
-
-      // Update local records optimistically
-      // setLocalFeeRecords((prev) =>
-      //   prev.map((record) =>
-      //     record.fee.id === selectedRecord.fee.id
-      //       ? {
-      //           ...record,
-      //           fee: {
-      //             ...record.fee,
-      //             paidAmount: record.fee.paidAmount + parsed.data.amount,
-      //             pendingAmount:
-      //               (record.fee.pendingAmount ?? record.fee.totalFee) - parsed.data.amount,
-      //             status:
-      //               record.fee.totalFee <= record.fee.paidAmount + parsed.data.amount
-      //                 ? 'PAID'
-      //                 : record.fee.status,
-      //           },
-      //         }
-      //       : record
-      //   )
-      // );
-
-      toast.success(
-        `Successfully recorded payment of ${formatCurrency(
-          parsed.data.amount
-        )}.`
-      );
-      setShowPaymentDialog(false);
-      setSelectedRecord(null);
-    } catch (error) {
-      console.error('Error recording payment:', error);
-      toast.error('Failed to record payment. Please try again.');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  return (
-    <Dialog
-      open={showPaymentDialog}
-      onOpenChange={(open) => {
-        setShowPaymentDialog(open);
-        if (!open) {
-          setFormErrors({});
-          setSelectedRecord(null);
-        }
-      }}
-    >
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle>Record Payment</DialogTitle>
-          <DialogDescription>
-            Record a new payment for{' '}
-            {/* {selectedRecord
- COUNTRY_CODE: +91
-              ? `${selectedRecord.student.firstName} ${selectedRecord.student.lastName}`
-              : 'selected student'} */}
-          </DialogDescription>
-        </DialogHeader>
-        {selectedRecord && (
-          <form onSubmit={handleSubmit}>
-            <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-2 gap-4 items-center">
-                <div className="font-medium text-muted-foreground">
-                  Total Fee:
-                </div>
-                <div className="font-medium">
-                  {formatCurrency(selectedRecord.fee.totalFee)}
-                </div>
-                <div className="font-medium text-muted-foreground">
-                  Paid Amount:
-                </div>
-                <div className="text-emerald-600">
-                  {formatCurrency(selectedRecord.fee.paidAmount)}
-                </div>
-                <div className="font-medium text-muted-foreground">
-                  Pending Amount:
-                </div>
-                <div className="text-amber-600">
-                  {formatCurrency(selectedRecord.fee.pendingAmount ?? 0)}
-                </div>
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="amount">Payment Amount</Label>
-                <Input
-                  id="amount"
-                  name="amount"
-                  type="number"
-                  placeholder="Enter amount"
-                  defaultValue={
-                    selectedRecord.fee.pendingAmount?.toString() ?? ''
-                  }
-                  required
-                  disabled={isSubmitting}
-                  aria-invalid={!!formErrors.amount}
-                  aria-describedby={
-                    formErrors.amount ? 'amount-error' : undefined
-                  }
-                />
-                {formErrors.amount && (
-                  <p id="amount-error" className="text-sm text-destructive">
-                    {formErrors.amount}
-                  </p>
-                )}
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="method">Payment Method</Label>
-                <Select
-                  name="method"
-                  defaultValue="CASH"
-                  disabled={isSubmitting}
-                  required
-                  aria-label="Payment method"
-                >
-                  <SelectTrigger id="method">
-                    <SelectValue placeholder="Select payment method" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {PaymentMethodSchema.options.map((method) => (
-                      <SelectItem key={method} value={method}>
-                        {method.charAt(0) + method.slice(1).toLowerCase()}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="transaction">Transaction ID (Optional)</Label>
-                <Input
-                  id="transaction"
-                  name="transaction"
-                  placeholder="Enter transaction reference"
-                  disabled={isSubmitting}
-                  aria-label="Transaction ID"
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="notes">Notes (Optional)</Label>
-                <Input
-                  id="notes"
-                  name="notes"
-                  placeholder="Add any additional notes"
-                  disabled={isSubmitting}
-                  aria-label="Payment notes"
-                />
-              </div>
+            <div>
+              <h3 className="text-sm font-medium mb-2">Fee Information</h3>
+              <Card>
+                <CardContent className="p-4">
+                  <dl className="grid grid-cols-[1fr_2fr] gap-2 text-sm">
+                    <dt className="font-medium text-muted-foreground">
+                      Fee ID:
+                    </dt>
+                    <dd>{selectedRecord.fee.id}</dd>
+                    <dt className="font-medium text-muted-foreground">
+                      Category:
+                    </dt>
+                    <dd>{selectedRecord.feeCategory.name}</dd>
+                    <dt className="font-medium text-muted-foreground">
+                      Total Amount:
+                    </dt>
+                    <dd className="font-medium">
+                      {formatCurrency(selectedRecord.fee.totalFee)}
+                    </dd>
+                    <dt className="font-medium text-muted-foreground">
+                      Paid Amount:
+                    </dt>
+                    <dd className="text-emerald-600">
+                      {formatCurrency(selectedRecord.fee.paidAmount)}
+                    </dd>
+                    <dt className="font-medium text-muted-foreground">
+                      Pending Amount:
+                    </dt>
+                    <dd
+                      className={
+                        selectedRecord.fee.pendingAmount ? 'text-amber-600' : ''
+                      }
+                    >
+                      {formatCurrency(selectedRecord.fee.pendingAmount ?? 0)}
+                    </dd>
+                    <dt className="font-medium text-muted-foreground">
+                      Due Date:
+                    </dt>
+                    <dd>{formatDate(selectedRecord.fee.dueDate)}</dd>
+                    <dt className="font-medium text-muted-foreground">
+                      Status:
+                    </dt>
+                    <dd>
+                      <Badge
+                        variant="outline"
+                        className={cn(
+                          'font-normal',
+                          selectedRecord.fee.status === 'PAID' &&
+                            'bg-emerald-50 text-emerald-700 border-emerald-200',
+                          selectedRecord.fee.status === 'UNPAID' &&
+                            'bg-amber-50 text-amber-700 border-amber-200',
+                          selectedRecord.fee.status === 'OVERDUE' &&
+                            'bg-red-50 text-red-700 border-red-200'
+                        )}
+                      >
+                        {selectedRecord.fee.status === 'PAID' && (
+                          <CheckCircle2Icon className="mr-1 h-3 w-3" />
+                        )}
+                        {selectedRecord.fee.status === 'OVERDUE' && (
+                          <XCircleIcon className="mr-1 h-3 w-3" />
+                        )}
+                        {selectedRecord.fee.status}
+                      </Badge>
+                    </dd>
+                  </dl>
+                </CardContent>
+              </Card>
             </div>
-            <DialogFooter>
-              <Button
-                type="button"
-                variant="outline"
-                disabled={isSubmitting}
-                onClick={() => setShowPaymentDialog(false)}
-                aria-label="Cancel"
-              >
-                Cancel
-              </Button>
-              <Button
-                type="submit"
-                disabled={isSubmitting}
-                aria-label="Record payment"
-              >
-                {isSubmitting ? 'Recording...' : 'Record Payment'}
-              </Button>
-            </DialogFooter>
-          </form>
-        )}
-      </DialogContent>
-    </Dialog>
+          </div>
+          <div>
+            <h3 className="text-sm font-medium mb-2">Payment History</h3>
+            <Card>
+              <CardContent className="p-0">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Receipt No.</TableHead>
+                      <TableHead>Date</TableHead>
+                      <TableHead>Method</TableHead>
+                      <TableHead className="text-right">Amount</TableHead>
+                      <TableHead className="text-right">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {selectedRecord.payments?.length ? (
+                      selectedRecord.payments.map((payment) => (
+                        <TableRow key={payment.id}>
+                          <TableCell>{payment.receiptNumber}</TableCell>
+                          <TableCell>
+                            {formatDate(payment.paymentDate)}
+                          </TableCell>
+                          <TableCell>{payment.paymentMethod}</TableCell>
+                          <TableCell className="text-right">
+                            {formatCurrency(payment.amountPaid)}
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              aria-label="Download receipt"
+                            >
+                              <DownloadIcon className="h-4 w-4 mr-1" />
+                              Receipt
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    ) : (
+                      <TableRow>
+                        <TableCell
+                          colSpan={5}
+                          className="text-center py-6 text-muted-foreground"
+                        >
+                          No payment records found
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+          </div>
+          <DialogFooter className="gap-2 sm:gap-0">
+            {selectedRecord.fee.status !== 'PAID' && (
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button aria-label="Record payment">
+                    <CreditCardIcon className="h-4 w-4 mr-2" />
+                    Record Payment
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-md">
+                  <DialogHeader>
+                    <DialogTitle>Record Payment</DialogTitle>
+                    <DialogDescription>
+                      Record a new payment for{' '}
+                      {selectedRecord?.fee.id
+                        ? `${selectedRecord.student.firstName} ${selectedRecord.student.lastName}`
+                        : 'selected student'}
+                    </DialogDescription>
+                  </DialogHeader>
+
+                  <RecordPaymentCard selectedRecord={selectedRecord} />
+                </DialogContent>
+              </Dialog>
+            )}
+            <Button variant="outline" aria-label="Download details">
+              <DownloadIcon className="h-4 w-4 mr-2" />
+              Download Details
+            </Button>
+          </DialogFooter>
+        </>
+      )}
+    </>
   );
-}
+};
 
 // Pagination Controls Component
 interface PaginationControlsProps {

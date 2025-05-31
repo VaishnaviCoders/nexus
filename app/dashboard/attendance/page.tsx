@@ -1,20 +1,14 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { AttendanceTable } from '@/components/dashboard/StudentAttendance/attendance-table';
 
 import AttendanceFilters from '@/components/dashboard/StudentAttendance/attendance-filter';
-import { auth } from '@clerk/nextjs/server';
 import { searchParamsCache } from '@/lib/searchParams';
 import { SearchParams } from 'nuqs';
 import { FilterAttendance } from '@/lib/data/attendance/FilterAttendance';
 import { Button } from '@/components/ui/button';
 import { DownloadIcon, PlusIcon } from 'lucide-react';
 import Link from 'next/link';
+import { getOrganizationId } from '@/lib/organization';
 type AttendanceStatus = 'PRESENT' | 'ABSENT' | 'LATE' | 'all';
 
 type PageProps = {
@@ -22,9 +16,7 @@ type PageProps = {
 };
 
 export default async function AttendancePage({ searchParams }: PageProps) {
-  const { orgId } = await auth();
-
-  if (!orgId) throw new Error('No organization found during Attendance Page');
+  const organizationId = await getOrganizationId();
 
   const { search, sectionId, status, gradeId } = await searchParamsCache.parse(
     searchParams
@@ -64,7 +56,7 @@ export default async function AttendancePage({ searchParams }: PageProps) {
           </div>
         </CardHeader>
         <CardContent className="p-2 md:p-6 m-0">
-          <AttendanceFilters organizationId={orgId} />
+          <AttendanceFilters organizationId={organizationId} />
         </CardContent>
       </Card>
 

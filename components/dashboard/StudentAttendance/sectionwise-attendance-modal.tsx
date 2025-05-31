@@ -36,7 +36,7 @@ interface Students {
   name: string;
   rollNumber: string;
   attendanceStatus: 'present' | 'absent' | 'late' | 'not-recorded';
-  notes?: string;
+  note?: string;
 }
 
 interface SectionAttendanceDetails {
@@ -301,7 +301,7 @@ export function SectionWiseAttendanceViewModal({
                     <TableHead>Roll No.</TableHead>
                     <TableHead>Student Name</TableHead>
                     <TableHead>Status</TableHead>
-                    <TableHead>Notes</TableHead>
+                    <TableHead>Note</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -318,7 +318,7 @@ export function SectionWiseAttendanceViewModal({
                           />
                         </TableCell>
                         <TableCell className="max-w-[200px] truncate">
-                          {student.notes || '-'}
+                          {student.note || '-'}
                         </TableCell>
                       </TableRow>
                     ))

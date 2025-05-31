@@ -22,11 +22,6 @@ interface FeeDistributionByCategoryProps {
 const FeeDistributionByCategory: React.FC<
   FeeDistributionByCategoryProps
 > = async ({ data }: FeeDistributionByCategoryProps) => {
-  const totalFees = data.reduce(
-    (acc, category) => acc + category.paidAmount + category.pendingAmount,
-    0
-  );
-
   return (
     <Card>
       <CardHeader>
@@ -36,22 +31,31 @@ const FeeDistributionByCategory: React.FC<
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="space-y-4">
+        <div className="space-y-2">
           {data.map((category, index) => (
-            <div key={index} className="space-y-2">
+            <div key={index} className="space-y-1">
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium">{category.name}</span>
                 <span className="text-sm text-muted-foreground">
                   ₹
                   {(
                     category.paidAmount + category.pendingAmount
-                  ).toLocaleString('en-IN')}
+                  ).toLocaleString('en-IN')}{' '}
                 </span>
               </div>
               <Progress
-                value={(category.paidAmount + category.pendingAmount) / 100}
+                value={
+                  category.paidAmount + category.pendingAmount > 0
+                    ? (category.paidAmount /
+                        (category.paidAmount + category.pendingAmount)) *
+                      100
+                    : 0
+                }
                 className="h-2"
               />
+              <span className="flex items-center space-x-1 text-sm text-muted-foreground">
+                ₹{category.paidAmount.toLocaleString('en-IN')}
+              </span>
             </div>
           ))}
         </div>

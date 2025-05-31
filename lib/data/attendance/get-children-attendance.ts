@@ -9,7 +9,7 @@ export async function getChildrenAttendance(studentId: string) {
       date: true,
       status: true,
       id: true,
-      notes: true,
+      note: true,
       recordedBy: true,
     },
   });

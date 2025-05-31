@@ -67,7 +67,6 @@ export default async function AdminFeeDashboard() {
   const data = await getMonthlyFeeData(2025);
   const feeRecords = await getFeeRecords();
 
-  console.log('Fee records:', data);
   // Call this function in your migration or admin script
   // fixIncorrectFeeStatuses().then((result) => {
   //   console.log('Updated incorrect fee statuses:', result.updated);
