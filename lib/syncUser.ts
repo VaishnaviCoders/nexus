@@ -11,7 +11,7 @@ const roleMap: Record<string, Role> = {
 };
 
 // Cache for organization validation to avoid repeated DB calls
-const orgCache = new Map<string, boolean>();
+const orgCache = new Map<string, CacheEntry>();
 const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
 interface CacheEntry {
