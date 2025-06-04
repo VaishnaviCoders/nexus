@@ -72,24 +72,31 @@ export default async function AdminFeeDashboard() {
   //   console.log('Updated incorrect fee statuses:', result.updated);
   // });
   return (
-    <div className="flex flex-col space-y-8 ">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-xl font-bold tracking-tight">Fee Management</h1>
-          <p className="text-muted-foreground">
+    <div className="flex flex-col space-y-8">
+      {/* Responsive Header */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="space-y-1">
+          <h1 className="text-xl font-bold tracking-tight sm:text-2xl">
+            Fee Management
+          </h1>
+          <p className="text-sm text-muted-foreground sm:text-base">
             Manage and track fee collection across all students
           </p>
         </div>
-        <div className="flex items-center gap-2">
-          <Button>
+
+        {/* Responsive Button Container */}
+        <div className="flex sm:flex-row sm:items-center space-x-2">
+          <Button variant="outline" className="w-full sm:w-auto">
             <DownloadIcon className="mr-2 h-4 w-4" />
-            Export Data
+            <span className="sm:inline">Export Data</span>
           </Button>
-          <Link href={'/dashboard/fees/admin/assign'}>
-            <Button type="button">
-              {' '}
+          <Link
+            href="/dashboard/fees/admin/assign"
+            className="w-full sm:w-auto"
+          >
+            <Button className="w-full sm:w-auto">
               <PlusIcon className="mr-2 h-4 w-4" />
-              Assign Fees
+              <span className="sm:inline">Assign Fees</span>
             </Button>
           </Link>
         </div>

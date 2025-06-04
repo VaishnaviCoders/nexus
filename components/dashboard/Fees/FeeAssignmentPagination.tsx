@@ -2,12 +2,7 @@
 
 import { useQueryState } from 'nuqs';
 import { Button } from '@/components/ui/button';
-import {
-  ChevronLeft,
-  ChevronRight,
-  ChevronsLeft,
-  ChevronsRight,
-} from 'lucide-react';
+import { ChevronsLeft, ChevronsRight } from 'lucide-react';
 import {
   Pagination,
   PaginationContent,

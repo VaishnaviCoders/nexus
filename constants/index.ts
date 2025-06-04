@@ -1,10 +1,70 @@
 import {
   ChartColumnBigIcon,
+  CheckCircle2,
+  Clock,
   DatabaseIcon,
+  FileText,
+  Lock,
+  Search,
   TrendingUpIcon,
   WandSparklesIcon,
+  XCircle,
   ZapIcon,
 } from 'lucide-react';
+
+// Anonymous Complaints
+
+export const statusConfig = {
+  PENDING: {
+    color: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+    icon: Clock,
+    description: 'Your complaint has been received and is awaiting review',
+  },
+  UNDER_REVIEW: {
+    color: 'bg-blue-100 text-blue-800 border-blue-200',
+    icon: FileText,
+    description: 'Your complaint is being reviewed by our team',
+  },
+  INVESTIGATING: {
+    color: 'bg-purple-100 text-purple-800 border-purple-200',
+    icon: Search,
+    description: 'An investigation is currently in progress',
+  },
+  RESOLVED: {
+    color: 'bg-green-100 text-green-800 border-green-200',
+    icon: CheckCircle2,
+    description: 'Your complaint has been resolved',
+  },
+  REJECTED: {
+    color: 'bg-red-100 text-red-800 border-red-200',
+    icon: XCircle,
+    description: 'Your complaint could not be processed',
+  },
+  CLOSED: {
+    color: 'bg-gray-100 text-gray-800 border-gray-200',
+    icon: Lock,
+    description: 'This complaint has been closed',
+  },
+};
+
+export const severityConfig = {
+  LOW: {
+    color: 'bg-green-100 text-green-800 border-green-200',
+    label: 'Low Priority',
+  },
+  MEDIUM: {
+    color: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+    label: 'Medium Priority',
+  },
+  HIGH: {
+    color: 'bg-orange-100 text-orange-800 border-orange-200',
+    label: 'High Priority',
+  },
+  CRITICAL: {
+    color: 'bg-red-100 text-red-800 border-red-200',
+    label: 'Critical Priority',
+  },
+};
 
 export const FEATURES = [
   {

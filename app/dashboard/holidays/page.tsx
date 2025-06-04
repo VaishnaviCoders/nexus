@@ -1,31 +1,40 @@
-import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Calendar, Users, TrendingUp, AlertCircle } from 'lucide-react';
 import HolidayManagement from '@/components/dashboard/holiday/holiday-management';
 import ComingSoon from '@/components/Coming-soon';
 import { getOrganizationId } from '@/lib/organization';
 import prisma from '@/lib/db';
 import { getAcademicYearSummary } from '@/lib/data/holiday/get-academic-year-summary';
+import { Card, CardContent } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Suspense } from 'react';
 // import DashboardStats from "./components/dashboard-stats"
 // import SchoolManagement from "./components/school-management"
 // import AttendanceTracker from "./components/attendance-tracker"
 // import HolidayManagement from "./components/holiday-management"
 
-const mockStats = {
-  totalSchools: 3,
-  totalStudents: 1550,
-  averageAttendance: 92.5,
-  workingDaysThisMonth: 22,
-  holidaysThisMonth: 3,
-};
-
 export default async function AttendanceSystem() {
+  // Example school year: July 1, 2025 to June 30, 2026
+  const startDate = new Date('2024-07-01');
+  const endDate = new Date('2025-06-30');
+
+  const summary = await getAcademicYearSummary({
+    startDate,
+    endDate,
+  });
+
   const organizationId = await getOrganizationId();
 
   const holidays = await prisma.academicCalendar.findMany({
     where: {
       organizationId: organizationId,
+      startDate: {
+        gte: new Date(startDate),
+      },
+      endDate: {
+        lte: new Date(endDate),
+      },
     },
+
     select: {
       id: true,
       organizationId: true,
@@ -37,14 +46,10 @@ export default async function AttendanceSystem() {
       isRecurring: true,
       createdBy: true,
     },
+    orderBy: {
+      startDate: 'desc',
+    },
   });
-
-  const summary = await getAcademicYearSummary({
-    startDate: new Date('2024-04-01'),
-    endDate: new Date('2026-03-31'),
-  });
-
-  console.log(summary);
 
   return (
     <div className="min-h-screen bg-gray-50 p-4">
@@ -70,7 +75,7 @@ export default async function AttendanceSystem() {
         </div> */}
 
         {/* Quick Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <Card>
             <CardContent className="p-4">
               <div className="flex items-center space-x-2">
@@ -124,43 +129,74 @@ export default async function AttendanceSystem() {
               </div>
             </CardContent>
           </Card>
-        </div>
+        </div> */}
+
+        <Suspense fallback={<LoadingSkeleton />}>
+          <HolidayManagement holidays={holidays} holidaysSummary={summary} />
+        </Suspense>
 
         {/* Main Content */}
-        <Tabs defaultValue="holidays" className="space-y-4">
+        {/* <Tabs defaultValue="holidays" className="space-y-4">
           <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
             <TabsTrigger value="attendance">Attendance Tracker</TabsTrigger>
             <TabsTrigger value="holidays">Holiday Management</TabsTrigger>
-            {/* <TabsTrigger value="schools">School Management</TabsTrigger> */}
+            <TabsTrigger value="schools">School Management</TabsTrigger>
           </TabsList>
 
           <TabsContent value="dashboard">
             <ComingSoon />
-            {/* <DashboardStats schools={mockSchools} selectedSchool={selectedSchool} onSchoolChange={setSelectedSchool} /> */}
+            <DashboardStats schools={mockSchools} selectedSchool={selectedSchool} onSchoolChange={setSelectedSchool} />
           </TabsContent>
 
           <TabsContent value="attendance">
-            {/* <AttendanceTracker
+            <AttendanceTracker
               schools={mockSchools}
               selectedSchool={selectedSchool}
               onSchoolChange={setSelectedSchool}
               currentDate={currentDate}
               onDateChange={setCurrentDate}
-            /> */}
+            />
             <ComingSoon />
           </TabsContent>
 
           <TabsContent value="holidays">
-            <HolidayManagement holidays={holidays} />
+            <HolidayManagement holidays={holidays} holidaysSummary={summary} />
           </TabsContent>
 
           <TabsContent value="schools">
-            {/* <SchoolManagement schools={mockSchools} /> */}
+            <SchoolManagement schools={mockSchools} />
             <ComingSoon />
           </TabsContent>
-        </Tabs>
+        </Tabs> */}
       </div>
+    </div>
+  );
+}
+
+function LoadingSkeleton() {
+  return (
+    <div className="space-y-6">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <Card key={i}>
+            <CardContent className="p-6">
+              <Skeleton className="h-4 w-20 mb-2" />
+              <Skeleton className="h-8 w-16" />
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+      <Card>
+        <CardContent className="p-6">
+          <div className="space-y-4">
+            <Skeleton className="h-10 w-full" />
+            {Array.from({ length: 5 }).map((_, i) => (
+              <Skeleton key={i} className="h-16 w-full" />
+            ))}
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

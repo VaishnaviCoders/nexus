@@ -76,7 +76,7 @@ export default async function IndexPage() {
             <DialogTrigger asChild>
               <Button>Get Early Access</Button>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className="max-w-md p-0 [&>button]:hidden top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 fixed">
               <DialogHeader>
                 <DialogTitle></DialogTitle>
                 <DialogDescription></DialogDescription>

@@ -6,10 +6,10 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { format, parseISO, isSameDay } from 'date-fns';
 
 interface AttendanceRecord {
-  id: number;
-  date: string;
-  status: 'present' | 'absent' | 'late';
-  note: string;
+  id: string;
+  date: Date;
+  status: 'PRESENT' | 'ABSENT' | 'LATE';
+  note: string | null;
 }
 
 interface ChildAttendanceCalendarProps {
@@ -24,7 +24,9 @@ export function ChildAttendanceCalendar({
 
   // Function to get status for a specific date
   const getDateStatus = (day: Date) => {
-    const record = records.find((r) => isSameDay(parseISO(r.date), day));
+    const record = records.find((r) =>
+      isSameDay(parseISO(r.date.toISOString()), day)
+    );
     return record ? record.status : null;
   };
 
@@ -33,13 +35,13 @@ export function ChildAttendanceCalendar({
     const status = getDateStatus(day);
 
     let statusClass = '';
-    if (status === 'present')
+    if (status === 'PRESENT')
       statusClass =
         'bg-green-100 dark:bg-green-900/20 text-green-700 dark:text-green-400';
-    else if (status === 'absent')
+    else if (status === 'ABSENT')
       statusClass =
         'bg-red-100 dark:bg-red-900/20 text-red-700 dark:text-red-400';
-    else if (status === 'late')
+    else if (status === 'LATE')
       statusClass =
         'bg-amber-100 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400';
 

@@ -1,6 +1,5 @@
 import prisma from '@/lib/db';
 import { ParentData } from '@/types';
-import { Parent } from '@prisma/client';
 import { performance } from 'perf_hooks';
 
 export async function getParentWithChildrenData() {

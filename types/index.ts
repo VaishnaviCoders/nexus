@@ -1,3 +1,4 @@
+import { ComplaintStatus, Severity } from '@prisma/client';
 import { type ClientUploadedFileData } from 'uploadthing/types';
 
 export interface UploadedFile<T = unknown> extends ClientUploadedFileData<T> {}
@@ -109,4 +110,30 @@ export interface AttendanceRecord {
   status: 'PRESENT' | 'ABSENT' | 'LATE';
   note: string | null;
   recordedBy: string;
+}
+
+// Aynonymous Complaints
+
+export interface ComplaintTimelineEntry {
+  id: string;
+  status: ComplaintStatus;
+  changedBy: string | null;
+  createdAt: Date;
+  note?: string | null;
+  complaintId: string;
+}
+
+export interface Complaint {
+  id: string;
+  trackingId: string;
+  category: string;
+  severity: Severity;
+  subject: string;
+  description: string;
+  evidenceUrls: string[];
+  submittedAt: Date;
+  currentStatus: ComplaintStatus;
+  updatedAt: Date;
+  createdAt: Date;
+  ComplaintStatusTimeline: ComplaintTimelineEntry[];
 }

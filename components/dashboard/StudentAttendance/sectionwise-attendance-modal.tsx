@@ -82,8 +82,8 @@ export function SectionWiseAttendanceViewModal({
     students = [], // Default to empty array to prevent undefined
   } = sectionData;
 
-  console.log('Section data (modal):', sectionData);
-  console.log('Student data (modal):', students);
+  // console.log('Section data (modal):', sectionData);
+  // console.log('Student data (modal):', students);
 
   const router = useRouter();
 
@@ -101,9 +101,9 @@ export function SectionWiseAttendanceViewModal({
   const studentsAbsent = (students ?? []).filter(
     (student) => student.attendanceStatus === 'absent'
   ).length;
-  const studentsLate = (students ?? []).filter(
-    (student) => student.attendanceStatus === 'late'
-  ).length;
+  // const studentsLate = (students ?? []).filter(
+  //   (student) => student.attendanceStatus === 'late'
+  // ).length;
   const studentsNotRecorded = (students ?? []).filter(
     (student) => student.attendanceStatus === 'not-recorded'
   ).length;

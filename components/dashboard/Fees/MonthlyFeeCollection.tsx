@@ -24,7 +24,6 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from '@/components/ui/hover-card';
-import { Progress } from '@/components/ui/progress';
 
 // Type definitions based on your Prisma schema
 type MonthlyFeeData = {

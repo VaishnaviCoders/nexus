@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-
 import { z } from 'zod';
 import { singleHolidayFormSchema } from '@/lib/schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -33,7 +32,7 @@ import {
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { Button } from '@/components/ui/button';
-import { CalendarIcon } from 'lucide-react';
+import { CalendarIcon, Loader2 } from 'lucide-react';
 import { DateRange } from 'react-day-picker';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -62,6 +61,7 @@ const CreateSingleHolidayForm = () => {
     try {
       await createSingleHolidayAction(data);
       toast.success('Holiday created!');
+      form.reset();
     } catch (err) {
       toast.error('Error creating holiday');
     }
@@ -89,7 +89,7 @@ const CreateSingleHolidayForm = () => {
           )}
         />
 
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormField
             control={form.control}
             name="startDate"
@@ -177,8 +177,8 @@ const CreateSingleHolidayForm = () => {
           name="isRecurring"
           render={({ field }) => (
             <FormItem>
-              <div className="flex items-center space-x-2 ">
-                <FormLabel>Is-Recurring</FormLabel>
+              <div className="flex items-center space-x-2">
+                <FormLabel>Is Recurring</FormLabel>
                 <FormControl className="flex items-center justify-center">
                   <Checkbox
                     checked={field.value}
@@ -208,7 +208,20 @@ const CreateSingleHolidayForm = () => {
           )}
         />
 
-        <Button type="submit">Add Holiday</Button>
+        <Button
+          type="submit"
+          className="w-full"
+          disabled={!form.formState.isSubmitting}
+        >
+          {form.formState.isSubmitting ? (
+            <>
+              <Loader2 className="animate-spin mr-2 h-4 w-4" />
+              Adding...
+            </>
+          ) : (
+            'Add Holiday'
+          )}
+        </Button>
       </form>
     </Form>
   );

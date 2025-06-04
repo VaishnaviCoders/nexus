@@ -31,13 +31,12 @@ import {
   Users,
   FileSpreadsheet,
   PlusCircle,
-  MoreHorizontal,
+  Loader2,
 } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -50,23 +49,38 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { toast } from 'sonner';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 
 import CreateSingleHolidayForm from './create-single-holiday-form';
-import BulkImportForm from './bulk-import-form';
 import HolidayGoogleSheetImporter from './holiday-google-sheet-importer';
+import { createSingleHolidayAction } from '@/lib/data/holiday/create-single-holiday';
+import { deleteSingleHolidayAction } from '@/lib/data/holiday/delete-single-holiday';
+import { createCsvHolidayAction } from '@/lib/data/holiday/create-csv-holiday';
+import { deleteAllHolidaysAction } from '@/lib/data/holiday/delete-all-holidays';
 
 interface HolidayManagementProps {
   holidays: Holiday[];
+  holidaysSummary: {
+    totalDays: number | 0;
+    totalWorkingDays: number | 0;
+    totalHolidays: number | 0;
+    totalWeekendDays: number | 0;
+  };
 }
 
 interface Holiday {
@@ -87,6 +101,7 @@ type DateRange = {
 
 export default function HolidayManagement({
   holidays,
+  holidaysSummary,
 }: HolidayManagementProps) {
   const [dateRange, setDateRange] = React.useState<DateRange | undefined>({
     from: new Date(),
@@ -95,25 +110,34 @@ export default function HolidayManagement({
 
   const [isBulkDialogOpen, setIsBulkDialogOpen] = useState(false);
   const [emergencyHolidayName, setEmergencyHolidayName] = useState('');
-  const [bulkHolidays, setBulkHolidays] = useState('');
-  const [sheetUrl, setSheetUrl] = useState('');
+  const [csvBulkHolidays, setCsvBulkHolidays] = useState('');
+  const [isCsvBulkUploading, setIsCsvBulkUploading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const [copied, setCopied] = useState(false);
 
   // Sample CSV template
   const csvTemplate = `Holiday Name,Start Date,End Date,Type,Reason,Is Recurring
-Diwali,2024-11-12,2024-11-12,PLANNED,Festival celebration,true
-Winter Break,2024-12-24,2024-12-31,PLANNED,Winter vacation,false
-Emergency Closure,2024-03-15,2024-03-15,SUDDEN,Weather emergency,false
-Republic Day,2024-01-26,2024-01-26,PLANNED,National holiday,true
-Holi,2024-03-14,2024-03-14,PLANNED,Festival of colors,true`;
+   Diwali,2024-11-12,2024-11-12,PLANNED,Festival celebration,true
+   Winter Break,2024-12-24,2024-12-31,PLANNED,Winter vacation,false
+   Emergency Closure,2024-03-15,2024-03-15,SUDDEN,Weather emergency,false
+   Republic Day,2024-01-26,2024-01-26,PLANNED,National holiday,true
+   Holi,2024-03-14,2024-03-14,PLANNED,Festival of colors,true`;
 
   const addEmergencyHoliday = async () => {
     try {
-      toast.success('Emergency holiday declared!');
-      console.log('Emergency holiday:', {
+      setIsSubmitting(true);
+      await createSingleHolidayAction({
         name: emergencyHolidayName,
-        dateRange,
+        startDate: dateRange?.from ?? new Date(),
+        endDate: dateRange?.to ?? new Date(),
+        type: CalendarEventType.SUDDEN,
+        reason: 'Its an emergency Holiday',
+        isRecurring: false,
       });
+      setIsSubmitting(false);
+      toast.success('Emergency holiday declared!');
+
       setEmergencyHolidayName('');
       setDateRange({ from: new Date(), to: new Date() });
     } catch (err) {
@@ -122,16 +146,68 @@ Holi,2024-03-14,2024-03-14,PLANNED,Festival of colors,true`;
     }
   };
 
-  const deleteHoliday = (id: string) => {
-    console.log('Delete holiday:', id);
+  const deleteHoliday = async (id: string) => {
+    await deleteSingleHolidayAction(id);
     toast.success('Holiday deleted successfully');
   };
 
-  const handleBulkImport = () => {
-    console.log('Bulk import:', bulkHolidays);
-    setBulkHolidays('');
-    setIsBulkDialogOpen(false);
-    toast.success('Holidays imported successfully');
+  const csvHandleBulkImport = async () => {
+    const lines = csvBulkHolidays
+      .split('\n')
+      .map((line) => line.trim())
+      .filter((line) => line); // Split by new lines and trim
+    const holidaysToCreate = [];
+    for (const line of lines) {
+      const [name, startDate, endDate, type, reason, isRecurring] = line
+        .split(',')
+        .map((item) => item.trim());
+      // Validate the data
+      if (!name || !startDate || !endDate || !type) {
+        toast.error('Please ensure all fields are filled out correctly.');
+        return;
+      }
+
+      // Validate date format (YYYY-MM-DD)
+      if (
+        !/^\d{4}-\d{2}-\d{2}$/.test(startDate) ||
+        !/^\d{4}-\d{2}-\d{2}$/.test(endDate)
+      ) {
+        toast.error('Date format must be YYYY-MM-DD.');
+        return;
+      }
+      // Validate type
+      const validTypes = ['PLANNED', 'SUDDEN', 'INSTITUTION_SPECIFIC'];
+      if (!validTypes.includes(type)) {
+        toast.error(`Type must be one of: ${validTypes.join(', ')}`);
+        return;
+      }
+
+      // / Validate isRecurring
+      const isRecurringBool = isRecurring === 'true';
+      // Push the validated holiday object to the array
+      holidaysToCreate.push({
+        name,
+        startDate: new Date(startDate),
+        endDate: new Date(endDate),
+        type,
+        reason: reason || null, // Allow reason to be optional
+        isRecurring: isRecurringBool,
+      });
+    }
+
+    // Insert into the database
+    try {
+      setIsCsvBulkUploading(true);
+      await Promise.all(
+        holidaysToCreate.map((holiday) => createCsvHolidayAction(holiday))
+      );
+      setCsvBulkHolidays(''); // Clear the textarea after successful import
+      setIsCsvBulkUploading(false);
+      toast.success('Holidays imported successfully!');
+    } catch (error) {
+      console.error('Error importing holidays:', error);
+      toast.error('Failed to import holidays.');
+    }
   };
 
   const downloadTemplate = () => {
@@ -183,8 +259,14 @@ Holi,2024-03-14,2024-03-14,PLANNED,Festival of colors,true`;
 
   const isHolidayActive = (holiday: Holiday) => {
     const today = new Date();
+    today.setHours(0, 0, 0, 0); // Set time to the start of the day
+
     const startDate = new Date(holiday.startDate);
+    startDate.setHours(0, 0, 0, 0); // Set time to the start of the day
+
     const endDate = new Date(holiday.endDate);
+    endDate.setHours(23, 59, 59, 999); // Set time to the end of the day
+
     return startDate <= today && endDate >= today;
   };
 
@@ -196,12 +278,15 @@ Holi,2024-03-14,2024-03-14,PLANNED,Festival of colors,true`;
     return diffDays;
   };
 
-  const todayString = new Date().toISOString().split('T')[0];
+  const deleteAllHolidays = async () => {
+    await deleteAllHolidaysAction();
+    toast.success('All holidays deleted successfully');
+  };
 
   return (
     <div className="space-y-8">
       {/* Academic Year Summary */}
-      <Card className="border-0 shadow-lg bg-gradient-to-br from-blue-50 to-indigo-50">
+      <Card className="border-0 shadow-lg bg-gradient-to-br from-blue-50 to-indigo-50 ">
         <CardHeader className="pb-4">
           <CardTitle className="flex items-center gap-3 text-xl">
             <div className="p-2 bg-blue-100 rounded-lg">
@@ -224,7 +309,9 @@ Holi,2024-03-14,2024-03-14,PLANNED,Festival of colors,true`;
                   TOTAL
                 </span>
               </div>
-              <p className="text-xl font-bold text-gray-900">365</p>
+              <p className="text-xl font-bold text-gray-900">
+                {holidaysSummary.totalDays}
+              </p>
               <p className="text-sm text-gray-600 font-medium">Total Days</p>
             </div>
 
@@ -237,7 +324,9 @@ Holi,2024-03-14,2024-03-14,PLANNED,Festival of colors,true`;
                   WORKING
                 </span>
               </div>
-              <p className="text-xl font-bold text-gray-900">261</p>
+              <p className="text-xl font-bold text-gray-900">
+                {holidaysSummary.totalWorkingDays}
+              </p>
               <p className="text-sm text-gray-600 font-medium">Working Days</p>
             </div>
 
@@ -251,7 +340,7 @@ Holi,2024-03-14,2024-03-14,PLANNED,Festival of colors,true`;
                 </span>
               </div>
               <p className="text-xl font-bold text-gray-900">
-                {holidays.length}
+                {holidaysSummary.totalHolidays}
               </p>
               <p className="text-sm text-gray-600 font-medium">Holiday Days</p>
             </div>
@@ -265,7 +354,10 @@ Holi,2024-03-14,2024-03-14,PLANNED,Festival of colors,true`;
                   WEEKENDS
                 </span>
               </div>
-              <p className="text-xl font-bold text-gray-900">104</p>
+              <p className="text-xl font-bold text-gray-900">
+                {' '}
+                {holidaysSummary.totalWeekendDays}
+              </p>
               <p className="text-sm text-gray-600 font-medium">Weekend Days</p>
             </div>
           </div>
@@ -340,12 +432,23 @@ Holi,2024-03-14,2024-03-14,PLANNED,Festival of colors,true`;
 
             <Button
               onClick={addEmergencyHoliday}
-              disabled={!emergencyHolidayName || !dateRange?.from}
+              disabled={
+                !emergencyHolidayName || !dateRange?.from || isSubmitting
+              }
               className="w-full bg-orange-600 hover:bg-orange-700 text-white font-medium py-3"
               size="lg"
             >
-              <AlertCircle className="w-5 h-5 mr-2" />
-              Declare Emergency Holiday
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="animate-spin mr-2 h-4 w-4" />
+                  Adding...
+                </>
+              ) : (
+                <>
+                  <AlertCircle className="w-5 h-5 mr-2" />
+                  Declare Emergency Holiday
+                </>
+              )}
             </Button>
 
             <Alert className="border-orange-200 bg-orange-50">
@@ -460,8 +563,8 @@ Holi,2024-03-14,2024-03-14,PLANNED,Festival of colors,true`;
                             Recurring
                           </p>
                           <Textarea
-                            value={bulkHolidays}
-                            onChange={(e) => setBulkHolidays(e.target.value)}
+                            value={csvBulkHolidays}
+                            onChange={(e) => setCsvBulkHolidays(e.target.value)}
                             placeholder="Paste your holiday data here..."
                             rows={10}
                             className="font-mono text-sm"
@@ -477,12 +580,21 @@ Holi,2024-03-14,2024-03-14,PLANNED,Festival of colors,true`;
                           </AlertDescription>
                         </Alert>
                         <Button
-                          onClick={handleBulkImport}
-                          disabled={!bulkHolidays.trim()}
+                          onClick={csvHandleBulkImport}
+                          disabled={!csvBulkHolidays.trim()}
                           className="w-full"
                         >
-                          <Upload className="w-4 h-4 mr-2" />
-                          Import Holidays
+                          {isCsvBulkUploading ? (
+                            <>
+                              <Loader2 className="animate-spin mr-2 h-4 w-4" />
+                              uploading
+                            </>
+                          ) : (
+                            <>
+                              <Upload className="w-4 h-4 mr-2" />
+                              Import Holidays
+                            </>
+                          )}
                         </Button>
                       </div>
                     </TabsContent>
@@ -562,11 +674,11 @@ Holi,2024-03-14,2024-03-14,PLANNED,Festival of colors,true`;
       </div>
 
       {/* Holidays Showcase - Completely Redesigned */}
-      <Card className="border-0 shadow-lg">
+      <Card className="border-0 shadow-lg p-0">
         <CardHeader className="pb-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <CardTitle className="text-2xl font-bold">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0 sm:space-x-4">
+            <div className="flex-1">
+              <CardTitle className="text-xl font-bold">
                 Holidays & Events
               </CardTitle>
               <CardDescription className="text-base mt-1">
@@ -574,13 +686,52 @@ Holi,2024-03-14,2024-03-14,PLANNED,Festival of colors,true`;
                 calculations
               </CardDescription>
             </div>
-            <Button
-              className="bg-blue-600 hover:bg-blue-700"
-              onClick={() => setIsBulkDialogOpen(true)}
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              Add Holiday
-            </Button>
+
+            <div className="flex items-center space-x-2">
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button
+                    variant={'outline'}
+                    className="hover:text-red-500 transition-colors duration-200"
+                  >
+                    <Trash2 className="w-4 h-4 mr-2" />
+                    Delete All
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>
+                      Are you absolutely sure?
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This action cannot be undone. All holidays will be
+                      permanently deleted.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction asChild>
+                      <Button
+                        variant="outline"
+                        onClick={deleteAllHolidays}
+                        className="hover:text-red-500 transition-colors duration-200 "
+                      >
+                        <Trash2 className="w-4 h-4 mr-2" />
+                        Delete All
+                      </Button>
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+
+              <Button
+                className="bg-blue-600 hover:bg-blue-700"
+                onClick={() => setIsBulkDialogOpen(true)}
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                Add Holiday
+              </Button>
+            </div>
           </div>
         </CardHeader>
         <CardContent>
@@ -596,7 +747,10 @@ Holi,2024-03-14,2024-03-14,PLANNED,Festival of colors,true`;
                 Start by adding holidays to ensure accurate attendance
                 calculations and better planning.
               </p>
-              <Button className="bg-blue-600 hover:bg-blue-700">
+              <Button
+                className="bg-blue-600 hover:bg-blue-700"
+                onClick={() => setIsBulkDialogOpen(true)}
+              >
                 <Plus className="w-4 h-4 mr-2" />
                 Add Your First Holiday
               </Button>
@@ -648,30 +802,22 @@ Holi,2024-03-14,2024-03-14,PLANNED,Festival of colors,true`;
                             </div>
                           </div>
                         </div>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="h-8 w-8 p-0"
-                            >
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem>
-                              <Edit className="w-4 h-4 mr-2" />
-                              Edit
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={() => deleteHoliday(holiday.id)}
-                              className="text-red-600"
-                            >
-                              <Trash2 className="w-4 h-4 mr-2" />
-                              Delete
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
+                        <div className="flex items-center space-x-2">
+                          {/* <Button
+                            onClick={() => updateHoliday(holiday.id)}
+                            variant={'outline'}
+                            size={'xs'}
+                          >
+                            <Edit2 className="w-2 h-2 " />
+                          </Button> */}
+                          <Button
+                            onClick={() => deleteHoliday(holiday.id)}
+                            variant={'destructive'}
+                            size={'sm'}
+                          >
+                            <Trash2 className="w-2 h-2 " />
+                          </Button>
+                        </div>
                       </div>
                     </CardHeader>
                     <CardContent className="pt-0">
@@ -714,7 +860,7 @@ Holi,2024-03-14,2024-03-14,PLANNED,Festival of colors,true`;
                           </div>
                           {holiday.reason && (
                             <div
-                              className="text-sm text-muted-foreground truncate max-w-[120px]"
+                              className="text-sm text-muted-foreground truncate max-w-[220px]"
                               title={holiday.reason}
                             >
                               {holiday.reason}

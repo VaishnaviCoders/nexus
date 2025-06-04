@@ -5,14 +5,13 @@ import {
   LucideIcon,
   Calendar,
   Bell,
-  UserPlus,
   MessageSquare,
   Backpack,
-  GraduationCap,
   ScrollText,
   FileCheck,
   IndianRupee,
   School,
+  ShieldAlert,
 } from 'lucide-react';
 
 type Submenu = {
@@ -49,21 +48,21 @@ export const roleMenus: Record<string, Group[]> = {
     {
       groupLabel: 'Management',
       menus: [
-        {
-          href: '/dashboard/leads',
-          label: 'Lead Management',
-          icon: UserPlus,
-        },
+        // {
+        //   href: '/dashboard/leads',
+        //   label: 'Lead Management',
+        //   icon: UserPlus,
+        // },
         {
           href: '/dashboard/grades',
           label: 'Class Management',
           icon: School,
         },
-        {
-          href: '/dashboard/teachers',
-          label: 'Teacher Management',
-          icon: GraduationCap,
-        },
+        // {
+        //   href: '/dashboard/teachers',
+        //   label: 'Teacher Management',
+        //   icon: GraduationCap,
+        // },
         {
           href: '/dashboard/students',
           label: 'Student Management',
@@ -96,6 +95,11 @@ export const roleMenus: Record<string, Group[]> = {
           //     label: 'Teacher Attendance',
           //   },
           // ],
+        },
+        {
+          href: '/dashboard/anonymous-complaints/manage',
+          label: 'Complaints Management',
+          icon: ShieldAlert,
         },
         {
           href: '/dashboard/notices',
@@ -140,11 +144,11 @@ export const roleMenus: Record<string, Group[]> = {
           label: 'Fees Management',
           icon: IndianRupee,
         },
-        {
-          href: '/dashboard/leads',
-          label: 'Lead Management',
-          icon: UserPlus,
-        },
+        // {
+        //   href: '/dashboard/leads',
+        //   label: 'Lead Management',
+        //   icon: UserPlus,
+        // },
         {
           href: '/dashboard/students',
           label: 'Students Management',
@@ -154,6 +158,11 @@ export const roleMenus: Record<string, Group[]> = {
           href: '/dashboard/holidays',
           label: 'Holidays Management',
           icon: Users,
+        },
+        {
+          href: '/dashboard/anonymous-complaints/manage',
+          label: 'Complaints Management',
+          icon: ShieldAlert,
         },
       ],
     },
@@ -216,7 +225,7 @@ export const roleMenus: Record<string, Group[]> = {
       groupLabel: 'Communication',
       menus: [
         {
-          href: '/dashboard/complaints',
+          href: '/dashboard/feedback',
           label: 'Teacher Feedback',
           icon: MessageSquare,
         },
@@ -226,7 +235,7 @@ export const roleMenus: Record<string, Group[]> = {
           icon: Bell,
         },
         {
-          href: '/dashboard/complaints',
+          href: '/dashboard/anonymous-complaints',
           label: 'Anonymous complaints',
           icon: Bell,
         },

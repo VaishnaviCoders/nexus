@@ -16,14 +16,7 @@ import {
   TrendingUp,
   TrendingDown,
 } from 'lucide-react';
-import {
-  format,
-  startOfMonth,
-  endOfMonth,
-  eachMonthOfInterval,
-  subMonths,
-  addMonths,
-} from 'date-fns';
+
 import { Progress } from '@/components/ui/progress';
 
 interface MonthlyStats {
@@ -153,7 +146,7 @@ export function ChildMonthlyAttendance({
             <CardHeader className="pb-2">
               <CardTitle className="text-lg">{monthData.month}</CardTitle>
               <CardDescription>
-                {monthData.totalDays} school days
+                {/* {monthData.totalDays} school days */}
               </CardDescription>
             </CardHeader>
             <CardContent>

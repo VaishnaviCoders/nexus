@@ -1,65 +1,77 @@
-import { eachDayOfInterval, isWeekend, isSameDay } from 'date-fns';
 import prisma from '@/lib/db';
 import { getOrganizationId } from '@/lib/organization';
 
-export const getAcademicYearSummary = async ({
-  startDate,
-  endDate,
-}: {
+type Props = {
   startDate: Date;
   endDate: Date;
-}) => {
-  // Get all holidays for the organization in range
+};
+export const getAcademicYearSummary = async ({ startDate, endDate }: Props) => {
+  const organizationId = await getOrganizationId(); // Assuming this function retrieves the current organization ID
 
-  const organizationId = await getOrganizationId();
+  // Fetch holidays for the organization within the specified date range
   const holidays = await prisma.academicCalendar.findMany({
     where: {
       organizationId,
       startDate: {
-        lte: endDate,
+        gte: new Date(startDate),
       },
       endDate: {
-        gte: startDate,
+        lte: new Date(endDate),
       },
     },
   });
 
-  // Flatten holiday ranges into individual dates
-  const holidayDates = new Set<string>();
-  for (const holiday of holidays) {
-    const range = eachDayOfInterval({
-      start: holiday.startDate,
-      end: holiday.endDate,
+  // Calculate total days
+
+  const totalDays =
+    Math.ceil(
+      (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
+    ) + 1;
+
+  // Calculate total holiday days (sum of durations for each holiday)
+  const holidayDays = new Set<string>();
+  holidays.forEach((holiday) => {
+    const start = new Date(holiday.startDate);
+    const end = new Date(holiday.endDate);
+    for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+      holidayDays.add(d.toISOString().split('T')[0]); // Add unique holiday dates
+    }
+  });
+  const totalHolidays = holidayDays.size;
+
+  // Initialize counters
+  let totalWorkingDays = 0;
+  let totalWeekendDays = 0;
+
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+
+  for (let d = start; d <= end; d.setDate(d.getDate() + 1)) {
+    const dayOfWeek = d.getDay();
+    // Check if the day is a weekend (Saturday or Sunday)
+    const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+    // Check if the day is a holiday
+    const isHoliday = holidays.some((holiday) => {
+      const holidayStart = new Date(holiday.startDate);
+      const holidayEnd = new Date(holiday.endDate);
+      return d >= holidayStart && d <= holidayEnd;
     });
-    range.forEach((date) => holidayDates.add(date.toDateString()));
-  }
 
-  // Iterate through each day in the range
-  const daysInRange = eachDayOfInterval({ start: startDate, end: endDate });
+    // Count weekend days
+    if (isWeekend) {
+      totalWeekendDays++;
+    }
 
-  let totalDays = 0;
-  let weekendCount = 0;
-  let holidayCount = 0;
-  let workingDaysCount = 0;
-
-  for (const day of daysInRange) {
-    totalDays++;
-
-    const isWeekendDay = isWeekend(day);
-    const isHoliday = holidayDates.has(day.toDateString());
-
-    if (isWeekendDay) weekendCount++;
-    if (isHoliday) holidayCount++;
-
-    if (!isWeekendDay && !isHoliday) {
-      workingDaysCount++;
+    // If it's not a weekend and not a holiday, count it as a working day
+    if (!isWeekend && !isHoliday) {
+      totalWorkingDays++;
     }
   }
 
   return {
     totalDays,
-    weekendCount,
-    holidayCount,
-    workingDaysCount,
+    totalWorkingDays,
+    totalHolidays,
+    totalWeekendDays, // Include weekend days in the return object
   };
 };

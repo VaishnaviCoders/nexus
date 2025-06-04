@@ -160,7 +160,7 @@ export function CreateFeeAssignmentButton({
   return (
     <>
       {pending ? (
-        <Button disabled>
+        <Button disabled={disabled}>
           <Loader2 className="mr-2 w-4 h-4 animate-spin" />
           Please wait
         </Button>

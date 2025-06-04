@@ -1,17 +1,11 @@
 import { auth } from '@clerk/nextjs/server';
-import { performance } from 'perf_hooks';
 
 export async function getOrganizationId() {
-  const start = performance.now();
   const { orgId } = await auth();
 
   if (!orgId) {
     throw new Error('No organization ID found');
   }
-
-  const end = performance.now();
-
-  console.log(`Organization ID fetched in ${end - start} ms`);
 
   return orgId;
 }

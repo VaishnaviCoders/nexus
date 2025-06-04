@@ -15,20 +15,11 @@ import {
   Copy,
   Download,
   Facebook,
-  Instagram,
-  Link,
   Mail,
   Share2,
   Twitter,
 } from 'lucide-react';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
+
 import { ImageIcon } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
@@ -45,12 +36,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-// import {
-//   RiCodeFill,
-//   RiFacebookFill,
-//   RiMailLine,
-//   RiTwitterXFill,
-// } from '@remixicon/react';
+
 import { useId, useRef } from 'react';
 
 interface ReceiptData {

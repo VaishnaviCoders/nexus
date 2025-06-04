@@ -250,24 +250,72 @@ enum CalendarEventType {
   INSTITUTION_SPECIFIC // Custom events (e.g., college fests, coaching workshops)
 }
 
+model AnonymousComplaint {
+  id            String          @id @default(cuid())
+  trackingId    String          @unique
+  category      String
+  severity      Severity        @default(MEDIUM)
+  subject       String
+  description   String
+  evidenceUrls  String[]
+  submittedAt   DateTime        @default(now())
+  currentStatus ComplaintStatus @default(PENDING)
+
+  organizationId          String
+  organization            Organization              @relation(fields: [organizationId], references: [id])
+  createdAt               DateTime                  @default(now())
+  updatedAt               DateTime                  @updatedAt
+  ComplaintStatusTimeline ComplaintStatusTimeline[]
+}
+
+model ComplaintStatusTimeline {
+  id          String             @id @default(cuid())
+  complaintId String
+  note        String?
+  status      ComplaintStatus    @default(PENDING)
+  changedBy   String?
+  complaint   AnonymousComplaint @relation(fields: [complaintId], references: [id])
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  @@index([complaintId])
+}
+
+enum Severity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum ComplaintStatus {
+  PENDING
+  RESOLVED
+  CLOSED
+  UNDER_REVIEW
+  INVESTIGATING
+  REJECTED
+}
+
 model Organization {
-  id               String             @id @default(cuid())
-  name             String
-  organizationSlug String             @unique
-  organizationLogo String?
-  createdAt        DateTime           @default(now())
-  updatedAt        DateTime           @updatedAt
-  isActive         Boolean            @default(true)
-  isPaid           Boolean            @default(false)
-  users            User[]
-  notices          Notice[]
-  Student          Student[]
-  Grade            Grade[]
-  Section          Section[]
-  Fee              Fee[]
-  FeeCategory      FeeCategory[]
-  FeePayment       FeePayment[]
-  AcademicCalendar AcademicCalendar[]
+  id                 String               @id @default(cuid())
+  name               String
+  organizationSlug   String               @unique
+  organizationLogo   String?
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  isActive           Boolean              @default(true)
+  isPaid             Boolean              @default(false)
+  users              User[]
+  notices            Notice[]
+  Student            Student[]
+  Grade              Grade[]
+  Section            Section[]
+  Fee                Fee[]
+  FeeCategory        FeeCategory[]
+  FeePayment         FeePayment[]
+  AcademicCalendar   AcademicCalendar[]
+  AnonymousComplaint AnonymousComplaint[]
 }
 
 model Notice {

@@ -80,7 +80,7 @@ export function ClientChildAttendance({
 
             <TabsContent value="calendar">
               <Card className="p-6 shadow-sm">
-                {/* <ChildAttendanceCalendar childId={selectedChild.id} records={records} /> */}
+                <ChildAttendanceCalendar records={records} />
               </Card>
             </TabsContent>
 

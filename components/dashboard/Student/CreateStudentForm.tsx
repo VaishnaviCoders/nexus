@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 // import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { useActionState, useState } from 'react';
+import { useState } from 'react';
 import { createStudent } from '@/app/actions';
 import { studentSchema } from '@/lib/schemas';
 import { z } from 'zod';
