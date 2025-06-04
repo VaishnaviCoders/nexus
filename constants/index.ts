@@ -47,6 +47,8 @@ export const statusConfig = {
   },
 };
 
+export type ComplaintStatus = keyof typeof statusConfig;
+
 export const severityConfig = {
   LOW: {
     color: 'bg-green-100 text-green-800 border-green-200',

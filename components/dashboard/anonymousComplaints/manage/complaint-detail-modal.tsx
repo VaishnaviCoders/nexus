@@ -261,7 +261,10 @@ export function ComplaintDetailModal({
                       new Date(b.createdAt).getTime() -
                       new Date(a.createdAt).getTime()
                   ).map((update: any, index: number) => {
-                    const StatusIcon = statusConfig[update.status].icon;
+                    const StatusIcon =
+                      statusConfig[update.status as keyof typeof statusConfig]
+                        .icon;
+
                     const isLatest = index === 0;
 
                     return (
@@ -294,7 +297,9 @@ export function ComplaintDetailModal({
                                 variant="outline"
                                 className={cn(
                                   'w-fit',
-                                  statusConfig[update.status].color,
+                                  statusConfig[
+                                    update.status as keyof typeof statusConfig
+                                  ].color,
                                   isLatest && 'ring-2 ring-blue-200'
                                 )}
                               >

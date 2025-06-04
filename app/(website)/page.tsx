@@ -57,14 +57,14 @@ export default async function IndexPage() {
 
       <div className="relative flex h-[500px]  w-full flex-col items-center justify-center overflow-hidden rounded-lg bg-background">
         <p className="z-10 whitespace-pre-wrap text-center text-5xl font-medium tracking-tighter text-black dark:text-white">
-          School CRM All in One Place
+          Everything Your School Needs — In One Smart CRM
         </p>
         <TextScramble
           className="font-mono text-sm my-5 h-3"
           duration={1.2}
           characterSet=". "
         >
-          Simplify Operations, Foster Growth, Empower Success
+          Automate Admin, Engage Students, Empower Educators
         </TextScramble>
 
         {/* <div className="h-5">

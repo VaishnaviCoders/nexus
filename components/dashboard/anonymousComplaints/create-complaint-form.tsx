@@ -23,7 +23,6 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import {
-  ArrowLeft,
   Upload,
   X,
   AlertTriangle,
@@ -33,7 +32,6 @@ import {
   Users,
   MessageSquare,
   ImageIcon,
-  Search,
 } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';

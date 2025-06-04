@@ -3,7 +3,7 @@ import { z } from 'zod';
 //   'image/jpeg',
 //   'image/jpg',
 //   'image/png',
-//   'image/webp',
+//   'image/webp',git
 // ];
 // const MAX_FILE_SIZE = 5000000;
 
