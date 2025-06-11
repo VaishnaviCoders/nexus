@@ -335,7 +335,7 @@ model Notice {
   WhatsAppNotification Boolean @default(false)
 
   targetAudience String[] // String[] Array of Target Audience
-  attachments    Json?
+  attachments    Json?    @default("[]")
 
   publishedBy    String
   Organization   Organization @relation(fields: [organizationId], references: [id])

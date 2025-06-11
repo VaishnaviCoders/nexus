@@ -50,52 +50,6 @@ cloudinary.config({
 // };
 
 //  * NOTICE
-export const createNotice = async (
-  data: z.infer<typeof CreateNoticeFormSchema>
-) => {
-  const { orgId } = await auth();
-  const user = await currentUser();
-
-  // console.log('Backend Action data', data);
-
-  const processedAttachments = data.attachments.map((file: any) => {
-    return {
-      name: file.name, // File name
-      url: file.url, // File URL
-      type: file.type, // File type
-      size: file.size, // File size
-    };
-  });
-  // console.log('Processed Attachments', processedAttachments);
-
-  await prisma.notice.create({
-    data: {
-      noticeType: data.noticeType,
-      title: data.title,
-      content: data.content,
-
-      attachments: processedAttachments,
-      targetAudience: data.targetAudience,
-
-      isDraft: data.isDraft,
-      isPublished: data.isPublished,
-      isNoticeApproved: false,
-
-      publishedBy: user?.fullName || '',
-      organizationId: orgId || '',
-      startDate: data.startDate,
-      endDate: data.endDate,
-
-      emailNotification: data.emailNotification,
-      pushNotification: data.pushNotification,
-      WhatsAppNotification: data.WhatsAppNotification,
-
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    },
-  });
-  redirect('/dashboard/notices');
-};
 
 export const deleteNotice = async (noticeId: string) => {
   await prisma.notice.delete({
@@ -118,34 +72,35 @@ const mapTargetAudienceToRole = (audience: string): Role | null => {
   return audienceMap[audience.toLowerCase()] || null;
 };
 
-const getRecipientEmails = async (
-  organizationId: string,
-  targetAudience: string[]
-): Promise<string[]> => {
-  let rolesToInclude: Role[] = [];
+// const getRecipientEmails = async (
+//   organizationId: string,
+//   targetAudience: string[]
+// ): Promise<string[]> => {
+//   let rolesToInclude: Role[] = [];
 
-  if (targetAudience.includes('all')) {
-    rolesToInclude = [Role.STUDENT, Role.TEACHER, Role.PARENT, Role.ADMIN];
-  } else {
-    rolesToInclude = targetAudience
-      .map(mapTargetAudienceToRole)
-      .filter((role): role is Role => role !== null);
-  }
+//   if (targetAudience.includes('all')) {
+//     rolesToInclude = [Role.STUDENT, Role.TEACHER, Role.PARENT, Role.ADMIN];
+//   } else {
+//     rolesToInclude = targetAudience
+//       .map(mapTargetAudienceToRole)
+//       .filter((role): role is Role => role !== null);
+//   }
 
-  const recipients = await prisma.user.findMany({
-    where: {
-      organizationId,
-      role: {
-        in: rolesToInclude,
-      },
-    },
-    select: {
-      email: true,
-    },
-  });
+//   const recipients = await prisma.user.findMany({
+//     where: {
+//       organizationId,
+//       role: {
+//         in: rolesToInclude,
+//       },
+//     },
+//     select: {
+//       email: true,
+//     },
+//   });
 
-  return recipients.map((user) => user.email);
-};
+//   return recipients.map((user) => user.email);
+// };
+
 // const sendNotifications = async (
 //   notice: any,
 //   recipientEmails: string[],
@@ -208,7 +163,7 @@ export const toggleNoticeApproval = async (
     },
   });
 
-  // // Check can we send emails
+  // Check can we send emails
   // if (!currentStatus && notice.isNoticeApproved && notice.emailNotification) {
   //   const recipientEmails = await getRecipientEmails(
   //     notice.organizationId,
@@ -219,6 +174,52 @@ export const toggleNoticeApproval = async (
   //   }
   // }
   revalidatePath('/dashboard/notice');
+};
+
+export const approveOrRejectNotice = async (
+  noticeId: string,
+  approve: boolean
+) => {
+  try {
+    const user = await currentUser();
+    if (!user) {
+      throw new Error('Authentication required');
+    }
+
+    const notice = await prisma.notice.update({
+      where: {
+        id: noticeId,
+      },
+      data: {
+        isNoticeApproved: approve,
+      },
+      include: {
+        Organization: true,
+      },
+    });
+
+    // If notice is approved and email notifications are enabled,
+    // we could trigger email sending here
+    // This is commented out as per the original code
+    /*
+    if (approve && notice.emailNotification) {
+      const recipientEmails = await getRecipientEmails(
+        notice.organizationId,
+        notice.targetAudience
+      );
+      
+      if (recipientEmails.length > 0) {
+        await sendNotifications(notice, recipientEmails, user);
+      }
+    }
+    */
+
+    revalidatePath('/dashboard/notices');
+    return notice;
+  } catch (error) {
+    console.error('Failed to update notice approval status:', error);
+    return undefined;
+  }
 };
 
 // * CLASSES && GRADES

@@ -262,22 +262,22 @@ export default function NoticeList({
                       notice.isPublished
                         ? 'text-blue-500 bg-blue-50 hover:bg-blue-100'
                         : notice.isDraft
-                          ? 'text-gray-500 bg-gray-50 hover:bg-gray-100'
-                          : 'text-yellow-500 bg-yellow-50 hover:bg-yellow-100'
+                        ? 'text-gray-500 bg-gray-50 hover:bg-gray-100'
+                        : 'text-yellow-500 bg-yellow-50 hover:bg-yellow-100'
                     )}
                     variant={
                       notice.isPublished
                         ? 'default'
                         : notice.isDraft
-                          ? 'secondary'
-                          : 'outline'
+                        ? 'secondary'
+                        : 'outline'
                     }
                   >
                     {notice.isPublished
                       ? 'Published'
                       : notice.isDraft
-                        ? 'Draft'
-                        : 'Pending Approval'}
+                      ? 'Draft'
+                      : 'Pending Approval'}
                   </Badge>
                 </TableCell>
                 {userRole === 'ADMIN' || userRole === 'TEACHER' ? (
@@ -292,15 +292,15 @@ export default function NoticeList({
                         notice.isNoticeApproved
                           ? 'default'
                           : notice.isNoticeApproved
-                            ? 'secondary'
-                            : 'outline'
+                          ? 'secondary'
+                          : 'outline'
                       }
                     >
                       {notice.isNoticeApproved
                         ? 'Approved'
                         : notice.isDraft
-                          ? 'Draft'
-                          : 'Pending'}
+                        ? 'Draft'
+                        : 'Pending'}
                     </Badge>
                   </TableCell>
                 ) : null}

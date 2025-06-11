@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
 // import { format as formatDate } from 'date-fns';
 import { CalendarIcon, Eye, Save } from 'lucide-react';
 import { useForm } from 'react-hook-form';
@@ -8,7 +8,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-// import { Calendar } from '@/components/ui/calendar';
 import {
   Form,
   FormControl,
@@ -49,8 +48,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { createNotice } from '@/app/actions';
-// import { FileUploader } from '@/components/ui/file-uploader';
 
 import { UploadedFilesCard } from '@/components/ui/uploaded-files-card';
 import { useUploadFile } from '@/hooks/use-upload-file';
@@ -58,6 +55,8 @@ import { CreateNoticeFormSchema } from '@/lib/schemas';
 import { toast } from 'sonner';
 import { CreateNoticeButton } from '@/lib/SubmitButton';
 import dynamic from 'next/dynamic';
+import { createNotice } from '@/lib/data/notice/create-notice-action';
+import { useRouter } from 'next/navigation';
 
 // Lazy load heavy components
 const Calendar = dynamic(
@@ -109,6 +108,7 @@ export default function CreateNotice() {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const { onUpload, progresses, uploadedFiles, isUploading, resetUploadState } =
     useUploadFile('imageUploader', { defaultUploadedFiles: [] });
+  const [isPending, startTransition] = useTransition();
 
   const form = useForm<z.infer<typeof CreateNoticeFormSchema>>({
     resolver: zodResolver(CreateNoticeFormSchema),
@@ -128,23 +128,35 @@ export default function CreateNotice() {
     },
   });
 
+  const router = useRouter();
+
   async function onSubmit(data: z.infer<typeof CreateNoticeFormSchema>) {
-    try {
-      // Ensure that attachments are correctly typed
-      const attachments: Attachment[] = data.attachments || []; // Default to an empty array if attachments is undefined
+    startTransition(async () => {
+      try {
+        const attachments: Attachment[] = data.attachments || [];
+        const result = await createNotice({ ...data, attachments });
 
-      // Create a new notice with the updated attachments
-      await createNotice({ ...data, attachments });
-      toast.success('Notice created successfully');
-      form.reset();
-      // Add this simple reset function
-      resetUploadState();
-    } catch (error) {
-      toast.error('Something went wrong');
-      console.error(error);
-    }
+        if (result.success) {
+          const message = data.isPublished
+            ? 'Notice published successfully'
+            : 'Notice saved as draft';
+          toast.success(message);
+
+          // Reset form state
+          form.reset();
+          resetUploadState();
+
+          // Navigate after successful creation
+          router.push('/dashboard/notices');
+        } else {
+          toast.error(result.error || 'Something went wrong');
+        }
+      } catch (error) {
+        console.error('Client error:', error);
+        toast.error('Something went wrong');
+      }
+    });
   }
-
   return (
     <Card className="w-full ">
       <CardHeader>
@@ -514,24 +526,7 @@ export default function CreateNotice() {
                   </DialogContent>
                 </Dialog>
 
-                {/* <LoadingButton
-                  type="submit"
-                  onClick={() => {
-                    form.setValue('isPublished', true);
-                    form.setValue('isDraft', false);
-                  }}
-                  action="create"
-                  disabled={isUploading}
-                >
-                  <Send className="mr-2 h-4 w-4" /> Publish Notice
-                </LoadingButton> */}
-                <CreateNoticeButton
-                  disabled={isUploading}
-                  onClick={() => {
-                    form.setValue('isPublished', true);
-                    form.setValue('isDraft', false);
-                  }}
-                />
+                <CreateNoticeButton isPending={isPending} />
               </div>
             </div>
           </form>

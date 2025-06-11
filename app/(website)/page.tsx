@@ -22,6 +22,7 @@ import DotPattern from '@/components/ui/dot-pattern';
 import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
 import IntegrationComponent from '../../components/websiteComp/IntegrationComponent';
 import Link from 'next/link';
+import { Shield, ShieldCheck } from 'lucide-react';
 // import MagicBentoGrid from '../components/websiteComp/magic-bento';
 
 export default async function IndexPage() {
@@ -30,14 +31,8 @@ export default async function IndexPage() {
       {/* <Spotlight className="" /> */}
       <header className="flex items-center justify-between my-3">
         <div className="flex items-center space-x-2">
-          <svg
-            className="h-8 w-8 text-blue-400"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-          >
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"></path>
-          </svg>
-          <h1>Next.js + NEXUS CRM</h1>
+          <ShieldCheck className="h-6 w-6 text-green-400" />
+          <h1>NEXUS CRM</h1>
         </div>
 
         <div className="flex items-center space-x-2">

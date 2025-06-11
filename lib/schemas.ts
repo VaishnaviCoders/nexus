@@ -14,12 +14,13 @@ export const CreateNoticeFormSchema = z.object({
     .min(3, {
       message: 'Title must be at least 3 characters.',
     })
-    .max(18, {
-      message: 'Title must be at most 18 characters.',
+    .max(28, {
+      message: 'Title must be at most 28 characters.',
     }),
-  startDate: z
-    .date()
-    .min(new Date(), { message: 'Start date must be in the future' }),
+  startDate: z.date(),
+  // startDate: z
+  // .date()
+  // .min(new Date(), { message: 'Start date must be in the future' }),
   endDate: z.date(),
   content: z.string().min(10, {
     message: 'Content must be at least 10 characters.',
