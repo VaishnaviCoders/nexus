@@ -131,6 +131,7 @@ export default function CreateNotice() {
   const router = useRouter();
 
   async function onSubmit(data: z.infer<typeof CreateNoticeFormSchema>) {
+    console.log('Form data:', data);
     startTransition(async () => {
       try {
         const attachments: Attachment[] = data.attachments || [];
@@ -157,6 +158,8 @@ export default function CreateNotice() {
       }
     });
   }
+
+  console.log('Form errors:', form.formState.errors);
   return (
     <Card className="w-full ">
       <CardHeader>

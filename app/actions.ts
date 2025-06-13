@@ -303,187 +303,226 @@ export async function createSection(prevState: any, formData: FormData) {
 // Students Actions
 
 export async function createStudent(data: z.infer<typeof studentSchema>) {
-  const { orgId } = await auth();
+  const organizationId = await getOrganizationId();
   const client = await clerkClient();
 
-  if (!orgId) throw new Error('Organization ID is required');
+  console.log('🏢 Using organizationId:', organizationId);
 
-  const validateData = studentSchema.parse(data);
-  // console.log('Student data', validateData);
+  const validated = studentSchema.parse(data);
+  console.log('📦 Student data:', validated);
 
   try {
-    const existingStudent = await prisma.student.findFirst({
+    // 🔎 Check for duplicate student
+    const duplicateStudent = await prisma.student.findFirst({
       where: {
         OR: [
-          { email: validateData.email },
-          { rollNumber: validateData.rollNumber },
-          { phoneNumber: validateData.phoneNumber },
+          { email: validated.email },
+          { rollNumber: validated.rollNumber },
+          { phoneNumber: validated.phoneNumber },
         ],
       },
     });
-    if (existingStudent) {
+
+    if (duplicateStudent) {
       throw new Error(
         '❌ Student with this email, roll number, or phone number already exists.'
       );
     }
+
+    // 👥 Get or create Clerk user
+    console.log('🔍 Checking for existing Clerk user...');
     const existingClerkUser = await client.users.getUserList({
-      emailAddress: [validateData.email],
+      emailAddress: [validated.email],
     });
 
-    let clerkUser;
-    if (existingClerkUser.data.length > 0) {
-      clerkUser = existingClerkUser.data[0];
-    } else {
-      // ✅ Create Clerk User if not found
-      clerkUser = await client.users.createUser({
-        emailAddress: [validateData.email],
-        firstName: validateData.firstName,
-        lastName: validateData.lastName,
-        password: validateData.phoneNumber,
+    const clerkUser =
+      existingClerkUser.data[0] ??
+      (await client.users.createUser({
+        emailAddress: [validated.email],
+        firstName: validated.firstName,
+        lastName: validated.lastName,
+        password: validated.phoneNumber,
         skipPasswordChecks: true,
-        externalId: `student_${validateData.rollNumber}`,
+        externalId: `student_${validated.rollNumber}`,
         privateMetadata: {
           role: 'STUDENT',
-          organizationId: orgId,
+          organizationId,
         },
-      });
-    }
+      }));
 
+    console.log('🔄 Creating student Clerk user...', clerkUser.id);
+
+    // 🏢 Add Clerk user to organization
     try {
-      const organization = await client.organizations.getOrganization({
-        organizationId: orgId,
+      const org = await client.organizations.getOrganization({
+        organizationId,
       });
-      // console.log('Verified organization:', organization);
-    } catch (error) {
-      console.error('❌ Organization verification failed:', error);
-      throw new Error('Organization not found in Clerk system');
-    }
-    // console.log('Clerk User Response:', JSON.stringify(clerkUser, null, 2));
-    // console.log('Adding to Organization ID:', orgId);
-    try {
+
+      console.log('✅ Clerk Org Exists:', org);
+
+      console.log('🏛️ Creating org membership for student...', clerkUser.id);
+
       await client.organizations.createOrganizationMembership({
-        organizationId: orgId,
+        organizationId,
         userId: clerkUser.id,
         role: 'org:student',
       });
-      // console.log(`✅ Added student ${validateData.email} to organization`);
-    } catch (orgError) {
-      console.error('❌ Failed to add student to organization:', orgError);
+
+      console.log('✅ Org membership success:', clerkUser.id);
+    } catch (err) {
+      console.error('❌ Clerk organization error:', err);
+      throw new Error('Organization validation or membership failed');
     }
 
-    // const imageFile = validateData.profileImage as File | null;
-
-    // if (!imageFile || imageFile.name === 'undefined') {
-    //   return console.log('File is not proper');
-    // }
-
-    // const arrayBuffer = await imageFile.arrayBuffer();
-
-    // console.log('arrayBuffer', arrayBuffer);
-
-    // const buffer = Buffer.from(arrayBuffer);
-
-    // const uploadResponse: UploadApiResponse | undefined = await new Promise(
-    //   (resolve, reject) => {
-    //     const uploadStream = cloudinary.uploader.upload_stream(
-    //       { resource_type: 'auto' },
-    //       (error, result) => {
-    //         if (error) {
-    //           reject(error);
-    //         } else {
-    //           resolve(result);
-    //         }
-    //       }
-    //     );
-    //     uploadStream.end(buffer);
-    //   }
-    // );
-
-    // const imageUrl = uploadResponse?.secure_url;
-
-    // if (!imageUrl) {
-    //   return console.log('Image URL Failed');
-    // }
-
-    const result = await prisma.$transaction(async (tx) => {
-      const student = await tx.student.create({
+    // 🛠️ Create student and parents in a DB transaction
+    const student = await prisma.$transaction(async (tx) => {
+      const newStudent = await tx.student.create({
         data: {
           clerkId: clerkUser.id,
-          organizationId: orgId,
-          rollNumber: validateData.rollNumber,
-          firstName: validateData.firstName,
-          lastName: validateData.lastName,
-          email: validateData.email,
-          phoneNumber: validateData.phoneNumber,
-          whatsAppNumber: validateData.whatsAppNumber,
-          middleName: validateData.middleName,
-          fullName: `${validateData.firstName} ${
-            validateData.middleName ?? ''
-          } ${validateData.lastName}`.trim(),
-          motherName:
-            validateData.parent?.relationship === 'MOTHER'
-              ? `${validateData.parent.firstName} ${validateData.parent.lastName}`.trim()
-              : null,
-          sectionId: validateData.sectionId,
-          gradeId: validateData.gradeId,
-          gender: validateData.gender,
-          profileImage: validateData.profileImage,
-          dateOfBirth: new Date(validateData.dateOfBirth),
-          emergencyContact: validateData.emergencyContact,
-
+          organizationId,
+          rollNumber: validated.rollNumber,
+          firstName: validated.firstName,
+          middleName: validated.middleName,
+          lastName: validated.lastName,
+          fullName: `${validated.firstName} ${validated.middleName ?? ''} ${
+            validated.lastName
+          }`.trim(),
+          email: validated.email,
+          phoneNumber: validated.phoneNumber,
+          whatsAppNumber: validated.whatsAppNumber,
+          sectionId: validated.sectionId,
+          gradeId: validated.gradeId,
+          gender: validated.gender,
+          profileImage: validated.profileImage,
+          dateOfBirth: new Date(validated.dateOfBirth),
+          emergencyContact: validated.emergencyContact,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
       });
-      // await tx.user.create({
-      //   data: {
-      //     clerkId: clerkUser.id,
-      //     organizationId: orgId,
-      //     role: 'STUDENT',
-      //     firstName: validateData.firstName,
-      //     lastName: validateData.lastName,
-      //     email: validateData.email,
-      //     studentId: student.id,
-      //     createdAt: new Date(),
-      //     updatedAt: new Date(),
-      //     profileImage: validateData.profileImage || '',
-      //     password: validateData.phoneNumber,
-      //   },
-      // });
 
-      if (validateData.parent) {
-        const parent = await tx.parent.upsert({
-          where: {
-            email: validateData.parent.email,
-          },
-          update: {
-            phoneNumber: validateData.parent.phoneNumber,
-            whatsAppNumber: validateData.parent.whatsAppNumber || '',
-          },
-          create: {
-            firstName: validateData.parent.firstName,
-            lastName: validateData.parent.lastName,
-            email: validateData.parent.email,
-            phoneNumber: validateData.parent.phoneNumber,
-            whatsAppNumber: validateData.parent.whatsAppNumber || '',
-          },
-        });
-        await tx.parentStudent.create({
-          data: {
-            relationship: validateData.parent.relationship,
-            studentId: student.id,
-            parentId: parent.id,
-          },
-        });
+      console.log('💾 Creating student in DB...');
+
+      await tx.user.create({
+        data: {
+          clerkId: clerkUser.id,
+          organizationId,
+          email: validated.email,
+          firstName: validated.firstName,
+          lastName: validated.lastName,
+          password: validated.phoneNumber,
+          profileImage: validated.profileImage,
+          role: 'STUDENT',
+          studentId: newStudent.id,
+          createdAt: new Date(),
+        },
+      });
+
+      console.log('💾 Creating student User in DB...');
+
+      // 👪 Create and link each parent
+      if (validated.parents?.length) {
+        await Promise.all(
+          validated.parents.map(async (parentData) => {
+            console.log(`👨‍👩‍👧 Creating parent: ${parentData.email}`);
+            console.log('📧 Checking existing parent user in Clerk...');
+            const existingParent = await client.users.getUserList({
+              emailAddress: [parentData.email],
+            });
+
+            const parentClerkUser =
+              existingParent.data[0] ??
+              (await client.users.createUser({
+                emailAddress: [parentData.email],
+                firstName: parentData.firstName,
+                lastName: parentData.lastName,
+                password: parentData.phoneNumber,
+                skipPasswordChecks: true,
+                externalId: `parent_${parentData.email}`,
+                privateMetadata: {
+                  role: 'PARENT',
+                  organizationId,
+                },
+              }));
+
+            console.log('🎯 Clerk parent created:', parentClerkUser.id);
+
+            await client.organizations.createOrganizationMembership({
+              organizationId,
+              userId: parentClerkUser.id,
+              role: 'org:parent',
+            });
+
+            console.log(
+              '🎯 Clerk parent membership created:',
+              parentClerkUser.id
+            );
+
+            // 2. Prisma user
+            const prismaParentUser = await tx.user.upsert({
+              where: { clerkId: parentClerkUser.id },
+              create: {
+                email: parentData.email,
+                profileImage: parentClerkUser.imageUrl,
+                firstName: parentData.firstName,
+                lastName: parentData.lastName,
+                clerkId: parentClerkUser.id,
+                role: 'PARENT',
+                organizationId,
+              },
+              update: {
+                firstName: parentData.firstName,
+                lastName: parentData.lastName,
+                updatedAt: new Date(),
+              },
+            });
+
+            console.log(
+              '💾 Parent created in DB as User:',
+              prismaParentUser.id
+            );
+
+            // 3. Prisma parent
+            const parent = await tx.parent.upsert({
+              where: { email: parentData.email },
+              update: {
+                phoneNumber: parentData.phoneNumber,
+                whatsAppNumber: parentData.whatsAppNumber ?? '',
+                userId: prismaParentUser.id,
+              },
+              create: {
+                email: parentData.email,
+                firstName: parentData.firstName,
+                lastName: parentData.lastName,
+                phoneNumber: parentData.phoneNumber,
+                whatsAppNumber: parentData.whatsAppNumber ?? '',
+                userId: prismaParentUser.id,
+              },
+            });
+
+            console.log('💾 Parent created in DB as Parent:', parent.id);
+
+            // 4. Link Parent ↔ Student
+            await tx.parentStudent.create({
+              data: {
+                relationship: parentData.relationship,
+                studentId: newStudent.id,
+                parentId: parent.id,
+              },
+            });
+
+            console.log('🔗 Linking parent and student...');
+          })
+        );
       }
-      return student;
+
+      return newStudent;
     });
-    return result;
+    revalidatePath('/dashboard/students/create');
+    return student;
   } catch (error) {
-    console.error('❌ Error in createStudent:', JSON.stringify(error, null, 2));
-    throw new Error(
-      `❌ Failed to create student: ${JSON.stringify(error, null, 2)}`
-    );
+    console.error('❌ createStudent failed:', error);
+    throw new Error('Failed to create student. ' + (error as Error).message);
   }
 }
 

@@ -457,7 +457,11 @@ export default function CreateAnonymousComplaintForm() {
                       Submit Another Complaint
                     </Button>
                     <Button
-                      onClick={() => router.push(`/track?id=${trackingId}`)}
+                      onClick={() =>
+                        router.push(
+                          `/dashboard/anonymous-complaints/track/${trackingId}`
+                        )
+                      }
                       className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
                     >
                       Track Complaint

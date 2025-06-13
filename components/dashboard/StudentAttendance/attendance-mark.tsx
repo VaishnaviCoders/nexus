@@ -1060,19 +1060,19 @@ export default function AttendanceMark({ students }: Props) {
                                 student.status !== 'PRESENT' && (
                                   <Button
                                     size="sm"
-                                    variant="ghost"
+                                    variant="outline"
                                     onClick={() =>
                                       generateAISuggestion(student.id)
                                     }
                                     disabled={
                                       aiSuggestionLoading === student.id
                                     }
-                                    className="h-7 text-xs p-2 rounded-lg bg-gradient-to-br from-indigo-500 to-blue-100 shadow-lg"
+                                    className="h-7 text-xs p-2 rounded-lg bg-blue-50 hover:bg-blue-100 border-dashed border-blue-500 shadow-lg"
                                   >
                                     {aiSuggestionLoading === student.id ? (
                                       <Loader2 className="h-3 w-3 mr-1 animate-spin" />
                                     ) : (
-                                      <Sparkles className="h-3 w-3 mr-1 text-white" />
+                                      <Sparkles className="h-3 w-3 mr-1 text-blue-500" />
                                     )}
                                     AI Suggest
                                   </Button>

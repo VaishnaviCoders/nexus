@@ -67,10 +67,30 @@ export async function POST(req: Request) {
     } = evt.data;
 
     const roleFromMetadata = (public_metadata.role as Role) || 'STUDENT';
+
+    // Check if the first organization exists
+    let organization = await prisma.organization.findFirst();
+
+    // If no organization exists, create the first organization
+    if (!organization) {
+      organization = await prisma.organization.create({
+        data: {
+          name: 'First Organization', // Set a default name or use metadata
+          organizationSlug: 'first-organization',
+          organizationLogo: null, // Set a default logo if needed
+          isActive: true,
+          isPaid: false,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      });
+    }
+
     const userData = await prisma.user.upsert({
       where: { id: id },
       update: {
         role: roleFromMetadata,
+        organizationId: organization.id,
       },
       create: {
         firstName: first_name || '',
@@ -82,7 +102,7 @@ export async function POST(req: Request) {
         createdAt: new Date(created_at),
         updatedAt: new Date(updated_at),
         clerkId: id,
-        organizationId: null,
+        organizationId: organization.id,
       },
     });
     console.log('user Updated or Created in DB', userData);

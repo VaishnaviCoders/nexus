@@ -23,6 +23,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import StudentPaymentHistoryTable from '@/components/dashboard/Fees/StudentPaymentHistoryTable';
 
 import { getFeeRecords } from '@/lib/data/fee/get-all-students-fees';
+import { DashboardCardSkeleton } from '@/lib/skeletons/DashboardCardSkeleton';
 // import fixIncorrectFeeStatuses from '@/lib/data/fee/payFeesAction';
 
 const getFeeCategoryAggregates = async () => {
@@ -63,6 +64,8 @@ const getFeeCategoryAggregates = async () => {
 };
 
 export default async function AdminFeeDashboard() {
+  await new Promise((resolve) => setTimeout(resolve, 5000));
+
   const feeCategories = await getFeeCategoryAggregates();
   const data = await getMonthlyFeeData(2025);
   const feeRecords = await getFeeRecords();
@@ -74,7 +77,7 @@ export default async function AdminFeeDashboard() {
   return (
     <div className="flex flex-col space-y-8">
       {/* Responsive Header */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-4 sm:flex-row px-2 sm:items-center sm:justify-between">
         <div className="space-y-1">
           <h1 className="text-xl font-bold tracking-tight sm:text-2xl">
             Fee Management
@@ -103,7 +106,9 @@ export default async function AdminFeeDashboard() {
       </div>
 
       {/* Summary Cards */}
-      <AdminFeesSummaryCards />
+      <Suspense fallback={<AdminFeesSummaryCardsSkeleton />}>
+        <AdminFeesSummaryCards />
+      </Suspense>
 
       {/* Charts and Analytics */}
       <div className="grid gap-4 lg:grid-cols-2">
@@ -182,3 +187,11 @@ const FeeDistributionByCategorySkeleton = () => {
     </>
   );
 };
+
+const AdminFeesSummaryCardsSkeleton = () => (
+  <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+    {Array.from({ length: 4 }).map((_, i) => (
+      <DashboardCardSkeleton key={i} />
+    ))}
+  </div>
+);

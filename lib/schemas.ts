@@ -52,8 +52,8 @@ export const sectionSchema = z.object({
 });
 
 export const parentSchema = z.object({
-  firstName: z.string().min(2, 'First name must be at least 2 characters'),
-  lastName: z.string().min(2, 'Last name must be at least 2 characters'),
+  firstName: z.string().min(1, 'First name is required'),
+  lastName: z.string().min(1, 'Last name is required'),
   email: z.string().email('Invalid email address'),
   phoneNumber: z.string().min(10, 'Phone number must be at least 10 digits'),
   whatsAppNumber: z.string().optional(),
@@ -87,7 +87,10 @@ export const studentSchema = z.object({
 
   motherName: z.string().optional(),
   fullName: z.string().optional(),
-  parent: parentSchema.optional(),
+  parents: z
+    .array(parentSchema)
+    .min(1, 'At least one parent is required')
+    .optional(),
 });
 
 // Fees

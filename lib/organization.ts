@@ -30,3 +30,11 @@ export async function getOrganization() {
     orgSlug,
   };
 }
+
+export async function getOrganizationUserRole() {
+  const { orgRole } = await auth();
+  if (!orgRole) {
+    throw new Error('No organization role found');
+  }
+  return { orgRole };
+}

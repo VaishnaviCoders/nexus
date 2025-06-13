@@ -9,6 +9,7 @@ import {
 import { getFeesSummary } from '@/app/actions';
 
 const AdminFeesSummaryCards = async () => {
+  await new Promise((resolve) => setTimeout(resolve, 2000));
   const {
     collectedFees,
     overdueFees,

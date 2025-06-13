@@ -216,7 +216,7 @@ export const roleMenus: Record<string, Group[]> = {
         },
         {
           href: '/dashboard/fees/student',
-          label: 'Fees Management',
+          label: 'Fees ',
           icon: IndianRupee,
         },
       ],

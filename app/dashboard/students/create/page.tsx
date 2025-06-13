@@ -1,6 +1,7 @@
 import CreateStudentForm from '@/components/dashboard/Student/CreateStudentForm';
+import { Skeleton } from '@/components/ui/skeleton';
 // import dynamic from 'next/dynamic';
-import React from 'react';
+import React, { Suspense } from 'react';
 
 // const CreateStudentForm = dynamic(
 //   () => import('@/app/components/dashboardComponents/CreateStudentForm')
@@ -8,9 +9,9 @@ import React from 'react';
 
 const page = () => {
   return (
-    <div>
+    <Suspense fallback={<Skeleton className="container mx-auto h-56" />}>
       <CreateStudentForm />
-    </div>
+    </Suspense>
   );
 };
 

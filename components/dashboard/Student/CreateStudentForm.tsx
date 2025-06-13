@@ -8,24 +8,21 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-// import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useState } from 'react';
 import { createStudent } from '@/app/actions';
 import { studentSchema } from '@/lib/schemas';
-import { z } from 'zod';
+import type { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import useSWR from 'swr';
-
 import {
   Form,
   FormControl,
-  // FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { useForm } from 'react-hook-form';
+import { useFieldArray, useForm } from 'react-hook-form';
 import {
   Popover,
   PopoverContent,
@@ -33,11 +30,22 @@ import {
 } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { CalendarIcon, ImagePlus } from 'lucide-react';
+import {
+  CalendarIcon,
+  ImagePlus,
+  Plus,
+  Trash2,
+  Upload,
+  User,
+  FileText,
+  GraduationCap,
+  Users,
+  Camera,
+} from 'lucide-react';
 import { Calendar } from '@/components/ui/calendar';
 import { Checkbox } from '@/components/ui/checkbox';
 import { toast } from 'sonner';
-import { Grade, Section } from '@prisma/client';
+import type { Grade, ParentRelationship, Section } from '@prisma/client';
 import {
   Select,
   SelectContent,
@@ -45,10 +53,32 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
+
+interface Parent {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string;
+  whatsAppNumber: string;
+  relationship: ParentRelationship;
+}
+
+interface DocumentFile {
+  id: string;
+  type: string;
+  file: File | null;
+  url: string;
+  name: string;
+}
 
 export default function CreateStudentForm() {
   const [selectedGradeId, setSelectedGradeId] = useState<string | null>(null);
-  const [image, setImage] = useState<string | null>(null);
+  const [profileImage, setProfileImage] = useState<string | null>(null);
+
+  const [documents, setDocuments] = useState<DocumentFile[]>([]);
+  const [pending, setPending] = useState(false);
 
   const form = useForm<z.infer<typeof studentSchema>>({
     resolver: zodResolver(studentSchema),
@@ -56,39 +86,41 @@ export default function CreateStudentForm() {
       firstName: '',
       middleName: '',
       lastName: '',
-
       email: '',
       phoneNumber: '',
       whatsAppNumber: '',
-
       dateOfBirth: new Date(),
       gender: 'MALE',
       rollNumber: '',
-
       gradeId: '',
       sectionId: '',
-
       motherName: '',
       fullName: '',
       emergencyContact: '',
       profileImage: '',
-      parent: {
-        firstName: '',
-        lastName: '',
-        email: '',
-        phoneNumber: '',
-        whatsAppNumber: '',
-        relationship: 'FATHER',
-      },
+      parents: [
+        {
+          firstName: '',
+          lastName: '',
+          email: '',
+          phoneNumber: '',
+          whatsAppNumber: '',
+          relationship: 'FATHER',
+        },
+      ],
     },
   });
-  // console.log('Form errors:', form.formState.errors);
 
-  const [pending, setPending] = useState(false);
-
+  const {
+    fields: parents,
+    append,
+    remove,
+  } = useFieldArray({
+    control: form.control,
+    name: 'parents',
+  });
   async function uploadToCloudinary(file: File) {
     const formData = new FormData();
-
     const uploadPreset = 'student_uploads';
     formData.append('file', file);
     formData.append('upload_preset', uploadPreset);
@@ -101,21 +133,80 @@ export default function CreateStudentForm() {
       }
     );
     const data = await response.json();
-    console.log('Cloudinary response:', data);
     return data.secure_url;
   }
 
   const onSubmit = async (data: z.infer<typeof studentSchema>) => {
     try {
       setPending(true);
-      await createStudent(data);
-      toast.success('Student created!');
-      setImage(null);
+      await createStudent(data); // ✅ parents are already inside `data`
+
+      console.log('Frontend Student Data', data);
+
+      toast.success('Student created successfully!');
+      setProfileImage(null);
+
+      setDocuments([]);
       form.reset();
     } catch (err) {
       console.error(err);
       toast.error('Failed to create student');
+    } finally {
+      setPending(false);
     }
+  };
+
+  console.log('Form errors:', form.formState.errors);
+
+  // const addParent = () => {
+  //   setParents([
+  //     ...parents,
+  //     {
+  //       firstName: '',
+  //       lastName: '',
+  //       email: '',
+  //       phoneNumber: '',
+  //       whatsAppNumber: '',
+  //       relationship: 'MOTHER',
+  //     },
+  //   ]);
+  // };
+
+  // const removeParent = (index: number) => {
+  //   if (parents.length > 1) {
+  //     setParents(parents.filter((_, i) => i !== index));
+  //   }
+  // };
+
+  // const updateParent = (index: number, field: keyof Parent, value: string) => {
+  //   const updatedParents = [...parents];
+  //   updatedParents[index] = { ...updatedParents[index], [field]: value };
+  //   setParents(updatedParents);
+  // };
+
+  const addDocument = () => {
+    const newDoc: DocumentFile = {
+      id: Date.now().toString(),
+      type: 'AADHAAR',
+      file: null,
+      url: '',
+      name: '',
+    };
+    setDocuments([...documents, newDoc]);
+  };
+
+  const removeDocument = (id: string) => {
+    setDocuments(documents.filter((doc) => doc.id !== id));
+  };
+
+  const updateDocument = (
+    id: string,
+    field: keyof DocumentFile,
+    value: any
+  ) => {
+    setDocuments(
+      documents.map((doc) => (doc.id === id ? { ...doc, [field]: value } : doc))
+    );
   };
 
   const genderOptions = [
@@ -124,489 +215,797 @@ export default function CreateStudentForm() {
     { id: 'OTHER', label: 'Other' },
   ];
 
+  const relationshipOptions = [
+    { id: '1', value: 'FATHER', label: 'Father' },
+    { id: '2', value: 'MOTHER', label: 'Mother' },
+    { id: '3', value: 'GUARDIAN', label: 'Guardian' },
+    { id: '4', value: 'OTHER', label: 'Other' },
+  ];
+
+  const documentTypes = [
+    { value: 'AADHAAR', label: 'Aadhaar Card' },
+    { value: 'PAN', label: 'PAN Card' },
+    { value: 'PASSPORT', label: 'Passport' },
+    { value: 'BIRTH_CERTIFICATE', label: 'Birth Certificate' },
+    { value: 'TRANSFER_CERTIFICATE', label: 'Transfer Certificate' },
+    { value: 'BANK_PASSBOOK', label: 'Bank Passbook' },
+    { value: 'PARENT_ID', label: 'Parent ID' },
+    { value: 'AGREEMENT', label: 'Agreement' },
+  ];
+
   const fetcher = (url: string) => fetch(url).then((res) => res.json());
   const { data: grades } = useSWR<Grade[]>('/api/grade', fetcher);
   const { data: sections } = useSWR<Section[]>(
-    selectedGradeId ? `/api/section/${selectedGradeId}` : [],
+    selectedGradeId ? `/api/section/${selectedGradeId}` : null,
     fetcher
   );
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="mb-5 ">
-        <div className="grid lg:grid-cols-9 gap-5">
-          <Card className="w-full mx-auto  my-3  col-span-7">
-            <CardHeader>
-              <CardTitle>New Student Registration</CardTitle>
-              <CardDescription>
-                Enter the student&apos;s information to register them in the
-                system.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <FormField
-                  control={form.control}
-                  name="firstName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>First Name</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Enter First Name" {...field} />
-                      </FormControl>
+    <div className="bg-gradient-to-br from-slate-50 to-slate-100 p-4 md:p-6 lg:p-4">
+      <div className="">
+        <div className="mb-8">
+          <h1 className="text-xl font-bold tracking-tight text-slate-900 md:text-2xl">
+            Student Registration
+          </h1>
+          <p className="mt-1 text-sm text-slate-600">
+            Create a comprehensive student profile with all necessary
+            information and documents.
+          </p>
+        </div>
 
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="middleName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Middle Name</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Enter Middle Name" {...field} />
-                      </FormControl>
-
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="lastName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Last Name</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Enter Last Name" {...field} />
-                      </FormControl>
-
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="space-y-2">
-                  <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Email</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter Email" {...field} />
-                        </FormControl>
-
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <FormField
-                    control={form.control}
-                    name="phoneNumber"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Phone Number</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter Phone Number" {...field} />
-                        </FormControl>
-
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <FormField
-                    control={form.control}
-                    name="whatsAppNumber"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>WhatsApp Number</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter Phone Number" {...field} />
-                        </FormControl>
-
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <FormField
-                  control={form.control}
-                  name="gradeId"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Select Grade</FormLabel>
-                      <Select
-                        onValueChange={(value) => {
-                          field.onChange(value);
-                          setSelectedGradeId(value); // Update state
-                        }}
-                        defaultValue={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select Grade" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {grades?.map((grade) => (
-                            <SelectItem key={grade.id} value={grade.id}>
-                              {grade.grade}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                {!selectedGradeId ? null : (
-                  <FormField
-                    control={form.control}
-                    name="sectionId"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Select Section</FormLabel>
-                        <FormControl>
-                          <Select
-                            onValueChange={field.onChange}
-                            defaultValue={field.value}
-                          >
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <div className="grid gap-8 lg:grid-cols-3 ">
+              {/* Student Information */}
+              <div className="lg:col-span-2 ">
+                <Card className="border-0 shadow-sm">
+                  <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-t-lg">
+                    <div className="flex items-center gap-3">
+                      <div className="rounded-full bg-blue-100 p-2">
+                        <User className="h-5 w-5 text-blue-600" />
+                      </div>
+                      <div>
+                        <CardTitle className="text-xl text-slate-900">
+                          Student Information
+                        </CardTitle>
+                        <CardDescription className="text-slate-600">
+                          Basic details and contact information
+                        </CardDescription>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="p-6 space-y-6">
+                    {/* Name Fields */}
+                    <div className="grid gap-4 sm:grid-cols-3">
+                      <FormField
+                        control={form.control}
+                        name="firstName"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-sm font-medium text-slate-700">
+                              First Name
+                            </FormLabel>
                             <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select Grade" />
-                              </SelectTrigger>
+                              <Input
+                                placeholder="Enter first name"
+                                className="border-slate-200 focus:border-blue-500 focus:ring-blue-500"
+                                {...field}
+                              />
                             </FormControl>
-                            <SelectContent>
-                              {sections?.map((section) => (
-                                <SelectItem key={section.id} value={section.id}>
-                                  {section.name}
-                                </SelectItem>
-                              )) ?? null}
-                            </SelectContent>
-                          </Select>
-                        </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="middleName"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-sm font-medium text-slate-700">
+                              Middle Name
+                            </FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="Enter middle name"
+                                className="border-slate-200 focus:border-blue-500 focus:ring-blue-500"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="lastName"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-sm font-medium text-slate-700">
+                              Last Name
+                            </FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="Enter last name"
+                                className="border-slate-200 focus:border-blue-500 focus:ring-blue-500"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
 
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                )}
+                    {/* Contact Fields */}
+                    <div className="grid gap-4 sm:grid-cols-3">
+                      <FormField
+                        control={form.control}
+                        name="email"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-sm font-medium text-slate-700">
+                              Email
+                            </FormLabel>
+                            <FormControl>
+                              <Input
+                                type="email"
+                                placeholder="Enter email address"
+                                className="border-slate-200 focus:border-blue-500 focus:ring-blue-500"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="phoneNumber"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-sm font-medium text-slate-700">
+                              Phone Number
+                            </FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="Enter phone number"
+                                className="border-slate-200 focus:border-blue-500 focus:ring-blue-500"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="whatsAppNumber"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-sm font-medium text-slate-700">
+                              WhatsApp Number
+                            </FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="Enter WhatsApp number"
+                                className="border-slate-200 focus:border-blue-500 focus:ring-blue-500"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
 
-                <FormField
-                  control={form.control}
-                  name="emergencyContact"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Emergency Contact</FormLabel>
-                      <FormControl>
-                        <Input placeholder="EMERGENCY CONTACT" {...field} />
-                      </FormControl>
+                    {/* Academic Fields */}
+                    <div className="grid gap-4 sm:grid-cols-3">
+                      <FormField
+                        control={form.control}
+                        name="gradeId"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-sm font-medium text-slate-700">
+                              Grade
+                            </FormLabel>
+                            <Select
+                              onValueChange={(value) => {
+                                field.onChange(value);
+                                setSelectedGradeId(value);
+                              }}
+                              defaultValue={field.value}
+                            >
+                              <FormControl>
+                                <SelectTrigger className="border-slate-200 focus:border-blue-500 focus:ring-blue-500">
+                                  <SelectValue placeholder="Select grade" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {grades?.map((grade) => (
+                                  <SelectItem key={grade.id} value={grade.id}>
+                                    {grade.grade}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
 
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                      {selectedGradeId && (
+                        <FormField
+                          control={form.control}
+                          name="sectionId"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-sm font-medium text-slate-700">
+                                Section
+                              </FormLabel>
+                              <Select
+                                onValueChange={field.onChange}
+                                defaultValue={field.value}
+                              >
+                                <FormControl>
+                                  <SelectTrigger className="border-slate-200 focus:border-blue-500 focus:ring-blue-500">
+                                    <SelectValue placeholder="Select section" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  {sections?.map((section) => (
+                                    <SelectItem
+                                      key={section.id}
+                                      value={section.id}
+                                    >
+                                      {section.name}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      )}
+
+                      <FormField
+                        control={form.control}
+                        name="emergencyContact"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-sm font-medium text-slate-700">
+                              Emergency Contact
+                            </FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="Emergency contact number"
+                                className="border-slate-200 focus:border-blue-500 focus:ring-blue-500"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
-            </CardContent>
-          </Card>
 
-          <Card className="w-full mx-auto my-3 col-span-2">
-            <CardHeader>
-              <CardTitle>Addition details</CardTitle>
-              <CardDescription>
-                Enter the student&apos;s information to register them in the
-                system.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className=" ">
-              <div className="grid-cols-1 md:grid-cols-3 space-y-7 ">
-                <div className="flex justify-between items-center">
-                  <FormField
-                    control={form.control}
-                    name="profileImage"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel> Your Profile Picture</FormLabel>
-                        <FormControl>
-                          <div className="flex  items-center justify-center">
-                            <div className="relative w-32 h-32 border-2 border-dashed rounded-lg flex items-center justify-center p-2">
+              {/* Profile & Additional Details */}
+              <div className="space-y-8">
+                {/* Additional Details */}
+                <Card className="border-0 shadow-sm">
+                  <CardHeader className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-t-lg">
+                    <div className="flex items-center gap-3">
+                      <div className="rounded-full bg-green-100 p-2">
+                        <GraduationCap className="h-5 w-5 text-green-600" />
+                      </div>
+                      <div>
+                        <CardTitle className="text-lg text-slate-900">
+                          Additional Details
+                        </CardTitle>
+                        <CardDescription className="text-slate-600">
+                          Personal information
+                        </CardDescription>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="p-6 space-y-6">
+                    <div className="flex items-center space-x-5 ">
+                      <FormField
+                        control={form.control}
+                        name="profileImage"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormControl>
+                              <div className="flex flex-col items-center space-y-4">
+                                <div className="relative w-32 h-32 border-2 border-dashed border-slate-300 rounded-full flex items-center justify-center bg-slate-50 hover:bg-slate-100 transition-colors">
+                                  <Input
+                                    type="file"
+                                    accept="image/*"
+                                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                    onChange={async (e) => {
+                                      const file = e.target.files?.[0];
+                                      if (file) {
+                                        const url = await uploadToCloudinary(
+                                          file
+                                        );
+                                        setProfileImage(url);
+                                        field.onChange(url);
+                                      }
+                                    }}
+                                  />
+                                  {profileImage ? (
+                                    <img
+                                      src={profileImage || '/placeholder.svg'}
+                                      alt="Profile"
+                                      className="w-full h-full object-cover rounded-lg"
+                                    />
+                                  ) : (
+                                    <div className="text-center">
+                                      <ImagePlus className="w-8 h-8 mx-auto mb-2 text-slate-400" />
+                                      <span className="text-sm text-slate-500">
+                                        Upload photo
+                                      </span>
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="rollNumber"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-sm font-medium text-slate-700">
+                              Roll Number
+                            </FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="Enter roll number"
+                                className="border-slate-200 focus:border-blue-500 focus:ring-blue-500"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+
+                    <FormField
+                      control={form.control}
+                      name="dateOfBirth"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium text-slate-700">
+                            Date of Birth
+                          </FormLabel>
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <FormControl>
+                                <Button
+                                  variant="outline"
+                                  className={cn(
+                                    'w-full pl-3 text-left font-normal border-slate-200 focus:border-blue-500 focus:ring-blue-500',
+                                    !field.value && 'text-muted-foreground'
+                                  )}
+                                >
+                                  {field.value ? (
+                                    new Intl.DateTimeFormat('en-IN', {
+                                      dateStyle: 'long',
+                                    }).format(field.value)
+                                  ) : (
+                                    <span>Pick a date</span>
+                                  )}
+                                  <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                </Button>
+                              </FormControl>
+                            </PopoverTrigger>
+                            <PopoverContent
+                              className="w-auto p-0"
+                              align="start"
+                            >
+                              <Calendar
+                                mode="single"
+                                selected={field.value}
+                                onSelect={field.onChange}
+                                disabled={(date) =>
+                                  date > new Date() ||
+                                  date < new Date('1900-01-01')
+                                }
+                                autoFocus
+                              />
+                            </PopoverContent>
+                          </Popover>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="gender"
+                      render={() => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium text-slate-700">
+                            Gender
+                          </FormLabel>
+                          <div className="flex flex-wrap gap-4">
+                            {genderOptions.map((item) => (
+                              <FormField
+                                key={item.id}
+                                control={form.control}
+                                name="gender"
+                                render={({ field }) => (
+                                  <FormItem className="flex items-center space-x-2 space-y-0">
+                                    <FormControl>
+                                      <Checkbox
+                                        checked={field.value === item.id}
+                                        onCheckedChange={(checked) => {
+                                          if (checked) {
+                                            field.onChange(item.id);
+                                          }
+                                        }}
+                                        className="border-slate-300"
+                                      />
+                                    </FormControl>
+                                    <FormLabel className="text-sm font-normal text-slate-700">
+                                      {item.label}
+                                    </FormLabel>
+                                  </FormItem>
+                                )}
+                              />
+                            ))}
+                          </div>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+
+            {/* Parents Section */}
+            <Card className="border-0 shadow-sm">
+              <CardHeader className="bg-gradient-to-r from-orange-50 to-red-50 rounded-t-lg">
+                <div className="flex items-center justify-between max-sm:flex-col max-sm:items-start max-sm:space-y-5">
+                  <div className="flex items-center gap-3">
+                    <div className="rounded-full bg-orange-100 p-2">
+                      <Users className="h-5 w-5 text-orange-600" />
+                    </div>
+                    <div>
+                      <CardTitle className="text-base text-slate-900">
+                        Parent/Guardian Information
+                      </CardTitle>
+                      <CardDescription className="text-slate-600 text-sm">
+                        Add multiple parents or guardians
+                      </CardDescription>
+                    </div>
+                  </div>
+                  <Button
+                    type="button"
+                    size={'sm'}
+                    variant="outline"
+                    className="border-orange-200 text-orange-600 hover:bg-orange-50 max-sm:flex max-sm:ml-auto"
+                    onClick={() =>
+                      append({
+                        firstName: '',
+                        lastName: '',
+                        email: '',
+                        phoneNumber: '',
+                        whatsAppNumber: '',
+                        relationship: 'MOTHER',
+                      })
+                    }
+                  >
+                    Add Parent
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent className="p-6">
+                <div className="space-y-8">
+                  {parents.map((field, index) => (
+                    <div key={index} className="relative">
+                      <div className="flex items-center justify-between mb-4">
+                        <Badge
+                          variant="secondary"
+                          className="bg-orange-100 text-orange-800"
+                        >
+                          Parent {index + 1}
+                        </Badge>
+                        {parents.length > 1 && (
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => remove(index)}
+                            className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        )}
+                      </div>
+                      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                        <FormField
+                          control={form.control}
+                          name={`parents.${index}.firstName`}
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>First Name</FormLabel>
+                              <FormControl>
+                                <Input
+                                  placeholder="Enter first name"
+                                  className="border-slate-200 focus:border-blue-500 focus:ring-blue-500"
+                                  {...field}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name={`parents.${index}.lastName`}
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Last Name</FormLabel>
+                              <FormControl>
+                                <Input
+                                  placeholder="Enter first name"
+                                  className="border-slate-200 focus:border-blue-500 focus:ring-blue-500"
+                                  {...field}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name={`parents.${index}.relationship`}
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-sm font-medium text-slate-700">
+                                Relationship
+                              </FormLabel>
+                              <Select
+                                value={field.value}
+                                onValueChange={field.onChange}
+                              >
+                                <FormControl>
+                                  <SelectTrigger className="border-slate-200 focus:border-blue-500 focus:ring-blue-500">
+                                    <SelectValue placeholder="Select grade" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  {relationshipOptions.map((relation) => (
+                                    <SelectItem
+                                      key={relation.id}
+                                      value={relation.value}
+                                    >
+                                      {relation.label}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name={`parents.${index}.email`}
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Email</FormLabel>
+                              <FormControl>
+                                <Input
+                                  placeholder="Enter first name"
+                                  className="border-slate-200 focus:border-blue-500 focus:ring-blue-500"
+                                  {...field}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name={`parents.${index}.phoneNumber`}
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Phone Number</FormLabel>
+                              <FormControl>
+                                <Input
+                                  placeholder="Enter first name"
+                                  className="border-slate-200 focus:border-blue-500 focus:ring-blue-500"
+                                  {...field}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name={`parents.${index}.whatsAppNumber`}
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>WhatsApp Number</FormLabel>
+                              <FormControl>
+                                <Input
+                                  placeholder="Enter first name"
+                                  className="border-slate-200 focus:border-blue-500 focus:ring-blue-500"
+                                  {...field}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Documents Section */}
+            <Card className="border-0 shadow-sm ">
+              <CardHeader className="bg-gradient-to-r from-teal-50 to-cyan-50 rounded-t-lg">
+                <div className="flex items-center justify-between max-sm:flex-col max-sm:items-start max-sm:space-y-5">
+                  <div className="flex items-center gap-3">
+                    <div className="rounded-full bg-teal-100 p-2">
+                      <FileText className="h-5 w-5 text-teal-600" />
+                    </div>
+                    <div>
+                      <CardTitle className="text-base text-slate-900">
+                        Documents
+                      </CardTitle>
+                      <CardDescription className="text-slate-600 text-sm">
+                        Upload required documents and certificates
+                      </CardDescription>
+                    </div>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={addDocument}
+                    className="border-teal-200 text-teal-600 hover:bg-teal-50 max-sm:flex max-sm:ml-auto"
+                  >
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add Document
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent className="p-6">
+                <h1 className="text-center animate-pulse text-lg text-green-500 font-semibold bg-green-50 py-3 px-4 rounded-md">
+                  This Feature is Coming Soon
+                </h1>
+                {documents.length === 0 ? (
+                  <div className="text-center py-8 text-slate-500">
+                    <FileText className="h-12 w-12 mx-auto mb-4 text-slate-300" />
+                    <p>
+                      No documents added yet. Click "Add Document" to get
+                      started.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="space-y-6">
+                    {documents.map((doc, index) => (
+                      <div
+                        key={doc.id}
+                        className="relative border border-slate-200 rounded-lg p-4"
+                      >
+                        <div className="flex items-center justify-between mb-4">
+                          <Badge
+                            variant="secondary"
+                            className="bg-teal-100 text-teal-800"
+                          >
+                            Document {index + 1}
+                          </Badge>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => removeDocument(doc.id)}
+                            className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+
+                        <div className="grid gap-4 sm:grid-cols-2">
+                          <div>
+                            <label className="text-sm font-medium text-slate-700 mb-2 block">
+                              Document Type
+                            </label>
+                            <Select
+                              value={doc.type}
+                              onValueChange={(value) =>
+                                updateDocument(doc.id, 'type', value)
+                              }
+                            >
+                              <SelectTrigger className="border-slate-200 focus:border-blue-500 focus:ring-blue-500">
+                                <SelectValue placeholder="Select document type" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {documentTypes.map((type) => (
+                                  <SelectItem
+                                    key={type.value}
+                                    value={type.value}
+                                  >
+                                    {type.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+
+                          <div>
+                            <label className="text-sm font-medium text-slate-700 mb-2 block">
+                              Upload File
+                            </label>
+                            <div className="relative">
                               <Input
                                 type="file"
-                                accept="image/*"
-                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer p-4"
-                                aria-label="Upload profile picture"
+                                accept=".pdf,.jpg,.jpeg,.png"
                                 onChange={async (e) => {
                                   const file = e.target.files?.[0];
                                   if (file) {
-                                    const url = await uploadToCloudinary(file);
-                                    setImage(url);
-                                    field.onChange(url);
+                                    updateDocument(doc.id, 'file', file);
+                                    updateDocument(doc.id, 'name', file.name);
+                                    // You can upload to cloudinary here if needed
+                                    // const url = await uploadToCloudinary(file);
+                                    // updateDocument(doc.id, 'url', url);
                                   }
                                 }}
+                                className="border-slate-200 focus:border-blue-500 focus:ring-blue-500"
                               />
-                              {image ? (
-                                <img
-                                  src={image || '/placeholder.svg'}
-                                  alt="Profile"
-                                  className="w-full h-full object-cover rounded-lg"
-                                />
-                              ) : (
-                                <div className="text-center">
-                                  <ImagePlus className="w-8 h-8 mx-auto mb-2 text-gray-400" />
-                                  <span className="text-sm text-gray-500">
-                                    Upload your photo
-                                  </span>
-                                </div>
-                              )}
+                              <Upload className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
                             </div>
+                            {doc.name && (
+                              <p className="text-xs text-slate-500 mt-1">
+                                Selected: {doc.name}
+                              </p>
+                            )}
                           </div>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <FormField
-                  control={form.control}
-                  name="rollNumber"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Enter Roll Number</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Enter Roll Number" {...field} />
-                      </FormControl>
-
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="dateOfBirth"
-                  render={({ field }) => (
-                    <FormItem className="">
-                      <FormLabel>Date of Birth</FormLabel>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <FormControl>
-                            <Button
-                              variant={'outline'}
-                              className={cn(
-                                'w-[205px] pl-3 text-left font-normal flex items-center gap-2',
-                                !field.value && 'text-muted-foreground'
-                              )}
-                            >
-                              {field.value ? (
-                                new Intl.DateTimeFormat('en-IN', {
-                                  dateStyle: 'long',
-                                }).format(field.value)
-                              ) : (
-                                <span>Pick a date</span>
-                              )}
-                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                            </Button>
-                          </FormControl>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                          <Calendar
-                            mode="single"
-                            selected={field.value}
-                            onSelect={field.onChange}
-                            // disabled={(date) => date < new Date('2023-01-01')}
-                            disabled={(date) =>
-                              date > new Date() || date < new Date('1900-01-01')
-                            }
-                            autoFocus
-                          />
-                        </PopoverContent>
-                      </Popover>
-
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="gender"
-                  render={() => (
-                    <FormItem>
-                      <FormLabel>Select Gender</FormLabel>
-
-                      <div className="flex space-x-3 ">
-                        {genderOptions.map((item) => (
-                          <FormField
-                            key={item.id}
-                            control={form.control}
-                            name="gender"
-                            render={({ field }) => {
-                              return (
-                                <FormItem
-                                  key={item.id}
-                                  className="flex flex-row items-start space-x-3 space-y-0"
-                                >
-                                  <FormControl>
-                                    <Checkbox
-                                      checked={
-                                        field.value === item.id.toUpperCase()
-                                      }
-                                      onCheckedChange={(checked) => {
-                                        if (checked) {
-                                          field.onChange(item.id.toUpperCase());
-                                        }
-                                      }}
-                                    />
-                                  </FormControl>
-                                  <FormLabel className="font-normal">
-                                    {item.label}
-                                  </FormLabel>
-                                </FormItem>
-                              );
-                            }}
-                          />
-                        ))}
+                        </div>
                       </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
 
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        <Card className="w-full mx-auto my-3">
-          <CardHeader>
-            <CardTitle>Parent details</CardTitle>
-            <CardDescription>
-              Enter the student&apos;s information to register them in the
-              system.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <FormField
-                control={form.control}
-                name={`parent.firstName`}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Parent First Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter Parent First Name" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name={`parent.lastName`}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Parent Last Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter Parent Last Name" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name={`parent.email`}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Parent Email</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter Parent Email" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name={`parent.phoneNumber`}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Parent Phone Number</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Enter Parent Phone Number"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name={`parent.whatsAppNumber`}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Parent WhatsApp Number</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Enter Parent WhatsApp Number"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name={`parent.relationship`}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Relationship</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select relationship" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="FATHER">Father</SelectItem>
-                        <SelectItem value="MOTHER">Mother</SelectItem>
-                        <SelectItem value="GUARDIAN">Guardian</SelectItem>
-                        <SelectItem value="OTHER">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-end">
+              <Button
+                type="button"
+                variant="outline"
+                className="border-slate-300 text-slate-700 hover:bg-slate-50"
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                disabled={pending}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-8"
+              >
+                {pending ? 'Creating Student...' : 'Create Student'}
+              </Button>
             </div>
-          </CardContent>
-        </Card>
-        <div className="flex justify-end space-x-3">
-          <Button variant="outline"> Cancel</Button>
-          <Button type="submit" disabled={pending} className="">
-            {pending ? 'Creating...' : 'Create Student'}
-          </Button>
-
-          {/* <CreateStudentButton /> */}
-        </div>
-      </form>
-    </Form>
+          </form>
+        </Form>
+      </div>
+    </div>
   );
 }
