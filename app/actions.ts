@@ -378,7 +378,6 @@ export async function createStudent(data: z.infer<typeof studentSchema>) {
     const student = await prisma.$transaction(async (tx) => {
       const newStudent = await tx.student.create({
         data: {
-          clerkId: clerkUser.id,
           organizationId,
           rollNumber: validated.rollNumber,
           firstName: validated.firstName,

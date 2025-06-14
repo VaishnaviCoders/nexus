@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import prisma from '@/lib/db';
 import { auth } from '@clerk/nextjs/server';
+import { getOrganizationId } from '../organization';
 
 interface FeeCategoryData {
   name: string;
@@ -10,14 +11,13 @@ interface FeeCategoryData {
 }
 
 export async function createFeeCategory(data: FeeCategoryData) {
-  const { orgId } = await auth();
-
+  const organizationId = await getOrganizationId();
   try {
     const result = await prisma.feeCategory.create({
       data: {
         name: data.name,
         description: data.description,
-        organizationId: orgId,
+        organizationId,
       },
     });
 

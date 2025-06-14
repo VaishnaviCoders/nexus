@@ -79,8 +79,7 @@ interface ParentData {
       category: string;
       receiptNumber: string;
       paymentMethod: string;
-      payerName: string | null;
-      payerPhone: string | null;
+      payerId: string;
     }[];
   }[];
 }

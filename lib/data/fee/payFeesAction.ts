@@ -57,8 +57,7 @@ export async function payFeesAction(
           paymentDate: new Date(),
           note: note || 'Payment made via UPI',
           paymentMethod: 'UPI',
-          payerName: `${user.firstName ?? ''} ${user.lastName ?? ''}`.trim(),
-          payerPhone: user.phoneNumbers?.[0]?.phoneNumber ?? null,
+          payerId: user.id,
           feeId,
         },
       });

@@ -1,12 +1,13 @@
 import prisma from '@/lib/db';
+import { getOrganizationId } from '@/lib/organization';
 import { auth } from '@clerk/nextjs/server';
 
 export async function getFeeCategories() {
-  const { orgId } = await auth();
+  const organizationId = await getOrganizationId();
   try {
     const categories = await prisma.feeCategory.findMany({
       where: {
-        organizationId: orgId,
+        organizationId: organizationId,
       },
       select: {
         id: true,
@@ -28,7 +29,7 @@ export async function getFeeCategories() {
       id: category.id,
       name: category.name,
       description: category.description,
-      organizationName: category.Organization?.name || 'Unknown',
+      organizationName: category.Organization.name || 'Unknown',
       createdAt: category.createdAt,
     }));
   } catch (error) {
