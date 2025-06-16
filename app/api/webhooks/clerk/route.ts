@@ -9,6 +9,17 @@ export async function GET(req: Request) {
   return new Response('Webhook received successfully', { status: 200 });
 }
 
+function mapClerkRole(clerkRole: string): Role {
+  const roleMap: Record<string, Role> = {
+    'org:admin': 'ADMIN',
+    'org:teacher': 'TEACHER',
+    'org:student': 'STUDENT',
+    'org:parent': 'PARENT',
+  };
+
+  return roleMap[clerkRole] || 'STUDENT';
+}
+
 export async function POST(req: Request) {
   console.log('🔄 Webhook POST request received');
   const CLERK_WEBHOOK_SIGNING_SECRET = process.env.CLERK_WEBHOOK_SIGNING_SECRET;
@@ -60,71 +71,133 @@ export async function POST(req: Request) {
   const { id } = evt.data;
   const eventType = evt.type;
 
-  if (eventType === 'organization.created') {
-    await prisma.organization.create({
-      data: {
-        organizationSlug: evt.data.slug,
-        name: evt.data.name,
-        organizationLogo: evt.data.image_url,
-        isActive: true,
-        isPaid: false,
-        createdAt: new Date(evt.data.created_at),
-      },
-    });
-  }
-
-  if (eventType === 'user.created' || eventType === 'user.updated') {
-    const {
-      first_name,
-      last_name,
-      created_at,
-      updated_at,
-      id,
-      email_addresses,
-      image_url,
-      public_metadata,
-    } = evt.data;
-
-    const roleFromMetadata = (public_metadata.role as Role) || 'STUDENT';
-
-    // Check if the first organization exists
-    let organization = await prisma.organization.findFirst();
-
-    // If no organization exists, create the first organization
-    if (!organization) {
-      organization = await prisma.organization.create({
+  switch (eventType) {
+    case 'organization.created':
+      await prisma.organization.create({
         data: {
-          name: 'First Organization', // Set a default name or use metadata
-          organizationSlug: 'first-organization',
-          organizationLogo: null, // Set a default logo if needed
+          id: evt.data.id,
+          organizationSlug: evt.data.slug,
+          name: evt.data.name,
+          organizationLogo: evt.data.image_url,
           isActive: true,
           isPaid: false,
-          createdAt: new Date(),
+          createdAt: new Date(evt.data.created_at),
+        },
+      });
+      break;
+
+    case 'organization.updated':
+      await prisma.organization.update({
+        where: {
+          id: evt.data.id,
+        },
+        data: {
+          name: evt.data.name,
+          organizationLogo: evt.data.image_url,
+          isActive: true,
+          isPaid: false,
+          updatedAt: new Date(evt.data.updated_at),
+        },
+      });
+      break;
+
+    case 'organization.deleted':
+      await prisma.organization.update({
+        where: {
+          id: evt.data.id,
+        },
+        data: {
+          isActive: false,
           updatedAt: new Date(),
         },
       });
+      break;
+
+    case 'organizationMembership.created': {
+      const clerkRole = evt.data.role;
+      const mappedRole = mapClerkRole(clerkRole);
+
+      await prisma.user.create({
+        data: {
+          clerkId: evt.data.public_user_data.user_id,
+          id: evt.data.public_user_data.user_id,
+          firstName: evt.data.public_user_data.first_name || '',
+          lastName: evt.data.public_user_data.last_name || '',
+          email: evt.data.public_user_data.identifier,
+          profileImage: evt.data.public_user_data.image_url || '',
+          organizationId: evt.data.organization.id,
+          role: mappedRole,
+          createdAt: new Date(evt.data.created_at), // Add membership creation date
+          updatedAt: new Date(evt.data.updated_at),
+        },
+      });
+      console.log(
+        '✅ Membership created:',
+        evt.data.public_user_data.user_id,
+        'Role:',
+        evt.data.role
+      );
+      break;
     }
 
-    const userData = await prisma.user.upsert({
-      where: { id: id },
-      update: {
-        role: roleFromMetadata,
-        organizationId: organization.id,
-      },
-      create: {
-        firstName: first_name || '',
-        lastName: last_name || '',
-        email: email_addresses[0].email_address,
-        profileImage: image_url,
-        id: id,
-        role: roleFromMetadata,
-        createdAt: new Date(created_at),
-        updatedAt: new Date(updated_at),
-        clerkId: id,
-        organizationId: organization.id,
-      },
-    });
-    console.log('user Updated or Created in DB', userData);
+    case 'organizationMembership.updated': {
+      const clerkRole = evt.data.role;
+      const mappedRole = mapClerkRole(clerkRole);
+
+      await prisma.user.update({
+        where: {
+          id: evt.data.public_user_data.user_id,
+        },
+        data: {
+          clerkId: evt.data.public_user_data.user_id,
+          organizationId: evt.data.organization.id,
+          role: mappedRole,
+          firstName: evt.data.public_user_data.first_name || '',
+          lastName: evt.data.public_user_data.last_name || '',
+          email: evt.data.public_user_data.identifier,
+          profileImage: evt.data.public_user_data.image_url || '',
+          createdAt: new Date(evt.data.created_at),
+          updatedAt: new Date(evt.data.updated_at),
+        },
+      });
+
+      console.log(
+        '✅ Membership updated:',
+        evt.data.public_user_data.user_id,
+        'New role:',
+        mappedRole
+      );
+      break;
+    }
+
+    case 'user.created':
+      await prisma.user.create({
+        data: {
+          id: evt.data.id,
+          clerkId: evt.data.id,
+          firstName: evt.data.first_name || '',
+          lastName: evt.data.last_name || '',
+          email: evt.data.email_addresses[0].email_address,
+          profileImage: evt.data.image_url || '',
+        },
+      });
+      break;
+    case 'user.updated':
+      await prisma.user.update({
+        where: {
+          clerkId: evt.data.id,
+        },
+        data: {
+          clerkId: evt.data.id,
+          firstName: evt.data.first_name || '',
+          lastName: evt.data.last_name || '',
+          email: evt.data.email_addresses[0].email_address,
+          profileImage: evt.data.image_url || '',
+        },
+      });
+      break;
+    default:
+      break;
   }
 
   console.log(`Received webhook with ID ${id} and event type of ${eventType}`);

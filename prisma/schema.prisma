@@ -46,8 +46,9 @@ model Organization {
   AcademicCalendar   AcademicCalendar[]
   AnonymousComplaint AnonymousComplaint[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Teacher   Teacher[]
 
   @@index([id])
   @@index([organizationSlug])
@@ -77,10 +78,29 @@ model User {
   parent         Parent?       @relation(fields: [parentId], references: [id])
   studentId      String?
   parentId       String?
+  Teacher        Teacher?
   FeePayment     FeePayment[]
 
   @@index([id, clerkId])
   @@index([organizationId])
+}
+
+model Teacher {
+  id             String       @id @default(cuid())
+  userId         String       @unique
+  user           User         @relation(fields: [userId], references: [id])
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  qualification     String
+  isActive          Boolean          @default(true)
+  experienceInYears Int
+  subjects          String[]
+  assignedGrades    String[]
+  assignedSections  String[]
+  employmentStatus  EmploymentStatus @default(ACTIVE)
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
 }
 
 model Student {
@@ -431,24 +451,6 @@ enum PaymentStatus {
   REFUNDED
   CANCELLED
 }
-
-// model Teacher {
-//   id             String       @id @default(cuid())
-//   userId         String       @unique
-//   user           User         @relation(fields: [userId], references: [id])
-//   organizationId String
-//   organization   Organization @relation(fields: [organizationId], references: [id])
-
-//   qualification  String
-//   isActive       Boolean      @default(true)
-//   experienceInYears     Int   
-//   subjects       String[]
-//   assignedGrades String[]
-//   assignedSections String[]
-//   employmentStatus EmploymentStatus@default(ACTIVE)
-//   createdAt      DateTime     @default(now())
-//   updatedAt      DateTime     @updatedAt
-// }
 
 enum EmploymentStatus {
   ACTIVE

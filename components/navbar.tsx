@@ -8,6 +8,7 @@ import { WelcomeMessage } from './dashboard-layout/WelcomeMessage';
 // import { syncUserAsync } from '@/lib/syncUser';
 import NotificationFeed from '@/app/components/dashboardComponents/NotificationFeed';
 import { Bell } from 'lucide-react';
+import { syncUserAsync } from '@/lib/syncUser';
 
 // Static loading components for better performance
 const LoadingBell = () => <Bell className="h-5 w-5 text-muted-foreground" />;
