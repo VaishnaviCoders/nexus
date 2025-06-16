@@ -1,38 +1,28 @@
 import NoticeList from '@/components/dashboard/notice/notice-list';
 
 import prisma from '@/lib/db';
-import { auth } from '@clerk/nextjs/server';
+
 import { Role } from '@prisma/client';
 import Link from 'next/link';
 import React, { Suspense } from 'react';
 import Loading from './loading';
-import { OrganizationSwitcher } from '@clerk/nextjs';
+import { getOrganizationId, getOrganizationUserRole } from '@/lib/organization';
 
 // const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const page = async () => {
-  const { orgId, orgRole } = await auth();
-  console.log('orgId', orgId);
-  // await delay(5000);
+  const { orgRole } = await getOrganizationUserRole();
 
-  if (!orgId)
-    return (
-      <div>
-        <h1>Organization not found , Select a organization from the sidebar</h1>{' '}
-        <OrganizationSwitcher />
-      </div>
-    );
+  const organizationId = await getOrganizationId();
 
   const notices = await prisma.notice.findMany({
     where: {
-      organizationId: orgId,
+      organizationId,
     },
     orderBy: {
       createdAt: 'desc',
     },
   });
-
-  if (!notices || notices.length === 0) return <div>No Notices Found</div>;
 
   const roleMap: Record<string, Role> = {
     'org:admin': 'ADMIN',
@@ -57,9 +47,15 @@ const page = async () => {
           </Link>
         ) : null}
       </div>
-      <Suspense fallback={<Loading />}>
-        <NoticeList notices={notices} orgRole={role} />
-      </Suspense>
+      {!notices || notices.length === 0 ? (
+        <>
+          <h1 className="text-center ">No Notices Found</h1>;{' '}
+        </>
+      ) : (
+        <Suspense fallback={<Loading />}>
+          <NoticeList notices={notices} orgRole={role} />
+        </Suspense>
+      )}
     </div>
   );
 };

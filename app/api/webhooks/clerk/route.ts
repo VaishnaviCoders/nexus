@@ -4,17 +4,22 @@ import { WebhookEvent } from '@clerk/nextjs/server';
 import prisma from '@/lib/db';
 import { Role } from '@prisma/client';
 
-export async function POST(req: Request) {
-  const WEBHOOK_SIGNING_SECRET = process.env.WEBHOOK_SIGNING_SECRET;
+export async function GET(req: Request) {
+  console.log('Webhook GET request received');
+  return new Response('Webhook received successfully', { status: 200 });
+}
 
-  if (!WEBHOOK_SIGNING_SECRET) {
+export async function POST(req: Request) {
+  const CLERK_WEBHOOK_SIGNING_SECRET = process.env.CLERK_WEBHOOK_SIGNING_SECRET;
+
+  if (!CLERK_WEBHOOK_SIGNING_SECRET) {
     throw new Error(
-      'Error: Please add WEBHOOK_SIGNING_SECRET from Clerk Dashboard to .env or .env.local'
+      'Error: Please add CLERK_WEBHOOK_SIGNING_SECRET from Clerk Dashboard to .env or .env.local'
     );
   }
 
   // Create new Svix instance with secret
-  const wh = new Webhook(WEBHOOK_SIGNING_SECRET);
+  const wh = new Webhook(CLERK_WEBHOOK_SIGNING_SECRET);
 
   // Get headers
   const headerPayload = await headers();
@@ -53,6 +58,19 @@ export async function POST(req: Request) {
   // For this guide, log payload to console
   const { id } = evt.data;
   const eventType = evt.type;
+
+  if (eventType === 'organization.created') {
+    await prisma.organization.create({
+      data: {
+        organizationSlug: evt.data.slug,
+        name: evt.data.name,
+        organizationLogo: evt.data.image_url,
+        isActive: true,
+        isPaid: false,
+        createdAt: new Date(evt.data.created_at),
+      },
+    });
+  }
 
   if (eventType === 'user.created' || eventType === 'user.updated') {
     const {

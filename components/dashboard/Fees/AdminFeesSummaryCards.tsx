@@ -38,7 +38,11 @@ const AdminFeesSummaryCards = async () => {
             </span>
           </div>
           <p className="text-xs text-muted-foreground mt-1">
-            {((collectedFees / totalFees) * 100).toFixed(1)}% of total fees
+            {totalFees > 0
+              ? `${((collectedFees / totalFees) * 100).toFixed(
+                  1
+                )}% of total fees`
+              : 'No fees collected yet'}
           </p>
         </CardContent>
       </Card>

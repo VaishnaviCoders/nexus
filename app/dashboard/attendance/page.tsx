@@ -49,7 +49,7 @@ export default async function AttendancePage({ searchParams }: PageProps) {
                 <Button type="button">
                   {' '}
                   <PlusIcon className="mr-2 h-4 w-4" />
-                  Mark Attendance
+                  Take Attendance
                 </Button>
               </Link>
             </div>

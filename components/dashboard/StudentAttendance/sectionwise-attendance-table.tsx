@@ -17,6 +17,9 @@ import {
   ChevronDown,
   ChevronUp,
   Eye,
+  LinkIcon,
+  Plus,
+  TriangleAlert,
 } from 'lucide-react';
 import {
   Select,
@@ -26,6 +29,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { SectionWiseAttendanceViewModal } from './sectionwise-attendance-modal';
+import Link from 'next/link';
 
 interface Students {
   id: string;
@@ -227,58 +231,82 @@ export function SectionAttendanceTable({
           </TableHeader>
 
           <TableBody>
-            {sortedSections.length > 0 ? (
-              sortedSections.map((section) => (
-                <TableRow key={section.id}>
-                  <TableCell className="font-medium whitespace-nowrap">
-                    {section.grade} - {section.section}
-                  </TableCell>
-                  <TableCell className="whitespace-nowrap">
-                    <StatusBadge status={section.status} />
-                  </TableCell>
-                  <TableCell className="text-right whitespace-nowrap">
-                    <div className="flex items-center justify-end gap-2">
-                      <span>{section.percentage}%</span>
-                      <div className="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
-                        <div
-                          className={`h-full ${
-                            section.percentage >= 80
-                              ? 'bg-green-500'
-                              : section.percentage >= 50
-                              ? 'bg-yellow-500'
-                              : 'bg-red-500'
-                          }`}
-                          style={{ width: `${section.percentage}%` }}
-                        />
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-right whitespace-nowrap">
-                    {section.studentsPresent}/{section.totalStudents}
-                  </TableCell>
-                  <TableCell className="text-right whitespace-nowrap">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-8 px-2"
-                      onClick={() => {
-                        setSelectedSection(section);
-                        setModalOpen(true);
-                      }}
+            {sections.length > 0 ? (
+              <>
+                {sortedSections.length > 0 ? (
+                  sortedSections.map((section) => (
+                    <TableRow key={section.id}>
+                      <TableCell className="font-medium whitespace-nowrap">
+                        {section.grade} - {section.section}
+                      </TableCell>
+                      <TableCell className="whitespace-nowrap">
+                        <StatusBadge status={section.status} />
+                      </TableCell>
+                      <TableCell className="text-right whitespace-nowrap">
+                        <div className="flex items-center justify-end gap-2">
+                          <span>{section.percentage}%</span>
+                          <div className="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
+                            <div
+                              className={`h-full ${
+                                section.percentage >= 80
+                                  ? 'bg-green-500'
+                                  : section.percentage >= 50
+                                  ? 'bg-yellow-500'
+                                  : 'bg-red-500'
+                              }`}
+                              style={{ width: `${section.percentage}%` }}
+                            />
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-right whitespace-nowrap">
+                        {section.studentsPresent}/{section.totalStudents}
+                      </TableCell>
+                      <TableCell className="text-right whitespace-nowrap">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 px-2"
+                          onClick={() => {
+                            setSelectedSection(section);
+                            setModalOpen(true);
+                          }}
+                        >
+                          <Eye className="h-4 w-4 mr-1" />
+                          View
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell
+                      colSpan={5}
+                      className="text-center py-6 text-muted-foreground"
                     >
-                      <Eye className="h-4 w-4 mr-1" />
-                      View
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))
+                      No sections found matching the current filters.
+                    </TableCell>
+                  </TableRow>
+                )}
+              </>
             ) : (
               <TableRow>
                 <TableCell
                   colSpan={5}
                   className="text-center py-6 text-muted-foreground"
                 >
-                  No sections found matching the current filters.
+                  <div className="flex flex-col items-center">
+                    <span className="flex items-center justify-center gap-2">
+                      <TriangleAlert className="text-orange-500 " />
+                      No section found
+                    </span>
+                    <Link
+                      href="/dashboard/grades"
+                      className="text-blue-500 flex items-center"
+                    >
+                      Create a new section
+                    </Link>
+                  </div>
                 </TableCell>
               </TableRow>
             )}

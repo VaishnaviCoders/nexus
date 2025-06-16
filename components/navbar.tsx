@@ -5,7 +5,7 @@ import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
 import React, { Suspense } from 'react';
 import { auth, currentUser } from '@clerk/nextjs/server';
 import { WelcomeMessage } from './dashboard-layout/WelcomeMessage';
-import { syncUserAsync } from '@/lib/syncUser';
+// import { syncUserAsync } from '@/lib/syncUser';
 import NotificationFeed from '@/app/components/dashboardComponents/NotificationFeed';
 import { Bell } from 'lucide-react';
 
@@ -18,6 +18,15 @@ const LoadingUserButton = () => (
 export async function Navbar() {
   // Get auth data first (faster than currentUser)
   const { orgId, orgRole, sessionClaims, userId } = await auth();
+
+  if (!userId || !orgId || !orgRole) {
+    console.warn('Missing user/org data from Clerk', {
+      userId,
+      orgId,
+      orgRole,
+    });
+    return;
+  }
 
   // Early return if not authenticated
   if (!userId || !orgId || !orgRole) {
@@ -43,10 +52,10 @@ export async function Navbar() {
   const user = await currentUser();
 
   // Background sync - don't block rendering
-  if (user) {
-    // Fire and forget - runs in background
-    syncUserAsync(user, orgId, orgRole).catch(console.error);
-  }
+  // if (user) {
+  //   // Fire and forget - runs in background
+  //   syncUserAsync(user, orgId, orgRole).catch(console.error);
+  // }
 
   const firstName = user?.firstName ?? 'Guest';
   const lastVisit = user?.lastSignInAt ? new Date(user.lastSignInAt) : null;

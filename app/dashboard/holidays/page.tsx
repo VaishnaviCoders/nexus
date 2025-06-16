@@ -52,7 +52,7 @@ export default async function AttendanceSystem() {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4">
+    <div className=" bg-gray-50 ">
       <div className="space-y-6">
         {/* Header */}
         {/* <div className="bg-white rounded-lg shadow-sm p-6">

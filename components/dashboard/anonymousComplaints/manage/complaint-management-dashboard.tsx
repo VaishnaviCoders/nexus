@@ -294,11 +294,13 @@ export function ComplaintManagementDashboard({
                 </div>
                 <div className="mt-4 flex items-center text-sm">
                   <span className="text-slate-600">
-                    {Math.round(
-                      (data.analytics.resolvedComplaints /
-                        data.analytics.totalComplaints) *
-                        100
-                    )}
+                    {data.analytics.resolvedComplaints > 0
+                      ? Math.round(
+                          (data.analytics.resolvedComplaints /
+                            data.analytics.totalComplaints) *
+                            100
+                        )
+                      : 0}
                     % resolution rate
                   </span>
                 </div>

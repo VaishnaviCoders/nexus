@@ -9,7 +9,6 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { useState } from 'react';
-import { createStudent } from '@/app/actions';
 import { studentSchema } from '@/lib/schemas';
 import type { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -55,6 +54,7 @@ import {
 } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { createStudent } from '@/lib/data/student/create-student-form-action';
 
 interface Parent {
   firstName: string;
@@ -288,7 +288,7 @@ export default function CreateStudentForm() {
                             <FormControl>
                               <Input
                                 placeholder="Enter first name"
-                                className="border-slate-200 focus:border-blue-500 focus:ring-blue-500"
+                                className="border-slate-200 focus:border-blue-500 focus:ring-blue-500 capitalize"
                                 {...field}
                               />
                             </FormControl>
@@ -307,7 +307,7 @@ export default function CreateStudentForm() {
                             <FormControl>
                               <Input
                                 placeholder="Enter middle name"
-                                className="border-slate-200 focus:border-blue-500 focus:ring-blue-500"
+                                className="border-slate-200 focus:border-blue-500 focus:ring-blue-500 capitalize"
                                 {...field}
                               />
                             </FormControl>
@@ -326,7 +326,7 @@ export default function CreateStudentForm() {
                             <FormControl>
                               <Input
                                 placeholder="Enter last name"
-                                className="border-slate-200 focus:border-blue-500 focus:ring-blue-500"
+                                className="border-slate-200 focus:border-blue-500 focus:ring-blue-500 capitalize"
                                 {...field}
                               />
                             </FormControl>
@@ -742,7 +742,7 @@ export default function CreateStudentForm() {
                               <FormControl>
                                 <Input
                                   placeholder="Enter first name"
-                                  className="border-slate-200 focus:border-blue-500 focus:ring-blue-500"
+                                  className="border-slate-200 focus:border-blue-500 focus:ring-blue-500 capitalize"
                                   {...field}
                                 />
                               </FormControl>
@@ -759,7 +759,7 @@ export default function CreateStudentForm() {
                               <FormControl>
                                 <Input
                                   placeholder="Enter first name"
-                                  className="border-slate-200 focus:border-blue-500 focus:ring-blue-500"
+                                  className="border-slate-200 focus:border-blue-500 focus:ring-blue-500 capitalize"
                                   {...field}
                                 />
                               </FormControl>

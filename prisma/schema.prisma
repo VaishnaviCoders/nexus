@@ -1,5 +1,12 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
 generator client {
   provider        = "prisma-client-js"
+  output          = "../lib/generated/prisma"
   previewFeatures = ["fullTextSearchPostgres"]
 }
 
@@ -10,14 +17,24 @@ datasource db {
 }
 
 model Organization {
-  id                 String               @id @default(cuid())
-  name               String?
-  organizationSlug   String               @unique
-  organizationLogo   String?
-  createdAt          DateTime             @default(now())
-  updatedAt          DateTime             @updatedAt
-  isActive           Boolean              @default(true)
-  isPaid             Boolean              @default(false)
+  id               String  @id @default(cuid())
+  name             String?
+  organizationSlug String  @unique
+  organizationLogo String?
+
+  contactEmail String? // admin or billing contact
+  contactPhone String?
+  website      String?
+
+  isActive      Boolean   @default(true)
+  isPaid        Boolean   @default(false)
+  plan          PlanType  @default(FREE)
+  planStartedAt DateTime?
+  planExpiresAt DateTime?
+
+  // Limits (can be used to restrict features based on plan)
+  maxStudents Int? // set limits per plan
+
   users              User[]
   notices            Notice[]
   Student            Student[]
@@ -28,6 +45,19 @@ model Organization {
   FeePayment         FeePayment[]
   AcademicCalendar   AcademicCalendar[]
   AnonymousComplaint AnonymousComplaint[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([id])
+  @@index([organizationSlug])
+}
+
+enum PlanType {
+  FREE
+  STANDARD
+  PREMIUM
+  ENTERPRISE
 }
 
 model User {
@@ -411,7 +441,7 @@ enum PaymentStatus {
 
 //   qualification  String
 //   isActive       Boolean      @default(true)
-//   experience     String
+//   experienceInYears     Int   
 //   subjects       String[]
 //   assignedGrades String[]
 //   assignedSections String[]
@@ -420,9 +450,13 @@ enum PaymentStatus {
 //   updatedAt      DateTime     @updatedAt
 // }
 
-// enum EmploymentStatus {
-//   ACTIVE
-//   INACTIVE
-//   RETIRED
-//   BANNED
-// }
+enum EmploymentStatus {
+  ACTIVE
+  ON_LEAVE
+  RESIGNED
+  RETIRED
+  TERMINATED
+  CONTRACTUAL
+  PROBATION
+  SUSPENDED
+}

@@ -2,7 +2,7 @@ import prisma from '@/lib/db';
 import { User } from '@clerk/nextjs/server';
 import { Role } from '@prisma/client';
 
-// Role mapping
+// Map Clerk org roles to Prisma roles
 const roleMap: Record<string, Role> = {
   'org:admin': 'ADMIN',
   'org:teacher': 'TEACHER',
@@ -10,7 +10,6 @@ const roleMap: Record<string, Role> = {
   'org:parent': 'PARENT',
 };
 
-// Cache for organization validation to avoid repeated DB calls
 const orgCache = new Map<string, CacheEntry>();
 const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
@@ -21,67 +20,60 @@ interface CacheEntry {
 
 const isValidOrganization = async (orgId: string): Promise<boolean> => {
   const now = Date.now();
-  const cached = orgCache.get(orgId) as CacheEntry | undefined;
-
-  // Return cached result if still valid
+  const cached = orgCache.get(orgId);
   if (cached && now - cached.timestamp < CACHE_TTL) {
     return cached.valid;
   }
 
   try {
-    const organization = await prisma.organization.findUnique({
+    const org = await prisma.organization.findUnique({
       where: { id: orgId },
-      select: { id: true }, // Only select id for performance
+      select: { id: true },
     });
 
-    const isValid = !!organization;
-    orgCache.set(orgId, { valid: isValid, timestamp: now });
-    return isValid;
+    const valid = !!org;
+    orgCache.set(orgId, { valid, timestamp: now });
+    return valid;
   } catch (error) {
-    console.error(`Error validating organization ${orgId}:`, error);
+    console.error('Error checking organization:', error);
     return false;
   }
 };
 
-// Synchronous version - blocks rendering (use sparingly)
 export const syncUser = async (
   user: User,
   orgId: string,
   orgRole: string
 ): Promise<void> => {
-  const role = orgRole && roleMap[orgRole] ? roleMap[orgRole] : 'STUDENT';
+  const role = roleMap[orgRole] ?? 'STUDENT';
 
-  if (!orgId) {
-    throw new Error('Organization ID is missing.');
-  }
-
-  // Validate organization exists
+  if (!orgId) throw new Error('Missing orgId');
   const isOrgValid = await isValidOrganization(orgId);
-  if (!isOrgValid) {
-    console.error(`Organization not found with ID: ${orgId}`);
-    throw new Error('Organization not found');
-  }
+  if (!isOrgValid) throw new Error(`Invalid organization: ${orgId}`);
 
-  const email = user.emailAddresses[0]?.emailAddress;
-  if (!email) {
-    throw new Error('User email is missing');
-  }
+  const clerkId = user.id;
+  const email =
+    user.primaryEmailAddress?.emailAddress ??
+    user.emailAddresses[0]?.emailAddress ??
+    null;
+
+  if (!email) throw new Error('User email is missing');
 
   try {
     await prisma.user.upsert({
-      where: { email },
+      where: { clerkId },
       update: {
-        profileImage: user.imageUrl,
-        role,
-        updatedAt: new Date(),
-        organizationId: orgId,
         firstName: user.firstName ?? '',
         lastName: user.lastName ?? '',
-        clerkId: user.id,
+        email,
+        profileImage: user.imageUrl,
+        organizationId: orgId,
+        role,
+        updatedAt: new Date(),
       },
       create: {
-        id: user.id,
-        clerkId: user.id,
+        id: clerkId,
+        clerkId,
         firstName: user.firstName ?? '',
         lastName: user.lastName ?? '',
         email,
@@ -92,14 +84,13 @@ export const syncUser = async (
       },
     });
 
-    console.log(`User synced: ${user.id} with Organization Id ${orgId}`);
+    console.log(`✅ Synced user ${clerkId} with org ${orgId}`);
   } catch (error) {
-    console.error('Error syncing Clerk user to DB:', error);
-    throw new Error('Failed to sync Clerk user');
+    console.error('❌ Error syncing user to DB:', error);
+    throw new Error('Failed to sync user');
   }
 };
 
-// Asynchronous version - doesn't block rendering
 export const syncUserAsync = async (
   user: User,
   orgId: string,
@@ -107,44 +98,33 @@ export const syncUserAsync = async (
 ): Promise<void> => {
   try {
     await syncUser(user, orgId, orgRole);
-  } catch (error) {
-    // Log error but don't throw to avoid blocking UI
-    console.error('Background user sync failed:', error);
-
-    // Optionally, you could add the sync to a queue for retry
-    // await addToSyncQueue({ userId: user.id, orgId, orgRole });
+  } catch (err) {
+    console.error('Background sync failed:', err);
   }
 };
 
-// Utility function to get current user from database
 export const getCurrentUser = async (clerkId: string) => {
   try {
     return await prisma.user.findUnique({
       where: { clerkId },
       include: {
         organization: {
-          select: {
-            id: true,
-            name: true,
-          },
+          select: { id: true, name: true },
         },
       },
     });
-  } catch (error) {
-    console.error('Error fetching current user:', error);
+  } catch (err) {
+    console.error('Error getting current user:', err);
     return null;
   }
 };
 
-// Batch sync function for multiple users (useful for webhooks)
 export const syncUsersInBatch = async (
   users: Array<{ user: User; orgId: string; orgRole: string }>
 ): Promise<void> => {
   const batchSize = 10;
-
   for (let i = 0; i < users.length; i += batchSize) {
     const batch = users.slice(i, i + batchSize);
-
     await Promise.allSettled(
       batch.map(({ user, orgId, orgRole }) =>
         syncUserAsync(user, orgId, orgRole)
@@ -153,7 +133,6 @@ export const syncUsersInBatch = async (
   }
 };
 
-// Clear organization cache (call this when organizations are updated)
 export const clearOrgCache = (): void => {
   orgCache.clear();
 };
