@@ -10,6 +10,7 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
+  console.log('🔄 Webhook POST request received');
   const CLERK_WEBHOOK_SIGNING_SECRET = process.env.CLERK_WEBHOOK_SIGNING_SECRET;
 
   if (!CLERK_WEBHOOK_SIGNING_SECRET) {
@@ -35,7 +36,7 @@ export async function POST(req: Request) {
   }
 
   // Get body
-  const payload = await req.json();
+  const payload: WebhookEvent = await req.json();
   const body = JSON.stringify(payload);
 
   let evt: WebhookEvent;
