@@ -22,7 +22,7 @@ import DotPattern from '@/components/ui/dot-pattern';
 import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
 import IntegrationComponent from '../../components/websiteComp/IntegrationComponent';
 import Link from 'next/link';
-import { Shield, ShieldCheck } from 'lucide-react';
+import { Shield, ShieldCheck, UserCircleIcon } from 'lucide-react';
 // import MagicBentoGrid from '../components/websiteComp/magic-bento';
 
 export default async function IndexPage() {
@@ -39,7 +39,15 @@ export default async function IndexPage() {
           <ModeToggle />
 
           <SignedOut>
-            <SignInButton />
+            <SignInButton>
+              <Button
+                variant="outline"
+                className="text-blue-500 hover:text-blue-600 border-blue-500/20 shadow-none"
+              >
+                <UserCircleIcon />
+                Sign In
+              </Button>
+            </SignInButton>
           </SignedOut>
           <SignedIn>
             <Button variant="outline" className="z-10" size={'sm'}>

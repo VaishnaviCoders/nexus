@@ -171,8 +171,15 @@ export async function POST(req: Request) {
     }
 
     case 'user.created':
-      await prisma.user.create({
-        data: {
+      await prisma.user.upsert({
+        where: { email: evt.data.email_addresses[0].email_address }, // Use email as the unique identifier
+        update: {
+          clerkId: evt.data.id,
+          firstName: evt.data.first_name || '',
+          lastName: evt.data.last_name || '',
+          profileImage: evt.data.image_url || '',
+        },
+        create: {
           id: evt.data.id,
           clerkId: evt.data.id,
           firstName: evt.data.first_name || '',
@@ -182,12 +189,18 @@ export async function POST(req: Request) {
         },
       });
       break;
+
     case 'user.updated':
-      await prisma.user.update({
-        where: {
+      await prisma.user.upsert({
+        where: { email: evt.data.email_addresses[0].email_address }, // Use email as the unique identifier
+        update: {
           clerkId: evt.data.id,
+          firstName: evt.data.first_name || '',
+          lastName: evt.data.last_name || '',
+          profileImage: evt.data.image_url || '',
         },
-        data: {
+        create: {
+          id: evt.data.id,
           clerkId: evt.data.id,
           firstName: evt.data.first_name || '',
           lastName: evt.data.last_name || '',

@@ -7,8 +7,9 @@ import { auth, currentUser } from '@clerk/nextjs/server';
 import { WelcomeMessage } from './dashboard-layout/WelcomeMessage';
 // import { syncUserAsync } from '@/lib/syncUser';
 import NotificationFeed from '@/app/components/dashboardComponents/NotificationFeed';
-import { Bell } from 'lucide-react';
+import { Bell, UserCircleIcon } from 'lucide-react';
 import { syncUserAsync } from '@/lib/syncUser';
+import { Button } from './ui/button';
 
 // Static loading components for better performance
 const LoadingBell = () => <Bell className="h-5 w-5 text-muted-foreground" />;
@@ -78,10 +79,11 @@ export async function Navbar() {
           <ModeToggle />
 
           <SignedOut>
-            <SignInButton mode="modal">
-              <button className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground">
+            <SignInButton>
+              <Button className="text-blue-500 hover:text-blue-600 border-blue-500/20 shadow-none">
+                <UserCircleIcon />
                 Sign In
-              </button>
+              </Button>
             </SignInButton>
           </SignedOut>
 
