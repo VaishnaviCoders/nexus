@@ -48,7 +48,7 @@ model Organization {
 
   // Limits (can be used to restrict features based on plan)
   maxStudents      Int? // set limits per plan
-  organizationType OrganizationType? // set limits per plan
+  organizationType OrganizationType?
 
   users              User[]
   notices            Notice[]
