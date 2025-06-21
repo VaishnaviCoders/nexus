@@ -1,6 +1,6 @@
 import prisma from '@/lib/db';
 import { FeeRecord } from '@/types';
-import { FeeStatus } from '@prisma/client';
+import { FeeStatus } from '@/lib/generated/prisma';
 
 export async function getFeeRecords(count: number = 50): Promise<FeeRecord[]> {
   try {

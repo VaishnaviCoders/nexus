@@ -33,11 +33,11 @@ import {
 } from '@/components/ui/dialog';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
-import { Role } from '@prisma/client';
 import { approveOrRejectNotice } from '@/app/actions';
 import { toast } from 'sonner';
 import Image from 'next/image';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Role } from '@/lib/generated/prisma';
 
 type Attachment = {
   name: string;

@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { Ellipsis, LogOut } from 'lucide-react';
 import { usePathname } from 'next/navigation';
+import { memo, useEffect } from 'react';
 
 import { cn } from '@/lib/utils';
 import { roleMenus } from '@/lib/menu-list';
@@ -16,131 +17,184 @@ import {
 } from '@/components/ui/tooltip';
 import { CollapseMenuButton } from './collapse-menu-button';
 import { SignOutButton } from '@clerk/nextjs';
-
+import { NotificationBadge } from './notification-badge';
 interface MenuProps {
   isOpen?: boolean;
   role: 'ADMIN' | 'TEACHER' | 'STUDENT' | 'PARENT';
 }
 
+// Memoized menu item component for better performance
+const MenuItem = memo(
+  ({
+    href,
+    label,
+    icon: Icon,
+    active,
+    isOpen,
+    pathname,
+  }: {
+    href: string;
+    label: string;
+    icon: any;
+    active?: boolean;
+    isOpen?: boolean;
+    pathname: string;
+  }) => {
+    const isActive =
+      (active === undefined && pathname.startsWith(href)) || active;
+
+    return (
+      <TooltipProvider disableHoverableContent>
+        <Tooltip delayDuration={100}>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              className={cn(
+                'w-full h-10 transition-all duration-150 ease-out group relative',
+                'hover:bg-blue-50/80 dark:hover:bg-blue-950/30',
+                isActive
+                  ? [
+                      'bg-blue-100/80 dark:bg-blue-900/40',
+                      'text-blue-700 dark:text-blue-300',
+                      'border border-blue-200/50 dark:border-blue-700/30',
+                      'font-medium shadow-sm',
+                    ]
+                  : [
+                      'text-slate-700 dark:text-slate-300',
+                      'hover:text-blue-700 dark:hover:text-blue-300',
+                    ],
+                'justify-start',
+                !isOpen && 'px-0'
+              )}
+              asChild
+            >
+              <Link href={href.startsWith('/') ? href : `/${href}`}>
+                {/* Active indicator */}
+                {isActive && (
+                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-blue-500 rounded-r-full" />
+                )}
+
+                <div
+                  className={cn(
+                    'flex items-center w-full transition-all duration-150',
+                    !isOpen ? 'justify-center' : 'justify-start gap-3 pl-2'
+                  )}
+                >
+                  <div className="flex items-center justify-center w-5 h-5 flex-shrink-0 relative">
+                    <Icon
+                      size={18}
+                      className="transition-transform duration-150 group-hover:scale-105"
+                    />
+                    {!isOpen && (
+                      <NotificationBadge label={label} isOpen={false} />
+                    )}
+                  </div>
+
+                  {isOpen && (
+                    <div className="flex items-center justify-between flex-1 min-w-0">
+                      <span className="font-medium truncate">{label}</span>
+                      <NotificationBadge label={label} isOpen={true} />
+                    </div>
+                  )}
+                </div>
+              </Link>
+            </Button>
+          </TooltipTrigger>
+          {!isOpen && (
+            <TooltipContent side="right" className="font-medium">
+              <div className="flex items-center gap-2">
+                {label}
+                <NotificationBadge label={label} isOpen={true} />
+              </div>
+            </TooltipContent>
+          )}
+        </Tooltip>
+      </TooltipProvider>
+    );
+  }
+);
+
+MenuItem.displayName = 'MenuItem';
+
+// Memoized group label component
+const GroupLabel = memo(
+  ({ groupLabel, isOpen }: { groupLabel: string; isOpen?: boolean }) => {
+    if ((isOpen && groupLabel) || isOpen === undefined) {
+      return (
+        <div className="px-2 py-3 mt-4 first:mt-2">
+          <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+            {groupLabel}
+          </p>
+        </div>
+      );
+    }
+
+    if (!isOpen && isOpen !== undefined && groupLabel) {
+      return (
+        <TooltipProvider>
+          <Tooltip delayDuration={100}>
+            <TooltipTrigger className="w-full">
+              <div className="flex justify-center py-2 mt-4 first:mt-2">
+                <div className="p-1 rounded-md bg-slate-200/50 dark:bg-slate-700/50">
+                  <Ellipsis className="h-3 w-3 text-slate-500 dark:text-slate-400" />
+                </div>
+              </div>
+            </TooltipTrigger>
+            <TooltipContent side="right" className="font-medium">
+              {groupLabel}
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      );
+    }
+
+    return null;
+  }
+);
+
+GroupLabel.displayName = 'GroupLabel';
+
 export function Menu({ isOpen, role }: MenuProps) {
   const pathname = usePathname();
   const menuList = roleMenus[role] || [];
+  // const { fetchNotifications } = useNotifications();
+
+  // Fetch notifications on mount
+  // useEffect(() => {
+  //   fetchNotifications();
+  // }, [fetchNotifications]);
 
   return (
-    <div className="relative h-full bg-gradient-to-b from-slate-50 via-white to-slate-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 border-r border-slate-200/60 dark:border-slate-700/60">
-      {/* Decorative gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-50/30 via-transparent to-purple-50/30 dark:from-blue-950/20 dark:via-transparent dark:to-purple-950/20 pointer-events-none" />
-
-      <ScrollArea className="relative z-10 h-full [&>div>div[style]]:!block">
-        <nav className="mt-6 h-full w-full">
-          <ul className="flex flex-col min-h-[calc(100vh-48px-36px-16px-32px)] lg:min-h-[calc(100vh-32px-40px-32px)] items-start space-y-1 px-3">
+    <div className="h-full flex flex-col">
+      {/* Scrollable Menu Items */}
+      <ScrollArea className="flex-1 px-3">
+        <nav className="py-2">
+          <ul className="space-y-1 pb-20">
+            {' '}
+            {/* Add extra padding at bottom to ensure all items are visible */}
             {menuList.map(({ groupLabel, menus }, index) => (
-              <li
-                className={cn('w-full', groupLabel ? 'pt-6' : '')}
-                key={index}
-              >
-                {(isOpen && groupLabel) || isOpen === undefined ? (
-                  <div className="relative mb-3">
-                    <div className="absolute inset-0 bg-gradient-to-r from-slate-200/50 to-transparent dark:from-slate-700/50 dark:to-transparent rounded-lg" />
-                    <p className="relative text-xs font-semibold text-slate-600 dark:text-slate-400 px-4 py-2 uppercase tracking-wider">
-                      {groupLabel}
-                    </p>
-                  </div>
-                ) : !isOpen && isOpen !== undefined && groupLabel ? (
-                  <TooltipProvider>
-                    <Tooltip delayDuration={100}>
-                      <TooltipTrigger className="w-full">
-                        <div className="w-full flex justify-center items-center mb-3">
-                          <div className="p-2 rounded-lg bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-800 shadow-sm">
-                            <Ellipsis className="h-4 w-4 text-slate-600 dark:text-slate-400" />
-                          </div>
-                        </div>
-                      </TooltipTrigger>
-                      <TooltipContent
-                        side="right"
-                        className="bg-slate-900 text-white border-slate-700"
-                      >
-                        <p>{groupLabel}</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                ) : (
-                  <div className="pb-2" />
-                )}
+              <li key={index} className="space-y-1">
+                <GroupLabel groupLabel={groupLabel} isOpen={isOpen} />
 
+                {/* Menu Items */}
                 <div className="space-y-1">
                   {menus.map(
-                    ({ href, label, icon: Icon, active, submenus }, index) =>
+                    (
+                      { href, label, icon: Icon, active, submenus },
+                      menuIndex
+                    ) =>
                       !submenus || submenus.length === 0 ? (
-                        <div className="w-full" key={index}>
-                          <TooltipProvider disableHoverableContent>
-                            <Tooltip delayDuration={100}>
-                              <TooltipTrigger asChild>
-                                <Button
-                                  variant="ghost"
-                                  className={cn(
-                                    'w-full justify-start h-11 mb-1 relative group transition-all duration-200 ease-in-out',
-                                    'hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 dark:hover:from-blue-950/50 dark:hover:to-indigo-950/50',
-                                    'hover:shadow-sm hover:border-blue-200/50 dark:hover:border-blue-700/50',
-                                    (active === undefined &&
-                                      pathname.startsWith(href)) ||
-                                      active
-                                      ? 'bg-gradient-to-r from-blue-100 to-indigo-100 dark:from-blue-900/50 dark:to-indigo-900/50 text-blue-700 dark:text-blue-300 shadow-sm border border-blue-200/50 dark:border-blue-700/50'
-                                      : 'text-slate-700 dark:text-slate-300 hover:text-blue-700 dark:hover:text-blue-300'
-                                  )}
-                                  asChild
-                                >
-                                  <Link
-                                    href={
-                                      href.startsWith('/') ? href : `/${href}`
-                                    }
-                                    passHref
-                                  >
-                                    {/* Active indicator */}
-                                    {((active === undefined &&
-                                      pathname.startsWith(href)) ||
-                                      active) && (
-                                      <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-gradient-to-b from-blue-500 to-indigo-500 rounded-r-full" />
-                                    )}
-
-                                    <span
-                                      className={cn(
-                                        'flex items-center justify-center w-5 h-5 transition-all duration-200',
-                                        isOpen === false ? '' : 'mr-3'
-                                      )}
-                                    >
-                                      <Icon
-                                        size={18}
-                                        className="transition-transform duration-200 group-hover:scale-110"
-                                      />
-                                    </span>
-
-                                    <p
-                                      className={cn(
-                                        'font-medium transition-all duration-300 ease-in-out',
-                                        isOpen === false
-                                          ? '-translate-x-96 opacity-0'
-                                          : 'translate-x-0 opacity-100'
-                                      )}
-                                    >
-                                      {label}
-                                    </p>
-                                  </Link>
-                                </Button>
-                              </TooltipTrigger>
-                              {isOpen === false && (
-                                <TooltipContent
-                                  side="right"
-                                  className="bg-slate-900 text-white border-slate-700"
-                                >
-                                  {label}
-                                </TooltipContent>
-                              )}
-                            </Tooltip>
-                          </TooltipProvider>
-                        </div>
+                        <MenuItem
+                          key={menuIndex}
+                          href={href}
+                          label={label}
+                          icon={Icon}
+                          active={active}
+                          isOpen={isOpen}
+                          pathname={pathname}
+                        />
                       ) : (
-                        <div className="w-full" key={index}>
+                        <div key={menuIndex}>
                           <CollapseMenuButton
                             icon={Icon}
                             label={label}
@@ -158,72 +212,61 @@ export function Menu({ isOpen, role }: MenuProps) {
                 </div>
               </li>
             ))}
-
-            {/* Enhanced Sign Out Button */}
-            <li className="w-full grow flex items-end pb-4">
-              <div className="w-full">
-                {/* Decorative separator */}
-                <div className="mb-4 mx-2">
-                  <div className="h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent dark:via-slate-600" />
-                </div>
-
-                <TooltipProvider>
-                  <Tooltip delayDuration={100}>
-                    <TooltipTrigger asChild>
-                      <SignOutButton redirectUrl="/">
-                        <Button
-                          variant="outline"
-                          className={cn(
-                            'w-full h-11 transition-all duration-200 ease-in-out group',
-                            'bg-gradient-to-r from-red-50 to-pink-50 dark:from-red-950/30 dark:to-pink-950/30',
-                            'border-red-200/50 dark:border-red-800/50',
-                            'hover:from-red-100 hover:to-pink-100 dark:hover:from-red-900/50 dark:hover:to-pink-900/50',
-                            'hover:border-red-300/50 dark:hover:border-red-700/50',
-                            'hover:shadow-sm text-red-700 dark:text-red-300',
-                            isOpen === false
-                              ? 'justify-center'
-                              : 'justify-start'
-                          )}
-                        >
-                          <span
-                            className={cn(
-                              'flex items-center justify-center transition-all duration-200',
-                              isOpen === false ? '' : 'mr-3'
-                            )}
-                          >
-                            <LogOut
-                              size={18}
-                              className="transition-transform duration-200 group-hover:scale-110"
-                            />
-                          </span>
-                          <p
-                            className={cn(
-                              'font-medium transition-all duration-300 ease-in-out',
-                              isOpen === false
-                                ? 'opacity-0 hidden'
-                                : 'opacity-100'
-                            )}
-                          >
-                            Sign out
-                          </p>
-                        </Button>
-                      </SignOutButton>
-                    </TooltipTrigger>
-                    {isOpen === false && (
-                      <TooltipContent
-                        side="right"
-                        className="bg-slate-900 text-white border-slate-700"
-                      >
-                        Sign out
-                      </TooltipContent>
-                    )}
-                  </Tooltip>
-                </TooltipProvider>
-              </div>
-            </li>
           </ul>
         </nav>
       </ScrollArea>
+
+      {/* Fixed Sign Out Button at Bottom */}
+      <div className="flex-shrink-0 p-3 border-t border-slate-200/60 dark:border-slate-700/60 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm">
+        <TooltipProvider>
+          <Tooltip delayDuration={100}>
+            <TooltipTrigger asChild>
+              <SignOutButton redirectUrl="/">
+                <Button
+                  variant="outline"
+                  className={cn(
+                    'w-full h-10 transition-all duration-150 ease-out group',
+                    'bg-red-50/80 dark:bg-red-950/20',
+                    'border-red-200/60 dark:border-red-800/40',
+                    'hover:bg-red-100/80 dark:hover:bg-red-900/30',
+                    'hover:border-red-300/60 dark:hover:border-red-700/40',
+                    'text-red-700 dark:text-red-300',
+                    'justify-start',
+                    !isOpen && 'px-0'
+                  )}
+                >
+                  <div
+                    className={cn(
+                      'flex items-center transition-all duration-150',
+                      !isOpen
+                        ? 'justify-center w-full'
+                        : 'justify-start gap-3 pl-2'
+                    )}
+                  >
+                    <LogOut
+                      size={18}
+                      className="transition-transform duration-150 group-hover:scale-105 flex-shrink-0"
+                    />
+                    <span
+                      className={cn(
+                        'font-medium transition-all duration-200 ease-out',
+                        !isOpen && 'opacity-0 w-0 overflow-hidden'
+                      )}
+                    >
+                      Sign out
+                    </span>
+                  </div>
+                </Button>
+              </SignOutButton>
+            </TooltipTrigger>
+            {!isOpen && (
+              <TooltipContent side="right" className="font-medium">
+                Sign out
+              </TooltipContent>
+            )}
+          </Tooltip>
+        </TooltipProvider>
+      </div>
     </div>
   );
 }

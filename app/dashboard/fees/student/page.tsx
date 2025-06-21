@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { cn } from '@/lib/utils';
+import { cn, formatCurrencyIN, formatDateIN } from '@/lib/utils';
 import prisma from '@/lib/db';
 import {
   Activity,
@@ -18,6 +18,20 @@ import {
   IndianRupee,
   PercentDiamond,
 } from 'lucide-react';
+import { redirect } from 'next/navigation';
+import { auth } from '@clerk/nextjs/server';
+
+async function getStudentFromUser(userId: string) {
+  return await prisma.student.findUnique({
+    where: {
+      userId: userId,
+    },
+    select: {
+      id: true,
+      createdAt: true,
+    },
+  });
+}
 
 async function getFees(studentId: string) {
   return await prisma.fee.findMany({
@@ -27,32 +41,28 @@ async function getFees(studentId: string) {
     include: {
       feeCategory: true,
     },
-  });
-}
-
-async function getStudentData(studentId: string) {
-  return await prisma.student.findMany({
-    where: {
-      id: studentId,
-    },
-    select: {
-      createdAt: true,
+    orderBy: {
+      createdAt: 'desc',
     },
   });
 }
 
-export default async function StudentFeePage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
-  const studentId = id;
+export default async function StudentFeePage() {
+  const { userId } = await auth();
 
-  console.log('Student ID', studentId);
+  if (!userId) {
+    return redirect('/sign-in');
+  }
 
-  const fees = await getFees(studentId);
-  const studentData = await getStudentData(studentId);
+  const student = await getStudentFromUser(userId);
+
+  console.log('Student', student);
+
+  if (!student) {
+    return redirect('/dashboard'); // Or show access denied
+  }
+
+  const fees = await getFees(student.id);
 
   const totalFees = fees.reduce((acc, fee) => acc + fee.totalFee, 0);
   const paidFees = fees.reduce((acc, fee) => acc + fee.paidAmount, 0);
@@ -144,12 +154,11 @@ export default async function StudentFeePage({
                 day: '2-digit',
                 month: 'short',
                 year: 'numeric',
-              }).format(studentData[0].createdAt)}
+              }).format(student.createdAt)}
             </div>
             <p className="text-xs text-muted-foreground mt-1">
               {Math.floor(
-                (new Date().getTime() -
-                  new Date(studentData[0].createdAt).getTime()) /
+                (new Date().getTime() - new Date(student.createdAt).getTime()) /
                   (1000 * 60 * 60 * 24 * 30)
               )}{' '}
               months enrolled
@@ -186,19 +195,15 @@ export default async function StudentFeePage({
                         fee.status === 'PAID'
                           ? 'bg-emerald-50 text-emerald-700 hover:bg-emerald-50 border-emerald-200'
                           : fee.status === 'UNPAID'
-                          ? 'bg-red-50 text-red-700 hover:bg-red-50 border-red-200'
-                          : ''
+                            ? 'bg-red-50 text-red-700 hover:bg-red-50 border-red-200'
+                            : ''
                       )}
                     >
                       {fee.status}
                     </Badge>
                   </div>
                   <div className="text-sm font-medium text-muted-foreground">
-                    {new Intl.NumberFormat('en-IN', {
-                      style: 'currency',
-                      currency: 'INR',
-                      maximumFractionDigits: 0,
-                    }).format(fee.totalFee)}
+                    {formatCurrencyIN(fee.totalFee)}
                   </div>
                 </div>
                 <CardDescription className="mt-1.5">
@@ -213,24 +218,14 @@ export default async function StudentFeePage({
                       Issue Date
                     </p>
                     <p className="text-sm mt-1">
-                      {new Intl.DateTimeFormat('en-IN', {
-                        day: '2-digit',
-                        month: 'short',
-                        year: 'numeric',
-                      }).format(fee.createdAt)}
+                      {formatDateIN(fee.createdAt)}
                     </p>
                   </div>
                   <div>
                     <p className="text-sm font-medium text-muted-foreground">
                       Due Date
                     </p>
-                    <p className="text-sm mt-1">
-                      {new Intl.DateTimeFormat('en-IN', {
-                        day: '2-digit',
-                        month: 'short',
-                        year: 'numeric',
-                      }).format(fee.dueDate)}
-                    </p>
+                    <p className="text-sm mt-1">{formatDateIN(fee.dueDate)}</p>
                   </div>
                   <div>
                     <p className="text-sm font-medium text-muted-foreground">
@@ -244,11 +239,7 @@ export default async function StudentFeePage({
                     </p>
                     <p className="text-sm mt-1">
                       {fee.status === 'PAID'
-                        ? `Paid ${new Intl.NumberFormat('en-IN', {
-                            style: 'currency',
-                            currency: 'INR',
-                            maximumFractionDigits: 0,
-                          }).format(fee.paidAmount)}`
+                        ? `Paid ${formatCurrencyIN(fee.paidAmount)}`
                         : 'Not paid yet'}
                     </p>
                   </div>

@@ -25,8 +25,7 @@ export default async function DemoLayout({
     <AdminPanelLayout role={role}>
       <Navbar />
       <BreadCrumbNavigation />
-
-      <div className="px-0 sm:px-4 ">{children}</div>
+      <div className="px-0 sm:px-4">{children}</div>
     </AdminPanelLayout>
   );
 }

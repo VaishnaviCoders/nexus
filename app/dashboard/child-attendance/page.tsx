@@ -10,11 +10,13 @@ export default async function ChildAttendanceMonitor() {
 
   const child = parentData?.students[0].student;
 
+  console.log('Childs Data', child);
+
   // const parentData = await getParentWithChildren(parentId);
 
   if (!parentData || parentData.students.length === 0 || !child?.id) {
     return (
-      <div className="py-10 text-center">
+      <div className="py-10 text-center ">
         <h1 className="text-2xl font-bold">No children found</h1>
         <p className="mt-4">
           Please contact the school administration for assistance.
@@ -26,6 +28,8 @@ export default async function ChildAttendanceMonitor() {
   const attendanceStats = await getAttendanceSummary(child.id);
 
   const AttendanceRecord = await getRecentAttendance(child.id);
+
+  console.log('Attendance Record', AttendanceRecord);
 
   const monthlyAttendance = await getMonthlyAttendance(child.id);
 

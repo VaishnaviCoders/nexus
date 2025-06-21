@@ -11,7 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { CalendarEventType } from '@prisma/client';
+import { CalendarEventType } from '@/lib/generated/prisma';
 import {
   AlertCircle,
   CheckCircle,

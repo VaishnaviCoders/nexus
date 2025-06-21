@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import prisma from '@/lib/db';
-import type { ComplaintStatus, Severity } from '@prisma/client';
+import type { ComplaintStatus, Severity } from '@/lib/generated/prisma';
 
 interface ComplaintFilters {
   status?: string;
@@ -180,20 +180,29 @@ export async function getComplaintsWithFilters(filters: ComplaintFilters) {
     });
 
     // Format breakdown data
-    const categoryBreakdownObj = categoryBreakdown.reduce((acc, item) => {
-      acc[item.category] = item._count.category;
-      return acc;
-    }, {} as Record<string, number>);
+    const categoryBreakdownObj = categoryBreakdown.reduce(
+      (acc, item) => {
+        acc[item.category] = item._count.category;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
-    const severityBreakdownObj = severityBreakdown.reduce((acc, item) => {
-      acc[item.severity] = item._count.severity;
-      return acc;
-    }, {} as Record<string, number>);
+    const severityBreakdownObj = severityBreakdown.reduce(
+      (acc, item) => {
+        acc[item.severity] = item._count.severity;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
-    const statusBreakdownObj = statusBreakdown.reduce((acc, item) => {
-      acc[item.currentStatus] = item._count.currentStatus;
-      return acc;
-    }, {} as Record<string, number>);
+    const statusBreakdownObj = statusBreakdown.reduce(
+      (acc, item) => {
+        acc[item.currentStatus] = item._count.currentStatus;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
     const totalPages = Math.ceil(totalCount / pageSize);
 

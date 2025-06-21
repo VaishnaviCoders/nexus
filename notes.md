@@ -67,3 +67,43 @@ Have to create short tutorials on how to use software
 Hints : Use public Questions on Quora and twitter post snippets
 
 Attendance is very big problem in all the medical college so there is only one solution that anyhow complete the attendance.
+
+Unused Components / Pages :
+http://localhost:3000/dashboard/fees
+
+Pending Pages :
+
+Dashboard For each Role
+
+Setting Page For each Role
+
+Admin
+
+Fee Category Edit Page : Completed But make to modal for Better UX / performance
+Delete Fee Category Page : Completed but if have data in fees then show error Foreign key constraint violated: `Fee_feeCategoryId_fkey (index)`
+Record Fee with Payment
+Send Reminder (SMS, Whatsapp Mail )
+Download Fees Details
+Download Receipt
+Do Something to SEND REMINDER HISTORY Component
+
+Attendance
+Date Range is not working
+Export Is not working
+
+Parent
+
+Remark Page -
+My Children Page : Proper Error Handling : No children found Then Give option to create :Done
+
+Fees Page : No data found for this parent.
+Notice : If not Notice found
+Attendance Monitoring Page : Calendar || Monthly Attendance || Recent Attendance .
+
+Student Page
+
+Assignments Page
+Attendance Page : Show only Own Attendance
+Teacher Feedback
+My Documents
+Update Profile

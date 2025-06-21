@@ -125,7 +125,7 @@ export const singleHolidayFormSchema = z.object({
   endDate: z.date(),
   type: z.enum(['PLANNED', 'SUDDEN', 'INSTITUTION_SPECIFIC']),
   reason: z.string().min(1, { message: 'Reason is required' }),
-  isRecurring: z.boolean().default(false),
+  isRecurring: z.boolean().default(false).optional(),
 });
 
 export const goggleImportHolidayFormSchema = z.array(

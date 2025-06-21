@@ -9,6 +9,11 @@ export async function getRecentAttendance(
       studentId: childId,
     },
     select: {
+      student: {
+        select: {
+          firstName: true,
+        },
+      },
       date: true,
       studentId: true,
       sectionId: true,

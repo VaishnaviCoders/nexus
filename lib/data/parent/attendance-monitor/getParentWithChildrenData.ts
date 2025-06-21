@@ -1,16 +1,27 @@
 import prisma from '@/lib/db';
+import { getCurrentUserId } from '@/lib/user';
 import { ParentData } from '@/types';
 import { performance } from 'perf_hooks';
 
 export async function getParentWithChildrenData() {
   const start = performance.now();
-  const parentData: ParentData | null = await prisma.parent.findUnique({
+
+  const userId = await getCurrentUserId();
+
+  const parentData = await prisma.parent.findUnique({
     where: {
-      id: 'cm97e0t2q0002vhvsz78ups0h',
+      userId: userId,
     },
     select: {
+      id: true,
       firstName: true,
       lastName: true,
+      email: true,
+      phoneNumber: true,
+      whatsAppNumber: true,
+      userId: true,
+      createdAt: true,
+      updatedAt: true,
       students: {
         select: {
           student: {
@@ -52,6 +63,7 @@ export async function getParentWithChildrenData() {
       },
     },
   });
+
   const end = performance.now();
 
   console.log('Parent Data Fetched in ', end - start, 'ms');

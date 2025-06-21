@@ -146,7 +146,7 @@ export function GradesLayoutClient({ initialGrades }: GradesLayoutClientProps) {
                     'transition-all duration-200 cursor-pointer group hover:shadow-md',
                     isActive
                       ? 'bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/50 dark:to-indigo-950/50 border-blue-200 dark:border-blue-700 shadow-sm'
-                      : 'hover:bg-slate-50 dark:hover:bg-slate-700/50 border-slate-200 dark:border-slate-700'
+                      : 'hover:bg-slate-50 dark:hover:border-blue-700   '
                   )}
                   onClick={() => router.push(`/dashboard/grades/${grade.id}`)}
                 >

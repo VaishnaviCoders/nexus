@@ -42,7 +42,6 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { CalendarEventType } from '@prisma/client';
 import { Calendar } from '@/components/ui/calendar';
 import {
   Popover,
@@ -72,6 +71,7 @@ import { createSingleHolidayAction } from '@/lib/data/holiday/create-single-holi
 import { deleteSingleHolidayAction } from '@/lib/data/holiday/delete-single-holiday';
 import { createCsvHolidayAction } from '@/lib/data/holiday/create-csv-holiday';
 import { deleteAllHolidaysAction } from '@/lib/data/holiday/delete-all-holidays';
+import { CalendarEventType } from '@/lib/generated/prisma';
 
 interface HolidayManagementProps {
   holidays: Holiday[];

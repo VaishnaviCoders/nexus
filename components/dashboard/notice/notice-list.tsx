@@ -31,10 +31,10 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 
-import { Role } from '@prisma/client';
 import { cn } from '@/lib/utils';
 import { deleteNotice } from '@/app/actions';
 import { DeleteNoticeButton } from '@/lib/SubmitButton';
+import { Role } from '@/lib/generated/prisma';
 
 interface Notice {
   id: string;
@@ -195,7 +195,7 @@ export default function NoticeList({
   return (
     <div className="w-full">
       <div className="rounded-md border">
-        <Table>
+        <Table className="">
           <TableHeader>
             <TableRow>
               {/* <TableHead className="w-[100px]">
@@ -256,28 +256,28 @@ export default function NoticeList({
                   {new Intl.DateTimeFormat('en-US').format(notice.endDate)}
                 </TableCell>
 
-                <TableCell>
+                <TableCell className="whitespace-nowrap">
                   <Badge
                     className={cn(
                       notice.isPublished
                         ? 'text-blue-500 bg-blue-50 hover:bg-blue-100'
                         : notice.isDraft
-                        ? 'text-gray-500 bg-gray-50 hover:bg-gray-100'
-                        : 'text-yellow-500 bg-yellow-50 hover:bg-yellow-100'
+                          ? 'text-gray-500 bg-gray-50 hover:bg-gray-100'
+                          : 'text-yellow-500 bg-yellow-50 hover:bg-yellow-100'
                     )}
                     variant={
                       notice.isPublished
                         ? 'default'
                         : notice.isDraft
-                        ? 'secondary'
-                        : 'outline'
+                          ? 'secondary'
+                          : 'outline'
                     }
                   >
                     {notice.isPublished
                       ? 'Published'
                       : notice.isDraft
-                      ? 'Draft'
-                      : 'Pending Approval'}
+                        ? 'Draft'
+                        : 'Pending Approval'}
                   </Badge>
                 </TableCell>
                 {userRole === 'ADMIN' || userRole === 'TEACHER' ? (
@@ -292,15 +292,15 @@ export default function NoticeList({
                         notice.isNoticeApproved
                           ? 'default'
                           : notice.isNoticeApproved
-                          ? 'secondary'
-                          : 'outline'
+                            ? 'secondary'
+                            : 'outline'
                       }
                     >
                       {notice.isNoticeApproved
                         ? 'Approved'
                         : notice.isDraft
-                        ? 'Draft'
-                        : 'Pending'}
+                          ? 'Draft'
+                          : 'Pending'}
                     </Badge>
                   </TableCell>
                 ) : null}
@@ -328,7 +328,7 @@ export default function NoticeList({
               servers.
             </DialogDescription>
           </DialogHeader>
-          <DialogFooter>
+          <DialogFooter className="flex flex-col gap-2">
             <Button
               variant="outline"
               onClick={() => setDeleteDialogOpen(false)}

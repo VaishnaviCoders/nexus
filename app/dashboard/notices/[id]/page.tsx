@@ -1,9 +1,9 @@
 import prisma from '@/lib/db';
 import { auth } from '@clerk/nextjs/server';
-import { Role } from '@prisma/client';
 import { AlertCircle } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import NoticeViewer from '@/components/dashboard/notice/notice-viewer';
+import { Role } from '@/lib/generated/prisma';
 
 type Attachment = {
   name: string;

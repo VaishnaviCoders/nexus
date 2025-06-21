@@ -16,6 +16,20 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+enum PlanType {
+  FREE
+  STANDARD
+  PREMIUM
+  ENTERPRISE
+}
+
+enum OrganizationType {
+  SCHOOL
+  COLLEGE
+  OTHER
+  COACHING_CLASS
+}
+
 model Organization {
   id               String  @id @default(cuid())
   name             String?
@@ -33,7 +47,8 @@ model Organization {
   planExpiresAt DateTime?
 
   // Limits (can be used to restrict features based on plan)
-  maxStudents Int? // set limits per plan
+  maxStudents      Int? // set limits per plan
+  organizationType OrganizationType? // set limits per plan
 
   users              User[]
   notices            Notice[]
@@ -54,32 +69,28 @@ model Organization {
   @@index([organizationSlug])
 }
 
-enum PlanType {
-  FREE
-  STANDARD
-  PREMIUM
-  ENTERPRISE
-}
-
 model User {
-  id             String        @id @default(cuid())
-  firstName      String
-  lastName       String
-  email          String        @unique
-  password       String?
-  profileImage   String
-  role           Role          @default(STUDENT)
-  clerkId        String        @unique
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
+  id           String  @id @default(cuid())
+  firstName    String
+  lastName     String
+  email        String  @unique
+  password     String?
+  profileImage String
+  role         Role    @default(STUDENT)
+  clerkId      String  @unique
+  isActive     Boolean @default(true)
+
   organization   Organization? @relation(fields: [organizationId], references: [id])
   organizationId String?
-  student        Student?      @relation(fields: [studentId], references: [id])
-  parent         Parent?       @relation(fields: [parentId], references: [id])
-  studentId      String?
-  parentId       String?
-  Teacher        Teacher?
-  FeePayment     FeePayment[]
+
+  teacher Teacher?
+  student Student?
+  parent  Parent?
+
+  FeePayment FeePayment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([id, clerkId])
   @@index([organizationId])
@@ -99,12 +110,16 @@ model Teacher {
   assignedGrades    String[]
   assignedSections  String[]
   employmentStatus  EmploymentStatus @default(ACTIVE)
-  createdAt         DateTime         @default(now())
-  updatedAt         DateTime         @updatedAt
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Student {
-  id               String   @id @default(cuid())
+  id     String  @id @default(cuid())
+  user   User?   @relation(fields: [userId], references: [id])
+  userId String? @unique
+
   firstName        String
   lastName         String
   middleName       String?
@@ -117,17 +132,17 @@ model Student {
   whatsAppNumber   String
   email            String
   emergencyContact String
-  section          Section  @relation(fields: [sectionId], references: [id])
-  sectionId        String
-  gradeId          String
-  grade            Grade    @relation(fields: [gradeId], references: [id])
   gender           Gender
+
+  section   Section @relation(fields: [sectionId], references: [id])
+  sectionId String
+  gradeId   String
+  grade     Grade   @relation(fields: [gradeId], references: [id])
 
   organization   Organization @relation(fields: [organizationId], references: [id])
   organizationId String
 
   Fee               Fee[]
-  User              User[]
   ParentStudent     ParentStudent[]
   StudentAttendance StudentAttendance[]
   StudentDocument   StudentDocument[]
@@ -147,17 +162,20 @@ model Student {
 }
 
 model Parent {
-  id             String          @id @default(cuid())
+  id     String  @id @default(cuid())
+  userId String? @unique
+  user   User?   @relation(fields: [userId], references: [id])
+
   firstName      String
   lastName       String
-  email          String          @unique
+  email          String @unique
   phoneNumber    String
   whatsAppNumber String
-  user           User[]
-  userId         String?
-  students       ParentStudent[]
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
+
+  students ParentStudent[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model ParentStudent {
@@ -171,13 +189,6 @@ model ParentStudent {
 
   @@index([relationship])
   @@index([parentId, studentId])
-}
-
-enum ParentRelationship {
-  FATHER
-  MOTHER
-  GUARDIAN
-  OTHER
 }
 
 model StudentAttendance {
@@ -400,6 +411,7 @@ model Notice {
   emailNotification    Boolean @default(true)
   pushNotification     Boolean @default(false)
   WhatsAppNotification Boolean @default(false)
+  smsNotification      Boolean @default(false)
 
   targetAudience String[] // String[] Array of Target Audience
   attachments    Json?    @default("[]")
@@ -462,3 +474,12 @@ enum EmploymentStatus {
   PROBATION
   SUSPENDED
 }
+
+// "TeacherFeedback",          // Missing - for teachers to give student feedback
+// "MonthlyAttendanceReport",  // Missing - AI-generated monthly summary of attendance
+// "FeedbackCategory",         // Optional - categorize feedback (e.g., Academics, Behavior)
+// "Assignment",            // Not in schema - could be needed for academic tracking
+// AssignmentSubmission    // Not in schema - could be needed for academic tracking
+// "Performance",           // Mentioned in comment but not implemented
+// "Marks",                 // Mentioned in comment but not implemented
+// Subject 

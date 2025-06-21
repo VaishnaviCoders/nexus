@@ -1,5 +1,4 @@
-import Link from 'next/link';
-import { MenuIcon, Sparkles } from 'lucide-react';
+import { MenuIcon } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -7,12 +6,13 @@ import {
   SheetHeader,
   SheetContent,
   SheetTrigger,
-  SheetTitle,
 } from '@/components/ui/sheet';
 import { Menu } from './menu';
 import { auth } from '@clerk/nextjs/server';
 import { OrganizationSwitcher } from '@clerk/nextjs';
-import type { Role } from '@prisma/client';
+import { DialogTitle } from '../ui/dialog';
+import { cn } from '@/lib/utils';
+import { Role } from '@/lib/generated/prisma';
 
 export async function SheetMenu() {
   const { userId, orgRole } = await auth();
@@ -39,64 +39,73 @@ export async function SheetMenu() {
             size={18}
             className="transition-transform duration-200 group-hover:scale-110"
           />
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/50 dark:to-indigo-950/50 opacity-0 group-hover:opacity-35 transition-opacity duration-200 rounded-md" />
         </Button>
       </SheetTrigger>
 
       <SheetContent
-        className="sm:w-80 px-0 h-full flex flex-col bg-gradient-to-b from-slate-50 via-white to-slate-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 border-l border-slate-200/60 dark:border-slate-700/60"
+        className="sm:w-80 px-0 h-full flex flex-col bg-white dark:bg-slate-900 border-l border-slate-200/60 dark:border-slate-700/60"
         side="left"
       >
-        {/* Decorative gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-50/30 via-transparent to-purple-50/30 dark:from-blue-950/20 dark:via-transparent dark:to-purple-950/20 pointer-events-none" />
-
-        <SheetHeader className="relative z-10 px-6 py-4">
-          <div className="relative">
-            {/* Header background */}
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-100/50 to-indigo-100/50 dark:from-blue-900/30 dark:to-indigo-900/30 rounded-xl border border-blue-200/30 dark:border-blue-700/30" />
-
-            <Button
-              className="relative flex justify-center items-center w-full py-6 bg-transparent hover:bg-transparent"
-              variant="link"
-              asChild
-            >
-              <Link href="/dashboard" className="flex items-center gap-3">
-                <SheetTitle className="font-bold text-xl bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                  <OrganizationSwitcher
-                    hidePersonal={true}
-                    afterSelectOrganizationUrl="/orgs/:slug"
-                    appearance={{
-                      elements: {
-                        organizationSwitcherPopoverActionButton__createOrganization:
-                          {
-                            display: 'none',
-                          },
-                        organizationSwitcherTrigger: {
-                          background: 'transparent',
-                          border: 'none',
-                          boxShadow: 'none',
-                          padding: '0',
-                          fontSize: '1.25rem',
-                          fontWeight: '700',
-                          color: 'transparent',
-                          backgroundImage:
-                            'linear-gradient(to right, rgb(37 99 235), rgb(79 70 229))',
-                          backgroundClip: 'text',
-                          WebkitBackgroundClip: 'text',
-                        },
-                        organizationSwitcherTrigger__hover: {
-                          background: 'transparent',
-                        },
+        <SheetHeader className="px-4 py-4 border-b border-slate-200/60 dark:border-slate-700/60">
+          <DialogTitle className="sr-only">Navigation menu</DialogTitle>
+          <div className="w-full flex items-center justify-center">
+            {/* Make the entire organization switcher clickable on mobile */}
+            <div className="w-full p-3 flex items-center justify-center rounded-lg border border-slate-200/60 dark:border-slate-700/60 bg-slate-50/50 dark:bg-slate-800/50">
+              <OrganizationSwitcher
+                hidePersonal={true}
+                appearance={{
+                  elements: {
+                    organizationSwitcherTrigger: {
+                      width: '100%',
+                      padding: '0',
+                      background: 'transparent',
+                      border: 'none',
+                      boxShadow: 'none',
+                      fontSize: '14px',
+                      fontWeight: '600',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '12px',
+                      color: 'black',
+                      '@media (prefers-color-scheme: dark)': {
+                        color: 'white',
                       },
-                    }}
-                  />
-                </SheetTitle>
-              </Link>
-            </Button>
+                    },
+                    organizationPreviewMainIdentifier: cn(
+                      'text-slate-700 dark:text-white font-semibold text-sm transition-all duration-300'
+                    ),
+                    organizationSwitcherTriggerIcon: cn(
+                      'text-slate-600 dark:text-white'
+                    ),
+                    organizationPreviewSecondaryIdentifier: {
+                      fontSize: '12px',
+                      fontWeight: '400',
+                      color: 'gray',
+                      '@media (prefers-color-scheme: dark)': {
+                        color: '#ccc',
+                      },
+                    },
+                    organizationSwitcherTrigger__hover: {
+                      background: 'rgba(59, 130, 246, 0.1)',
+                    },
+                    organizationSwitcherPopoverActionButton__createOrganization:
+                      {
+                        display: 'none',
+                      },
+                    // Ensure the manage button is clickable
+                    organizationSwitcherPopoverActionButton__manageOrganization:
+                      {
+                        cursor: 'pointer',
+                        pointerEvents: 'auto',
+                      },
+                  },
+                }}
+              />
+            </div>
           </div>
         </SheetHeader>
 
-        <div className="relative z-10 flex-1 px-3">
+        <div className="flex-1 overflow-hidden">
           {role ? (
             <Menu isOpen role={role} />
           ) : (

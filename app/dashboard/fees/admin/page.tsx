@@ -79,7 +79,7 @@ export default async function AdminFeeDashboard() {
       {/* Responsive Header */}
       <div className="flex flex-col gap-4 sm:flex-row px-2 sm:items-center sm:justify-between">
         <div className="space-y-1">
-          <h1 className="text-xl font-bold tracking-tight sm:text-2xl">
+          <h1 className="text-lg font-bold tracking-tight sm:text-2xl">
             Fee Management
           </h1>
           <p className="text-sm text-muted-foreground sm:text-base">

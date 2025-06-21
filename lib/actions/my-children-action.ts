@@ -1,8 +1,10 @@
 import { performance } from 'perf_hooks';
 import prisma from '../db';
+import { getCurrentUserId } from '../user';
 
 export default async function getAllChildrenByParentId(parentId: string) {
   const start = performance.now();
+
   const data = await prisma.parent.findUnique({
     where: { id: parentId },
     select: {

@@ -166,7 +166,7 @@ export function AttendanceTable({ records }: AttendanceRecordsProps) {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 my-3">
       <div className="rounded-md border">
         <Table>
           <TableHeader>

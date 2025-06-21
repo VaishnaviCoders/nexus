@@ -25,7 +25,7 @@ const FeeDistributionByCategory: React.FC<
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Fee Collection by Category</CardTitle>
+        <CardTitle className="text-lg">Fee Collection by Category</CardTitle>
         <CardDescription>
           Shows paid vs pending fees within each category
         </CardDescription>

@@ -208,11 +208,7 @@ const CreateSingleHolidayForm = () => {
           )}
         />
 
-        <Button
-          type="submit"
-          className="w-full"
-          disabled={!form.formState.isSubmitting}
-        >
+        <Button type="submit" className="w-full">
           {form.formState.isSubmitting ? (
             <>
               <Loader2 className="animate-spin mr-2 h-4 w-4" />

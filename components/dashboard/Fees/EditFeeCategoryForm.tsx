@@ -105,7 +105,7 @@ export function EditFeeCategoryForm({ category }: EditFeeCategoryFormProps) {
         </div>
 
         <Button type="submit" className="w-full my-3" disabled={isSubmitting}>
-          {isSubmitting ? 'Creating...' : 'Create Fee Category'}
+          {isSubmitting ? 'Editing...' : 'Edit Fee Category'}
         </Button>
       </form>
     </Form>

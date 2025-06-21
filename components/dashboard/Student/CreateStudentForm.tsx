@@ -9,6 +9,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { useState } from 'react';
+import Link from 'next/link';
 import { studentSchema } from '@/lib/schemas';
 import type { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -44,7 +45,7 @@ import {
 import { Calendar } from '@/components/ui/calendar';
 import { Checkbox } from '@/components/ui/checkbox';
 import { toast } from 'sonner';
-import type { Grade, ParentRelationship, Section } from '@prisma/client';
+import type { Grade, Section } from '@/lib/generated/prisma';
 import {
   Select,
   SelectContent,
@@ -53,17 +54,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
 import { createStudent } from '@/lib/data/student/create-student-form-action';
-
-interface Parent {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phoneNumber: string;
-  whatsAppNumber: string;
-  relationship: ParentRelationship;
-}
 
 interface DocumentFile {
   id: string;
@@ -145,7 +136,7 @@ export default function CreateStudentForm() {
 
       toast.success('Student created successfully!');
       setProfileImage(null);
-
+      setSelectedGradeId(null);
       setDocuments([]);
       form.reset();
     } catch (err) {
@@ -155,8 +146,6 @@ export default function CreateStudentForm() {
       setPending(false);
     }
   };
-
-  console.log('Form errors:', form.formState.errors);
 
   // const addParent = () => {
   //   setParents([
@@ -241,7 +230,7 @@ export default function CreateStudentForm() {
   );
 
   return (
-    <div className="bg-gradient-to-br from-slate-50 to-slate-100 p-4 md:p-6 lg:p-4">
+    <div className="">
       <div className="">
         <div className="mb-8">
           <h1 className="text-xl font-bold tracking-tight text-slate-900 md:text-2xl">
@@ -421,11 +410,33 @@ export default function CreateStudentForm() {
                                 </SelectTrigger>
                               </FormControl>
                               <SelectContent>
-                                {grades?.map((grade) => (
-                                  <SelectItem key={grade.id} value={grade.id}>
-                                    {grade.grade}
-                                  </SelectItem>
-                                ))}
+                                {grades ? (
+                                  grades.length > 0 ? (
+                                    grades.map((grade) => (
+                                      <SelectItem
+                                        key={grade.id}
+                                        value={grade.id}
+                                      >
+                                        {grade.grade}
+                                      </SelectItem>
+                                    ))
+                                  ) : (
+                                    <div className="p-2 text-center text-sm text-muted-foreground">
+                                      No grades found.
+                                      <Link
+                                        target="_blank"
+                                        href="/dashboard/grades"
+                                        className="ml-1 text-blue-500 hover:underline"
+                                      >
+                                        Create a grade
+                                      </Link>
+                                    </div>
+                                  )
+                                ) : (
+                                  <div className="p-2 text-center text-sm text-muted-foreground">
+                                    Loading grades...
+                                  </div>
+                                )}
                               </SelectContent>
                             </Select>
                             <FormMessage />
@@ -452,14 +463,33 @@ export default function CreateStudentForm() {
                                   </SelectTrigger>
                                 </FormControl>
                                 <SelectContent>
-                                  {sections?.map((section) => (
-                                    <SelectItem
-                                      key={section.id}
-                                      value={section.id}
-                                    >
-                                      {section.name}
-                                    </SelectItem>
-                                  ))}
+                                  {sections ? (
+                                    sections.length > 0 ? (
+                                      sections.map((section) => (
+                                        <SelectItem
+                                          key={section.id}
+                                          value={section.id}
+                                        >
+                                          {section.name}
+                                        </SelectItem>
+                                      ))
+                                    ) : (
+                                      <div className="p-2 text-center text-sm text-muted-foreground">
+                                        No sections found.
+                                        <Link
+                                          target="_blank"
+                                          href="/dashboard/grades"
+                                          className="ml-1 text-blue-500 hover:underline"
+                                        >
+                                          Create a section
+                                        </Link>
+                                      </div>
+                                    )
+                                  ) : (
+                                    <div className="p-2 text-center text-sm text-muted-foreground">
+                                      Loading sections...
+                                    </div>
+                                  )}
                                 </SelectContent>
                               </Select>
                               <FormMessage />
@@ -528,9 +558,8 @@ export default function CreateStudentForm() {
                                     onChange={async (e) => {
                                       const file = e.target.files?.[0];
                                       if (file) {
-                                        const url = await uploadToCloudinary(
-                                          file
-                                        );
+                                        const url =
+                                          await uploadToCloudinary(file);
                                         setProfileImage(url);
                                         field.onChange(url);
                                       }
@@ -887,7 +916,7 @@ export default function CreateStudentForm() {
                 </div>
               </CardHeader>
               <CardContent className="p-6">
-                <h1 className="text-center animate-pulse text-lg text-green-500 font-semibold bg-green-50 py-3 px-4 rounded-md">
+                <h1 className="text-center animate-pulse text-lg text-green-500 font-semibold bg-green-50 py-3 px-4 rounded-md ">
                   This Feature is Coming Soon
                 </h1>
                 {documents.length === 0 ? (

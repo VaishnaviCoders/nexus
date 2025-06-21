@@ -1,15 +1,25 @@
 import { ModeToggle } from '@/components/mode-toggle';
 import { SheetMenu } from '@/components/dashboard-layout/sheet-menu';
 import { Separator } from '@/components/ui/separator';
-import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
+import {
+  OrganizationList,
+  SignInButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+} from '@clerk/nextjs';
 import React, { Suspense } from 'react';
-import { auth, currentUser } from '@clerk/nextjs/server';
+import { auth, clerkClient, currentUser } from '@clerk/nextjs/server';
 import { WelcomeMessage } from './dashboard-layout/WelcomeMessage';
 // import { syncUserAsync } from '@/lib/syncUser';
 import NotificationFeed from '@/app/components/dashboardComponents/NotificationFeed';
 import { Bell, UserCircleIcon } from 'lucide-react';
 import { syncUserAsync } from '@/lib/syncUser';
 import { Button } from './ui/button';
+import { syncUserWithOrg } from '@/app/actions';
+import { redirect } from 'next/navigation';
+
+import prisma from '@/lib/db';
 
 // Static loading components for better performance
 const LoadingBell = () => <Bell className="h-5 w-5 text-muted-foreground" />;
@@ -21,14 +31,8 @@ export async function Navbar() {
   // Get auth data first (faster than currentUser)
   const { orgId, orgRole, sessionClaims, userId } = await auth();
 
-  if (!userId || !orgId || !orgRole) {
-    console.warn('Missing user/org data from Clerk', {
-      userId,
-      orgId,
-      orgRole,
-    });
-    return;
-  }
+  const user = await currentUser();
+  const client = await clerkClient();
 
   // Early return if not authenticated
   if (!userId || !orgId || !orgRole) {
@@ -50,14 +54,49 @@ export async function Navbar() {
     );
   }
 
-  // Get user data only when needed and run sync in background
-  const user = await currentUser();
+  if (!orgId) {
+    throw new Error('Organization not found in DB');
+  }
+
+  // if (!userId || !orgId || !orgRole) {
+  //   console.warn('Missing user/org data from Clerk', {
+  //     userId,
+  //     orgId,
+  //     orgRole,
+  //   });
+  //   redirect('/create-organization');
+  // }
+
+  const clerkOrg = await client.organizations.getOrganization({
+    organizationId: orgId,
+  }); // or from session
+
+  let dbOrg = await prisma.organization.findUnique({
+    where: { id: clerkOrg.id },
+  });
+
+  if (!dbOrg) {
+    // Optional: Only do this in dev
+    if (process.env.NODE_ENV === 'development') {
+      dbOrg = await prisma.organization.create({
+        data: {
+          id: clerkOrg.id,
+          name: clerkOrg.name,
+          organizationSlug: clerkOrg.slug || '',
+          isActive: true,
+        },
+      });
+      console.log('✅ Dev org created:', dbOrg);
+    } else {
+      throw new Error('Invalid organization: ' + clerkOrg.id);
+    }
+  }
 
   // Background sync - don't block rendering
-  // if (user) {
-  //   // Fire and forget - runs in background
-  //   syncUserAsync(user, orgId, orgRole).catch(console.error);
-  // }
+  if (user) {
+    // Fire and forget - runs in background
+    syncUserAsync(user, orgId, orgRole).catch(console.error);
+  }
 
   const firstName = user?.firstName ?? 'Guest';
   const lastVisit = user?.lastSignInAt ? new Date(user.lastSignInAt) : null;

@@ -1,12 +1,15 @@
 import prisma from '@/lib/db';
+import { getCurrentUserId } from '@/lib/user';
 
 const GetFeesByParentId = async () => {
   const start = performance.now();
 
-  const userId = 'cm965kxvk0002vhr87jn4nsyi';
+  const userId = await getCurrentUserId();
 
   const parent = await prisma.parent.findUnique({
-    where: { id: userId },
+    where: {
+      userId: userId,
+    },
     select: {
       firstName: true,
       lastName: true,

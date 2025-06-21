@@ -3,18 +3,11 @@
 import { auth, currentUser, User } from '@clerk/nextjs/server';
 import { clerkClient } from '@clerk/nextjs/server';
 import prisma from '../lib/db';
-import {
-  CreateNoticeFormSchema,
-  feeCategorySchema,
-  gradeSchema,
-  sectionSchema,
-  studentSchema,
-} from '../lib/schemas';
+import { feeCategorySchema, gradeSchema, sectionSchema } from '../lib/schemas';
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
 import { Resend } from 'resend';
 import { NoticeEmailTemplate } from '@/components/email-templates/noticeMail';
-import { Role, StudentAttendance } from '@prisma/client';
 import { Knock } from '@knocklabs/node';
 import { redirect } from 'next/navigation';
 import { parseWithZod } from '@conform-to/zod';
@@ -70,6 +63,81 @@ const mapTargetAudienceToRole = (audience: string): Role | null => {
     staff: Role.TEACHER, // Assuming staff maps to TEACHER role
   };
   return audienceMap[audience.toLowerCase()] || null;
+};
+
+export const syncUserWithOrg = async () => {
+  const { orgId, orgRole, orgSlug } = await auth();
+
+  if (!orgId) {
+    throw new Error('Missing orgId ');
+  }
+  if (!orgSlug) {
+    throw new Error('Missing orgSlug');
+  }
+  if (!orgRole) {
+    throw new Error('Missing orgRole');
+  }
+  const user = await currentUser();
+
+  if (!user) {
+    throw new Error('No user found');
+  }
+
+  const roleMap: Record<string, Role> = {
+    'org:admin': 'ADMIN',
+    'org:teacher': 'TEACHER',
+    'org:student': 'STUDENT',
+    'org:parent': 'PARENT',
+  };
+
+  const mappedRole: Role = roleMap[orgRole] || 'PARENT';
+
+  // default fallback
+
+  // ✅ Upsert organization
+  const organization = await prisma.organization.upsert({
+    where: { id: orgId },
+    update: {
+      name: orgSlug,
+      isActive: true,
+      isPaid: false,
+      updatedAt: new Date(),
+    },
+    create: {
+      id: orgId,
+      organizationSlug: orgSlug,
+      isActive: true,
+      isPaid: false,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
+  });
+
+  console.log('✅ Synced organization:', organization);
+  // ✅ Upsert user with organizationId and role
+  const syncedUser = await prisma.user.upsert({
+    where: { clerkId: user.id },
+    update: {
+      organizationId: orgId,
+      role: mappedRole,
+      firstName: user.firstName || '',
+      lastName: user.lastName || '',
+      email: user.emailAddresses[0]?.emailAddress || '',
+      profileImage: user.imageUrl || '',
+    },
+    create: {
+      id: user.id,
+      clerkId: user.id,
+      organizationId: orgId,
+      role: mappedRole,
+      firstName: user.firstName || '',
+      lastName: user.lastName || '',
+      email: user.emailAddresses[0]?.emailAddress || '',
+      profileImage: user.imageUrl || '',
+    },
+  });
+
+  console.log('✅ Synced user:', syncedUser);
 };
 
 // const getRecipientEmails = async (
@@ -453,10 +521,13 @@ export async function getStudentMonthlyAttendance(studentId: string) {
   ];
 
   // Initialize monthly attendance with 0s
-  const monthlyAttendance = allMonths.reduce((acc, month) => {
-    acc[month] = { month, attendance: 0 };
-    return acc;
-  }, {} as Record<string, { month: string; attendance: number }>);
+  const monthlyAttendance = allMonths.reduce(
+    (acc, month) => {
+      acc[month] = { month, attendance: 0 };
+      return acc;
+    },
+    {} as Record<string, { month: string; attendance: number }>
+  );
 
   // Process attendance data
   attendanceRecords.forEach((record) => {
@@ -618,6 +689,7 @@ import {
   endOfDay,
 } from 'date-fns';
 import FilterStudents from '@/lib/data/student/FilterStudents';
+import { Role, StudentAttendance } from '@/lib/generated/prisma';
 
 export async function getMonthlyFeeCollection(monthsBack: number) {
   const start = performance.now();

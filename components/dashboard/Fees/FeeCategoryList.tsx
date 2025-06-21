@@ -8,12 +8,14 @@ export async function FeeCategoryList() {
 
   if (categories.length === 0) {
     return (
-      <EmptyState
-        title="No fee categories found"
-        description="Create your first fee category to get started."
-        icons={[User, Activity, Pin]}
-        image="/EmptyStatePageNotFound.png"
-      />
+      <div className="flex items-center justify-center">
+        <EmptyState
+          title="No fee categories found"
+          description="Create your first fee category to get started."
+          icons={[User, Activity, Pin]}
+          image="/EmptyStatePageNotFound.png"
+        />
+      </div>
     );
   }
 

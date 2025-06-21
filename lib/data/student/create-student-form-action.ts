@@ -3,13 +3,17 @@
 import prisma from '@/lib/db';
 import { getOrganizationId } from '@/lib/organization';
 import { studentSchema } from '@/lib/schemas';
-import { clerkClient } from '@clerk/nextjs/server';
+import { auth, clerkClient } from '@clerk/nextjs/server';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
+
+// ZOD VAlidation
 
 // Configuration constants
 const RETRY_ATTEMPTS = 3;
 const RETRY_DELAY = 1000; // 1 second
+
+const redirectUrl = 'http://localhost:3000/dashboard/';
 
 // Utility function for delays
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -40,14 +44,20 @@ async function retryOperation<T>(
 
 // Enhanced error classes for better error handling
 class StudentCreationError extends Error {
-  constructor(message: string, public cause?: Error) {
+  constructor(
+    message: string,
+    public cause?: Error
+  ) {
     super(message);
     this.name = 'StudentCreationError';
   }
 }
 
 class ClerkOperationError extends Error {
-  constructor(message: string, public cause?: Error) {
+  constructor(
+    message: string,
+    public cause?: Error
+  ) {
     super(message);
     this.name = 'ClerkOperationError';
   }
@@ -82,6 +92,7 @@ async function cleanupFailedStudent(
 
 export async function createStudent(data: z.infer<typeof studentSchema>) {
   const organizationId = await getOrganizationId();
+  const { userId } = await auth();
   const client = await clerkClient();
   const createdClerkUsers: string[] = []; // Track created users for cleanup
 
@@ -99,7 +110,6 @@ export async function createStudent(data: z.infer<typeof studentSchema>) {
 
     console.log('✅ Clerk Organization Details:', organization);
 
-    // Extract membership limit from organization details
     // This might be in organization.maxAllowedMemberships or similar property
     const membershipLimit = organization.maxAllowedMemberships || 100; // fallback to 100 if not available
 
@@ -166,12 +176,12 @@ export async function createStudent(data: z.infer<typeof studentSchema>) {
     console.log('🏛️ Adding student to organization...');
     try {
       // Check if student is already a member
-      const existingMembership =
+      const studentMemberships =
         await client.organizations.getOrganizationMembershipList({
           organizationId,
         });
 
-      if (existingMembership.data.length === 0) {
+      if (studentMemberships.data.length === 0) {
         await retryOperation(async () => {
           return await client.organizations.createOrganizationMembership({
             organizationId,
@@ -180,6 +190,15 @@ export async function createStudent(data: z.infer<typeof studentSchema>) {
           });
         });
         console.log('✅ Student added to organization successfully');
+
+        await client.organizations.createOrganizationInvitation({
+          organizationId: organization.id,
+          emailAddress: validated.email,
+          role: 'org:student',
+          redirectUrl: redirectUrl,
+          inviterUserId: userId || 'unknown',
+        });
+        console.log('✉️ Invitation sent to student:', validated.email);
       } else {
         console.log('✅ Student already exists in organization');
       }
@@ -243,12 +262,13 @@ export async function createStudent(data: z.infer<typeof studentSchema>) {
 
           // Add parent to organization (only if not already a member)
           console.log(`🏛️ Adding parent ${index + 1} to organization...`);
-          const existingParentMembership =
+
+          const parentMemberships =
             await client.organizations.getOrganizationMembershipList({
               organizationId,
             });
 
-          if (existingParentMembership.data.length === 0) {
+          if (parentMemberships.data.length === 0) {
             await retryOperation(async () => {
               return await client.organizations.createOrganizationMembership({
                 organizationId,
@@ -259,6 +279,15 @@ export async function createStudent(data: z.infer<typeof studentSchema>) {
             console.log(
               `✅ Parent ${index + 1} added to organization successfully`
             );
+
+            await client.organizations.createOrganizationInvitation({
+              organizationId: organization.id,
+              emailAddress: parentData.email,
+              role: 'org:parent',
+              redirectUrl: redirectUrl,
+              inviterUserId: userId || 'unknown',
+            });
+            console.log('✉️ Invitation sent to parent:', parentData.email);
           } else {
             console.log(
               `✅ Parent ${index + 1} already exists in organization`
@@ -312,6 +341,7 @@ export async function createStudent(data: z.infer<typeof studentSchema>) {
         const studentUser = await tx.user.upsert({
           where: { clerkId: studentClerkUser.id },
           create: {
+            id: studentClerkUser.id,
             clerkId: studentClerkUser.id,
             organizationId,
             email: validated.email,
@@ -321,10 +351,10 @@ export async function createStudent(data: z.infer<typeof studentSchema>) {
             profileImage:
               validated.profileImage || studentClerkUser.imageUrl || '',
             role: 'STUDENT',
-            studentId: newStudent.id,
             createdAt: new Date(),
           },
           update: {
+            id: studentClerkUser.id,
             organizationId,
             email: validated.email,
             firstName: validated.firstName,
@@ -333,7 +363,6 @@ export async function createStudent(data: z.infer<typeof studentSchema>) {
             profileImage:
               validated.profileImage || studentClerkUser.imageUrl || '',
             role: 'STUDENT',
-            studentId: newStudent.id,
             updatedAt: new Date(),
           },
         });
@@ -347,6 +376,7 @@ export async function createStudent(data: z.infer<typeof studentSchema>) {
           const prismaParentUser = await tx.user.upsert({
             where: { clerkId: clerkUser.id },
             create: {
+              id: clerkUser.id,
               email: parentData.email,
               profileImage: clerkUser.imageUrl || '',
               firstName: parentData.firstName,
@@ -357,6 +387,7 @@ export async function createStudent(data: z.infer<typeof studentSchema>) {
               createdAt: new Date(),
             },
             update: {
+              id: clerkUser.id,
               firstName: parentData.firstName,
               lastName: parentData.lastName,
               updatedAt: new Date(),

@@ -104,7 +104,7 @@ export function MonthlyFeeCollection({
     <Card className={cn('w-full', className)}>
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <div>
-          <CardTitle>Monthly Fee Collection</CardTitle>
+          <CardTitle className="text-lg">Monthly Fee Collection</CardTitle>
           <CardDescription>
             Fee collection trend over {selectedYear}
           </CardDescription>

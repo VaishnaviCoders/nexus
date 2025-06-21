@@ -44,7 +44,7 @@ export function ClientChildAttendance({
   );
 
   return (
-    <div className="space-y-6 px-4 ">
+    <div className="space-y-6 px-4 min-h-screen">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-2 border-b">
         <h1 className="text-2xl font-bold tracking-tight">
           {selectedChild.firstName} {selectedChild.lastName}'s Attendance

@@ -2,11 +2,14 @@ import NoticeList from '@/components/dashboard/notice/notice-list';
 
 import prisma from '@/lib/db';
 
-import { Role } from '@prisma/client';
 import Link from 'next/link';
 import React, { Suspense } from 'react';
 import Loading from './loading';
 import { getOrganizationId, getOrganizationUserRole } from '@/lib/organization';
+import { EmptyState } from '@/components/EmptyState';
+import { Activity, Pin, Newspaper } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { Role } from '@/lib/generated/prisma';
 
 // const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -35,7 +38,7 @@ const page = async () => {
   // console.log('Detected Clerk Role:', role);
 
   return (
-    <div className="w-full mx-auto">
+    <div className="w-full mx-auto ">
       <div className="flex justify-between items-center px-4 pb-5">
         <h1 className="text-xl font-bold ">All Notices</h1>
         {role === 'ADMIN' || role === 'TEACHER' ? (
@@ -49,7 +52,30 @@ const page = async () => {
       </div>
       {!notices || notices.length === 0 ? (
         <>
-          <h1 className="text-center ">No Notices Found</h1>;{' '}
+          <div className="flex items-center justify-center">
+            <EmptyState
+              title={cn(
+                role === 'ADMIN'
+                  ? 'No Notices Published Yet'
+                  : role === 'TEACHER'
+                    ? 'Your Class Wall Looks Empty'
+                    : 'No Notices Available'
+              )}
+              description={cn(
+                role === 'ADMIN'
+                  ? 'Create your first announcement to keep everyone informed about important updates.'
+                  : role === 'TEACHER'
+                    ? 'Post notices to share lessons, assignments, or important class information.'
+                    : role === 'STUDENT'
+                      ? 'Check back later for updates from your teachers and school.'
+                      : role === 'PARENT'
+                        ? "Your child's school will post important notices here."
+                        : 'No content available yet.'
+              )}
+              icons={[Newspaper, Activity, Pin]}
+              image="/EmptyStatePageNotFound.png"
+            />
+          </div>
         </>
       ) : (
         <Suspense fallback={<Loading />}>

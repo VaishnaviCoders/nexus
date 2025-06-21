@@ -1,4 +1,4 @@
-import { ComplaintStatus, Severity } from '@prisma/client';
+import { ComplaintStatus, Severity } from '@/lib/generated/prisma';
 import { type ClientUploadedFileData } from 'uploadthing/types';
 
 export interface UploadedFile<T = unknown> extends ClientUploadedFileData<T> {}
@@ -77,8 +77,15 @@ export interface FeeReminderRecipient {
 // Parent Child Attendance Monitor
 
 export type ParentData = {
+  id: string;
   firstName: string;
   lastName: string;
+  email: string;
+  phoneNumber: string;
+  whatsAppNumber: string;
+  userId: string | null;
+  createdAt: Date;
+  updatedAt: Date;
   students: {
     student: {
       id: string;

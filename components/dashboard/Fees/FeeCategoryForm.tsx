@@ -63,7 +63,11 @@ export function FeeCategoryForm() {
                 <FormItem>
                   <FormLabel>Category Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="Category Name" {...field} />
+                    <Input
+                      placeholder="Category Name"
+                      {...field}
+                      className="capitalize"
+                    />
                   </FormControl>
                   <FormDescription>
                     This is your public Category Name.
@@ -82,7 +86,7 @@ export function FeeCategoryForm() {
                 <FormItem>
                   <FormLabel>Description (Optional)</FormLabel>
                   <FormControl>
-                    <Input placeholder="Description" {...field} />
+                    <Input placeholder="Description" {...field} className="" />
                   </FormControl>
                   <FormDescription>
                     This is your public Category Name.

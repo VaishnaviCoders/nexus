@@ -27,9 +27,9 @@ export default async function ParentDashboard() {
   );
   const paymentPercentage = Math.round((totalPaid / totalFees) * 100);
 
-  if (!parentData) {
-    return <div>No data found for this parent.</div>;
-  }
+  // if (!parentData) {
+  //   return <div>No data found for this parent.</div>;
+  // }
 
   console.log(
     'Client Parent Data',

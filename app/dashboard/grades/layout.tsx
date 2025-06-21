@@ -42,7 +42,7 @@ export default async function GradesLayout({
   }));
 
   return (
-    <div className="p-4 h-full bg-gradient-to-br bg-red-50 from-slate-50 via-white to-blue-50/30 dark:from-slate-900 dark:via-slate-800 dark:to-blue-950/20">
+    <div className="p-4">
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 ">
         {/* Sidebar */}
         <div className="lg:col-span-1">
