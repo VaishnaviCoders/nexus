@@ -6,7 +6,7 @@ import {
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { CheckCircle, Users, Calendar, DollarSign, Bell } from 'lucide-react';
+import { CheckCircle, Users, Calendar, IndianRupee, Bell } from 'lucide-react';
 import Link from 'next/link';
 import { ParentDashboardStatsContent } from '@/components/dashboard/parent/parent-dashboard-stats-cards';
 import { NoticesSummaryCard } from '@/components/dashboard/parent/notice-summary-card';
@@ -50,7 +50,7 @@ export default function ParentDashboard() {
                 </Link>
                 <Link href="/dashboard/fees/parent">
                   <Button size="sm">
-                    <DollarSign className="w-4 h-4 mr-2" />
+                    <IndianRupee className="w-4 h-4 mr-2" />
                     Pay Fees
                   </Button>
                 </Link>
@@ -90,7 +90,7 @@ export default function ParentDashboard() {
               </Link>
               <Link href="/dashboard/fees/parent">
                 <Button variant="outline" className="w-full justify-start">
-                  <DollarSign className="w-4 h-4 mr-2" />
+                  <IndianRupee className="w-4 h-4 mr-2" />
                   Pay Fees
                 </Button>
               </Link>

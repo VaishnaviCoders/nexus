@@ -98,7 +98,7 @@ My Children Page : Proper Error Handling : No children found Then Give option to
 
 Fees Page : No data found for this parent.
 Notice : If not Notice found
-Attendance Monitoring Page : Calendar || Monthly Attendance || Recent Attendance .
+Attendance Monitoring Page : Calendar || Monthly Attendance || Recent Attendance . : Done
 
 Student Page
 

@@ -110,6 +110,7 @@ export default function CreateStudentForm() {
     control: form.control,
     name: 'parents',
   });
+
   async function uploadToCloudinary(file: File) {
     const formData = new FormData();
     const uploadPreset = 'student_uploads';

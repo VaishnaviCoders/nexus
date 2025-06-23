@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 import {
   Users,
   GraduationCap,
-  DollarSign,
+  IndianRupee,
   Calendar,
   MessageSquare,
   UserPlus,
@@ -186,7 +186,7 @@ const SAMPLE_ACTIVITIES: ActivityItem[] = [
     title: 'Fee Overdue Alert',
     description:
       '15 students have overdue fees totaling ₹2,45,000. Auto-reminders sent.',
-    icon: DollarSign,
+    icon: IndianRupee,
     iconStyle: 'fee',
     time: '1 hour ago',
     badge: { text: 'Overdue', variant: 'red' },
@@ -250,7 +250,7 @@ const filterTypes = [
   { id: 'student', label: 'Students', icon: Users },
   { id: 'teacher', label: 'Teachers', icon: GraduationCap },
   { id: 'payment', label: 'Payments', icon: CreditCard },
-  { id: 'fee', label: 'Fees', icon: DollarSign },
+  { id: 'fee', label: 'Fees', icon: IndianRupee },
   { id: 'attendance', label: 'Attendance', icon: UserCheck },
   { id: 'complaint', label: 'Complaints', icon: AlertTriangle },
   { id: 'notice', label: 'Notices', icon: Bell },

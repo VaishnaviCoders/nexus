@@ -12,43 +12,45 @@ async function IssuesStatsContent() {
       : 0;
 
   return (
-    <CardContent className="pt-6   ">
-      <div className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <h3 className="text-sm font-medium">Issues & Complaints</h3>
-        <AlertTriangle className="h-4 w-4 text-muted-foreground" />
-      </div>
-
-      <div className="space-y-3 ">
-        <div className="text-2xl font-bold">{stats.pendingIssues}</div>
-
-        <div className="flex items-center justify-between">
-          <p className="text-xs text-muted-foreground">
-            Issues awaiting resolution
-          </p>
-
-          {stats.criticalIssues > 0 && (
-            <Badge
-              variant="outline"
-              className="bg-red-50 text-red-700 border-red-200 dark:bg-red-950 dark:text-red-300 dark:border-red-800"
-            >
-              {stats.criticalIssues} critical
-            </Badge>
-          )}
+    <Card className="h-full">
+      <CardContent className="pt-6   ">
+        <div className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <h3 className="text-sm font-medium">Issues & Complaints</h3>
+          <AlertTriangle className="h-4 w-4 text-muted-foreground" />
         </div>
 
-        <div className="flex items-center justify-between text-xs">
-          <div className="flex items-center gap-1 text-muted-foreground">
-            <CheckCircle className="w-3 h-3 text-green-500" />
-            {stats.resolvedIssues} resolved ({resolutionRate}%)
+        <div className="space-y-3 ">
+          <div className="text-2xl font-bold">{stats.pendingIssues}</div>
+
+          <div className="flex items-center justify-between">
+            <p className="text-xs text-muted-foreground">
+              Issues awaiting resolution
+            </p>
+
+            {stats.criticalIssues > 0 && (
+              <Badge
+                variant="outline"
+                className="bg-red-50 text-red-700 border-red-200 dark:bg-red-950 dark:text-red-300 dark:border-red-800"
+              >
+                {stats.criticalIssues} critical
+              </Badge>
+            )}
           </div>
 
-          <div className="flex items-center gap-1 text-muted-foreground">
-            <Clock className="w-3 h-3" />
-            {stats.totalIssues} total
+          <div className="flex items-center justify-between text-xs">
+            <div className="flex items-center gap-1 text-muted-foreground">
+              <CheckCircle className="w-3 h-3 text-green-500" />
+              {stats.resolvedIssues} resolved ({resolutionRate}%)
+            </div>
+
+            <div className="flex items-center gap-1 text-muted-foreground">
+              <Clock className="w-3 h-3" />
+              {stats.totalIssues} total
+            </div>
           </div>
         </div>
-      </div>
-    </CardContent>
+      </CardContent>
+    </Card>
   );
 }
 

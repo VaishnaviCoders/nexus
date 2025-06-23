@@ -1,3 +1,5 @@
+import { DocumentType } from '@/lib/generated/prisma';
+import { StudentDocument } from '@/types/document';
 import {
   ChartColumnBigIcon,
   CheckCircle2,
@@ -292,4 +294,59 @@ const mockFeeCategories = [
   { name: 'Library Fee', amount: 50000 },
   { name: 'Lab Fee', amount: 60000 },
   { name: 'Sports Fee', amount: 40000 },
+];
+
+// Mock data - replace with actual API calls
+const mockDocuments: StudentDocument[] = [
+  {
+    id: '1',
+    type: DocumentType.AADHAAR,
+    fileName: 'aadhaar_card.pdf',
+    fileSize: 2048576,
+    fileType: 'application/pdf',
+    documentUrl: '/placeholder.svg?height=400&width=600',
+    studentId: 'student1',
+    verified: true,
+    verifiedBy: 'admin1',
+    verifiedAt: new Date('2024-01-15'),
+    uploadedBy: 'student1',
+    uploadedAt: new Date('2024-01-10'),
+    note: 'Clear copy of Aadhaar card',
+    isDeleted: false,
+    createdAt: new Date('2024-01-10'),
+    updatedAt: new Date('2024-01-15'),
+  },
+  {
+    id: '2',
+    type: DocumentType.BIRTH_CERTIFICATE,
+    fileName: 'birth_certificate.jpg',
+    fileSize: 1536000,
+    fileType: 'image/jpeg',
+    documentUrl: '/placeholder.svg?height=400&width=600',
+    studentId: 'student1',
+    verified: false,
+    uploadedBy: 'parent1',
+    uploadedAt: new Date('2024-01-20'),
+    note: 'Original birth certificate scan',
+    isDeleted: false,
+    createdAt: new Date('2024-01-20'),
+    updatedAt: new Date('2024-01-20'),
+  },
+  {
+    id: '3',
+    type: DocumentType.TRANSFER_CERTIFICATE,
+    fileName: 'tc.pdf',
+    fileSize: 3072000,
+    fileType: 'application/pdf',
+    documentUrl: '/placeholder.svg?height=400&width=600',
+    studentId: 'student1',
+    verified: true,
+    verifiedBy: 'admin2',
+    verifiedAt: new Date('2024-01-25'),
+    uploadedBy: 'student1',
+    uploadedAt: new Date('2024-01-22'),
+    isDeleted: false,
+    createdAt: new Date('2024-01-22'),
+    updatedAt: new Date('2024-01-25'),
+  },
 ];

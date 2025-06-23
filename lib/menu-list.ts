@@ -12,6 +12,7 @@ import {
   IndianRupee,
   School,
   ShieldAlert,
+  FileIcon,
 } from 'lucide-react';
 
 type Submenu = {
@@ -219,6 +220,11 @@ export const roleMenus: Record<string, Group[]> = {
           label: 'Fees ',
           icon: IndianRupee,
         },
+        {
+          href: '/dashboard/documents',
+          label: 'My Documents',
+          icon: FileIcon,
+        },
       ],
     },
     {
@@ -242,17 +248,9 @@ export const roleMenus: Record<string, Group[]> = {
       ],
     },
     {
-      groupLabel: 'Documents',
+      groupLabel: 'Settings',
       menus: [
-        {
-          href: '/dashboard/documents',
-          label: 'My Documents',
-          icon: FileCheck,
-          submenus: [
-            { href: '/documents/upload', label: 'Upload Documents' },
-            { href: '/documents/view', label: 'View Documents' },
-          ],
-        },
+        { href: '/dashboard/settings', label: 'Settings', icon: Settings },
       ],
     },
   ],

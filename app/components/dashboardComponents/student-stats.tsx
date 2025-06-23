@@ -9,40 +9,42 @@ async function StudentStatsContent() {
   const stats = await getStudentStats();
 
   return (
-    <CardContent className="pt-6">
-      <div className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <h3 className="text-sm font-medium">Total Students</h3>
-        <Users className="h-4 w-4 text-muted-foreground" />
-      </div>
-
-      <div className="space-y-3">
-        <div className="text-2xl font-bold">
-          {stats.totalStudents.toLocaleString()}
+    <Card className="pt-6  ">
+      <CardContent>
+        <div className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <h3 className="text-sm font-medium">Total Students</h3>
+          <Users className="h-4 w-4 text-muted-foreground" />
         </div>
 
-        <Progress value={stats.attendancePercentage} className="h-2" />
+        <div className="space-y-3">
+          <div className="text-2xl font-bold">
+            {stats.totalStudents.toLocaleString()}
+          </div>
 
-        <div className="flex items-center justify-between">
-          <p className="text-xs text-muted-foreground">
-            {stats.presentToday} present today ({stats.attendancePercentage}%)
-          </p>
+          <Progress value={stats.attendancePercentage} className="h-2" />
 
-          {stats.newAdmissionsThisMonth > 0 && (
-            <Badge
-              variant="outline"
-              className="bg-green-50 text-green-700 border-green-200 dark:bg-green-950 dark:text-green-300 dark:border-green-800"
-            >
-              <TrendingUp className="w-3 h-3 mr-1" />+
-              {stats.newAdmissionsThisMonth} this month
-            </Badge>
-          )}
+          <div className="flex items-center justify-between">
+            <p className="text-xs text-muted-foreground">
+              {stats.presentToday} present today ({stats.attendancePercentage}%)
+            </p>
+
+            {stats.newAdmissionsThisMonth > 0 && (
+              <Badge
+                variant="outline"
+                className="bg-green-50 text-green-700 border-green-200 dark:bg-green-950 dark:text-green-300 dark:border-green-800"
+              >
+                <TrendingUp className="w-3 h-3 mr-1" />+
+                {stats.newAdmissionsThisMonth} this month
+              </Badge>
+            )}
+          </div>
+
+          <div className="text-xs text-muted-foreground">
+            {stats.activeStudents} active students
+          </div>
         </div>
-
-        <div className="text-xs text-muted-foreground">
-          {stats.activeStudents} active students
-        </div>
-      </div>
-    </CardContent>
+      </CardContent>
+    </Card>
   );
 }
 

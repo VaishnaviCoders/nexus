@@ -2,14 +2,12 @@
 
 import prisma from '@/lib/db';
 import { getOrganizationId } from '@/lib/organization';
-import { auth } from '@clerk/nextjs/server';
+import { getCurrentUserId } from '@/lib/user';
 import { cache } from 'react';
 
 // Cache the parent lookup for better performance
 const getParentInfo = cache(async () => {
-  const { userId } = await auth();
-  const organizationId = await getOrganizationId();
-  if (!userId) throw new Error('Unauthorized');
+  const userId = await getCurrentUserId();
 
   const parent = await prisma.parent.findUnique({
     where: {

@@ -2,11 +2,11 @@
 
 import { Button } from '@/components/ui/button';
 import {
-  Plus,
+  Activity,
   UserPlus,
   FileText,
   Calendar,
-  DollarSign,
+  IndianRupee,
   AlertTriangle,
   Users,
   BookOpen,
@@ -45,7 +45,7 @@ export default function AdminQuickActions() {
     {
       title: 'Manage Fees',
       description: 'Fee collection & tracking',
-      icon: DollarSign,
+      icon: IndianRupee,
       href: '/dashboard/fees/admin',
       color:
         'bg-orange-50 text-orange-700 dark:bg-orange-950 dark:text-orange-300',
@@ -107,7 +107,7 @@ export default function AdminQuickActions() {
 
       <div>
         <h3 className="text-sm font-medium text-muted-foreground mb-3 flex items-center gap-2">
-          <Plus className="w-4 h-4" />
+          <Activity className="w-4 h-4" />
           Most Used
         </h3>
         <div className="grid gap-3 md:grid-cols-2">

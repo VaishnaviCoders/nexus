@@ -2,7 +2,7 @@ import { Suspense } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import { DollarSign } from 'lucide-react';
+import { IndianRupee } from 'lucide-react';
 import { getRevenueStats } from '@/lib/data/dashboard/admin-dashboard-cards';
 
 async function RevenueStatsContent() {
@@ -20,43 +20,45 @@ async function RevenueStatsContent() {
   };
 
   return (
-    <CardContent className="pt-6 ">
-      <div className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <h3 className="text-sm font-medium">Revenue Collection</h3>
-        <DollarSign className="h-4 w-4 text-muted-foreground" />
-      </div>
-
-      <div className="space-y-3">
-        <div className="text-2xl font-bold">
-          {formatCurrency(stats.collectedRevenue)}
+    <Card className="h-full">
+      <CardContent className="pt-6 ">
+        <div className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <h3 className="text-sm font-medium">Revenue Collection</h3>
+          <IndianRupee className="h-4 w-4 text-muted-foreground" />
         </div>
 
-        <Progress value={stats.revenuePercentage} className="h-2" />
+        <div className="space-y-3">
+          <div className="text-2xl font-bold">
+            {formatCurrency(stats.collectedRevenue)}
+          </div>
 
-        <div className="flex items-center justify-between">
-          <p className="text-xs text-muted-foreground">
-            {formatCurrency(stats.pendingRevenue)} pending (
-            {100 - stats.revenuePercentage}%)
-          </p>
+          <Progress value={stats.revenuePercentage} className="h-2" />
 
-          <Badge
-            variant="outline"
-            className="bg-green-50 text-green-700 border-green-200 dark:bg-green-950 dark:text-green-300 dark:border-green-800"
-          >
-            {stats.revenuePercentage}% collected
-          </Badge>
+          <div className="flex items-center justify-between">
+            <p className="text-xs text-muted-foreground">
+              {formatCurrency(stats.pendingRevenue)} pending (
+              {100 - stats.revenuePercentage}%)
+            </p>
+
+            <Badge
+              variant="outline"
+              className="bg-green-50 text-green-700 border-green-200 dark:bg-green-950 dark:text-green-300 dark:border-green-800"
+            >
+              {stats.revenuePercentage}% collected
+            </Badge>
+          </div>
+
+          <div className="flex justify-between text-xs text-muted-foreground">
+            <span>This month: {formatCurrency(stats.thisMonthCollection)}</span>
+            {stats.overdueFeesCount > 0 && (
+              <span className="text-red-600 dark:text-red-400">
+                {stats.overdueFeesCount} overdue
+              </span>
+            )}
+          </div>
         </div>
-
-        <div className="flex justify-between text-xs text-muted-foreground">
-          <span>This month: {formatCurrency(stats.thisMonthCollection)}</span>
-          {stats.overdueFeesCount > 0 && (
-            <span className="text-red-600 dark:text-red-400">
-              {stats.overdueFeesCount} overdue
-            </span>
-          )}
-        </div>
-      </div>
-    </CardContent>
+      </CardContent>
+    </Card>
   );
 }
 

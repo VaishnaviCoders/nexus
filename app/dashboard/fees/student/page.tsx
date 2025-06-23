@@ -69,13 +69,15 @@ export default async function StudentFeePage() {
   const pendingFees = totalFees - paidFees;
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h2 className="text-2xl font-bold tracking-tight">Fee Dashboard</h2>
-        <p className="text-muted-foreground">
-          Manage and track student fee information
-        </p>
-      </div>
+    <div className="space-y-3 px-2">
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-xl font-bold">Fee Dashboard</CardTitle>
+          <CardDescription className="text-base ">
+            Manage and track student fee information
+          </CardDescription>
+        </CardHeader>
+      </Card>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card className="overflow-hidden border-border/50 transition-all hover:border-primary/20 hover:shadow-md">

@@ -1,72 +1,69 @@
 import { Suspense } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Users, Calendar, IndianRupee, Bell } from 'lucide-react';
-import { getParentDashboardStats } from '@/lib/data/parent/getParent-dashboard-stats';
+import { Progress } from '@/components/ui/progress';
+import { Users, Calendar, BookOpen, AlertTriangle } from 'lucide-react';
+import { getTeacherDashboardStats } from '@/lib/data/teacher/get-teacher-dashboard-stats';
 
-async function ParentStatsContent() {
-  const stats = await getParentDashboardStats();
-
-  const formatCurrency = (amount: number) => {
-    if (amount >= 100000) {
-      return `₹${(amount / 100000).toFixed(1)}L`;
-    } else if (amount >= 1000) {
-      return `₹${(amount / 1000).toFixed(1)}K`;
-    }
-    return `₹${amount.toLocaleString()}`;
-  };
+async function TeacherStatsContent() {
+  const stats = await getTeacherDashboardStats();
 
   const statsCards = [
     {
-      title: 'My Children',
-      value: stats.totalChildren.toString(),
-      description: `${stats.presentToday} present today`,
+      title: 'My Students',
+      value: stats.totalStudents.toString(),
+      description: `${stats.todayAttendance.present} present today`,
       icon: Users,
       color: 'blue',
-      badge:
-        stats.presentToday === stats.totalChildren
-          ? { text: 'All Present', variant: 'green' }
-          : null,
+      progress: stats.todayAttendance.percentage,
+      badge: {
+        text: `${stats.todayAttendance.percentage}%`,
+        variant:
+          stats.todayAttendance.percentage >= 90
+            ? 'green'
+            : stats.todayAttendance.percentage >= 75
+              ? 'yellow'
+              : 'red',
+      },
     },
     {
-      title: 'Avg Attendance',
-      value: `${stats.avgAttendance}%`,
-      description: 'This month average',
+      title: "Today's Attendance",
+      value: `${stats.todayAttendance.present}/${stats.todayAttendance.total}`,
+      description: `${stats.todayAttendance.percentage}% present`,
       icon: Calendar,
       color: 'green',
-      badge:
-        stats.avgAttendance >= 90
-          ? { text: 'Excellent', variant: 'green' }
-          : stats.avgAttendance >= 75
-            ? { text: 'Good', variant: 'yellow' }
-            : { text: 'Needs Attention', variant: 'red' },
+      progress: stats.todayAttendance.percentage,
+      badge: {
+        text:
+          stats.todayAttendance.absent > 0
+            ? `${stats.todayAttendance.absent} absent`
+            : 'All Present',
+        variant: stats.todayAttendance.absent === 0 ? 'green' : 'yellow',
+      },
     },
     {
-      title: 'Pending Fees',
-      value:
-        stats.totalPendingFees > 0
-          ? formatCurrency(stats.totalPendingFees)
-          : '₹0',
-      description:
-        stats.totalOverdueFees > 0
-          ? `₹${formatCurrency(stats.totalOverdueFees)} overdue`
-          : 'All up to date',
-      icon: IndianRupee,
-      color: 'emerald',
-      badge:
-        stats.totalOverdueFees > 0
-          ? { text: 'Overdue', variant: 'red' }
-          : stats.totalPendingFees > 0
-            ? { text: 'Pending', variant: 'yellow' }
-            : { text: 'Paid', variant: 'green' },
-    },
-    {
-      title: 'New Notices',
-      value: stats.unreadNotices.toString(),
-      description: 'Unread notices',
-      icon: Bell,
+      title: 'Teaching Subjects',
+      value: stats.teacher.TeacherSubject.length.toString(),
+      description: `${stats.teacher.isActive ? 'Class Teacher' : 'Subject Teacher'}`,
+      icon: BookOpen,
       color: 'purple',
-      badge: stats.unreadNotices > 0 ? { text: 'New', variant: 'blue' } : null,
+      badge: stats.teacher.isActive
+        ? {
+            text: `Grade ${stats.teacher.isActive}-${stats.teacher.isActive}`,
+            variant: 'blue',
+          }
+        : null,
+    },
+    {
+      title: 'Pending Tasks',
+      value: stats.pendingComplaints.toString(),
+      description: 'Complaints to review',
+      icon: AlertTriangle,
+      color: 'red',
+      badge: {
+        text: stats.pendingComplaints > 0 ? 'Action Required' : 'All Clear',
+        variant: stats.pendingComplaints > 0 ? 'red' : 'green',
+      },
     },
   ];
 
@@ -88,7 +85,7 @@ async function ParentStatsContent() {
         return (
           <Card
             key={index}
-            className="relative overflow-hidden group bg-white border-2 hover:shadow-lg transition-all duration-300 bg-gradient-to-br from-card via-card to-muted/10"
+            className="relative overflow-hidden group hover:shadow-lg transition-all duration-300  bg-gradient-to-br from-card via-card to-muted/10"
           >
             <div
               className={`absolute inset-0 bg-gradient-to-br from-${stat.color}-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
@@ -104,6 +101,12 @@ async function ParentStatsContent() {
 
               <div className="space-y-3">
                 <div className="text-2xl font-bold">{stat.value}</div>
+
+                {stat.progress !== undefined && (
+                  <div className="space-y-1">
+                    <Progress value={stat.progress} className="h-2" />
+                  </div>
+                )}
 
                 <div className="flex items-center justify-between">
                   <p className="text-xs text-muted-foreground leading-relaxed">
@@ -132,11 +135,11 @@ async function ParentStatsContent() {
   );
 }
 
-function ParentStatsCardsSkeleton() {
+function TeacherStatsCardsSkeleton() {
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       {Array.from({ length: 4 }).map((_, i) => (
-        <Card key={i} className="animate-pulse border-0">
+        <Card key={i} className="animate-pulse ">
           <CardContent className="p-6">
             <div className="flex items-center justify-between mb-4">
               <div className="h-4 bg-muted rounded w-20"></div>
@@ -144,6 +147,7 @@ function ParentStatsCardsSkeleton() {
             </div>
             <div className="space-y-3">
               <div className="h-8 bg-muted rounded w-16"></div>
+              <div className="h-2 bg-muted rounded"></div>
               <div className="h-3 bg-muted rounded w-24"></div>
             </div>
           </CardContent>
@@ -153,10 +157,10 @@ function ParentStatsCardsSkeleton() {
   );
 }
 
-export function ParentDashboardStatsContent() {
+export function TeacherStatsCards() {
   return (
-    <Suspense fallback={<ParentStatsCardsSkeleton />}>
-      <ParentStatsContent />
+    <Suspense fallback={<TeacherStatsCardsSkeleton />}>
+      <TeacherStatsContent />
     </Suspense>
   );
 }

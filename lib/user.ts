@@ -1,5 +1,4 @@
 import { currentUser } from '@clerk/nextjs/server';
-import { performance } from 'perf_hooks';
 import { redis } from '@/lib/redis';
 import { cache } from 'react';
 
@@ -49,16 +48,11 @@ const TTL = 60 * 5; // cache for 5 mins
 // };
 
 export const getCurrentUserId = cache(async () => {
-  const start = performance.now();
   const user = await currentUser();
 
   if (!user || !user.id) {
     throw new Error('No user found');
   }
 
-  const end = performance.now();
-  console.log(
-    `🟢 Redis HIT – getCurrentUserId took ${(end - start).toFixed(2)} ms`
-  );
   return user.id;
 });

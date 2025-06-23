@@ -83,8 +83,21 @@ export const syncUser = async (
         organizationId: orgId,
       },
     });
-
     console.log(`✅ Synced user ${clerkId} with org ${orgId}`);
+
+    await prisma.teacher.upsert({
+      where: { userId: clerkId },
+      update: {
+        userId: clerkId,
+      },
+      create: {
+        userId: clerkId,
+        organizationId: orgId,
+        isActive: true,
+      },
+    });
+
+    console.log(`✅ Teacher sync  ${clerkId} with org ${orgId}`);
   } catch (error) {
     console.error('❌ Error syncing user to DB:', error);
     throw new Error('Failed to sync user');

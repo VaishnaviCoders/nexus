@@ -3,7 +3,13 @@
 import { auth, currentUser, User } from '@clerk/nextjs/server';
 import { clerkClient } from '@clerk/nextjs/server';
 import prisma from '../lib/db';
-import { feeCategorySchema, gradeSchema, sectionSchema } from '../lib/schemas';
+import {
+  DocumentUploadFormData,
+  documentUploadSchema,
+  feeCategorySchema,
+  gradeSchema,
+  sectionSchema,
+} from '../lib/schemas';
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
 import { Resend } from 'resend';
@@ -742,4 +748,46 @@ export async function fetchFilteredStudents({
   sectionId?: string;
 }) {
   return await FilterStudents({ search, gradeId, sectionId });
+}
+
+export async function uploadStudentDocuments(
+  data: DocumentUploadFormData,
+  documentUrl: string,
+  studentId: string
+) {
+  const user = await currentUser();
+  const validatedData = documentUploadSchema.parse(data);
+
+  const document = await prisma.studentDocument.create({
+    data: {
+      documentUrl: documentUrl,
+      uploadedBy: user?.id,
+      uploadedAt: new Date(),
+      note: validatedData.note || '',
+      type: validatedData.type,
+      fileName: validatedData.file.name,
+      fileSize: validatedData.file.size,
+      fileType: validatedData.file.type,
+      studentId: studentId,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      verified: false,
+    },
+  });
+
+  revalidatePath('/dashboard/documents');
+
+  console.log('Document created:', document);
+  return document;
+}
+
+export async function studentDocumentsDelete(documentId: string) {
+  // const user = await currentUser();
+  const deletedDocument = await prisma.studentDocument.delete({
+    where: { id: documentId },
+  });
+
+  revalidatePath('/dashboard/documents');
+
+  return deletedDocument;
 }

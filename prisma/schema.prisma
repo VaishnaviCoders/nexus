@@ -64,6 +64,7 @@ model Organization {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   Teacher   Teacher[]
+  Subject   Subject[]
 
   @@index([id])
   @@index([organizationSlug])
@@ -97,22 +98,90 @@ model User {
 }
 
 model Teacher {
-  id             String       @id @default(cuid())
-  userId         String       @unique
-  user           User         @relation(fields: [userId], references: [id])
+  id     String @id @default(cuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id])
+
+  employmentStatus EmploymentStatus @default(ACTIVE)
+  isActive         Boolean          @default(true)
+
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id])
 
-  qualification     String
-  isActive          Boolean          @default(true)
-  experienceInYears Int
-  subjects          String[]
-  assignedGrades    String[]
-  assignedSections  String[]
-  employmentStatus  EmploymentStatus @default(ACTIVE)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  profile        TeacherProfile?
+  TeacherSubject TeacherSubject[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  @@index([userId, isActive, employmentStatus, organizationId])
+}
+
+model TeacherProfile {
+  id        String  @id @default(cuid())
+  teacherId String  @unique
+  teacher   Teacher @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+
+  dateOfBirth       DateTime
+  contactEmail      String
+  contactPhone      String
+  address           String
+  qualification     String
+  experienceInYears Int
+  joinedAt          DateTime
+  resumeUrl         String?
+
+  specializedSubjects String[]
+  preferredGrades     String[]
+
+  certificateUrls String[]
+  bio             String?
+}
+
+model Subject {
+  id             String           @id @default(cuid())
+  name           String
+  code           String           @unique
+  description    String
+  organizationId String
+  organization   Organization     @relation(fields: [organizationId], references: [id])
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  TeacherSubject TeacherSubject[]
+
+  @@index([organizationId, name, code])
+}
+
+model TeacherSubject {
+  id        String @id @default(cuid())
+  teacherId String
+  subjectId String
+
+  teacher Teacher @relation(fields: [teacherId], references: [id])
+  subject Subject @relation(fields: [subjectId], references: [id])
+
+  @@unique([teacherId, subjectId])
+  @@index([teacherId, subjectId])
+}
+
+model Grade {
+  id             String       @id @default(cuid())
+  grade          String
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  students       Student[]
+  // subjects       Subject[]
+  section        Section[]
+}
+
+model Section {
+  id                String              @id @default(cuid())
+  name              String // e.g., "A", "B", "C"
+  gradeId           String
+  organizationId    String
+  grade             Grade               @relation(fields: [gradeId], references: [id], onDelete: Cascade)
+  organization      Organization        @relation(fields: [organizationId], references: [id])
+  students          Student[] // Students in this section
+  StudentAttendance StudentAttendance[]
 }
 
 model Student {
@@ -209,11 +278,16 @@ model StudentAttendance {
 }
 
 model StudentDocument {
-  id          String       @id @default(cuid())
-  type        DocumentType
+  id   String       @id @default(cuid())
+  type DocumentType
+
+  fileName    String?
+  fileSize    Int? // (in bytes)
+  fileType    String?
   documentUrl String
-  student     Student      @relation(fields: [studentId], references: [id])
-  studentId   String
+
+  student   Student @relation(fields: [studentId], references: [id])
+  studentId String
 
   verified   Boolean   @default(false)
   verifiedBy String? // Clerk ID or Admin ID who verified
@@ -222,34 +296,27 @@ model StudentDocument {
   uploadedBy String? // Clerk ID or Student/Parent ID (depends on who uploads)
   uploadedAt DateTime @default(now())
 
-  note     String? // Optional note from uploader or verifier
-  fileName String? // For user-friendly display
-  fileSize Int? // (in bytes)
-  fileType String? // "application/pdf", "image/png", etc.
+  note String?
 
   isDeleted Boolean   @default(false) // Soft delete
   deletedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([studentId, type])
+  @@index([verified, uploadedAt])
 }
 
-model Grade {
-  id             String       @id @default(cuid())
-  grade          String
-  organizationId String
-  organization   Organization @relation(fields: [organizationId], references: [id])
-  students       Student[]
-  // subjects       Subject[]
-  section        Section[]
-}
-
-model Section {
-  id                String              @id @default(cuid())
-  name              String // e.g., "A", "B", "C"
-  gradeId           String
-  organizationId    String
-  grade             Grade               @relation(fields: [gradeId], references: [id], onDelete: Cascade)
-  organization      Organization        @relation(fields: [organizationId], references: [id])
-  students          Student[] // Students in this section
-  StudentAttendance StudentAttendance[]
+enum DocumentType {
+  AADHAAR
+  PAN
+  PASSPORT
+  BIRTH_CERTIFICATE
+  TRANSFER_CERTIFICATE
+  BANK_PASSBOOK
+  PARENT_ID
+  AGREEMENT
 }
 
 model Fee {
@@ -430,17 +497,6 @@ enum Role {
   PARENT
 }
 
-enum DocumentType {
-  AADHAAR
-  PAN
-  PASSPORT
-  BIRTH_CERTIFICATE
-  TRANSFER_CERTIFICATE
-  BANK_PASSBOOK
-  PARENT_ID
-  AGREEMENT
-}
-
 enum Gender {
   MALE
   FEMALE
@@ -475,6 +531,46 @@ enum EmploymentStatus {
   SUSPENDED
 }
 
+// model FeeReminderLog {
+//   id             String   @id @default(cuid())
+//   studentId      String
+//   student        Student  @relation(fields: [studentId], references: [id])
+
+//   parentId       String
+//   parent         Parent   @relation(fields: [parentId], references: [id])
+
+//   organizationId String
+//   organization   Organization @relation(fields: [organizationId], references: [id])
+
+//   channel        ReminderChannel // EMAIL, SMS, WHATSAPP, PUSH
+//   status         ReminderStatus  // SENT, FAILED, PENDING
+
+//   messageContent String
+//   costInPaise    Int     // cost of sending this message (eg. 39 paise)
+//   sentAt         DateTime @default(now())
+
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   @@index([organizationId, sentAt])
+//   @@index([parentId, studentId])
+// }
+
+// enum ReminderChannel {
+//   EMAIL
+//   SMS
+//   WHATSAPP
+//   PUSH
+// }
+
+// enum ReminderStatus {
+//   PENDING
+//   SENT
+//   FAILED
+// }
+
+// FeedBackCollection
+
 // "TeacherFeedback",          // Missing - for teachers to give student feedback
 // "MonthlyAttendanceReport",  // Missing - AI-generated monthly summary of attendance
 // "FeedbackCategory",         // Optional - categorize feedback (e.g., Academics, Behavior)
@@ -483,3 +579,15 @@ enum EmploymentStatus {
 // "Performance",           // Mentioned in comment but not implemented
 // "Marks",                 // Mentioned in comment but not implemented
 // Subject 
+// LeaveManagement
+// Lead Management
+// Courses and Batches
+// Certificate Generator
+// Amazon Alexa  Integration
+
+// Teacher  : Salary / Payout, Leave Management, Assigned Leads , Profile , Write FeedBack , Give Assignments, Fill Exam Mark , Bio Attendance , 
+// Parent : View Fee Receipts , Download Receipts , Pay Fees , Parent Profile , SMS Notification , WhatsApp Notification , Setting Page 
+// Student : View Fee Receipts , Download Receipts , Pay Fees , Student Profile , SMS Notification , WhatsApp Notification , Setting Page , Dashboard
+// Admin : ALl Reports / AI Generated  View Fee Receipts , Download Receipts , Phonepay Payment Gateway Money , Admin Profile , SMS Notification , WhatsApp Notification , Setting Page , Organization Management
+
+// Student Bulk Import 

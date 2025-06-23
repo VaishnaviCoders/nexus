@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { DocumentType } from './generated/prisma';
 // const ACCEPTED_IMAGE_TYPES = [
 //   'image/jpeg',
 //   'image/jpg',
@@ -93,6 +94,28 @@ export const studentSchema = z.object({
     .optional(),
 });
 
+export const documentUploadSchema = z.object({
+  type: z.nativeEnum(DocumentType, {
+    required_error: 'Please select a document type',
+  }),
+  file: z
+    .instanceof(File)
+    .refine(
+      (file) => file.size <= 10 * 1024 * 1024,
+      'File size must be less than 10MB'
+    )
+    .refine(
+      (file) =>
+        ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'].includes(
+          file.type
+        ),
+      'Only JPEG, PNG, WebP, and PDF files are allowed'
+    ),
+  note: z.string().optional(),
+});
+
+export type DocumentUploadFormData = z.infer<typeof documentUploadSchema>;
+
 // Fees
 
 export const feeCategorySchema = z.object({
@@ -138,3 +161,25 @@ export const goggleImportHolidayFormSchema = z.array(
     isRecurring: z.boolean().default(false),
   })
 );
+
+export const studentProfileSchema = z.object({
+  firstName: z.string().min(2, 'First name must be at least 2 characters'),
+  lastName: z.string().min(2, 'Last name must be at least 2 characters'),
+  middleName: z.string().optional(),
+  motherName: z.string().min(2, "Mother's name must be at least 2 characters"),
+  dateOfBirth: z.string().min(1, 'Date of birth is required'),
+  gender: z.enum(['MALE', 'FEMALE', 'OTHER'], {
+    required_error: 'Please select a gender',
+  }),
+  phoneNumber: z.string().min(10, 'Phone number must be at least 10 digits'),
+  whatsAppNumber: z
+    .string()
+    .min(10, 'WhatsApp number must be at least 10 digits'),
+  email: z.string().email('Please enter a valid email address'),
+  emergencyContact: z
+    .string()
+    .min(10, 'Emergency contact must be at least 10 digits'),
+  profileImage: z.string().optional(),
+});
+
+export type StudentProfileFormData = z.infer<typeof studentProfileSchema>;

@@ -9,10 +9,10 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   CreditCard,
-  DollarSign,
   Users,
   BookOpen,
   AlertTriangle,
+  IndianRupee,
 } from 'lucide-react';
 import Link from 'next/link';
 // import { RevenueChart } from '@/components/dashboard/revenue-chart';
@@ -47,7 +47,7 @@ export default function Dashboard() {
                   <CardTitle className="text-sm font-medium">
                     Total Revenue
                   </CardTitle>
-                  <DollarSign className="h-4 w-4 text-muted-foreground" />
+                  <IndianRupee className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">₹1,25,000</div>

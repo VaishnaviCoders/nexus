@@ -97,7 +97,7 @@ const students = [
   },
 ];
 
-export default function TeacherDashboard() {
+export default function TeacherFeesManagementDashboard() {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
 
@@ -331,8 +331,8 @@ export default function TeacherDashboard() {
                           {student.feeStatus === 'PAID'
                             ? 'Paid'
                             : student.feeStatus === 'UNPAID'
-                            ? 'Unpaid'
-                            : 'Overdue'}
+                              ? 'Unpaid'
+                              : 'Overdue'}
                         </Badge>
                       </TableCell>
                       <TableCell className="text-right">
