@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { getFeesSummary } from '@/app/actions';
+import { formatCurrencyIN } from '@/lib/utils';
 
 interface FeeCategory {
   name: string;
@@ -54,7 +54,7 @@ const FeeDistributionByCategory: React.FC<
                 className="h-2"
               />
               <span className="flex items-center space-x-1 text-sm text-muted-foreground">
-                ₹{category.paidAmount.toLocaleString('en-IN')}
+                ₹{formatCurrencyIN(category.paidAmount)}
               </span>
             </div>
           ))}

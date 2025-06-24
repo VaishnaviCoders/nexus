@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { AlertTriangle, Clock, TrendingDown, Bell } from 'lucide-react';
 import { getAttendanceAlerts } from '@/lib/data/parent/attendance-monitor/getParent-attendance';
+import Link from 'next/link';
 
 async function AttendanceAlertsContent() {
   const alerts = await getAttendanceAlerts();
@@ -105,17 +106,14 @@ async function AttendanceAlertsContent() {
                   )}
                 </div>
 
-                <Button
-                  size="sm"
-                  variant="outline"
-                  className="text-xs"
-                  onClick={() => {
-                    // Navigate to detailed view for this student
-                    window.location.href = `/dashboard/child-attendance?student=${alert.studentId}`;
-                  }}
+                <Link
+                  href={`/dashboard/child-attendance?student=${alert.studentId}`}
+                  passHref
                 >
-                  View Details
-                </Button>
+                  <Button size="sm" variant="outline" className="text-xs">
+                    View Details
+                  </Button>
+                </Link>
               </div>
             </div>
           );

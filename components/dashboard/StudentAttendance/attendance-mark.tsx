@@ -128,7 +128,7 @@ const generateNoteSuggestion = async (
   status: AttendanceStatus
 ): Promise<string> => {
   // Simulate AI processing
-  await new Promise((resolve) => setTimeout(resolve, 1000));
+  // await new Promise((resolve) => setTimeout(resolve, 1000));
 
   const suggestions = {
     ABSENT: [
@@ -158,7 +158,6 @@ const generateNoteSuggestion = async (
 
 export default function AttendanceMark({ students }: Props) {
   const router = useRouter();
-  const { orgRole } = useAuth();
 
   const [date, setDate] = useState<Date>(new Date());
   const [selectedGrade, setSelectedGrade] = useState<string>('');
@@ -423,7 +422,7 @@ export default function AttendanceMark({ students }: Props) {
         }));
 
       console.log('Recording attendance:', records);
-      await markAttendance(sectionId, records);
+      await markAttendance(sectionId, date, records);
 
       toast.success('Attendance saved successfully!', {
         description: `Attendance for ${format(
@@ -501,7 +500,7 @@ export default function AttendanceMark({ students }: Props) {
   return (
     <main className="flex-1 p-4 md:p-4 space-y-6 ">
       {/* Header Section */}
-      {/* <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-blue-950/20 dark:via-indigo-950/20 dark:to-purple-950/20 border border-blue-200/50 dark:border-blue-800/50">
+      <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-blue-950/20 dark:via-indigo-950/20 dark:to-purple-950/20 border border-blue-200/50 dark:border-blue-800/50">
         <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
         <div className="relative p-6 space-y-4">
           <div className="flex items-start justify-between">
@@ -547,7 +546,7 @@ export default function AttendanceMark({ students }: Props) {
             </div>
           </div>
         </div>
-      </div> */}
+      </div>
 
       {/* Enhanced Session Configuration */}
       <Card className="border-2 border-blue-200/50 dark:border-blue-800/50 shadow-lg bg-gradient-to-br from-white to-blue-50/30 dark:from-gray-900 dark:to-blue-950/10">
@@ -672,8 +671,8 @@ export default function AttendanceMark({ students }: Props) {
                         !selectedGrade
                           ? 'Select grade first'
                           : availableSections.length === 0
-                          ? 'No sections available'
-                          : 'Choose section'
+                            ? 'No sections available'
+                            : 'Choose section'
                       }
                     />
                   </div>
@@ -975,8 +974,8 @@ export default function AttendanceMark({ students }: Props) {
                                           attendancePercentage >= 95
                                             ? 'text-green-600 dark:text-green-400'
                                             : attendancePercentage >= 90
-                                            ? 'text-yellow-600 dark:text-yellow-400'
-                                            : 'text-red-600 dark:text-red-400'
+                                              ? 'text-yellow-600 dark:text-yellow-400'
+                                              : 'text-red-600 dark:text-red-400'
                                         )}
                                       >
                                         {attendancePercentage}%
@@ -1083,10 +1082,10 @@ export default function AttendanceMark({ students }: Props) {
                                 student.status === 'PRESENT'
                                   ? 'Add any additional notes...'
                                   : student.status === 'ABSENT'
-                                  ? 'Reason for absence, follow-up actions...'
-                                  : student.status === 'LATE'
-                                  ? 'Reason for lateness, time arrived...'
-                                  : 'Select attendance status first...'
+                                    ? 'Reason for absence, follow-up actions...'
+                                    : student.status === 'LATE'
+                                      ? 'Reason for lateness, time arrived...'
+                                      : 'Select attendance status first...'
                               }
                               value={student.note}
                               onChange={(e) =>

@@ -290,11 +290,11 @@ export const roleMenus: Record<string, Group[]> = {
           label: 'Notice Board',
           icon: Bell,
         },
-        {
-          href: '/dashboard/remark',
-          label: 'Remark ',
-          icon: Bell,
-        },
+        // {
+        //   href: '/dashboard/remark',
+        //   label: 'Remark ',
+        //   icon: Bell,
+        // },
       ],
     },
     {

@@ -2,9 +2,9 @@
 
 import { cn } from '@/lib/utils';
 import { motion } from 'motion/react';
-import { CircleDollarSign } from 'lucide-react';
+import { IndianRupee } from 'lucide-react';
 
-export default function Alert05() {
+export default function PaymentReceivedAlert() {
   return (
     <motion.div
       initial={{ opacity: 0, y: -8 }}
@@ -34,7 +34,7 @@ export default function Alert05() {
                 'shadow-lg shadow-indigo-500/20'
               )}
             >
-              <CircleDollarSign className="h-6 w-6 text-white" />
+              <IndianRupee className="h-6 w-6 text-green-500" />
             </div>
           </motion.div>
 
@@ -51,7 +51,7 @@ export default function Alert05() {
                     Payment Received
                   </h3>
                   <span className="px-2.5 py-1 rounded-full text-sm font-semibold bg-white/80 dark:bg-white/10 text-indigo-600 dark:text-indigo-300 backdrop-blur-xs">
-                    $2,400.00
+                    ₹ 2,400.00
                   </span>
                 </div>
                 <p className="text-sm text-indigo-700 dark:text-indigo-300">

@@ -7,15 +7,12 @@ const withPWA = require('next-pwa')({
 });
 
 const nextConfig: NextConfig = {
-  turbopack: {
-    resolveExtensions: ['.mdx', '.tsx', '.ts', '.jsx', '.js', '.mjs', '.json'],
-  },
   distDir: '.next',
   reactStrictMode: true,
 
-  // compiler: {
-  //   removeConsole: process.env.NODE_ENV === 'development',
-  // },
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'development',
+  },
   headers: async () => {
     return [
       {

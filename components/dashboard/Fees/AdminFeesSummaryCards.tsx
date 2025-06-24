@@ -6,10 +6,10 @@ import {
   UsersIcon,
   XCircleIcon,
 } from 'lucide-react';
-import { getFeesSummary } from '@/app/actions';
+import { formatCurrencyIN } from '@/lib/utils';
+import { getAdminFeesSummary } from '@/lib/data/fee/get-admin-fee-stats';
 
 const AdminFeesSummaryCards = async () => {
-  await new Promise((resolve) => setTimeout(resolve, 2000));
   const {
     collectedFees,
     overdueFees,
@@ -18,7 +18,24 @@ const AdminFeesSummaryCards = async () => {
     totalFees,
     totalStudents,
     unpaidStudents,
-  } = await getFeesSummary();
+  } = await getAdminFeesSummary();
+
+  console.log(
+    'totalFees',
+    totalFees,
+    'collectedFees',
+    collectedFees,
+    'pendingFees',
+    pendingFees,
+    'totalStudents',
+    totalStudents,
+    'paidStudents',
+    paidStudents,
+    'unpaidStudents',
+    unpaidStudents,
+    'overdueFees',
+    overdueFees
+  );
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       <Card className="overflow-hidden border-border/50 transition-all hover:border-primary/20 hover:shadow-md">
@@ -80,7 +97,7 @@ const AdminFeesSummaryCards = async () => {
           <div className="flex items-baseline space-x-1 text-2xl font-bold text-red-600">
             <IndianRupeeIcon className="h-3 w-3 text-red-500 mr-1" />
             <span className="text-2xl font-bold">
-              {overdueFees.toLocaleString('en-IN')}
+              {formatCurrencyIN(overdueFees)}
             </span>
           </div>
           <div className="flex items-center mt-1">

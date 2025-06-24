@@ -8,7 +8,8 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Calendar, Users, BookOpen, CalendarIcon } from 'lucide-react';
 import Link from 'next/link';
-import { TeacherStatsCards } from './TeacherDashboardStatsCard';
+import { TeacherStatsCards } from '@/components/dashboard/teacher/TeacherDashboardStatsCard';
+import { RecentActivitiesCard } from '@/components/dashboard/teacher/RecentActivitiesCard';
 
 // import { TeacherStatsCards } from "@/components/teacher-dashboard/teacher-stats-cards"
 // import { TodayScheduleCard } from "@/components/teacher-dashboard/today-schedule-card"
@@ -17,7 +18,7 @@ import { TeacherStatsCards } from './TeacherDashboardStatsCard';
 // import { StudentPerformanceCard } from "@/components/teacher-dashboard/student-performance-card"
 // import { QuickActionsCard } from "@/components/teacher-dashboard/quick-actions-card"
 
-export default function TeacherDashboard() {
+export default async function TeacherDashboard() {
   return (
     <div className="bg-gradient-to-br from-background via-background to-muted/10">
       <div className="px-3 space-y-3">
@@ -81,7 +82,7 @@ export default function TeacherDashboard() {
             {/* <StudentPerformanceCard /> */}
 
             {/* Recent Activities */}
-            {/* <RecentActivitiesCard /> */}
+            <RecentActivitiesCard />
           </div>
         </div>
 

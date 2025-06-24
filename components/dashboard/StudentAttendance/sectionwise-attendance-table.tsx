@@ -251,8 +251,8 @@ export function SectionAttendanceTable({
                                 section.percentage >= 80
                                   ? 'bg-green-500'
                                   : section.percentage >= 50
-                                  ? 'bg-yellow-500'
-                                  : 'bg-red-500'
+                                    ? 'bg-yellow-500'
+                                    : 'bg-red-500'
                               }`}
                               style={{ width: `${section.percentage}%` }}
                             />

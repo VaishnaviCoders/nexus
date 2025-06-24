@@ -34,6 +34,11 @@ export async function getChildrenAttendanceOverview() {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
+  const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+  const yearStart = new Date(today.getFullYear(), 0, 1);
+  const last14Start = new Date(today);
+  last14Start.setDate(today.getDate() - 13); // incl
+
   const childrenData = await Promise.all(
     parent.students.map(async (parentStudent) => {
       const student = parentStudent.student;
@@ -49,73 +54,84 @@ export async function getChildrenAttendanceOverview() {
       });
 
       // Get this month's attendance stats
-      const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
-      const monthAttendance = await prisma.studentAttendance.aggregate({
+
+      const monthStats = await prisma.studentAttendance.groupBy({
+        by: ['status'],
         where: {
           studentId: student.id,
-          date: { gte: monthStart, lte: today },
+          date: { gte: monthStart },
         },
-        _count: { _all: true, present: true },
+        _count: true,
       });
 
-      // Get this year's attendance stats
-      const yearStart = new Date(today.getFullYear(), 0, 1);
-      const yearAttendance = await prisma.studentAttendance.aggregate({
+      const monthPresent =
+        monthStats.find((r) => r.status === 'PRESENT')?._count || 0;
+      const monthTotal = monthStats.reduce((sum, r) => sum + r._count, 0);
+      const attendancePercentage =
+        monthTotal > 0 ? Math.round((monthPresent / monthTotal) * 100) : 0;
+
+      // 3. Year stats
+      const yearStats = await prisma.studentAttendance.groupBy({
+        by: ['status'],
         where: {
           studentId: student.id,
-          date: { gte: yearStart, lte: today },
+          date: { gte: yearStart },
         },
-        _count: { _all: true, present: true },
+        _count: true,
       });
 
-      // Get last 30 days attendance for trend
-      const last30Days = new Date(today);
-      last30Days.setDate(last30Days.getDate() - 30);
-      const recentAttendance = await prisma.studentAttendance.findMany({
+      const yearPresent =
+        yearStats.find((r) => r.status === 'PRESENT')?._count || 0;
+      const yearTotal = yearStats.reduce((sum, r) => sum + r._count, 0);
+
+      // 4. Last 14 Days (sorted by date ASC)
+      const last14 = await prisma.studentAttendance.findMany({
         where: {
           studentId: student.id,
-          date: { gte: last30Days, lte: today },
+          date: { gte: last14Start, lte: today },
         },
-        orderBy: { date: 'desc' },
+        orderBy: { date: 'asc' },
+        select: { date: true, status: true },
       });
 
-      // Calculate streaks
+      const last14Map = new Map(
+        last14.map((entry) => [entry.date.toDateString(), entry.status])
+      );
+      const last14Days = Array.from({ length: 14 }).map((_, i) => {
+        const d = new Date(last14Start);
+        d.setDate(d.getDate() + i);
+        const key = d.toDateString();
+        return {
+          date: d,
+          status: last14Map.get(key) || 'NOT_MARKED',
+        };
+      });
+      // 5. Streak logic
       let currentStreak = 0;
-      let longestStreak = 0;
+      let bestStreak = 0;
       let tempStreak = 0;
 
-      const sortedAttendance = recentAttendance.sort(
-        (a, b) => b.date.getTime() - a.date.getTime()
-      );
-
-      for (let i = 0; i < sortedAttendance.length; i++) {
-        if (sortedAttendance[i].present) {
-          if (i === 0) currentStreak++;
-          tempStreak++;
-          longestStreak = Math.max(longestStreak, tempStreak);
+      for (let i = last14Days.length - 1; i >= 0; i--) {
+        const status = last14Days[i].status;
+        if (status === 'PRESENT') {
+          tempStreak += 1;
+          if (i === last14Days.length - 1) currentStreak = tempStreak;
         } else {
-          if (i === 0) currentStreak = 0;
+          bestStreak = Math.max(bestStreak, tempStreak);
           tempStreak = 0;
         }
       }
+      bestStreak = Math.max(bestStreak, tempStreak);
 
-      const monthPercentage =
-        monthAttendance._count._all > 0
-          ? Math.round(
-              ((monthAttendance._count.present || 0) /
-                monthAttendance._count._all) *
-                100
-            )
-          : 0;
-
-      const yearPercentage =
-        yearAttendance._count._all > 0
-          ? Math.round(
-              ((yearAttendance._count.present || 0) /
-                yearAttendance._count._all) *
-                100
-            )
-          : 0;
+      // 6. Pending fees
+      const pendingFees = await prisma.fee.aggregate({
+        where: {
+          studentId: student.id,
+          status: { in: ['UNPAID', 'OVERDUE'] },
+        },
+        _sum: { pendingAmount: true },
+        _count: { _all: true },
+      });
 
       return {
         id: student.id,
@@ -127,21 +143,24 @@ export async function getChildrenAttendanceOverview() {
         relationship: parentStudent.relationship,
         todayStatus: todayAttendance?.status || 'NOT_MARKED',
         todayPresent: todayAttendance?.present || false,
-        monthStats: {
-          totalDays: monthAttendance._count._all,
-          presentDays: monthAttendance._count.present || 0,
-          percentage: monthPercentage,
+        month: {
+          present: monthPresent,
+          total: monthTotal,
+          percentage: attendancePercentage,
         },
-        yearStats: {
-          totalDays: yearAttendance._count._all,
-          presentDays: yearAttendance._count.present || 0,
-          percentage: yearPercentage,
+        year: {
+          present: yearPresent,
+          total: yearTotal,
         },
-        streaks: {
+        last14Days: last14Days, // Array of { date, status }
+        streak: {
           current: currentStreak,
-          longest: longestStreak,
+          best: bestStreak,
         },
-        recentAttendance: recentAttendance.slice(0, 14), // Last 14 days
+        pendingFees: {
+          amount: pendingFees._sum.pendingAmount || 0,
+          count: pendingFees._count._all || 0,
+        },
       };
     })
   );
@@ -297,31 +316,42 @@ export async function getAttendanceAlerts(studentId?: string) {
     ? parent.students.filter((ps) => ps.student.id === studentId)
     : parent.students;
 
-  const alerts = [];
+  const alerts: {
+    type: 'LOW_ATTENDANCE' | 'CONSECUTIVE_ABSENCES' | 'NOT_MARKED';
+    severity: 'HIGH' | 'MEDIUM' | 'LOW';
+    studentId: string;
+    studentName: string;
+    message: string;
+    percentage?: number;
+    days?: number;
+  }[] = [];
 
   for (const parentStudent of studentsToCheck) {
     const student = parentStudent.student;
 
     // Check for low attendance (below 75%)
     const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
-    const monthAttendance = await prisma.studentAttendance.aggregate({
-      where: {
-        studentId: student.id,
-        date: { gte: monthStart, lte: today },
-      },
-      _count: { _all: true, present: true },
-    });
+
+    const [presentCount, totalCount] = await Promise.all([
+      prisma.studentAttendance.count({
+        where: {
+          studentId: student.id,
+          date: { gte: monthStart, lte: today },
+          present: true,
+        },
+      }),
+      prisma.studentAttendance.count({
+        where: {
+          studentId: student.id,
+          date: { gte: monthStart, lte: today },
+        },
+      }),
+    ]);
 
     const monthPercentage =
-      monthAttendance._count._all > 0
-        ? Math.round(
-            ((monthAttendance._count.present || 0) /
-              monthAttendance._count._all) *
-              100
-          )
-        : 0;
+      totalCount > 0 ? Math.round((presentCount / totalCount) * 100) : 0;
 
-    if (monthPercentage < 75 && monthAttendance._count._all >= 5) {
+    if (monthPercentage < 75 && totalCount >= 5) {
       alerts.push({
         type: 'LOW_ATTENDANCE',
         severity: monthPercentage < 60 ? 'HIGH' : 'MEDIUM',
@@ -363,14 +393,19 @@ export async function getAttendanceAlerts(studentId?: string) {
       });
     }
 
-    // Check if not marked today (after 10 AM)
+    // Check if not marked today (after 7 AM)
     const currentHour = new Date().getHours();
-    if (currentHour >= 10) {
-      const todayAttendance = await prisma.studentAttendance.findUnique({
+    if (currentHour >= 7) {
+      const startOfDay = new Date(today);
+      const endOfDay = new Date(today);
+      endOfDay.setHours(23, 59, 59, 999);
+
+      const todayAttendance = await prisma.studentAttendance.findFirst({
         where: {
-          studentId_date: {
-            studentId: student.id,
-            date: today,
+          studentId: student.id,
+          date: {
+            gte: startOfDay,
+            lte: endOfDay,
           },
         },
       });

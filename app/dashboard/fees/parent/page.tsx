@@ -5,13 +5,13 @@ import { DashboardCardSkeleton } from '@/lib/skeletons/DashboardCardSkeleton';
 import { Calendar, Receipt, User } from 'lucide-react';
 import ParentFeeHistory from '@/components/dashboard/Fees/ParentFeeHistory';
 import GetFeesByParentId from '@/lib/data/fee/parent-fee';
+import { formatCurrencyIN } from '@/lib/utils';
+import { redirect } from 'next/navigation';
 
 export default async function ParentDashboard() {
-  // const [selectedChild, setSelectedChild] = useState(parentData.children[0].id);
-
   const parentData = await GetFeesByParentId();
 
-  if (!parentData) return <div>No data found for this parent.</div>;
+  if (!parentData) redirect('/dashboard');
 
   const totalFees = parentData.children.reduce(
     (sum, child) => sum + child.totalFees,
@@ -26,15 +26,6 @@ export default async function ParentDashboard() {
     0
   );
   const paymentPercentage = Math.round((totalPaid / totalFees) * 100);
-
-  // if (!parentData) {
-  //   return <div>No data found for this parent.</div>;
-  // }
-
-  console.log(
-    'Client Parent Data',
-    parentData.children.map((c) => c.paymentHistory)
-  );
 
   return (
     <div className="">
@@ -74,7 +65,7 @@ export default async function ParentDashboard() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  ₹{totalFees.toLocaleString()}
+                  ₹{formatCurrencyIN(totalFees)}
                 </div>
                 <p className="text-xs text-muted-foreground">
                   For all children
@@ -92,7 +83,7 @@ export default async function ParentDashboard() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold text-green-600">
-                  ₹{totalPaid.toLocaleString()}
+                  ₹{formatCurrencyIN(totalPaid)}
                 </div>
                 <div className="flex items-center">
                   <p className="text-xs text-muted-foreground">
@@ -112,7 +103,7 @@ export default async function ParentDashboard() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold text-amber-600">
-                  ₹{totalPending.toLocaleString()}
+                  ₹{formatCurrencyIN(totalPending)}
                 </div>
                 <p className="text-xs text-muted-foreground">Due payments</p>
               </CardContent>

@@ -24,6 +24,8 @@ import StudentPaymentHistoryTable from '@/components/dashboard/Fees/StudentPayme
 
 import { getFeeRecords } from '@/lib/data/fee/get-all-students-fees';
 import { DashboardCardSkeleton } from '@/lib/skeletons/DashboardCardSkeleton';
+import PaymentReceivedAlert from '@/components/ui/payment-received-alert';
+
 // import fixIncorrectFeeStatuses from '@/lib/data/fee/payFeesAction';
 
 const getFeeCategoryAggregates = async () => {
@@ -64,8 +66,6 @@ const getFeeCategoryAggregates = async () => {
 };
 
 export default async function AdminFeeDashboard() {
-  await new Promise((resolve) => setTimeout(resolve, 5000));
-
   const feeCategories = await getFeeCategoryAggregates();
   const data = await getMonthlyFeeData(2025);
   const feeRecords = await getFeeRecords();
@@ -74,6 +74,8 @@ export default async function AdminFeeDashboard() {
   // fixIncorrectFeeStatuses().then((result) => {
   //   console.log('Updated incorrect fee statuses:', result.updated);
   // });
+
+  <PaymentReceivedAlert />;
   return (
     <div className="flex flex-col space-y-8">
       {/* Responsive Header */}

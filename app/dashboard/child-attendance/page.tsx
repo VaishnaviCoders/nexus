@@ -2,57 +2,45 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardHeader,
   CardTitle,
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import {
-  Calendar,
-  CalendarIcon,
-  Download,
-  Filter,
-  TrendingUp,
-} from 'lucide-react';
+import { Calendar, Download, Filter, TrendingUp } from 'lucide-react';
 import Link from 'next/link';
 import { AttendanceOverviewCards } from '@/components/dashboard/parent/attendance-overview-cards';
 import { AttendanceAlerts } from '@/components/dashboard/parent/attendance-alerts';
 import { DetailedAttendanceChart } from '@/components/dashboard/parent/detailed-attendance-chart';
-
-// import { AttendanceAlerts } from "@/components/parent-attendance/attendance-alerts"
-// import { DetailedAttendanceChart } from "@/components/parent-attendance/detailed-attendance-chart"
 
 export default function ChildAttendancePage() {
   return (
     <div className="space-y-6">
       {/* Header */}
       <Card className="">
-        <CardContent className="flex flex-col lg:flex-row lg:items-center lg:justify-between p-6 gap-4">
+        <CardContent className="flex flex-col md:flex-row md:items-center md:justify-between p-6 gap-4">
           <div>
-            <CardTitle className="text-lg font-bold ">
-              Attendance Monitor
+            <CardTitle className="text-lg font-bold flex items-center gap-2 ">
+              Attendance Monitor{' '}
+              <Badge
+                variant="outline"
+                className="bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950 dark:text-blue-300 dark:border-blue-800"
+              >
+                <TrendingUp className="w-3 h-3 mr-1" />
+                Real-time Updates
+              </Badge>
             </CardTitle>
             <CardDescription className="text-base mt-1">
               Track and analyze your children's school attendance patterns
             </CardDescription>
           </div>
           <div className="flex items-center gap-3">
-            <Badge
-              variant="outline"
-              className="bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950 dark:text-blue-300 dark:border-blue-800"
-            >
-              <TrendingUp className="w-3 h-3 mr-1" />
-              Real-time Updates
-            </Badge>
-            <div className="flex gap-2">
-              <Button variant="outline" size="sm" className="hidden sm:flex">
-                <Download className="w-4 h-4 mr-2" />
-                Export
-              </Button>
-              <Link href="/dashboard">
-                <Button size="sm">Back to Dashboard</Button>
-              </Link>
-            </div>
+            <Button variant="outline" size="sm">
+              <Download className="w-4 h-4 mr-2" />
+              Export
+            </Button>
+            <Link href="/dashboard">
+              <Button size="sm">Back to Dashboard</Button>
+            </Link>
           </div>
         </CardContent>
       </Card>

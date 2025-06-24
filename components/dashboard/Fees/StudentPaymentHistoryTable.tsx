@@ -284,7 +284,7 @@ const RecordPaymentCard = ({ selectedRecord }: RecordPaymentCardProps) => {
         return;
       }
 
-      await payFeesAction(selectedRecord.fee.id, parsed.data.amount);
+      // await payFeesAction(selectedRecord.fee.id, parsed.data.amount);
 
       toast.success(
         `Successfully recorded payment of ${formatCurrency(

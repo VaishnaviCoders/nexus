@@ -253,7 +253,11 @@ const FeeAssignmentDataTable = ({
                         </FormControl>
                         <SelectContent>
                           {feeCategories.map((category) => (
-                            <SelectItem value={category.id} key={category.id}>
+                            <SelectItem
+                              value={category.id}
+                              key={category.id}
+                              className="capitalize"
+                            >
                               {category.name}
                             </SelectItem>
                           ))}
@@ -262,6 +266,7 @@ const FeeAssignmentDataTable = ({
                       <FormDescription>
                         If don't see your category, please create it from
                         <Link
+                          target="_blank"
                           href="/dashboard/fees/admin/fee-categories"
                           className="text-blue-500 ml-2"
                         >
@@ -408,8 +413,8 @@ const FeeAssignmentDataTable = ({
                                   fee.status === 'PAID'
                                     ? 'bg-gradient-to-r from-green-400 to-green-100 dark:from-teal-950/30 dark:to-emerald-950/30'
                                     : fee.status === 'OVERDUE'
-                                    ? 'bg-gradient-to-r from-red-400 to-red-100 dark:from-red-950/30 dark:to-red-950/30'
-                                    : 'bg-gradient-to-r from-orange-100 to-orange-50 dark:from-teal-950/30 dark:to-orange-950/30'
+                                      ? 'bg-gradient-to-r from-red-400 to-red-100 dark:from-red-950/30 dark:to-red-950/30'
+                                      : 'bg-gradient-to-r from-orange-100 to-orange-50 dark:from-teal-950/30 dark:to-orange-950/30'
                                 } p-4 rounded-t-lg`}
                               >
                                 <h4 className="font-semibold text-lg flex items-center gap-2">

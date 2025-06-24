@@ -43,16 +43,20 @@ async function TeacherStatsContent() {
     },
     {
       title: 'Teaching Subjects',
-      value: stats.teacher.TeacherSubject.length.toString(),
-      description: `${stats.teacher.isActive ? 'Class Teacher' : 'Subject Teacher'}`,
+      value: stats.teacher.TeachingAssignment.length.toString(),
+      description: `Subjects you're assigned`,
       icon: BookOpen,
       color: 'purple',
-      badge: stats.teacher.isActive
-        ? {
-            text: `Grade ${stats.teacher.isActive}-${stats.teacher.isActive}`,
-            variant: 'blue',
-          }
-        : null,
+      badge:
+        stats.teacher.TeachingAssignment.length > 0
+          ? {
+              text: `${stats.teacher.TeachingAssignment.length} subjects`,
+              variant: 'blue',
+            }
+          : {
+              text: 'No Subjects Assigned',
+              variant: 'yellow',
+            },
     },
     {
       title: 'Pending Tasks',

@@ -22,7 +22,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { deleteFeeCategory } from '@/lib/actions/fee-category-actions';
+import { deleteFeeCategory } from '@/lib/data/fee/fee-category-actions';
 import { toast } from 'sonner';
 
 interface FeeCategoryItemProps {
@@ -51,7 +51,10 @@ export function FeeCategoryItem({ category }: FeeCategoryItemProps) {
       toast.success('Fee category deleted successfully');
       router.refresh();
     } catch (error) {
-      toast.warning('Failed to delete fee category');
+      toast.warning('Failed to delete fee category', {
+        description:
+          'You Can not delete Fee Category Please try again or contact support.',
+      });
     } finally {
       setIsDeleting(false);
     }
@@ -61,7 +64,7 @@ export function FeeCategoryItem({ category }: FeeCategoryItemProps) {
     <Card>
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-lg">{category.name}</CardTitle>
+          <CardTitle className="text-lg capitalize">{category.name}</CardTitle>
           <Button
             variant="ghost"
             size="sm"

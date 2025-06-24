@@ -1,302 +1,294 @@
 'use client';
 
 import { useState } from 'react';
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import {
-  Check,
-  Code,
-  Copy,
   Download,
-  Facebook,
-  Mail,
-  Share2,
-  Twitter,
+  Receipt,
+  Calendar,
+  CreditCard,
+  Hash,
+  User,
+  Building,
+  CheckCircle,
+  XCircle,
+  Clock,
 } from 'lucide-react';
+import { formatCurrencyIN, formatDateIN } from '@/lib/utils';
 
-import { ImageIcon } from 'lucide-react';
-import { toast } from 'sonner';
-import { cn } from '@/lib/utils';
-
-import { Input } from '@/components/ui/input';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
-
-import { useId, useRef } from 'react';
-
-interface ReceiptData {
-  receiptNumber: string;
-  studentName: string;
-  rollNumber: string;
-  feeCategory: string;
-  totalAmount: string;
-  paidAmount: string;
-  pendingAmount: string;
-  paymentDate: string;
+interface PaymentData {
+  id: string;
+  amountPaid: number;
+  paymentDate: Date;
   paymentMethod: string;
-  transactionId: string;
-  payerName: string;
-  organizationName: string;
+  receiptNumber: string;
+  note: string;
+  transactionId: string | null;
+  payerId: string;
+  feeId: string;
+  platformFee: number | null; // percentage
+  status: string;
+  recordedBy: string;
+  organizationId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  payer: {
+    firstName: string;
+    lastName: string;
+    email: string;
+  };
 }
 
 interface FeeReceiptCardProps {
-  receiptData: ReceiptData;
+  receiptData: PaymentData;
 }
 
-export default function FeeReceiptCard(data: any) {
-  console.log('Receipt Data', data);
-  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
-  const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
-  const [copied, setCopied] = useState(false);
+export function FeeReceiptCard({ receiptData }: FeeReceiptCardProps) {
+  const [isDownloading, setIsDownloading] = useState(false);
 
-  const receiptData = {
-    receiptNumber: 'REC-12345',
-    studentName: 'John Doe',
-    rollNumber: 'STU123',
-    feeCategory: 'Yearly Fee',
-    totalAmount: '₹10,000',
-    paidAmount: '₹8,000',
-    pendingAmount: '₹2,000',
-    paymentDate: 'April 20, 2025',
-    paymentMethod: 'UPI',
-    transactionId: 'TXN789123',
-    payerName: 'Jane Doe',
-    organizationName: 'Springfield School',
+  const calculatePlatformFee = () => {
+    return receiptData.platformFee ?? 0;
+  };
+
+  const getNetAmount = () => {
+    return receiptData.amountPaid - calculatePlatformFee();
+  };
+
+  const getStatusIcon = (status: string) => {
+    switch (status.toLowerCase()) {
+      case 'paid':
+        return <CheckCircle className="w-4 h-4" />;
+      case 'unpaid':
+        return <XCircle className="w-4 h-4" />;
+      case 'pending':
+        return <Clock className="w-4 h-4" />;
+      default:
+        return <Clock className="w-4 h-4" />;
+    }
+  };
+
+  const getStatusVariant = (status: string) => {
+    switch (status.toLowerCase()) {
+      case 'paid':
+        return 'default';
+      case 'unpaid':
+        return 'destructive';
+      case 'pending':
+        return 'secondary';
+      default:
+        return 'secondary';
+    }
   };
 
   const handleDownload = async () => {
-    setIsGeneratingPdf(true);
+    setIsDownloading(true);
+    try {
+      const response = await fetch('/api/download-receipt', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(receiptData),
+      });
 
-    setIsGeneratingPdf(false);
-
-    toast.success('Receipt Downloaded');
-  };
-
-  const handleShare = (method: 'email' | 'whatsapp') => {
-    // Mock share functionality
-    // toast({
-    //   title: `Receipt Shared via ${method === 'email' ? 'Email' : 'WhatsApp'}`,
-    //   description: `Your receipt has been shared via ${
-    //     method === 'email' ? 'Email' : 'WhatsApp'
-    //   }.`,
-    // });
-    // setIsShareDialogOpen(false);
-  };
-
-  const id = useId();
-  // const [copied, setCopied] = useState<boolean>(false);
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  const handleCopy = () => {
-    if (inputRef.current) {
-      navigator.clipboard.writeText(inputRef.current.value);
-      setCopied(true);
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        a.download = `receipt-${receiptData.receiptNumber}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+      }
+    } catch (error) {
+      console.error('Error downloading receipt:', error);
+    } finally {
+      setIsDownloading(false);
     }
   };
 
   return (
-    <Card className="w-full max-w-2xl shadow-lg">
-      <CardHeader className="flex items-center justify-center pb-2">
-        <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-2">
-          <ImageIcon className="w-12 h-12 text-gray-400" />
+    <div className="bg-white">
+      {/* Header */}
+      <div className="border-b bg-gradient-to-r from-slate-50 to-gray-50 px-6 py-8">
+        <div className="flex items-start justify-between">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <Receipt className="w-5 h-5 text-slate-600" />
+              <h2 className="text-lg font-semibold text-slate-900">
+                Payment Receipt
+              </h2>
+            </div>
+            <p className="text-sm text-slate-500">Transaction confirmation</p>
+          </div>
+          <Badge
+            variant={getStatusVariant(receiptData.status)}
+            className="flex items-center gap-1"
+          >
+            {getStatusIcon(receiptData.status)}
+            {receiptData.status}
+          </Badge>
         </div>
-        <h2 className="text-2xl font-bold text-center">
-          {receiptData.organizationName}
-        </h2>
-        <p className="text-gray-500 text-center">Official Fee Receipt</p>
-      </CardHeader>
-      <CardContent className="pt-4">
-        <div className="bg-gray-50 p-4 rounded-lg mb-6">
-          <div className="flex justify-between items-center mb-2">
-            <h3 className="font-semibold text-lg">
-              Receipt #{receiptData.receiptNumber}
-            </h3>
-            <span className="text-sm text-gray-500">
-              {receiptData.paymentDate}
-            </span>
+      </div>
+
+      {/* Content */}
+      <div className="p-6 space-y-6">
+        {/* Amount Section */}
+        <div className="text-center py-4">
+          <div className="text-3xl font-bold text-slate-900 mb-1">
+            {formatCurrencyIN(receiptData.amountPaid)}
           </div>
-          <Separator className="my-3" />
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <p className="text-sm text-gray-500">Student Name</p>
-              <p className="font-medium">{receiptData.studentName}</p>
-            </div>
-            <div>
-              <p className="text-sm text-gray-500">Roll Number</p>
-              <p className="font-medium">{receiptData.rollNumber}</p>
-            </div>
-            <div>
-              <p className="text-sm text-gray-500">Fee Category</p>
-              <p className="font-medium">{receiptData.feeCategory}</p>
-            </div>
-            <div>
-              <p className="text-sm text-gray-500">Payment Method</p>
-              <p className="font-medium">{receiptData.paymentMethod}</p>
-            </div>
-            <div>
-              <p className="text-sm text-gray-500">Transaction ID</p>
-              <p className="font-medium">{receiptData.transactionId}</p>
-            </div>
-            <div>
-              <p className="text-sm text-gray-500">Payer Name</p>
-              <p className="font-medium">{receiptData.payerName}</p>
-            </div>
-          </div>
+          <p className="text-sm text-slate-500">Total Amount</p>
         </div>
 
-        <div className="bg-gray-50 p-4 rounded-lg">
-          <h3 className="font-semibold text-lg mb-3">Payment Summary</h3>
-          <Separator className="mb-4" />
-          <div className="space-y-3">
-            <div className="flex justify-between">
-              <span className="text-gray-600">Total Amount</span>
-              <span className="font-medium">{receiptData.totalAmount}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-600">Paid Amount</span>
-              <span className="font-medium text-green-600">
-                {receiptData.paidAmount}
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-600">Pending Amount</span>
-              <span className="font-medium text-amber-600">
-                {receiptData.pendingAmount}
-              </span>
-            </div>
-            <Separator className="my-2" />
-            <div className="flex justify-between">
-              <span className="font-semibold">Status</span>
-              <span className="font-semibold text-amber-600">
-                Partially Paid
-              </span>
-            </div>
-          </div>
-        </div>
-      </CardContent>
-      <CardFooter className="flex flex-col sm:flex-row gap-3 pt-4">
-        <Button
-          className="w-full sm:w-auto"
-          onClick={handleDownload}
-          disabled={isGeneratingPdf}
-        >
-          <Download className="mr-2 h-4 w-4" />
-          {isGeneratingPdf ? 'Generating PDF...' : 'Download Receipt'}
-        </Button>
+        <Separator />
 
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button variant="outline" className="w-full sm:w-auto">
-              <Share2 className="mr-2 h-4 w-4" />
-              Share Receipt
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-72">
-            <div className="flex flex-col gap-3 text-center">
-              <div className="text-sm font-medium mt-3"></div>
-              <div className="flex flex-wrap justify-center gap-2">
-                <Button size="icon" variant="outline" aria-label="Embed">
-                  <Code size={16} strokeWidth={2} aria-hidden="true" />
-                </Button>
-                <Button
-                  size="icon"
-                  variant="outline"
-                  aria-label="Share on Twitter"
-                >
-                  <Twitter size={16} strokeWidth={2} aria-hidden="true" />
-                </Button>
-                <Button
-                  size="icon"
-                  variant="outline"
-                  aria-label="Share on Facebook"
-                >
-                  <Facebook size={16} strokeWidth={2} aria-hidden="true" />
-                </Button>
-                <Button
-                  size="icon"
-                  variant="outline"
-                  aria-label="Share via email"
-                >
-                  <Mail size={16} strokeWidth={2} aria-hidden="true" />
-                </Button>
+        {/* Transaction Details */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-4">
+            <div className="flex items-start gap-3">
+              <Hash className="w-4 h-4 text-slate-400 mt-0.5" />
+              <div className="min-w-0 flex-1">
+                <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">
+                  Receipt Number
+                </p>
+                <p className="text-sm font-mono text-slate-900 break-all">
+                  {receiptData.receiptNumber}
+                </p>
               </div>
-              <div className="space-y-2">
-                <div className="relative">
-                  <Input
-                    ref={inputRef}
-                    id={id}
-                    className="pe-9"
-                    type="text"
-                    defaultValue={`/dashboard/fees/receipt/${receiptData.receiptNumber}`}
-                    aria-label="Share link"
-                    readOnly
-                  />
-                  <TooltipProvider delayDuration={0}>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <button
-                          onClick={handleCopy}
-                          className="absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-lg border border-transparent text-muted-foreground/80 outline-offset-2 transition-colors hover:text-foreground focus-visible:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring/70 disabled:pointer-events-none disabled:cursor-not-allowed"
-                          aria-label={copied ? 'Copied' : 'Copy to clipboard'}
-                          disabled={copied}
-                        >
-                          <div
-                            className={cn(
-                              'transition-all',
-                              copied
-                                ? 'scale-100 opacity-100'
-                                : 'scale-0 opacity-0'
-                            )}
-                          >
-                            <Check
-                              className="stroke-emerald-500"
-                              size={16}
-                              strokeWidth={2}
-                              aria-hidden="true"
-                            />
-                          </div>
-                          <div
-                            className={cn(
-                              'absolute transition-all',
-                              copied
-                                ? 'scale-0 opacity-0'
-                                : 'scale-100 opacity-100'
-                            )}
-                          >
-                            <Copy
-                              size={16}
-                              strokeWidth={2}
-                              aria-hidden="true"
-                            />
-                          </div>
-                        </button>
-                      </TooltipTrigger>
-                      <TooltipContent className="px-2 py-1 text-xs">
-                        Copy to clipboard
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
+            </div>
+
+            <div className="flex items-start gap-3">
+              <Calendar className="w-4 h-4 text-slate-400 mt-0.5" />
+              <div>
+                <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">
+                  Payment Date
+                </p>
+                <p className="text-sm text-slate-900">
+                  {formatDateIN(receiptData.paymentDate)}
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3">
+              <CreditCard className="w-4 h-4 text-slate-400 mt-0.5" />
+              <div>
+                <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">
+                  Payment Method
+                </p>
+                <p className="text-sm text-slate-900">
+                  {receiptData.paymentMethod}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <div className="flex items-start gap-3">
+              <Receipt className="w-4 h-4 text-slate-400 mt-0.5" />
+              <div className="min-w-0 flex-1">
+                <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">
+                  Transaction ID
+                </p>
+                <p className="text-sm font-mono text-slate-900">
+                  {receiptData.transactionId || '—'}
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3">
+              <User className="w-4 h-4 text-slate-400 mt-0.5" />
+              <div className="min-w-0 flex-1">
+                <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">
+                  Payer Name
+                </p>
+                <p className="text-sm font-mono text-slate-900 break-all">
+                  {receiptData.payer.firstName} {receiptData.payer.lastName}
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3">
+              <Building className="w-4 h-4 text-slate-400 mt-0.5" />
+              <div className="min-w-0 flex-1">
+                <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">
+                  Organization Id
+                </p>
+                <p className="text-sm font-mono text-slate-900 break-all">
+                  {receiptData.organizationId}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Amount Breakdown */}
+        {receiptData.platformFee && (
+          <>
+            <Separator />
+            <div className="space-y-3">
+              <h3 className="text-sm font-medium text-slate-900">
+                Amount Breakdown
+              </h3>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-slate-600">Gross Amount</span>
+                  <span className="font-medium">
+                    {formatCurrencyIN(receiptData.amountPaid)}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-600">Platform Fee</span>
+                  <span className="font-medium">
+                    {formatCurrencyIN(calculatePlatformFee())}
+                  </span>
+                </div>
+                <Separator />
+                <div className="flex justify-between font-medium">
+                  <span>Net Amount</span>
+                  <span>{formatCurrencyIN(getNetAmount())}</span>
                 </div>
               </div>
             </div>
-          </PopoverContent>
-        </Popover>
-      </CardFooter>
-    </Card>
+          </>
+        )}
+
+        {/* Note */}
+        {receiptData.note && (
+          <>
+            <Separator />
+            <div className="bg-blue-50 border border-blue-100 rounded-lg p-4">
+              <p className="text-sm text-blue-800">
+                <span className="font-medium">Note:</span> {receiptData.note}
+              </p>
+            </div>
+          </>
+        )}
+
+        {/* Footer */}
+        <Separator />
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div className="text-xs text-slate-500 space-y-1">
+            <p>Created: {formatDateIN(receiptData.createdAt)}</p>
+            <p>Updated: {formatDateIN(receiptData.updatedAt)}</p>
+          </div>
+
+          <Button
+            onClick={handleDownload}
+            disabled={isDownloading}
+            size="sm"
+            className="bg-slate-900 hover:bg-slate-800"
+          >
+            <Download className="w-4 h-4 mr-2" />
+            {isDownloading ? 'Generating...' : 'Download PDF'}
+          </Button>
+        </div>
+      </div>
+    </div>
   );
 }

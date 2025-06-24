@@ -39,10 +39,10 @@ export async function getFeeRecords(count: number = 50): Promise<FeeRecord[]> {
             description: true,
           },
         },
-        FeePayments: {
+        payments: {
           select: {
             id: true,
-            amountPaid: true,
+            amount: true,
             paymentDate: true,
             paymentMethod: true,
             receiptNumber: true,
@@ -94,9 +94,9 @@ export async function getFeeRecords(count: number = 50): Promise<FeeRecord[]> {
         id: fee.student.sectionId,
         name: fee.student.section.name,
       },
-      payments: fee.FeePayments.map((payment) => ({
+      payments: fee.payments.map((payment) => ({
         id: payment.id,
-        amountPaid: payment.amountPaid,
+        amountPaid: payment.amount,
         paymentDate: payment.paymentDate,
         paymentMethod: payment.paymentMethod,
         receiptNumber: payment.receiptNumber,

@@ -32,56 +32,63 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import FeeReceiptCard from './FeeReceiptCard';
-import { payFeesAction } from '@/lib/data/fee/payFeesAction';
-import { toast } from 'sonner';
 
-interface ReceiptData {
-  receiptNumber: string;
-  studentName: string;
-  rollNumber: string;
-  feeCategory: string;
-  totalAmount: number;
-  paidAmount: number;
-  pendingAmount: number;
-  paymentDate: string;
-  paymentMethod: string;
-  transactionId: string;
-  payerName: string;
-  organizationName: string;
-}
+import { toast } from 'sonner';
+import { FeeReceiptCard } from './FeeReceiptCard';
+import { formatCurrencyIN } from '@/lib/utils';
+import { payFeesAction } from '@/lib/data/fee/payFeesAction';
 
 interface ParentData {
   name: string;
   email: string;
   phone: string;
-  children: {
-    id: string;
-    name: string;
-    grade: string;
-    section: string;
-    rollNo: string;
-    totalFees: number;
-    paidFees: number;
-    pendingFees: number;
-    unpaidFees: {
-      id: string;
-      dueDate: Date;
-      amount: number;
-      category: string;
-      status: string | 'PAID' | 'UNPAID' | 'OVERDUE';
-    }[];
-    paymentHistory: {
-      id: string;
-      date: Date;
-      childName: string;
-      amount: number;
-      category: string;
-      receiptNumber: string;
-      paymentMethod: string;
-      payerId: string;
-    }[];
-  }[];
+  children: ChildData[];
+}
+
+interface ChildData {
+  id: string;
+  name: string;
+  grade: string;
+  section: string;
+  rollNo: string;
+  totalFees: number;
+  paidFees: number;
+  pendingFees: number;
+  unpaidFees: UnpaidFee[];
+  paymentHistory: PaymentHistoryItem[];
+}
+
+interface UnpaidFee {
+  id: string;
+  dueDate: Date;
+  amount: number;
+  category: string;
+  status: 'PAID' | 'UNPAID' | 'OVERDUE' | string;
+}
+
+interface PaymentHistoryItem {
+  id: string;
+  feeId: string;
+  status: string;
+  note: string;
+  transactionId: string | null;
+  amountPaid: number;
+  platformFee: number | null;
+  paymentDate: Date;
+  studentName: string;
+  category: string;
+  receiptNumber: string;
+  paymentMethod: string;
+  payerId: string;
+  recordedBy: string;
+  organizationId: string;
+  payer: {
+    firstName: string;
+    lastName: string;
+    email: string;
+  };
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 const ParentFeeHistory = ({ parentData }: { parentData: ParentData }) => {
@@ -95,10 +102,7 @@ const ParentFeeHistory = ({ parentData }: { parentData: ParentData }) => {
 
   const handlePayment = async (feeId: string) => {
     try {
-      const unpaid = currentChild?.unpaidFees.find((f) => f.id === feeId);
-      if (!unpaid) return toast.error('Fee not found');
-
-      const res = await payFeesAction(unpaid.id, unpaid.amount);
+      const result = await payFeesAction(feeId);
       toast.success('Payment successful');
       // Optional: refresh data or revalidate
     } catch (err: any) {
@@ -122,6 +126,8 @@ const ParentFeeHistory = ({ parentData }: { parentData: ParentData }) => {
   };
 
   if (!currentChild) return null;
+
+  console.log(currentChild?.paymentHistory);
 
   return (
     <div>
@@ -176,19 +182,19 @@ const ParentFeeHistory = ({ parentData }: { parentData: ParentData }) => {
               <div className="space-y-2">
                 <p className="text-sm font-medium">Total Fees</p>
                 <p className="text-2xl font-bold">
-                  ₹{currentChild.totalFees.toLocaleString()}
+                  ₹{formatCurrencyIN(currentChild.totalFees)}
                 </p>
               </div>
               <div className="space-y-2">
                 <p className="text-sm font-medium">Paid Amount</p>
                 <p className="text-2xl font-bold text-green-600">
-                  ₹{currentChild.paidFees.toLocaleString()}
+                  ₹{formatCurrencyIN(currentChild.paidFees)}
                 </p>
               </div>
               <div className="space-y-2">
                 <p className="text-sm font-medium">Pending Amount</p>
                 <p className="text-2xl font-bold text-amber-600">
-                  ₹{currentChild.pendingFees.toLocaleString()}
+                  ₹{formatCurrencyIN(currentChild.pendingFees)}
                 </p>
               </div>
             </div>
@@ -243,7 +249,7 @@ const ParentFeeHistory = ({ parentData }: { parentData: ParentData }) => {
                             {format(payment.dueDate, 'PPP')}
                           </TableCell>
                           <TableCell>
-                            ₹{payment.amount.toLocaleString()}
+                            ₹{formatCurrencyIN(payment.amount)}
                           </TableCell>
                           <TableCell>
                             <Badge
@@ -337,13 +343,17 @@ const ParentFeeHistory = ({ parentData }: { parentData: ParentData }) => {
                 ) : (
                   currentChild?.paymentHistory.map((payment) => (
                     <TableRow key={payment.id}>
-                      <TableCell>{format(payment.date, 'PPP')}</TableCell>
+                      <TableCell>
+                        {format(payment.paymentDate, 'PPP')}
+                      </TableCell>
                       <TableCell className="font-medium">
-                        {payment.childName}
+                        {payment.studentName}
                       </TableCell>
                       <TableCell>{payment.receiptNumber}</TableCell>
                       <TableCell>{payment.category}</TableCell>
-                      <TableCell>₹{payment.amount.toLocaleString()}</TableCell>
+                      <TableCell>
+                        ₹{formatCurrencyIN(payment.amountPaid)}
+                      </TableCell>
                       <TableCell>{payment.paymentMethod}</TableCell>
                       <TableCell className="text-right">
                         <Dialog>
@@ -354,9 +364,7 @@ const ParentFeeHistory = ({ parentData }: { parentData: ParentData }) => {
                             </Button>
                           </DialogTrigger>
                           <DialogContent
-                            className={
-                              ' p-0 m-0  overflow-y-scroll max-h-screen'
-                            }
+                            className={' m-0  overflow-y-scroll max-h-screen'}
                           >
                             <DialogHeader className="p-2">
                               <DialogTitle>View Receipt</DialogTitle>
@@ -364,9 +372,7 @@ const ParentFeeHistory = ({ parentData }: { parentData: ParentData }) => {
                                 View the receipt for this payment
                               </DialogDescription>
                             </DialogHeader>
-                            <FeeReceiptCard
-                              receiptData={currentChild.paymentHistory}
-                            />
+                            <FeeReceiptCard receiptData={payment} />
                           </DialogContent>
                         </Dialog>
                       </TableCell>

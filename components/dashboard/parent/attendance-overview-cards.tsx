@@ -54,13 +54,13 @@ async function AttendanceOverviewContent() {
                       ? 'Not Marked'
                       : child.todayStatus}
                   </Badge>
-                  {child.streaks.current > 0 && (
+                  {child.streak.current > 0 && (
                     <Badge
                       variant="outline"
                       className="bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950 dark:text-blue-300"
                     >
                       <Award className="w-3 h-3 mr-1" />
-                      {child.streaks.current} day streak
+                      {child.streak.current} day streak
                     </Badge>
                   )}
                 </div>
@@ -74,26 +74,23 @@ async function AttendanceOverviewContent() {
               <div className="flex items-center justify-between">
                 <h4 className="text-sm font-medium">This Month</h4>
                 <div className="flex items-center gap-1">
-                  {child.monthStats.percentage >= 90 ? (
+                  {child.month.percentage >= 90 ? (
                     <TrendingUp className="w-4 h-4 text-green-500" />
-                  ) : child.monthStats.percentage < 75 ? (
+                  ) : child.month.percentage < 75 ? (
                     <TrendingDown className="w-4 h-4 text-red-500" />
                   ) : (
                     <Calendar className="w-4 h-4 text-blue-500" />
                   )}
                   <span className="text-lg font-bold">
-                    {child.monthStats.percentage}%
+                    {child.month.percentage}%
                   </span>
                 </div>
               </div>
-              <Progress value={child.monthStats.percentage} className="h-3" />
+              <Progress value={child.month.percentage} className="h-3" />
               <div className="flex justify-between text-xs text-muted-foreground">
-                <span>{child.monthStats.presentDays} present</span>
-                <span>
-                  {child.monthStats.totalDays - child.monthStats.presentDays}{' '}
-                  absent
-                </span>
-                <span>{child.monthStats.totalDays} total days</span>
+                <span>{child.month.present} present</span>
+                <span>{child.month.total - child.month.present} absent</span>
+                <span>{child.month.total} total days</span>
               </div>
             </div>
 
@@ -102,18 +99,30 @@ async function AttendanceOverviewContent() {
               <div className="flex items-center justify-between">
                 <h4 className="text-sm font-medium">This Year</h4>
                 <span className="text-lg font-bold">
-                  {child.yearStats.percentage}%
+                  {Math.round(
+                    (child.year.present / (child.year.total || 1)) * 100
+                  )}
+                  %
                 </span>
               </div>
-              <Progress value={child.yearStats.percentage} className="h-2" />
+              <Progress
+                value={Math.round(
+                  (child.year.present / (child.year.total || 1)) * 100
+                )}
+                className="h-2"
+              />
               <div className="flex justify-between text-xs text-muted-foreground">
                 <span>
-                  {child.yearStats.presentDays}/{child.yearStats.totalDays} days
+                  {child.year.present}/{child.year.total} days
                 </span>
                 <span>
-                  {child.yearStats.percentage >= 90
+                  {Math.round(
+                    (child.year.present / (child.year.total || 1)) * 100
+                  ) >= 90
                     ? 'Excellent'
-                    : child.yearStats.percentage >= 75
+                    : Math.round(
+                          (child.year.present / (child.year.total || 1)) * 100
+                        ) >= 75
                       ? 'Good'
                       : 'Needs Improvement'}
                 </span>
@@ -124,25 +133,25 @@ async function AttendanceOverviewContent() {
             <div className="space-y-3">
               <h4 className="text-sm font-medium">Last 14 Days</h4>
               <div className="flex gap-1 flex-wrap">
-                {child.recentAttendance.map((record, index) => (
-                  <div
-                    key={index}
-                    className={`w-6 h-6 rounded text-xs flex items-center justify-center font-medium ${
-                      record.present
-                        ? record.status === 'LATE'
-                          ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300'
-                          : 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300'
-                        : 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300'
-                    }`}
-                    title={`${record.date.toLocaleDateString()} - ${record.status}`}
-                  >
-                    {record.present
-                      ? record.status === 'LATE'
-                        ? 'L'
-                        : 'P'
-                      : 'A'}
-                  </div>
-                ))}
+                {child.last14Days.map((record, index) => {
+                  const status = record.status;
+                  const present = status === 'PRESENT' || status === 'LATE';
+                  return (
+                    <div
+                      key={index}
+                      className={`w-6 h-6 rounded text-xs flex items-center justify-center font-medium ${
+                        present
+                          ? status === 'LATE'
+                            ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300'
+                            : 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300'
+                          : 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300'
+                      }`}
+                      title={`${record.date.toLocaleDateString()} - ${status}`}
+                    >
+                      {present ? (status === 'LATE' ? 'L' : 'P') : 'A'}
+                    </div>
+                  );
+                })}
               </div>
               <div className="text-xs text-muted-foreground">
                 P = Present, A = Absent, L = Late
@@ -150,11 +159,11 @@ async function AttendanceOverviewContent() {
             </div>
 
             {/* Streaks */}
-            {(child.streaks.current > 0 || child.streaks.longest > 0) && (
+            {(child.streak.current > 0 || child.streak.best > 0) && (
               <div className="grid grid-cols-2 gap-4 pt-3 border-t">
                 <div className="text-center">
                   <div className="text-lg font-bold text-blue-600">
-                    {child.streaks.current}
+                    {child.streak.current}
                   </div>
                   <div className="text-xs text-muted-foreground">
                     Current Streak
@@ -162,7 +171,7 @@ async function AttendanceOverviewContent() {
                 </div>
                 <div className="text-center">
                   <div className="text-lg font-bold text-purple-600">
-                    {child.streaks.longest}
+                    {child.streak.best}
                   </div>
                   <div className="text-xs text-muted-foreground">
                     Best Streak
@@ -172,21 +181,20 @@ async function AttendanceOverviewContent() {
             )}
 
             {/* Alerts */}
-            {child.monthStats.percentage < 75 &&
-              child.monthStats.totalDays >= 5 && (
-                <div className="p-3 rounded-lg bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800">
-                  <div className="flex items-center gap-2">
-                    <AlertTriangle className="w-4 h-4 text-red-500" />
-                    <span className="text-sm font-medium text-red-800 dark:text-red-200">
-                      Low Attendance Alert
-                    </span>
-                  </div>
-                  <p className="text-xs text-red-600 dark:text-red-400 mt-1">
-                    Attendance is below 75%. Please ensure regular school
-                    attendance.
-                  </p>
+            {child.month.percentage < 75 && child.month.total >= 5 && (
+              <div className="p-3 rounded-lg bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800">
+                <div className="flex items-center gap-2">
+                  <AlertTriangle className="w-4 h-4 text-red-500" />
+                  <span className="text-sm font-medium text-red-800 dark:text-red-200">
+                    Low Attendance Alert
+                  </span>
                 </div>
-              )}
+                <p className="text-xs text-red-600 dark:text-red-400 mt-1">
+                  Attendance is below 75%. Please ensure regular school
+                  attendance.
+                </p>
+              </div>
+            )}
           </CardContent>
         </Card>
       ))}

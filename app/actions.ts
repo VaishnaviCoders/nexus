@@ -382,6 +382,7 @@ type AttendanceStatus = 'PRESENT' | 'ABSENT' | 'LATE';
 
 export async function markAttendance(
   sectionId: string,
+  selectedDate: Date,
   attendanceData: {
     studentId: string;
     status: AttendanceStatus;
@@ -407,12 +408,22 @@ export async function markAttendance(
     );
   }
 
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  // Optional: Add validation if you want to restrict date range
+  // const today = new Date();
+  // today.setHours(0, 0, 0, 0);
+  // const maxPastDays = 7; // Allow marking up to 7 days ago
+  // const minDate = new Date(today.getTime() - (maxPastDays * 24 * 60 * 60 * 1000));
 
-  if (new Date().setHours(0, 0, 0, 0) !== today.getTime()) {
-    throw new Error('Attendance can only be marked for today.');
-  }
+  // if (attendanceDate < minDate || attendanceDate > today) {
+  //   throw new Error(`Attendance can only be marked within ${maxPastDays} days.`);
+  // }
+
+  //   if (new Date().setHours(0, 0, 0, 0) !== today.getTime()) {
+  // throw new Error('Attendance can only be marked for today.');
+  // }
+
+  const attendanceDate = new Date(selectedDate);
+  attendanceDate.setHours(0, 0, 0, 0);
 
   const recordedBy =
     [user.firstName, user.lastName].filter(Boolean).join(' ') || 'Unknown';
@@ -421,7 +432,7 @@ export async function markAttendance(
     where: {
       studentId_date: {
         studentId: record.studentId,
-        date: today,
+        date: attendanceDate,
       },
     },
     update: {
@@ -436,7 +447,7 @@ export async function markAttendance(
       studentId: record.studentId,
       present: record.status === 'PRESENT' || record.status === 'LATE',
 
-      date: today,
+      date: attendanceDate,
       status: record.status,
       note: record.note,
       recordedBy,
@@ -447,7 +458,9 @@ export async function markAttendance(
   }));
 
   const data = await prisma.$transaction(
-    attendanceUpdates.map((data) => prisma.studentAttendance.upsert(data))
+    attendanceUpdates.map((updateData) =>
+      prisma.studentAttendance.upsert(updateData)
+    )
   );
 
   console.log('Attendance data updated:', data);
@@ -628,64 +641,6 @@ export async function getDashboardStats(organizationId: string) {
   };
 }
 
-export async function getFeesSummary() {
-  const orgId = await getOrganizationId();
-  const today = new Date();
-  const [feeAgg, studentCount, studentGroupedFees, overdueAmount] =
-    await Promise.all([
-      prisma.fee.aggregate({
-        where: { organizationId: orgId },
-        _sum: {
-          totalFee: true,
-          paidAmount: true,
-          pendingAmount: true,
-        },
-      }),
-
-      prisma.student.count({
-        where: { organizationId: orgId },
-      }),
-
-      prisma.fee.groupBy({
-        by: ['studentId'],
-        where: {
-          organizationId: orgId,
-        },
-        _sum: {
-          pendingAmount: true,
-        },
-      }),
-
-      prisma.fee.aggregate({
-        where: {
-          organizationId: orgId,
-          dueDate: { lt: today },
-          pendingAmount: { gt: 0 },
-        },
-        _sum: {
-          pendingAmount: true,
-        },
-      }),
-    ]);
-
-  const paidStudents = studentGroupedFees.filter(
-    (s) => Number(s._sum.pendingAmount) === 0
-  ).length;
-
-  const totalStudents = studentCount;
-  const unpaidStudents = totalStudents - paidStudents;
-
-  return {
-    totalFees: feeAgg._sum.totalFee || 0,
-    collectedFees: feeAgg._sum.paidAmount || 0,
-    pendingFees: feeAgg._sum.pendingAmount || 0,
-    totalStudents,
-    paidStudents,
-    unpaidStudents,
-    overdueFees: overdueAmount._sum.pendingAmount || 0,
-  };
-}
-
 import {
   startOfMonth,
   endOfMonth,
@@ -697,46 +652,46 @@ import {
 import FilterStudents from '@/lib/data/student/FilterStudents';
 import { Role, StudentAttendance } from '@/lib/generated/prisma';
 
-export async function getMonthlyFeeCollection(monthsBack: number) {
-  const start = performance.now();
-  const orgId = await getOrganizationId();
-  const now = new Date();
+// export async function getMonthlyFeeCollection(monthsBack: number) {
+//   const start = performance.now();
+//   const orgId = await getOrganizationId();
+//   const now = new Date();
 
-  // Generate a range of past months
-  const results = await prisma.feePayment.groupBy({
-    by: ['paymentDate'],
-    where: {
-      organizationId: orgId,
-      paymentDate: {
-        gte: subMonths(now, monthsBack),
-        lte: now,
-      },
-    },
-    _sum: {
-      amountPaid: true,
-    },
-  });
+//   // Generate a range of past months
+//   const results = await prisma.feePayment.groupBy({
+//     by: ['paymentDate'],
+//     where: {
+//       organizationId: orgId,
+//       paymentDate: {
+//         gte: subMonths(now, monthsBack),
+//         lte: now,
+//       },
+//     },
+//     _sum: {
+//       amount: true,
+//     },
+//   });
 
-  // Group and format by month
-  const monthlyCollection: Record<string, number> = {};
+//   // Group and format by month
+//   const monthlyCollection: Record<string, number> = {};
 
-  for (const r of results) {
-    const monthKey = `${r.paymentDate.getFullYear()}-${(
-      r.paymentDate.getMonth() + 1
-    )
-      .toString()
-      .padStart(2, '0')}`;
-    if (!monthlyCollection[monthKey]) {
-      monthlyCollection[monthKey] = 0;
-    }
-    monthlyCollection[monthKey] += r._sum.amountPaid ?? 0;
-  }
-  const end = performance.now();
+//   for (const r of results) {
+//     const monthKey = `${r.paymentDate.getFullYear()}-${(
+//       r.paymentDate.getMonth() + 1
+//     )
+//       .toString()
+//       .padStart(2, '0')}`;
+//     if (!monthlyCollection[monthKey]) {
+//       monthlyCollection[monthKey] = 0;
+//     }
+//     monthlyCollection[monthKey] += r._sum.amount ?? 0;
+//   }
+//   const end = performance.now();
 
-  console.log('getMonthlyFeeCollection took', end - start, 'ms');
+//   console.log('getMonthlyFeeCollection took', end - start, 'ms');
 
-  return monthlyCollection;
-}
+//   return monthlyCollection;
+// }
 
 export async function fetchFilteredStudents({
   search = '',

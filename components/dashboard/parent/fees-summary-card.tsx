@@ -121,7 +121,7 @@ async function FeesSummaryContent() {
                       <span>{payment.fee.feeCategory.name}</span>
                     </div>
                     <div className="text-green-600 dark:text-green-400">
-                      {formatCurrency(payment.amountPaid)}
+                      {formatCurrency(payment.amount)}
                     </div>
                   </div>
                 ))}

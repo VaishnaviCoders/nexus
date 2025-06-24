@@ -35,18 +35,30 @@ const GetFeesByParentId = async () => {
                   status: true,
                   updatedAt: true,
                   feeCategory: { select: { name: true } },
-                  FeePayments: {
+                  payments: {
                     select: {
                       id: true,
-                      organizationId: true,
-                      amountPaid: true,
+                      amount: true,
                       paymentDate: true,
                       paymentMethod: true,
                       receiptNumber: true,
-                      payerId: true,
-                      transactionId: true,
                       note: true,
+                      transactionId: true,
+                      payerId: true,
+                      feeId: true,
+                      platformFee: true,
+                      status: true,
+                      recordedBy: true,
+                      organizationId: true,
                       createdAt: true,
+                      updatedAt: true,
+                      payer: {
+                        select: {
+                          firstName: true,
+                          lastName: true,
+                          email: true,
+                        },
+                      },
                     },
                     orderBy: { paymentDate: 'asc' },
                   },
@@ -87,18 +99,29 @@ const GetFeesByParentId = async () => {
     );
 
     const paymentHistory = student.Fee.flatMap((fee) =>
-      fee.FeePayments.map((payment) => ({
+      fee.payments.map((payment) => ({
         id: payment.id,
+        amountPaid: payment.amount,
+        platformFee: payment.platformFee,
+        paymentDate: payment.paymentDate,
+        receiptNumber: payment.receiptNumber,
+        note: payment.note || '',
+        payerId: payment.payerId,
+        feeId: payment.feeId,
+        status: payment.status,
+        recordedBy: payment.recordedBy || 'System',
+        transactionId: payment.transactionId,
         organizationId: payment.organizationId,
-        amount: payment.amountPaid,
-        childName: student.firstName + ' ' + student.lastName,
-        date: payment.paymentDate,
+        studentName: student.firstName + ' ' + student.lastName,
         paymentMethod: payment.paymentMethod,
         category: fee.feeCategory?.name || 'Unknown',
-        receiptNumber: payment.receiptNumber,
-        payerId: payment.payerId,
-        transactionId: payment.transactionId,
-        notes: payment.note,
+        payer: {
+          firstName: payment.payer.firstName,
+          lastName: payment.payer.lastName,
+          email: payment.payer.email,
+        },
+        createdAt: payment.createdAt,
+        updatedAt: payment.updatedAt,
       }))
     );
 

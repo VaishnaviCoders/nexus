@@ -1,24 +1,28 @@
 import { Suspense } from 'react';
-// import { FeeCategoryList } from '@/components/fee-categories/fee-category-list';
-// import { FeeCategoryFormSkeleton } from '@/components/fee-categories/fee-category-form-skeleton';
-// import { getOrganizations } from '@/lib/data/organizations';
+
 import { FeeCategoryForm } from '@/components/dashboard/Fees/FeeCategoryForm';
 import { FeeCategoryList } from '@/components/dashboard/Fees/FeeCategoryList';
+import { Card, CardDescription, CardTitle } from '@/components/ui/card';
 
 export default async function FeeCategoriesPage() {
   return (
-    <div className=" ">
-      <h1 className="text-lg md:text-3xl font-bold mb-4 mx-2 ">
-        Fee Category Management
-      </h1>
+    <div className=" space-y-3">
+      <Card className="flex items-center justify-between p-6">
+        <div>
+          <CardTitle className="text-lg">Fee Category Management</CardTitle>
+          <CardDescription>
+            Manage fee categories for your organization
+          </CardDescription>
+        </div>
+      </Card>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 m-1">
         <div className="lg:col-span-1">
           <div className="bg-white rounded-lg shadow p-6">
             <h2 className="text-xl font-semibold mb-4">Add New Fee Category</h2>
-            {/* <Suspense fallback={<FeeCategoryFormSkeleton />}> */}
-            <FeeCategoryForm />
-            {/* </Suspense> */}
+            <Suspense fallback={<FeeCategoryFormSkeleton />}>
+              <FeeCategoryForm />
+            </Suspense>
           </div>
         </div>
 
@@ -36,6 +40,21 @@ export default async function FeeCategoriesPage() {
             </Suspense>
           </div>
         </div>
+      </div>
+    </div>
+  );
+}
+
+function FeeCategoryFormSkeleton() {
+  return (
+    <div className="space-y-4">
+      <div className="grid grid-cols-1 gap-4">
+        {Array.from({ length: 3 }).map((_, i) => (
+          <div key={i} className="animate-pulse">
+            <div className="h-5 bg-muted rounded w-32"></div>
+            <div className="h-4 bg-muted rounded w-48"></div>
+          </div>
+        ))}
       </div>
     </div>
   );

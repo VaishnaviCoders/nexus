@@ -51,8 +51,15 @@ export function formatDateIN(date: Date | string): string {
   }).format(d);
 }
 
-// Format number as INR currency (e.g., ₹1,23,456)
+// Format number as INR currency (e.g., 1,23,456)
 export function formatCurrencyIN(amount: number): string {
+  return new Intl.NumberFormat('en-IN', {
+    maximumFractionDigits: 0,
+  }).format(amount);
+}
+
+// Format number as INR currency (e.g., ₹1,23,456)
+export function formatCurrencyINWithSymbol(amount: number): string {
   return new Intl.NumberFormat('en-IN', {
     style: 'currency',
     currency: 'INR',

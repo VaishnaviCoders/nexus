@@ -149,7 +149,7 @@ export async function getRevenueStats() {
         organizationId,
         status: 'COMPLETED',
       },
-      _sum: { amountPaid: true },
+      _sum: { amount: true },
     }),
 
     // Overdue Fees Count
@@ -168,12 +168,12 @@ export async function getRevenueStats() {
         status: 'COMPLETED',
         paymentDate: { gte: currentMonth },
       },
-      _sum: { amountPaid: true },
+      _sum: { amount: true },
     }),
   ]);
 
   const totalRevenueAmount = totalRevenue._sum.totalFee || 0;
-  const collectedRevenueAmount = collectedRevenue._sum.amountPaid || 0;
+  const collectedRevenueAmount = collectedRevenue._sum.amount || 0;
   const pendingRevenue = totalRevenueAmount - collectedRevenueAmount;
   const revenuePercentage =
     totalRevenueAmount > 0
@@ -186,7 +186,7 @@ export async function getRevenueStats() {
     pendingRevenue,
     revenuePercentage,
     overdueFeesCount,
-    thisMonthCollection: thisMonthCollection._sum.amountPaid || 0,
+    thisMonthCollection: thisMonthCollection._sum.amount || 0,
   };
 }
 

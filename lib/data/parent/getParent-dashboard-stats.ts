@@ -36,6 +36,10 @@ export async function getChildrenOverview() {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
+  const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+  const last14Start = new Date(today);
+  last14Start.setDate(today.getDate() - 13); // includes today
+
   const childrenData = await Promise.all(
     parent.students.map(async (parentStudent) => {
       const student = parentStudent.student;
@@ -50,17 +54,23 @@ export async function getChildrenOverview() {
         },
       });
 
-      // Get this month's attendance stats
-      const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
-      const attendanceStats = await prisma.studentAttendance.aggregate({
+      // 2. Month stats
+      const monthStats = await prisma.studentAttendance.groupBy({
+        by: ['status'],
         where: {
           studentId: student.id,
           date: { gte: monthStart },
         },
-        _count: { _all: true, present: true },
+        _count: true,
       });
 
-      // Get pending fees
+      const monthPresent =
+        monthStats.find((r) => r.status === 'PRESENT')?._count || 0;
+      const monthTotal = monthStats.reduce((sum, r) => sum + r._count, 0);
+      const attendancePercentage =
+        monthTotal > 0 ? Math.round((monthPresent / monthTotal) * 100) : 0;
+
+      // 6. Pending fees
       const pendingFees = await prisma.fee.aggregate({
         where: {
           studentId: student.id,
@@ -69,15 +79,6 @@ export async function getChildrenOverview() {
         _sum: { pendingAmount: true },
         _count: { _all: true },
       });
-
-      const attendancePercentage =
-        attendanceStats._count._all > 0
-          ? Math.round(
-              ((attendanceStats._count.present || 0) /
-                attendanceStats._count._all) *
-                100
-            )
-          : 0;
 
       return {
         id: student.id,

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import prisma from '@/lib/db';
+import prisma from '../../../lib/db';
 
 import { unstable_noStore as noStore } from 'next/cache';
 import { auth } from '@clerk/nextjs/server';

@@ -115,10 +115,6 @@ export default async function AssignFees({ searchParams }: PageProps) {
     gradeId,
   });
 
-  // // Better console logging
-  // console.log('Students:', students);
-  // console.log('Filters:', { search, sectionId, gradeId });
-
   return (
     <main className="flex flex-1 flex-col gap-4 ">
       <FeeAssignmentFilter organizationId={orgId} />

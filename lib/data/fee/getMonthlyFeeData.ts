@@ -10,7 +10,7 @@ export async function getMonthlyFeeData(year: number) {
       },
     },
     _sum: {
-      amountPaid: true,
+      amount: true,
     },
     _count: {
       id: true,
@@ -25,7 +25,7 @@ export async function getMonthlyFeeData(year: number) {
     if (!monthlyData[month]) {
       monthlyData[month] = { amount: 0, count: 0 };
     }
-    monthlyData[month].amount += entry._sum.amountPaid ?? 0;
+    monthlyData[month].amount += entry._sum.amount ?? 0;
     monthlyData[month].count += entry._count.id;
   });
 

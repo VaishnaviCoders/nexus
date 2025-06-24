@@ -1,115 +1,65 @@
 'use server';
 
+import { randomUUID } from 'crypto';
+import {
+  PaymentMethod,
+  PaymentStatus,
+  FeeStatus,
+} from '@/lib/generated/prisma';
+import { currentUser } from '@clerk/nextjs/server';
 import prisma from '@/lib/db';
 import { getOrganizationId } from '@/lib/organization';
-import { currentUser } from '@clerk/nextjs/server';
 import { revalidatePath } from 'next/cache';
 
-export async function payFeesAction(
-  feeId: string,
-  amount: number,
-  note?: string
-) {
+export const payFeesAction = async (feeId: string) => {
   const user = await currentUser();
-  const orgId = await getOrganizationId();
+  const organizationId = await getOrganizationId();
+  if (!user?.id) throw new Error('Unauthorized');
 
-  if (!user) {
-    throw new Error('No user found');
-  }
-
-  const receiptNumber = `RCP-${Date.now()}-${Math.floor(
-    Math.random() * 1000
-  )}-${feeId}`;
-
-  try {
-    await prisma.$transaction(async (ctx) => {
-      // ✅ Check if fee exists and belongs to this org
-      const fee = await ctx.fee.findFirst({
-        where: {
-          id: feeId,
-          organizationId: orgId,
-        },
-      });
-
-      if (!fee) throw new Error('Fee not found or unauthorized access');
-      if (fee.status === 'PAID' && fee.pendingAmount === 0)
-        throw new Error('Fee is already paid');
-
-      // Calculate new paid and pending amounts
-      const newPaidAmount = (fee.paidAmount ?? 0) + amount;
-      const newPendingAmount = Math.max((fee.totalFee ?? 0) - newPaidAmount, 0);
-
-      // Determine new status
-      let newStatus: 'PAID' | 'UNPAID' | 'OVERDUE' = 'UNPAID';
-      if (newPendingAmount <= 0) {
-        newStatus = 'PAID';
-      } else if (fee.dueDate < new Date()) {
-        newStatus = 'OVERDUE';
-      }
-
-      // ✅ Create payment
-      const feePayment = await ctx.feePayment.create({
-        data: {
-          organizationId: orgId,
-          receiptNumber,
-          amountPaid: amount,
-          recordedBy: user.id,
-          paymentDate: new Date(),
-          note: note || 'Payment made via UPI',
-          paymentMethod: 'UPI',
-          payerId: user.id,
-          feeId,
-        },
-      });
-
-      console.log('✅ Fee payment recorded:', feePayment.id);
-
-      // Update fee record
-      await ctx.fee.update({
-        where: { id: feeId },
-        data: {
-          status: newStatus,
-          paidAmount: newPaidAmount,
-          updatedAt: new Date(),
-          pendingAmount: newPendingAmount,
-        },
-      });
-    });
-
-    revalidatePath('/dashboard/fees/parent');
-    return { success: true, message: 'Fee payment successful' };
-  } catch (error: any) {
-    console.error('❌ Fee payment error:', error);
-    return { success: false, message: error.message ?? 'Something went wrong' };
-  }
-}
-
-export default async function fixIncorrectFeeStatuses() {
-  // Find all incorrectly marked "PAID" fees
-  const incorrectFees = await prisma.fee.findMany({
-    where: {
-      status: 'PAID',
-      paidAmount: { lt: prisma.fee.fields.totalFee },
-    },
+  const fee = await prisma.fee.findUnique({
+    where: { id: feeId },
   });
 
-  for (const fee of incorrectFees) {
-    const pendingAmount = fee.totalFee - fee.paidAmount;
-    const now = new Date();
-    let newStatus: 'UNPAID' | 'OVERDUE' = 'UNPAID';
-    if (fee.dueDate < now) {
-      newStatus = 'OVERDUE';
-    }
+  if (!fee) throw new Error('Fee not found');
+  if (fee.status === 'PAID') throw new Error('Fee already paid');
 
-    await prisma.fee.update({
+  const amountToPay = fee.pendingAmount ?? fee.totalFee - fee.paidAmount;
+  if (amountToPay <= 0) throw new Error('Nothing to pay');
+
+  const platformFee = parseFloat((amountToPay * 0.02).toFixed(2));
+  const totalPaid = parseFloat((fee.paidAmount + amountToPay).toFixed(2));
+  const isFullyPaid = totalPaid >= fee.totalFee;
+
+  const [payment] = await prisma.$transaction([
+    // 1. Create FeePayment record
+    prisma.feePayment.create({
+      data: {
+        feeId: fee.id,
+        amount: amountToPay,
+        status: PaymentStatus.COMPLETED,
+        paymentMethod: PaymentMethod.UPI, // or collect dynamically
+        receiptNumber: `REC-${randomUUID().slice(0, 8).toUpperCase()}`,
+        transactionId: `TXN-${randomUUID().slice(0, 10)}`,
+        note: 'Paid via parent dashboard',
+        payerId: user.id,
+        organizationId: organizationId,
+        platformFee,
+        recordedBy: user.id,
+      },
+    }),
+
+    // 2. Update Fee record
+    prisma.fee.update({
       where: { id: fee.id },
       data: {
-        status: newStatus,
-        pendingAmount,
-        updatedAt: now,
+        paidAmount: totalPaid,
+        pendingAmount: isFullyPaid ? 0 : fee.totalFee - totalPaid,
+        status: isFullyPaid ? FeeStatus.PAID : FeeStatus.UNPAID,
       },
-    });
-  }
+    }),
+  ]);
 
-  return { updated: incorrectFees.length };
-}
+  revalidatePath('/dashboard/fees/parent');
+
+  return { success: true, paymentId: payment.id };
+};

@@ -8,7 +8,7 @@ import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
-import { createFeeCategory } from '@/lib/actions/fee-category-actions';
+import { createFeeCategory } from '@/lib/data/fee/fee-category-actions';
 import { toast } from 'sonner';
 import {
   Form,
