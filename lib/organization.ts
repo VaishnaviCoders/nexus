@@ -1,4 +1,5 @@
 import { auth } from '@clerk/nextjs/server';
+import prisma from './db';
 
 export async function getOrganizationId() {
   const { orgId } = await auth();
@@ -30,6 +31,34 @@ export async function getOrganization() {
     orgSlug,
   };
 }
+
+// export async function getDbOrganization({
+//   organizationId,
+// }: {
+//   organizationId: string;
+// }) {
+//   const org = await prisma.organization.findFirst({
+//     where: {
+//       id: organizationId,
+//     },
+//     select: {
+//       id: true,
+//       name: true,
+//       organizationSlug: true,
+//       organizationLogo: true,
+//       contactEmail: true,
+//       contactPhone: true,
+//       website: true,
+//       organizationType: true,
+//       plan: true,
+//       planStartedAt: true,
+//       planExpiresAt: true,
+//       maxStudents: true,
+//       isActive: true,
+//       isPaid: true,
+//     },
+//   });
+// }
 
 export async function getOrganizationUserRole() {
   const { orgRole } = await auth();

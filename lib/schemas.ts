@@ -59,6 +59,7 @@ export const parentSchema = z.object({
   phoneNumber: z.string().min(10, 'Phone number must be at least 10 digits'),
   whatsAppNumber: z.string().optional(),
   relationship: z.enum(['FATHER', 'MOTHER', 'GUARDIAN', 'OTHER']),
+  isPrimary: z.boolean().optional().default(false),
 });
 
 export const studentSchema = z.object({
@@ -183,3 +184,100 @@ export const studentProfileSchema = z.object({
 });
 
 export type StudentProfileFormData = z.infer<typeof studentProfileSchema>;
+
+export const organizationSchema = z.object({
+  name: z.string().min(2, 'Organization name must be at least 2 characters'),
+  organizationSlug: z
+    .string()
+    .min(3, 'Slug must be at least 3 characters')
+    .regex(
+      /^[a-z0-9-]+$/,
+      'Slug can only contain lowercase letters, numbers, and hyphens'
+    ),
+  contactEmail: z
+    .string()
+    .email('Please enter a valid email address')
+    .optional()
+    .or(z.literal('')),
+  contactPhone: z.string().optional(),
+  website: z
+    .string()
+    .url('Please enter a valid URL')
+    .optional()
+    .or(z.literal('')),
+  organizationType: z
+    .enum([
+      'SCHOOL',
+      'COLLEGE',
+      'COACHING_CLASS',
+      'UNIVERSITY',
+      'KINDERGARTEN',
+      'TRAINING_INSTITUTE',
+      'OTHER',
+    ])
+    .optional(),
+});
+
+export type OrganizationFormData = z.infer<typeof organizationSchema>;
+
+// Teacher
+
+export const teacherProfileSchema = z.object({
+  // Basic Information
+  firstName: z.string().min(2, 'First name must be at least 2 characters'),
+  middleName: z.string().optional(),
+  lastName: z.string().min(2, 'Last name must be at least 2 characters'),
+  profilePhoto: z.string().optional(),
+
+  // Contact Information
+  contactEmail: z.string().email('Please enter a valid email address'),
+  contactPhone: z.string().min(10, 'Phone number must be at least 10 digits'),
+  address: z.string().min(10, 'Please enter a complete address'),
+  city: z.string().optional(),
+  state: z.string().optional(),
+  dateOfBirth: z.date({
+    required_error: 'Date of birth is required',
+  }),
+
+  // Professional Information
+  qualification: z.string().min(5, 'Please enter your qualification details'),
+  experienceInYears: z
+    .number()
+    .min(0, 'Experience cannot be negative')
+    .max(50, 'Experience seems too high'),
+  resumeUrl: z.string().optional(),
+
+  // Teaching Preferences
+  specializedSubjects: z
+    .array(z.string())
+    .min(1, 'Please select at least one subject'),
+  preferredGrades: z
+    .array(z.string())
+    .min(1, 'Please select at least one grade'),
+
+  // Optional Information
+  bio: z.string().max(500, 'Bio must be less than 500 characters').optional(),
+  linkedinPortfolio: z
+    .string()
+    .url('Please enter a valid URL')
+    .optional()
+    .or(z.literal('')),
+  languagesKnown: z.array(z.string()).optional(),
+  teachingPhilosophy: z
+    .string()
+    .max(1000, 'Teaching philosophy must be less than 1000 characters')
+    .optional(),
+
+  // Documents
+  certificateUrls: z
+    .array(
+      z.object({
+        title: z.string(),
+        url: z.string().url(),
+      })
+    )
+    .optional(),
+  idProofUrl: z.string().optional(),
+});
+
+export type TeacherProfileFormData = z.infer<typeof teacherProfileSchema>;

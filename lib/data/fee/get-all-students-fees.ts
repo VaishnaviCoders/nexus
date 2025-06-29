@@ -4,7 +4,6 @@ import { FeeStatus } from '@/lib/generated/prisma';
 
 export async function getFeeRecords(count: number = 50): Promise<FeeRecord[]> {
   try {
-    const start = performance.now();
     const fees = await prisma.fee.findMany({
       take: count, // Limit the number of records
       include: {
@@ -30,6 +29,23 @@ export async function getFeeRecords(count: number = 50): Promise<FeeRecord[]> {
                 grade: true,
               },
             },
+            ParentStudent: {
+              where: { isPrimary: true },
+              select: {
+                isPrimary: true,
+                parent: {
+                  select: {
+                    userId: true,
+                    id: true,
+                    firstName: true,
+                    lastName: true,
+                    email: true,
+                    phoneNumber: true,
+                    whatsAppNumber: true,
+                  },
+                },
+              },
+            },
           },
         },
         feeCategory: {
@@ -48,6 +64,13 @@ export async function getFeeRecords(count: number = 50): Promise<FeeRecord[]> {
             receiptNumber: true,
             transactionId: true,
             feeId: true,
+            payer: {
+              select: {
+                firstName: true,
+                lastName: true,
+                email: true,
+              },
+            },
           },
         },
       },
@@ -80,6 +103,7 @@ export async function getFeeRecords(count: number = 50): Promise<FeeRecord[]> {
         phoneNumber: fee.student.phoneNumber,
         gradeId: fee.student.gradeId,
         sectionId: fee.student.sectionId,
+        ParentStudent: fee.student.ParentStudent,
       },
       feeCategory: {
         id: fee.feeCategory.id,
@@ -102,14 +126,13 @@ export async function getFeeRecords(count: number = 50): Promise<FeeRecord[]> {
         receiptNumber: payment.receiptNumber,
         transactionId: payment.transactionId ?? undefined,
         feeId: payment.feeId,
+        payer: {
+          firstName: payment.payer.firstName,
+          lastName: payment.payer.lastName,
+          email: payment.payer.email,
+        },
       })),
     }));
-
-    const end = performance.now();
-
-    console.log(
-      `Fetched ${fees.length} fee records in ${(end - start) / 1000} seconds`
-    );
 
     return feeRecords;
   } catch (error) {

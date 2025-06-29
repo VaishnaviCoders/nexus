@@ -17,8 +17,10 @@ import {
   PrinterIcon,
   BellIcon,
   Eye,
+  MailIcon,
+  EyeIcon,
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn, formatCurrencyIN, formatDateIN } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
@@ -72,7 +74,6 @@ import {
   SendFeesReminderDialog,
   FeeReminderRecipient,
 } from './SendFeesReminderDialog';
-import { ReminderHistoryButton } from './ReminderHistoryButton';
 
 const formatCurrency = (amount: number) =>
   new Intl.NumberFormat('en-IN', {
@@ -213,7 +214,6 @@ export default function StudentPaymentHistoryTable({
 
   return (
     <div className="flex flex-col space-y-8">
-      <ReminderHistoryButton studentId="123" />
       <Tabs value={currentTab} onValueChange={setCurrentTab} className="w-full">
         <FilterControls
           filters={filters}
@@ -258,6 +258,11 @@ const RecordPaymentCard = ({ selectedRecord }: RecordPaymentCardProps) => {
   const [formErrors, setFormErrors] = useState<{ amount?: string }>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  if (!selectedRecord) return null;
+
+  const actualPendingAmount =
+    selectedRecord.fee.totalFee - selectedRecord.fee.paidAmount;
+  const maxPayableAmount = Math.max(0, actualPendingAmount);
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!selectedRecord) return;
@@ -284,7 +289,21 @@ const RecordPaymentCard = ({ selectedRecord }: RecordPaymentCardProps) => {
         return;
       }
 
-      // await payFeesAction(selectedRecord.fee.id, parsed.data.amount);
+      // Additional validation for payment amount
+      if (parsed.data.amount > maxPayableAmount) {
+        setFormErrors({
+          amount: `Amount cannot exceed pending amount of ${formatCurrencyIN(maxPayableAmount)}`,
+        });
+        return;
+      }
+
+      if (parsed.data.amount <= 0) {
+        setFormErrors({
+          amount: 'Payment amount must be greater than zero',
+        });
+        return;
+      }
+      await payFeesAction(selectedRecord.fee.id);
 
       toast.success(
         `Successfully recorded payment of ${formatCurrency(
@@ -332,8 +351,9 @@ const RecordPaymentCard = ({ selectedRecord }: RecordPaymentCardProps) => {
                   name="amount"
                   type="number"
                   placeholder="Enter amount"
+                  max={maxPayableAmount}
                   defaultValue={
-                    selectedRecord.fee.pendingAmount?.toString() ?? ''
+                    maxPayableAmount > 0 ? maxPayableAmount.toString() : ''
                   }
                   required
                   disabled={isSubmitting}
@@ -426,28 +446,49 @@ function FilterControls({
   currentTab,
 }: FilterControlsProps) {
   // Map feeRecords to initialRecipients for unpaid or overdue fees
-  const initialRecipients: FeeReminderRecipient[] = useMemo(
-    () =>
-      feeRecords
-        .filter(
-          (record) =>
-            record.fee.status === 'UNPAID' || record.fee.status === 'OVERDUE'
-        )
-        .map((record) => ({
+
+  const initialRecipients: FeeReminderRecipient[] = useMemo(() => {
+    return feeRecords
+      .filter((record) => ['UNPAID', 'OVERDUE'].includes(record.fee.status))
+      .map((record) => {
+        const primaryParent = record.student.ParentStudent?.find(
+          (ps) => ps.isPrimary
+        )?.parent;
+
+        const parentId = primaryParent?.id ?? undefined;
+        const parentUserId = primaryParent?.userId ?? undefined;
+
+        const parentName = primaryParent
+          ? `${primaryParent.firstName} ${primaryParent.lastName}`
+          : `${record.student.firstName} ${record.student.lastName}`;
+
+        const parentEmail = primaryParent?.email ?? record.student.email;
+        const parentPhone =
+          primaryParent?.phoneNumber ?? record.student.phoneNumber;
+        const parentWhatsApp =
+          primaryParent?.whatsAppNumber ?? record.student.phoneNumber;
+
+        const status = record.fee.status as 'UNPAID' | 'OVERDUE';
+
+        return {
           id: record.fee.id,
           studentId: record.student.id,
           studentName: `${record.student.firstName} ${record.student.lastName}`,
           grade: record.grade.grade,
           section: record.section.name,
-          parentName: `${record.student.firstName} ${record.student.lastName}`, // Placeholder; replace with actual parent data if available
-          parentEmail: record.student.email || '',
-          parentPhone: record.student.phoneNumber || '',
-          status: record.fee.status as 'UNPAID' | 'OVERDUE',
+          parentName,
+          parentEmail,
+          parentPhone,
+          parentId,
+          parentUserId,
+          parentWhatsApp,
+          status,
           amountDue: record.fee.pendingAmount ?? record.fee.totalFee,
           dueDate: record.fee.dueDate,
-        })),
-    [feeRecords]
-  );
+        };
+      });
+  }, [feeRecords]);
+
   return (
     <div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0 mb-4">
       <TabsList className="flex-wrap">
@@ -790,7 +831,7 @@ function FeeTableRow({ record }: FeeTableRowProps) {
             <Eye className="mr-2 h-4 w-4" />
             View
           </DialogTrigger>
-          <DialogContent className="max-w-3xl">
+          <DialogContent className="w-full max-w-[95vw] sm:max-w-4xl max-h-[90vh] overflow-y-auto p-4 sm:p-6">
             <DialogHeader>
               <DialogTitle>Fee Details</DialogTitle>
               <DialogDescription>
@@ -815,35 +856,88 @@ const FeeDetailsContent = ({
       {selectedRecord && (
         <>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <h3 className="text-sm font-medium mb-2">Student Information</h3>
-              <Card>
-                <CardContent className="p-4">
-                  <dl className="grid grid-cols-[1fr_2fr] gap-2 text-sm">
-                    <dt className="font-medium text-muted-foreground">Name:</dt>
-                    <dd>{`${selectedRecord.student.firstName} ${selectedRecord.student.lastName}`}</dd>
-                    <dt className="font-medium text-muted-foreground">
-                      Roll Number:
-                    </dt>
-                    <dd>{selectedRecord.student.rollNumber}</dd>
-                    <dt className="font-medium text-muted-foreground">
-                      Class:
-                    </dt>
-                    <dd>{`${selectedRecord.grade.grade} - ${selectedRecord.section.name}`}</dd>
-                    <dt className="font-medium text-muted-foreground">
-                      Email:
-                    </dt>
-                    <dd className="truncate">
-                      {selectedRecord.student.email || 'N/A'}
-                    </dd>
-                    <dt className="font-medium text-muted-foreground">
-                      Phone:
-                    </dt>
-                    <dd>{selectedRecord.student.phoneNumber || 'N/A'}</dd>
-                  </dl>
-                </CardContent>
-              </Card>
+            {/* Student Information */}
+            <div className="grid gap-4 grid-cols-1">
+              <div>
+                <h3 className="text-sm font-medium mb-2">
+                  Student Information
+                </h3>
+                <Card>
+                  <CardContent className="p-4">
+                    <dl className="grid grid-cols-[1fr_2fr] gap-2 text-sm">
+                      <dt className="font-medium text-muted-foreground">
+                        Name:
+                      </dt>
+                      <dd>{`${selectedRecord.student.firstName} ${selectedRecord.student.lastName}`}</dd>
+                      <dt className="font-medium text-muted-foreground">
+                        Roll Number:
+                      </dt>
+                      <dd>{selectedRecord.student.rollNumber}</dd>
+                      <dt className="font-medium text-muted-foreground">
+                        Class:
+                      </dt>
+                      <dd>{`${selectedRecord.grade.grade} - ${selectedRecord.section.name}`}</dd>
+                      <dt className="font-medium text-muted-foreground">
+                        Email:
+                      </dt>
+                      <dd className="truncate">
+                        {selectedRecord.student.email || 'N/A'}
+                      </dd>
+                      <dt className="font-medium text-muted-foreground">
+                        Phone:
+                      </dt>
+                      <dd>{selectedRecord.student.phoneNumber || 'N/A'}</dd>
+                    </dl>
+                  </CardContent>
+                </Card>
+              </div>
+              {selectedRecord.payments?.length > 0 && (
+                <>
+                  <h3 className="text-sm font-medium mb-2">
+                    Payment Information
+                  </h3>
+                  {selectedRecord.payments.map((payment) => (
+                    <Card key={payment.id} className="mb-4">
+                      <CardContent className="p-4">
+                        <dl className="grid grid-cols-[1fr_2fr] gap-2 text-sm">
+                          <dt className="font-medium text-muted-foreground">
+                            Receipt No:
+                          </dt>
+                          <dd>{payment.receiptNumber}</dd>
+
+                          <dt className="font-medium text-muted-foreground">
+                            Payer:
+                          </dt>
+                          <dd>{`${payment.payer.firstName} ${payment.payer.lastName}`}</dd>
+
+                          <dt className="font-medium text-muted-foreground">
+                            Amount Paid:
+                          </dt>
+                          <dd>{formatCurrencyIN(payment.amountPaid)}</dd>
+
+                          <dt className="font-medium text-muted-foreground">
+                            Payment Date:
+                          </dt>
+                          <dd className="truncate">
+                            {formatDateIN(payment.paymentDate) || 'N/A'}
+                          </dd>
+
+                          <dt className="font-medium text-muted-foreground">
+                            Method:
+                          </dt>
+                          <dd>{payment.paymentMethod || 'N/A'}</dd>
+                          <dt className="font-medium text-muted-foreground">
+                            Transaction ID:
+                          </dt>
+                          <dd>{payment.transactionId || 'N/A'}</dd>
+                        </dl>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </>
+              )}
             </div>
+            {/* Fee Information */}
             <div>
               <h3 className="text-sm font-medium mb-2">Fee Information</h3>
               <Card>
@@ -852,37 +946,61 @@ const FeeDetailsContent = ({
                     <dt className="font-medium text-muted-foreground">
                       Fee ID:
                     </dt>
-                    <dd>{selectedRecord.fee.id}</dd>
+                    <dd className=" text-base font-semibold">
+                      {selectedRecord.fee.id}
+                    </dd>
                     <dt className="font-medium text-muted-foreground">
                       Category:
                     </dt>
-                    <dd>{selectedRecord.feeCategory.name}</dd>
+                    <dd>
+                      <div className="flex flex-col">
+                        <span className="font-medium">
+                          {selectedRecord.feeCategory.name}
+                        </span>
+                        {selectedRecord.feeCategory.description && (
+                          <span className="text-xs text-muted-foreground">
+                            {selectedRecord.feeCategory.description}
+                          </span>
+                        )}
+                      </div>
+                    </dd>
                     <dt className="font-medium text-muted-foreground">
                       Total Amount:
                     </dt>
-                    <dd className="font-medium">
-                      {formatCurrency(selectedRecord.fee.totalFee)}
+                    <dd className="font-medium text-lg">
+                      {formatCurrencyIN(selectedRecord.fee.totalFee)}
                     </dd>
                     <dt className="font-medium text-muted-foreground">
                       Paid Amount:
                     </dt>
-                    <dd className="text-emerald-600">
-                      {formatCurrency(selectedRecord.fee.paidAmount)}
+                    <dd className="text-emerald-600 font-medium">
+                      {formatCurrencyIN(selectedRecord.fee.paidAmount)}
                     </dd>
                     <dt className="font-medium text-muted-foreground">
                       Pending Amount:
                     </dt>
                     <dd
-                      className={
-                        selectedRecord.fee.pendingAmount ? 'text-amber-600' : ''
-                      }
+                      className={cn(
+                        'font-medium',
+                        selectedRecord.fee.pendingAmount &&
+                          selectedRecord.fee.pendingAmount > 0
+                          ? 'text-amber-600'
+                          : 'text-emerald-600'
+                      )}
                     >
-                      {formatCurrency(selectedRecord.fee.pendingAmount ?? 0)}
+                      {formatCurrencyIN(selectedRecord.fee.pendingAmount ?? 0)}
                     </dd>
                     <dt className="font-medium text-muted-foreground">
                       Due Date:
                     </dt>
-                    <dd>{formatDate(selectedRecord.fee.dueDate)}</dd>
+                    <dd
+                      className={cn(
+                        selectedRecord.fee.status === 'OVERDUE' &&
+                          'text-red-600 font-medium'
+                      )}
+                    >
+                      {formatDateIN(selectedRecord.fee.dueDate)}
+                    </dd>
                     <dt className="font-medium text-muted-foreground">
                       Status:
                     </dt>
@@ -908,56 +1026,131 @@ const FeeDetailsContent = ({
                         {selectedRecord.fee.status}
                       </Badge>
                     </dd>
+                    <dt className="font-medium text-muted-foreground">
+                      Created:
+                    </dt>
+                    <dd className="text-xs text-muted-foreground">
+                      {formatDateIN(selectedRecord.fee.createdAt)}
+                    </dd>
+                    <dt className="font-medium text-muted-foreground">
+                      Last Updated:
+                    </dt>
+                    <dd className="text-xs text-muted-foreground">
+                      {formatDateIN(selectedRecord.fee.updatedAt)}
+                    </dd>
                   </dl>
                 </CardContent>
               </Card>
             </div>
           </div>
+
+          {/* Payment History */}
           <div>
-            <h3 className="text-sm font-medium mb-2">Payment History</h3>
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-sm font-medium">Payment History</h3>
+              {selectedRecord.payments?.length && (
+                <span className="text-xs text-muted-foreground">
+                  {selectedRecord.payments.length} payment
+                  {selectedRecord.payments.length !== 1 ? 's' : ''}
+                </span>
+              )}
+            </div>
             <Card>
-              <CardContent className="p-0">
-                <Table>
+              <CardContent className="p-0  overflow-x-auto">
+                <Table className="">
                   <TableHeader>
                     <TableRow>
                       <TableHead>Receipt No.</TableHead>
                       <TableHead>Date</TableHead>
-                      <TableHead>Method</TableHead>
+                      <TableHead className="hidden md:table-cell">
+                        Method
+                      </TableHead>
+                      <TableHead className="hidden md:table-cell">
+                        Payer
+                      </TableHead>
+
                       <TableHead className="text-right">Amount</TableHead>
-                      <TableHead className="text-right">Actions</TableHead>
+                      {/* <TableHead className="text-right">Actions</TableHead> */}
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {selectedRecord.payments?.length ? (
                       selectedRecord.payments.map((payment) => (
                         <TableRow key={payment.id}>
-                          <TableCell>{payment.receiptNumber}</TableCell>
                           <TableCell>
-                            {formatDate(payment.paymentDate)}
+                            <div className="flex flex-col">
+                              <span className="font-medium">
+                                {payment.receiptNumber}
+                              </span>
+                              <span className="text-xs text-muted-foreground font-mono">
+                                {payment.id}
+                              </span>
+                            </div>
                           </TableCell>
-                          <TableCell>{payment.paymentMethod}</TableCell>
+                          <TableCell className="whitespace-nowrap">
+                            {formatDateIN(payment.paymentDate)}
+                          </TableCell>
+                          <TableCell className="hidden md:table-cell">
+                            <Badge variant="secondary" className="text-xs">
+                              {payment.paymentMethod}
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="hidden md:table-cell">
+                            {payment.payer ? (
+                              <div className="flex flex-col">
+                                <span className="text-sm">
+                                  {payment.payer.firstName}{' '}
+                                  {payment.payer.lastName}
+                                </span>
+                                <span className="text-xs text-muted-foreground">
+                                  {payment.payer.email}
+                                </span>
+                              </div>
+                            ) : (
+                              <span className="text-muted-foreground text-sm">
+                                N/A
+                              </span>
+                            )}
+                          </TableCell>
+
                           <TableCell className="text-right">
-                            {formatCurrency(payment.amountPaid)}
+                            <span className="font-medium text-emerald-600">
+                              {formatCurrency(payment.amountPaid)}
+                            </span>
                           </TableCell>
-                          <TableCell className="text-right">
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              aria-label="Download receipt"
-                            >
-                              <DownloadIcon className="h-4 w-4 mr-1" />
-                              Receipt
-                            </Button>
-                          </TableCell>
+                          {/* <TableCell className="text-right">
+                            <div className="flex gap-1 justify-end">
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                aria-label="Download receipt"
+                              >
+                                <DownloadIcon className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                aria-label="View payment details"
+                              >
+                                <EyeIcon className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </TableCell> */}
                         </TableRow>
                       ))
                     ) : (
                       <TableRow>
                         <TableCell
-                          colSpan={5}
-                          className="text-center py-6 text-muted-foreground"
+                          colSpan={7}
+                          className="text-center py-8 text-muted-foreground"
                         >
-                          No payment records found
+                          <div className="flex flex-col items-center gap-2">
+                            <CreditCardIcon className="h-8 w-8 text-muted-foreground/50" />
+                            <span>No payment records found</span>
+                            <span className="text-xs">
+                              Payments will appear here once recorded
+                            </span>
+                          </div>
                         </TableCell>
                       </TableRow>
                     )}
@@ -966,7 +1159,74 @@ const FeeDetailsContent = ({
               </CardContent>
             </Card>
           </div>
-          <DialogFooter className="gap-2 sm:gap-0">
+
+          {/* Payment Summary */}
+          {selectedRecord.payments?.length > 0 && (
+            <div>
+              <h3 className="text-sm font-medium mb-2">Payment Summary</h3>
+              <Card>
+                <CardContent className="p-4">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-emerald-600">
+                        {selectedRecord.payments.length}
+                      </div>
+                      <div className="text-muted-foreground">
+                        Total Payments
+                      </div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-blue-600">
+                        {formatCurrency(
+                          selectedRecord.payments.reduce(
+                            (sum, p) => sum + p.amountPaid,
+                            0
+                          )
+                        )}
+                      </div>
+                      <div className="text-muted-foreground">Amount Paid</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-amber-600">
+                        {formatCurrency(selectedRecord.fee.pendingAmount ?? 0)}
+                      </div>
+                      <div className="text-muted-foreground">Pending</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold">
+                        {Math.round(
+                          (selectedRecord.fee.paidAmount /
+                            selectedRecord.fee.totalFee) *
+                            100
+                        )}
+                        %
+                      </div>
+                      <div className="text-muted-foreground">Completion</div>
+                    </div>
+                  </div>
+                  <div className="mt-4">
+                    <div className="flex justify-between text-xs text-muted-foreground mb-1">
+                      <span>Payment Progress</span>
+                      <span>
+                        {formatCurrency(selectedRecord.fee.paidAmount)} /{' '}
+                        {formatCurrency(selectedRecord.fee.totalFee)}
+                      </span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div
+                        className="bg-emerald-500 h-2 rounded-full transition-all duration-300"
+                        style={{
+                          width: `${Math.min((selectedRecord.fee.paidAmount / selectedRecord.fee.totalFee) * 100, 100)}%`,
+                        }}
+                      />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+
+          <DialogFooter className="gap-2 grid grid-cols-2 sm:gap-0">
             {selectedRecord.fee.status !== 'PAID' && (
               <Dialog>
                 <DialogTrigger asChild>
@@ -985,7 +1245,6 @@ const FeeDetailsContent = ({
                         : 'selected student'}
                     </DialogDescription>
                   </DialogHeader>
-
                   <RecordPaymentCard selectedRecord={selectedRecord} />
                 </DialogContent>
               </Dialog>
@@ -994,6 +1253,16 @@ const FeeDetailsContent = ({
               <DownloadIcon className="h-4 w-4 mr-2" />
               Download Details
             </Button>
+            <Button variant="outline" aria-label="Print receipt">
+              <PrinterIcon className="h-4 w-4 mr-2" />
+              Print
+            </Button>
+            {selectedRecord.fee.status !== 'PAID' && (
+              <Button variant="outline" aria-label="Send reminder">
+                <MailIcon className="h-4 w-4 mr-2" />
+                Send Reminder
+              </Button>
+            )}
           </DialogFooter>
         </>
       )}

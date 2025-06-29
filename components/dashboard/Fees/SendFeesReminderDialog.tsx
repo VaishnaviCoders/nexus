@@ -26,7 +26,6 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import {
   Select,
   SelectContent,
@@ -68,6 +67,8 @@ export interface FeeReminderRecipient {
   dueDate: Date;
   avatar?: string;
   organizationName?: string;
+  parentId?: string | null;
+  parentUserId?: string | null;
 }
 
 interface FeeReminderHistory {
@@ -192,6 +193,8 @@ export function SendFeesReminderDialog({
         scheduleDate: data.sendNow ? null : data.scheduleDate,
         scheduleTime: data.sendNow ? null : data.scheduleTime,
       };
+
+      console.log('Reminder data:', reminderData);
 
       //   // Send the reminders
       const result = await sendFeeReminders(reminderData);

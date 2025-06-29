@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Calendar, Bell, Clock, Activity } from 'lucide-react';
 import { getRecentActivities } from '@/lib/data/teacher/get-teacher-dashboard-stats';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 async function RecentActivitiesContent() {
   const activities = await getRecentActivities();
@@ -24,7 +25,7 @@ async function RecentActivitiesContent() {
   return (
     <Card className="border-0 bg-gradient-to-br from-card via-card to-green-50/20 dark:to-green-950/20">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
+        <CardTitle className="flex items-center gap-2 text-lg">
           <Activity className="w-5 h-5" />
           Recent Activities
         </CardTitle>
@@ -36,41 +37,45 @@ async function RecentActivitiesContent() {
             <p className="text-sm">No recent activities</p>
           </div>
         ) : (
-          activities.map((activity) => {
-            const Icon =
-              activityIcons[activity.type as keyof typeof activityIcons] ||
-              Activity;
-            return (
-              <div
-                key={activity.id}
-                className="flex items-start gap-3 p-3 rounded-lg hover:bg-muted/30 transition-colors duration-200"
-              >
+          <ScrollArea className="h-80">
+            {activities.map((activity) => {
+              const Icon =
+                activityIcons[activity.type as keyof typeof activityIcons] ||
+                Activity;
+              return (
                 <div
-                  className={`p-2 rounded-lg ${
-                    activityColors[activity.type as keyof typeof activityColors]
-                  } flex-shrink-0`}
+                  key={activity.id}
+                  className="flex items-start gap-3 p-3 rounded-lg hover:bg-muted/30 transition-colors duration-200"
                 >
-                  <Icon className="w-4 h-4" />
-                </div>
+                  <div
+                    className={`p-2 rounded-lg ${
+                      activityColors[
+                        activity.type as keyof typeof activityColors
+                      ]
+                    } flex-shrink-0`}
+                  >
+                    <Icon className="w-4 h-4" />
+                  </div>
 
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="flex-1 min-w-0">
-                      <p className="font-medium text-sm">{activity.title}</p>
-                      <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
-                        {activity.description}
-                      </p>
-                    </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium text-sm">{activity.title}</p>
+                        <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
+                          {activity.description}
+                        </p>
+                      </div>
 
-                    <div className="flex items-center gap-1 text-xs text-muted-foreground shrink-0">
-                      <Clock className="w-3 h-3" />
-                      {new Date(activity.time).toLocaleDateString()}
+                      <div className="flex items-center gap-1 text-xs text-muted-foreground shrink-0">
+                        <Clock className="w-3 h-3" />
+                        {new Date(activity.time).toLocaleDateString()}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            );
-          })
+              );
+            })}
+          </ScrollArea>
         )}
       </CardContent>
     </Card>
@@ -79,7 +84,7 @@ async function RecentActivitiesContent() {
 
 function RecentActivitiesSkeleton() {
   return (
-    <Card className="animate-pulse border-0">
+    <Card className="animate-pulse border-0 h-80">
       <CardHeader>
         <div className="flex items-center gap-2">
           <div className="h-5 w-5 bg-muted rounded"></div>

@@ -1,8 +1,46 @@
 1. Invite Teacher => Accept Invite but not Clerk not redirect to dashboard or website
 2. Get Error Organization not found : But solved on page refresh
 3. How to admin assign section and subjects to teacher
+4. How to determine ABC students Have 2 parent so which parent Should Get All Notification || At Student Onboarding or Provide Option To Student Set Primary Parent ?
+5. Right now, we don’t have a model that defines academic year ranges per class/section or grade. So when calculating working days, attendance, or anything date-based, the system doesn’t know:
+6. New User Sign_up Using Clerk => Database not updated with the user and user's organization
 
-Pending
+Website Pending
+
+- Feedback Form : ExtractUrl || ExtractUserId ||ExtractUserOrgId || DropDown Subject || Message || Feedback Submitted Message with Icon || Error/ Crash Auto Submit Form Like Microsoft
+- List of Features : {
+  "Name": Online Fee Payment
+  "description": ""
+  }
+- SEO Each Feature
+- Talk To Expert : Cal.com Integration
+- Policy's Pages :
+- Blog Pages with SEO :
+- What Admin/ Teacher Get benefits page
+- 101 Reason To buy software
+- Who can buy software : School || Collages || Coaching Classes
+- Pricing Model : 12K Per Month || 79 INR Per Student/Month
+
+Revenue Model
+By Per Students
+By Fees 2%
+By Notification Cost Whatsapp || Message || Email => Meta charge 0.65 paisa Then We Charge 0.90 paisa
+By LMS Model : Planned V0.3
+
+Editor / Designer/ UI UX
+
+- Daily One Attractive Poster
+- 2 Reels In Week
+
+Other Marketing
+
+- Software Name
+- Instagram / Facebook : Reels: Upload 2 reels In week || Stories : Daily 3-7 Stories , Testimonials , User Feedback || User Feedback video
+- Upload Ai Blogs to Blogs Sites :
+- Join Communities : Whats App || Facebook || Instagram || TaleGram || Reddit
+- Hire 3 Months Marketing Teams : Meta Adds
+
+- Software Pending
 
 Utility Functions:
 
@@ -12,34 +50,46 @@ Utility Functions:
 - Download Fees Details
 - Download Receipt
 - Delete Fee Category Page : Completed but if have data in fees then show error Foreign key constraint violated: `Fee_feeCategoryId_fkey (index)` : ✅ Fixed
-- Full Academic Calendar
-- Payment Gateway Setup
-- After Launch: Assignment - Create Assignment || Edit Assignment || Delete Assignment || View Assignment || Track Assignment
-- Bulk student import (CSV)
-- Biometric integration
-- Advanced notification system
-- Lead management
-- Amazon Alexa integration
+- Full Academic Calendar : Holidays || Events || Exams ||
+- Payment Gateway Setup : Razorpay 2% || Phone pay 1.95% or Free || CashFree
 
-- Student[id] Page
+- Student[id] Page : Only For Teacher || Admin => Edit Profile
+
+POST-LAUNCH (Month 1)
+
+Assignment Management : Create Assignment || Edit Assignment || Delete Assignment || View Assignment || Track Assignment || submit assignment
+Bulk Student Import (CSV)
+Advanced Notification System
+Lead Management
+Document Verification
+Teacher Remark
+
+DEFERRED (After Stable Launch)
+
+Biometric Integration
+Amazon Alexa Integration
+LMS
+Own Webinar Platform : Collect Leads || Ai Agent || MOMS || Summary
+Transport Management
+AI Reports
+TimeTable (Complex feature)
+Salary Payout
+Leave Management
 
 In Teacher
 
-1. Fee Management : send fees reminder
-2. Setting Page
-3. Salary Payout
-4. Leave Apply
-5. Lead Management
-6. Update Teacher Profile
-7. Teacher Attendance History
-8. Write Feedback
-9. Dashboard : 20% Remaining
-10. Simple assignment creation by teachers
+1. Fee Management : Send fees Reminder : ✅ Fixed
+2. Setting Page : ✅ Fixed
+3. Update Teacher Profile : ✅ Fixed
+4. Recent Activities : ✅ Fixed
+5. Assignment creation by teachers
+6. Teacher Fees Page : Show only related Fees don't show all fees
+7. Teacher Today's Schedule : Make dynamic
 
 In Student
 
-1. Student Attendance History : Find Better option cuz child attendance and own Attendance Same
-2. Dashboard
+1. Student Attendance History : Own Attendance History
+2. Dashboard : Weekly Attendance || Subject Performance || Dashboard Stats
 3. Pay Fees / Download Receipt
 4. Assignments Page
 5. Teacher Feedback Page
@@ -49,17 +99,54 @@ In Student
 
 In Admin
 
-1. Organization Page to Configure organization
-2. Subjects Page : Add subjects || assign subjects to teachers || assign subjects to sections || assign Teacher to section : Research Needed
-3. Setting Page
+1. Organization Page to Configure organization : ✅ Fixed
+2. Subjects Page : Add subjects || assign subjects to teachers || assign subjects to sections || assign subjects to students || assign Teacher to section : Research Needed
+3. Setting Page: ✅ Fixed
 4. Reports Page : Generate AI Reports or Export Reports
-5. Attendance : Date Range is not working
-6. Dashboard : Monthly Fee Collection Responsive || Upcoming Events
-7. Fee Details Dialog : Transaction ID / Payer Information missing
+5. Attendance : Date Range is not working : ✅ Fixed
+6. Dashboard : Monthly Fee Collection Responsive || Upcoming Events : ✅ Fixed
+7. Fee Details Dialog : Transaction ID / Payer Information missing : ✅ Fixed
+8. Set Background Jobs TO Correct Fees Status
+9. Document Verification
 
 In Parent
 
-1. Setting Page
+1. Setting Page : ✅ Fixed
 2. Preference Page : Notification , Notice , Feedback , Reports , Reminder , Attendance Report
-3. child-attendance Page :Attendance Alert => Link to Show Attendance Details
+3. child-attendance Page :Attendance Alert => Link to Show Attendance Details <StudentAttendanceList studentId={studentId}>
 4. Child Attendance Monitor Calculation : ✅ Fixed
+
+Big Problem
+
+1. TimeTable
+2. Pay Fees At Home
+3. Ai Reports :
+4. Complaints Management : ✅ Solved
+5. Teacher Salary :
+6. Student Attendance :✅ Solved
+7. Teacher Attendance : Track Performance
+8. Transport : Track Bus Location || Driver All Details || Number Plate
+9. Instant Customer Support
+10. LMS
+11. Own Webinar Like Scaler, Zoom
+
+<!-- FEES Model-->
+
+Assigned fee By School: ₹100
+Platform fee (2%): ₹2
+Total payable: ₹102
+Receipt shows:
+Tuition Fee: ₹100
+Platform Fee: ₹2
+Total Paid: ₹102
+
+Student: Riya Sharma
+Fee Category: Tuition Fee
+Assigned Fee: ₹100
+Platform Fee: ₹2
+Amount Paid (by parent): ₹102
+Net Received by School: ₹100
+Payment Date: 25 June 2025
+Status: COMPLETED
+Payment Method: UPI
+Transaction ID: TXN98765

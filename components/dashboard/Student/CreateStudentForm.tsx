@@ -17,6 +17,7 @@ import useSWR from 'swr';
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -55,6 +56,7 @@ import {
 } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { createStudent } from '@/lib/data/student/create-student-form-action';
+import { Switch } from '@/components/ui/switch';
 
 interface DocumentFile {
   id: string;
@@ -97,6 +99,7 @@ export default function CreateStudentForm() {
           phoneNumber: '',
           whatsAppNumber: '',
           relationship: 'FATHER',
+          isPrimary: false,
         },
       ],
     },
@@ -147,32 +150,6 @@ export default function CreateStudentForm() {
       setPending(false);
     }
   };
-
-  // const addParent = () => {
-  //   setParents([
-  //     ...parents,
-  //     {
-  //       firstName: '',
-  //       lastName: '',
-  //       email: '',
-  //       phoneNumber: '',
-  //       whatsAppNumber: '',
-  //       relationship: 'MOTHER',
-  //     },
-  //   ]);
-  // };
-
-  // const removeParent = (index: number) => {
-  //   if (parents.length > 1) {
-  //     setParents(parents.filter((_, i) => i !== index));
-  //   }
-  // };
-
-  // const updateParent = (index: number, field: keyof Parent, value: string) => {
-  //   const updatedParents = [...parents];
-  //   updatedParents[index] = { ...updatedParents[index], [field]: value };
-  //   setParents(updatedParents);
-  // };
 
   const addDocument = () => {
     const newDoc: DocumentFile = {
@@ -732,6 +709,7 @@ export default function CreateStudentForm() {
                         phoneNumber: '',
                         whatsAppNumber: '',
                         relationship: 'MOTHER',
+                        isPrimary: false,
                       })
                     }
                   >
@@ -744,12 +722,37 @@ export default function CreateStudentForm() {
                   {parents.map((field, index) => (
                     <div key={index} className="relative">
                       <div className="flex items-center justify-between mb-4">
-                        <Badge
-                          variant="secondary"
-                          className="bg-orange-100 text-orange-800"
-                        >
-                          Parent {index + 1}
-                        </Badge>
+                        <div className="flex items-center space-x-3">
+                          <Badge
+                            variant="secondary"
+                            className="bg-orange-100 text-orange-800"
+                          >
+                            Parent {index + 1}
+                          </Badge>
+                          <FormField
+                            control={form.control}
+                            name={`parents.${index}.isPrimary`}
+                            render={({ field }) => (
+                              <FormItem className="flex items-center space-x-2 rounded-lg p-4  ">
+                                <FormLabel>Primary Parent</FormLabel>
+                                <FormControl>
+                                  <Switch
+                                    checked={field.value}
+                                    onCheckedChange={(checked) => {
+                                      // Uncheck all other parents and set this one to true
+                                      parents.forEach((_, i) => {
+                                        form.setValue(
+                                          `parents.${i}.isPrimary`,
+                                          i === index ? checked : false
+                                        );
+                                      });
+                                    }}
+                                  />
+                                </FormControl>
+                              </FormItem>
+                            )}
+                          />
+                        </div>
                         {parents.length > 1 && (
                           <Button
                             type="button"

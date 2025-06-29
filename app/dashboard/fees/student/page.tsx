@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { redirect } from 'next/navigation';
 import { auth } from '@clerk/nextjs/server';
+import PayFeeButton from '@/components/PayFeeButton';
 
 async function getStudentFromUser(userId: string) {
   return await prisma.student.findUnique({
@@ -55,8 +56,6 @@ export default async function StudentFeePage() {
   }
 
   const student = await getStudentFromUser(userId);
-
-  console.log('Student', student);
 
   if (!student) {
     return redirect('/dashboard'); // Or show access denied
@@ -250,9 +249,7 @@ export default async function StudentFeePage() {
 
               <CardFooter className="flex justify-end pt-3 pb-4">
                 {fee.status === 'UNPAID' ? (
-                  <Button className="bg-primary hover:bg-primary/90">
-                    <CreditCard className="mr-2 h-4 w-4" /> Pay Fees
-                  </Button>
+                  <PayFeeButton feeId={fee.id} />
                 ) : (
                   <Button variant="outline">
                     <Download className="mr-2 h-4 w-4" />

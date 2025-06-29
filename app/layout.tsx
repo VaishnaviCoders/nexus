@@ -5,7 +5,7 @@ import './globals.css';
 import './notification-feed-overrides.css';
 
 import { ThemeProvider } from '@/components/theme-provider';
-import { ClerkProvider, GoogleOneTap } from '@clerk/nextjs';
+import { ClerkProvider } from '@clerk/nextjs';
 import { Toaster } from 'sonner';
 import { NextSSRPlugin } from '@uploadthing/react/next-ssr-plugin';
 import { extractRouterConfig } from 'uploadthing/server';
@@ -13,14 +13,15 @@ import { ourFileRouter } from '@/app/api/uploadthing/core';
 
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import { SpeedInsights } from '@vercel/speed-insights/next';
+import { CustomGoogleOneTap } from '@/components/CustomGoogleOneTap';
 
 export const metadata: Metadata = {
   metadataBase: new URL(
     process.env.APP_URL
       ? `${process.env.APP_URL}`
       : process.env.VERCEL_URL
-      ? `https://${process.env.VERCEL_URL}`
-      : `http://localhost:${process.env.PORT || 3000}`
+        ? `https://${process.env.VERCEL_URL}`
+        : `http://localhost:${process.env.PORT || 3000}`
   ),
   title: 'School CRM',
   description: 'Entire School Management Software',
@@ -57,7 +58,7 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
         <body className={GeistSans.className}>
-          <GoogleOneTap />
+          {/* <CustomGoogleOneTap /> */}
 
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <NextSSRPlugin

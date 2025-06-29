@@ -9,6 +9,8 @@ import {
   feeCategorySchema,
   gradeSchema,
   sectionSchema,
+  TeacherProfileFormData,
+  teacherProfileSchema,
 } from '../lib/schemas';
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
@@ -641,57 +643,9 @@ export async function getDashboardStats(organizationId: string) {
   };
 }
 
-import {
-  startOfMonth,
-  endOfMonth,
-  subMonths,
-  subDays,
-  startOfDay,
-  endOfDay,
-} from 'date-fns';
 import FilterStudents from '@/lib/data/student/FilterStudents';
+import { endOfDay, startOfDay, subDays } from 'date-fns';
 import { Role, StudentAttendance } from '@/lib/generated/prisma';
-
-// export async function getMonthlyFeeCollection(monthsBack: number) {
-//   const start = performance.now();
-//   const orgId = await getOrganizationId();
-//   const now = new Date();
-
-//   // Generate a range of past months
-//   const results = await prisma.feePayment.groupBy({
-//     by: ['paymentDate'],
-//     where: {
-//       organizationId: orgId,
-//       paymentDate: {
-//         gte: subMonths(now, monthsBack),
-//         lte: now,
-//       },
-//     },
-//     _sum: {
-//       amount: true,
-//     },
-//   });
-
-//   // Group and format by month
-//   const monthlyCollection: Record<string, number> = {};
-
-//   for (const r of results) {
-//     const monthKey = `${r.paymentDate.getFullYear()}-${(
-//       r.paymentDate.getMonth() + 1
-//     )
-//       .toString()
-//       .padStart(2, '0')}`;
-//     if (!monthlyCollection[monthKey]) {
-//       monthlyCollection[monthKey] = 0;
-//     }
-//     monthlyCollection[monthKey] += r._sum.amount ?? 0;
-//   }
-//   const end = performance.now();
-
-//   console.log('getMonthlyFeeCollection took', end - start, 'ms');
-
-//   return monthlyCollection;
-// }
 
 export async function fetchFilteredStudents({
   search = '',
@@ -745,4 +699,92 @@ export async function studentDocumentsDelete(documentId: string) {
   revalidatePath('/dashboard/documents');
 
   return deletedDocument;
+}
+
+export async function updateTeacherProfileAction({
+  teacherId,
+  data,
+}: {
+  teacherId: string;
+  data: TeacherProfileFormData;
+}) {
+  const validatedData = teacherProfileSchema.parse(data);
+
+  // Convert { title, url }[] → string[]
+  const certificateUrls: string[] =
+    validatedData.certificateUrls?.map((file) => file.url) || [];
+
+  const existingProfile = await prisma.teacherProfile.findUnique({
+    where: { teacherId },
+  });
+
+  const teacher = await prisma.teacher.findUnique({
+    where: { id: teacherId },
+    select: { createdAt: true, userId: true },
+  });
+
+  if (!teacher) throw new Error('Teacher not found');
+
+  await prisma.user.update({
+    where: { id: teacher.userId },
+    data: {
+      profileImage: validatedData.profilePhoto,
+      lastName: validatedData.lastName,
+      firstName: validatedData.firstName,
+      updatedAt: new Date(),
+    },
+  });
+
+  if (!teacher) throw new Error('Teacher not found');
+
+  if (existingProfile) {
+    // ✅ Update profile
+    await prisma.teacherProfile.update({
+      where: { teacherId },
+      data: {
+        contactEmail: validatedData.contactEmail,
+        contactPhone: validatedData.contactPhone,
+        address: validatedData.address,
+        city: validatedData.city,
+        state: validatedData.state,
+        dateOfBirth: validatedData.dateOfBirth,
+        qualification: validatedData.qualification,
+        experienceInYears: validatedData.experienceInYears,
+        resumeUrl: validatedData.resumeUrl,
+        bio: validatedData.bio,
+        teachingPhilosophy: validatedData.teachingPhilosophy,
+        specializedSubjects: validatedData.specializedSubjects,
+        preferredGrades: validatedData.preferredGrades,
+        idProofUrl: validatedData.idProofUrl || '',
+        linkedinPortfolio: validatedData.linkedinPortfolio,
+        languagesKnown: validatedData.languagesKnown,
+        certificateUrls,
+      },
+    });
+  } else {
+    // ✅ Create profile using teacher.createdAt as joinedAt
+    await prisma.teacherProfile.create({
+      data: {
+        teacherId,
+        contactEmail: validatedData.contactEmail,
+        contactPhone: validatedData.contactPhone,
+        address: validatedData.address,
+        city: validatedData.city,
+        state: validatedData.state,
+        dateOfBirth: validatedData.dateOfBirth,
+        qualification: validatedData.qualification,
+        experienceInYears: validatedData.experienceInYears,
+        resumeUrl: validatedData.resumeUrl,
+        joinedAt: teacher.createdAt,
+        bio: validatedData.bio,
+        teachingPhilosophy: validatedData.teachingPhilosophy,
+        specializedSubjects: validatedData.specializedSubjects,
+        preferredGrades: validatedData.preferredGrades,
+        idProofUrl: validatedData.idProofUrl || '',
+        linkedinPortfolio: validatedData.linkedinPortfolio,
+        languagesKnown: validatedData.languagesKnown,
+        certificateUrls,
+      },
+    });
+  }
 }

@@ -153,7 +153,7 @@ function ParentStatsCardsSkeleton() {
   );
 }
 
-export function ParentDashboardStatsContent() {
+export function ParentDashboardStats() {
   return (
     <Suspense fallback={<ParentStatsCardsSkeleton />}>
       <ParentStatsContent />

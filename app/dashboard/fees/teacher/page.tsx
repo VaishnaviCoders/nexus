@@ -1,143 +1,16 @@
-'use client';
+// 'use client';
 
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import {
-  Search,
-  Mail,
-  Check,
-  AlertTriangle,
-  IndianRupeeIcon,
-  XCircleIcon,
-} from 'lucide-react';
+import { Suspense } from 'react';
+
 import { SendFeesReminderDialog } from '@/components/dashboard/Fees/SendFeesReminderDialog';
+import StudentPaymentHistoryTable from '@/components/dashboard/Fees/StudentPaymentHistoryTable';
+import { getFeeRecords } from '@/lib/data/fee/get-all-students-fees';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Card, CardContent } from '@/components/ui/card';
+import { FeeStatsCardForTeacher } from '@/components/dashboard/teacher/FeeStatsCardForTeacher';
 
-// Sample data
-const students = [
-  {
-    id: '1',
-    name: 'Rahul Sharma',
-    rollNo: '1001',
-    feeStatus: 'PAID',
-    totalFee: 25000,
-    paidAmount: 25000,
-    pendingAmount: 0,
-    email: 'rahul.s@example.com',
-    parent: 'Mr. Rajesh Sharma',
-  },
-  {
-    id: '2',
-    name: 'Priya Patel',
-    rollNo: '802',
-    feeStatus: 'PAID',
-    totalFee: 18000,
-    paidAmount: 18000,
-    pendingAmount: 0,
-    email: 'priya.p@example.com',
-    parent: 'Mr. Prakash Patel',
-  },
-  {
-    id: '3',
-    name: 'Amit Kumar',
-    rollNo: '1201',
-    feeStatus: 'UNPAID',
-    totalFee: 20000,
-    paidAmount: 0,
-    pendingAmount: 20000,
-    email: 'amit.k@example.com',
-    parent: 'Mrs. Anita Kumar',
-  },
-  {
-    id: '4',
-    name: 'Neha Singh',
-    rollNo: '903',
-    feeStatus: 'OVERDUE',
-    totalFee: 22000,
-    paidAmount: 0,
-    pendingAmount: 22000,
-    email: 'neha.s@example.com',
-    parent: 'Mr. Naveen Singh',
-  },
-  {
-    id: '5',
-    name: 'Vikram Joshi',
-    rollNo: '1102',
-    feeStatus: 'UNPAID',
-    totalFee: 19000,
-    paidAmount: 5000,
-    pendingAmount: 14000,
-    email: 'vikram.j@example.com',
-    parent: 'Mrs. Vandana Joshi',
-  },
-];
-
-export default function TeacherFeesManagementDashboard() {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [statusFilter, setStatusFilter] = useState('all');
-
-  // Filter students based on search query and status filter
-  const filteredStudents = students.filter((student) => {
-    const matchesSearch =
-      student.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      student.rollNo.includes(searchQuery);
-    const matchesStatus =
-      statusFilter === 'all' || student.feeStatus === statusFilter;
-
-    return matchesSearch && matchesStatus;
-  });
-
-  type PaymentStatus = 'PAID' | 'UNPAID' | 'OVERDUE';
-
-  const getStatusBadgeVariant = (status: PaymentStatus) => {
-    switch (status) {
-      case 'PAID':
-        return 'secondary';
-      case 'UNPAID':
-        return 'outline';
-      case 'OVERDUE':
-        return 'destructive';
-      default:
-        return 'default';
-    }
-  };
-
-  const sendReminder = (studentId: string) => {
-    // Here you would typically make an API call to send a reminder
-    console.log(`Sending reminder to student with ID: ${studentId}`);
-    alert(`Reminder sent to student with ID: ${studentId}`);
-  };
-
-  const markAsPaid = (studentId: string) => {
-    // Here you would typically make an API call to mark the fee as paid
-    console.log(`Marking fee as paid for student with ID: ${studentId}`);
-    alert(`Fee marked as paid for student with ID: ${studentId}`);
-  };
+export default async function TeacherFeesManagementDashboard() {
+  const feeRecords = await getFeeRecords();
 
   return (
     <div className="">
@@ -148,234 +21,41 @@ export default function TeacherFeesManagementDashboard() {
           </h1>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          <Card className="overflow-hidden border-border/50 transition-all hover:border-primary/20 hover:shadow-md">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                {' '}
-                Total Students
-              </CardTitle>
-              <div className="rounded-md bg-primary/10 p-1">
-                <IndianRupeeIcon className="h-4 w-4 text-primary" />
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-baseline space-x-1">
-                <IndianRupeeIcon className="h-4 w-4 text-muted-foreground" />
-                <span className="text-2xl font-bold">
-                  {/* {collectedFees.toLocaleString('en-IN')}  */} 0
-                </span>
-              </div>
-              <p className="text-xs text-muted-foreground mt-1">
-                {/* {((collectedFees / totalFees) * 100).toFixed(1)}  */}In your
-                class
-              </p>
-            </CardContent>
-          </Card>
+        <FeeStatsCardForTeacher />
 
-          <Card className="overflow-hidden border-border/50 transition-all hover:border-primary/20 hover:shadow-md">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Paid Fees</CardTitle>
-              <div className="rounded-md bg-primary/10 p-1">
-                <IndianRupeeIcon className="h-4 w-4 text-primary" />
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-baseline space-x-1">
-                <IndianRupeeIcon className="h-4 w-4 text-muted-foreground" />
-                <span className="text-2xl font-bold">
-                  {/* {collectedFees.toLocaleString('en-IN')}  */} 0
-                </span>
-              </div>
-              <p className="text-xs text-muted-foreground mt-1">
-                {/* {((collectedFees / totalFees) * 100).toFixed(1)}  */}% of
-                total fees
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="overflow-hidden border-border/50 transition-all hover:border-amber-500/20 hover:shadow-md">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Unpaid Fees</CardTitle>
-              <div className="rounded-md bg-amber-500/10 p-1">
-                <IndianRupeeIcon className="h-4 w-4 text-amber-500" />
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-baseline space-x-1">
-                <IndianRupeeIcon className="h-4 w-4 text-muted-foreground" />
-                <span className="text-2xl font-bold">
-                  {/* {pendingFees.toLocaleString('en-IN')} 0 */} 0
-                </span>
-              </div>
-              <p className="text-xs text-muted-foreground mt-1">
-                {/* {unpaidStudents}  */} 0 Students with unpaid fees
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="overflow-hidden border-border/50 transition-all hover:border-red-500/20 hover:shadow-md">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                Overdue Fees
-              </CardTitle>
-              <div className="rounded-md bg-red-500/10 p-1">
-                <XCircleIcon className="h-4 w-4 text-red-500" />
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-baseline space-x-1">
-                <IndianRupeeIcon className="h-4 w-4 text-muted-foreground" />
-                <span className="text-2xl font-bold">
-                  <p className="text-xs text-muted-foreground">
-                    Students with overdue fees
-                  </p>
-                </span>
-              </div>
-              <p className="text-xs text-muted-foreground mt-1">
-                Fees past due date requiring action
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Student Fee Status</CardTitle>
-            <CardDescription>
-              View and manage fee status for students in your class
-            </CardDescription>
-            <div className="flex flex-col space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0 mt-4">
-              <div className="flex-1">
-                <Label htmlFor="status-filter">Status</Label>
-                <Select value={statusFilter} onValueChange={setStatusFilter}>
-                  <SelectTrigger id="status-filter">
-                    <SelectValue placeholder="Filter by status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Statuses</SelectItem>
-                    <SelectItem value="PAID">Paid</SelectItem>
-                    <SelectItem value="UNPAID">Unpaid</SelectItem>
-                    <SelectItem value="OVERDUE">Overdue</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="flex-1">
-                <Label htmlFor="search">Search</Label>
-                <div className="relative">
-                  <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="search"
-                    type="search"
-                    placeholder="Search by name or roll no..."
-                    className="pl-8"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                  />
-                </div>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Student</TableHead>
-                  <TableHead>Roll No</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="text-right">Total Fee</TableHead>
-                  <TableHead className="text-right">Paid</TableHead>
-                  <TableHead className="text-right">Pending</TableHead>
-                  <TableHead>Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredStudents.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={7} className="text-center">
-                      No students found
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  filteredStudents.map((student) => (
-                    <TableRow key={student.id}>
-                      <TableCell>
-                        <div className="flex items-center gap-3">
-                          <Avatar>
-                            <AvatarImage
-                              src={`/placeholder.svg?height=40&width=40`}
-                              alt={student.name}
-                            />
-                            <AvatarFallback>
-                              {student.name
-                                .split(' ')
-                                .map((n) => n[0])
-                                .join('')}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div>
-                            <p className="font-medium">{student.name}</p>
-                            <p className="text-xs text-muted-foreground">
-                              {student.parent}
-                            </p>
-                          </div>
-                        </div>
-                      </TableCell>
-                      <TableCell>{student.rollNo}</TableCell>
-                      <TableCell>
-                        <Badge
-                          variant={getStatusBadgeVariant(
-                            student.feeStatus as PaymentStatus
-                          )}
-                        >
-                          {student.feeStatus === 'PAID'
-                            ? 'Paid'
-                            : student.feeStatus === 'UNPAID'
-                              ? 'Unpaid'
-                              : 'Overdue'}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        ₹{student.totalFee.toLocaleString()}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        ₹{student.paidAmount.toLocaleString()}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        ₹{student.pendingAmount.toLocaleString()}
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex gap-2">
-                          {student.feeStatus !== 'PAID' && (
-                            <>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => sendReminder(student.id)}
-                              >
-                                <Mail className="h-3.5 w-3.5 mr-1" />
-                                Remind
-                              </Button>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => markAsPaid(student.id)}
-                              >
-                                <Check className="h-3.5 w-3.5 mr-1" />
-                                Mark Paid
-                              </Button>
-                            </>
-                          )}
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
+        <Suspense fallback={<StudentPaymentHistoryTableSkeleton />}>
+          <StudentPaymentHistoryTable feeRecords={feeRecords} />
+        </Suspense>
       </main>
     </div>
   );
 }
+
+const StudentPaymentHistoryTableSkeleton = () => (
+  <Card>
+    <CardContent className="p-0">
+      <table className="w-full">
+        <thead>
+          <tr>
+            {Array.from({ length: 8 }).map((_, i) => (
+              <th key={i} className="p-4">
+                <Skeleton className="h-5 w-20" />
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {Array.from({ length: 10 }).map((_, i) => (
+            <tr key={i}>
+              {Array.from({ length: 8 }).map((__, j) => (
+                <td key={j} className="p-4">
+                  <Skeleton className="h-5 w-full" />
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </CardContent>
+  </Card>
+);

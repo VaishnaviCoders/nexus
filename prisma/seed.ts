@@ -43,12 +43,65 @@ async function test() {
     // });
     // console.log('data', data);
 
-    const paymentData = await prisma.feePayment.findUnique({
+    // const paymentData = await prisma.feePayment.findUnique({
+    //   where: {
+    //     receiptNumber: 'RCP-1750505949490-499-cmc65vvn30007vhwwlluht7lz',
+    //   },
+    // });
+    // console.log('paymentData', paymentData);
+
+    // const studentsWithFees = await prisma.student.findMany({
+    //   where: {
+    //     section: {
+    //       TeachingAssignment: {
+    //         some: {
+    //           teacherId: 'cmc8vdrfm0003vhp4h0gch3iz',
+    //           status: 'ASSIGNED',
+    //         },
+    //       },
+    //     },
+    //     Fee: {
+    //       some: {
+    //         status: { not: 'PAID' },
+    //       },
+    //     },
+    //   },
+    //   include: {
+    //     Fee: true,
+    //     section: true,
+    //     grade: true,
+    //   },
+    // });
+
+    // console.log('studentsWithFees', studentsWithFees);
+
+    await prisma.teacherProfile.upsert({
       where: {
-        receiptNumber: 'RCP-1750505949490-499-cmc65vvn30007vhwwlluht7lz',
+        teacherId: 'cmc8vdrfm0003vhp4h0gch3iz',
+      },
+      update: {},
+      create: {
+        teacherId: 'cmc8vdrfm0003vhp4h0gch3iz',
+        contactEmail: '',
+        contactPhone: '',
+        address: '',
+        city: '',
+        state: '',
+        dateOfBirth: new Date('2000-01-01'),
+        qualification: '',
+        experienceInYears: 0,
+        resumeUrl: '',
+        joinedAt: new Date(),
+        bio: '',
+        teachingPhilosophy: '',
+        specializedSubjects: [],
+        preferredGrades: [],
+        idProofUrl: '',
+        linkedinPortfolio: '',
+        languagesKnown: [],
+        certificateUrls: [],
       },
     });
-    console.log('paymentData', paymentData);
   } catch (error) {
     console.error('Prisma error:', error);
   }

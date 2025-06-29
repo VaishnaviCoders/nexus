@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { CheckCircle, Users, Calendar, IndianRupee, Bell } from 'lucide-react';
 import Link from 'next/link';
-import { ParentDashboardStatsContent } from '@/components/dashboard/parent/parent-dashboard-stats-cards';
+import { ParentDashboardStats } from '@/components/dashboard/parent/parent-dashboard-stats-cards';
 import { NoticesSummaryCard } from '@/components/dashboard/parent/notice-summary-card';
 import { AttendanceSummaryCard } from '@/components/dashboard/parent/attendance-summary-card';
 import { FeesSummaryCard } from '@/components/dashboard/parent/fees-summary-card';
@@ -60,7 +60,7 @@ export default function ParentDashboard() {
         </Card>
 
         {/* Stats Cards */}
-        <ParentDashboardStatsContent />
+        <ParentDashboardStats />
 
         {/* Main Content Grid */}
         <div className="grid gap-6 lg:grid-cols-12">

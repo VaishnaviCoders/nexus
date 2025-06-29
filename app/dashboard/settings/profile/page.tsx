@@ -77,6 +77,11 @@ export async function getStudentProfile(studentId?: string) {
       throw new Error('Unauthorized to view this profile');
     }
 
+    console.log(
+      'Student profile:',
+      student.ParentStudent.filter((ps) => ps.isPrimary === true)
+    );
+
     return {
       id: student.id,
       firstName: student.firstName,

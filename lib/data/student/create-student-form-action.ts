@@ -309,130 +309,127 @@ export async function createStudent(data: z.infer<typeof studentSchema>) {
 
     // Database transaction
     console.log('💾 Starting database transaction...');
-    const student = await prisma.$transaction(
-      async (tx) => {
-        // Create student
-        const newStudent = await tx.student.create({
-          data: {
-            organizationId,
-            rollNumber: validated.rollNumber,
-            firstName: validated.firstName,
-            middleName: validated.middleName,
-            lastName: validated.lastName,
-            fullName: `${validated.firstName} ${validated.middleName ?? ''} ${
-              validated.lastName
-            }`.trim(),
-            email: validated.email,
-            phoneNumber: validated.phoneNumber,
-            whatsAppNumber: validated.whatsAppNumber,
-            sectionId: validated.sectionId,
-            gradeId: validated.gradeId,
-            gender: validated.gender,
-            profileImage: validated.profileImage,
-            dateOfBirth: new Date(validated.dateOfBirth),
-            emergencyContact: validated.emergencyContact,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          },
-        });
-        console.log('✅ Student created in database:', newStudent.id);
+    const student = await prisma.$transaction(async (tx) => {
+      // Create student
+      const newStudent = await tx.student.create({
+        data: {
+          organizationId,
+          rollNumber: validated.rollNumber,
+          firstName: validated.firstName,
+          middleName: validated.middleName,
+          lastName: validated.lastName,
+          fullName: `${validated.firstName} ${validated.middleName ?? ''} ${
+            validated.lastName
+          }`.trim(),
+          email: validated.email,
+          phoneNumber: validated.phoneNumber,
+          whatsAppNumber: validated.whatsAppNumber,
+          sectionId: validated.sectionId,
+          gradeId: validated.gradeId,
+          gender: validated.gender,
+          profileImage: validated.profileImage,
+          dateOfBirth: new Date(validated.dateOfBirth),
+          emergencyContact: validated.emergencyContact,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      });
+      console.log('✅ Student created in database:', newStudent.id);
 
-        // Create or update student user record
-        const studentUser = await tx.user.upsert({
-          where: { clerkId: studentClerkUser.id },
+      // Create or update student user record
+      const studentUser = await tx.user.upsert({
+        where: { clerkId: studentClerkUser.id },
+        create: {
+          id: studentClerkUser.id,
+          clerkId: studentClerkUser.id,
+          organizationId,
+          email: validated.email,
+          firstName: validated.firstName,
+          lastName: validated.lastName,
+          password: validated.phoneNumber,
+          profileImage:
+            validated.profileImage || studentClerkUser.imageUrl || '',
+          role: 'STUDENT',
+          createdAt: new Date(),
+        },
+        update: {
+          id: studentClerkUser.id,
+          organizationId,
+          email: validated.email,
+          firstName: validated.firstName,
+          lastName: validated.lastName,
+          password: validated.phoneNumber,
+          profileImage:
+            validated.profileImage || studentClerkUser.imageUrl || '',
+          role: 'STUDENT',
+          updatedAt: new Date(),
+        },
+      });
+      console.log('✅ Student user record processed:', studentUser.id);
+
+      // Process parents in database
+      for (const { clerkUser, parentData } of parentClerkUsers) {
+        console.log(`💾 Creating parent in database: ${parentData.email}`);
+
+        // Create/update parent user record
+        const prismaParentUser = await tx.user.upsert({
+          where: { clerkId: clerkUser.id },
           create: {
-            id: studentClerkUser.id,
-            clerkId: studentClerkUser.id,
+            id: clerkUser.id,
+            email: parentData.email,
+            profileImage: clerkUser.imageUrl || '',
+            firstName: parentData.firstName,
+            lastName: parentData.lastName,
+            clerkId: clerkUser.id,
+            role: 'PARENT',
+            isActive: true,
             organizationId,
-            email: validated.email,
-            firstName: validated.firstName,
-            lastName: validated.lastName,
-            password: validated.phoneNumber,
-            profileImage:
-              validated.profileImage || studentClerkUser.imageUrl || '',
-            role: 'STUDENT',
             createdAt: new Date(),
           },
           update: {
-            id: studentClerkUser.id,
-            organizationId,
-            email: validated.email,
-            firstName: validated.firstName,
-            lastName: validated.lastName,
-            password: validated.phoneNumber,
-            profileImage:
-              validated.profileImage || studentClerkUser.imageUrl || '',
-            role: 'STUDENT',
+            id: clerkUser.id,
+            firstName: parentData.firstName,
+            lastName: parentData.lastName,
             updatedAt: new Date(),
           },
         });
-        console.log('✅ Student user record processed:', studentUser.id);
+        console.log('✅ Parent user record processed:', prismaParentUser.id);
 
-        // Process parents in database
-        for (const { clerkUser, parentData } of parentClerkUsers) {
-          console.log(`💾 Creating parent in database: ${parentData.email}`);
+        // Create/update parent record
+        const parent = await tx.parent.upsert({
+          where: { email: parentData.email },
+          update: {
+            phoneNumber: parentData.phoneNumber,
+            whatsAppNumber: parentData.whatsAppNumber ?? '',
+            userId: prismaParentUser.id,
+            updatedAt: new Date(),
+          },
+          create: {
+            email: parentData.email,
+            firstName: parentData.firstName,
+            lastName: parentData.lastName,
+            phoneNumber: parentData.phoneNumber,
+            whatsAppNumber: parentData.whatsAppNumber ?? '',
+            userId: prismaParentUser.id,
+            createdAt: new Date(),
+          },
+        });
+        console.log('✅ Parent record processed:', parent.id);
 
-          // Create/update parent user record
-          const prismaParentUser = await tx.user.upsert({
-            where: { clerkId: clerkUser.id },
-            create: {
-              id: clerkUser.id,
-              email: parentData.email,
-              profileImage: clerkUser.imageUrl || '',
-              firstName: parentData.firstName,
-              lastName: parentData.lastName,
-              clerkId: clerkUser.id,
-              role: 'PARENT',
-              organizationId,
-              createdAt: new Date(),
-            },
-            update: {
-              id: clerkUser.id,
-              firstName: parentData.firstName,
-              lastName: parentData.lastName,
-              updatedAt: new Date(),
-            },
-          });
-          console.log('✅ Parent user record processed:', prismaParentUser.id);
-
-          // Create/update parent record
-          const parent = await tx.parent.upsert({
-            where: { email: parentData.email },
-            update: {
-              phoneNumber: parentData.phoneNumber,
-              whatsAppNumber: parentData.whatsAppNumber ?? '',
-              userId: prismaParentUser.id,
-              updatedAt: new Date(),
-            },
-            create: {
-              email: parentData.email,
-              firstName: parentData.firstName,
-              lastName: parentData.lastName,
-              phoneNumber: parentData.phoneNumber,
-              whatsAppNumber: parentData.whatsAppNumber ?? '',
-              userId: prismaParentUser.id,
-              createdAt: new Date(),
-            },
-          });
-          console.log('✅ Parent record processed:', parent.id);
-
-          // Create parent-student relationship
-          await tx.parentStudent.create({
-            data: {
-              relationship: parentData.relationship,
-              studentId: newStudent.id,
-              parentId: parent.id,
-            },
-          });
-          console.log('✅ Parent-student relationship created');
-        }
-
-        return newStudent;
-      },
-      {
-        timeout: 30000, // 30 second timeout
+        // Create parent-student relationship
+        await tx.parentStudent.create({
+          data: {
+            relationship: parentData.relationship,
+            isPrimary: parentData.isPrimary,
+            studentId: newStudent.id,
+            parentId: parent.id,
+          },
+        });
+        console.log('✅ Parent-student relationship created');
       }
-    );
+
+      return newStudent;
+    });
 
     console.log('🎉 Student creation completed successfully:', student.id);
 

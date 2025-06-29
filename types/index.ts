@@ -28,6 +28,18 @@ export interface FeeRecord {
     phoneNumber: string;
     gradeId: string;
     sectionId: string;
+    ParentStudent?: {
+      isPrimary: boolean | null;
+      parent: {
+        userId: string | null;
+        id: string;
+        firstName: string;
+        lastName: string;
+        email: string;
+        phoneNumber: string;
+        whatsAppNumber?: string;
+      };
+    }[];
   };
   feeCategory: {
     id: string;
@@ -56,6 +68,11 @@ export interface FeeRecord {
     receiptNumber: string;
     transactionId: string | undefined;
     feeId: string;
+    payer: {
+      firstName: string;
+      lastName: string;
+      email: string;
+    };
   }[];
 }
 

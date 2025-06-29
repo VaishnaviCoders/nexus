@@ -1,4 +1,7 @@
+import AdminSettings from '@/components/dashboard/admin/AdminSettings';
+import ParentSettings from '@/components/dashboard/parent/ParentSettings';
 import StudentSettings from '@/components/dashboard/Student/StudentSettings';
+import TeacherSettings from '@/components/dashboard/teacher/TeacherSettings';
 import { Button } from '@/components/ui/button';
 import { auth } from '@clerk/nextjs/server';
 import Link from 'next/link';
@@ -8,12 +11,12 @@ export default async function SettingPage() {
   const { orgRole } = await auth();
 
   switch (orgRole) {
-    // case 'org:admin':
-    //   return <AdminDashboard />;
-    // case 'org:teacher':
-    //   return <TeacherDashboard />;
-    // case 'org:parent':
-    //   return <ParentDashboard />;
+    case 'org:admin':
+      return <AdminSettings />;
+    case 'org:teacher':
+      return <TeacherSettings />;
+    case 'org:parent':
+      return <ParentSettings />;
     case 'org:student':
       return (
         <>

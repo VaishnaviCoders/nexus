@@ -26,8 +26,11 @@ enum PlanType {
 enum OrganizationType {
   SCHOOL
   COLLEGE
-  OTHER
   COACHING_CLASS
+  UNIVERSITY
+  KINDERGARTEN
+  TRAINING_INSTITUTE
+  OTHER
 }
 
 model Organization {
@@ -37,7 +40,7 @@ model Organization {
   organizationLogo String?
 
   contactEmail String? // admin or billing contact
-  contactPhone String?
+  contactPhone String? // admin or billing contact
   website      String?
 
   isActive      Boolean   @default(true)
@@ -66,6 +69,7 @@ model Organization {
   Teacher            Teacher[]
   Subject            Subject[]
   TeachingAssignment TeachingAssignment[]
+  NotificationLog    NotificationLog[]
 
   @@index([id])
   @@index([organizationSlug])
@@ -91,8 +95,9 @@ model User {
 
   FeePayment FeePayment[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  NotificationLog NotificationLog[]
 
   @@index([id, clerkId])
   @@index([organizationId])
@@ -123,20 +128,27 @@ model TeacherProfile {
   teacherId String  @unique
   teacher   Teacher @relation(fields: [teacherId], references: [id], onDelete: Cascade)
 
-  dateOfBirth       DateTime
-  contactEmail      String
-  contactPhone      String
-  address           String
+  contactEmail String
+  contactPhone String
+  address      String
+  city         String?
+  state        String?
+  dateOfBirth  DateTime
+
   qualification     String
   experienceInYears Int
-  joinedAt          DateTime
   resumeUrl         String?
 
+  joinedAt            DateTime
+  bio                 String?
+  teachingPhilosophy  String?
   specializedSubjects String[]
   preferredGrades     String[]
+  idProofUrl          String
 
-  certificateUrls String[]
-  bio             String?
+  linkedinPortfolio String?
+  languagesKnown    String[]
+  certificateUrls   String[]
 }
 
 model Subject {
@@ -256,8 +268,9 @@ model Student {
   // complaints     Complaint[]
   // marks          Mark[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  NotificationLog NotificationLog[]
 
   @@index([email]) // User lookup
   @@index([phoneNumber])
@@ -279,8 +292,9 @@ model Parent {
 
   students ParentStudent[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  NotificationLog NotificationLog[]
 }
 
 model ParentStudent {
@@ -548,6 +562,59 @@ model Notice {
   updatedAt      DateTime     @updatedAt
 }
 
+model NotificationLog {
+  id             String       @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  // WHO received
+  userId String? // optional Clerk/User ID (can be teacher, parent, etc.)
+  user   User?   @relation(fields: [userId], references: [id])
+
+  parentId String? // optional: if linked to a parent directly`
+  parent   Parent? @relation(fields: [parentId], references: [id])
+
+  studentId String? // optional: useful for linking fee/attendance alerts
+  student   Student? @relation(fields: [studentId], references: [id])
+
+  channel          NotificationChannel
+  status           NotificationStatus  @default(SENT)
+  notificationType NotificationType
+
+  units Int   @default(1) // optional, 1 per message, or set for bulk
+  cost  Float @default(0)
+
+  sentAt    DateTime @default(now())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([organizationId, sentAt])
+  @@index([channel, status])
+  @@index([userId])
+}
+
+enum NotificationType {
+  NOTICE
+  FEE_REMINDER
+  ATTENDANCE_ALERT
+  DOCUMENT_REQUEST
+  GENERAL_ANNOUNCEMENT
+}
+
+enum NotificationChannel {
+  EMAIL
+  SMS
+  WHATSAPP
+  PUSH
+}
+
+enum NotificationStatus {
+  PENDING
+  SENT
+  FAILED
+  DELIVERED
+}
+
 enum Role {
   ADMIN
   TEACHER
@@ -571,44 +638,6 @@ enum EmploymentStatus {
   PROBATION
   SUSPENDED
 }
-
-// model FeeReminderLog {
-//   id             String   @id @default(cuid())
-//   studentId      String
-//   student        Student  @relation(fields: [studentId], references: [id])
-
-//   parentId       String
-//   parent         Parent   @relation(fields: [parentId], references: [id])
-
-//   organizationId String
-//   organization   Organization @relation(fields: [organizationId], references: [id])
-
-//   channel        ReminderChannel // EMAIL, SMS, WHATSAPP, PUSH
-//   status         ReminderStatus  // SENT, FAILED, PENDING
-
-//   messageContent String
-//   costInPaise    Int     // cost of sending this message (eg. 39 paise)
-//   sentAt         DateTime @default(now())
-
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-
-//   @@index([organizationId, sentAt])
-//   @@index([parentId, studentId])
-// }
-
-// enum ReminderChannel {
-//   EMAIL
-//   SMS
-//   WHATSAPP
-//   PUSH
-// }
-
-// enum ReminderStatus {
-//   PENDING
-//   SENT
-//   FAILED
-// }
 
 // FeedBackCollection
 

@@ -16,8 +16,6 @@ import FeeDistributionByCategory from '@/components/dashboard/Fees/FeeDistributi
 import AdminFeesSummaryCards from '@/components/dashboard/Fees/AdminFeesSummaryCards';
 import { Suspense } from 'react';
 import Link from 'next/link';
-import prisma from '@/lib/db';
-import { getOrganizationId } from '@/lib/organization';
 import { getMonthlyFeeData } from '@/lib/data/fee/getMonthlyFeeData';
 import { Skeleton } from '@/components/ui/skeleton';
 import StudentPaymentHistoryTable from '@/components/dashboard/Fees/StudentPaymentHistoryTable';
@@ -25,48 +23,12 @@ import StudentPaymentHistoryTable from '@/components/dashboard/Fees/StudentPayme
 import { getFeeRecords } from '@/lib/data/fee/get-all-students-fees';
 import { DashboardCardSkeleton } from '@/lib/skeletons/DashboardCardSkeleton';
 import PaymentReceivedAlert from '@/components/ui/payment-received-alert';
+import { getFeeCategoryDistribution } from '@/lib/data/fee/get-fee-category-distribution';
 
 // import fixIncorrectFeeStatuses from '@/lib/data/fee/payFeesAction';
 
-const getFeeCategoryAggregates = async () => {
-  const orgId = await getOrganizationId();
-
-  const result = await prisma.fee.groupBy({
-    by: ['feeCategoryId'],
-    where: {
-      organizationId: orgId,
-    },
-    _sum: {
-      paidAmount: true,
-      pendingAmount: true,
-    },
-  });
-
-  const categories = await prisma.feeCategory.findMany({
-    where: {
-      id: { in: result.map((r) => r.feeCategoryId) },
-      organizationId: orgId,
-    },
-    select: {
-      id: true,
-      name: true,
-    },
-  });
-
-  const data = result.map((r) => {
-    const category = categories.find((c) => c.id === r.feeCategoryId);
-    return {
-      name: category?.name ?? 'Unknown',
-      paidAmount: r._sum.paidAmount ?? 0,
-      pendingAmount: r._sum.pendingAmount ?? 0,
-    };
-  });
-
-  return data;
-};
-
 export default async function AdminFeeDashboard() {
-  const feeCategories = await getFeeCategoryAggregates();
+  const feeCategories = await getFeeCategoryDistribution();
   const data = await getMonthlyFeeData(2025);
   const feeRecords = await getFeeRecords();
 

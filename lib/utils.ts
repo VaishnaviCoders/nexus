@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import { NotificationChannel } from './generated/prisma';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -65,4 +66,37 @@ export function formatCurrencyINWithSymbol(amount: number): string {
     currency: 'INR',
     maximumFractionDigits: 0,
   }).format(amount);
+}
+
+/**
+ * Cost mapping for each notification channel (INR per unit).
+ */
+const CHANNEL_COST_MAP: Record<NotificationChannel, number> = {
+  EMAIL: 0.05,
+  SMS: 0.3,
+  WHATSAPP: 0.5,
+  PUSH: 0,
+};
+
+/**
+ * Get the cost per message for a given notification channel.
+ * @param channel - NotificationChannel enum value
+ * @returns Cost per unit (float)
+ */
+export function getChannelUnitCost(channel: NotificationChannel): number {
+  return CHANNEL_COST_MAP[channel];
+}
+
+/**
+ * Calculate the total cost for a notification.
+ * @param channel - NotificationChannel enum value
+ * @param units - Number of messages sent (default = 1)
+ * @returns Total cost, rounded to 2 decimals
+ */
+export function calculateNotificationCost(
+  channel: NotificationChannel,
+  units: number = 1
+): number {
+  const unitCost = getChannelUnitCost(channel);
+  return parseFloat((unitCost * units).toFixed(2));
 }

@@ -20,22 +20,6 @@ const AdminFeesSummaryCards = async () => {
     unpaidStudents,
   } = await getAdminFeesSummary();
 
-  console.log(
-    'totalFees',
-    totalFees,
-    'collectedFees',
-    collectedFees,
-    'pendingFees',
-    pendingFees,
-    'totalStudents',
-    totalStudents,
-    'paidStudents',
-    paidStudents,
-    'unpaidStudents',
-    unpaidStudents,
-    'overdueFees',
-    overdueFees
-  );
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       <Card className="overflow-hidden border-border/50 transition-all hover:border-primary/20 hover:shadow-md">

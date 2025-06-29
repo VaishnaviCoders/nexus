@@ -248,8 +248,10 @@ const AiMonthlyReport: React.FC<AiMonthlyReportProps> = ({ data }) => {
 12. December collected ₹95,000 from 42 payments
 
 The total amount collected for the year was ₹1,150,000. The total number of payments made during the year was 600. There was an average of approximately 50 payments per month.`;
+      const data = await getMonthlyFeeData(2025);
+      const formattedText = formatFeeData(data);
 
-      const formattedText = formatFeeData(mockMonthlyFeeCollectionData);
+      console.log('Formatted text:', formattedText);
       const generatedSummary = await generateAISummaryOpenRouter(formattedText);
       setSummary(generatedSummary);
     } catch (error) {

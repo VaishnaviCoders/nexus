@@ -211,7 +211,7 @@ export const roleMenus: Record<string, Group[]> = {
           icon: ScrollText,
         },
         {
-          href: '/dashboard/child-attendance',
+          href: '/dashboard/my-attendance',
           label: 'Attendance',
           icon: Calendar,
         },

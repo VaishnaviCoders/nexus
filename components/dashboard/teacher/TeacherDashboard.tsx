@@ -10,6 +10,7 @@ import { Calendar, Users, BookOpen, CalendarIcon } from 'lucide-react';
 import Link from 'next/link';
 import { TeacherStatsCards } from '@/components/dashboard/teacher/TeacherDashboardStatsCard';
 import { RecentActivitiesCard } from '@/components/dashboard/teacher/RecentActivitiesCard';
+import { TeacherTodaysClassScheduleCard } from './TeacherTodaysClassScheduleCard';
 
 // import { TeacherStatsCards } from "@/components/teacher-dashboard/teacher-stats-cards"
 // import { TodayScheduleCard } from "@/components/teacher-dashboard/today-schedule-card"
@@ -18,11 +19,14 @@ import { RecentActivitiesCard } from '@/components/dashboard/teacher/RecentActiv
 // import { StudentPerformanceCard } from "@/components/teacher-dashboard/student-performance-card"
 // import { QuickActionsCard } from "@/components/teacher-dashboard/quick-actions-card"
 
+// Available Sameer Kad Main V0.dev
+
 export default async function TeacherDashboard() {
   return (
     <div className="bg-gradient-to-br from-background via-background to-muted/10">
       <div className="px-3 space-y-3">
         {/* Header */}
+
         <Card className="bg-gradient-to-r from-card via-card to-primary/5">
           <CardContent className="flex flex-col lg:flex-row lg:items-center lg:justify-between p-6 gap-4">
             <div>
@@ -67,7 +71,7 @@ export default async function TeacherDashboard() {
           {/* Left Column - Main Content */}
           <div className="lg:col-span-8 space-y-6">
             {/* Today's Schedule */}
-            {/* <TodayScheduleCard /> */}
+            <TeacherTodaysClassScheduleCard />
 
             {/* My Classes */}
             {/* <MyClassesCard /> */}

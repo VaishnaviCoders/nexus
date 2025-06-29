@@ -4,8 +4,36 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ArrowRight, CheckCircle, Zap } from 'lucide-react';
+import {
+  Dialog,
+  DialogDescription,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '../ui/dialog';
+import { Calendar } from '../ui/calendar';
+import React from 'react';
+import ComingSoon from '../Coming-soon';
 
 export default function CTA() {
+  const [date, setDate] = React.useState<Date | undefined>(
+    new Date(2025, 5, 12)
+  );
+  const [selectedTime, setSelectedTime] = React.useState<string | null>(
+    '10:00'
+  );
+  const timeSlots = Array.from({ length: 37 }, (_, i) => {
+    const totalMinutes = i * 15;
+    const hour = Math.floor(totalMinutes / 60) + 9;
+    const minute = totalMinutes % 60;
+    return `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+  });
+
+  const bookedDates = Array.from(
+    { length: 3 },
+    (_, i) => new Date(2025, 5, 17 + i)
+  );
   return (
     <section className="py-32 relative overflow-hidden">
       {/* Background */}
@@ -106,13 +134,30 @@ export default function CTA() {
               <p className="mb-6 opacity-90">
                 See how EduFlow works with your specific requirements
               </p>
-              <Button
-                variant="secondary"
-                size="lg"
-                className="bg-white text-blue-600 hover:bg-gray-100 font-semibold px-8 py-3 rounded-xl"
-              >
-                Schedule Demo
-              </Button>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button
+                    variant="secondary"
+                    size="lg"
+                    className="bg-white text-blue-600 hover:bg-gray-100 font-semibold px-8 py-3 rounded-xl"
+                  >
+                    Schedule Demo
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-3xl">
+                  <DialogHeader>
+                    <DialogTitle>Schedule a Demo</DialogTitle>
+                    <DialogDescription>
+                      Schedule a demo with our team to see how EduFlow works
+                      with your specific requirements
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="h-72 ">
+                    {' '}
+                    <ComingSoon />
+                  </div>
+                </DialogContent>
+              </Dialog>
             </div>
 
             <div className="bg-gradient-to-br from-green-500 to-blue-500 rounded-2xl p-8 text-white text-center">

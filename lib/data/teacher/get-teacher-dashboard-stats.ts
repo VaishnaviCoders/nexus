@@ -249,7 +249,6 @@ export async function getRecentActivities() {
   // Get recent attendance records marked by this teacher
   const recentAttendance = await prisma.studentAttendance.findMany({
     where: {
-      recordedBy: teacher.userId,
       date: { gte: weekAgo },
     },
     include: {

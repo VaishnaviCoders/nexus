@@ -6,7 +6,6 @@ import AdminDashboard from '@/components/dashboard/admin/AdminDashboard';
 import ParentDashboard from '@/components/dashboard/parent/ParentDashboard';
 import StudentDashboard from '@/components/dashboard/Student/StudentDashboard';
 import TeacherDashboard from '@/components/dashboard/teacher/TeacherDashboard';
-// import TeacherDashboard from '@/components/dashboard/teacher/TeacherDashboard';
 
 export default async function DashboardPage() {
   const { orgRole } = await auth();
@@ -19,8 +18,6 @@ export default async function DashboardPage() {
     case 'org:parent':
       return <ParentDashboard />;
     case 'org:student':
-      return <StudentDashboard />;
-    default:
-      redirect('/'); // Or show a fallback/unauthorized page
+      return <StudentDashboard />; // Or show a fallback/unauthorized page
   }
 }
