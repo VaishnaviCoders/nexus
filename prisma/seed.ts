@@ -75,33 +75,41 @@ async function test() {
 
     // console.log('studentsWithFees', studentsWithFees);
 
-    await prisma.teacherProfile.upsert({
+    // await prisma.teacherProfile.upsert({
+    //   where: {
+    //     teacherId: 'cmc8vdrfm0003vhp4h0gch3iz',
+    //   },
+    //   update: {},
+    //   create: {
+    //     teacherId: 'cmc8vdrfm0003vhp4h0gch3iz',
+    //     contactEmail: '',
+    //     contactPhone: '',
+    //     address: '',
+    //     city: '',
+    //     state: '',
+    //     dateOfBirth: new Date('2000-01-01'),
+    //     qualification: '',
+    //     experienceInYears: 0,
+    //     resumeUrl: '',
+    //     joinedAt: new Date(),
+    //     bio: '',
+    //     teachingPhilosophy: '',
+    //     specializedSubjects: [],
+    //     preferredGrades: [],
+    //     idProofUrl: '',
+    //     linkedinPortfolio: '',
+    //     languagesKnown: [],
+    //     certificateUrls: [],
+    //   },
+    // });
+
+    const feePayment = await prisma.feePayment.findUnique({
       where: {
-        teacherId: 'cmc8vdrfm0003vhp4h0gch3iz',
-      },
-      update: {},
-      create: {
-        teacherId: 'cmc8vdrfm0003vhp4h0gch3iz',
-        contactEmail: '',
-        contactPhone: '',
-        address: '',
-        city: '',
-        state: '',
-        dateOfBirth: new Date('2000-01-01'),
-        qualification: '',
-        experienceInYears: 0,
-        resumeUrl: '',
-        joinedAt: new Date(),
-        bio: '',
-        teachingPhilosophy: '',
-        specializedSubjects: [],
-        preferredGrades: [],
-        idProofUrl: '',
-        linkedinPortfolio: '',
-        languagesKnown: [],
-        certificateUrls: [],
+        id: 'cmcic6tco007tvhrk5la6hctm',
       },
     });
+
+    console.log('feePayment', feePayment);
   } catch (error) {
     console.error('Prisma error:', error);
   }

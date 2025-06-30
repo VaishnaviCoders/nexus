@@ -62,11 +62,18 @@ const Features = () => {
 
       <div className="relative z-10">
         <h1 className="mt-8 text-2xl font-semibold text-center lg:text-3xl xl:text-4xl">
-          Smart Solutions That Make Your School Life Easier
+          {/* Smart Solutions That Make Your School Life Easier */}
+          We Solved the Chaos You Face Every Day
         </h1>
         <p className="max-w-lg mx-auto mt-6 text-center text-neutral-500">
-          Unlock a New Era of Learning: Experience the Power of Our Cutting-Edge
-          Features Designed for Seamless School Management!
+          Tired of messy spreadsheets, lost notices, or chasing parents for
+          dues? Nexus turns your daily school headaches into smooth, automated
+          workflows.
+        </p>
+
+        <p className="text-center text-sm text-muted-foreground mt-4">
+          We didn’t just build features. We solved the daily pain points you
+          silently put up with — and made your school run smoother than ever.
         </p>
       </div>
 
@@ -94,8 +101,9 @@ const Features = () => {
                 </h1>
 
                 <p className="max-w-xs mt-2 text-sm text-muted-foreground text-start md:text-center">
-                  Manage, track, and convert leads efficiently with our
-                  all-in-one lead management system.
+                  No more scattered inquiry forms or forgotten follow-ups.
+                  Easily manage new admission leads from interest to enrollment
+                  — all in one place.
                 </p>
               </div>
               <div className="flex flex-col text-center justify-center items-center  max-sm:items-start">
@@ -104,8 +112,9 @@ const Features = () => {
                   Teacher / Member Management
                 </h1>
                 <p className="max-w-xs mt-2 text-sm text-muted-foreground text-start md:text-center">
-                  Handle teacher and member records, from attendance to salary
-                  management, with ease.
+                  Struggling with staff data, salary logs, or attendance sheets?
+                  Now manage everything about your staff — without juggling
+                  files or WhatsApp groups.
                 </p>
               </div>
             </div>
@@ -118,8 +127,9 @@ const Features = () => {
                 </h1>
 
                 <p className="max-w-xs mt-2 text-sm text-muted-foreground text-start md:text-center">
-                  Get detailed insights into student performance, attendance,
-                  and progress for improved decision-making.
+                  Ever wished you could spot a student's issues before exams?
+                  Our dashboard gives early warnings based on attendance, marks
+                  & teacher feedback.
                 </p>
               </div>
               <div className="flex flex-col text-center justify-center items-center  max-sm:items-start">
@@ -128,8 +138,8 @@ const Features = () => {
                   Seamless Integration
                 </h1>
                 <p className="max-w-xs mt-2 text-sm text-muted-foreground text-start md:text-center">
-                  Effortlessly connect and integrate with your existing tools
-                  for a seamless workflow experience.
+                  Already using other tools? Don’t worry — Nexus plugs into your
+                  existing workflow so you don’t start from scratch.
                 </p>
               </div>
             </div>

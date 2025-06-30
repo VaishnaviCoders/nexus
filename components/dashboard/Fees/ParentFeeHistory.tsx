@@ -36,7 +36,8 @@ import {
 import { toast } from 'sonner';
 import { FeeReceiptCard } from './FeeReceiptCard';
 import { formatCurrencyIN } from '@/lib/utils';
-import { payFeesAction } from '@/lib/data/fee/payFeesAction';
+import { phonePayInitPayment } from '@/lib/data/fee/payFeesAction';
+import PayFeeButton from '@/components/PayFeeButton';
 
 interface ParentData {
   name: string;
@@ -99,17 +100,6 @@ const ParentFeeHistory = ({ parentData }: { parentData: ParentData }) => {
   const currentChild = parentData.children.find(
     (child) => child.id === selectedChild
   );
-
-  const handlePayment = async (feeId: string) => {
-    try {
-      const result = await payFeesAction(feeId);
-      toast.success('Payment successful');
-      // Optional: refresh data or revalidate
-    } catch (err: any) {
-      console.error('Payment failed:', err);
-      toast.error('Payment failed');
-    }
-  };
 
   type PaymentStatus = 'PAID' | 'UNPAID' | 'OVERDUE';
   const getStatusBadgeVariant = (status: PaymentStatus) => {
@@ -263,12 +253,7 @@ const ParentFeeHistory = ({ parentData }: { parentData: ParentData }) => {
                             </Badge>
                           </TableCell>
                           <TableCell className="text-right">
-                            <Button
-                              size="sm"
-                              onClick={() => handlePayment(payment.id)}
-                            >
-                              Pay Now
-                            </Button>
+                            <PayFeeButton feeId={payment.id} />
                           </TableCell>
                         </TableRow>
                       ))

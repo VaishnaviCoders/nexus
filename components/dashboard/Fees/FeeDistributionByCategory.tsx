@@ -35,7 +35,9 @@ const FeeDistributionByCategory: React.FC<
           {data.map((category, index) => (
             <div key={index} className="space-y-1">
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">{category.name}</span>
+                <span className="text-sm font-medium capitalize">
+                  {category.name}
+                </span>
                 <span className="text-sm text-muted-foreground">
                   ₹
                   {(

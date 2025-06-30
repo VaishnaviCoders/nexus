@@ -1,6 +1,6 @@
 'use server';
-import prisma from '../db';
-import { OrganizationFormData } from '../schemas';
+import prisma from '@/lib/db';
+import { OrganizationFormData } from '@/lib/schemas';
 
 export async function updateOrganization({
   organizationId,

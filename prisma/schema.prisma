@@ -390,6 +390,7 @@ model Fee {
   @@index([studentId])
   @@index([status])
   @@index([dueDate])
+  @@index([organizationId])
 }
 
 model FeePayment {
@@ -421,6 +422,30 @@ model FeePayment {
   @@index([organizationId])
 }
 
+enum PaymentMethod {
+  CASH
+  UPI
+  CARD
+  BANK_TRANSFER
+  CHEQUE
+  ONLINE
+}
+
+enum PaymentStatus {
+  PENDING
+  UNPAID
+  COMPLETED
+  FAILED
+  REFUNDED
+  CANCELLED
+}
+
+enum FeeStatus {
+  PAID
+  UNPAID
+  OVERDUE
+}
+
 model FeeCategory {
   id             String       @id @default(cuid())
   name           String // e.g., "Yearly Fee", "Exam Fee", "Lab Fee", etc.
@@ -433,29 +458,6 @@ model FeeCategory {
 
   @@unique([name, organizationId])
   @@index([organizationId])
-}
-
-enum PaymentMethod {
-  CASH
-  UPI
-  CARD
-  BANK_TRANSFER
-  CHEQUE
-  ONLINE
-}
-
-enum PaymentStatus {
-  UNPAID
-  COMPLETED
-  FAILED
-  REFUNDED
-  CANCELLED
-}
-
-enum FeeStatus {
-  PAID
-  UNPAID
-  OVERDUE
 }
 
 enum AttendanceStatus {

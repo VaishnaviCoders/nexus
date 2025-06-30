@@ -48,10 +48,10 @@ Utility Functions:
 - Send Reminder (SMS, Whatsapp Mail ) only mail Done
 - View Receipt : ✅ Fixed , Platform Fee is pending
 - Download Fees Details
-- Download Receipt
+- Download Receipt : ✅ Fixed
 - Delete Fee Category Page : Completed but if have data in fees then show error Foreign key constraint violated: `Fee_feeCategoryId_fkey (index)` : ✅ Fixed
 - Full Academic Calendar : Holidays || Events || Exams ||
-- Payment Gateway Setup : Razorpay 2% || Phone pay 1.95% or Free || CashFree
+- Payment Gateway Setup : Razorpay 2% || Phone pay 1.95% or Free || CashFree : ✅ Fixed
 
 - Student[id] Page : Only For Teacher || Admin => Edit Profile
 
@@ -90,7 +90,7 @@ In Student
 
 1. Student Attendance History : Own Attendance History
 2. Dashboard : Weekly Attendance || Subject Performance || Dashboard Stats
-3. Pay Fees / Download Receipt
+3. Pay Fees / Download Receipt : ✅ Fixed
 4. Assignments Page
 5. Teacher Feedback Page
 6. Settings Page: 40% Remaining

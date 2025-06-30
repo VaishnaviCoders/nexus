@@ -25,17 +25,10 @@ import { DashboardCardSkeleton } from '@/lib/skeletons/DashboardCardSkeleton';
 import PaymentReceivedAlert from '@/components/ui/payment-received-alert';
 import { getFeeCategoryDistribution } from '@/lib/data/fee/get-fee-category-distribution';
 
-// import fixIncorrectFeeStatuses from '@/lib/data/fee/payFeesAction';
-
 export default async function AdminFeeDashboard() {
   const feeCategories = await getFeeCategoryDistribution();
   const data = await getMonthlyFeeData(2025);
   const feeRecords = await getFeeRecords();
-
-  // Call this function in your migration or admin script
-  // fixIncorrectFeeStatuses().then((result) => {
-  //   console.log('Updated incorrect fee statuses:', result.updated);
-  // });
 
   <PaymentReceivedAlert />;
   return (

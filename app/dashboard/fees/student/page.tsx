@@ -21,6 +21,7 @@ import {
 import { redirect } from 'next/navigation';
 import { auth } from '@clerk/nextjs/server';
 import PayFeeButton from '@/components/PayFeeButton';
+import { ReceiptDownloadButton } from '@/components/ReceiptDownloadButton';
 
 async function getStudentFromUser(userId: string) {
   return await prisma.student.findUnique({
@@ -248,13 +249,10 @@ export default async function StudentFeePage() {
               </CardContent>
 
               <CardFooter className="flex justify-end pt-3 pb-4">
-                {fee.status === 'UNPAID' ? (
+                {fee.status !== 'PAID' ? (
                   <PayFeeButton feeId={fee.id} />
                 ) : (
-                  <Button variant="outline">
-                    <Download className="mr-2 h-4 w-4" />
-                    Download Receipt
-                  </Button>
+                  <ReceiptDownloadButton paymentId={fee.id} variant="outline" />
                 )}
               </CardFooter>
             </Card>

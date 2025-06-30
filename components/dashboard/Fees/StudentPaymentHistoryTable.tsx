@@ -67,7 +67,7 @@ import {
 } from '@/components/ui/dialog';
 import { Skeleton } from '@/components/ui/skeleton';
 import { format } from 'date-fns';
-import { payFeesAction } from '@/lib/data/fee/payFeesAction';
+import { phonePayInitPayment } from '@/lib/data/fee/payFeesAction';
 import { toast } from 'sonner';
 import { FeeRecord } from '@/types';
 import {
@@ -303,7 +303,7 @@ const RecordPaymentCard = ({ selectedRecord }: RecordPaymentCardProps) => {
         });
         return;
       }
-      await payFeesAction(selectedRecord.fee.id);
+      await phonePayInitPayment(selectedRecord.fee.id);
 
       toast.success(
         `Successfully recorded payment of ${formatCurrency(

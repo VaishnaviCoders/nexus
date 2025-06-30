@@ -12,10 +12,26 @@ import prisma from '@/lib/db';
 import { getOrganizationId } from '@/lib/organization';
 import { revalidatePath } from 'next/cache';
 
-export const payFeesAction = async (feeId: string) => {
+export const phonePayInitPayment = async (feeId: string) => {
   const user = await currentUser();
   const organizationId = await getOrganizationId();
   if (!user?.id) throw new Error('Unauthorized');
+
+  // Validate environment variables
+  const requiredEnvVars = [
+    'NEXT_PUBLIC_PAYMENT_MERCHANT_ID',
+    'NEXT_PUBLIC_SALT_KEY',
+    'NEXT_PUBLIC_SALT_INDEX',
+    'NEXT_PUBLIC_PHONE_PAY_HOST_URL',
+    'NEXT_PUBLIC_APP_URL',
+  ];
+
+  for (const envVar of requiredEnvVars) {
+    if (!process.env[envVar]) {
+      console.error(`Missing environment variable: ${envVar}`);
+      throw new Error(`Missing environment variable: ${envVar}`);
+    }
+  }
 
   const fee = await prisma.fee.findUnique({
     where: { id: feeId },
@@ -28,8 +44,6 @@ export const payFeesAction = async (feeId: string) => {
   if (amountToPay <= 0) throw new Error('Nothing to pay');
 
   const platformFee = parseFloat((amountToPay * 0.02).toFixed(2));
-  const totalPaid = parseFloat((fee.paidAmount + amountToPay).toFixed(2));
-  const isFullyPaid = totalPaid >= fee.totalFee;
 
   const transactionId = `TXN-${randomUUID().slice(0, 10)}`;
 
@@ -38,13 +52,15 @@ export const payFeesAction = async (feeId: string) => {
     merchantTransactionId: transactionId,
     merchantUserId: 'MUID-' + randomUUID().toString().slice(-6),
     amount: amountToPay * 100,
-    redirectUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/status/${transactionId}`,
+    redirectUrl: `${process.env.NEXT_PUBLIC_APP_URL}/api/phonepay-callback/${transactionId}`,
     redirectMode: 'REDIRECT',
-    callbackUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/status/${transactionId}`,
+    callbackUrl: `${process.env.NEXT_PUBLIC_APP_URL}/api/phonepay-callback/${transactionId}`,
     paymentInstrument: {
       type: 'PAY_PAGE',
     },
   };
+
+  console.log('Payment Payload:', payload);
 
   function generateSha256(data: string): string {
     return createHash('sha256').update(data).digest('hex');
@@ -53,10 +69,12 @@ export const payFeesAction = async (feeId: string) => {
   const dataPayload = JSON.stringify(payload);
   const dataBase64 = Buffer.from(dataPayload).toString('base64');
 
-  const fullURL = dataBase64 + '/pg/v1/pay' + process.env.NEXT_PUBLIC_SALT_KEY;
-  const dataSha256 = generateSha256(fullURL);
-
+  const stringToHash =
+    dataBase64 + '/pg/v1/pay' + process.env.NEXT_PUBLIC_SALT_KEY;
+  const dataSha256 = generateSha256(stringToHash);
   const checksum = dataSha256 + '###' + process.env.NEXT_PUBLIC_SALT_INDEX;
+
+  console.log('Checksum generated:', checksum);
 
   const UAT_PAY_API_URL = `${process.env.NEXT_PUBLIC_PHONE_PAY_HOST_URL}/pg/v1/pay`;
 
@@ -71,48 +89,140 @@ export const payFeesAction = async (feeId: string) => {
       body: JSON.stringify({ request: dataBase64 }),
     });
 
-    console.log('Response', response);
+    const responseData = await response.json();
+    console.log('Payment API Response:', responseData);
 
-    return {
-      // redirectUrl: response.data.data.instrumentResponse.redirectInfo.url,
-      transactionId: transactionId,
-    };
+    if (!response.ok) {
+      console.error('API Error Details:', responseData);
+      throw new Error(
+        `Payment API error: ${response.status} ${response.statusText}. Details: ${JSON.stringify(responseData)}`
+      );
+    }
+
+    if (
+      responseData.success &&
+      responseData.data?.instrumentResponse?.redirectInfo?.url
+    ) {
+      // Only create database record AFTER successful PhonePe response
+      await prisma.feePayment.create({
+        data: {
+          feeId: fee.id,
+          amount: amountToPay,
+          status: PaymentStatus.PENDING,
+          paymentMethod: PaymentMethod.UPI,
+          receiptNumber: `REC-${randomUUID().slice(0, 8).toUpperCase()}`,
+          transactionId: transactionId,
+          note: 'Payment initiated via parent dashboard',
+          payerId: user.id,
+          organizationId: organizationId,
+          platformFee,
+          recordedBy: user.id,
+        },
+      });
+
+      revalidatePath('/dashboard/fees');
+
+      return {
+        success: true,
+        redirectUrl: responseData.data.instrumentResponse.redirectInfo.url,
+        transactionId: transactionId,
+      };
+    } else {
+      throw new Error(responseData.message || 'Payment initialization failed');
+    }
   } catch (error) {
-    console.error('Error in server action:', error);
+    console.error('Error in payFeesAction:', error);
     throw error;
   }
 };
 
-// const [payment] = await prisma.$transaction([
-//   // 1. Create FeePayment record
-//   prisma.feePayment.create({
-//     data: {
-//       feeId: fee.id,
-//       amount: amountToPay,
-//       status: PaymentStatus.COMPLETED,
-//       paymentMethod: PaymentMethod.UPI, // or collect dynamically
-//       receiptNumber: `REC-${randomUUID().slice(0, 8).toUpperCase()}`,
-//       transactionId: transactionId,
-//       note: 'Paid via parent dashboard',
-//       payerId: user.id,
-//       organizationId: organizationId,
-//       platformFee,
-//       recordedBy: user.id,
-//     },
-//   }),
+function generateSha256(data: string): string {
+  return createHash('sha256').update(data).digest('hex');
+}
 
-//   // 2. Update Fee record
-//   prisma.fee.update({
-//     where: { id: fee.id },
-//     data: {
-//       paidAmount: totalPaid,
-//       pendingAmount: isFullyPaid ? 0 : fee.totalFee - totalPaid,
-//       status: isFullyPaid ? FeeStatus.PAID : FeeStatus.UNPAID,
-//     },
-//   }),
-// ]);
+export const verifyPhonePePayment = async (transactionId: string) => {
+  const merchantId = process.env.NEXT_PUBLIC_PAYMENT_MERCHANT_ID!;
+  const saltKey = process.env.NEXT_PUBLIC_SALT_KEY!;
+  const saltIndex = process.env.NEXT_PUBLIC_SALT_INDEX!;
+  const host = process.env.NEXT_PUBLIC_PHONE_PAY_HOST_URL!;
 
-// revalidatePath('/dashboard/fees/parent');
+  const organizationId = await getOrganizationId();
 
-// return { success: true, paymentId: payment.id };
-// };
+  const relativeUrl = `/pg/v1/status/${merchantId}/${transactionId}`;
+  const fullUrl = `${host}${relativeUrl}`;
+  const checksum = generateSha256(relativeUrl + saltKey) + '###' + saltIndex;
+
+  const res = await fetch(fullUrl, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-VERIFY': checksum,
+      'X-MERCHANT-ID': merchantId,
+    },
+    cache: 'no-store',
+  });
+
+  const json = await res.json();
+  console.log('PhonePe Status Response in verifyPhonePePayment:', json);
+
+  if (!res.ok || !json.success) {
+    throw new Error('Failed to verify payment');
+  }
+
+  console.log('Payment Verification Response:', json);
+
+  const state = json?.data?.state;
+
+  if (state !== 'COMPLETED') {
+    console.warn('Payment not completed yet:', state);
+    return { success: false, status: state ?? 'UNKNOWN' };
+  }
+
+  const paymentMethod = json?.data?.paymentInstrument?.type;
+
+  await prisma.$transaction(async (tx) => {
+    // 1) Find the pending payment record
+    const payment = await tx.feePayment.findFirst({
+      where: {
+        transactionId,
+        organizationId,
+        status: PaymentStatus.PENDING,
+      },
+      include: { fee: true },
+    });
+    if (!payment) {
+      throw new Error('No matching pending FeePayment record');
+    }
+
+    // 2) Mark that FeePayment COMPLETED
+    await tx.feePayment.update({
+      where: { id: payment.id },
+      data: {
+        status: PaymentStatus.COMPLETED,
+        paymentMethod,
+        paymentDate: new Date(),
+      },
+    });
+
+    // 3) Recalculate all completed payments for this fee
+    const completed = await tx.feePayment.findMany({
+      where: { feeId: payment.feeId, status: PaymentStatus.COMPLETED },
+    });
+    const paidAmount = completed.reduce((sum, p) => sum + p.amount, 0);
+    const pendingAmount = Math.max(payment.fee.totalFee - paidAmount, 0);
+
+    // 4) Update the Fee record atomically
+    await tx.fee.update({
+      where: { id: payment.feeId },
+      data: {
+        paidAmount,
+        pendingAmount,
+        status: pendingAmount === 0 ? FeeStatus.PAID : FeeStatus.UNPAID,
+      },
+    });
+  });
+
+  revalidatePath('/dashboard/fees');
+
+  return { success: true, status: 'success' };
+};
