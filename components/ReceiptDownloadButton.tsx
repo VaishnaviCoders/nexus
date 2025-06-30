@@ -27,7 +27,7 @@ export function ReceiptDownloadButton({
 
       const result = await generateReceiptPDF(paymentId);
 
-      if (result.success && result.pdf) {
+      if (result && result.success && result.pdf) {
         // Create download link
         const link = document.createElement('a');
         link.href = result.pdf;
@@ -38,7 +38,7 @@ export function ReceiptDownloadButton({
 
         toast.success('Receipt downloaded successfully!');
       } else {
-        toast.error(result.error || 'Failed to generate receipt');
+        toast.error(result?.error || 'Failed to generate receipt');
       }
     } catch (error) {
       console.error('Error downloading receipt:', error);
