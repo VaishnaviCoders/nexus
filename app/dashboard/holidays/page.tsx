@@ -7,15 +7,10 @@ import { getAcademicYearSummary } from '@/lib/data/holiday/get-academic-year-sum
 import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Suspense } from 'react';
-// import DashboardStats from "./components/dashboard-stats"
-// import SchoolManagement from "./components/school-management"
-// import AttendanceTracker from "./components/attendance-tracker"
-// import HolidayManagement from "./components/holiday-management"
 
 export default async function AttendanceSystem() {
-  // Example school year: July 1, 2025 to June 30, 2026
-  const startDate = new Date('2024-07-01');
-  const endDate = new Date('2025-06-30');
+  const startDate = new Date('2024-06-01');
+  const endDate = new Date('2025-04-30');
 
   const summary = await getAcademicYearSummary({
     startDate,

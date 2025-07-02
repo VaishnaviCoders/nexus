@@ -50,12 +50,18 @@ export default async function AttendancePage() {
 
   return (
     <div className="space-y-6 ">
-      <Card className="flex items-center justify-between p-6">
-        <div>
-          <CardTitle className="text-lg">Section Attendance</CardTitle>
-          <CardDescription>Today&apos;s attendance overview</CardDescription>
+      <div className="flex flex-col gap-4 sm:flex-row px-4 sm:items-center sm:justify-between">
+        <div className="space-y-1">
+          <h1 className="text-lg font-bold tracking-tight sm:text-2xl">
+            Section Attendance
+          </h1>
+          <p className="text-sm text-muted-foreground sm:text-base">
+            Today&apos;s attendance overview
+          </p>
         </div>
-        <div className="flex space-x-2">
+
+        {/* Responsive Button Container */}
+        <div className="flex sm:flex-row sm:items-center space-x-2">
           <Link href="/dashboard/attendance" passHref>
             <Button variant="outline" size="sm">
               View History
@@ -67,7 +73,7 @@ export default async function AttendancePage() {
             </Button>
           </Link>
         </div>
-      </Card>
+      </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>

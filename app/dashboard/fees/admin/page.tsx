@@ -69,7 +69,7 @@ export default async function AdminFeeDashboard() {
 
       {/* Charts and Analytics */}
       <div className="grid gap-4 lg:grid-cols-2">
-        <Suspense fallback={<FeeDistributionByCategorySkeleton />}>
+        <Suspense fallback={<MonthlyFeeCollectionSkeleton />}>
           <MonthlyFeeCollection data={data} />
         </Suspense>
 
@@ -84,6 +84,46 @@ export default async function AdminFeeDashboard() {
     </div>
   );
 }
+
+const MonthlyFeeCollectionSkeleton = () => {
+  return (
+    <div className="w-full animate-pulse">
+      <div className="flex justify-between items-center mb-4">
+        <div>
+          <div className="h-5 w-40 bg-muted rounded mb-1" />
+          <div className="h-4 w-32 bg-muted rounded" />
+        </div>
+        <div className="flex gap-2">
+          <div className="h-8 w-[100px] bg-muted rounded" />
+          <div className="h-8 w-8 bg-muted rounded" />
+        </div>
+      </div>
+
+      <div className="flex justify-between border-b pb-4 h-[230px] items-end gap-1 md:gap-2">
+        {Array.from({ length: 12 }).map((_, i) => (
+          <div key={i} className="flex flex-col items-center gap-1">
+            <div
+              className="w-5 md:w-8 bg-muted rounded-t-md"
+              style={{ height: `${40 + i * 5}px` }}
+            />
+            <div className="h-3 w-8 bg-muted rounded" />
+          </div>
+        ))}
+      </div>
+
+      <div className="flex justify-between pt-4">
+        <div>
+          <div className="h-4 w-24 bg-muted rounded mb-1" />
+          <div className="h-6 w-28 bg-muted rounded" />
+        </div>
+        <div className="text-right">
+          <div className="h-4 w-24 bg-muted rounded mb-1 ml-auto" />
+          <div className="h-6 w-16 bg-muted rounded ml-auto" />
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const StudentPaymentHistoryTableSkeleton = () => (
   <Card>

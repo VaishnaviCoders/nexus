@@ -1,5 +1,4 @@
 'use client';
-
 import { motion } from 'framer-motion';
 import {
   Users,
@@ -20,6 +19,50 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import CTA from '@/components/websiteComp/ctc';
+import { Metadata } from 'next';
+
+// export const metadata: Metadata = {
+//   title: 'Features – Shiksha.cloud | School Management CRM',
+//   description:
+//     'Discover all-in-one school management features including student database, attendance tracking, fee management, parent portal, analytics, academic planning, and more.',
+//   keywords: [
+//     'school management software',
+//     'student information system',
+//     'online attendance tracking',
+//     'fee management system',
+//     'parent teacher communication',
+//     'school CRM features',
+//     'academic calendar app',
+//     'digital school platform',
+//     'school data analytics',
+//     'coaching class software',
+//     'school ERP india',
+//   ],
+//   openGraph: {
+//     title: 'Shiksha.cloud Features – All-in-One School CRM',
+//     description:
+//       'Explore powerful features of Shiksha.cloud: Manage students, fees, attendance, communication, academic planning, and analytics from a single dashboard.',
+//     url: 'https://shiksha.cloud/features',
+//     siteName: 'Shiksha.cloud',
+//     images: [
+//       {
+//         url: 'https://shiksha.cloud/og/features.png',
+//         width: 1200,
+//         height: 630,
+//         alt: 'Shiksha.cloud Features Preview',
+//       },
+//     ],
+//     type: 'website',
+//     locale: 'en_IN',
+//   },
+//   twitter: {
+//     card: 'summary_large_image',
+//     title: 'Shiksha.cloud Features',
+//     description:
+//       'Manage your entire school digitally — attendance, fees, parent access, analytics, and more.',
+//     images: ['https://shiksha.cloud/og/features.png'],
+//   },
+// };
 
 const features = [
   {
@@ -270,9 +313,9 @@ export default function FeaturesPage() {
 
                     {/* Title & Subtitle */}
                     <div className="mb-4">
-                      <h3 className="text-2xl font-bold text-gray-900 mb-2 group-hover:text-gray-800 transition-colors">
+                      <h2 className="text-2xl font-bold text-gray-900 mb-2 group-hover:text-gray-800 transition-colors">
                         {feature.title}
-                      </h3>
+                      </h2>
                       <p
                         className={`text-sm font-semibold ${feature.accentColor} uppercase tracking-wide`}
                       >

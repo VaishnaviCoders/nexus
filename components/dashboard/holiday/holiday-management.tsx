@@ -117,12 +117,22 @@ export default function HolidayManagement({
   const [copied, setCopied] = useState(false);
 
   // Sample CSV template
-  const csvTemplate = `Holiday Name,Start Date,End Date,Type,Reason,Is Recurring
-   Diwali,2024-11-12,2024-11-12,PLANNED,Festival celebration,true
-   Winter Break,2024-12-24,2024-12-31,PLANNED,Winter vacation,false
-   Emergency Closure,2024-03-15,2024-03-15,SUDDEN,Weather emergency,false
-   Republic Day,2024-01-26,2024-01-26,PLANNED,National holiday,true
-   Holi,2024-03-14,2024-03-14,PLANNED,Festival of colors,true`;
+  const csvTemplate = `Independence Day,2024-08-15,2024-08-15,PLANNED,National Holiday,true
+Raksha Bandhan,2024-08-19,2024-08-19,PLANNED,Sibling festival,true
+Janmashtami,2024-08-26,2024-08-26,PLANNED,Birth of Lord Krishna,true
+Ganesh Chaturthi,2024-09-07,2024-09-07,PLANNED,Festival,true
+Eid-e-Milad,2024-09-16,2024-09-16,PLANNED,Prophet's birthday,true
+Gandhi Jayanti,2024-10-02,2024-10-02,PLANNED,National holiday,true
+Dussehra,2024-10-11,2024-10-13,PLANNED,Festival of Victory,true
+Diwali Break,2024-11-01,2024-11-07,PLANNED,Festival of Lights,true
+Guru Nanak Jayanti,2024-11-15,2024-11-15,PLANNED,Sikh religious festival,true
+Christmas,2024-12-25,2024-12-25,PLANNED,Christian holiday,true
+Winter Break,2024-12-24,2025-01-02,PLANNED,Year-end vacation,false
+Makar Sankranti,2025-01-14,2025-01-14,PLANNED,Harvest festival,true
+Republic Day,2025-01-26,2025-01-26,PLANNED,National holiday,true
+Maha Shivratri,2025-02-26,2025-02-26,PLANNED,Hindu festival,true
+Holi,2025-03-14,2025-03-14,PLANNED,Festival of Colors,true
+Summer Break,2025-04-20,2025-06-10,PLANNED,Annual vacation,false`;
 
   const addEmergencyHoliday = async () => {
     try {
@@ -587,7 +597,7 @@ export default function HolidayManagement({
                           {isCsvBulkUploading ? (
                             <>
                               <Loader2 className="animate-spin mr-2 h-4 w-4" />
-                              uploading
+                              Uploading
                             </>
                           ) : (
                             <>
@@ -610,6 +620,10 @@ export default function HolidayManagement({
                             quickly
                           </p>
                           <div className="bg-gray-50 border rounded-lg p-4">
+                            <p className="text-base py-2 ">
+                              Holiday Name,Start Date,End Date,Type,Reason,Is
+                              Recurring
+                            </p>
                             <pre className="text-sm font-mono whitespace-pre-wrap overflow-x-auto text-gray-700">
                               {csvTemplate}
                             </pre>
@@ -762,6 +776,8 @@ export default function HolidayManagement({
                 const isActive = isHolidayActive(holiday);
                 const duration = getHolidayDuration(holiday);
 
+                console.log('Holidays', holidays);
+
                 return (
                   <Card
                     key={holiday.id}
@@ -803,13 +819,6 @@ export default function HolidayManagement({
                           </div>
                         </div>
                         <div className="flex items-center space-x-2">
-                          {/* <Button
-                            onClick={() => updateHoliday(holiday.id)}
-                            variant={'outline'}
-                            size={'xs'}
-                          >
-                            <Edit2 className="w-2 h-2 " />
-                          </Button> */}
                           <Button
                             onClick={() => deleteHoliday(holiday.id)}
                             variant={'destructive'}

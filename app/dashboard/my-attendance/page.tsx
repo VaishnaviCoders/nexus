@@ -9,8 +9,10 @@ import { Button } from '@/components/ui/button';
 import { Download, TrendingUp, Award, Clock } from 'lucide-react';
 import Link from 'next/link';
 import { AttendanceStatsCards } from '@/components/dashboard/StudentAttendance/attendance-stats-cards';
-import { AttendanceCalendar } from '@/components/dashboard/StudentAttendance/attendance-calendar';
+import { StudentAttendanceCalendar } from '@/components/dashboard/StudentAttendance/attendance-calendar';
 import prisma from '@/lib/db';
+import StudentCalendar from '@/components/dashboard/Student/StudentCalendar';
+import { RecentAttendanceTimeline } from '@/components/dashboard/StudentAttendance/recent-attendance-calendar';
 
 // import { AttendanceOverviewCards } from "@/components/student-attendance/attendance-overview-cards"
 // import { AttendanceCalendar } from "@/components/student-attendance/attendance-calendar"
@@ -25,6 +27,13 @@ export default async function page() {
       // date: { gte: startDate, lte: endDate },
     },
     orderBy: { date: 'desc' },
+  });
+
+  const recentAttendance = await prisma.studentAttendance.findMany({
+    where: {
+      studentId: 'cmc3tdtk90009vhr8jjrajcl2',
+    },
+    take: 7,
   });
   return (
     <div className="p-4 space-y-6">
@@ -68,7 +77,8 @@ export default async function page() {
         {/* Left Column - Calendar & Trends */}
         <div className="lg:col-span-8 space-y-6">
           {/* Attendance Calendar */}
-          <AttendanceCalendar attendanceData={attendanceData} />
+          <StudentAttendanceCalendar attendanceRecords={attendanceData} />
+          {/* <StudentCalendar /> */}
 
           {/* Trends Chart */}
           {/* <AttendanceTrendsChart initialData={attendanceData} /> */}
@@ -77,7 +87,7 @@ export default async function page() {
         {/* Right Column - Timeline & Achievements */}
         <div className="lg:col-span-4 space-y-6">
           {/* Recent Timeline */}
-          {/* <RecentAttendanceTimeline /> */}
+          <RecentAttendanceTimeline recentAttendance={recentAttendance} />
 
           {/* Quick Stats */}
           <Card className="border-0 bg-gradient-to-br from-card via-card to-indigo-50/20 dark:to-indigo-950/20">

@@ -29,7 +29,7 @@ async function AttendanceStatsCardsContent() {
             : 'Pending',
     },
     {
-      title: 'This Month',
+      title: "This Month's Attendance",
       value: `${data.thisMonth.percentage}%`,
       description: `${data.thisMonth.presentDays}/${data.thisMonth.totalDays} days`,
       icon: Calendar,

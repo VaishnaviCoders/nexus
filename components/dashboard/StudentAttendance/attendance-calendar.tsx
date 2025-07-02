@@ -1,30 +1,50 @@
 'use client';
 
-import { useState, useMemo, useCallback } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
+
+import { useState, useMemo, useCallback, useEffect } from 'react';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from '@/components/ui/hover-card';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import {
   ChevronLeft,
   ChevronRight,
-  CalendarIcon,
+  Calendar,
   CheckCircle2,
   XCircle,
   Clock,
-  Calendar,
-  User,
-  FileText,
+  Download,
+  Filter,
+  RotateCcw,
+  TrendingUp,
 } from 'lucide-react';
-import { AttendanceStatus } from '@/lib/generated/prisma';
-import { cn } from '@/lib/utils';
+import {
+  format,
+  startOfMonth,
+  endOfMonth,
+  eachDayOfInterval,
+  isSameDay,
+  isToday,
+  isFuture,
+  getDay,
+} from 'date-fns';
+import { Separator } from '@/components/ui/separator';
 
-// Type-safe interfaces based on Prisma schema
+// Types based on Prisma schema
+type AttendanceStatus = 'PRESENT' | 'ABSENT' | 'LATE';
+
 interface StudentAttendanceRecord {
   id: string;
   studentId: string;
@@ -39,81 +59,83 @@ interface StudentAttendanceRecord {
 }
 
 interface AttendanceCalendarProps {
-  attendanceData: StudentAttendanceRecord[];
-  studentName?: string;
+  attendanceRecords: StudentAttendanceRecord[];
+  onDateClick?: (date: Date, record?: StudentAttendanceRecord) => void;
+  onExportData?: () => void;
   className?: string;
-  onDateClick?: (date: Date, attendance?: StudentAttendanceRecord) => void;
 }
 
-type DateStatus =
-  | 'present'
-  | 'absent'
-  | 'late'
-  | 'future'
-  | 'no-school'
-  | 'today';
-
 interface CalendarDay {
-  day: number | null;
-  date: Date | null;
-  status: DateStatus;
-  attendance?: StudentAttendanceRecord;
-  isToday: boolean;
+  date: Date;
+  dayNumber: number;
   isCurrentMonth: boolean;
+  isToday: boolean;
+  isFuture: boolean;
+  attendance?: StudentAttendanceRecord;
+  status: 'present' | 'absent' | 'late' | 'no-data' | 'future' | 'weekend';
+}
+
+interface MonthlyStats {
+  totalSchoolDays: number;
+  presentDays: number;
+  absentDays: number;
+  lateDays: number;
+  attendanceRate: number;
 }
 
 const STATUS_CONFIG = {
   present: {
-    color:
-      'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100 dark:bg-emerald-950 dark:text-emerald-300 dark:border-emerald-800',
+    className: 'bg-green-50 border-green-200 text-green-700 hover:bg-green-100',
+    darkClassName:
+      'dark:bg-green-950/50 dark:border-green-800 dark:text-green-300',
     icon: CheckCircle2,
     label: 'Present',
-    badgeVariant: 'default' as const,
-    description: 'Student was present on this day',
+    badgeVariant: 'present' as const,
   },
   absent: {
-    color:
-      'bg-red-50 text-red-700 border-red-200 hover:bg-red-100 dark:bg-red-950 dark:text-red-300 dark:border-red-800',
+    className: 'bg-red-50 border-red-200 text-red-700 hover:bg-red-100',
+    darkClassName: 'dark:bg-red-950/50 dark:border-red-800 dark:text-red-300',
     icon: XCircle,
     label: 'Absent',
-    badgeVariant: 'destructive' as const,
-    description: 'Student was absent on this day',
+    badgeVariant: 'absent' as const,
   },
   late: {
-    color:
-      'bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100 dark:bg-amber-950 dark:text-amber-300 dark:border-amber-800',
+    className:
+      'bg-yellow-50 border-yellow-200 text-yellow-700 hover:bg-yellow-100',
+    darkClassName:
+      'dark:bg-yellow-950/50 dark:border-yellow-800 dark:text-yellow-300',
     icon: Clock,
     label: 'Late',
-    badgeVariant: 'secondary' as const,
-    description: 'Student arrived late on this day',
+    badgeVariant: 'late' as const,
+  },
+  'no-data': {
+    className: 'bg-gray-50 border-gray-200 text-gray-500 hover:bg-gray-100',
+    darkClassName:
+      'dark:bg-gray-900/50 dark:border-gray-700 dark:text-gray-400',
+    icon: Calendar,
+    label: 'No Data',
+    badgeVariant: 'outline' as const,
   },
   future: {
-    color:
-      'bg-slate-50 text-slate-400 border-slate-200 hover:bg-slate-100 dark:bg-slate-900 dark:text-slate-500 dark:border-slate-700',
+    className: 'bg-gray-50 border-gray-200 text-gray-400',
+    darkClassName:
+      'dark:bg-gray-900/30 dark:border-gray-800 dark:text-gray-500',
     icon: Calendar,
     label: 'Future',
     badgeVariant: 'outline' as const,
-    description: 'Future date',
   },
-  'no-school': {
-    color:
-      'bg-gray-50 text-gray-500 border-gray-200 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600',
+  weekend: {
+    className: 'bg-blue-50 border-blue-200 text-blue-600',
+    darkClassName:
+      'dark:bg-blue-950/30 dark:border-blue-800 dark:text-blue-400',
     icon: Calendar,
-    label: 'No School',
+    label: 'Weekend',
     badgeVariant: 'outline' as const,
-    description: 'No school on this day',
   },
-  today: {
-    color:
-      'bg-blue-50 text-blue-700 border-blue-300 hover:bg-blue-100 dark:bg-blue-950 dark:text-blue-300 dark:border-blue-700 ring-2 ring-blue-300 dark:ring-blue-700',
-    icon: Calendar,
-    label: 'Today',
-    badgeVariant: 'default' as const,
-    description: 'Today',
-  },
-} as const;
+};
 
-const MONTH_NAMES = [
+const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const MONTHS = [
   'January',
   'February',
   'March',
@@ -126,388 +148,490 @@ const MONTH_NAMES = [
   'October',
   'November',
   'December',
-] as const;
+];
 
-const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as const;
-
-export function AttendanceCalendar({
-  attendanceData,
-  studentName,
-  className,
+export function StudentAttendanceCalendar({
+  attendanceRecords,
   onDateClick,
+  onExportData,
+  className,
 }: AttendanceCalendarProps) {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [hoveredDay, setHoveredDay] = useState<number | null>(null);
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
+  const [filterStatus, setFilterStatus] = useState<string>('all');
 
-  const currentMonth = currentDate.getMonth();
-  const currentYear = currentDate.getFullYear();
-  const today = new Date();
+  useEffect(() => {
+    setCurrentDate(new Date(selectedYear, selectedMonth, 1));
+  }, [selectedYear, selectedMonth]);
 
-  // Memoized calendar calculations for performance
-  const calendarData = useMemo(() => {
-    const firstDayOfMonth = new Date(currentYear, currentMonth, 1);
-    const lastDayOfMonth = new Date(currentYear, currentMonth + 1, 0);
-    const daysInMonth = lastDayOfMonth.getDate();
-    const startingDayOfWeek = firstDayOfMonth.getDay();
+  const calendarDays = useMemo(() => {
+    const monthStart = startOfMonth(currentDate);
+    const monthEnd = endOfMonth(currentDate);
+    const startDate = new Date(monthStart);
+    startDate.setDate(startDate.getDate() - getDay(monthStart));
 
-    const calendarDays: CalendarDay[] = [];
+    const endDate = new Date(monthEnd);
+    endDate.setDate(endDate.getDate() + (6 - getDay(monthEnd)));
 
-    // Add empty cells for days before month starts
-    for (let i = 0; i < startingDayOfWeek; i++) {
-      calendarDays.push({
-        day: null,
-        date: null,
-        status: 'no-school',
-        isToday: false,
-        isCurrentMonth: false,
-      });
-    }
+    const days = eachDayOfInterval({ start: startDate, end: endDate });
 
-    // Add days of the month
-    for (let day = 1; day <= daysInMonth; day++) {
-      const date = new Date(currentYear, currentMonth, day);
-      const dateStr = date.toISOString().split('T')[0];
-      const todayStr = today.toISOString().split('T')[0];
+    return days.map((date): CalendarDay => {
+      const dayNumber = date.getDate();
+      const isCurrentMonth = date.getMonth() === currentDate.getMonth();
+      const todayCheck = isToday(date);
+      const futureCheck = isFuture(date);
+      const isWeekend = getDay(date) === 0 || getDay(date) === 6;
 
-      const attendance = attendanceData.find((record) => {
-        const recordDateStr = new Date(record.date).toISOString().split('T')[0];
-        return recordDateStr === dateStr;
-      });
+      const attendance = attendanceRecords.find((record) =>
+        isSameDay(new Date(record.date), date)
+      );
 
-      let status: DateStatus;
-      const isToday = dateStr === todayStr;
+      let status: CalendarDay['status'];
 
-      if (isToday) {
-        status = 'today';
-      } else if (date > today) {
+      if (!isCurrentMonth) {
+        status = 'no-data';
+      } else if (futureCheck) {
         status = 'future';
+      } else if (isWeekend && !attendance) {
+        status = 'weekend';
       } else if (!attendance) {
-        status = 'no-school';
+        status = 'no-data';
+      } else if (attendance.status === 'LATE') {
+        status = 'late';
       } else if (attendance.present) {
-        status =
-          attendance.status === AttendanceStatus.LATE ? 'late' : 'present';
+        status = 'present';
       } else {
         status = 'absent';
       }
 
-      calendarDays.push({
-        day,
+      return {
         date,
-        status,
+        dayNumber,
+        isCurrentMonth,
+        isToday: todayCheck,
+        isFuture: futureCheck,
         attendance,
-        isToday,
-        isCurrentMonth: true,
-      });
-    }
+        status,
+      };
+    });
+  }, [currentDate, attendanceRecords]);
 
-    return calendarDays;
-  }, [currentYear, currentMonth, attendanceData, today]);
-
-  // Memoized statistics
-  const monthStats = useMemo(() => {
-    const monthAttendance = attendanceData.filter((record) => {
+  const monthlyStats = useMemo((): MonthlyStats => {
+    const currentMonthRecords = attendanceRecords.filter((record) => {
       const recordDate = new Date(record.date);
       return (
-        recordDate.getMonth() === currentMonth &&
-        recordDate.getFullYear() === currentYear
+        recordDate.getMonth() === selectedMonth &&
+        recordDate.getFullYear() === selectedYear
       );
     });
 
-    const totalDays = monthAttendance.length;
-    const presentDays = monthAttendance.filter(
-      (record) => record.present
+    const totalSchoolDays = currentMonthRecords.length;
+    const presentDays = currentMonthRecords.filter((r) => r.present).length;
+    const absentDays = currentMonthRecords.filter(
+      (r) => !r.present && r.status !== 'LATE'
     ).length;
-    const lateDays = monthAttendance.filter(
-      (record) => record.status === AttendanceStatus.LATE
+    const lateDays = currentMonthRecords.filter(
+      (r) => r.status === 'LATE'
     ).length;
-    const absentDays = totalDays - presentDays;
+
+    const attendanceRate =
+      totalSchoolDays > 0
+        ? Math.round((presentDays / totalSchoolDays) * 100)
+        : 0;
 
     return {
-      totalDays,
+      totalSchoolDays,
       presentDays,
-      lateDays,
       absentDays,
-      percentage:
-        totalDays > 0 ? Math.round((presentDays / totalDays) * 100) : 0,
+      lateDays,
+      attendanceRate,
     };
-  }, [attendanceData, currentMonth, currentYear]);
+  }, [attendanceRecords, selectedMonth, selectedYear]);
 
-  const navigateMonth = useCallback((direction: 'prev' | 'next') => {
-    setCurrentDate((prev) => {
-      const newDate = new Date(prev);
+  const filteredCalendarDays = useMemo(() => {
+    if (filterStatus === 'all') return calendarDays;
+    return calendarDays.map((day) => ({
+      ...day,
+      isHighlighted: day.status === filterStatus,
+    }));
+  }, [calendarDays, filterStatus]);
+
+  const navigateMonth = useCallback(
+    (direction: 'prev' | 'next') => {
       if (direction === 'prev') {
-        newDate.setMonth(prev.getMonth() - 1);
+        if (selectedMonth === 0) {
+          setSelectedMonth(11);
+          setSelectedYear((prev) => prev - 1);
+        } else {
+          setSelectedMonth((prev) => prev - 1);
+        }
       } else {
-        newDate.setMonth(prev.getMonth() + 1);
+        if (selectedMonth === 11) {
+          setSelectedMonth(0);
+          setSelectedYear((prev) => prev + 1);
+        } else {
+          setSelectedMonth((prev) => prev + 1);
+        }
       }
-      return newDate;
-    });
-    setHoveredDay(null);
+    },
+    [selectedMonth]
+  );
+
+  const resetToCurrentMonth = useCallback(() => {
+    const now = new Date();
+    setSelectedYear(now.getFullYear());
+    setSelectedMonth(now.getMonth());
   }, []);
 
   const handleDateClick = useCallback(
-    (calendarDay: CalendarDay) => {
-      if (calendarDay.date && onDateClick) {
-        onDateClick(calendarDay.date, calendarDay.attendance);
+    (day: CalendarDay) => {
+      if (onDateClick && day.isCurrentMonth) {
+        onDateClick(day.date, day.attendance);
       }
     },
     [onDateClick]
   );
 
-  const formatTooltipContent = useCallback((calendarDay: CalendarDay) => {
-    if (!calendarDay.date) return null;
-
-    const config = STATUS_CONFIG[calendarDay.status];
-    const attendance = calendarDay.attendance;
-
-    return (
-      <div className="space-y-2 max-w-xs">
-        <div className="flex items-center gap-2">
-          <config.icon className="w-4 h-4" />
-          <span className="font-medium">
-            {calendarDay.date.toLocaleDateString('en-US', {
-              weekday: 'long',
-              month: 'long',
-              day: 'numeric',
-            })}
-          </span>
-        </div>
-
-        <div className="text-sm text-muted-foreground">
-          <div className="flex items-center gap-1">
-            <span className="font-medium">Status:</span>
-            <Badge variant={config.badgeVariant} className="text-xs">
-              {config.label}
-            </Badge>
-          </div>
-        </div>
-
-        {attendance && (
-          <div className="space-y-1 text-xs">
-            {attendance.note && (
-              <div className="flex items-start gap-1">
-                <FileText className="w-3 h-3 mt-0.5 flex-shrink-0" />
-                <span className="text-muted-foreground">{attendance.note}</span>
-              </div>
-            )}
-            <div className="flex items-center gap-1 text-muted-foreground">
-              <User className="w-3 h-3" />
-              <span>Recorded by: {attendance.recordedBy}</span>
-            </div>
-            <div className="text-muted-foreground">
-              Updated: {new Date(attendance.updatedAt).toLocaleTimeString()}
-            </div>
-          </div>
-        )}
-
-        {calendarDay.status === 'future' && (
-          <div className="text-xs text-muted-foreground">
-            Attendance not yet recorded
-          </div>
-        )}
-
-        {calendarDay.status === 'no-school' && !calendarDay.isCurrentMonth && (
-          <div className="text-xs text-muted-foreground">Different month</div>
-        )}
-      </div>
-    );
-  }, []);
+  const getStatusConfig = (status: CalendarDay['status']) =>
+    STATUS_CONFIG[status];
 
   return (
-    <TooltipProvider delayDuration={300}>
-      <Card
-        className={cn(
-          'border-0 bg-gradient-to-br from-card via-card to-blue-50/20 dark:to-blue-950/20 shadow-lg',
-          className
-        )}
-      >
-        <CardHeader className="pb-4">
-          <div className="flex items-center justify-between">
-            <div className="space-y-1">
-              <CardTitle className="flex items-center gap-2 text-lg">
+    <Card className={cn('w-full mx-auto', className)}>
+      <CardContent>
+        {/* Header */}
+        <div className="mt-2">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h1 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
                 Attendance Calendar
-              </CardTitle>
-              {studentName && (
-                <p className="text-sm text-muted-foreground">
-                  {studentName}'s attendance journey
-                </p>
-              )}
+              </h1>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                Track your daily attendance and performance
+              </p>
             </div>
 
             <div className="flex items-center gap-2">
+              <Select value={filterStatus} onValueChange={setFilterStatus}>
+                <SelectTrigger className="w-28 h-8 text-xs">
+                  <Filter className="h-3 w-3 mr-1" />
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All</SelectItem>
+                  <SelectItem value="present">Present</SelectItem>
+                  <SelectItem value="absent">Absent</SelectItem>
+                  <SelectItem value="late">Late</SelectItem>
+                </SelectContent>
+              </Select>
+
+              {onExportData && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={onExportData}
+                  className="h-8 text-xs bg-transparent"
+                >
+                  <Download className="h-3 w-3 mr-1" />
+                  Export
+                </Button>
+              )}
+            </div>
+          </div>
+
+          {/* Stats */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6 transition-all duration-300">
+            <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-3 sm:p-4 shadow-sm hover:shadow-md transition-shadow">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wide font-medium">
+                    Present
+                  </p>
+                  <p className="text-xl sm:text-2xl font-bold text-emerald-600 dark:text-emerald-400">
+                    {monthlyStats.presentDays}
+                  </p>
+                </div>
+                <div className="p-2 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg">
+                  <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-3 sm:p-4 shadow-sm hover:shadow-md transition-shadow">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wide font-medium">
+                    Absent
+                  </p>
+                  <p className="text-xl sm:text-2xl font-bold text-red-600 dark:text-red-400">
+                    {monthlyStats.absentDays}
+                  </p>
+                </div>
+                <div className="p-2 bg-red-100 dark:bg-red-900/30 rounded-lg">
+                  <XCircle className="h-4 w-4 text-red-600 dark:text-red-400" />
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-3 sm:p-4 shadow-sm hover:shadow-md transition-shadow">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wide font-medium">
+                    Late
+                  </p>
+                  <p className="text-xl sm:text-2xl font-bold text-amber-600 dark:text-amber-400">
+                    {monthlyStats.lateDays}
+                  </p>
+                </div>
+                <div className="p-2 bg-amber-100 dark:bg-amber-900/30 rounded-lg">
+                  <Clock className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-3 sm:p-4 shadow-sm hover:shadow-md transition-shadow">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wide font-medium">
+                    Rate
+                  </p>
+                  <p className="text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-400">
+                    {monthlyStats.attendanceRate}%
+                  </p>
+                </div>
+                <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+                  <TrendingUp className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Calendar */}
+        <Card className="">
+          <CardHeader className="pb-4">
+            <div className="flex items-center justify-between">
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => navigateMonth('prev')}
-                className="hover:bg-blue-50 hover:border-blue-200 transition-colors"
+                className="h-8 w-8 p-0"
               >
-                <ChevronLeft className="w-4 h-4" />
+                <ChevronLeft className="h-4 w-4" />
               </Button>
 
-              <div className="text-center min-w-[140px]">
-                <div className="text-sm font-semibold">
-                  {MONTH_NAMES[currentMonth]} {currentYear}
-                </div>
-                <div className="text-xs text-muted-foreground">
-                  {monthStats.percentage}% attendance
-                </div>
+              <div className="flex items-center gap-2">
+                <Select
+                  value={selectedMonth.toString()}
+                  onValueChange={(value) =>
+                    setSelectedMonth(Number.parseInt(value))
+                  }
+                >
+                  <SelectTrigger className="w-32 h-8 text-sm">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {MONTHS.map((month, index) => (
+                      <SelectItem key={month} value={index.toString()}>
+                        {month}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                <Select
+                  value={selectedYear.toString()}
+                  onValueChange={(value) =>
+                    setSelectedYear(Number.parseInt(value))
+                  }
+                >
+                  <SelectTrigger className="w-20 h-8 text-sm">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {Array.from(
+                      { length: 10 },
+                      (_, i) => new Date().getFullYear() - 5 + i
+                    ).map((year) => (
+                      <SelectItem key={year} value={year.toString()}>
+                        {year}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={resetToCurrentMonth}
+                  className="h-8 w-8 p-0"
+                >
+                  <RotateCcw className="h-3 w-3" />
+                </Button>
               </div>
 
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => navigateMonth('next')}
-                className="hover:bg-blue-50 hover:border-blue-200 transition-colors"
+                className="h-8 w-8 p-0"
               >
-                <ChevronRight className="w-4 h-4" />
+                <ChevronRight className="h-4 w-4" />
               </Button>
             </div>
-          </div>
+          </CardHeader>
 
-          {/* Month Statistics */}
-          <div className="flex items-center justify-center gap-4 pt-2">
-            <div className="flex items-center gap-1 text-xs">
-              <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
-              <span>{monthStats.presentDays} Present</span>
-            </div>
-            <div className="flex items-center gap-1 text-xs">
-              <div className="w-2 h-2 rounded-full bg-amber-500"></div>
-              <span>{monthStats.lateDays} Late</span>
-            </div>
-            <div className="flex items-center gap-1 text-xs">
-              <div className="w-2 h-2 rounded-full bg-red-500"></div>
-              <span>{monthStats.absentDays} Absent</span>
-            </div>
-          </div>
-        </CardHeader>
-
-        <CardContent className="space-y-4">
-          {/* Legend */}
-          <div className="flex flex-wrap justify-center gap-2 text-xs">
-            {Object.entries(STATUS_CONFIG).map(([status, config]) => {
-              if (status === 'today') return null;
-              return (
-                <Badge
-                  key={status}
-                  variant={config.badgeVariant}
-                  className="text-xs"
+          <CardContent className="p-0">
+            <div className="grid grid-cols-7 border-b border-gray-200 dark:border-gray-800">
+              {WEEKDAYS.map((day) => (
+                <div
+                  key={day}
+                  className="p-3 pb-4 text-center text-xs font-medium  uppercase tracking-wide  "
                 >
-                  <config.icon className="w-3 h-3 mr-1" />
-                  {config.label}
-                </Badge>
-              );
-            })}
-          </div>
+                  {day}
+                </div>
+              ))}
+            </div>
+            {/* <Separator className="h-[2px] w-full rounded-lg " /> */}
 
-          {/* Calendar Grid */}
-          <div className="grid grid-cols-7 gap-1 p-2 bg-white/50 dark:bg-gray-900/50 rounded-lg">
-            {/* Day headers */}
-            {DAY_NAMES.map((day) => (
-              <div
-                key={day}
-                className="p-3 text-center text-xs font-semibold text-muted-foreground uppercase tracking-wide"
-              >
-                {day}
-              </div>
-            ))}
+            <div className="grid grid-cols-7 my-3 space-x-2 space-y-2">
+              {filteredCalendarDays.map((day, index) => {
+                const config = getStatusConfig(day.status);
+                const IconComponent = config.icon;
 
-            {/* Calendar days */}
-            {calendarData.map((calendarDay, index) => {
-              if (calendarDay.day === null) {
-                return <div key={index} className="p-3"></div>;
-              }
+                return (
+                  <HoverCard key={index} openDelay={200}>
+                    <HoverCardTrigger asChild>
+                      <div
+                        className={cn(
+                          'relative h-16 rounded-sm shadow-sm cursor-pointer transition-colors',
+                          config.className,
+                          config.darkClassName,
+                          day.isCurrentMonth ? 'opacity-100' : 'opacity-40',
+                          day.isToday && 'ring-2 ring-blue-500 ring-inset',
+                          filterStatus !== 'all' &&
+                            day.status !== filterStatus &&
+                            'opacity-30'
+                        )}
+                        onClick={() => handleDateClick(day)}
+                      >
+                        <div className="p-2 h-full flex flex-col justify-between">
+                          <div className="flex items-center justify-between">
+                            <span
+                              className={cn(
+                                'text-sm font-medium ',
+                                day.isToday && 'font-semibold'
+                              )}
+                            >
+                              {day.dayNumber}
+                            </span>
+                            {day.attendance && (
+                              <IconComponent className="h-3 w-3 opacity-60" />
+                            )}
+                          </div>
 
-              const config = STATUS_CONFIG[calendarDay.status];
-              const isHovered = hoveredDay === calendarDay.day;
-
-              return (
-                <Tooltip key={calendarDay.day}>
-                  <TooltipTrigger asChild>
-                    <div
-                      className={cn(
-                        'relative p-3 text-center text-sm border rounded-lg cursor-pointer transition-all duration-300',
-                        'hover:scale-110 hover:shadow-sm hover:z-10 active:scale-95',
-                        config.color,
-                        isHovered && 'scale-110 shadow-lg z-10',
-                        calendarDay.isToday && 'font-bold ',
-                        !calendarDay.isCurrentMonth && 'opacity-30'
-                      )}
-                      onClick={() => handleDateClick(calendarDay)}
-                      onMouseEnter={() => setHoveredDay(calendarDay.day)}
-                      onMouseLeave={() => setHoveredDay(null)}
-                    >
-                      <span className="relative z-10">{calendarDay.day}</span>
-
-                      {/* Status indicator */}
-                      {calendarDay.attendance && (
-                        <div className="absolute top-1 right-1">
-                          <config.icon className="w-3 h-3 opacity-70" />
+                          {day.isToday && (
+                            <div className="flex justify-center">
+                              <div className="w-1.5 h-1.5 bg-blue-500 rounded-full" />
+                            </div>
+                          )}
                         </div>
-                      )}
+                      </div>
+                    </HoverCardTrigger>
 
-                      {/* Today indicator */}
-                      {calendarDay.isToday && (
-                        <div className="absolute inset-0 rounded-lg  border-blue-600 animate-pulse"></div>
-                      )}
+                    <HoverCardContent className="w-72 p-4" side="top">
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                          <h4 className="font-medium text-sm">
+                            {format(day.date, 'EEEE, MMMM d, yyyy')}
+                          </h4>
+                          <Badge
+                            variant={config.badgeVariant}
+                            className="text-xs"
+                          >
+                            <IconComponent className="h-3 w-3 mr-1" />
+                            {config.label}
+                          </Badge>
+                        </div>
 
-                      {/* Hover effect */}
-                      {isHovered && (
-                        <div className="absolute inset-0 rounded-lg bg-white/20 dark:bg-black/20"></div>
-                      )}
-                    </div>
-                  </TooltipTrigger>
+                        {day.attendance ? (
+                          <div className="space-y-2">
+                            <div className="grid grid-cols-2 gap-3 text-sm">
+                              <div>
+                                <span className="text-gray-600 dark:text-gray-400 text-xs">
+                                  Status
+                                </span>
+                                <p className="font-medium">
+                                  {day.attendance.status}
+                                </p>
+                              </div>
+                              <div>
+                                <span className="text-gray-600 dark:text-gray-400 text-xs">
+                                  Present
+                                </span>
+                                <p className="font-medium">
+                                  {day.attendance.present ? 'Yes' : 'No'}
+                                </p>
+                              </div>
+                            </div>
 
-                  <TooltipContent
-                    side="top"
-                    className="max-w-xs p-3 bg-white dark:bg-gray-900 border shadow-xl"
-                  >
-                    {formatTooltipContent(calendarDay)}
-                  </TooltipContent>
-                </Tooltip>
-              );
-            })}
-          </div>
+                            {day.attendance.note && (
+                              <div>
+                                <span className="text-gray-600 dark:text-gray-400 text-xs">
+                                  Note
+                                </span>
+                                <p className="text-sm mt-1 p-2 bg-gray-50 dark:bg-gray-800 rounded text-gray-700 dark:text-gray-300">
+                                  {day.attendance.note}
+                                </p>
+                              </div>
+                            )}
 
-          {/* Quick Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 pt-2">
-            <div className="text-center p-2 bg-emerald-50 dark:bg-emerald-950 rounded-lg">
-              <div className="text-lg font-bold text-emerald-700 dark:text-emerald-300">
-                {monthStats.presentDays}
-              </div>
-              <div className="text-xs text-emerald-600 dark:text-emerald-400">
-                Present
-              </div>
+                            <div className="text-xs text-gray-500 dark:text-gray-400 space-y-1 pt-2 border-t border-gray-200 dark:border-gray-700">
+                              <p>Recorded by: {day.attendance.recordedBy}</p>
+                              <p>
+                                Updated:{' '}
+                                {format(
+                                  new Date(day.attendance.updatedAt),
+                                  "MMM d, yyyy 'at' h:mm a"
+                                )}
+                              </p>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="text-sm text-gray-500 dark:text-gray-400">
+                            {day.isFuture
+                              ? 'Future date - attendance not recorded yet'
+                              : day.status === 'weekend'
+                                ? 'Weekend - no school'
+                                : 'No attendance data available'}
+                          </div>
+                        )}
+                      </div>
+                    </HoverCardContent>
+                  </HoverCard>
+                );
+              })}
             </div>
+          </CardContent>
+        </Card>
 
-            <div className="text-center p-2 bg-amber-50 dark:bg-amber-950 rounded-lg">
-              <div className="text-lg font-bold text-amber-700 dark:text-amber-300">
-                {monthStats.lateDays}
-              </div>
-              <div className="text-xs text-amber-600 dark:text-amber-400">
-                Late
-              </div>
-            </div>
-
-            <div className="text-center p-2 bg-red-50 dark:bg-red-950 rounded-lg">
-              <div className="text-lg font-bold text-red-700 dark:text-red-300">
-                {monthStats.absentDays}
-              </div>
-              <div className="text-xs text-red-600 dark:text-red-400">
-                Absent
-              </div>
-            </div>
-
-            <div className="text-center p-2 bg-blue-50 dark:bg-blue-950 rounded-lg">
-              <div className="text-lg font-bold text-blue-700 dark:text-blue-300">
-                {monthStats.percentage}%
-              </div>
-              <div className="text-xs text-blue-600 dark:text-blue-400">
-                Rate
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    </TooltipProvider>
+        {/* Legend */}
+        <div className="flex items-center justify-center gap-2 sm:gap-4 mt-6 pt-4 border-t border-gray-200  flex-wrap">
+          {Object.entries(STATUS_CONFIG).map(([status, config]) => {
+            const IconComponent = config.icon;
+            return (
+              <Badge
+                key={status}
+                variant={config.badgeVariant}
+                className="text-xs"
+              >
+                <IconComponent className="h-3 w-3 mr-1" />
+                {config.label}
+              </Badge>
+            );
+          })}
+        </div>
+      </CardContent>
+    </Card>
   );
 }

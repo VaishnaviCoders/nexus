@@ -13,7 +13,7 @@ import { z } from 'zod';
 const RETRY_ATTEMPTS = 3;
 const RETRY_DELAY = 1000; // 1 second
 
-const redirectUrl = 'http://localhost:3000/dashboard/';
+const redirectUrl = `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/students`;
 
 // Utility function for delays
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));

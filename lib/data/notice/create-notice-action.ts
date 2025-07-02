@@ -4,7 +4,6 @@ import prisma from '@/lib/db';
 import { getOrganizationId } from '@/lib/organization';
 import { CreateNoticeFormSchema } from '@/lib/schemas';
 import { currentUser } from '@clerk/nextjs/server';
-import { redirect } from 'next/navigation';
 import { z } from 'zod';
 
 export const createNotice = async (

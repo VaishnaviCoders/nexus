@@ -245,7 +245,7 @@ export default function OrganizationConfig({
                           {...field}
                         />
                         <span className="text-sm text-muted-foreground bg-muted px-3 py-2 border border-r-0 rounded-l-md">
-                          .nexus.com
+                          .shiksha.cloud
                         </span>
                       </div>
                     </FormControl>

@@ -32,28 +32,28 @@ const AdminDashboard = async () => {
   // const data = mockMonthlyFeeCollectionData;
   return (
     <div className="space-y-6 ">
-      <Card className="flex items-center justify-between p-6">
+      <Card className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-6">
         <div>
           <CardTitle className="text-lg">Admin Dashboard</CardTitle>
           <CardDescription>
-            {' '}
-            Dashboard for admin to manage the system{' '}
+            Dashboard for admin to manage the system
           </CardDescription>
         </div>
-        <div className="flex space-x-2">
+
+        <div className="flex w-full gap-2">
           <AiMonthlyReport data={data} />
 
           <Dialog>
             <DialogTrigger asChild>
-              <Button size="sm" variant={'default'}>
+              <Button size="sm" variant="default">
                 Quick Actions
               </Button>
             </DialogTrigger>
 
-            <DialogContent className="min-w-7xl">
+            <DialogContent className="min-w-[90vw] sm:min-w-2xl">
               <DialogHeader>
                 <DialogTitle>Quick Actions</DialogTitle>
-                <DialogDescription></DialogDescription>
+                <DialogDescription />
                 <AdminQuickActions />
               </DialogHeader>
             </DialogContent>

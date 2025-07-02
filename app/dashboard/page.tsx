@@ -1,6 +1,4 @@
-// app/dashboard/page.tsx
 import { auth } from '@clerk/nextjs/server';
-import { redirect } from 'next/navigation';
 
 import AdminDashboard from '@/components/dashboard/admin/AdminDashboard';
 import ParentDashboard from '@/components/dashboard/parent/ParentDashboard';

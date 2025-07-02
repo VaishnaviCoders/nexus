@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import {
   GraduationCap,
   Search,
@@ -122,94 +122,98 @@ export function GradesLayoutClient({ initialGrades }: GradesLayoutClientProps) {
         </div>
 
         {/* Grades List */}
-        <div className="space-y-3 ">
-          {filteredGrades.length === 0 ? (
-            <div className="text-center py-8">
-              <GraduationCap className="h-12 w-12 text-slate-400 mx-auto mb-3" />
-              <p className="text-slate-600 dark:text-slate-400 font-medium">
-                {searchTerm ? 'No grades found' : 'No grades created yet'}
-              </p>
-              <p className="text-sm text-slate-500 dark:text-slate-500 mt-1">
-                {searchTerm
-                  ? 'Try a different search term'
-                  : 'Create your first grade to get started'}
-              </p>
-            </div>
-          ) : (
-            filteredGrades.map((grade) => {
-              const isActive = pathname.includes(grade.id);
+        <Suspense fallback={<GradeListingSkeleton />}>
+          <div className="space-y-3 ">
+            {filteredGrades.length === 0 ? (
+              <div className="text-center py-8">
+                <GraduationCap className="h-12 w-12 text-slate-400 mx-auto mb-3" />
+                <p className="text-slate-600 dark:text-slate-400 font-medium">
+                  {searchTerm ? 'No grades found' : 'No grades created yet'}
+                </p>
+                <p className="text-sm text-slate-500 dark:text-slate-500 mt-1">
+                  {searchTerm
+                    ? 'Try a different search term'
+                    : 'Create your first grade to get started'}
+                </p>
+              </div>
+            ) : (
+              filteredGrades.map((grade) => {
+                const isActive = pathname.includes(grade.id);
 
-              return (
-                <Card
-                  key={grade.id}
-                  className={cn(
-                    'transition-all duration-200 cursor-pointer group hover:shadow-md',
-                    isActive
-                      ? 'bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/50 dark:to-indigo-950/50 border-blue-200 dark:border-blue-700 shadow-sm'
-                      : 'hover:bg-slate-50 dark:hover:border-blue-700   '
-                  )}
-                  onClick={() => router.push(`/dashboard/grades/${grade.id}`)}
-                >
-                  <CardContent className="p-4">
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-2">
-                          <h3 className="font-semibold text-slate-900 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                            {grade.grade}
-                          </h3>
-                          {isActive && (
-                            <Badge
-                              variant="secondary"
-                              className="bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300"
-                            >
-                              Active
-                            </Badge>
-                          )}
+                return (
+                  <Card
+                    key={grade.id}
+                    className={cn(
+                      'transition-all duration-200 cursor-pointer group hover:shadow-md',
+                      isActive
+                        ? 'bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/50 dark:to-indigo-950/50 border-blue-200 dark:border-blue-700 shadow-sm'
+                        : 'hover:bg-slate-50 dark:hover:border-blue-700   '
+                    )}
+                    onClick={() => router.push(`/dashboard/grades/${grade.id}`)}
+                  >
+                    <CardContent className="p-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-2">
+                            <h3 className="font-semibold text-slate-900 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                              {grade.grade}
+                            </h3>
+                            {isActive && (
+                              <Badge
+                                variant="secondary"
+                                className="bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300"
+                              >
+                                Active
+                              </Badge>
+                            )}
+                          </div>
+
+                          <div className="flex items-center gap-4 text-sm text-slate-600 dark:text-slate-400">
+                            <div className="flex items-center gap-1">
+                              <BookOpen className="h-3 w-3" />
+                              <span>{grade.sectionCount} sections</span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <Users className="h-3 w-3" />
+                              <span>{grade.studentCount} students</span>
+                            </div>
+                          </div>
                         </div>
 
-                        <div className="flex items-center gap-4 text-sm text-slate-600 dark:text-slate-400">
-                          <div className="flex items-center gap-1">
-                            <BookOpen className="h-3 w-3" />
-                            <span>{grade.sectionCount} sections</span>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <Users className="h-3 w-3" />
-                            <span>{grade.studentCount} students</span>
-                          </div>
+                        <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 hover:bg-blue-100 dark:hover:bg-blue-900/50"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              router.push(`/dashboard/grades/${grade.id}`);
+                            }}
+                          >
+                            <Settings2 className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 hover:bg-red-100 dark:hover:bg-red-900/50 text-red-600 dark:text-red-400"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              router.push(
+                                `/dashboard/grades/${grade.id}/delete`
+                              );
+                            }}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
                         </div>
                       </div>
-
-                      <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8 hover:bg-blue-100 dark:hover:bg-blue-900/50"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            router.push(`/dashboard/grades/${grade.id}`);
-                          }}
-                        >
-                          <Settings2 className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8 hover:bg-red-100 dark:hover:bg-red-900/50 text-red-600 dark:text-red-400"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            router.push(`/dashboard/grades/${grade.id}/delete`);
-                          }}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              );
-            })
-          )}
-        </div>
+                    </CardContent>
+                  </Card>
+                );
+              })
+            )}
+          </div>
+        </Suspense>
       </CardContent>
     </Card>
   );

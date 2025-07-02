@@ -62,17 +62,6 @@ export const deleteNotice = async (noticeId: string) => {
   revalidatePath('/dashboard/notice');
 };
 
-const mapTargetAudienceToRole = (audience: string): Role | null => {
-  const audienceMap: { [key: string]: Role } = {
-    admins: Role.ADMIN,
-    students: Role.STUDENT,
-    teachers: Role.TEACHER,
-    parents: Role.PARENT,
-    staff: Role.TEACHER, // Assuming staff maps to TEACHER role
-  };
-  return audienceMap[audience.toLowerCase()] || null;
-};
-
 export const syncUserWithOrg = async () => {
   const { orgId, orgRole, orgSlug } = await auth();
 
@@ -148,155 +137,43 @@ export const syncUserWithOrg = async () => {
   console.log('✅ Synced user:', syncedUser);
 };
 
-// const getRecipientEmails = async (
-//   organizationId: string,
-//   targetAudience: string[]
-// ): Promise<string[]> => {
-//   let rolesToInclude: Role[] = [];
-
-//   if (targetAudience.includes('all')) {
-//     rolesToInclude = [Role.STUDENT, Role.TEACHER, Role.PARENT, Role.ADMIN];
-//   } else {
-//     rolesToInclude = targetAudience
-//       .map(mapTargetAudienceToRole)
-//       .filter((role): role is Role => role !== null);
-//   }
-
-//   const recipients = await prisma.user.findMany({
-//     where: {
-//       organizationId,
-//       role: {
-//         in: rolesToInclude,
-//       },
-//     },
-//     select: {
-//       email: true,
-//     },
-//   });
-
-//   return recipients.map((user) => user.email);
-// };
-
-// const sendNotifications = async (
-//   notice: any,
-//   recipientEmails: string[],
-//   user: User
-// ) => {
-//   const resend = new Resend(process.env.RESEND_API_KEY);
-//   const knock = new Knock(process.env.KNOCK_API_SECRET);
-//   const [knockResponse, resendResponse] = await Promise.all([
-//     knock.workflows.trigger('notice-created', {
-//       recipients: recipientEmails.map((email) => ({
-//         id: user.id,
-//         email,
-//         name: user.firstName || '',
-//       })),
-//       data: {
-//         title: notice.title,
-//         email: user.emailAddresses[0].emailAddress,
-//         name: user.firstName,
-//       },
-//     }),
-//     resend.emails.send({
-//       from: 'onboarding@resend.dev',
-//       to: recipientEmails,
-//       subject: `Notice: ${notice.title}`,
-//       react: NoticeEmailTemplate({
-//         title: notice.title,
-//         organizationImage:
-//           notice.Organization?.organizationLogo ||
-//           'https://supabase.com/dashboard/img/supabase-logo.svg',
-//         content: notice.content,
-//         noticeType: notice.noticeType,
-//         startDate: notice.startDate,
-//         endDate: notice.endDate,
-//         targetAudience: notice.targetAudience,
-//         organizationName: notice.Organization?.name || '',
-//         publishedBy: notice.publishedBy,
-//         noticeUrl: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/notices/${notice.id}`,
-//       }),
-//     }),
-//   ]);
-//   console.log('Notifications sent:', { knockResponse, resendResponse });
-// };
-export const toggleNoticeApproval = async (
-  noticeId: string,
-  currentStatus: boolean
-) => {
-  console.log('clicked toggleNoticeApproval', noticeId);
-
-  const user = await currentUser();
-  if (!user) return;
-  const notice = await prisma.notice.update({
-    where: {
-      id: noticeId,
-    },
-    data: {
-      isNoticeApproved: !currentStatus,
-    },
-    include: {
-      Organization: true,
-    },
-  });
-
-  // Check can we send emails
-  // if (!currentStatus && notice.isNoticeApproved && notice.emailNotification) {
-  //   const recipientEmails = await getRecipientEmails(
-  //     notice.organizationId,
-  //     notice.targetAudience
-  //   );
-  //   if (recipientEmails.length > 0) {
-  //     await sendNotifications(notice, recipientEmails, user);
-  //   }
-  // }
-  revalidatePath('/dashboard/notice');
-};
-
-export const approveOrRejectNotice = async (
-  noticeId: string,
-  approve: boolean
-) => {
-  try {
-    const user = await currentUser();
-    if (!user) {
-      throw new Error('Authentication required');
-    }
-
-    const notice = await prisma.notice.update({
-      where: {
-        id: noticeId,
-      },
-      data: {
-        isNoticeApproved: approve,
-      },
-      include: {
-        Organization: true,
-      },
-    });
-
-    // If notice is approved and email notifications are enabled,
-    // we could trigger email sending here
-    // This is commented out as per the original code
-    /*
-    if (approve && notice.emailNotification) {
-      const recipientEmails = await getRecipientEmails(
-        notice.organizationId,
-        notice.targetAudience
-      );
-      
-      if (recipientEmails.length > 0) {
-        await sendNotifications(notice, recipientEmails, user);
-      }
-    }
-    */
-
-    revalidatePath('/dashboard/notices');
-    return notice;
-  } catch (error) {
-    console.error('Failed to update notice approval status:', error);
-    return undefined;
+const mapTargetAudienceToRole = (audience: string): Role | null => {
+  switch (audience.toLowerCase()) {
+    case 'students':
+      return Role.STUDENT;
+    case 'teachers':
+      return Role.TEACHER;
+    case 'parents':
+      return Role.PARENT;
+    case 'admins':
+      return Role.ADMIN;
+    default:
+      return null;
   }
 };
+
+export async function getNoticeRecipients(
+  organizationId: string,
+  targetAudience: string[]
+): Promise<string[]> {
+  const rolesToInclude = targetAudience.includes('all')
+    ? [Role.STUDENT, Role.TEACHER, Role.PARENT, Role.ADMIN]
+    : targetAudience
+        .map(mapTargetAudienceToRole)
+        .filter((role): role is Role => role !== null);
+
+  if (rolesToInclude.length === 0) return [];
+
+  const users = await prisma.user.findMany({
+    where: {
+      organizationId,
+      role: { in: rolesToInclude },
+    },
+    select: { email: true },
+  });
+
+  return users.map((u) => u.email!.trim());
+}
 
 // * CLASSES && GRADES
 

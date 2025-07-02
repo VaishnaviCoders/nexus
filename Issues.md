@@ -4,6 +4,9 @@
 4. How to determine ABC students Have 2 parent so which parent Should Get All Notification || At Student Onboarding or Provide Option To Student Set Primary Parent ?
 5. Right now, we don’t have a model that defines academic year ranges per class/section or grade. So when calculating working days, attendance, or anything date-based, the system doesn’t know:
 6. New User Sign_up Using Clerk => Database not updated with the user and user's organization
+7. Need To manage Guest User : Signin By Clerk but not added in any organization or have any role in`organization
+
+As a software engineer, I've always been passionate about building things that make people's lives easier. There's something incredibly rewarding about knowing that the code I write can help someone accomplish their daily tasks more efficiently.
 
 Website Pending
 
@@ -19,6 +22,7 @@ Website Pending
 - What Admin/ Teacher Get benefits page
 - 101 Reason To buy software
 - Who can buy software : School || Collages || Coaching Classes
+
 - Pricing Model : 12K Per Month || 79 INR Per Student/Month
 
 Revenue Model

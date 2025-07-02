@@ -744,8 +744,7 @@ function FeeTable({
 function FeeTableHeader() {
   return (
     <TableRow>
-      <TableHead className="w-[100px]">Fee ID</TableHead>
-      <TableHead>Student</TableHead>
+      <TableHead>Student Name</TableHead>
       <TableHead>Class</TableHead>
       <TableHead>Category</TableHead>
       <TableHead className="text-right">Amount</TableHead>
@@ -761,7 +760,6 @@ interface FeeTableRowProps {
 function FeeTableRow({ record }: FeeTableRowProps) {
   return (
     <TableRow className="group">
-      <TableCell className="font-medium">{record.fee.id.slice(0, 8)}</TableCell>
       <TableCell className="whitespace-nowrap">
         <div className="font-medium">{`${record.student.firstName} ${record.student.lastName}`}</div>
         <div className="text-xs text-muted-foreground">

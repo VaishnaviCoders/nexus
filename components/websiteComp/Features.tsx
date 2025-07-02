@@ -67,8 +67,8 @@ const Features = () => {
         </h1>
         <p className="max-w-lg mx-auto mt-6 text-center text-neutral-500">
           Tired of messy spreadsheets, lost notices, or chasing parents for
-          dues? Nexus turns your daily school headaches into smooth, automated
-          workflows.
+          dues? <strong className="gradient-text"> Shiksha.Cloud</strong> turns
+          your daily school headaches into smooth, automated workflows.
         </p>
 
         <p className="text-center text-sm text-muted-foreground mt-4">
@@ -147,25 +147,27 @@ const Features = () => {
           <div className="bottom-0 flex items-center w-full mt-20 pb- justify-evenly lg:mt-auto">
             <div className="flex flex-col items-center">
               <h1 className="text-2xl font-medium text-transparent md:text-4xl bg-gradient-to-b from-neutral-950 dark:from-neutral-50 to-neutral-500 dark:to-neutral-600 bg-clip-text">
-                5+
+                7+
               </h1>
               <span className="text-sm text-muted-foreground">
-                Organizations
+                Schools & Coaching Institutes
               </span>
             </div>
             <div className="flex flex-col items-center">
               <h1 className="text-2xl font-medium text-transparent md:text-4xl bg-gradient-to-b from-neutral-950 dark:from-neutral-50 to-neutral-500 dark:to-neutral-600 bg-clip-text">
-                21.2k
+                1,760+
               </h1>
               <span className="text-sm text-muted-foreground">
-                Active Users
+                Students Tracked Daily
               </span>
             </div>
             <div className="flex flex-col items-center">
               <h1 className="text-2xl font-medium text-transparent md:text-4xl bg-gradient-to-b from-neutral-950 dark:from-neutral-50 to-neutral-500 dark:to-neutral-600 bg-clip-text">
-                10.5k
+                ₹8.4L+
               </h1>
-              <span className="text-sm text-muted-foreground">Projects</span>
+              <span className="text-sm text-muted-foreground">
+                Fees Processed
+              </span>
             </div>
           </div>
         </div>

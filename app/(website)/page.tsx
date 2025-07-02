@@ -22,8 +22,39 @@ import DotPattern from '@/components/ui/dot-pattern';
 import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
 import IntegrationComponent from '../../components/websiteComp/IntegrationComponent';
 import Link from 'next/link';
-import { Shield, ShieldCheck, UserCircleIcon } from 'lucide-react';
+import { ShieldCheck, UserCircleIcon } from 'lucide-react';
+import ProblemAndSolution from '@/components/websiteComp/ProblemAndSolution';
+import { Metadata } from 'next';
 // import MagicBentoGrid from '../components/websiteComp/magic-bento';
+
+export const metadata: Metadata = {
+  title: 'Shiksha.cloud – Modern School Management CRM',
+  description:
+    'All-in-one platform to manage students, fees, attendance, and reports. Built for schools, colleges, and coaching institutes.',
+  keywords: [
+    'school management software',
+    'student information system',
+    'fee management',
+    'attendance tracker',
+    'Shiksha cloud CRM',
+  ],
+  openGraph: {
+    title: 'Shiksha.cloud',
+    description: 'Streamline your school operations with Shiksha.cloud',
+    url: 'https://shiksha.cloud',
+    siteName: 'Shiksha.cloud',
+    images: [
+      {
+        url: 'https://shiksha.cloud/og-banner.png',
+        width: 1200,
+        height: 630,
+        alt: 'Shiksha.cloud - School CRM',
+      },
+    ],
+    locale: 'en_IN',
+    type: 'website',
+  },
+};
 
 export default async function IndexPage() {
   return (
@@ -32,7 +63,7 @@ export default async function IndexPage() {
       <header className="flex items-center justify-between my-3">
         <div className="flex items-center space-x-2">
           <ShieldCheck className="h-6 w-6 text-green-400" />
-          <h1>NEXUS CRM</h1>
+          <h1>Shiksha Cloud CRM</h1>
         </div>
 
         <div className="flex items-center space-x-2">
@@ -58,7 +89,7 @@ export default async function IndexPage() {
         </div>
       </header>
 
-      <div className="relative flex h-[500px]  w-full flex-col items-center justify-center overflow-hidden rounded-lg bg-background">
+      {/* <div className="relative flex h-[500px]  w-full flex-col items-center justify-center overflow-hidden rounded-lg bg-background">
         <p className="z-10 whitespace-pre-wrap text-center text-5xl font-medium tracking-tighter text-black dark:text-white">
           Everything Your School Needs — In One Smart CRM
         </p>
@@ -68,13 +99,13 @@ export default async function IndexPage() {
           characterSet=". "
         >
           Automate Admin, Engage Students, Empower Educators
-        </TextScramble>
+        </TextScramble> */}
 
-        {/* <div className="h-5">
+      {/* <div className="h-5">
           <TextEffectWithExit />
         </div> */}
 
-        <div className="my-4 z-10 flex items-center justify-between gap-3">
+      {/* <div className="my-4 z-10 flex items-center justify-between gap-3">
           <Dialog>
             <DialogTrigger asChild>
               <Button>Get Early Access</Button>
@@ -97,7 +128,8 @@ export default async function IndexPage() {
             '[mask-image:radial-gradient(300px_circle_at_center,white,transparent)]'
           )}
         />
-      </div>
+      </div> */}
+      <ProblemAndSolution />
       <BentoGrid />
 
       <Features />

@@ -1,4 +1,5 @@
 'use server';
+
 import prisma from '@/lib/db';
 import { auth } from '@clerk/nextjs/server';
 import { cache } from 'react';
@@ -11,10 +12,9 @@ const getStudentInfo = cache(async () => {
     where: { clerkId: userId },
     include: {
       student: {
-        include: {
-          grade: true,
-          section: true,
-          organization: true,
+        select: {
+          id: true,
+          organizationId: true,
         },
       },
     },
@@ -23,20 +23,32 @@ const getStudentInfo = cache(async () => {
   if (!user?.student) throw new Error('Student profile not found');
   return user.student;
 });
+
 export async function getStudentAttendanceStatsCards() {
   const student = await getStudentInfo();
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
+  const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+  const startOfYear = new Date(today.getFullYear(), 0, 1);
+  const last30Days = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
+
   const [
     todayAttendance,
-    thisMonthStats,
-    thisYearStats,
-    overallStats,
+    // This month
+    thisMonthTotal,
+    thisMonthPresent,
+    // This year
+    thisYearTotal,
+    thisYearPresent,
+    // Overall
+    overallTotal,
+    overallPresent,
+    // Recent attendance
     recentAttendance,
+    // Monthly trend (grouped by date)
     monthlyTrend,
   ] = await Promise.all([
-    // Today's attendance
     prisma.studentAttendance.findUnique({
       where: {
         studentId_date: {
@@ -47,115 +59,109 @@ export async function getStudentAttendanceStatsCards() {
     }),
 
     // This month stats
-    prisma.studentAttendance.aggregate({
+    prisma.studentAttendance.count({
       where: {
         studentId: student.id,
         date: {
-          gte: new Date(today.getFullYear(), today.getMonth(), 1),
+          gte: startOfMonth,
           lte: today,
         },
       },
-      _count: { _all: true, present: true },
+    }),
+    prisma.studentAttendance.count({
+      where: {
+        studentId: student.id,
+        status: 'PRESENT',
+        date: {
+          gte: startOfMonth,
+          lte: today,
+        },
+      },
     }),
 
     // This year stats
-    prisma.studentAttendance.aggregate({
+    prisma.studentAttendance.count({
       where: {
         studentId: student.id,
         date: {
-          gte: new Date(today.getFullYear(), 0, 1),
+          gte: startOfYear,
           lte: today,
         },
       },
-      _count: { _all: true, present: true },
+    }),
+    prisma.studentAttendance.count({
+      where: {
+        studentId: student.id,
+        status: 'PRESENT',
+        date: {
+          gte: startOfYear,
+          lte: today,
+        },
+      },
     }),
 
     // Overall stats
-    prisma.studentAttendance.aggregate({
+    prisma.studentAttendance.count({
       where: {
         studentId: student.id,
       },
-      _count: { _all: true, present: true },
+    }),
+    prisma.studentAttendance.count({
+      where: {
+        studentId: student.id,
+        status: 'PRESENT',
+      },
     }),
 
-    // Recent 30 days attendance
+    // Recent 30 days
     prisma.studentAttendance.findMany({
       where: {
         studentId: student.id,
         date: {
-          gte: new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000),
+          gte: last30Days,
           lte: today,
         },
       },
       orderBy: { date: 'desc' },
     }),
 
-    // Monthly trend for the year
+    // Monthly trend
     prisma.studentAttendance.groupBy({
       by: ['date'],
       where: {
         studentId: student.id,
         date: {
-          gte: new Date(today.getFullYear(), 0, 1),
+          gte: startOfYear,
           lte: today,
         },
       },
-      _count: { _all: true, present: true },
+      _count: true,
     }),
   ]);
 
-  // Calculate percentages
-  const todayStatus = todayAttendance?.status || 'NOT_MARKED';
-  const thisMonthPercentage =
-    thisMonthStats._count._all > 0
-      ? Math.round(
-          ((thisMonthStats._count.present || 0) / thisMonthStats._count._all) *
-            100
-        )
-      : 0;
-  const thisYearPercentage =
-    thisYearStats._count._all > 0
-      ? Math.round(
-          ((thisYearStats._count.present || 0) / thisYearStats._count._all) *
-            100
-        )
-      : 0;
-  const overallPercentage =
-    overallStats._count._all > 0
-      ? Math.round(
-          ((overallStats._count.present || 0) / overallStats._count._all) * 100
-        )
-      : 0;
-
-  // Process monthly trend
-  //   const monthlyData = processMonthlyTrend(monthlyTrend);
-
-  // Calculate streaks
-  //   const { currentStreak, longestStreak } = calculateStreaks(recentAttendance);
+  // Percentages
+  const calcPercentage = (present: number, total: number) =>
+    total > 0 ? Math.round((present / total) * 100) : 0;
 
   return {
     student,
-    todayStatus,
+    todayStatus: todayAttendance?.status || 'NOT_MARKED',
     thisMonth: {
-      totalDays: thisMonthStats._count._all,
-      presentDays: thisMonthStats._count.present || 0,
-      percentage: thisMonthPercentage,
+      totalDays: thisMonthTotal,
+      presentDays: thisMonthPresent,
+      percentage: calcPercentage(thisMonthPresent, thisMonthTotal),
     },
     thisYear: {
-      totalDays: thisYearStats._count._all,
-      presentDays: thisYearStats._count.present || 0,
-      percentage: thisYearPercentage,
+      totalDays: thisYearTotal,
+      presentDays: thisYearPresent,
+      percentage: calcPercentage(thisYearPresent, thisYearTotal),
     },
     overall: {
-      totalDays: overallStats._count._all,
-      presentDays: overallStats._count.present || 0,
-      percentage: overallPercentage,
+      totalDays: overallTotal,
+      presentDays: overallPresent,
+      percentage: calcPercentage(overallPresent, overallTotal),
     },
     recentAttendance,
-    // monthlyData,
-    // streaks: {
-    //   current: currentStreak,
-    //   longest: longestStreak,
-    // },
+    monthlyTrend,
   };
 }

@@ -28,16 +28,15 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
   DialogFooter,
 } from '@/components/ui/dialog';
 import { Separator } from '@/components/ui/separator';
-import { cn } from '@/lib/utils';
-import { approveOrRejectNotice } from '@/app/actions';
+import { formatDateIN } from '@/lib/utils';
 import { toast } from 'sonner';
 import Image from 'next/image';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Role } from '@/lib/generated/prisma';
+import { updateNoticeApprovalStatus } from '@/lib/data/notice/update-notice-approval-status';
 
 type Attachment = {
   name: string;
@@ -82,19 +81,11 @@ export default function NoticeViewer({
 
   const handleApprovalAction = async (approve: boolean) => {
     startTransition(async () => {
-      await approveOrRejectNotice(notice.id, approve);
+      await updateNoticeApprovalStatus(notice.id, approve);
       toast.success(
         approve ? 'Notice has been approved' : 'Notice has been rejected'
       );
     });
-  };
-
-  const formatDate = (date: Date) => {
-    return new Intl.DateTimeFormat('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    }).format(new Date(date));
   };
 
   const getInitials = (name: string) => {
@@ -143,7 +134,8 @@ export default function NoticeViewer({
             <CardDescription className="mt-2 flex items-center gap-2">
               <Calendar className="h-4 w-4" />
               <span>
-                {formatDate(notice.startDate)} - {formatDate(notice.endDate)}
+                {formatDateIN(notice.startDate)} -{' '}
+                {formatDateIN(notice.endDate)}
               </span>
             </CardDescription>
           </div>
@@ -354,7 +346,7 @@ export default function NoticeViewer({
         </div>
         <div className="flex items-center gap-2">
           <CalendarRange className="h-4 w-4" />
-          <span>Created: {formatDate(notice.createdAt)}</span>
+          <span>Created: {formatDateIN(notice.createdAt)}</span>
         </div>
       </CardFooter>
     </Card>
