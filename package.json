@@ -84,7 +84,6 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@types/lodash.debounce": "^4.0.9",
-    "@types/minimatch": "^6.0.0",
     "@types/node": "^20",
     "@types/papaparse": "^5.3.16",
     "@types/react": "^19.0.8",

@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "types": [],
     "target": "ES2017",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
@@ -25,10 +26,10 @@
   "include": [
     "**/*.ts",
     "**/*.tsx",
-    ".next/types/**/*.ts",
     "next-env.d.ts",
     "build/types/**/*.ts",
     "app/dashboard/attendance/analytics"
   ],
+
   "exclude": ["node_modules"]
 }
