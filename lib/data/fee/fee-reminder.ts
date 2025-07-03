@@ -177,7 +177,7 @@ const sendEmail = async (
 ) => {
   const resend = new Resend(process.env.RESEND_API_KEY);
   const resendResponse = await resend.emails.send({
-    from: 'onboarding@resend.dev',
+    from: 'no-reply@shiksha.cloud',
     to: recipientEmail,
     subject: subject,
     react: message,

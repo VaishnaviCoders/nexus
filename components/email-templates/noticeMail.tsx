@@ -13,7 +13,7 @@ import {
   Img,
 } from '@react-email/components';
 
-interface NoticeEmailTempProps {
+interface NoticeEmailTemplateProps {
   title: string;
   content: string;
   noticeType: string;
@@ -42,7 +42,7 @@ const audienceOptions = [
   { id: 'admins', label: 'Admins', icon: '👷' },
 ];
 
-export const NoticeEmailTemplate: React.FC<Readonly<NoticeEmailTempProps>> = ({
+export const NoticeEmailTemplate: React.FC<NoticeEmailTemplateProps> = ({
   title,
   content,
   noticeType,

@@ -30,7 +30,6 @@ export default async function AdminFeeDashboard() {
   const data = await getMonthlyFeeData(2025);
   const feeRecords = await getFeeRecords();
 
-  <PaymentReceivedAlert />;
   return (
     <div className="flex flex-col space-y-8">
       {/* Responsive Header */}

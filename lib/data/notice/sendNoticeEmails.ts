@@ -5,6 +5,7 @@ import { User } from '@clerk/nextjs/server';
 import { NoticeEmailTemplate } from '@/components/email-templates/noticeMail';
 import { OrganizationType, Prisma } from '@/lib/generated/prisma';
 import { render, TailwindConfig } from '@react-email/components';
+import { ReactElement } from 'react';
 
 type NoticeWithOrg = Prisma.NoticeGetPayload<{
   include: {
@@ -27,6 +28,26 @@ export const sendNoticeEmails = async (
   const resend = new Resend(process.env.RESEND_API_KEY);
   const knock = new Knock(process.env.KNOCK_API_SECRET);
 
+  // Ensure all required props are provided and typed correctly
+  const emailProps = {
+    content: notice.content ?? '', // Provide default for nullable fields
+    endDate: notice.endDate ?? new Date(), // Provide default
+    noticeType: notice.noticeType ?? 'announcement', // Provide default
+    organizationImage:
+      notice.Organization.organizationLogo ??
+      'https://brandfetch.com/clerk.com?view=library&library=default&collection=logos&asset=idOESnvCPd&utm_source=https%253A%252F%252Fbrandfetch.com%252Fclerk.com&utm_medium=copyAction&utm_campaign=brandPageReferral', // Fallback image
+    organizationName: notice.Organization.name ?? 'Unknown Organization', // Provide default
+    publishedBy: user.firstName ?? 'Unknown', // Provide default
+    startDate: notice.startDate ?? new Date(), // Provide default
+    targetAudience: notice.targetAudience ?? [], // Provide default
+    title: notice.title ?? 'Untitled Notice', // Provide default
+    noticeUrl: `${process.env.NEXT_PUBLIC_APP_URL}/notices/${notice.id}`, // Ensure this is always defined
+  };
+
+  const emailComponent = NoticeEmailTemplate(emailProps) as ReactElement;
+
+  const emailHtml = await render(emailComponent);
+
   const [knockResponse, resendResponse] = await Promise.all([
     knock.workflows.trigger('notice-created', {
       recipients: recipientEmails.map((email) => ({
@@ -41,11 +62,12 @@ export const sendNoticeEmails = async (
       },
     }),
     resend.emails.send({
-      from: 'notices@shiksha.cloud',
+      from: 'no-reply@shiksha.cloud',
       to: recipientEmails,
       subject: `Notice: ${notice.title}`,
-      text: 'Hey',
+      html: emailHtml,
     }),
   ]);
+
   console.log('Notifications sent:', { knockResponse, resendResponse });
 };
