@@ -107,3 +107,54 @@ Attendance Page : Show only Own Attendance
 Teacher Feedback
 My Documents
 Update Profile
+
+Feature List
+
+- Not boring UI like PHP : Build With Latest Stack Premium Technology Nextjs
+- School / Collage/ Coaching Classes Easy Onboarding
+- Role Base Access [TEACHER,ADMIN,STUDENT,PARENT]
+- MultiTenant Platform
+- Fee Management System : Monthly Collection /
+- Fee Reminders Sender (Manual/Automated)
+- Online Fee Payment Option : Get Receipts by email / SMS / Whatsapp or Direct Download
+- Students / Parents : Track There Own All Fees
+- Teacher / Admin : Manage all Fees
+-
+
+- Dashboard All Roles
+
+- Class Management
+- Add Grade/Class - Delete Grades
+- Add Section/Stream - Delete Section
+- Assign Teacher to Section / Stream
+
+- Student Management
+- Create Student
+- Manage Student / Delete Student
+
+- Holiday Management
+- Emergency Holiday Declaration
+- Import by Google Sheet / Single Holiday / Bulk Import / Template base Copy Paste CSV
+- Delete Holidays
+
+- Attendance Management
+- Section Wise Attendance Analytics : Section overview / Student History with Status
+- Take Attendance with one Click Ai suggestion for Late and Absent
+- All Students History
+
+- Complaint Management
+- Anonymous Complaint for Student And Parent
+- Teacher Can Investigation and Update Complaint Status
+- Track Complaint Status ?
+-
+
+- Notice Board
+- Notice Approve and reject System
+- Received by Mail , Whats app / SMS
+- Push Notification
+
+- Setting Page
+- Organization Config
+- Student can Edit profile
+- Teacher Can Update Profile
+- Parent Can See Child Parents Connected and Update IsPrimary Parent

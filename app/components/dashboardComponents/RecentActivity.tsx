@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from 'react';
-import { cn } from '@/lib/utils';
+import { cn, formatCurrencyIN } from '@/lib/utils';
 import {
   Users,
   GraduationCap,
@@ -273,15 +273,6 @@ export default function AdminRecentActivity() {
       ? activities
       : activities.filter((activity) => activity.type === selectedFilter);
 
-  const formatAmount = (amount?: number) => {
-    if (!amount) return '';
-    return new Intl.NumberFormat('en-IN', {
-      style: 'currency',
-      currency: 'INR',
-      minimumFractionDigits: 0,
-    }).format(amount);
-  };
-
   return (
     <Card className="p-6 space-y-6">
       {/* Header */}
@@ -362,16 +353,16 @@ export default function AdminRecentActivity() {
       </div>
       {/* Activity List */}
 
-      <CardContent>
-        <ScrollArea className="h-80 pr-4">
+      <CardContent className="">
+        <ScrollArea className="h-80 ">
           <div
             className={cn(
               'bg-white/50 dark:bg-zinc-900/50 backdrop-blur-xl',
               'rounded-3xl border border-white/20 dark:border-zinc-800/50',
-              'shadow-sm overflow-hidden'
+              'shadow-sm overflow-hidden '
             )}
           >
-            <div className="divide-y divide-white/10 dark:divide-zinc-800/50">
+            <div className="divide-y divide-white/10 dark:divide-zinc-800/50 ">
               {filteredActivities.map((activity) => {
                 const Icon = activity.icon;
 
@@ -379,7 +370,7 @@ export default function AdminRecentActivity() {
                   <div
                     key={activity.id}
                     className={cn(
-                      'group relative flex items-start gap-4 p-6',
+                      'group relative flex items-start gap-4 p-6 ',
                       'hover:bg-white/80 dark:hover:bg-zinc-800/50',
                       'transition-all duration-300 ease-out',
                       'border-l-4',
@@ -434,7 +425,7 @@ export default function AdminRecentActivity() {
                             <div className="flex items-center gap-4 text-xs text-zinc-500 dark:text-zinc-400">
                               {activity.metadata.amount && (
                                 <span className="flex items-center gap-1">
-                                  {formatAmount(activity.metadata.amount)}
+                                  {formatCurrencyIN(activity.metadata.amount)}
                                 </span>
                               )}
                               {activity.metadata.count && (
@@ -459,7 +450,7 @@ export default function AdminRecentActivity() {
                         </div>
 
                         {/* Time */}
-                        <div className="text-right shrink-0">
+                        <div className="text-right shrink-0 hidden sm:block">
                           <span className="text-xs font-medium text-zinc-400 dark:text-zinc-500 flex items-center gap-1">
                             <Clock className="w-3 h-3" />
                             {activity.time}

@@ -38,6 +38,6 @@ export async function getMonthlyFeeData(year: number) {
     count: monthlyData[i]?.count ?? 0,
   }));
 
-  new Promise((resolve) => setTimeout(resolve, 1000));
+  console.log(data);
   return data;
 }

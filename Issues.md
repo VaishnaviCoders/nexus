@@ -38,7 +38,7 @@ Editor / Designer/ UI UX
 
 Other Marketing
 
-- Software Name
+- Software Name : shiksha.Cloud
 - Instagram / Facebook : Reels: Upload 2 reels In week || Stories : Daily 3-7 Stories , Testimonials , User Feedback || User Feedback video
 - Upload Ai Blogs to Blogs Sites :
 - Join Communities : Whats App || Facebook || Instagram || TaleGram || Reddit

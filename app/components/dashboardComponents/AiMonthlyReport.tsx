@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useTransition } from 'react';
 import {
   Card,
   CardContent,
@@ -35,8 +35,8 @@ import {
   PieChart,
 } from 'lucide-react';
 import { generateAISummaryOpenRouter } from '@/ai/ai-monthly-fee-report';
-import { getMonthlyFeeData } from '@/lib/data/fee/getMonthlyFeeData';
 import { mockMonthlyFeeCollectionData } from '@/constants';
+import { generateAiMonthlyFeesReportAction } from '@/ai/gemini-monthly-fee-report';
 
 interface MonthlyData {
   month: string;
@@ -71,8 +71,25 @@ interface AiMonthlyReportProps {
 
 const AiMonthlyReport: React.FC<AiMonthlyReportProps> = ({ data }) => {
   const [summary, setSummary] = React.useState<string>('');
-  const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
+  const [isPending, startTransition] = useTransition();
+
+  const mockSummary = `In the provided school fee data for 12 months:
+
+  1. January collected ₹1005,000 from 51 payments
+  2. February collected ₹85,000 from 38 payments
+  3. March collected ₹110,000 from 55 payments
+  4. April collected ₹75,000 from 32 payments
+  5. May collected ₹65,000 from 28 payments
+  6. June collected ₹90,000 from 41 payments
+  7. July collected ₹100,000 from 47 payments
+  8. August collected ₹115,000 from 53 payments
+  9. September collected ₹95,000 from 44 payments
+  10. October collected ₹8,000 from 36 payments
+  11. November collected ₹120,000 from 58 payments
+  12. December collected ₹95,000 from 42 payments
+  
+  The total amount collected for the year was ₹1,150,000. The total number of payments made during the year was 600. There was an average of approximately 50 payments per month.`;
 
   // Enhanced parsing function with multiple strategies
   const parseSummary = (summaryText: string): ParsedSummary => {
@@ -229,37 +246,23 @@ const AiMonthlyReport: React.FC<AiMonthlyReportProps> = ({ data }) => {
       .join('\n');
   }
 
-  const handleGenerate = async (): Promise<void> => {
-    setIsLoading(true);
-    try {
-      const mockSummary = `In the provided school fee data for 12 months:
+  const handleGenerate = async () => {
+    startTransition(async () => {
+      try {
+        console.log('data', data);
 
-1. January collected ₹1005,000 from 51 payments
-2. February collected ₹85,000 from 38 payments
-3. March collected ₹110,000 from 55 payments
-4. April collected ₹75,000 from 32 payments
-5. May collected ₹65,000 from 28 payments
-6. June collected ₹90,000 from 41 payments
-7. July collected ₹100,000 from 47 payments
-8. August collected ₹115,000 from 53 payments
-9. September collected ₹95,000 from 44 payments
-10. October collected ₹8,000 from 36 payments
-11. November collected ₹120,000 from 58 payments
-12. December collected ₹95,000 from 42 payments
+        const formattedText = formatFeeData(data);
 
-The total amount collected for the year was ₹1,150,000. The total number of payments made during the year was 600. There was an average of approximately 50 payments per month.`;
-      const data = await getMonthlyFeeData(2025);
-      const formattedText = formatFeeData(data);
+        console.log('FormattedText', formattedText);
 
-      console.log('Formatted text:', formattedText);
-      const generatedSummary = await generateAISummaryOpenRouter(formattedText);
-      setSummary(generatedSummary);
-    } catch (error) {
-      console.error('Error generating summary:', error);
-      setSummary('Failed to generate summary. Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
+        const generatedSummary =
+          await generateAiMonthlyFeesReportAction(formattedText);
+        setSummary(generatedSummary);
+      } catch (error) {
+        console.error('Error generating summary:', error);
+        setSummary('Failed to generate summary. Please try again.');
+      }
+    });
   };
 
   const parsedData: ParsedSummary = summary
@@ -617,11 +620,11 @@ The total amount collected for the year was ₹1,150,000. The total number of pa
             </Button>
             <Button
               onClick={handleGenerate}
-              disabled={isLoading}
+              disabled={isPending}
               className="gap-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl"
             >
-              {isLoading && <Loader2 className="w-4 h-4 animate-spin" />}
-              {isLoading
+              {isPending && <Loader2 className="w-4 h-4 animate-spin" />}
+              {isPending
                 ? 'Analyzing Data...'
                 : summary
                   ? 'Regenerate Analysis'

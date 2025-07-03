@@ -31,20 +31,21 @@ const AdminDashboard = async () => {
 
   // const data = mockMonthlyFeeCollectionData;
   return (
-    <div className="space-y-6 ">
-      <div className="flex flex-col gap-4 sm:flex-row px-2 sm:items-center sm:justify-between">
-        <div className="space-y-1">
-          <h1 className="text-lg font-bold tracking-tight sm:text-2xl">
-            Admin Dashboard
-          </h1>
-          <p className="text-sm text-muted-foreground sm:text-base">
+    <div className="space-y-6 px-2">
+      <Card className="py-4 px-2 flex items-center justify-between   ">
+        {' '}
+        {/* //max-sm:flex-col max-sm:items-start max-sm:space-y-3 */}
+        <div>
+          <CardTitle className="text-lg">Admin Dashboard</CardTitle>
+          <CardDescription className="text-sm">
+            {' '}
             Dashboard for admin to manage the system
-          </p>
+          </CardDescription>
         </div>
-
-        {/* Responsive Button Container */}
-        <div className="flex sm:flex-row sm:items-center space-x-2 w-full ">
-          <AiMonthlyReport data={data} />
+        <div className="flex justify-center items-center space-x-3">
+          <div className="hidden sm:block">
+            <AiMonthlyReport data={data} />
+          </div>
 
           <Dialog>
             <DialogTrigger asChild>
@@ -62,14 +63,14 @@ const AdminDashboard = async () => {
             </DialogContent>
           </Dialog>
         </div>
-      </div>
+      </Card>
 
       <AdminDashboardCards />
 
-      <div className="grid gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <div className="grid gap-4  sm:gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {/* Left Column - Charts */}
         <div className="md:col-span-2 lg:col-span-2 xl:col-span-3 space-y-4 sm:space-y-6">
-          <div className="grid gap-4 sm:gap-6 grid-cols-1">
+          <div className="grid gap-4 sm:gap-6 grid-cols-1 my-4">
             <Suspense fallback={<ActivitySkeleton />}>
               <MonthlyFeeCollection data={data} />
             </Suspense>
