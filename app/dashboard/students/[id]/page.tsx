@@ -32,7 +32,6 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import StudentPerformance from '@/components/dashboard/Student/StudentPerformance';
 import StudentAssignment from '@/components/dashboard/Student/StudentAssignment';
-import { StudentAttendanceChart } from '@/components/dashboard/Student/StudentAttendanceChart';
 import { Badge } from '@/components/ui/badge';
 import { getOrganizationId } from '@/lib/organization';
 
@@ -324,7 +323,7 @@ const StudentIdRoute = async ({
           </TabsContent>
 
           <TabsContent value="attendance" className="space-y-4">
-            <StudentAttendanceChart data={attendance} />
+            {/* <StudentAttendanceChart data={attendance} /> */}
           </TabsContent>
 
           <TabsContent value="performance" className="space-y-4 ">
