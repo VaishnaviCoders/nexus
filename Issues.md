@@ -5,8 +5,9 @@
 5. Right now, we don’t have a model that defines academic year ranges per class/section or grade. So when calculating working days, attendance, or anything date-based, the system doesn’t know:
 6. New User Sign_up Using Clerk => Database not updated with the user and user's organization
 7. Need To manage Guest User : Signin By Clerk but not added in any organization or have any role in`organization
+8. What about Installments Fees ?
 
-As a software engineer, I've always been passionate about building things that make people's lives easier. There's something incredibly rewarding about knowing that the code I write can help someone accomplish their daily tasks more efficiently.
+As a software developer, I've always been passionate about building things that make people's lives easier. There's something incredibly rewarding about knowing that the code I write can help someone accomplish their daily tasks more efficiently.
 
 Website Pending
 
@@ -43,6 +44,7 @@ Other Marketing
 - Upload Ai Blogs to Blogs Sites :
 - Join Communities : Whats App || Facebook || Instagram || TaleGram || Reddit
 - Hire 3 Months Marketing Teams : Meta Adds
+- Make Logo
 
 - Software Pending
 

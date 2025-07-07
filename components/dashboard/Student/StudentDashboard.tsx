@@ -8,91 +8,227 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { CalendarDays } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
 
-const StudentDashboard = () => {
+import prisma from '@/lib/db';
+import { getCurrentUserId } from '@/lib/user';
+import StudentSubjectsRadar from './student-subjects-radar';
+import { RecentNoticesCards } from '../notice/recent-notices-cards';
+import { FeesQuickCard } from './FeesQuickCard';
+import { FeeStatus, PaymentMethod } from '@/lib/generated/prisma';
+import { Button } from '@/components/ui/button';
+import {
+  CreditCard,
+  Download,
+  Upload,
+  Calendar,
+  MessageSquare,
+  Bell,
+  Zap,
+} from 'lucide-react';
+
+export async function getFeesStatus(studentId: string) {
+  const fees = await prisma.fee.findMany({
+    where: { studentId },
+    include: {
+      payments: {
+        orderBy: { paymentDate: 'desc' },
+        take: 5,
+      },
+    },
+  });
+
+  let totalAnnualFee = 0;
+  let paidAmount = 0;
+  let pendingAmount = 0;
+  let recentPayments: {
+    id: string;
+    amount: number;
+    paymentDate: Date;
+    method: PaymentMethod;
+    status: 'COMPLETED';
+    receiptNumber: string;
+  }[] = [];
+
+  let nextDueDate: Date | null = null;
+
+  for (const fee of fees) {
+    totalAnnualFee += fee.totalFee;
+    paidAmount += fee.paidAmount;
+    pendingAmount += fee.pendingAmount || 0;
+
+    // Set nextDueDate to earliest due among unpaid or overdue
+    if (
+      (fee.status === 'UNPAID' || fee.status === 'OVERDUE') &&
+      (!nextDueDate || fee.dueDate < nextDueDate)
+    ) {
+      nextDueDate = fee.dueDate;
+    }
+
+    for (const payment of fee.payments) {
+      if (payment.status === 'COMPLETED') {
+        recentPayments.push({
+          id: payment.id,
+          amount: payment.amount,
+          paymentDate: payment.paymentDate,
+          method: payment.paymentMethod,
+          status: 'COMPLETED',
+          receiptNumber: payment.receiptNumber,
+        });
+      }
+    }
+  }
+
+  // Sort recent payments by date descending and limit to latest 3
+  recentPayments = recentPayments
+    .sort((a, b) => b.paymentDate.getTime() - a.paymentDate.getTime())
+    .slice(0, 3);
+
+  const status: FeeStatus =
+    pendingAmount === 0
+      ? FeeStatus.PAID
+      : paidAmount === 0
+        ? FeeStatus.UNPAID
+        : FeeStatus.OVERDUE;
+
+  return {
+    totalAnnualFee,
+    paidAmount,
+    pendingAmount,
+    nextDueDate,
+    status,
+    recentPayments,
+  };
+}
+
+const quickActions = [
+  {
+    title: 'Pay Fees',
+    description: 'Online payments',
+    icon: CreditCard,
+    color: 'bg-green-500 hover:bg-green-600',
+    action: 'payment',
+    link: '/dashboard/fees/student',
+  },
+  {
+    title: 'Download Receipt',
+    description: 'Payment receipts',
+    icon: Download,
+    color: 'bg-blue-500 hover:bg-blue-600',
+    action: 'download',
+    link: '/dashboard/fees/student',
+  },
+  {
+    title: 'Upload Documents',
+    description: 'Submit documents',
+    icon: Upload,
+    color: 'bg-purple-500 hover:bg-purple-600',
+    action: 'upload',
+    link: '/dashboard/documents',
+  },
+  {
+    title: 'Submit Complaint',
+    description: 'Report issues',
+    icon: MessageSquare,
+    color: 'bg-red-500 hover:bg-red-600',
+    action: 'complaint',
+    link: '/dashboard/anonymous-complaints',
+  },
+];
+
+const StudentDashboard = async () => {
+  const userId = await getCurrentUserId();
+
+  const student = await prisma.student.findUnique({
+    where: { userId },
+    select: {
+      id: true,
+    },
+  });
+  if (!student) throw new Error('Student not found');
+
+  const feesData = await getFeesStatus(student.id);
+
   return (
-    <div className="space-y-6">
+    <div className="grid gap-4 md:gap-6">
+      {/* Main Content Grid - Responsive Layout */}
       <StudentDashboardStatsCards />
-      <div className="grid gap-6 lg:grid-cols-7 ">
-        <Card className="lg:col-span-4 border-slate-200/50 dark:border-slate-700/50">
-          <CardHeader className="pb-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 rounded-t-lg border-b border-blue-200/30 dark:border-blue-800/30">
-            <CardTitle className="text-lg font-semibold">
-              Weekly Attendance Overview
-            </CardTitle>
-            <CardDescription>
-              Your attendance pattern for the current month
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="pt-6">
-            <div className="h-64 flex items-center justify-center text-slate-500 dark:text-slate-400">
-              <div className="text-center">
-                <CalendarDays className="w-12 h-12 mx-auto mb-2 opacity-50" />
-                <p>Attendance chart will be displayed here</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="lg:col-span-3 border-slate-200/50 dark:border-slate-700/50">
-          <CardHeader className="pb-4 bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-950/20 dark:to-teal-950/20 rounded-t-lg border-b border-emerald-200/30 dark:border-emerald-800/30">
-            <CardTitle className="text-lg font-semibold">
-              Subject Performance
-            </CardTitle>
-            <CardDescription>Recent test scores and grades</CardDescription>
-          </CardHeader>
-          <CardContent className="pt-6">
-            <div className="space-y-4">
-              {[
-                {
-                  subject: 'Mathematics',
-                  score: 92,
-                  grade: 'A',
-                  color: 'bg-blue-500',
-                },
-                {
-                  subject: 'Science',
-                  score: 88,
-                  grade: 'A-',
-                  color: 'bg-emerald-500',
-                },
-                {
-                  subject: 'English',
-                  score: 85,
-                  grade: 'B+',
-                  color: 'bg-amber-500',
-                },
-                {
-                  subject: 'History',
-                  score: 90,
-                  grade: 'A',
-                  color: 'bg-purple-500',
-                },
-              ].map((item, index) => (
-                <div
-                  key={index}
-                  className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className={`w-3 h-3 rounded-full ${item.color}`}></div>
-                    <span className="font-medium text-sm">{item.subject}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-semibold">{item.score}%</span>
-                    <Badge variant="secondary" className="text-xs">
-                      {item.grade}
-                    </Badge>
-                  </div>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-6">
+        {/* Left Column - Subject Performance (Takes more space on desktop) */}
+        <div className="lg:col-span-7 xl:col-span-8">
+          <Card className=" border-slate-200/50 dark:border-slate-700/50">
+            <CardHeader className="pb-4 bg-gradient-to-r from-blue-50 to-teal-50 dark:from-blue-950/20 dark:to-teal-950/20 rounded-t-lg border-b border-blue-200/30 dark:border-blue-800/30">
+              <CardTitle className="text-lg font-semibold">
+                Subject Performance
+              </CardTitle>
+              <CardDescription>
+                Comprehensive academic performance tracking and analysis
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="p-4 md:p-6">
+              <StudentSubjectsRadar />
+            </CardContent>
+          </Card>
+          <Card className="my-2 flex flex-col">
+            <CardHeader className="pb-3 flex-shrink-0">
+              <div className="flex items-center gap-2">
+                <div className="p-2 bg-slate-100 dark:bg-slate-800 rounded-lg">
+                  <Zap className="w-4 h-4 text-slate-600 dark:text-slate-400" />
                 </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+                <div>
+                  <CardTitle className="text-base font-semibold">
+                    Quick Actions
+                  </CardTitle>
+                  <CardDescription className="text-xs">
+                    Frequently used features
+                  </CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+
+            <CardContent className="flex-1">
+              <div className="grid grid-cols-2 gap-2">
+                {quickActions.map((action) => (
+                  <Button
+                    key={action.action}
+                    variant="outline"
+                    className="h-auto p-3 flex flex-col items-center gap-2 hover:shadow-sm transition-all bg-transparent text-center"
+                  >
+                    <div
+                      className={`p-2 rounded-full text-white ${action.color} transition-colors`}
+                    >
+                      <action.icon className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <div className="text-xs font-medium leading-tight">
+                        {action.title}
+                      </div>
+                      <div className="text-xs text-slate-500 leading-tight">
+                        {action.description}
+                      </div>
+                    </div>
+                  </Button>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Right Column - Quick Info Cards */}
+        <div className="lg:col-span-5 xl:col-span-4 space-y-4 md:space-y-6 my-3">
+          <RecentNoticesCards />
+          <FeesQuickCard feesData={feesData} />
+        </div>
       </div>
-      <div className="flex items-center justify-center min-h-full">
-        <ComingSoon />
+
+      {/* Bottom Section - Additional Widgets */}
+      {/* <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-6">
+      <div className="md:col-span-1 xl:col-span-2">
+        <UpcomingEventsCard />
       </div>
+      <div className="md:col-span-1 xl:col-span-2">
+        <QuickActionsCard />
+      </div>
+    </div> */}
     </div>
   );
 };

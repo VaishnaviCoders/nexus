@@ -1,25 +1,18 @@
 'use server';
 
 import prisma from '@/lib/db';
-import { auth } from '@clerk/nextjs/server';
+import { getCurrentUserId } from '@/lib/user';
 
 export const getStudentDashboardStats = async () => {
-  const { userId } = await auth();
-  if (!userId) throw new Error('Unauthorized');
+  const userId = await getCurrentUserId();
 
   const student = await prisma.student.findFirst({
-    where: {
-      user: {
-        clerkId: userId,
-      },
-    },
+    where: { userId },
     select: {
       id: true,
       sectionId: true,
     },
   });
-
-  console.log(student);
 
   if (!student) throw new Error('Student not found');
 
