@@ -100,16 +100,22 @@ export default function AdvancedProfilePage() {
             variant="ghost"
             size="sm"
             className="text-gray-300 hover:text-white hover:bg-white/10"
+            asChild
           >
-            <Github className="w-4 h-4 mr-2" />
-            GitHub
+            <Link href={'https://github.com/DevSammyKad'} target="_blank">
+              <Github className="w-4 h-4 mr-2" />
+              GitHub
+            </Link>
           </Button>
           <Button
             size="sm"
+            asChild
             className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 border-0"
           >
-            <Globe className="w-4 h-4 mr-2" />
-            Shiksha.cloud
+            <Link href={'https://www.shiksha.cloud/'} target="_blank">
+              <Globe className="w-4 h-4 mr-2" />
+              Shiksha.cloud
+            </Link>
           </Button>
         </div>
       </nav>
@@ -143,7 +149,7 @@ export default function AdvancedProfilePage() {
               As a software developer, I've always been passionate about
               building things that make people's lives easier. Currently
               building{' '}
-              <Link href={'https://www.shiksha.cloud/'}>
+              <Link href={'https://www.shiksha.cloud/'} target="_blank">
                 <span className="text-transparent bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text font-semibold">
                   Shiksha.cloud
                 </span>{' '}
@@ -186,12 +192,15 @@ export default function AdvancedProfilePage() {
                 </Link>
               </Button>
               <Button
+                asChild
                 size="lg"
                 variant="outline"
                 className="border-white/20 text-white hover:bg-white/10 px-8 py-3 bg-transparent"
               >
-                <Terminal className="w-5 h-5 mr-2" />
-                View Tech Stack
+                <Link href="#tech-stack" scroll={true} className="btn">
+                  <Terminal className="w-5 h-5 mr-2" />
+                  View Tech Stack
+                </Link>
               </Button>
             </div>
           </div>
@@ -199,7 +208,7 @@ export default function AdvancedProfilePage() {
       </section>
 
       {/* Tech Stack Visualization */}
-      <section className="relative z-10 px-6 py-24">
+      <section className="relative z-10 px-6 py-24" id="tech-stack">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
@@ -987,16 +996,27 @@ export default function AdvancedProfilePage() {
                   size="lg"
                   className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white border-0 px-8 py-3"
                 >
-                  <ExternalLink className="w-5 h-5 mr-2" />
-                  Schedule a Demo
+                  <Link
+                    href={'https://cal.com/sammykad'}
+                    target="_blank"
+                    className="flex items-center space-x-1"
+                  >
+                    {' '}
+                    <ExternalLink className="w-5 h-5 mr-2" />
+                    Schedule a Demo
+                  </Link>
                 </Button>
                 <Button
                   size="lg"
                   variant="outline"
                   className="border-white/20 text-white hover:bg-white/10 px-8 py-3 bg-transparent"
+                  asChild
                 >
-                  <Github className="w-5 h-5 mr-2" />
-                  View on GitHub
+                  <Link href={'https://github.com/DevSammyKad'} target="_blank">
+                    {' '}
+                    <Github className="w-5 h-5 mr-2" />
+                    View on GitHub
+                  </Link>
                 </Button>
               </div>
             </div>
@@ -1012,7 +1032,7 @@ export default function AdvancedProfilePage() {
             cutting-edge web technologies
           </p>
           <p className="text-gray-500 text-sm">
-            © 2024 Sameer Kad. All rights reserved.
+            © 2025 Sameer Kad. All rights reserved.
           </p>
         </div>
       </footer>
