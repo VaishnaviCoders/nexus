@@ -8,11 +8,11 @@ import {
   MessageSquare,
   Backpack,
   ScrollText,
-  FileCheck,
   IndianRupee,
   School,
   ShieldAlert,
   FileIcon,
+  BadgeCheck,
 } from 'lucide-react';
 
 type Submenu = {
@@ -78,7 +78,12 @@ export const roleMenus: Record<string, Group[]> = {
         {
           href: '/dashboard/holidays',
           label: 'Holidays Management',
-          icon: Users,
+          icon: Calendar,
+        },
+        {
+          href: '/dashboard/documents/verification',
+          label: 'Documents Verification',
+          icon: BadgeCheck,
         },
       ],
     },
@@ -243,7 +248,7 @@ export const roleMenus: Record<string, Group[]> = {
         {
           href: '/dashboard/anonymous-complaints',
           label: 'Anonymous complaints',
-          icon: Bell,
+          icon: ShieldAlert,
         },
       ],
     },

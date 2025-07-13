@@ -38,6 +38,5 @@ export async function getMonthlyFeeData(year: number) {
     count: monthlyData[i]?.count ?? 0,
   }));
 
-  console.log(data);
   return data;
 }

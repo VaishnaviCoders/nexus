@@ -1,13 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import {
-  CheckCircle,
-  FileText,
-  Search,
-  UploadCloud,
-  UploadIcon,
-} from 'lucide-react';
+import { CheckCircle, FileText, Search, UploadCloud } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -25,8 +19,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-// import { DocumentUploadForm } from "@/components/document-upload-form"
-// import { DocumentCard } from "@/components/document-card"
+
 import { type StudentDocument, DOCUMENT_TYPE_LABELS } from '@/types/document';
 import { DocumentCard } from '@/components/dashboard/Student/documents/DocumentCard';
 import { Badge } from '@/components/ui/badge';
@@ -48,7 +41,6 @@ export default function DocumentsPage({
   studentId: string;
   data: StudentDocument[];
 }) {
-  //   const [documents, setDocuments] = useState<StudentDocument[]>(mockDocuments);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState<string>('all');
   const [filterStatus, setFilterStatus] = useState<string>('all');
@@ -63,7 +55,8 @@ export default function DocumentsPage({
     const matchesStatus =
       filterStatus === 'all' ||
       (filterStatus === 'verified' && doc.verified) ||
-      (filterStatus === 'pending' && !doc.verified);
+      (filterStatus === 'pending' && !doc.verified && !doc.rejected) ||
+      (filterStatus === 'rejected' && doc.rejected);
 
     return matchesSearch && matchesType && matchesStatus && !doc.isDeleted;
   });
@@ -71,18 +64,16 @@ export default function DocumentsPage({
   const verifiedCount = data.filter(
     (doc) => doc.verified && !doc.isDeleted
   ).length;
+
   const pendingCount = data.filter(
-    (doc) => !doc.verified && !doc.isDeleted
+    (doc) => !doc.verified && !doc.rejected && !doc.isDeleted
   ).length;
 
-  const handleUploadSuccess = () => {
-    // Refresh documents list
-    // In a real app, you'd refetch from your API
-    console.log('Document uploaded successfully');
-  };
+  // const rejectedCount = data.filter(
+  //   (doc) => doc.rejected && !doc.isDeleted
+  // ).length;
 
   const handleDeleteDocument = async (documentId: string) => {
-    console.log('Document deleted:', documentId);
     await studentDocumentsDelete(documentId);
   };
 
@@ -126,7 +117,7 @@ export default function DocumentsPage({
                 </Button>
               </DialogTrigger>
 
-              <DialogContent className="min-w-7xl ">
+              <DialogContent className="max-w-4xl">
                 <DialogHeader>
                   <DialogTitle> Upload Document</DialogTitle>
                   <DialogDescription>
@@ -134,10 +125,7 @@ export default function DocumentsPage({
                     Add a new document for verification. We support PDF, JPEG,
                     PNG, and WebP files up to 10MB.
                   </DialogDescription>
-                  <DocumentUploadForm
-                    studentId={studentId}
-                    onUploadSuccess={handleUploadSuccess}
-                  />
+                  <DocumentUploadForm studentId={studentId} />
                 </DialogHeader>
               </DialogContent>
             </Dialog>
@@ -232,6 +220,7 @@ export default function DocumentsPage({
                     <SelectItem value="all">All Status</SelectItem>
                     <SelectItem value="verified">Verified</SelectItem>
                     <SelectItem value="pending">Pending</SelectItem>
+                    <SelectItem value="rejected">Rejected</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -240,11 +229,11 @@ export default function DocumentsPage({
 
           {/* Documents Grid */}
           {filteredDocuments.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-3">
               {filteredDocuments.map((document) => (
                 <DocumentCard
                   key={document.id}
-                  document={document}
+                  studentDocument={document}
                   onDelete={handleDeleteDocument}
                 />
               ))}
@@ -276,10 +265,7 @@ export default function DocumentsPage({
         </TabsContent>
 
         <TabsContent value="upload">
-          <DocumentUploadForm
-            onUploadSuccess={handleUploadSuccess}
-            studentId={studentId}
-          />
+          <DocumentUploadForm studentId={studentId} />
         </TabsContent>
       </Tabs>
     </div>

@@ -25,6 +25,115 @@ import AdminQuickActions from '@/app/components/dashboardComponents/AdminQuickAc
 import AdminDashboardCards from '@/app/components/dashboardComponents/AdminDashboardCards';
 import AdminRecentActivity from '@/app/components/dashboardComponents/RecentActivity';
 import { UpcomingEvents } from '@/app/components/dashboardComponents/UpcomingEvents';
+import WeeklyAttendanceReportCard from '../StudentAttendance/WeeklyAttendanceReportCard';
+
+enum AttendanceStatus {
+  PRESENT = 'PRESENT',
+  ABSENT = 'ABSENT',
+  LATE = 'LATE',
+  EXCUSED_ABSENT = 'EXCUSED_ABSENT',
+  UNEXCUSED_ABSENT = 'UNEXCUSED_ABSENT',
+  EARLY_DISMISSAL = 'EARLY_DISMISSAL',
+}
+
+interface WeeklyAttendanceData {
+  student: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    middleName?: string;
+    rollNumber: string;
+    profileImage?: string;
+    grade: { grade: string };
+    section: { name: string };
+  };
+  attendanceRecords: {
+    date: string;
+    present: boolean;
+    status: AttendanceStatus;
+    note?: string;
+  }[];
+  weekRange: {
+    startDate: string;
+    endDate: string;
+  };
+  organization: {
+    name: string;
+    organizationLogo?: string;
+    contactEmail?: string;
+    contactPhone?: string;
+  };
+  cumulativeStats?: {
+    totalDaysPresent: number;
+    totalPossibleDays: number;
+    attendancePercentage: number;
+  };
+}
+
+const dummyAttendanceData: WeeklyAttendanceData = {
+  student: {
+    id: 'stu_12345',
+    firstName: 'Aarav',
+    lastName: 'Sharma',
+    middleName: 'Kumar',
+    rollNumber: '2024A056',
+    profileImage:
+      'https://res.cloudinary.com/demo/image/upload/v1700000000/sample.jpg',
+    grade: { grade: '10' },
+    section: { name: 'B' },
+  },
+  attendanceRecords: [
+    {
+      date: '2025-07-07',
+      present: true,
+      status: AttendanceStatus.PRESENT,
+    },
+    {
+      date: '2025-07-08',
+      present: true,
+      status: AttendanceStatus.LATE,
+      note: 'Arrived 10 minutes late',
+    },
+    {
+      date: '2025-07-09',
+      present: false,
+      status: AttendanceStatus.UNEXCUSED_ABSENT,
+      note: 'No information provided',
+    },
+    {
+      date: '2025-07-10',
+      present: true,
+      status: AttendanceStatus.EARLY_DISMISSAL,
+      note: 'Left due to medical emergency',
+    },
+    {
+      date: '2025-07-11',
+      present: true,
+      status: AttendanceStatus.PRESENT,
+    },
+  ],
+  weekRange: {
+    startDate: '2025-07-07',
+    endDate: '2025-07-11',
+  },
+  organization: {
+    name: 'Shiksha Public School',
+    organizationLogo:
+      'https://res.cloudinary.com/demo/image/upload/v1700000000/org-logo.png',
+    contactEmail: 'info@shikshaschool.edu.in',
+    contactPhone: '+91-9876543210',
+  },
+  cumulativeStats: {
+    totalDaysPresent: 4,
+    totalPossibleDays: 5,
+    attendancePercentage: 80,
+  },
+};
+
+{
+  /* <WeeklyAttendanceReportCard data={dummyAttendanceData} /> */
+}
+//
 
 const AdminDashboard = async () => {
   const data = await getMonthlyFeeData(2025);

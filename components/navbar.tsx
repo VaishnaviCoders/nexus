@@ -54,9 +54,9 @@ export async function Navbar() {
     );
   }
 
-  if (!orgId) {
-    throw new Error('Organization not found in DB');
-  }
+  // if (!orgId) {
+  //   throw new Error('Organization not found in DB');
+  // }
 
   // if (!userId || !orgId || !orgRole) {
   //   console.warn('Missing user/org data from Clerk', {
@@ -67,36 +67,36 @@ export async function Navbar() {
   //   redirect('/create-organization');
   // }
 
-  const clerkOrg = await client.organizations.getOrganization({
-    organizationId: orgId,
-  }); // or from session
+  // const clerkOrg = await client.organizations.getOrganization({
+  //   organizationId: orgId,
+  // }); // or from session
 
-  let dbOrg = await prisma.organization.findUnique({
-    where: { id: clerkOrg.id },
-  });
+  // let dbOrg = await prisma.organization.findUnique({
+  //   where: { id: clerkOrg.id },
+  // });
 
-  if (!dbOrg) {
-    // Optional: Only do this in dev
-    if (process.env.NODE_ENV === 'development') {
-      dbOrg = await prisma.organization.create({
-        data: {
-          id: clerkOrg.id,
-          name: clerkOrg.name,
-          organizationSlug: clerkOrg.slug || '',
-          isActive: true,
-        },
-      });
-      console.log('✅ Dev org created:', dbOrg);
-    } else {
-      throw new Error('Invalid organization: ' + clerkOrg.id);
-    }
-  }
+  // if (!dbOrg) {
+  //   // Optional: Only do this in dev
+  //   if (process.env.NODE_ENV === 'development') {
+  //     dbOrg = await prisma.organization.create({
+  //       data: {
+  //         id: clerkOrg.id,
+  //         name: clerkOrg.name,
+  //         organizationSlug: clerkOrg.slug || '',
+  //         isActive: true,
+  //       },
+  //     });
+  //     console.log('✅ Dev org created:', dbOrg);
+  //   } else {
+  //     throw new Error('Invalid organization: ' + clerkOrg.id);
+  //   }
+  // }
 
   // Background sync - don't block rendering
-  if (user) {
-    // Fire and forget - runs in background
-    syncUserAsync(user, orgId, orgRole).catch(console.error);
-  }
+  // if (user) {
+  //   // Fire and forget - runs in background
+  //   syncUserAsync(user, orgId, orgRole).catch(console.error);
+  // }
 
   const firstName = user?.firstName ?? 'Guest';
   const lastVisit = user?.lastSignInAt ? new Date(user.lastSignInAt) : null;

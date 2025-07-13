@@ -10,6 +10,7 @@ import {
   ShieldCheck,
   MoreVertical,
   Trash2,
+  ClipboardX,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -28,27 +29,35 @@ import {
 } from '@/components/ui/dialog';
 import { type StudentDocument, DOCUMENT_TYPE_LABELS } from '@/types/document';
 import { formatFileSize, getFileTypeFromUrl } from '@/lib/cloudinary';
+import { formatDateIN } from '@/lib/utils';
 
 interface DocumentCardProps {
-  document: StudentDocument;
+  studentDocument: StudentDocument;
   onDelete?: (documentId: string) => void;
 }
 
-export function DocumentCard({ document, onDelete }: DocumentCardProps) {
+export function DocumentCard({ studentDocument, onDelete }: DocumentCardProps) {
   const [showPreview, setShowPreview] = useState(false);
-  const fileType = getFileTypeFromUrl(document.documentUrl);
+  const fileType = getFileTypeFromUrl(studentDocument.documentUrl);
   const isPDF = fileType === 'application/pdf';
   const isImage = fileType.startsWith('image/');
 
-  const handleDownload = () => {
-    // const link = document.createElement("a")
-    // link.href = document.documentUrl
-    // link.download =
-    //   document.fileName || `${DOCUMENT_TYPE_LABELS[document.type]}.${document.documentUrl.split(".").pop()}`
-    // link.target = "_blank"
-    // document.body.appendChild(link)
-    // link.click()
-    // document.body.removeChild(link)
+  const handleDownload = async () => {
+    const response = await fetch(studentDocument.documentUrl);
+    const blob = await response.blob();
+    const blobUrl = window.URL.createObjectURL(blob);
+
+    const link = document.createElement('a');
+    link.href = blobUrl;
+    link.download =
+      studentDocument.fileName ||
+      `${DOCUMENT_TYPE_LABELS[studentDocument.type]}.${studentDocument.documentUrl.split('.').pop()}`;
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    window.URL.revokeObjectURL(blobUrl); // Clean up
   };
 
   return (
@@ -62,22 +71,33 @@ export function DocumentCard({ document, onDelete }: DocumentCardProps) {
               </div>
               <div className="flex-1 min-w-0">
                 <h3 className="font-semibold text-sm">
-                  {DOCUMENT_TYPE_LABELS[document.type]}
+                  {DOCUMENT_TYPE_LABELS[studentDocument.type]}
                 </h3>
                 <p className="text-xs text-muted-foreground truncate">
-                  {document.fileName || 'No filename'}
+                  {studentDocument.fileName || 'No filename'}
                 </p>
               </div>
             </div>
             <div className="flex items-center gap-2">
               <Badge
-                variant={document.verified ? 'default' : 'secondary'}
+                variant={
+                  studentDocument.verified
+                    ? 'verified'
+                    : studentDocument.rejected
+                      ? 'rejected'
+                      : 'pending'
+                }
                 className="text-xs"
               >
-                {document.verified ? (
+                {studentDocument.verified ? (
                   <>
                     <ShieldCheck className="h-3 w-3 mr-1" />
                     Verified
+                  </>
+                ) : studentDocument.rejected ? (
+                  <>
+                    <ClipboardX className="h-3 w-3 mr-1" />
+                    Rejected
                   </>
                 ) : (
                   <>
@@ -103,7 +123,7 @@ export function DocumentCard({ document, onDelete }: DocumentCardProps) {
                   </DropdownMenuItem>
                   {onDelete && (
                     <DropdownMenuItem
-                      onClick={() => onDelete(document.id)}
+                      onClick={() => onDelete(studentDocument.id)}
                       className="text-destructive"
                     >
                       <Trash2 className="h-4 w-4 mr-2" />
@@ -120,26 +140,15 @@ export function DocumentCard({ document, onDelete }: DocumentCardProps) {
             <div className="flex justify-between text-xs text-muted-foreground">
               <span>
                 Size:{' '}
-                {document.fileSize
-                  ? formatFileSize(document.fileSize)
+                {studentDocument.fileSize
+                  ? formatFileSize(studentDocument.fileSize)
                   : 'Unknown'}
               </span>
               <span>
                 Uploaded:{' '}
-                {format(new Date(document.uploadedAt), 'MMM dd, yyyy')}
+                {format(new Date(studentDocument.uploadedAt), 'MMM dd, yyyy')}
               </span>
             </div>
-            {/* {document.note && (
-              <p className="text-xs text-muted-foreground bg-muted p-2 rounded">
-                {document.note}
-              </p>
-            )} */}
-            {document.verified && document.verifiedAt && (
-              <p className="text-xs text-green-600">
-                Verified on{' '}
-                {format(new Date(document.verifiedAt), 'MMM dd, yyyy')}
-              </p>
-            )}
           </div>
           <div className="flex gap-2 mt-4">
             <Button
@@ -167,20 +176,22 @@ export function DocumentCard({ document, onDelete }: DocumentCardProps) {
       <Dialog open={showPreview} onOpenChange={setShowPreview}>
         <DialogContent className="max-w-4xl max-h-[90vh]">
           <DialogHeader>
-            <DialogTitle>{DOCUMENT_TYPE_LABELS[document.type]}</DialogTitle>
+            <DialogTitle>
+              {DOCUMENT_TYPE_LABELS[studentDocument.type]}
+            </DialogTitle>
           </DialogHeader>
           <div className="flex-1 overflow-hidden">
             {isPDF ? (
               <iframe
-                src={document.documentUrl}
+                src={studentDocument.documentUrl}
                 className="w-full h-[70vh] border rounded-lg"
-                title={`Preview of ${DOCUMENT_TYPE_LABELS[document.type]}`}
+                title={`Preview of ${DOCUMENT_TYPE_LABELS[studentDocument.type]}`}
               />
             ) : isImage ? (
               <div className="flex justify-center">
                 <img
-                  src={document.documentUrl || '/placeholder.svg'}
-                  alt={DOCUMENT_TYPE_LABELS[document.type]}
+                  src={studentDocument.documentUrl || '/placeholder.svg'}
+                  alt={DOCUMENT_TYPE_LABELS[studentDocument.type]}
                   className="max-w-full max-h-[70vh] object-contain rounded-lg"
                 />
               </div>

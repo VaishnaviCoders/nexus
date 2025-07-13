@@ -1,8 +1,6 @@
 'use server';
 
 import { auth, currentUser, User } from '@clerk/nextjs/server';
-import { clerkClient } from '@clerk/nextjs/server';
-import prisma from '../lib/db';
 import {
   DocumentUploadFormData,
   documentUploadSchema,
@@ -523,6 +521,9 @@ export async function getDashboardStats(organizationId: string) {
 import FilterStudents from '@/lib/data/student/FilterStudents';
 import { endOfDay, startOfDay, subDays } from 'date-fns';
 import { Role, StudentAttendance } from '@/lib/generated/prisma';
+import { getCurrentUserId } from '@/lib/user';
+import { DocumentVerificationAction } from '@/types/document';
+import prisma from '@/lib/db';
 
 export async function fetchFilteredStudents({
   search = '',
@@ -542,40 +543,117 @@ export async function uploadStudentDocuments(
   studentId: string
 ) {
   const user = await currentUser();
+  const organizationId = await getOrganizationId();
+
+  if (!user) throw new Error('User Not Found Please Logout And Log In');
+
   const validatedData = documentUploadSchema.parse(data);
+
+  const uploadedBy =
+    [user.firstName, user.lastName].filter(Boolean).join(' ') || 'Unknown';
 
   const document = await prisma.studentDocument.create({
     data: {
-      documentUrl: documentUrl,
-      uploadedBy: user?.id,
+      organizationId,
+      documentUrl,
+      uploadedBy,
       uploadedAt: new Date(),
-      note: validatedData.note || '',
+      note: validatedData.note ?? '',
       type: validatedData.type,
       fileName: validatedData.file.name,
       fileSize: validatedData.file.size,
       fileType: validatedData.file.type,
-      studentId: studentId,
+      studentId,
       createdAt: new Date(),
       updatedAt: new Date(),
-      verified: false,
     },
   });
 
   revalidatePath('/dashboard/documents');
+  revalidatePath('/dashboard/documents/verification');
 
-  console.log('Document created:', document);
   return document;
 }
 
 export async function studentDocumentsDelete(documentId: string) {
-  // const user = await currentUser();
   const deletedDocument = await prisma.studentDocument.delete({
     where: { id: documentId },
   });
 
   revalidatePath('/dashboard/documents');
+  revalidatePath('/dashboard/documents/verification');
 
   return deletedDocument;
+}
+
+interface VerifyDocumentData {
+  action: DocumentVerificationAction;
+  note?: string;
+  rejectionReason?: string;
+}
+export async function verifyStudentDocument(
+  documentId: string,
+  data: VerifyDocumentData
+) {
+  try {
+    const user = await currentUser();
+    if (!user) throw new Error('User Not Found Please Logout And Log In');
+
+    const verifiedByOrRejectedBy =
+      [user.firstName, user.lastName].filter(Boolean).join(' ') || 'Unknown';
+    // const organizationId = await getOrganizationId();
+
+    // const document = await prisma.studentDocument.findFirst({
+    //   where: {
+    //     id: documentId,
+    //     student: { organizationId },
+    //     isDeleted: false,
+    //   },
+    // });
+
+    // if (!document) {
+    //   return { success: false, error: 'Document not found' };
+    // }
+
+    const updateData =
+      data.action === 'APPROVE'
+        ? {
+            verified: true,
+            verifiedBy: verifiedByOrRejectedBy || 'System',
+            verifiedAt: new Date(),
+            rejected: false,
+            rejectedBy: null,
+            rejectedAt: null,
+            note: data.note ?? null,
+          }
+        : {
+            verified: false,
+            verifiedBy: null,
+            verifiedAt: null,
+            rejected: true,
+            rejectedBy: verifiedByOrRejectedBy || 'System',
+            rejectedAt: new Date(),
+            rejectReason: data.rejectionReason,
+          };
+
+    await prisma.studentDocument.update({
+      where: { id: documentId },
+      data: updateData,
+    });
+
+    revalidatePath('/dashboard/document/verification');
+
+    return {
+      success: true,
+      message: `Document ${data.action === 'APPROVE' ? 'approved' : 'rejected'} successfully`,
+    };
+  } catch (error) {
+    console.error('Error verifying document:', error);
+    return {
+      success: false,
+      error: 'Something went wrong while verifying the document.',
+    };
+  }
 }
 
 export async function updateTeacherProfileAction({

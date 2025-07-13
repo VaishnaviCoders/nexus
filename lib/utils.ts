@@ -7,17 +7,21 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatBytes(
-  bytes: number,
+  bytes: number | null,
   opts: {
     decimals?: number;
     sizeType?: 'accurate' | 'normal';
   } = {}
 ) {
+  if (bytes === null || bytes === undefined) return 'N/A';
+
   const { decimals = 0, sizeType = 'normal' } = opts;
 
   const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
   const accurateSizes = ['Bytes', 'KiB', 'MiB', 'GiB', 'TiB'];
+
   if (bytes === 0) return '0 Byte';
+
   const i = Math.floor(Math.log(bytes) / Math.log(1024));
   return `${(bytes / Math.pow(1024, i)).toFixed(decimals)} ${
     sizeType === 'accurate'
@@ -43,13 +47,19 @@ export function composeEventHandlers<E>(
   };
 }
 
-export function formatDateIN(date: Date | string): string {
-  const d = typeof date === 'string' ? new Date(date) : date;
-  return new Intl.DateTimeFormat('en-IN', {
+/**
+ * Formats a date string to 'DD/MM/YYYY' in India timezone.
+ * Returns '-' if the date is invalid.
+ */
+export function formatDateIN(dateValue?: string | Date | null): string {
+  if (!dateValue) return '-';
+  const date = new Date(dateValue);
+  if (isNaN(date.getTime())) return '-';
+  return date.toLocaleDateString('en-IN', {
     day: '2-digit',
-    month: 'short',
+    month: '2-digit',
     year: 'numeric',
-  }).format(d);
+  });
 }
 
 // Format number as INR currency (e.g., 1,23,456)

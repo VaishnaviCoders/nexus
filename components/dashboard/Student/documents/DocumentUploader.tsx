@@ -28,16 +28,13 @@ import { DOCUMENT_TYPE_LABELS } from '@/types/document';
 import { toast } from 'sonner';
 import { DocumentUploadFormData, documentUploadSchema } from '@/lib/schemas';
 import { uploadStudentDocuments } from '@/app/actions';
+import { DocumentType } from '@/lib/generated/prisma';
 
 interface DocumentUploadFormProps {
   studentId: string;
-  onUploadSuccess: () => void;
 }
 
-export function DocumentUploadForm({
-  studentId,
-  onUploadSuccess,
-}: DocumentUploadFormProps) {
+export function DocumentUploadForm({ studentId }: DocumentUploadFormProps) {
   const [isUploading, setIsUploading] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [dragActive, setDragActive] = useState(false);
@@ -105,7 +102,6 @@ export function DocumentUploadForm({
 
       form.reset();
       setSelectedFile(null);
-      onUploadSuccess();
     } catch (error) {
       toast.error('Upload failed', {
         description:
@@ -124,7 +120,7 @@ export function DocumentUploadForm({
   };
 
   return (
-    <div className="my-2">
+    <div className="my-2 text-start">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           {/* Document Type Selection */}
@@ -224,7 +220,7 @@ export function DocumentUploadForm({
                         </div>
                       </div>
                     ) : (
-                      <Card className="border-2 border-primary/20 bg-primary/5">
+                      <Card className="border-2 border-primary/20 bg-primary/5 max-sm:max-w-md">
                         <CardContent className="p-6">
                           <div className="flex items-center gap-4">
                             <div className="flex-shrink-0">

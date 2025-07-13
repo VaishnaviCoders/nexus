@@ -4,7 +4,6 @@ async function test() {
   try {
     // const users = await prisma.user.findMany();
     // console.log(users);
-
     // await prisma.subject.create({
     //   data: {
     //     name: 'Mathematics',
@@ -14,9 +13,7 @@ async function test() {
     //     createdAt: new Date(),
     //   },
     // });
-
     // const subjects = await prisma.subject.findMany();
-
     // await prisma.teachingAssignment.create({
     //   data: {
     //     teacherId: 'cmc8vdrfm0003vhp4h0gch3iz',
@@ -29,7 +26,6 @@ async function test() {
     //   },
     // });
     // console.log(subjects);
-
     // co
     // const data = await prisma.teachingAssignment.findMany({
     //   where: {
@@ -42,14 +38,12 @@ async function test() {
     //   },
     // });
     // console.log('data', data);
-
     // const paymentData = await prisma.feePayment.findUnique({
     //   where: {
     //     receiptNumber: 'RCP-1750505949490-499-cmc65vvn30007vhwwlluht7lz',
     //   },
     // });
     // console.log('paymentData', paymentData);
-
     // const studentsWithFees = await prisma.student.findMany({
     //   where: {
     //     section: {
@@ -72,9 +66,7 @@ async function test() {
     //     grade: true,
     //   },
     // });
-
     // console.log('studentsWithFees', studentsWithFees);
-
     // await prisma.teacherProfile.upsert({
     //   where: {
     //     teacherId: 'cmc8vdrfm0003vhp4h0gch3iz',
@@ -102,14 +94,12 @@ async function test() {
     //     certificateUrls: [],
     //   },
     // });
-
-    const feePayment = await prisma.feePayment.findUnique({
-      where: {
-        id: 'cmcic6tco007tvhrk5la6hctm',
-      },
-    });
-
-    console.log('feePayment', feePayment);
+    // const feePayment = await prisma.feePayment.findUnique({
+    //   where: {
+    //     id: 'cmcic6tco007tvhrk5la6hctm',
+    //   },
+    // });
+    // console.log('feePayment', feePayment);
   } catch (error) {
     console.error('Prisma error:', error);
   }

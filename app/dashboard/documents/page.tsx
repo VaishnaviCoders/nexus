@@ -1,6 +1,7 @@
 import DocumentsPage from '@/components/dashboard/Student/documents/DocumentPage';
 import prisma from '@/lib/db';
 import { getCurrentUserId } from '@/lib/user';
+import { redirect } from 'next/navigation';
 import React from 'react';
 
 async function getStudentDocuments(studentId: string) {
@@ -22,7 +23,11 @@ async function getStudentDocuments(studentId: string) {
       createdAt: true,
       updatedAt: true,
       verified: true,
+      rejected: true,
       isDeleted: true,
+    },
+    orderBy: {
+      createdAt: 'desc',
     },
   });
 
@@ -43,6 +48,7 @@ const page = async () => {
   const user = await prisma.user.findUnique({
     where: { id: userId },
     select: {
+      role: true,
       student: {
         select: {
           id: true,
@@ -51,10 +57,18 @@ const page = async () => {
     },
   });
 
-  if (!user || !user.student) {
-    throw new Error('Student profile not found');
+  if (!user) {
+    redirect('/'); // or show fallback
   }
 
+  // ✅ Only allow students here
+  if (user.role !== 'STUDENT' || !user.student?.id) {
+    return (
+      <div className="p-8 text-center text-red-600 font-semibold text-lg">
+        Only students can access this page.
+      </div>
+    );
+  }
   const documents = await getStudentDocuments(user.student.id);
   return <DocumentsPage studentId={user.student.id} data={documents} />;
 };

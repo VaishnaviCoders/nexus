@@ -1,6 +1,5 @@
 import prisma from '@/lib/db';
 import { getOrganizationId } from '@/lib/organization';
-import { performance } from 'perf_hooks';
 
 interface FilterStudentsProps {
   search?: string;
@@ -14,8 +13,6 @@ export default async function FilterStudents({
   sectionId = 'all',
 }: FilterStudentsProps) {
   const orgId = await getOrganizationId();
-  const start = performance.now();
-  // console.log('FilterStudents inputs:', { orgId, search, gradeId, sectionId });
 
   const where: any = {
     organizationId: orgId,
@@ -72,13 +69,6 @@ export default async function FilterStudents({
       orderBy: [{ firstName: 'asc' }, { lastName: 'asc' }],
       take: 100,
     });
-
-    const end = performance.now();
-    console.log('Fetched students in', end - start, 'ms');
-    // console.log(
-    //   'Fetched students:',
-    //   students.map((s) => s.firstName)
-    // );
 
     return students;
   } catch (error) {

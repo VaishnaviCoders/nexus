@@ -25,6 +25,11 @@ const badgeVariants = cva(
         premium:
           'bg-gradient-to-r from-purple-500 to-purple-700 text-white border-purple-600 hover:from-purple-600 hover:to-purple-800',
         free: 'bg-gradient-to-r from-green-400 to-green-600 text-white border-green-500 hover:from-green-500 hover:to-green-700',
+        pending:
+          'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
+        verified:
+          'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
+        rejected: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
       },
     },
     defaultVariants: {

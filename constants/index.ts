@@ -14,6 +14,59 @@ import {
   ZapIcon,
 } from 'lucide-react';
 
+// Document Verification
+
+export const documentRejectionReasons = {
+  AADHAAR: [
+    'The Aadhaar card image is too blurry to read the full name or DOB. Please upload a clearer version.',
+    'We couldn’t verify the Aadhaar number as the last 4 digits are partially hidden. Full visibility is required.',
+    'This Aadhaar card appears to be cropped or cut. Please upload the full document including barcode.',
+    'The uploaded Aadhaar card seems to belong to someone else. Please ensure it matches the registered name.',
+  ],
+  PAN: [
+    'The PAN card photo is unclear, especially the text area. Kindly upload a higher quality scan.',
+    "We couldn't verify the PAN number due to partial visibility. Please make sure the full card is visible.",
+    'The document appears to be a photocopy with low contrast. Please upload a scanned original.',
+    'PAN name does not match the registered user’s name. Please double-check before uploading.',
+  ],
+  PASSPORT: [
+    'The passport page with your photo and details is either missing or unreadable. Please check and re-upload.',
+    'The MRZ (barcode at bottom) is not visible. Please upload the full passport page without cropping.',
+    'Your passport image is too dark or poorly lit. Kindly upload a well-scanned version.',
+    'The passport appears to be expired. Please upload a valid version.',
+  ],
+  BIRTH_CERTIFICATE: [
+    'The issuing authority’s seal or stamp is not visible. Please upload a certified document.',
+    'Important fields like DOB or name are unclear or cut off. Kindly upload a complete certificate.',
+    'Handwritten entries on the certificate are difficult to read. Please upload a clearer copy.',
+    'The birth certificate seems to be in regional language only. Please attach an English-translated copy if available.',
+  ],
+  TRANSFER_CERTIFICATE: [
+    'The official school/college stamp is missing or unclear. Please upload a certified document.',
+    'We couldn’t find the name of the issuing institution. Make sure the full certificate is uploaded.',
+    'Your Transfer Certificate appears to be tampered with or edited. Please upload a fresh one.',
+    'The document format doesn’t match typical TC layout. Kindly verify and re-upload.',
+  ],
+  BANK_PASSBOOK: [
+    'The account holder name is unclear or mismatched. Please ensure it matches the registered person.',
+    'The uploaded image does not include IFSC, branch name, or account number. Please include all key details.',
+    'This appears to be a cropped or partial page from the bank passbook. Kindly upload the full page.',
+    'The scan is poorly lit or blurred, making key information unreadable.',
+  ],
+  PARENT_ID: [
+    'The parent ID does not contain sufficient information (Name/DOB/Photo). Please upload a complete ID.',
+    'The ID seems to belong to a minor or an unrelated person. Please double-check before re-uploading.',
+    'Photo or signature is missing/unclear. A valid ID is required for parent verification.',
+    'We could not verify the authenticity of the ID due to low image quality. Please upload a better scan.',
+  ],
+  AGREEMENT: [
+    'The document appears unsigned or lacks official seal/stamp. Please upload a complete agreement.',
+    'Some pages seem to be missing from the agreement. Ensure all pages are uploaded.',
+    'Text is too faded or faint to read clearly. Kindly upload a scanned version, not a photo.',
+    'The agreement format appears invalid or incomplete. Please verify and re-upload.',
+  ],
+};
+
 // Anonymous Complaints
 
 export const statusConfig = {
@@ -297,7 +350,7 @@ const mockFeeCategories = [
 ];
 
 // Mock data - replace with actual API calls
-const mockDocuments: StudentDocument[] = [
+const mockDocuments = [
   {
     id: '1',
     type: DocumentType.AADHAAR,

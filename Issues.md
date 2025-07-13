@@ -113,7 +113,7 @@ In Admin
 6. Dashboard : Monthly Fee Collection Responsive || Upcoming Events : ✅ Fixed
 7. Fee Details Dialog : Transaction ID / Payer Information missing : ✅ Fixed
 8. Set Background Jobs TO Correct Fees Status
-9. Document Verification
+9. Document Verification: Send Message After Reject or Approve Document / Image || AI Suggestion For Notes , Reject Note
 
 In Parent
 

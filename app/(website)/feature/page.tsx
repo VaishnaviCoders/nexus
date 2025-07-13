@@ -10,14 +10,12 @@ import {
   Shield,
   BarChart3,
   GraduationCap,
-  ArrowRight,
   CheckCircle,
   Star,
   Zap,
 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import CTA from '@/components/websiteComp/ctc';
 import { Metadata } from 'next';
 

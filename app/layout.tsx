@@ -14,6 +14,7 @@ import { ourFileRouter } from '@/app/api/uploadthing/core';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { CustomGoogleOneTap } from '@/components/CustomGoogleOneTap';
+import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
 
 export const metadata: Metadata = {
   metadataBase: new URL(
@@ -59,6 +60,8 @@ export default function RootLayout({
       <html lang="en" suppressHydrationWarning>
         <body className={GeistSans.className}>
           {/* <CustomGoogleOneTap /> */}
+          <GoogleAnalytics gaId="G-Z9HW1EQ694" />
+          <GoogleTagManager gtmId="GTM-WNFTTCM4" />
 
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <NextSSRPlugin

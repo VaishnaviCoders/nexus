@@ -8,6 +8,7 @@ export interface StudentDocument {
   fileType?: string;
   documentUrl: string;
   studentId: string;
+  rejected: boolean;
   verified: boolean;
   verifiedBy?: string;
   verifiedAt?: Date;
@@ -19,6 +20,40 @@ export interface StudentDocument {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export type DocumentWithStudent = {
+  id: string;
+  type: keyof typeof DOCUMENT_TYPE_LABELS;
+  fileName: string | null;
+  fileSize: number | null;
+  fileType: string | null;
+  documentUrl: string;
+  studentId: string;
+  verified: boolean;
+  verifiedBy: string | null;
+  verifiedAt: Date | null;
+  rejected: boolean;
+  rejectedBy: string | null;
+  rejectedAt: Date | null;
+  uploadedBy: string | null;
+  uploadedAt: Date;
+  note: string | null;
+  rejectReason?: string | null;
+  isDeleted: boolean;
+  deletedAt: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
+  student: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    rollNumber: string;
+    grade: { grade: string };
+    section: { name: string };
+  };
+};
+
+export type DocumentVerificationAction = 'APPROVE' | 'REJECT';
 
 export const DOCUMENT_TYPE_LABELS: Record<DocumentType, string> = {
   AADHAAR: 'Aadhaar Card',
