@@ -467,6 +467,10 @@ enum AttendanceStatus {
   PRESENT
   ABSENT
   LATE
+  // Create After Stable Version
+  //   EXCUSED_ABSENT = 'EXCUSED_ABSENT',
+  // UNEXCUSED_ABSENT = 'UNEXCUSED_ABSENT',
+  // EARLY_DISMISSAL = 'EARLY_DISMISSAL',
 }
 
 model AcademicCalendar {
