@@ -12,6 +12,10 @@ import prisma from '@/lib/db';
 import { getOrganizationId } from '@/lib/organization';
 import { revalidatePath } from 'next/cache';
 
+function generateSha256(data: string): string {
+  return createHash('sha256').update(data).digest('hex');
+}
+
 export const phonePayInitPayment = async (feeId: string) => {
   const user = await currentUser();
   const organizationId = await getOrganizationId();
@@ -40,10 +44,15 @@ export const phonePayInitPayment = async (feeId: string) => {
   if (!fee) throw new Error('Fee not found');
   if (fee.status === 'PAID') throw new Error('Fee already paid');
 
-  const amountToPay = fee.pendingAmount ?? fee.totalFee - fee.paidAmount;
-  if (amountToPay <= 0) throw new Error('Nothing to pay');
+  const pendingAmount = fee.pendingAmount ?? fee.totalFee - fee.paidAmount;
 
-  const platformFee = parseFloat((amountToPay * 0.02).toFixed(2));
+  if (pendingAmount <= 0) {
+    throw new Error('No outstanding amount to pay');
+  }
+
+  const platformFee = parseFloat((pendingAmount * 0.02).toFixed(2));
+
+  const totalPayableAmount = pendingAmount + platformFee;
 
   const transactionId = `TXN-${randomUUID().slice(0, 10)}`;
 
@@ -51,7 +60,7 @@ export const phonePayInitPayment = async (feeId: string) => {
     merchantId: process.env.NEXT_PUBLIC_PAYMENT_MERCHANT_ID,
     merchantTransactionId: transactionId,
     merchantUserId: 'MUID-' + randomUUID().toString().slice(-6),
-    amount: amountToPay * 100,
+    amount: totalPayableAmount,
     redirectUrl: `${process.env.NEXT_PUBLIC_APP_URL}/api/phonepay-callback/${transactionId}`,
     redirectMode: 'REDIRECT',
     callbackUrl: `${process.env.NEXT_PUBLIC_APP_URL}/api/phonepay-callback/${transactionId}`,
@@ -62,29 +71,27 @@ export const phonePayInitPayment = async (feeId: string) => {
 
   console.log('Payment Payload:', payload);
 
-  function generateSha256(data: string): string {
-    return createHash('sha256').update(data).digest('hex');
-  }
-
   const dataPayload = JSON.stringify(payload);
   const dataBase64 = Buffer.from(dataPayload).toString('base64');
 
   const stringToHash =
     dataBase64 + '/pg/v1/pay' + process.env.NEXT_PUBLIC_SALT_KEY;
+
   const dataSha256 = generateSha256(stringToHash);
   const checksum = dataSha256 + '###' + process.env.NEXT_PUBLIC_SALT_INDEX;
 
   console.log('Checksum generated:', checksum);
 
-  const UAT_PAY_API_URL = `${process.env.NEXT_PUBLIC_PHONE_PAY_HOST_URL}/pg/v1/pay`;
+  const PAY_API_URL = `${process.env.NEXT_PUBLIC_PHONE_PAY_HOST_URL}/pg/v1/pay`;
 
   try {
-    const response = await fetch(UAT_PAY_API_URL, {
+    const response = await fetch(PAY_API_URL, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
         'X-VERIFY': checksum,
+        'X-MERCHANT-ID': process.env.NEXT_PUBLIC_PAYMENT_MERCHANT_ID!,
       },
       body: JSON.stringify({ request: dataBase64 }),
     });
@@ -107,7 +114,7 @@ export const phonePayInitPayment = async (feeId: string) => {
       await prisma.feePayment.create({
         data: {
           feeId: fee.id,
-          amount: amountToPay,
+          amount: pendingAmount * 100, // store only actual fee, not platformFe
           status: PaymentStatus.PENDING,
           paymentMethod: PaymentMethod.UPI,
           receiptNumber: `REC-${randomUUID().slice(0, 8).toUpperCase()}`,
@@ -135,10 +142,6 @@ export const phonePayInitPayment = async (feeId: string) => {
     throw error;
   }
 };
-
-function generateSha256(data: string): string {
-  return createHash('sha256').update(data).digest('hex');
-}
 
 export const verifyPhonePePayment = async (transactionId: string) => {
   const merchantId = process.env.NEXT_PUBLIC_PAYMENT_MERCHANT_ID!;

@@ -1,3 +1,4 @@
+'use server';
 import prisma from '@/lib/db';
 import { getOrganizationId } from '@/lib/organization';
 

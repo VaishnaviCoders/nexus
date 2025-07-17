@@ -27,6 +27,47 @@ enum OrganizationType {
   OTHER
 }
 
+model AcademicYear {
+  id             String       @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  name      String // "2024-25", "Batch Jan–May", etc.
+  startDate DateTime
+  endDate   DateTime
+
+  type      YearType @default(ANNUAL)
+  isCurrent Boolean  @default(false)
+
+  // Meta Data
+  description String?
+  createdBy   String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relation Targets (Optional but Needed)
+  // fees               Fee[]
+  // feePayments        FeePayment[]
+  // assignments        Assignment[]
+  // submissions        AssignmentSubmission[]
+  // marks              Mark[]
+  complaints         AnonymousComplaint[]
+  notices            Notice[]
+  TeachingAssignment TeachingAssignment[]
+  StudentAttendance  StudentAttendance[]
+  AcademicCalendar   AcademicCalendar[]
+
+  @@unique([organizationId, name])
+  @@index([organizationId, isCurrent])
+}
+
+enum YearType {
+  ANNUAL // For Schools (April–March)
+  SEMESTER // For Colleges/Universities
+  TRIMESTER // For IB/International Schools
+  BATCH // For Coaching/Training Programs
+}
+
 model Organization {
   id               String  @id @default(cuid())
   name             String?
@@ -58,13 +99,15 @@ model Organization {
   FeePayment         FeePayment[]
   AcademicCalendar   AcademicCalendar[]
   AnonymousComplaint AnonymousComplaint[]
-
-  createdAt          DateTime             @default(now())
-  updatedAt          DateTime             @updatedAt
   Teacher            Teacher[]
   Subject            Subject[]
   TeachingAssignment TeachingAssignment[]
   NotificationLog    NotificationLog[]
+  AcademicYear       AcademicYear[]
+
+  createdBy String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([id])
   @@index([organizationSlug])
@@ -103,6 +146,8 @@ model Teacher {
   userId String @unique
   user   User   @relation(fields: [userId], references: [id])
 
+  employeeCode String? @unique
+
   employmentStatus EmploymentStatus @default(ACTIVE)
   isActive         Boolean          @default(true)
 
@@ -114,6 +159,8 @@ model Teacher {
   profile            TeacherProfile?
   TeachingAssignment TeachingAssignment[]
   Section            Section[]
+  // leaves             Leave[]
+  // salaries           Salary[]
 
   @@index([userId, isActive, employmentStatus, organizationId])
 }
@@ -180,8 +227,10 @@ model TeachingAssignment {
   section      Section      @relation(fields: [sectionId], references: [id])
   organization Organization @relation(fields: [organizationId], references: [id])
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  AcademicYear   AcademicYear? @relation(fields: [academicYearId], references: [id])
+  academicYearId String?
 
   // ✅ Proper unique constraint
   @@unique([teacherId, subjectId, gradeId, sectionId, academicYear])
@@ -255,7 +304,7 @@ model Student {
   organizationId String
 
   Fee               Fee[]
-  ParentStudent     ParentStudent[]
+  ParentStudent     ParentStudent[] // Change to parents
   StudentAttendance StudentAttendance[]
   StudentDocument   StudentDocument[]
   // performances   Performance[]
@@ -266,6 +315,7 @@ model Student {
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
   NotificationLog NotificationLog[]
+  performance     Performance[]
 
   @@index([email]) // User lookup
   @@index([phoneNumber])
@@ -285,7 +335,7 @@ model Parent {
   phoneNumber    String
   whatsAppNumber String
 
-  students ParentStudent[]
+  students ParentStudent[] // change to children
 
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
@@ -300,32 +350,40 @@ model ParentStudent {
   parent       Parent   @relation(fields: [parentId], references: [id])
   parentId     String
   isPrimary    Boolean? @default(false)
+  // @@unique([studentId, parentId])
 
   @@index([relationship])
   @@index([parentId, studentId])
 }
 
 model StudentAttendance {
-  id         String           @id @default(cuid())
-  studentId  String
-  present    Boolean          @default(false)
+  id String @id @default(cuid())
+
   date       DateTime
   status     AttendanceStatus
   note       String?
   recordedBy String
-  sectionId  String
-  section    Section          @relation(fields: [sectionId], references: [id])
-  createdAt  DateTime         @default(now())
-  updatedAt  DateTime         @updatedAt
-  student    Student          @relation(fields: [studentId], references: [id])
+
+  studentId String
+  present   Boolean @default(false)
+
+  sectionId String
+  section   Section @relation(fields: [sectionId], references: [id])
+
+  student        Student       @relation(fields: [studentId], references: [id])
+  academicYear   AcademicYear? @relation(fields: [academicYearId], references: [id])
+  academicYearId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@unique([studentId, date])
 }
 
 model StudentDocument {
-  id   String       @id @default(cuid())
-  type DocumentType
+  id String @id @default(cuid())
 
+  type        DocumentType
   fileName    String?
   fileSize    Int? // (in bytes)
   fileType    String?
@@ -474,18 +532,24 @@ enum AttendanceStatus {
 }
 
 model AcademicCalendar {
-  id             String            @id @default(cuid())
+  id             String       @id @default(cuid())
   organizationId String
-  organization   Organization      @relation(fields: [organizationId], references: [id])
-  name           String // e.g., "Diwali Break", "Emergency Closure", "Tech Fest"
-  startDate      DateTime // Start date of the holiday or event
-  endDate        DateTime // End date of the holiday or event
+  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  // Event details
+  name      String // e.g., "Diwali Break", "Emergency Closure", "Tech Fest"
+  startDate DateTime // Start date of the holiday or event
+  endDate   DateTime // End date of the holiday or event
+
+  // Event categorization
   type           CalendarEventType // PLANNED, SUDDEN, INSTITUTION_SPECIFIC
   reason         String? // e.g., "Festival", "Weather Emergency", "Exam Prep"
   isRecurring    Boolean           @default(false) // Whether the event repeats annually
   createdBy      String // ID of the user who created the entry (admin/teacher)
   createdAt      DateTime          @default(now())
   updatedAt      DateTime          @updatedAt
+  academicYear   AcademicYear?     @relation(fields: [academicYearId], references: [id])
+  academicYearId String?
 
   @@unique([organizationId, startDate, endDate]) // Prevent duplicate entries for the same date range
   @@index([organizationId, startDate, endDate]) // Optimize queries for date ranges
@@ -513,6 +577,8 @@ model AnonymousComplaint {
   createdAt               DateTime                  @default(now())
   updatedAt               DateTime                  @updatedAt
   ComplaintStatusTimeline ComplaintStatusTimeline[]
+  academicYear            AcademicYear?             @relation(fields: [academicYearId], references: [id])
+  academicYearId          String?
 }
 
 model ComplaintStatusTimeline {
@@ -565,10 +631,12 @@ model Notice {
   attachments    Json?    @default("[]")
 
   publishedBy    String
-  Organization   Organization @relation(fields: [organizationId], references: [id])
+  Organization   Organization  @relation(fields: [organizationId], references: [id])
   organizationId String
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  academicYear   AcademicYear? @relation(fields: [academicYearId], references: [id])
+  academicYearId String?
 }
 
 model NotificationLog {
@@ -648,6 +716,62 @@ enum EmploymentStatus {
   SUSPENDED
 }
 
+enum EvaluationType {
+  TEST
+  EXAM
+  ASSIGNMENT
+  PROJECT
+  PRACTICAL
+  QUIZ
+  ORAL
+  INTERNAL
+  FINAL
+  OTHER
+}
+
+model Performance {
+  id             String @id @default(cuid())
+  studentId      String
+  subjectId      String
+  academicYearId String
+  organizationId String
+
+  // Optional but recommended context
+  teacherId String?
+  gradeId   String?
+  sectionId String?
+
+  // Evaluation metadata
+  evaluationTitle String // e.g., "Midterm Exam", "Unit Test 1"
+  evaluationType  EvaluationType @default(TEST)
+  evaluationDate  DateTime?
+  maxMarks        Float
+  obtainedMarks   Float
+  // For GPA/weighted average calculations
+
+  // Performance labels and feedback
+  gradeLabel  String? // e.g., A+, B
+  remarks     String?
+  isPassed    Boolean?
+  isPublished Boolean  @default(false) // visibility toggle for students
+
+  // Relations
+  student Student @relation(fields: [studentId], references: [id])
+  // subject       Subject       @relation(fields: [subjectId], references: [id])
+  // academicYear  AcademicYear @relation(fields: [academicYearId], references: [id])
+  // organization  Organization  @relation(fields: [organizationId], references: [id])
+  // teacher       Teacher?      @relation(fields: [teacherId], references: [id])
+  // grade         Grade?        @relation(fields: [gradeId], references: [id])
+  // section       Section?      @relation(fields: [sectionId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([studentId, subjectId, evaluationTitle, academicYearId])
+  @@index([teacherId])
+  @@index([organizationId, academicYearId])
+}
+
 // FeedBackCollection
 
 // "TeacherFeedback",          // Missing - for teachers to give student feedback
@@ -657,7 +781,7 @@ enum EmploymentStatus {
 // "AssignmentSubmission"    // Not in schema - could be needed for academic tracking
 // "Performance",           // Mentioned in comment but not implemented
 // "Marks",                 // Mentioned in comment but not implemented
-// Subject 
+//  Subject 
 // LeaveManagement
 // Lead Management
 // Courses and Batches
@@ -670,3 +794,31 @@ enum EmploymentStatus {
 // Admin : ALl Reports / AI Generated  View Fee Receipts , Download Receipts , Phonepay Payment Gateway Money , Admin Profile , SMS Notification , WhatsApp Notification , Setting Page , Organization Management
 
 // Student Bulk Import 
+
+// Payout : Corporate Bank Account || IFC CODE  Branch || Verify by consorn bank || 
+
+// model Leave {
+//   id           String     @id @default(cuid())
+//   startDate    DateTime
+//   endDate      DateTime
+//   reason       String
+//   status       LeaveStatus @default(PENDING)
+//   approvedBy   String?
+//   approvedAt   DateTime?
+//   rejectedNote String?
+
+//   teacher   Teacher? @relation(fields: [teacherId], references: [id])
+//   teacherId String?
+//   student   Student? @relation(fields: [studentId], references: [id])
+//   studentId String?
+
+//   academicYear   AcademicYear @relation(fields: [academicYearId], references: [id])
+//   academicYearId String
+
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+//   deletedAt DateTime?
+
+//   @@index([teacherId, startDate])
+//   @@index([studentId, startDate])
+// }

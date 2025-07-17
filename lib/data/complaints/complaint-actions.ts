@@ -2,7 +2,9 @@
 
 import { revalidatePath } from 'next/cache';
 import prisma from '@/lib/db';
-import type { ComplaintStatus, Severity } from '@/lib/generated/prisma';
+import type { ComplaintStatus, Prisma, Severity } from '@/lib/generated/prisma';
+import { getOrganizationId } from '@/lib/organization';
+import { getCurrentAcademicYear } from '@/lib/academicYear';
 
 interface ComplaintFilters {
   status?: string;
@@ -15,7 +17,11 @@ interface ComplaintFilters {
 }
 
 export async function getComplaintsWithFilters(filters: ComplaintFilters) {
+  const organizationId = await getOrganizationId();
+  const currentYear = await getCurrentAcademicYear();
+
   try {
+    const academicYearId = currentYear.id;
     const {
       status,
       severity,
@@ -30,7 +36,10 @@ export async function getComplaintsWithFilters(filters: ComplaintFilters) {
     const skip = (page - 1) * pageSize;
 
     // Build where clause
-    const where: any = {};
+    const where: Prisma.AnonymousComplaintWhereInput = {
+      organizationId,
+      academicYearId,
+    };
 
     if (status && status !== 'all') {
       where.currentStatus = status as ComplaintStatus;
@@ -72,6 +81,8 @@ export async function getComplaintsWithFilters(filters: ComplaintFilters) {
       prisma.anonymousComplaint.count({ where }),
     ]);
 
+    const baseWhere = { organizationId, academicYearId };
+
     // Get analytics data
     const [
       totalComplaints,
@@ -82,26 +93,35 @@ export async function getComplaintsWithFilters(filters: ComplaintFilters) {
       severityBreakdown,
       statusBreakdown,
     ] = await Promise.all([
-      prisma.anonymousComplaint.count(),
-      prisma.anonymousComplaint.count({ where: { currentStatus: 'PENDING' } }),
-      prisma.anonymousComplaint.count({ where: { currentStatus: 'RESOLVED' } }),
-      prisma.anonymousComplaint.count({ where: { severity: 'CRITICAL' } }),
+      prisma.anonymousComplaint.count({ where }),
+      prisma.anonymousComplaint.count({
+        where: { ...baseWhere, currentStatus: 'PENDING' },
+      }),
+      prisma.anonymousComplaint.count({
+        where: { ...baseWhere, currentStatus: 'RESOLVED' },
+      }),
+      prisma.anonymousComplaint.count({
+        where: { ...baseWhere, severity: 'CRITICAL' },
+      }),
 
       // Category breakdown
       prisma.anonymousComplaint.groupBy({
         by: ['category'],
+        where,
         _count: { category: true },
       }),
 
       // Severity breakdown
       prisma.anonymousComplaint.groupBy({
         by: ['severity'],
+        where,
         _count: { severity: true },
       }),
 
       // Status breakdown
       prisma.anonymousComplaint.groupBy({
         by: ['currentStatus'],
+        where,
         _count: { currentStatus: true },
       }),
     ]);
@@ -109,7 +129,7 @@ export async function getComplaintsWithFilters(filters: ComplaintFilters) {
     // Calculate average resolution time
     const resolvedComplaintsWithTimeline =
       await prisma.anonymousComplaint.findMany({
-        where: { currentStatus: 'RESOLVED' },
+        where: { currentStatus: 'RESOLVED', organizationId, academicYearId },
         include: {
           ComplaintStatusTimeline: {
             where: { status: 'RESOLVED' },
@@ -130,13 +150,10 @@ export async function getComplaintsWithFilters(filters: ComplaintFilters) {
         );
       });
 
-    const averageResolutionTime =
-      resolutionTimes.length > 0
-        ? Math.round(
-            resolutionTimes.reduce((sum, time) => sum + time, 0) /
-              resolutionTimes.length
-          )
-        : 0;
+    const averageResolutionTime = Math.round(
+      resolutionTimes.reduce((sum, t) => sum + t, 0) / resolutionTimes.length ||
+        0
+    );
 
     // Get monthly trends (last 6 months)
     const sixMonthsAgo = new Date();
@@ -147,7 +164,10 @@ export async function getComplaintsWithFilters(filters: ComplaintFilters) {
         submittedAt: {
           gte: sixMonthsAgo,
         },
+        organizationId,
+        academicYearId,
       },
+
       select: {
         submittedAt: true,
         currentStatus: true,
@@ -155,10 +175,11 @@ export async function getComplaintsWithFilters(filters: ComplaintFilters) {
     });
 
     const monthlyTrends = Array.from({ length: 6 }, (_, i) => {
-      const date = new Date();
-      date.setMonth(date.getMonth() - (5 - i));
-      const monthKey = date.toISOString().slice(0, 7); // YYYY-MM format
-      const monthName = date.toLocaleDateString('en-US', {
+      const targetDate = new Date();
+      targetDate.setMonth(sixMonthsAgo.getMonth() + i);
+
+      const monthKey = targetDate.toISOString().slice(0, 7);
+      const monthName = targetDate.toLocaleDateString('en-US', {
         month: 'short',
         year: 'numeric',
       });

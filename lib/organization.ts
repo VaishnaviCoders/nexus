@@ -1,5 +1,6 @@
+'use server';
+
 import { auth } from '@clerk/nextjs/server';
-import prisma from './db';
 
 export async function getOrganizationId() {
   const { orgId } = await auth();

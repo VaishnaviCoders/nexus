@@ -113,7 +113,8 @@ In Admin
 6. Dashboard : Monthly Fee Collection Responsive || Upcoming Events : ✅ Fixed
 7. Fee Details Dialog : Transaction ID / Payer Information missing : ✅ Fixed
 8. Set Background Jobs TO Correct Fees Status
-9. Document Verification: Send Message After Reject or Approve Document / Image || AI Suggestion For Notes , Reject Note
+9. Document Verification: Send Message After Reject or Approve Document / Image || AI Suggestion For Notes , Reject Note ✅ Completed
+10. Full Calendar : https://originui.com/
 
 In Parent
 
@@ -121,8 +122,31 @@ In Parent
 2. Preference Page : Notification , Notice , Feedback , Reports , Reminder , Attendance Report
 3. child-attendance Page :Attendance Alert => Link to Show Attendance Details <StudentAttendanceList studentId={studentId}>
 4. Child Attendance Monitor Calculation : ✅ Fixed
+5. Attendance Reports : Weekly, Monthly , Yearly
+6. Automated Email Attendance Reports : Weekly, Monthly , Yearly
+7. Automated Whatsapp PDF Attendance Reports : Weekly, Monthly , Yearly
 
-Big Problem
+Email Templates
+
+- Admisson success or not : Success Asel tr Next Details , Location Time
+- Fees : Enrolment Fees
+- Class Time Table
+- Exam | Notice | Event | Result Declare | hall Ticket
+-
+- Attendance Reports : Weekly, Monthly , Yearly => PARENT
+- Document Verified || Rejected with Reason => PARENT , STUDENT
+- Smart Fee reminder scheduling (7 days before, due date, overdue) => PARENT
+- Instant receipt generation & delivery
+
+WhatsApp Templates
+
+- For Holidays
+- Urgent Notice
+
+SMS Templates
+
+- Holidays or Closed Tommawro
+- Big Problem
 
 1. TimeTable
 2. Pay Fees At Home

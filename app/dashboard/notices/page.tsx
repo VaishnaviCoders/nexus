@@ -10,22 +10,29 @@ import { EmptyState } from '@/components/EmptyState';
 import { Activity, Pin, Newspaper } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Role } from '@/lib/generated/prisma';
-
-// const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+import { getCurrentAcademicYear } from '@/lib/academicYear';
+import { performance } from 'perf_hooks';
 
 const page = async () => {
   const { orgRole } = await getOrganizationUserRole();
 
   const organizationId = await getOrganizationId();
+  const currentYear = await getCurrentAcademicYear();
+
+  const t0 = performance.now();
 
   const notices = await prisma.notice.findMany({
     where: {
       organizationId,
+      academicYearId: currentYear.id,
     },
     orderBy: {
       createdAt: 'desc',
     },
   });
+
+  const t1 = performance.now();
+  console.log(`⏱  Notices query took ${(t1 - t0).toFixed(2)} ms`);
 
   const roleMap: Record<string, Role> = {
     'org:admin': 'ADMIN',
@@ -40,7 +47,7 @@ const page = async () => {
   return (
     <div className="w-full mx-auto ">
       <div className="flex justify-between items-center px-4 pb-5">
-        <h1 className="text-xl font-bold ">All Notices</h1>
+        <h1 className="text-xl font-bold ">All Notices{notices.length}</h1>
         {role === 'ADMIN' || role === 'TEACHER' ? (
           <Link
             className="px-4 py-2 bg-primary text-primary-foreground hover:bg-primary/90 inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"

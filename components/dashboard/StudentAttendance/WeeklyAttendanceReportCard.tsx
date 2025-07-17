@@ -10,6 +10,7 @@ import {
   Phone,
   Mail,
 } from 'lucide-react';
+import { formatDateIN } from '@/lib/utils';
 
 // Extend your existing AttendanceStatus enum
 enum AttendanceStatus {
@@ -156,14 +157,6 @@ const WeeklyAttendanceReportCard: React.FC<{ data: WeeklyAttendanceData }> = ({
     },
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      weekday: 'long',
-      month: 'short',
-      day: 'numeric',
-    });
-  };
-
   const getAttendanceMessage = (percentage: number) => {
     if (percentage >= 95)
       return {
@@ -218,8 +211,8 @@ const WeeklyAttendanceReportCard: React.FC<{ data: WeeklyAttendanceData }> = ({
             <div className="flex items-center space-x-2 text-blue-100 text-sm">
               <Calendar className="w-4 h-4" />
               <span>
-                {formatDate(weekRange.startDate)} -{' '}
-                {formatDate(weekRange.endDate)}
+                {formatDateIN(weekRange.startDate)} -{' '}
+                {formatDateIN(weekRange.endDate)}
               </span>
             </div>
           </div>
@@ -343,7 +336,7 @@ const WeeklyAttendanceReportCard: React.FC<{ data: WeeklyAttendanceData }> = ({
               >
                 <div className="flex items-center justify-between mb-3">
                   <div className="font-medium text-gray-900">
-                    {formatDate(record.date)}
+                    {formatDateIN(record.date)}
                   </div>
                   <div className="flex items-center space-x-2">
                     <span className="text-2xl">{config.emoji}</span>

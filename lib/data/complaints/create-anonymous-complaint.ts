@@ -1,5 +1,6 @@
 'use server';
 import { anonymousComplaintSchema } from '@/components/dashboard/anonymousComplaints/create-complaint-form';
+import { getCurrentAcademicYearId } from '@/lib/academicYear';
 import prisma from '@/lib/db';
 import { getOrganizationId } from '@/lib/organization';
 import { z } from 'zod';
@@ -17,10 +18,12 @@ export async function createAnonymousComplaintAction(
   const organizationId = await getOrganizationId();
 
   const trackingId = generateTrackingId();
+  const { academicYearId } = await getCurrentAcademicYearId();
 
-  const complaint = await prisma.anonymousComplaint.create({
+  await prisma.anonymousComplaint.create({
     data: {
       organizationId,
+      academicYearId,
       category: data.category,
       severity: data.severity,
       subject: data.subject,
@@ -38,8 +41,5 @@ export async function createAnonymousComplaintAction(
     },
   });
 
-  console.log('Complaint created:', complaint);
-
-  console.log('Created complaint with trackingId:', trackingId);
   return trackingId;
 }

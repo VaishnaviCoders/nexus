@@ -1,13 +1,8 @@
 import OrganizationConfig from '@/components/OrganizationConfig';
 import prisma from '@/lib/db';
 import { getOrganizationId } from '@/lib/organization';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { Card, CardDescription, CardTitle } from '@/components/ui/card';
+import { AcademicYearConfig } from './adminConfig/AcademicYearConfig';
 
 async function getOrganization(organizationId: string) {
   const organization = await prisma.organization.findUnique({
@@ -16,7 +11,7 @@ async function getOrganization(organizationId: string) {
       id: true,
       name: true,
       organizationSlug: true,
-      // organizationLogo: true,
+      organizationLogo: true,
       contactEmail: true,
       contactPhone: true,
       website: true,
@@ -30,11 +25,21 @@ async function getOrganization(organizationId: string) {
   });
   return organization;
 }
+
+async function getAcademicYears(organizationId: string) {
+  const academicYears = await prisma.academicYear.findMany({
+    where: { organizationId },
+    orderBy: [{ isCurrent: 'desc' }, { startDate: 'desc' }],
+  });
+
+  return academicYears;
+}
 const AdminSettings = async () => {
   const organizationId = await getOrganizationId();
 
   const organization = await getOrganization(organizationId);
 
+  const academicYears = await getAcademicYears(organizationId);
   return (
     <div className="px-4 space-y-4">
       <Card className="px-4 py-3">
@@ -56,6 +61,10 @@ const AdminSettings = async () => {
         </div>
 
         {/* Add more settings sections here */}
+        <AcademicYearConfig
+          academicYears={academicYears}
+          organizationId={organizationId}
+        />
       </div>
     </div>
   );

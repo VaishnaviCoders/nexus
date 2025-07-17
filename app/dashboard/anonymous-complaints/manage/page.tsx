@@ -1,6 +1,5 @@
 import { Suspense } from 'react';
-// import { ComplaintManagementDashboard } from '@/components/complaints/complaint-management-dashboard';
-// import { getComplaintsWithFilters } from '@/lib/actions/complaint-actions';
+
 import {
   Card,
   CardContent,

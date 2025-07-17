@@ -2,6 +2,10 @@
 
 import { auth, currentUser, User } from '@clerk/nextjs/server';
 import {
+  AcademicYearFormData,
+  academicYearSchema,
+  AcademicYearUpdateData,
+  academicYearUpdateSchema,
   DocumentUploadFormData,
   documentUploadSchema,
   feeCategorySchema,
@@ -348,7 +352,7 @@ export async function markAttendance(
 export async function getPreviousDayAttendance(
   studentId: string,
   targetDate: Date
-): Promise<StudentAttendance | null> {
+) {
   try {
     const previousDay = subDays(targetDate, 1);
 
@@ -361,6 +365,7 @@ export async function getPreviousDayAttendance(
         },
       },
       select: {
+        academicYear: true,
         id: true,
         studentId: true,
         recordedBy: true,
@@ -741,5 +746,235 @@ export async function updateTeacherProfileAction({
         certificateUrls,
       },
     });
+  }
+}
+
+export async function createAcademicYear(data: AcademicYearFormData) {
+  try {
+    const user = await currentUser();
+    const userId = await getCurrentUserId();
+
+    const validatedData = academicYearSchema.parse(data);
+
+    // Check for overlapping academic years
+    const overlapping = await prisma.academicYear.findFirst({
+      where: {
+        organizationId: validatedData.organizationId,
+        OR: [
+          {
+            AND: [
+              { startDate: { lte: validatedData.startDate } },
+              { endDate: { gte: validatedData.startDate } },
+            ],
+          },
+          {
+            AND: [
+              { startDate: { lte: validatedData.endDate } },
+              { endDate: { gte: validatedData.endDate } },
+            ],
+          },
+          {
+            AND: [
+              { startDate: { gte: validatedData.startDate } },
+              { endDate: { lte: validatedData.endDate } },
+            ],
+          },
+        ],
+      },
+    });
+
+    if (overlapping) {
+      return {
+        success: false,
+        error:
+          'The selected dates overlap with an existing academic year. Please choose different dates.',
+      };
+    }
+
+    // If this is set as default, unset other defaults
+    if (validatedData.isCurrent) {
+      await prisma.academicYear.updateMany({
+        where: {
+          organizationId: validatedData.organizationId,
+          isCurrent: true,
+        },
+        data: { isCurrent: false },
+      });
+    }
+
+    await prisma.academicYear.create({
+      data: {
+        ...validatedData,
+        createdBy: `${user?.firstName} ${user?.lastName}` || userId || 'SYSTEM', // Replace with actual user ID from auth
+      },
+    });
+
+    revalidatePath('/dashboard/settings');
+    return { success: true };
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return {
+        success: false,
+        error: error.errors[0]?.message || 'Validation failed',
+      };
+    }
+    return {
+      success: false,
+      error:
+        'Something went wrong while creating the academic year. Please try again or contact support.',
+    };
+  }
+}
+
+export async function updateAcademicYear(data: AcademicYearUpdateData) {
+  try {
+    const validatedData = academicYearUpdateSchema.parse(data);
+
+    // Check for overlapping academic years (excluding current one)
+    const overlapping = await prisma.academicYear.findFirst({
+      where: {
+        organizationId: validatedData.organizationId,
+        id: { not: validatedData.id },
+        OR: [
+          {
+            AND: [
+              { startDate: { lte: validatedData.startDate } },
+              { endDate: { gte: validatedData.startDate } },
+            ],
+          },
+          {
+            AND: [
+              { startDate: { lte: validatedData.endDate } },
+              { endDate: { gte: validatedData.endDate } },
+            ],
+          },
+          {
+            AND: [
+              { startDate: { gte: validatedData.startDate } },
+              { endDate: { lte: validatedData.endDate } },
+            ],
+          },
+        ],
+      },
+    });
+
+    if (overlapping) {
+      return {
+        success: false,
+        error:
+          'The selected dates overlap with an existing academic year. Please choose different dates.',
+      };
+    }
+
+    // If this is set as default, unset other defaults
+    if (validatedData.isCurrent) {
+      await prisma.academicYear.updateMany({
+        where: {
+          organizationId: validatedData.organizationId,
+          isCurrent: true,
+          id: { not: validatedData.id },
+        },
+        data: { isCurrent: false },
+      });
+    }
+
+    await prisma.academicYear.update({
+      where: { id: validatedData.id },
+      data: {
+        name: validatedData.name,
+        startDate: validatedData.startDate,
+        endDate: validatedData.endDate,
+        type: validatedData.type,
+        description: validatedData.description,
+        isCurrent: validatedData.isCurrent,
+      },
+    });
+
+    revalidatePath('/dashboard/settings');
+
+    return { success: true };
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return {
+        success: false,
+        error: error.errors[0]?.message || 'Validation failed',
+      };
+    }
+    return {
+      success: false,
+      error:
+        'Something went wrong while updating the academic year. Please try again or contact support.',
+    };
+  }
+}
+
+export async function setDefaultAcademicYear(
+  yearId: string,
+  organizationId: string
+) {
+  try {
+    // Unset all other defaults
+    await prisma.academicYear.updateMany({
+      where: {
+        organizationId,
+        isCurrent: true,
+        id: { not: yearId },
+      },
+      data: {
+        isCurrent: false,
+      },
+    });
+
+    // Set selected year as default
+    await prisma.academicYear.update({
+      where: {
+        id: yearId,
+      },
+      data: {
+        isCurrent: true,
+      },
+    });
+
+    revalidatePath('/dashboard/settings');
+    return { success: true };
+  } catch (error) {
+    console.error('Failed to set default academic year:', error);
+    return {
+      success: false,
+      error: 'Unable to set default academic year',
+    };
+  }
+}
+
+export async function deleteAcademicYear(id: string) {
+  try {
+    await prisma.academicYear.delete({
+      where: { id },
+    });
+
+    revalidatePath('/dashboard/settings');
+    return { success: true };
+  } catch (error: unknown) {
+    console.error('Failed to delete academic year:', error);
+
+    let errorMessage = 'Failed to delete academic year';
+
+    // Check for Prisma foreign key error
+    if (
+      typeof error === 'object' &&
+      error !== null &&
+      'code' in error &&
+      (error as any).code === 'P2003'
+    ) {
+      errorMessage =
+        'Cannot delete. This academic year is linked to other data (e.g., attendance, notices, etc.)';
+    } else if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+
+    return {
+      success: false,
+      error: errorMessage,
+    };
   }
 }

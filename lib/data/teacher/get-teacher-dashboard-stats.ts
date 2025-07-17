@@ -1,5 +1,6 @@
 'use server';
 
+import { getCurrentAcademicYear } from '@/lib/academicYear';
 import prisma from '@/lib/db';
 import { auth } from '@clerk/nextjs/server';
 import { cache } from 'react';
@@ -32,7 +33,9 @@ const getTeacherInfo = cache(async () => {
 });
 
 export async function getTeacherDashboardStats() {
+  const currentYear = await getCurrentAcademicYear();
   const teacher = await getTeacherInfo();
+
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
@@ -91,6 +94,7 @@ export async function getTeacherDashboardStats() {
 
     prisma.anonymousComplaint.count({
       where: {
+        academicYearId: currentYear.id,
         organizationId: teacher.organizationId,
         currentStatus: {
           in: ['PENDING', 'UNDER_REVIEW', 'INVESTIGATING'],

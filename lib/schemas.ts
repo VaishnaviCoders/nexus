@@ -281,3 +281,21 @@ export const teacherProfileSchema = z.object({
 });
 
 export type TeacherProfileFormData = z.infer<typeof teacherProfileSchema>;
+
+export const academicYearSchema = z.object({
+  name: z.string().min(1, 'Name is required').max(100, 'Name is too long'),
+  startDate: z.date({ required_error: 'Start date is required' }),
+  endDate: z.date({ required_error: 'End date is required' }),
+  type: z.enum(['ANNUAL', 'SEMESTER', 'TRIMESTER', 'BATCH']),
+  description: z.string().optional(),
+  isCurrent: z.boolean().default(false),
+  organizationId: z.string().min(1, 'Organization ID is required'),
+});
+
+export type AcademicYearFormData = z.infer<typeof academicYearSchema>;
+
+export const academicYearUpdateSchema = academicYearSchema.extend({
+  id: z.string().min(1, 'ID is required'),
+});
+
+export type AcademicYearUpdateData = z.infer<typeof academicYearUpdateSchema>;

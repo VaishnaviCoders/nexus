@@ -34,7 +34,7 @@ export default function AdminQuickActions() {
       category: 'primary',
     },
     {
-      title: 'Mark Attendance',
+      title: 'Take Attendance',
       description: 'Record daily attendance',
       icon: Users,
       href: '/dashboard/attendance/mark',

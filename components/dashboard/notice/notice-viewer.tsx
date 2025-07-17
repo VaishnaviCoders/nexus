@@ -31,7 +31,7 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 import { Separator } from '@/components/ui/separator';
-import { formatDateIN } from '@/lib/utils';
+import { formatBytes, formatDateIN } from '@/lib/utils';
 import { toast } from 'sonner';
 import Image from 'next/image';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -97,12 +97,6 @@ export default function NoticeViewer({
       .substring(0, 2);
   };
 
-  const getFileSize = (size: number) => {
-    if (size < 1024) return `${size} B`;
-    if (size < 1024 * 1024) return `${(size / 1024).toFixed(1)} KB`;
-    return `${(size / (1024 * 1024)).toFixed(1)} MB`;
-  };
-
   return (
     <Card className="w-full shadow-md">
       <CardHeader className="border-b">
@@ -110,7 +104,7 @@ export default function NoticeViewer({
           <div>
             <div className="flex items-center gap-2 mb-2">
               <Badge variant="outline" className="font-medium">
-                {notice.noticeType}
+                {notice.noticeType.toUpperCase()}
               </Badge>
               {notice.isNoticeApproved ? (
                 <Badge className="bg-green-100 text-green-800 hover:bg-green-200">
@@ -266,7 +260,7 @@ export default function NoticeViewer({
                             {attachment.name}
                           </span>
                           <span className="text-xs text-muted-foreground">
-                            {getFileSize(attachment.size)}
+                            {formatBytes(attachment.size)}
                           </span>
                         </div>
                       </div>

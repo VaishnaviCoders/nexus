@@ -2,11 +2,10 @@
 
 import type React from 'react';
 
-import { useState, useEffect, useTransition } from 'react';
+import { useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
-import { Settings, Building2, Upload, X } from 'lucide-react';
+import { Settings, Building2 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -33,19 +32,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { toast } from 'sonner';
 
 import { OrganizationType } from '@/lib/generated/prisma';
 import { OrganizationFormData, organizationSchema } from '@/lib/schemas';
 import { updateOrganization } from '@/lib/data/update-organization';
-// import { getOrganization, updateOrganization } from "@/lib/actions/organization"
 
 interface Organization {
   id: string;
   name: string | null;
   organizationSlug: string;
-  // organizationLogo: string | null;
+  organizationLogo: string | null;
   contactEmail: string | null;
   contactPhone: string | null;
   website: string | null;

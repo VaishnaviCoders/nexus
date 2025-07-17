@@ -1,5 +1,6 @@
 'use server';
 
+import { getCurrentAcademicYear } from '@/lib/academicYear';
 import prisma from '@/lib/db';
 import { getOrganizationId } from '@/lib/organization';
 import { CreateNoticeFormSchema } from '@/lib/schemas';
@@ -11,9 +12,10 @@ export const createNotice = async (
 ) => {
   try {
     const validatedData = CreateNoticeFormSchema.parse(data);
-    const [organizationId, user] = await Promise.all([
+    const [organizationId, user, currentYear] = await Promise.all([
       getOrganizationId(),
       currentUser(),
+      getCurrentAcademicYear(),
     ]);
     // console.log('Backend Action data', data);
 
@@ -31,6 +33,7 @@ export const createNotice = async (
         noticeType: validatedData.noticeType,
         title: validatedData.title,
         content: validatedData.content,
+        academicYearId: currentYear.id,
 
         attachments: processedAttachments,
         targetAudience: validatedData.targetAudience,

@@ -325,9 +325,9 @@ export default function AttendanceMark({ students }: Props) {
         student.status
       );
       handleNoteChange(studentId, suggestion);
-      toast.success('AI suggestion generated!', {
-        description: 'Note has been updated with AI suggestion.',
-      });
+      // toast.success('AI suggestion generated!', {
+      //   description: 'Note has been updated with AI suggestion.',
+      // });
     } catch (error) {
       toast.error('Failed to generate suggestion', {
         description: 'Please try again or write the note manually.',
@@ -421,7 +421,7 @@ export default function AttendanceMark({ students }: Props) {
           note: student.note || '',
         }));
 
-      console.log('Recording attendance:', records);
+      // console.log('Recording attendance:', records);
       await markAttendance(sectionId, date, records);
 
       toast.success('Attendance saved successfully!', {
@@ -498,7 +498,7 @@ export default function AttendanceMark({ students }: Props) {
   };
 
   return (
-    <main className="flex-1 p-4 md:p-4 space-y-6 ">
+    <main className="flex-1 p-2 md:p-4 space-y-6 ">
       {/* Header Section */}
       <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-blue-950/20 dark:via-indigo-950/20 dark:to-purple-950/20 border border-blue-200/50 dark:border-blue-800/50">
         <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
@@ -510,7 +510,7 @@ export default function AttendanceMark({ students }: Props) {
                   <Users className="h-6 w-6 text-blue-600 dark:text-blue-400" />
                 </div>
                 <div>
-                  <h1 className="text-base  font-bold tracking-tight bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                  <h1 className="text-base font-bold tracking-tight bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                     Attendance Management
                   </h1>
                   <p className="text-muted-foreground mt-1">
@@ -520,11 +520,11 @@ export default function AttendanceMark({ students }: Props) {
                 </div>
               </div>
 
-              <div className="flex items-center gap-4 text-sm">
+              <div className="flex flex-col items-start sm:flex-row sm:items-center gap-4 text-sm ">
                 <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm border border-white/20">
                   <CalendarIcon className="h-4 w-4 text-blue-500" />
-                  <span className="font-medium">
-                    Today: {format(new Date(), 'EEEE, MMMM do')}
+                  <span className="font-medium text-sm">
+                    Today : {format(new Date(), 'EEEE, MMMM do')}
                   </span>
                 </div>
                 <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm border border-white/20">
@@ -1050,51 +1050,48 @@ export default function AttendanceMark({ students }: Props) {
 
                           {/* Note Section */}
 
-                          <div className="mt-4 space-y-2">
-                            <div className="flex items-center justify-between">
-                              <label className="text-sm font-medium">
-                                Note (Optional)
-                              </label>
-                              {student.status &&
-                                student.status !== 'PRESENT' && (
-                                  <Button
-                                    size="sm"
-                                    variant="outline"
-                                    onClick={() =>
-                                      generateAISuggestion(student.id)
-                                    }
-                                    disabled={
-                                      aiSuggestionLoading === student.id
-                                    }
-                                    className="h-7 text-xs p-2 rounded-lg bg-blue-50 hover:bg-blue-100 border-dashed border-blue-500 shadow-lg"
-                                  >
-                                    {aiSuggestionLoading === student.id ? (
-                                      <Loader2 className="h-3 w-3 mr-1 animate-spin" />
-                                    ) : (
-                                      <Sparkles className="h-3 w-3 mr-1 text-blue-500" />
-                                    )}
-                                    AI Suggest
-                                  </Button>
-                                )}
+                          {/* Note Section - Only show for Absent or Late students */}
+                          {(student.status === 'ABSENT' ||
+                            student.status === 'LATE') && (
+                            <div className="mt-4 space-y-2">
+                              <div className="flex items-center justify-between">
+                                <label className="text-sm font-medium">
+                                  Note{' '}
+                                  {student.status === 'ABSENT'
+                                    ? '(Absence Reason)'
+                                    : '(Late Arrival Details)'}
+                                </label>
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  onClick={() =>
+                                    generateAISuggestion(student.id)
+                                  }
+                                  disabled={aiSuggestionLoading === student.id}
+                                  className="h-7 text-xs p-2 rounded-lg bg-blue-50 hover:bg-blue-100 border-dashed border-blue-500 shadow-lg"
+                                >
+                                  {aiSuggestionLoading === student.id ? (
+                                    <Loader2 className="h-3 w-3 mr-1 animate-spin" />
+                                  ) : (
+                                    <Sparkles className="h-3 w-3 mr-1 text-blue-500" />
+                                  )}
+                                  AI Suggest
+                                </Button>
+                              </div>
+                              <Textarea
+                                placeholder={
+                                  student.status === 'ABSENT'
+                                    ? 'Reason for absence, follow-up actions needed...'
+                                    : 'Reason for lateness, time arrived, follow-up actions...'
+                                }
+                                value={student.note}
+                                onChange={(e) =>
+                                  handleNoteChange(student.id, e.target.value)
+                                }
+                                className="h-20 resize-none placeholder:text-muted-foreground text-muted-foreground"
+                              />
                             </div>
-                            <Textarea
-                              placeholder={
-                                student.status === 'PRESENT'
-                                  ? 'Add any additional notes...'
-                                  : student.status === 'ABSENT'
-                                    ? 'Reason for absence, follow-up actions...'
-                                    : student.status === 'LATE'
-                                      ? 'Reason for lateness, time arrived...'
-                                      : 'Select attendance status first...'
-                              }
-                              value={student.note}
-                              onChange={(e) =>
-                                handleNoteChange(student.id, e.target.value)
-                              }
-                              className="h-20 resize-none placeholder:text-muted-foreground text-muted-foreground"
-                              disabled={!student.status}
-                            />
-                          </div>
+                          )}
                         </CardContent>
                       </Card>
                     );

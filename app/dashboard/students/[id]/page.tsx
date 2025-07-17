@@ -34,6 +34,7 @@ import StudentPerformance from '@/components/dashboard/Student/StudentPerformanc
 import StudentAssignment from '@/components/dashboard/Student/StudentAssignment';
 import { Badge } from '@/components/ui/badge';
 import { getOrganizationId } from '@/lib/organization';
+import { getCurrentAcademicYear } from '@/lib/academicYear';
 
 const getStudentDashboardData = async (studentId: string) => {
   const start = performance.now();
@@ -75,10 +76,11 @@ const getStudentDashboardData = async (studentId: string) => {
   };
 };
 
-const getNotices = async (organizationId: string) => {
+const getNotices = async (organizationId: string, currentYearId: string) => {
   const notices = await prisma.notice.findMany({
     where: {
-      organizationId: organizationId,
+      organizationId,
+      academicYearId: currentYearId,
     },
     orderBy: {
       startDate: 'asc',
@@ -95,8 +97,9 @@ const StudentIdRoute = async ({
   const { id } = await params;
 
   const organizationId = await getOrganizationId();
+  const currentYear = await getCurrentAcademicYear();
 
-  const notices = await getNotices(organizationId);
+  const notices = await getNotices(organizationId, currentYear.id);
   const studentId = id;
 
   const {
