@@ -12,8 +12,6 @@ import { TeacherStatsCards } from '@/components/dashboard/teacher/TeacherDashboa
 import { RecentActivitiesCard } from '@/components/dashboard/teacher/RecentActivitiesCard';
 import { TeacherTodaysClassScheduleCard } from './TeacherTodaysClassScheduleCard';
 
-// import { TeacherStatsCards } from "@/components/teacher-dashboard/teacher-stats-cards"
-// import { TodayScheduleCard } from "@/components/teacher-dashboard/today-schedule-card"
 // import { MyClassesCard } from "@/components/teacher-dashboard/my-classes-card"
 // import { RecentActivitiesCard } from "@/components/teacher-dashboard/recent-activities-card"
 // import { StudentPerformanceCard } from "@/components/teacher-dashboard/student-performance-card"
