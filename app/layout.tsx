@@ -63,7 +63,7 @@ export default function RootLayout({
           <GoogleAnalytics gaId="G-Z9HW1EQ694" />
           <GoogleTagManager gtmId="GTM-WNFTTCM4" />
 
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
             <NextSSRPlugin
               /**
                * The `extractRouterConfig` will extract **only** the route configs

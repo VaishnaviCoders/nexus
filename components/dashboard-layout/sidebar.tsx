@@ -109,20 +109,6 @@ export function Sidebar({ role }: SidebarProps) {
           </Button>
         </div>
 
-        {/* Role Badge - Only show when expanded */}
-        {/* <div
-          className={cn(
-            'flex-shrink-0 px-4 py-2 transition-all duration-300',
-            !getOpenState() && 'opacity-0 h-0 py-0 overflow-hidden'
-          )}
-        >
-          <div className="px-3 py-1.5 rounded-md bg-blue-50 dark:bg-blue-950/30 border border-blue-200/50 dark:border-blue-800/50">
-            <p className="text-xs font-medium text-blue-700 dark:text-blue-300 uppercase tracking-wide text-center">
-              {role}
-            </p>
-          </div>
-        </div> */}
-
         {/* Menu Content - Scrollable */}
         <div className="flex-1 overflow-hidden">
           <Menu isOpen={getOpenState()} role={role} />

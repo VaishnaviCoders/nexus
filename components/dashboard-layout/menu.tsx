@@ -85,15 +85,15 @@ const MenuItem = memo(
                       size={18}
                       className="transition-transform duration-150 group-hover:scale-105"
                     />
-                    {!isOpen && (
+                    {/* {!isOpen && (
                       <NotificationBadge label={label} isOpen={false} />
-                    )}
+                    )} */}
                   </div>
 
                   {isOpen && (
                     <div className="flex items-center justify-between flex-1 min-w-0">
                       <span className="font-medium truncate">{label}</span>
-                      <NotificationBadge label={label} isOpen={true} />
+                      {/* <NotificationBadge label={label} isOpen={true} /> */}
                     </div>
                   )}
                 </div>

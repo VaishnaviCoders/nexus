@@ -20,6 +20,7 @@ export const updateNoticeApprovalStatus = async (
     },
     data: {
       isNoticeApproved: shouldApprove,
+      isPublished: shouldApprove,
     },
     include: {
       Organization: {

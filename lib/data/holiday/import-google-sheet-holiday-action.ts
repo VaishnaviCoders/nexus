@@ -1,4 +1,5 @@
 'use server';
+import { getCurrentAcademicYearId } from '@/lib/academicYear';
 import prisma from '@/lib/db';
 import { getOrganizationId } from '@/lib/organization';
 import { goggleImportHolidayFormSchema } from '@/lib/schemas';
@@ -12,6 +13,7 @@ export const ImportGoogleSheetHolidayAction = async (
   try {
     const organizationId = await getOrganizationId();
     const user = await currentUser();
+    const { academicYearId } = await getCurrentAcademicYearId();
 
     // Validate data against schema
     const validatedData = goggleImportHolidayFormSchema.parse(data);
@@ -26,6 +28,7 @@ export const ImportGoogleSheetHolidayAction = async (
         isRecurring: holiday.isRecurring,
         organizationId,
         createdBy: user ? `${user.firstName} ${user.lastName}` : 'Unknown',
+        academicYearId,
       })),
       skipDuplicates: true,
     });

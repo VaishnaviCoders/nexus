@@ -1,5 +1,6 @@
 'use server';
 
+import { getCurrentAcademicYearId } from '@/lib/academicYear';
 import prisma from '@/lib/db';
 import { getOrganizationId } from '@/lib/organization';
 import { singleHolidayFormSchema } from '@/lib/schemas';
@@ -14,6 +15,7 @@ export const createSingleHolidayAction = async (
 
   const user = await currentUser();
   const organizationId = await getOrganizationId();
+  const { academicYearId } = await getCurrentAcademicYearId();
 
   await prisma.academicCalendar.create({
     data: {
@@ -26,6 +28,7 @@ export const createSingleHolidayAction = async (
       isRecurring: validateData.isRecurring,
       createdBy: `${user?.firstName} ${user?.lastName} || "Unknown"`,
       createdAt: new Date(),
+      academicYearId,
     },
   });
   revalidatePath('/dashboard/holiday');

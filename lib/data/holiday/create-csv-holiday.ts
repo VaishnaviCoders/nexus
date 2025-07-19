@@ -1,5 +1,6 @@
 'use server';
 
+import { getCurrentAcademicYearId } from '@/lib/academicYear';
 import prisma from '@/lib/db';
 import { getOrganizationId } from '@/lib/organization';
 import { singleHolidayFormSchema } from '@/lib/schemas';
@@ -28,6 +29,7 @@ export const createCsvHolidayAction = async (holidayData: HolidayCSVData) => {
 
   const user = await currentUser();
   const organizationId = await getOrganizationId();
+  const { academicYearId } = await getCurrentAcademicYearId();
 
   await prisma.academicCalendar.createMany({
     data: {
@@ -41,6 +43,7 @@ export const createCsvHolidayAction = async (holidayData: HolidayCSVData) => {
       createdBy:
         `${user?.firstName ?? ''} ${user?.lastName ?? ''}`.trim() || 'Unknown',
       createdAt: new Date(),
+      academicYearId,
     },
     skipDuplicates: true,
   });

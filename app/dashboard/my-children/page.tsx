@@ -53,7 +53,7 @@ const ParentChildrenDashboard = async () => {
             </div>
             <Badge variant="secondary" className="w-fit">
               <BookOpen className="h-4 w-4 mr-1" />
-              Academic Year 2024-25
+              Academic Year 2025-26
             </Badge>
           </div>
         </CardHeader>

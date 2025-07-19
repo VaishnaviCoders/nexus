@@ -60,7 +60,7 @@ export const phonePayInitPayment = async (feeId: string) => {
     merchantId: process.env.NEXT_PUBLIC_PAYMENT_MERCHANT_ID,
     merchantTransactionId: transactionId,
     merchantUserId: 'MUID-' + randomUUID().toString().slice(-6),
-    amount: totalPayableAmount,
+    amount: totalPayableAmount * 100,
     redirectUrl: `${process.env.NEXT_PUBLIC_APP_URL}/api/phonepay-callback/${transactionId}`,
     redirectMode: 'REDIRECT',
     callbackUrl: `${process.env.NEXT_PUBLIC_APP_URL}/api/phonepay-callback/${transactionId}`,
@@ -114,7 +114,7 @@ export const phonePayInitPayment = async (feeId: string) => {
       await prisma.feePayment.create({
         data: {
           feeId: fee.id,
-          amount: pendingAmount * 100, // store only actual fee, not platformFe
+          amount: pendingAmount, // store only actual fee, not platformFe
           status: PaymentStatus.PENDING,
           paymentMethod: PaymentMethod.UPI,
           receiptNumber: `REC-${randomUUID().slice(0, 8).toUpperCase()}`,

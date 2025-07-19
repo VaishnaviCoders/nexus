@@ -58,7 +58,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { cn } from '@/lib/utils';
+import { cn, formatCurrencyIN, formatDateIN } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -349,7 +349,7 @@ const FeeAssignmentDataTable = ({
                 />
               </TableHead>
               <TableHead>Name</TableHead>
-              <TableHead>Roll No</TableHead>
+              <TableHead className="whitespace-nowrap">Roll No</TableHead>
               <TableHead>Grade</TableHead>
               <TableHead>Section</TableHead>
               <TableHead>Fee Status</TableHead>
@@ -377,11 +377,15 @@ const FeeAssignmentDataTable = ({
                       }}
                     />
                   </TableCell>
-                  <TableCell className="font-medium">
+                  <TableCell className="font-medium whitespace-nowrap">
                     {student.firstName} {student.lastName}
                   </TableCell>
-                  <TableCell>{student.rollNumber}</TableCell>
-                  <TableCell>{student.grade.grade}</TableCell>
+                  <TableCell className="whitespace-nowrap">
+                    {student.rollNumber}
+                  </TableCell>
+                  <TableCell className="whitespace-nowrap">
+                    {student.grade.grade}
+                  </TableCell>
                   <TableCell>{student.section.name}</TableCell>
                   <TableCell>
                     <div className="flex flex-col gap-1.5">
@@ -454,9 +458,9 @@ const FeeAssignmentDataTable = ({
                                     </div>
                                     <div className="text-sm font-medium text-right text-red-600">
                                       ₹
-                                      {(
-                                        fee.totalFee - fee.paidAmount
-                                      ).toLocaleString()}
+                                      {formatCurrencyIN(
+                                        (fee.totalFee = fee.paidAmount)
+                                      )}
                                     </div>
                                   </div>
                                 )}
@@ -465,9 +469,7 @@ const FeeAssignmentDataTable = ({
                                     Due Date
                                   </div>
                                   <div className="text-sm font-medium text-right">
-                                    {new Intl.DateTimeFormat('en-US').format(
-                                      fee.dueDate
-                                    )}
+                                    {formatDateIN(fee.dueDate)}
                                   </div>
                                 </div>
                                 <div className="grid grid-cols-2 gap-2">

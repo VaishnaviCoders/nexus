@@ -115,6 +115,7 @@ In Admin
 8. Set Background Jobs TO Correct Fees Status
 9. Document Verification: Send Message After Reject or Approve Document / Image || AI Suggestion For Notes , Reject Note ✅ Completed
 10. Full Calendar : https://originui.com/
+11. Add Option To Upload Student Documents on create Student
 
 In Parent
 
@@ -142,6 +143,10 @@ WhatsApp Templates
 
 - For Holidays
 - Urgent Notice
+
+Whatsapp Risk
+
+- Number Block
 
 SMS Templates
 

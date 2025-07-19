@@ -31,6 +31,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import Link from 'next/link';
+import { formatDateIN } from '@/lib/utils';
 
 type AttendanceStatus = 'PRESENT' | 'ABSENT' | 'LATE';
 
@@ -209,11 +210,7 @@ export function AttendanceTable({ records }: AttendanceRecordsProps) {
                   />
                 </TableCell>
                 <TableCell className="whitespace-nowrap">
-                  {new Intl.DateTimeFormat('en-IN', {
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric',
-                  }).format(new Date(row.date))}
+                  {formatDateIN(row.date)}
                 </TableCell>
                 <TableCell>
                   <div className="font-medium capitalize whitespace-nowrap">

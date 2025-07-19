@@ -31,26 +31,6 @@ cloudinary.config({
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
-// export const syncOrganization = async () => {
-//   const { orgId, orgSlug } = await auth();
-
-//   if (!orgId) throw new Error('No organization found during Clerk sync');
-//   await prisma.organization.upsert({
-//     where: {
-//       id: orgId,
-//     },
-//     update: {},
-//     create: {
-//       id: orgId,
-//       name: orgSlug || '',
-//       organizationSlug: orgSlug || '',
-//       isActive: true,
-//       isPaid: false,
-//       createdAt: new Date(),
-//       updatedAt: new Date(),
-//     },
-//   });
-// };
 
 //  * NOTICE
 

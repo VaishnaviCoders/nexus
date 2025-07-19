@@ -28,7 +28,7 @@ const chartConfig = {
   },
   classAvg: {
     label: 'Class Average',
-    color: 'hsl(var(--chart-2))',
+    color: '#8b5cf6',
   },
 };
 

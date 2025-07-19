@@ -2,152 +2,235 @@ import { ModeToggle } from '@/components/mode-toggle';
 import { SheetMenu } from '@/components/dashboard-layout/sheet-menu';
 import { Separator } from '@/components/ui/separator';
 import {
-  OrganizationList,
+  OrganizationSwitcher,
   SignInButton,
   SignedIn,
   SignedOut,
   UserButton,
 } from '@clerk/nextjs';
-import React, { Suspense } from 'react';
-import { auth, clerkClient, currentUser } from '@clerk/nextjs/server';
+import { Suspense } from 'react';
+import { auth, currentUser } from '@clerk/nextjs/server';
 import { WelcomeMessage } from './dashboard-layout/WelcomeMessage';
-// import { syncUserAsync } from '@/lib/syncUser';
 import NotificationFeed from '@/app/components/dashboardComponents/NotificationFeed';
-import { Bell, UserCircleIcon } from 'lucide-react';
-import { syncUserAsync } from '@/lib/syncUser';
+import { Bell, UserCircleIcon, Building2 } from 'lucide-react';
 import { Button } from './ui/button';
-import { syncUserWithOrg } from '@/app/actions';
-import { redirect } from 'next/navigation';
+import { Badge } from './ui/badge';
+import { Skeleton } from './ui/skeleton';
+import { Role } from '@/lib/generated/prisma';
 
-import prisma from '@/lib/db';
-
-// Static loading components for better performance
-const LoadingBell = () => <Bell className="h-5 w-5 text-muted-foreground" />;
-const LoadingUserButton = () => (
-  <div className="h-8 w-8 rounded-full bg-muted animate-pulse" />
+// Improved loading components
+const LoadingBell = () => (
+  <div className="relative">
+    <Bell className="h-5 w-5 text-muted-foreground animate-pulse" />
+  </div>
 );
 
+const LoadingUserButton = () => <Skeleton className="h-8 w-8 rounded-full" />;
+
+const LoadingOrgSwitcher = () => <Skeleton className="h-8 w-32 rounded-md" />;
+
+const RoleBadge = ({ role }: { role: string }) => {
+  const roleConfig = {
+    'org:admin': {
+      display: 'ADMIN',
+      color: 'bg-green-100 text-green-800 dark:bg-red-900 dark:text-red-200',
+    },
+    'org:teacher': {
+      display: 'TEACHER',
+      color:
+        'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
+    },
+    'org:student': {
+      display: 'STUDENT',
+      color: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
+    },
+    'org:parent': {
+      display: 'PARENT',
+      color:
+        'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200',
+    },
+  };
+
+  const config = roleConfig[role as keyof typeof roleConfig];
+
+  return (
+    <Badge
+      variant="secondary"
+      className={`text-xs  ${config?.color || 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200'}`}
+    >
+      {config?.display || role}
+    </Badge>
+  );
+};
+
 export async function Navbar() {
-  // Get auth data first (faster than currentUser)
-  const { orgId, orgRole, sessionClaims, userId } = await auth();
+  try {
+    // Get auth data
+    const { orgId, orgRole, userId } = await auth();
 
-  const user = await currentUser();
-  const client = await clerkClient();
+    // If not authenticated, show guest navbar
+    if (!userId) {
+      return (
+        <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+          <div className="flex h-16 items-center px-4">
+            <div className="flex items-center space-x-4">
+              <SheetMenu />
+              <div className="flex items-center space-x-2">
+                <h1 className="text-lg font-semibold">Dashboard</h1>
+                <Badge variant="outline" className="text-xs">
+                  Guest
+                </Badge>
+              </div>
+            </div>
 
-  // Early return if not authenticated
-  if (!userId || !orgId || !orgRole) {
+            <div className="ml-auto flex items-center space-x-3">
+              <ModeToggle />
+              <SignInButton mode="modal">
+                <Button size="sm" className="gap-2">
+                  <UserCircleIcon className="h-4 w-4" />
+                  Sign In
+                </Button>
+              </SignInButton>
+            </div>
+          </div>
+          <Separator />
+        </header>
+      );
+    }
+
+    // Get user data for authenticated users
+    const user = await currentUser();
+    const firstName = user?.firstName ?? 'User';
+    const lastName = user?.lastName ?? '';
+    const fullName = `${firstName} ${lastName}`.trim();
+    const lastVisit = user?.lastSignInAt ? new Date(user.lastSignInAt) : null;
+
     return (
-      <header className="flex h-16 shrink-0 items-center px-4">
-        <div className="flex items-center space-x-4 lg:space-x-6">
-          <SheetMenu />
-          <h1 className="text-lg font-bold">Welcome Guest</h1>
+      <>
+        <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+          <div className="flex h-16 items-center px-4">
+            {/* Left section */}
+            <div className="flex items-center space-x-4">
+              <SheetMenu />
+
+              <div className="flex items-center space-x-3">
+                <div className="flex flex-col">
+                  <h1 className="text-lg font-semibold leading-none">
+                    Dashboard
+                  </h1>
+                  <div className="flex items-center space-x-2 mt-1">
+                    <span className="text-sm text-muted-foreground">
+                      {fullName}
+                    </span>
+                    {orgRole && <RoleBadge role={orgRole} />}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Center section - Organization switcher */}
+            {/* {orgId && (
+              <div className="hidden md:flex items-center justify-center flex-1 max-w-md mx-4">
+                <Suspense fallback={<LoadingOrgSwitcher />}>
+                  <div className="flex items-center space-x-2 px-3 py-1.5 rounded-md border bg-muted/50">
+                    <Building2 className="h-4 w-4 text-muted-foreground" />
+                    <OrganizationSwitcher
+                      appearance={{
+                        elements: {
+                          organizationSwitcherTrigger:
+                            'border-0 shadow-none bg-transparent hover:bg-transparent',
+                          organizationSwitcherTriggerIcon:
+                            'text-muted-foreground',
+                        },
+                      }}
+                    />
+                  </div>
+                </Suspense>
+              </div>
+            )} */}
+
+            {/* Right section */}
+            <div className="ml-auto flex items-center space-x-3">
+              <ModeToggle />
+
+              <SignedOut>
+                <SignInButton mode="modal">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="gap-2 bg-transparent"
+                  >
+                    <UserCircleIcon className="h-4 w-4" />
+                    Sign In
+                  </Button>
+                </SignInButton>
+              </SignedOut>
+
+              <SignedIn>
+                <div className="flex items-center space-x-2">
+                  {/* Notifications */}
+                  <Suspense fallback={<LoadingBell />}>
+                    <NotificationFeed />
+                  </Suspense>
+
+                  {/* User button */}
+                  <Suspense fallback={<LoadingUserButton />}>
+                    <UserButton
+                      appearance={{
+                        elements: {
+                          avatarBox: 'h-8 w-8',
+                        },
+                      }}
+                    />
+                  </Suspense>
+                </div>
+              </SignedIn>
+            </div>
+          </div>
+        </header>
+
+        <Separator className="mb-4" />
+
+        {/* Welcome message section */}
+        {userId && (
+          <div className="px-4 mb-6">
+            <Suspense
+              fallback={
+                <div className="space-y-2">
+                  <Skeleton className="h-6 w-64" />
+                  <Skeleton className="h-4 w-48" />
+                </div>
+              }
+            >
+              <WelcomeMessage userName={firstName} lastVisit={lastVisit} />
+            </Suspense>
+          </div>
+        )}
+      </>
+    );
+  } catch (error) {
+    // Error fallback
+    console.error('Navbar error:', error);
+    return (
+      <header className="sticky top-0 z-50 w-full border-b bg-background">
+        <div className="flex h-16 items-center px-4">
+          <div className="flex items-center space-x-4">
+            <SheetMenu />
+            <h1 className="text-lg font-semibold">Dashboard</h1>
+            <Badge variant="destructive" className="text-xs">
+              Error
+            </Badge>
+          </div>
+
+          <div className="ml-auto flex items-center space-x-3">
+            <ModeToggle />
+            <Button variant="outline" size="sm" disabled>
+              Reload
+            </Button>
+          </div>
         </div>
-        <div className="ml-auto flex items-center space-x-4">
-          <ModeToggle />
-          <SignInButton mode="modal">
-            <button className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground">
-              Sign In
-            </button>
-          </SignInButton>
-        </div>
+        <Separator />
       </header>
     );
   }
-
-  // if (!orgId) {
-  //   throw new Error('Organization not found in DB');
-  // }
-
-  // if (!userId || !orgId || !orgRole) {
-  //   console.warn('Missing user/org data from Clerk', {
-  //     userId,
-  //     orgId,
-  //     orgRole,
-  //   });
-  //   redirect('/create-organization');
-  // }
-
-  // const clerkOrg = await client.organizations.getOrganization({
-  //   organizationId: orgId,
-  // }); // or from session
-
-  // let dbOrg = await prisma.organization.findUnique({
-  //   where: { id: clerkOrg.id },
-  // });
-
-  // if (!dbOrg) {
-  //   // Optional: Only do this in dev
-  //   if (process.env.NODE_ENV === 'development') {
-  //     dbOrg = await prisma.organization.create({
-  //       data: {
-  //         id: clerkOrg.id,
-  //         name: clerkOrg.name,
-  //         organizationSlug: clerkOrg.slug || '',
-  //         isActive: true,
-  //       },
-  //     });
-  //     console.log('✅ Dev org created:', dbOrg);
-  //   } else {
-  //     throw new Error('Invalid organization: ' + clerkOrg.id);
-  //   }
-  // }
-
-  // Background sync - don't block rendering
-  // if (user) {
-  //   // Fire and forget - runs in background
-  //   syncUserAsync(user, orgId, orgRole).catch(console.error);
-  // }
-
-  const firstName = user?.firstName ?? 'Guest';
-  const lastVisit = user?.lastSignInAt ? new Date(user.lastSignInAt) : null;
-
-  return (
-    <>
-      <header className="flex h-16 shrink-0 items-center px-4">
-        <div className="flex items-center space-x-4 lg:space-x-6">
-          <SheetMenu />
-          <div className="flex space-x-2 items-center">
-            <h1 className="text-lg font-bold flex items-center">
-              Welcome {firstName}
-            </h1>
-            <span className="hidden text-lg font-bold sm:flex">{orgRole}</span>
-          </div>
-        </div>
-
-        <div className="ml-auto flex items-center space-x-4">
-          <ModeToggle />
-
-          <SignedOut>
-            <SignInButton>
-              <Button className="text-blue-500 hover:text-blue-600 border-blue-500/20 shadow-none">
-                <UserCircleIcon />
-                Sign In
-              </Button>
-            </SignInButton>
-          </SignedOut>
-
-          <SignedIn>
-            {/* Lazy load notifications */}
-            <Suspense fallback={<LoadingBell />}>
-              <NotificationFeed />
-            </Suspense>
-
-            {/* Lazy load user button */}
-            <Suspense fallback={<LoadingUserButton />}>
-              <UserButton />
-            </Suspense>
-          </SignedIn>
-        </div>
-      </header>
-
-      <Separator orientation="horizontal" className="my-1" />
-
-      {/* Lazy load welcome message */}
-      <Suspense
-        fallback={<div className="h-12 animate-pulse bg-muted rounded" />}
-      >
-        <WelcomeMessage userName={firstName} lastVisit={lastVisit} />
-      </Suspense>
-    </>
-  );
 }

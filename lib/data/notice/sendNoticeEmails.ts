@@ -4,7 +4,7 @@ import { Knock } from '@knocklabs/node';
 import { User } from '@clerk/nextjs/server';
 import { NoticeEmailTemplate } from '@/components/email-templates/noticeMail';
 import { OrganizationType, Prisma } from '@/lib/generated/prisma';
-import { render, TailwindConfig } from '@react-email/components';
+import { render, pretty } from '@react-email/render';
 import { ReactElement } from 'react';
 
 type NoticeWithOrg = Prisma.NoticeGetPayload<{
@@ -48,6 +48,8 @@ export const sendNoticeEmails = async (
 
   const emailHtml = await render(emailComponent);
 
+  // const html = await pretty(await render(<NoticeEmailTemplate />));
+
   const [knockResponse, resendResponse] = await Promise.all([
     knock.workflows.trigger('notice-created', {
       recipients: recipientEmails.map((email) => ({
@@ -65,7 +67,7 @@ export const sendNoticeEmails = async (
       from: 'no-reply@shiksha.cloud',
       to: recipientEmails,
       subject: `Notice: ${notice.title}`,
-      html: emailHtml,
+      react: emailHtml,
     }),
   ]);
 

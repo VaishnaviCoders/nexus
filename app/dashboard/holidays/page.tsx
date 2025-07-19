@@ -1,33 +1,22 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import HolidayManagement from '@/components/dashboard/holiday/holiday-management';
-import ComingSoon from '@/components/Coming-soon';
 import { getOrganizationId } from '@/lib/organization';
 import prisma from '@/lib/db';
 import { getAcademicYearSummary } from '@/lib/data/holiday/get-academic-year-summary';
 import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Suspense } from 'react';
+import { getCurrentAcademicYearId } from '@/lib/academicYear';
 
-export default async function AttendanceSystem() {
-  const startDate = new Date('2024-06-01');
-  const endDate = new Date('2025-04-30');
-
-  const summary = await getAcademicYearSummary({
-    startDate,
-    endDate,
-  });
+export default async function page() {
+  const summary = await getAcademicYearSummary();
 
   const organizationId = await getOrganizationId();
+  const { academicYearId } = await getCurrentAcademicYearId();
 
   const holidays = await prisma.academicCalendar.findMany({
     where: {
-      organizationId: organizationId,
-      startDate: {
-        gte: new Date(startDate),
-      },
-      endDate: {
-        lte: new Date(endDate),
-      },
+      organizationId,
+      academicYearId,
     },
 
     select: {
@@ -49,83 +38,6 @@ export default async function AttendanceSystem() {
   return (
     <div className=" bg-gray-50 ">
       <div className="space-y-6">
-        {/* Header */}
-        {/* <div className="bg-white rounded-lg shadow-sm p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-xl font-bold text-gray-900">
-                School Attendance Management
-              </h1>
-              <p className="text-gray-600 mt-1">
-                Comprehensive attendance tracking with holiday management
-              </p>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Badge variant="outline" className="bg-green-50 text-green-700">
-                <Calendar className="w-4 h-4 mr-1" />
-                {new Date().toLocaleDateString()}
-              </Badge>
-            </div>
-          </div>
-        </div> */}
-
-        {/* Quick Stats */}
-        {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center space-x-2">
-                <Users className="w-5 h-5 text-green-500" />
-                <div>
-                  <p className="text-sm text-gray-600">Total Students</p>
-                  <p className="text-2xl font-bold">
-                    {mockStats.totalStudents.toLocaleString()}
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center space-x-2">
-                <TrendingUp className="w-5 h-5 text-purple-500" />
-                <div>
-                  <p className="text-sm text-gray-600">Avg Attendance</p>
-                  <p className="text-2xl font-bold">
-                    {mockStats.averageAttendance}%
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center space-x-2">
-                <Calendar className="w-5 h-5 text-orange-500" />
-                <div>
-                  <p className="text-sm text-gray-600">Working Days</p>
-                  <p className="text-2xl font-bold">
-                    {summary.workingDaysCount}
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center space-x-2">
-                <AlertCircle className="w-5 h-5 text-red-500" />
-                <div>
-                  <p className="text-sm text-gray-600">Holidays</p>
-                  <p className="text-2xl font-bold">{summary.holidayCount}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div> */}
-
         <Suspense fallback={<LoadingSkeleton />}>
           <HolidayManagement holidays={holidays} holidaysSummary={summary} />
         </Suspense>

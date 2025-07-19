@@ -37,7 +37,7 @@ export default async function TeacherDashboard() {
                   className="bg-green-50 text-green-700 border-green-200 dark:bg-green-950 dark:text-green-300 dark:border-green-800"
                 >
                   <CalendarIcon className="w-3 h-3 mr-1" />
-                  Academic Year 2024-25
+                  Academic Year 2025-26
                 </Badge>
               </CardTitle>
               <CardDescription className="text-base mt-1">

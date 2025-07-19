@@ -13,6 +13,9 @@ import { StudentAttendanceCalendar } from '@/components/dashboard/StudentAttenda
 import prisma from '@/lib/db';
 import StudentCalendar from '@/components/dashboard/Student/StudentCalendar';
 import { RecentAttendanceTimeline } from '@/components/dashboard/StudentAttendance/recent-attendance-calendar';
+import { currentUser } from '@clerk/nextjs/server';
+import { getCurrentUserId } from '@/lib/user';
+import { getCurrentUserByRole } from '@/lib/auth';
 
 // import { AttendanceOverviewCards } from "@/components/student-attendance/attendance-overview-cards"
 // import { AttendanceCalendar } from "@/components/student-attendance/attendance-calendar"
@@ -21,18 +24,49 @@ import { RecentAttendanceTimeline } from '@/components/dashboard/StudentAttendan
 // import { RecentAttendanceTimeline } from "@/components/student-attendance/recent-attendance-timeline"
 
 export default async function page() {
+  const userId = await getCurrentUserId();
+  const user = await getCurrentUserByRole();
+
+  if (user.role !== 'STUDENT') {
+    return (
+      <div className="p-6">
+        <Card>
+          <CardContent className="p-6 space-y-2">
+            <CardTitle>Unauthorized</CardTitle>
+            <CardDescription>
+              This page is only accessible to students.
+            </CardDescription>
+            <p className="text-muted-foreground">
+              You are logged in as <strong>{user.role}</strong>.
+            </p>
+            <Link href="/dashboard">
+              <Button variant="outline" size="sm" className="mt-2">
+                Back to Dashboard
+              </Button>
+            </Link>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  const student = await prisma.student.findUnique({
+    where: {
+      id: user.studentId,
+    },
+  });
   const attendanceData = await prisma.studentAttendance.findMany({
     where: {
-      studentId: 'cmc3tdtk90009vhr8jjrajcl2',
-      // date: { gte: startDate, lte: endDate },
+      studentId: student?.id,
     },
     orderBy: { date: 'desc' },
   });
 
   const recentAttendance = await prisma.studentAttendance.findMany({
     where: {
-      studentId: 'cmc3tdtk90009vhr8jjrajcl2',
+      studentId: student?.id,
     },
+    orderBy: { date: 'desc' },
     take: 7,
   });
   return (
@@ -48,7 +82,7 @@ export default async function page() {
                 className="bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950 dark:text-blue-300 dark:border-blue-800"
               >
                 <TrendingUp className="w-3 h-3 mr-1" />
-                Academic Year 2024-25
+                Academic Year 2025-26
               </Badge>
             </CardTitle>
             <CardDescription className=" mt-1">

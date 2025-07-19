@@ -25,8 +25,6 @@ export async function getCurrentAcademicYear() {
 export async function getCurrentAcademicYearId() {
   const organizationId = await getOrganizationId();
 
-  console.log(organizationId);
-
   const academicYear = await prisma.academicYear.findFirst({
     where: {
       organizationId,

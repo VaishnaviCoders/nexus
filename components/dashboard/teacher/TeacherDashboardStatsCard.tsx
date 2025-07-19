@@ -17,13 +17,18 @@ async function TeacherStatsContent() {
       color: 'blue',
       progress: stats.todayAttendance.percentage,
       badge: {
-        text: `${stats.todayAttendance.percentage}%`,
+        text:
+          stats.todayAttendance.total === 0
+            ? 'No Attendance Data'
+            : stats.todayAttendance.absent === 0
+              ? 'All Present'
+              : `${stats.todayAttendance.absent} absent`,
         variant:
-          stats.todayAttendance.percentage >= 90
-            ? 'green'
-            : stats.todayAttendance.percentage >= 75
-              ? 'yellow'
-              : 'red',
+          stats.todayAttendance.total === 0
+            ? 'yellow'
+            : stats.todayAttendance.absent === 0
+              ? 'green'
+              : 'yellow',
       },
     },
     {
@@ -59,7 +64,7 @@ async function TeacherStatsContent() {
             },
     },
     {
-      title: 'Pending Tasks',
+      title: 'Pending Complaints',
       value: stats.pendingComplaints.toString(),
       description: 'Complaints to review',
       icon: AlertTriangle,
@@ -89,7 +94,7 @@ async function TeacherStatsContent() {
         return (
           <Card
             key={index}
-            className="relative overflow-hidden group hover:shadow-lg transition-all duration-300  bg-gradient-to-br from-card via-card to-muted/10"
+            className="relative overflow-hidden group hover:shadow-md transition-all duration-300  bg-gradient-to-br from-card via-card to-muted/10"
           >
             <div
               className={`absolute inset-0 bg-gradient-to-br from-${stat.color}-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300`}

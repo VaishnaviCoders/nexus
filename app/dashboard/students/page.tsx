@@ -12,6 +12,12 @@ import { getOrganizationId, getOrganizationUserRole } from '@/lib/organization';
 import FilterStudents from '@/lib/data/student/FilterStudents';
 import { Skeleton } from '@/components/ui/skeleton';
 import { redirect } from 'next/navigation';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardTitle,
+} from '@/components/ui/card';
 
 export const revalidate = 30; // or 'force-cache' if data doesn't change often
 
@@ -22,9 +28,8 @@ type PageProps = {
 export default async function Students({ searchParams }: PageProps) {
   const orgId = await getOrganizationId();
 
-  const { search, sectionId, gradeId } = await searchParamsCache.parse(
-    searchParams
-  );
+  const { search, sectionId, gradeId } =
+    await searchParamsCache.parse(searchParams);
 
   const students = await FilterStudents({ search, gradeId, sectionId });
 
@@ -33,20 +38,29 @@ export default async function Students({ searchParams }: PageProps) {
   if (orgRole === 'org:student' || orgRole === 'org:parent')
     redirect('/dashboard');
   return (
-    <div className="p-4 ">
-      <header className="flex justify-between items-center mb-6">
-        <h1 className="text-xl font-bold">Students </h1>
-        <div className="flex gap-2">
+    <div className="p-4 space-y-3 ">
+      <Card className="py-4 px-2 flex items-center justify-between   ">
+        {/* //max-sm:flex-col max-sm:items-start max-sm:space-y-3 */}
+        <div>
+          <CardTitle>Students Management </CardTitle>
+          <CardDescription>
+            Add, edit, and track student information
+          </CardDescription>
+        </div>
+        <div className="flex justify-center items-center space-x-3">
+          <div className="hidden sm:block">
+            <Link href="/dashboard/attendance/mark">
+              <Button type="button">Take Attendance</Button>
+            </Link>
+          </div>
           <Link href="/dashboard/students/create">
             <Button type="button" variant="outline">
               Add New Student
             </Button>
           </Link>
-          <Link href="/dashboard/attendance/mark">
-            <Button type="button">Take Attendance</Button>
-          </Link>
         </div>
-      </header>
+      </Card>
+
       <Separator />
 
       <Suspense fallback={<Skeleton className="container mx-auto h-56" />}>

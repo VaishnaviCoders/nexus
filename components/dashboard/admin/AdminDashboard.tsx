@@ -142,12 +142,10 @@ const AdminDashboard = async () => {
   return (
     <div className="space-y-6 px-2">
       <Card className="py-4 px-2 flex items-center justify-between   ">
-        {' '}
         {/* //max-sm:flex-col max-sm:items-start max-sm:space-y-3 */}
         <div>
           <CardTitle className="text-lg">Admin Dashboard</CardTitle>
           <CardDescription className="text-sm">
-            {' '}
             Dashboard for admin to manage the system
           </CardDescription>
         </div>

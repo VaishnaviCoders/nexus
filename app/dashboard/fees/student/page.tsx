@@ -72,8 +72,8 @@ export default async function StudentFeePage() {
     <div className="space-y-3 px-2">
       <Card>
         <CardHeader>
-          <CardTitle className="text-xl font-bold">Fee Dashboard</CardTitle>
-          <CardDescription className="text-base ">
+          <CardTitle>Fee Dashboard</CardTitle>
+          <CardDescription>
             Manage and track student fee information
           </CardDescription>
         </CardHeader>
