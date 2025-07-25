@@ -15,8 +15,12 @@ import {
   CheckCircle,
   XCircle,
   Clock,
+  RefreshCcw,
+  Slash,
 } from 'lucide-react';
 import { formatCurrencyIN, formatDateIN } from '@/lib/utils';
+import { PaymentStatus } from '@/lib/generated/prisma';
+import { generateReceiptPDF } from '@/lib/data/generate-receipt';
 
 interface PaymentData {
   id: string;
@@ -29,7 +33,7 @@ interface PaymentData {
   payerId: string;
   feeId: string;
   platformFee: number | null; // percentage
-  status: string;
+  status: PaymentStatus;
   recordedBy: string;
   organizationId: string;
   createdAt: Date;
@@ -53,69 +57,75 @@ export function FeeReceiptCard({ receiptData }: FeeReceiptCardProps) {
   };
 
   const getNetAmount = () => {
-    return receiptData.amountPaid - calculatePlatformFee();
+    return receiptData.amountPaid + calculatePlatformFee();
   };
 
-  const getStatusIcon = (status: string) => {
-    switch (status.toLowerCase()) {
-      case 'paid':
-        return <CheckCircle className="w-4 h-4" />;
-      case 'unpaid':
-        return <XCircle className="w-4 h-4" />;
-      case 'pending':
-        return <Clock className="w-4 h-4" />;
+  const getStatusIcon = (status: PaymentStatus) => {
+    switch (status) {
+      case 'COMPLETED':
+        return <CheckCircle className="w-4 h-4 text-green-600" />;
+      case 'UNPAID':
+        return <XCircle className="w-4 h-4 text-red-600" />;
+      case 'PENDING':
+        return <Clock className="w-4 h-4 text-yellow-500" />;
+      case 'FAILED':
+        return <XCircle className="w-4 h-4 text-red-600" />;
+      case 'REFUNDED':
+        return <RefreshCcw className="w-4 h-4 text-blue-500" />;
+      case 'CANCELLED':
+        return <Slash className="w-4 h-4 text-gray-500" />;
       default:
-        return <Clock className="w-4 h-4" />;
+        return <Clock className="w-4 h-4 text-gray-400" />;
     }
   };
 
-  const getStatusVariant = (status: string) => {
-    switch (status.toLowerCase()) {
-      case 'paid':
-        return 'default';
-      case 'unpaid':
-        return 'destructive';
-      case 'pending':
-        return 'secondary';
+  const getStatusBadgeVariant = (status: PaymentStatus) => {
+    switch (status) {
+      case 'COMPLETED':
+        return 'verified'; // Green ✅
+      case 'UNPAID':
+        return 'rejected'; // Red ❌
+      case 'PENDING':
+        return 'pending'; // Yellow ⏳
+      case 'FAILED':
+        return 'rejected'; // Red ❌
+      case 'REFUNDED':
+        return 'meta'; // Blue 🔁
+      case 'CANCELLED':
+        return 'outline'; // Grey 🚫
       default:
-        return 'secondary';
+        return 'outline'; // fallback
     }
   };
 
-  const handleDownload = async () => {
-    setIsDownloading(true);
-    try {
-      const response = await fetch('/api/download-receipt', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(receiptData),
-      });
+  // const handleDownload = async () => {
+  //   setIsDownloading(true);
+  //   try {
+  //     const response = await generateReceiptPDF(receiptData.feeId);
 
-      if (response.ok) {
-        const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.style.display = 'none';
-        a.href = url;
-        a.download = `receipt-${receiptData.receiptNumber}.pdf`;
-        document.body.appendChild(a);
-        a.click();
-        window.URL.revokeObjectURL(url);
-        document.body.removeChild(a);
-      }
-    } catch (error) {
-      console.error('Error downloading receipt:', error);
-    } finally {
-      setIsDownloading(false);
-    }
-  };
+  //     if (response) {
+  //       const blob = await response.blob();
+  //       const url = window.URL.createObjectURL(blob);
+  //       const a = document.createElement('a');
+  //       a.style.display = 'none';
+  //       a.href = url;
+  //       a.download = `receipt-${receiptData.receiptNumber}.pdf`;
+  //       document.body.appendChild(a);
+  //       a.click();
+  //       window.URL.revokeObjectURL(url);
+  //       document.body.removeChild(a);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error downloading receipt:', error);
+  //   } finally {
+  //     setIsDownloading(false);
+  //   }
+  // };
 
   return (
     <div className="bg-white">
       {/* Header */}
-      <div className="border-b bg-gradient-to-r from-slate-50 to-gray-50 px-6 py-8">
+      <div className="border-b bg-gradient-to-r from-slate-50 to-gray-50 px-6 py-2">
         <div className="flex items-start justify-between">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
@@ -127,7 +137,7 @@ export function FeeReceiptCard({ receiptData }: FeeReceiptCardProps) {
             <p className="text-sm text-slate-500">Transaction confirmation</p>
           </div>
           <Badge
-            variant={getStatusVariant(receiptData.status)}
+            variant={getStatusBadgeVariant(receiptData.status)}
             className="flex items-center gap-1"
           >
             {getStatusIcon(receiptData.status)}
@@ -137,7 +147,7 @@ export function FeeReceiptCard({ receiptData }: FeeReceiptCardProps) {
       </div>
 
       {/* Content */}
-      <div className="p-6 space-y-6">
+      <div className="p-6 space-y-4">
         {/* Amount Section */}
         <div className="text-center py-4">
           <div className="text-3xl font-bold text-slate-900 mb-1">
@@ -208,7 +218,8 @@ export function FeeReceiptCard({ receiptData }: FeeReceiptCardProps) {
                   Payer Name
                 </p>
                 <p className="text-sm font-mono text-slate-900 break-all">
-                  {receiptData.payer.firstName} {receiptData.payer.lastName}
+                  {receiptData?.payer?.firstName ?? 'N/A'}{' '}
+                  {receiptData?.payer?.lastName ?? ''}
                 </p>
               </div>
             </div>
@@ -243,7 +254,7 @@ export function FeeReceiptCard({ receiptData }: FeeReceiptCardProps) {
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-600">Platform Fee</span>
+                  <span className="text-slate-600">Convenience Charge </span>
                   <span className="font-medium">
                     {formatCurrencyIN(calculatePlatformFee())}
                   </span>
@@ -278,7 +289,7 @@ export function FeeReceiptCard({ receiptData }: FeeReceiptCardProps) {
             <p>Updated: {formatDateIN(receiptData.updatedAt)}</p>
           </div>
 
-          <Button
+          {/* <Button
             onClick={handleDownload}
             disabled={isDownloading}
             size="sm"
@@ -286,7 +297,7 @@ export function FeeReceiptCard({ receiptData }: FeeReceiptCardProps) {
           >
             <Download className="w-4 h-4 mr-2" />
             {isDownloading ? 'Generating...' : 'Download PDF'}
-          </Button>
+          </Button> */}
         </div>
       </div>
     </div>

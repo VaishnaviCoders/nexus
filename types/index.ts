@@ -1,4 +1,9 @@
-import { ComplaintStatus, Severity } from '@/lib/generated/prisma';
+import {
+  ComplaintStatus,
+  PaymentMethod,
+  PaymentStatus,
+  Severity,
+} from '@/lib/generated/prisma';
 import { type ClientUploadedFileData } from 'uploadthing/types';
 
 export interface UploadedFile<T = unknown> extends ClientUploadedFileData<T> {}
@@ -21,6 +26,7 @@ export interface FeeRecord {
   };
   student: {
     id: string;
+    userId: string;
     firstName: string;
     lastName: string;
     rollNumber: string;
@@ -58,16 +64,11 @@ export interface FeeRecord {
     id: string;
     amountPaid: number;
     paymentDate: Date;
-    paymentMethod:
-      | 'CASH'
-      | 'UPI'
-      | 'CARD'
-      | 'BANK_TRANSFER'
-      | 'CHEQUE'
-      | 'ONLINE';
+    paymentMethod: PaymentMethod;
     receiptNumber: string;
     transactionId: string | undefined;
     feeId: string;
+    status: PaymentStatus;
     payer: {
       firstName: string;
       lastName: string;

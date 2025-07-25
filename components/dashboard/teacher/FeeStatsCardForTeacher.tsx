@@ -13,7 +13,7 @@ const FeeStatsCardForTeacherContent = async () => {
   const stats = await getTeacherFeeSummary(userId);
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-      <Card className="overflow-hidden border-border/50 transition-all hover:border-primary/20 hover:shadow-md">
+      <Card className="overflow-hidden border-border/50 transition-all hover:border-primary/20  hover:shadow-sm">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium"> Total Students</CardTitle>
           <div className="rounded-md bg-primary/10 p-1">
@@ -29,7 +29,7 @@ const FeeStatsCardForTeacherContent = async () => {
         </CardContent>
       </Card>
 
-      <Card className="overflow-hidden border-border/50 transition-all hover:border-primary/20 hover:shadow-md">
+      <Card className="overflow-hidden border-border/50 transition-all hover:border-primary/20  hover:shadow-sm">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Paid Fees</CardTitle>
           <div className="rounded-md bg-primary/10 p-1">
@@ -49,7 +49,7 @@ const FeeStatsCardForTeacherContent = async () => {
         </CardContent>
       </Card>
 
-      <Card className="overflow-hidden border-border/50 transition-all hover:border-amber-500/20 hover:shadow-md">
+      <Card className="overflow-hidden border-border/50 transition-all hover:border-amber-500/20  hover:shadow-sm">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Unpaid Fees</CardTitle>
           <div className="rounded-md bg-amber-500/10 p-1">
@@ -69,7 +69,7 @@ const FeeStatsCardForTeacherContent = async () => {
         </CardContent>
       </Card>
 
-      <Card className="overflow-hidden border-border/50 transition-all hover:border-red-500/20 hover:shadow-md">
+      <Card className="overflow-hidden border-border/50 transition-all hover:border-red-500/20  hover:shadow-sm">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Overdue Fees</CardTitle>
           <div className="rounded-md bg-red-500/10 p-1">

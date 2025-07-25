@@ -1,5 +1,4 @@
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -14,7 +13,6 @@ import prisma from '@/lib/db';
 import {
   Activity,
   CreditCard,
-  Download,
   IndianRupee,
   PercentDiamond,
 } from 'lucide-react';
@@ -42,6 +40,10 @@ async function getFees(studentId: string) {
     },
     include: {
       feeCategory: true,
+      payments: {
+        where: { status: 'COMPLETED' },
+        select: { id: true },
+      },
     },
     orderBy: {
       createdAt: 'desc',
@@ -187,8 +189,8 @@ export default async function StudentFeePage() {
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
-                    <CardTitle className="text-base">
-                      Fee ID: {fee.id}
+                    <CardTitle className="text-base capitalize">
+                      Fee : {fee.feeCategory.name}
                     </CardTitle>
                     <Badge
                       variant="outline"
@@ -233,7 +235,9 @@ export default async function StudentFeePage() {
                     <p className="text-sm font-medium text-muted-foreground">
                       Category
                     </p>
-                    <p className="text-sm mt-1">{fee.feeCategory.name}</p>
+                    <p className="text-sm mt-1 capitalize">
+                      {fee.feeCategory.name}
+                    </p>
                   </div>
                   <div>
                     <p className="text-sm font-medium text-muted-foreground">
@@ -252,7 +256,10 @@ export default async function StudentFeePage() {
                 {fee.status !== 'PAID' ? (
                   <PayFeeButton feeId={fee.id} />
                 ) : (
-                  <ReceiptDownloadButton paymentId={fee.id} variant="outline" />
+                  <ReceiptDownloadButton
+                    paymentId={fee.payments[0]?.id!}
+                    variant="outline"
+                  />
                 )}
               </CardFooter>
             </Card>

@@ -56,3 +56,31 @@ export const getCurrentUserId = cache(async () => {
 
   return user.id;
 });
+
+export const getCurrentUser = async () => {
+  const user = await currentUser();
+
+  if (!user || !user.id) {
+    throw new Error('No user found');
+  }
+
+  const {
+    id,
+    firstName,
+    lastName,
+    emailAddresses,
+    imageUrl,
+    username,
+    publicMetadata,
+  } = user;
+
+  return {
+    id,
+    firstName,
+    lastName,
+    email: emailAddresses?.[0]?.emailAddress ?? null,
+    imageUrl,
+    username,
+    metadata: publicMetadata,
+  };
+};

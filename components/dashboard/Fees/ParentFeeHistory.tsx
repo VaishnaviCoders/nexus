@@ -33,11 +33,10 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 
-import { toast } from 'sonner';
 import { FeeReceiptCard } from './FeeReceiptCard';
 import { formatCurrencyIN } from '@/lib/utils';
-import { phonePayInitPayment } from '@/lib/data/fee/payFeesAction';
 import PayFeeButton from '@/components/PayFeeButton';
+import { PaymentStatus } from '@/lib/generated/prisma';
 
 interface ParentData {
   name: string;
@@ -70,7 +69,7 @@ interface UnpaidFee {
 interface PaymentHistoryItem {
   id: string;
   feeId: string;
-  status: string;
+  status: PaymentStatus;
   note: string;
   transactionId: string | null;
   amountPaid: number;
@@ -95,23 +94,26 @@ interface PaymentHistoryItem {
 const ParentFeeHistory = ({ parentData }: { parentData: ParentData }) => {
   const [selectedChild, setSelectedChild] = useState(parentData.children[0].id);
 
-  console.log('Parent Data', parentData);
-
   const currentChild = parentData.children.find(
     (child) => child.id === selectedChild
   );
 
-  type PaymentStatus = 'PAID' | 'UNPAID' | 'OVERDUE';
   const getStatusBadgeVariant = (status: PaymentStatus) => {
     switch (status) {
-      case 'PAID':
-        return 'secondary';
+      case 'COMPLETED':
+        return 'verified'; // Green ✅
       case 'UNPAID':
-        return 'outline';
-      case 'OVERDUE':
-        return 'destructive';
+        return 'rejected'; // Red ❌
+      case 'PENDING':
+        return 'pending'; // Yellow ⏳
+      case 'FAILED':
+        return 'rejected'; // Red ❌
+      case 'REFUNDED':
+        return 'meta'; // Blue 🔁
+      case 'CANCELLED':
+        return 'outline'; // Grey 🚫
       default:
-        return 'default';
+        return 'outline'; // fallback
     }
   };
 
@@ -231,14 +233,16 @@ const ParentFeeHistory = ({ parentData }: { parentData: ParentData }) => {
                     ) : (
                       currentChild.unpaidFees.map((payment) => (
                         <TableRow key={payment.id}>
-                          <TableCell className="font-medium">
+                          <TableCell className="font-medium whitespace-nowrap">
                             {currentChild.name}
                           </TableCell>
-                          <TableCell>{payment.category}</TableCell>
-                          <TableCell>
+                          <TableCell className="capitalize">
+                            {payment.category}
+                          </TableCell>
+                          <TableCell className="whitespace-nowrap">
                             {format(payment.dueDate, 'PPP')}
                           </TableCell>
-                          <TableCell>
+                          <TableCell className="">
                             ₹{formatCurrencyIN(payment.amount)}
                           </TableCell>
                           <TableCell>
@@ -281,7 +285,7 @@ const ParentFeeHistory = ({ parentData }: { parentData: ParentData }) => {
               </div>
             )}
 
-            <div className="flex justify-end gap-2">
+            {/* <div className="flex justify-end gap-2">
               <Button variant="outline">
                 <Receipt className="mr-2 h-4 w-4" />
                 Download Receipts
@@ -292,7 +296,7 @@ const ParentFeeHistory = ({ parentData }: { parentData: ParentData }) => {
                   Pay All Pending Fees
                 </Button>
               )}
-            </div>
+            </div> */}
           </CardContent>
         </Card>
       )}
@@ -328,14 +332,18 @@ const ParentFeeHistory = ({ parentData }: { parentData: ParentData }) => {
                 ) : (
                   currentChild?.paymentHistory.map((payment) => (
                     <TableRow key={payment.id}>
-                      <TableCell>
+                      <TableCell className="whitespace-nowrap">
                         {format(payment.paymentDate, 'PPP')}
                       </TableCell>
-                      <TableCell className="font-medium">
+                      <TableCell className="font-medium whitespace-nowrap">
                         {payment.studentName}
                       </TableCell>
-                      <TableCell>{payment.receiptNumber}</TableCell>
-                      <TableCell>{payment.category}</TableCell>
+                      <TableCell className="whitespace-nowrap">
+                        {payment.receiptNumber}
+                      </TableCell>
+                      <TableCell className="capitalize">
+                        {payment.category}
+                      </TableCell>
                       <TableCell>
                         ₹{formatCurrencyIN(payment.amountPaid)}
                       </TableCell>

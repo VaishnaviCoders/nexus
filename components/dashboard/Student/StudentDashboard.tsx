@@ -1,4 +1,3 @@
-import ComingSoon from '@/components/Coming-soon';
 import React from 'react';
 import { StudentDashboardStatsCards } from './StudentDashboardStatsCards';
 import {
@@ -16,15 +15,7 @@ import { RecentNoticesCards } from '../notice/recent-notices-cards';
 import { FeesQuickCard } from './FeesQuickCard';
 import { FeeStatus, PaymentMethod } from '@/lib/generated/prisma';
 import { Button } from '@/components/ui/button';
-import {
-  CreditCard,
-  Download,
-  Upload,
-  Calendar,
-  MessageSquare,
-  Bell,
-  Zap,
-} from 'lucide-react';
+import { CreditCard, Download, Upload, MessageSquare, Zap } from 'lucide-react';
 
 export async function getFeesStatus(studentId: string) {
   const fees = await prisma.fee.findMany({

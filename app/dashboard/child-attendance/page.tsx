@@ -83,10 +83,12 @@ export default function ChildAttendancePage() {
                 Notification Settings
               </Button>
             </Link>
-            <Button variant="outline" className="w-full justify-start">
-              <Download className="w-4 h-4 mr-2" />
-              Download Report
-            </Button>
+            <Link href="/dashboard/settings">
+              <Button variant="outline" className="w-full justify-start">
+                <Download className="w-4 h-4 mr-2" />
+                Download Report
+              </Button>
+            </Link>
           </div>
         </CardContent>
       </Card>

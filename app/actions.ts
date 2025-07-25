@@ -4,7 +4,7 @@ import { auth, currentUser, User } from '@clerk/nextjs/server';
 import {
   AcademicYearFormData,
   academicYearSchema,
-  AcademicYearUpdateData,
+  AcademicYearUpdateFormData,
   academicYearUpdateSchema,
   DocumentUploadFormData,
   documentUploadSchema,
@@ -806,7 +806,7 @@ export async function createAcademicYear(data: AcademicYearFormData) {
   }
 }
 
-export async function updateAcademicYear(data: AcademicYearUpdateData) {
+export async function updateAcademicYear(data: AcademicYearUpdateFormData) {
   try {
     const validatedData = academicYearUpdateSchema.parse(data);
 

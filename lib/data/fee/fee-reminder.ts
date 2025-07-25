@@ -5,8 +5,14 @@ import {
   SendReminderData,
 } from '@/components/dashboard/Fees/SendFeesReminderDialog';
 import prisma from '@/lib/db';
-import { NotificationChannel } from '@/lib/generated/prisma';
+import {
+  NotificationChannel,
+  Prisma,
+  scheduledJobType,
+} from '@/lib/generated/prisma';
+import { inngest } from '@/lib/inngest/client';
 import { getOrganizationId } from '@/lib/organization';
+import { getCurrentUser } from '@/lib/user';
 import { calculateNotificationCost } from '@/lib/utils';
 import { Resend } from 'resend';
 import { z } from 'zod';
@@ -56,110 +62,25 @@ export async function sendFeeReminders(
   data: SendReminderData
 ): Promise<ReminderResult> {
   const organizationId = await getOrganizationId();
+
+  const user = await getCurrentUser();
+
+  const createdBy = `${user.firstName ?? ''} ${user.lastName ?? ''}`.trim();
+
   try {
     const validated = reminderDataSchema.parse(data);
 
     if (validated.scheduleDate && validated.scheduleTime) {
-      // TODO: Save to queue/schedule later
-      console.log(
-        '⏱ Scheduled Reminder:',
-        validated.scheduleDate,
-        validated.scheduleTime
+      const scheduleResult = await scheduleReminder(
+        validated,
+        organizationId,
+        createdBy
       );
-      return { success: true, sentCount: 0 };
+
+      return scheduleResult;
     }
 
-    let totalSent = 0;
-    let totalFailed = 0;
-
-    console.log(
-      'Sending reminders to',
-      validated.recipients.length,
-      'recipients',
-      validated.recipients
-    );
-
-    // Step 2: Loop through recipients and send reminders
-    for (const recipient of validated.recipients) {
-      for (const channel of validated.channels) {
-        const prismaChannel = toPrismaChannel(channel);
-        const cost = calculateNotificationCost(prismaChannel, 1); // 1 unit per recipient per channel
-
-        const personalizedMessage = validated.message
-          .replace('{STUDENT_NAME}', recipient.studentName)
-          .replace(
-            '{ORGANIZATION_NAME}',
-            recipient.organizationName || 'School Administration'
-          )
-          .replace(
-            '{AMOUNT}',
-            recipient.amountDue.toLocaleString('en-IN', {
-              style: 'currency',
-              currency: 'INR',
-              maximumFractionDigits: 0,
-            })
-          );
-
-        // Call external APIs here based on the channel
-
-        let status: 'SENT' | 'FAILED' = 'SENT';
-        try {
-          if (channel === 'email') {
-            console.log(
-              'Sending email to:',
-              validated.subject,
-              recipient.parentEmail,
-              personalizedMessage
-            );
-
-            await sendEmail(
-              recipient.parentEmail,
-              // 'vaishnaviraykar768@gmail.com',
-              validated.subject,
-              personalizedMessage
-            );
-          } else if (channel === 'sms') {
-            await sendSMS(recipient.parentPhone, personalizedMessage);
-          } else if (channel === 'whatsapp') {
-            await sendWhatsApp(recipient.parentPhone, personalizedMessage);
-          }
-
-          // Optionally: save to a FeeReminderHistory table in Prisma
-
-          await prisma.notificationLog.create({
-            data: {
-              organizationId, // Pass this into recipient if needed
-              userId: recipient.parentUserId ?? null, // You can add parent.userId if you track it
-              studentId: recipient.studentId,
-              parentId: recipient.parentId,
-              channel: prismaChannel,
-              notificationType: 'FEE_REMINDER',
-              status,
-              units: 1,
-              cost: cost,
-              sentAt: new Date(),
-            },
-          });
-
-          totalSent++;
-        } catch (error) {
-          console.error(
-            `❌ Failed to send ${channel} to ${recipient.parentName}:`,
-            error
-          );
-          status = 'FAILED';
-          totalFailed++;
-        }
-      }
-    }
-
-    return {
-      success: totalFailed === 0,
-      sentCount: totalSent,
-      error: totalFailed
-        ? `Failed to send ${totalFailed} reminders`
-        : undefined,
-    };
+    return await executeReminders(validated, organizationId);
   } catch (error) {
     console.error('Failed to send reminders:', error);
 
@@ -194,3 +115,152 @@ const sendWhatsApp = async (recipientPhone: string, message: string) => {
   // Implement WhatsApp sending
   console.log('Sending WhatsApp to:', recipientPhone, message);
 };
+
+async function scheduleReminder(
+  data: SendReminderData,
+  organizationId: string,
+  createdBy: string
+): Promise<ReminderResult> {
+  try {
+    if (!data.scheduleDate || !data.scheduleTime) {
+      return {
+        success: false,
+        error: 'Schedule date and time must be provided',
+      };
+    }
+
+    const dateOnly = data.scheduleDate?.toISOString().split('T')[0]; // "YYYY-MM-DD"
+    const timeOnly = data.scheduleTime ?? '00:00';
+
+    const isoString = `${dateOnly}T${timeOnly}:00+05:30`;
+    const scheduledDateTime = new Date(isoString);
+
+    const currentTime = new Date();
+
+    // Add minimum buffer (e.g., 2 minutes)
+    const minFutureTime = new Date(currentTime.getTime() + 2 * 60 * 1000);
+    if (scheduledDateTime <= minFutureTime) {
+      return {
+        success: false,
+        error: `Scheduled time must be at least 2 minutes in the future. Got: ${scheduledDateTime.toISOString()}`,
+      };
+    }
+
+    // Create a scheduled job record
+    const scheduledJob = await prisma.scheduledJob.create({
+      data: {
+        organizationId,
+        type: scheduledJobType.FEE_REMINDER,
+        scheduledAt: scheduledDateTime,
+        data: JSON.stringify(data),
+        status: 'PENDING',
+        createdBy,
+        channels: data.channels.map(toPrismaChannel),
+      },
+    });
+
+    await inngest.send({
+      name: 'fee/reminder.scheduled',
+      data: {
+        data,
+        scheduledDateTime,
+        organizationId,
+        jobId: scheduledJob.id,
+      },
+    });
+
+    return {
+      success: true,
+      sentCount: 0,
+      scheduledJobId: scheduledJob.id,
+      scheduledAt: scheduledDateTime,
+      message: `Reminder scheduled for ${scheduledDateTime.toLocaleString()}`,
+    };
+  } catch (error) {
+    console.error('Failed to schedule reminder:', error);
+    return {
+      success: false,
+      error:
+        error instanceof Error ? error.message : 'Failed to schedule reminder',
+    };
+  }
+}
+
+export async function executeReminders(
+  validated: SendReminderData,
+  organizationId: string
+) {
+  let totalSent = 0;
+  let totalFailed = 0;
+
+  // Step 2: Loop through recipients and send reminders
+  for (const recipient of validated.recipients) {
+    for (const channel of validated.channels) {
+      const prismaChannel = toPrismaChannel(channel);
+      const cost = calculateNotificationCost(prismaChannel, 1); // 1 unit per recipient per channel
+
+      const personalizedMessage = validated.message
+        .replace('{STUDENT_NAME}', recipient.studentName)
+        .replace(
+          '{ORGANIZATION_NAME}',
+          recipient.organizationName || 'School Administration'
+        )
+        .replace(
+          '{AMOUNT}',
+          recipient.amountDue.toLocaleString('en-IN', {
+            style: 'currency',
+            currency: 'INR',
+            maximumFractionDigits: 0,
+          })
+        );
+
+      // Call external APIs here based on the channel
+
+      let status: 'SENT' | 'FAILED' = 'SENT';
+      try {
+        if (channel === 'email') {
+          await sendEmail(
+            recipient.parentEmail,
+            // 'vaishnaviraykar768@gmail.com',
+            validated.subject,
+            personalizedMessage
+          );
+        } else if (channel === 'sms') {
+          await sendSMS(recipient.parentPhone, personalizedMessage);
+        } else if (channel === 'whatsapp') {
+          await sendWhatsApp(recipient.parentPhone, personalizedMessage);
+        }
+
+        await prisma.notificationLog.create({
+          data: {
+            organizationId, // Pass this into recipient if needed
+            userId: recipient.parentUserId ?? null, // You can add parent.userId if you track it
+            studentId: recipient.studentId,
+            parentId: recipient.parentId,
+            channel: prismaChannel,
+            notificationType: 'FEE_REMINDER',
+            status,
+            units: 1,
+            cost: cost,
+            sentAt: new Date(),
+          },
+        });
+
+        totalSent++;
+      } catch (error) {
+        console.error(
+          `❌ Failed to send ${channel} to ${recipient.parentName}:`,
+          error
+        );
+        status = 'FAILED';
+        totalFailed++;
+      }
+    }
+  }
+
+  return {
+    success: totalFailed === 0,
+    sentCount: totalSent,
+    error: totalFailed ? `Failed to send ${totalFailed} reminders` : undefined,
+  };
+}

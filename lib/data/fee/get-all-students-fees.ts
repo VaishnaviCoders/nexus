@@ -1,6 +1,6 @@
 import prisma from '@/lib/db';
 import { FeeRecord } from '@/types';
-import { FeeStatus } from '@/lib/generated/prisma';
+import { FeeStatus, PaymentStatus } from '@/lib/generated/prisma';
 
 export async function getFeeRecords(count: number = 50): Promise<FeeRecord[]> {
   try {
@@ -18,7 +18,7 @@ export async function getFeeRecords(count: number = 50): Promise<FeeRecord[]> {
             phoneNumber: true,
             gradeId: true,
             sectionId: true,
-
+            userId: true,
             section: {
               select: {
                 name: true,
@@ -64,6 +64,7 @@ export async function getFeeRecords(count: number = 50): Promise<FeeRecord[]> {
             receiptNumber: true,
             transactionId: true,
             feeId: true,
+            status: true,
             payer: {
               select: {
                 firstName: true,
@@ -96,6 +97,7 @@ export async function getFeeRecords(count: number = 50): Promise<FeeRecord[]> {
       },
       student: {
         id: fee.student.id,
+        userId: fee.student.userId,
         firstName: fee.student.firstName,
         lastName: fee.student.lastName,
         rollNumber: fee.student.rollNumber,
@@ -126,6 +128,7 @@ export async function getFeeRecords(count: number = 50): Promise<FeeRecord[]> {
         receiptNumber: payment.receiptNumber,
         transactionId: payment.transactionId ?? undefined,
         feeId: payment.feeId,
+        status: payment.status as PaymentStatus,
         payer: {
           firstName: payment.payer.firstName,
           lastName: payment.payer.lastName,

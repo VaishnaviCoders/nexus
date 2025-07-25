@@ -106,6 +106,7 @@ model Organization {
   TeachingAssignment TeachingAssignment[]
   NotificationLog    NotificationLog[]
   AcademicYear       AcademicYear[]
+  scheduledJob       ScheduledJob[]
 
   createdBy String?
   createdAt DateTime @default(now())
@@ -279,9 +280,9 @@ model Section {
 }
 
 model Student {
-  id     String  @id @default(cuid())
-  user   User?   @relation(fields: [userId], references: [id])
-  userId String? @unique
+  id     String @id @default(cuid())
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @unique
 
   firstName        String
   lastName         String
@@ -509,6 +510,33 @@ enum FeeStatus {
   OVERDUE
 }
 
+model ScheduledJob {
+  id          String                @id @default(cuid())
+  data        Json
+  type        scheduledJobType
+  scheduledAt DateTime
+  channels    NotificationChannel[]
+
+  status String @default("PENDING") // PENDING, PROCESSING, COMPLETED, FAILED
+
+  result Json?
+  error  String?
+
+  createdBy      String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  @@index([organizationId, status])
+  @@index([scheduledAt])
+}
+
+enum scheduledJobType {
+  FEE_REMINDER
+  NOTICE
+}
+
 model FeeCategory {
   id             String       @id @default(cuid())
   name           String // e.g., "Yearly Fee", "Exam Fee", "Lab Fee", etc.
@@ -678,6 +706,7 @@ enum NotificationType {
   ATTENDANCE_ALERT
   DOCUMENT_REQUEST
   GENERAL_ANNOUNCEMENT
+  Exam
 }
 
 enum NotificationChannel {

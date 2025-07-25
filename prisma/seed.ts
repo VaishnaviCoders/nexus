@@ -46,13 +46,26 @@ async function generateNotices() {
 const main = async () => {
   console.log('🌱 Seeding notices...');
 
-  const notices = await generateNotices();
+  // const notices = await generateNotices();
 
-  const result = await prisma.notice.createMany({
-    data: notices,
-    skipDuplicates: false,
+  // const result = await prisma.notice.createMany({
+  //   data: notices,
+  //   skipDuplicates: false,
+  // });
+  // console.log(`✅ Created ${result.count} notices successfully!`);
+
+  await prisma.scheduledJob.create({
+    data: {
+      organizationId: 'org_2yikjYDIq5D8AjIyLvq2T6K5jZF',
+      type: 'FEE_REMINDER',
+      scheduledAt: new Date('2025-07-22T22:00:00Z'),
+      channels: ['EMAIL', 'WHATSAPP'], // must be array of enums
+      data: {
+        studentId: '...',
+        feeId: '...',
+      },
+    },
   });
-  console.log(`✅ Created ${result.count} notices successfully!`);
 
   const sampleNotices = await prisma.notice.findMany({
     take: 5,

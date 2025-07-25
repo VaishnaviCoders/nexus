@@ -1,13 +1,19 @@
-// 'use client';
-
 import { Suspense } from 'react';
 
-import { SendFeesReminderDialog } from '@/components/dashboard/Fees/SendFeesReminderDialog';
 import StudentPaymentHistoryTable from '@/components/dashboard/Fees/StudentPaymentHistoryTable';
 import { getFeeRecords } from '@/lib/data/fee/get-all-students-fees';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Card, CardContent } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { FeeStatsCardForTeacher } from '@/components/dashboard/teacher/FeeStatsCardForTeacher';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { PlusIcon } from 'lucide-react';
 
 export default async function TeacherFeesManagementDashboard() {
   const feeRecords = await getFeeRecords();
@@ -15,11 +21,23 @@ export default async function TeacherFeesManagementDashboard() {
   return (
     <div className="">
       <main className="flex flex-1 flex-col gap-4">
-        <div className="flex items-center justify-between mx-2">
-          <h1 className="text-2xl font-bold tracking-tight">
-            Teacher Dashboard
-          </h1>
-        </div>
+        <Card className="py-4 px-2 flex items-center justify-between">
+          <div>
+            <CardTitle className="text-lg">Teacher Dashboard</CardTitle>
+            <CardDescription className="text-sm">
+              Dashboard for admin to manage the system
+            </CardDescription>
+          </div>
+          <Link
+            href="/dashboard/fees/admin/assign"
+            className="w-full sm:w-auto"
+          >
+            <Button className="w-full sm:w-auto">
+              <PlusIcon className="mr-2 h-4 w-4" />
+              <span className="sm:inline">Assign Fees</span>
+            </Button>
+          </Link>
+        </Card>
 
         <FeeStatsCardForTeacher />
 

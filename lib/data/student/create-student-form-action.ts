@@ -313,6 +313,7 @@ export async function createStudent(data: z.infer<typeof studentSchema>) {
       // Create student
       const newStudent = await tx.student.create({
         data: {
+          userId: studentClerkUser.id,
           organizationId,
           rollNumber: validated.rollNumber,
           firstName: validated.firstName,

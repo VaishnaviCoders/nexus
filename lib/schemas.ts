@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { DocumentType } from './generated/prisma';
+import { DocumentType, PaymentMethod } from './generated/prisma';
 // const ACCEPTED_IMAGE_TYPES = [
 //   'image/jpeg',
 //   'image/jpg',
@@ -298,4 +298,34 @@ export const academicYearUpdateSchema = academicYearSchema.extend({
   id: z.string().min(1, 'ID is required'),
 });
 
-export type AcademicYearUpdateData = z.infer<typeof academicYearUpdateSchema>;
+export type AcademicYearUpdateFormData = z.infer<
+  typeof academicYearUpdateSchema
+>;
+
+//  Payment Reminder schema
+export const reminderFormSchema = z.object({
+  recipients: z.array(z.string()).min(1, 'Select at least one recipient'),
+  channels: z
+    .array(z.enum(['email', 'sms', 'whatsapp']))
+    .min(1, 'Select at least one channel'),
+  templateId: z.string().min(1, 'Please select a template'),
+
+  scheduleDate: z.date().optional(),
+  scheduleTime: z.string().optional(),
+  sendNow: z.boolean().default(true),
+});
+
+export type ReminderFormValues = z.infer<typeof reminderFormSchema>;
+
+// Offline Payment
+
+export const offlinePaymentSchema = z.object({
+  feeId: z.string().min(1),
+  amount: z.coerce.number().positive(),
+  method: z.nativeEnum(PaymentMethod),
+  transactionId: z.string().optional(),
+  note: z.string().optional(),
+  payerId: z.string(),
+});
+
+export type offlinePaymentFormData = z.infer<typeof offlinePaymentSchema>;

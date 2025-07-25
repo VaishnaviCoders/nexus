@@ -35,6 +35,8 @@ import StudentAssignment from '@/components/dashboard/Student/StudentAssignment'
 import { Badge } from '@/components/ui/badge';
 import { getOrganizationId } from '@/lib/organization';
 import { getCurrentAcademicYear } from '@/lib/academicYear';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import { formatDateIN } from '@/lib/utils';
 
 const getStudentDashboardData = async (studentId: string) => {
   const start = performance.now();
@@ -413,44 +415,50 @@ const StudentIdRoute = async ({
           </Card>
 
           {/* Announcements */}
-          <Card className="bg-gradient-to-br from-white to-amber-50/30 dark:from-slate-900 dark:to-amber-950/20 border-amber-200/50 dark:border-amber-800/30 shadow-lg">
+          <Card className="bg-gradient-to-br from-white to-amber-50/30 dark:from-slate-900 dark:to-amber-950/20 border border-amber-200/50 dark:border-amber-800/30 shadow-lg">
             <CardHeader className="pb-4">
               <CardTitle className="text-lg font-semibold flex items-center gap-2">
                 <Bell className="w-5 h-5 text-amber-600" />
                 Recent Notices
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-3">
-                {notices.map((notice, index) => (
-                  <div
-                    key={index}
-                    className="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg border-l-4 border-amber-500"
-                  >
-                    <div className="flex justify-between items-start mb-1">
-                      <h3 className="font-semibold text-slate-900 dark:text-slate-100 text-sm">
-                        {notice.title}
-                      </h3>
-                      <span className="text-xs text-slate-500 dark:text-slate-400">
-                        {new Intl.DateTimeFormat('en-in').format(
-                          notice.startDate
-                        )}
-                      </span>
-                    </div>
-                    <p className="text-sm text-slate-700 dark:text-slate-300">
-                      {notice.content}
-                    </p>
-                  </div>
-                ))}
-              </div>
 
-              <Button
-                variant="outline"
-                className="w-full border-amber-200 hover:bg-amber-50 dark:border-amber-800 dark:hover:bg-amber-950/20"
-              >
-                <Bell className="mr-2 h-4 w-4" />
-                View All Announcements
-              </Button>
+            <CardContent className="space-y-4">
+              <ScrollArea className="h-40 rounded-md border-none">
+                <div className="space-y-3 pr-4">
+                  {' '}
+                  {/* Add pr-4 for scrollbar space */}
+                  {notices.map((notice, index) => (
+                    <div
+                      key={index}
+                      className="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-md border-l-4 border-amber-500"
+                    >
+                      <div className="flex justify-between items-start gap-2 mb-1">
+                        <h3 className="text-sm font-medium text-slate-900 dark:text-slate-100">
+                          {notice.title}
+                        </h3>
+                        <span className="text-xs text-slate-500 dark:text-slate-400 whitespace-nowrap">
+                          {formatDateIN(notice.startDate)}
+                        </span>
+                      </div>
+                      <p className="text-sm text-slate-700 dark:text-slate-300">
+                        {notice.content}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+                <ScrollBar orientation="vertical" />
+              </ScrollArea>
+
+              <Link href="/dashboard/notices" passHref>
+                <Button
+                  variant="outline"
+                  className="w-full border-amber-200 hover:bg-amber-50 dark:border-amber-800 dark:hover:bg-amber-950/30"
+                >
+                  <Bell className="mr-2 h-4 w-4" />
+                  View All Announcements
+                </Button>
+              </Link>
             </CardContent>
           </Card>
 

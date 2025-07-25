@@ -37,6 +37,7 @@ import {
 import { generateAISummaryOpenRouter } from '@/ai/ai-monthly-fee-report';
 import { mockMonthlyFeeCollectionData } from '@/constants';
 import { generateAiMonthlyFeesReportAction } from '@/ai/gemini-monthly-fee-report';
+import AIStateLoading from '@/components/websiteComp/AILoadingState';
 
 interface MonthlyData {
   month: string;
@@ -303,10 +304,11 @@ const AiMonthlyReport: React.FC<AiMonthlyReportProps> = ({ data }) => {
         <Button
           size="sm"
           variant="outline"
-          className="gap-2 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 transition-all duration-300 border-dashed hover:border-solid"
+          className="gap-2 text-blue-500 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 transition-all duration-300 border-dashed hover:border-solid"
         >
-          <Sparkles className="w-4 h-4" />
-          Generate AI Summary
+          <Sparkles className="w-4 h-4 text-blue-400 " />
+          AI
+          {/* Generate AI Summary */}
         </Button>
       </DialogTrigger>
 
@@ -338,6 +340,12 @@ const AiMonthlyReport: React.FC<AiMonthlyReportProps> = ({ data }) => {
                 </p>
               </CardContent>
             </Card>
+          )}
+
+          {isPending && (
+            <>
+              <AIStateLoading />
+            </>
           )}
 
           {summary && (

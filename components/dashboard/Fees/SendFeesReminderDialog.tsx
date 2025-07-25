@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useTransition } from 'react';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -8,6 +8,7 @@ import { format } from 'date-fns';
 import {
   CalendarIcon,
   Check,
+  ChevronDownIcon,
   Info,
   Loader2,
   Mail,
@@ -51,7 +52,7 @@ import { FeeReminderTemplates } from '@/components/Templates/FeeReminder';
 import { toast } from 'sonner';
 import { WhatsAppIcon } from '@/public/icons/WhatsAppIcon';
 import { sendFeeReminders } from '@/lib/data/fee/fee-reminder';
-// import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { reminderFormSchema, ReminderFormValues } from '@/lib/schemas';
 
 export interface FeeReminderRecipient {
   id: string;
@@ -94,22 +95,10 @@ export interface ReminderResult {
   success: boolean;
   error?: string;
   sentCount?: number;
+  message?: string;
+  scheduledJobId?: string;
+  scheduledAt?: Date;
 }
-
-// Define the schema for the form
-const reminderFormSchema = z.object({
-  recipients: z.array(z.string()).min(1, 'Select at least one recipient'),
-  channels: z
-    .array(z.enum(['email', 'sms', 'whatsapp']))
-    .min(1, 'Select at least one channel'),
-  templateId: z.string().min(1, 'Please select a template'),
-
-  scheduleDate: z.date().optional(),
-  scheduleTime: z.string().optional(),
-  sendNow: z.boolean().default(true),
-});
-
-type ReminderFormValues = z.infer<typeof reminderFormSchema>;
 
 interface SendReminderDialogProps {
   initialRecipients: FeeReminderRecipient[];
@@ -118,7 +107,7 @@ interface SendReminderDialogProps {
 export function SendFeesReminderDialog({
   initialRecipients = [],
 }: SendReminderDialogProps) {
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isPending, startTransition] = useTransition();
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [previewMessage, setPreviewMessage] = useState('');
@@ -132,6 +121,8 @@ export function SendFeesReminderDialog({
       channels: ['email'],
       templateId: 'friendly-reminder',
       sendNow: true,
+      scheduleDate: new Date(),
+      scheduleTime: '10:30',
     },
   });
 
@@ -176,52 +167,54 @@ export function SendFeesReminderDialog({
 
   // Handle form submission
   async function onSubmit(data: ReminderFormValues) {
-    setIsSubmitting(true);
     setError(null);
 
-    try {
-      // Get the selected recipients
-      const selectedRecipients = initialRecipients.filter((r) =>
-        data.recipients.includes(r.id)
-      );
+    startTransition(() => {
+      (async () => {
+        try {
+          const selectedRecipients = initialRecipients.filter((r) =>
+            data.recipients.includes(r.id)
+          );
 
-      const reminderData: SendReminderData = {
-        recipients: selectedRecipients,
-        channels: data.channels,
-        subject: previewSubject,
-        message: previewMessage,
-        scheduleDate: data.sendNow ? null : data.scheduleDate,
-        scheduleTime: data.sendNow ? null : data.scheduleTime,
-      };
+          const reminderData: SendReminderData = {
+            recipients: selectedRecipients,
+            channels: data.channels,
+            subject: previewSubject,
+            message: previewMessage,
+            scheduleDate: data.sendNow ? null : data.scheduleDate,
+            scheduleTime: data.sendNow ? null : data.scheduleTime,
+          };
 
-      console.log('Reminder data:', reminderData);
+          const result = await sendFeeReminders(reminderData);
 
-      //   // Send the reminders
-      const result = await sendFeeReminders(reminderData);
+          console.log('Reminder data:', reminderData, result);
 
-      toast.success('Reminders sent successfully!');
+          // Check if the operation was successful
+          if (result.success) {
+            toast.success(
+              result.message ||
+                (data.sendNow
+                  ? 'Reminders sent successfully!'
+                  : 'Reminders scheduled successfully!')
+            );
+            console.log('Reminder operation successful:', reminderData, result);
 
-      // console.log('Reminder data:', reminderData);
-
-      //   if (result.success) {
-      //     setSuccess(true);
-      //     setTimeout(() => {
-      //       onOpenChange(false);
-      //       setSuccess(false);
-      //     }, 2000);
-      //   } else {
-      //     setError(result.error || 'Failed to send reminders');
-      //   }
-      setSuccess(true);
-      setTimeout(() => {
-        setSuccess(false);
-      }, 2000);
-    } catch (err) {
-      setError('An unexpected error occurred');
-      console.error(err);
-    } finally {
-      setIsSubmitting(false);
-    }
+            setSuccess(true);
+            setTimeout(() => {
+              setSuccess(false);
+            }, 2000);
+          } else {
+            // Handle server-side errors
+            const errorMessage = result.error || 'Failed to process reminders';
+            setError(errorMessage);
+            toast.error(errorMessage);
+          }
+        } catch (err) {
+          setError('An unexpected error occurred');
+          console.error(err);
+        }
+      })();
+    });
   }
 
   return (
@@ -525,32 +518,34 @@ export function SendFeesReminderDialog({
               {/* Date and Time Picker (if scheduled) */}
               {!watchSendNow && (
                 <div className="grid grid-cols-2 gap-4">
+                  {/* Date Picker */}
                   <FormField
                     control={form.control}
                     name="scheduleDate"
                     render={({ field }) => (
-                      <FormItem className="flex flex-col">
-                        <FormLabel>Date</FormLabel>
+                      <FormItem className="flex flex-col gap-3">
+                        <FormLabel className="px-1">Date</FormLabel>
                         <Popover>
                           <PopoverTrigger asChild>
                             <FormControl>
                               <Button
-                                variant={'outline'}
+                                variant="outline"
                                 className={cn(
-                                  'pl-3 text-left font-normal',
+                                  'justify-between  font-normal',
                                   !field.value && 'text-muted-foreground'
                                 )}
                               >
-                                {field.value ? (
-                                  format(field.value, 'PPP')
-                                ) : (
-                                  <span>Pick a date</span>
-                                )}
-                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                {field.value
+                                  ? format(field.value, 'PPP')
+                                  : 'Select date'}
+                                <ChevronDownIcon />
                               </Button>
                             </FormControl>
                           </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0" align="start">
+                          <PopoverContent
+                            className="w-auto overflow-hidden p-0"
+                            align="start"
+                          >
                             <Calendar
                               mode="single"
                               selected={field.value}
@@ -558,7 +553,6 @@ export function SendFeesReminderDialog({
                               disabled={(date) =>
                                 date < new Date(new Date().setHours(0, 0, 0, 0))
                               }
-                              initialFocus
                             />
                           </PopoverContent>
                         </Popover>
@@ -567,17 +561,19 @@ export function SendFeesReminderDialog({
                     )}
                   />
 
+                  {/* Time Picker */}
                   <FormField
                     control={form.control}
                     name="scheduleTime"
                     render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Time</FormLabel>
+                      <FormItem className="flex flex-col gap-3">
+                        <FormLabel className="px-1">Time</FormLabel>
                         <FormControl>
                           <Input
                             type="time"
-                            placeholder="Select time"
+                            step="60"
                             {...field}
+                            className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
                           />
                         </FormControl>
                         <FormMessage />
@@ -650,15 +646,16 @@ export function SendFeesReminderDialog({
         {!success && (
           <>
             <div className="flex justify-end space-x-4 mt-5">
-              <Button variant="outline" disabled={isSubmitting}>
+              {/* <Button variant="outline" disabled={isPending} onClick={onClose}>
                 Cancel
-              </Button>
+              </Button> */}
+
               <Button
                 type="submit"
                 onClick={form.handleSubmit(onSubmit)}
-                disabled={isSubmitting}
+                disabled={isPending}
               >
-                {isSubmitting ? (
+                {isPending ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     Sending...

@@ -24,6 +24,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from '@/components/ui/hover-card';
+import AiMonthlyReport from '@/app/components/dashboardComponents/AiMonthlyReport';
 
 // Type definitions based on your Prisma schema
 type MonthlyFeeData = {
@@ -126,9 +127,10 @@ export function MonthlyFeeCollection({
             </SelectContent>
           </Select>
 
-          <Button variant="outline" size="icon" title="Export Data">
+          {/* <Button variant="outline" size="icon" title="Export Data">
             <DownloadIcon className="h-4 w-4" />
-          </Button>
+          </Button> */}
+          <AiMonthlyReport data={data} />
         </div>
       </CardHeader>
 

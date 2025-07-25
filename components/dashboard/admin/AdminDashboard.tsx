@@ -150,7 +150,7 @@ const AdminDashboard = async () => {
           </CardDescription>
         </div>
         <div className="flex justify-center items-center space-x-3">
-          <div className="hidden sm:block">
+          <div className="">
             <AiMonthlyReport data={data} />
           </div>
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useTransition } from 'react';
 import { z } from 'zod';
 import {
   ArrowLeftIcon,
@@ -19,6 +19,7 @@ import {
   Eye,
   MailIcon,
   EyeIcon,
+  Send,
 } from 'lucide-react';
 import { cn, formatCurrencyIN, formatDateIN } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
@@ -66,46 +67,30 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Skeleton } from '@/components/ui/skeleton';
-import { format } from 'date-fns';
-import { phonePayInitPayment } from '@/lib/data/fee/payFeesAction';
 import { toast } from 'sonner';
 import { FeeRecord } from '@/types';
 import {
   SendFeesReminderDialog,
   FeeReminderRecipient,
 } from './SendFeesReminderDialog';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { recordOfflinePayment } from '@/lib/data/fee/recordOfflinePayment';
+import { PaymentMethod } from '@/lib/generated/prisma';
+import { offlinePaymentSchema, offlinePaymentFormData } from '@/lib/schemas';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
 
-const formatCurrency = (amount: number) =>
-  new Intl.NumberFormat('en-IN', {
-    style: 'currency',
-    currency: 'INR',
-    maximumFractionDigits: 0,
-  }).format(amount);
-
-const formatDate = (date: Date) => format(new Date(date), 'dd MMM yyyy');
-
-// Schemas
-const PaymentMethodSchema = z.enum([
-  'CASH',
-  'UPI',
-  'CARD',
-  'BANK_TRANSFER',
-  'CHEQUE',
-  'ONLINE',
-]);
-
-const PaymentFormSchema = z.object({
-  amount: z
-    .number()
-    .positive('Amount must be positive')
-    .max(
-      1000000,
-      'Amount too large (Contact your administrator for assistance)'
-    ),
-  method: PaymentMethodSchema,
-  transactionId: z.string().optional(),
-  note: z.string().optional(),
-});
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 interface FilterState {
   searchTerm: string;
@@ -250,178 +235,214 @@ export default function StudentPaymentHistoryTable({
 
 // Record Payment Dialog Component
 interface RecordPaymentCardProps {
-  selectedRecord: FeeRecord | null;
+  selectedRecord: FeeRecord;
 }
 
 const RecordPaymentCard = ({ selectedRecord }: RecordPaymentCardProps) => {
-  console.log('selectedRecord', selectedRecord?.fee.id);
-  const [formErrors, setFormErrors] = useState<{ amount?: string }>({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
-  if (!selectedRecord) return null;
+  const maxPayableAmount =
+    selectedRecord.fee.pendingAmount ??
+    (selectedRecord
+      ? selectedRecord.fee.totalFee - selectedRecord.fee.paidAmount
+      : 0);
 
-  const actualPendingAmount =
-    selectedRecord.fee.totalFee - selectedRecord.fee.paidAmount;
-  const maxPayableAmount = Math.max(0, actualPendingAmount);
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!selectedRecord) return;
+  const form = useForm<offlinePaymentFormData>({
+    resolver: zodResolver(offlinePaymentSchema),
+    defaultValues: {
+      feeId: selectedRecord?.fee.id || '', // Use selectedRecord.id for the form's feeId
+      amount: maxPayableAmount > 0 ? maxPayableAmount : 0, // Initialize with max payable or 0
+      method: PaymentMethod.CASH, // Default to CASH
+      transactionId: '',
+      note: '',
+      payerId: selectedRecord.student.userId,
+    },
+  });
 
-    setIsSubmitting(true);
-    setFormErrors({});
-
-    const formData = new FormData(e.currentTarget);
-    const data = {
-      amount: parseFloat(formData.get('amount') as string),
-      method: formData.get('method') as string,
-      transactionId: formData.get('transaction') as string,
-      note: formData.get('note') as string,
-    };
-
-    try {
-      const parsed = PaymentFormSchema.safeParse(data);
-      if (!parsed.success) {
-        const errors = parsed.error.flatten().fieldErrors;
-        setFormErrors({
-          amount: errors.amount?.[0],
-        });
-        setIsSubmitting(false);
-        return;
-      }
-
-      // Additional validation for payment amount
-      if (parsed.data.amount > maxPayableAmount) {
-        setFormErrors({
-          amount: `Amount cannot exceed pending amount of ${formatCurrencyIN(maxPayableAmount)}`,
-        });
-        return;
-      }
-
-      if (parsed.data.amount <= 0) {
-        setFormErrors({
-          amount: 'Payment amount must be greater than zero',
-        });
-        return;
-      }
-      await phonePayInitPayment(selectedRecord.fee.id);
-
-      toast.success(
-        `Successfully recorded payment of ${formatCurrency(
-          parsed.data.amount
-        )}.`
-      );
-    } catch (error) {
-      console.error('Error recording payment:', error);
-      toast.error('Failed to record payment. Please try again.');
-    } finally {
-      setIsSubmitting(false);
+  async function onSubmit(data: offlinePaymentFormData) {
+    // Additional client-side validation for amount against maxPayableAmount
+    if (data.amount > maxPayableAmount) {
+      form.setError('amount', {
+        type: 'manual',
+        message: `Amount cannot exceed ${formatCurrencyIN(maxPayableAmount)}.`,
+      });
+      toast.error('Validation Error', {
+        description: `Payment amount exceeds the pending amount.`,
+      });
+      return;
     }
-  };
+
+    startTransition(async () => {
+      try {
+        // Ensure feeId is present before calling recordOfflinePayment
+        if (!selectedRecord?.fee.id) {
+          toast.error('Failed to record payment', {
+            description:
+              'Fee record ID is missing. Please select a valid record.',
+          });
+          return;
+        }
+
+        await recordOfflinePayment(data);
+        toast.success('Payment recorded successfully!');
+        // Optionally reset form or navigate
+        form.reset();
+      } catch (error) {
+        console.error('Payment recording failed:', error);
+        toast.error('Failed to record payment', {
+          description:
+            error instanceof Error
+              ? error.message
+              : 'An unexpected error occurred.',
+        });
+      }
+    });
+  }
+
+  if (!selectedRecord) {
+    return (
+      <Card className="w-full max-w-md">
+        <CardContent className="p-6 text-center text-muted-foreground">
+          No fee record selected. Please select a record to proceed with
+          payment.
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
-    <Card>
-      <CardContent className="max-w-md">
-        {selectedRecord && (
-          <form onSubmit={handleSubmit}>
-            <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-2 gap-4 items-center">
-                <div className="font-medium text-muted-foreground">
-                  Total Fee:
-                </div>
-                <div className="font-medium">
-                  {formatCurrency(selectedRecord.fee.totalFee)}
-                </div>
-                <div className="font-medium text-muted-foreground">
-                  Paid Amount:
-                </div>
-                <div className="text-emerald-600">
-                  {formatCurrency(selectedRecord.fee.paidAmount)}
-                </div>
-                <div className="font-medium text-muted-foreground">
-                  Pending Amount:
-                </div>
-                <div className="text-amber-600">
-                  {formatCurrency(selectedRecord.fee.pendingAmount ?? 0)}
-                </div>
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="amount">Payment Amount</Label>
-                <Input
-                  id="amount"
-                  name="amount"
-                  type="number"
-                  placeholder="Enter amount"
-                  max={maxPayableAmount}
-                  defaultValue={
-                    maxPayableAmount > 0 ? maxPayableAmount.toString() : ''
-                  }
-                  required
-                  disabled={isSubmitting}
-                  aria-invalid={!!formErrors.amount}
-                  aria-describedby={
-                    formErrors.amount ? 'amount-error' : undefined
-                  }
-                />
-                {formErrors.amount && (
-                  <p id="amount-error" className="text-sm text-destructive">
-                    {formErrors.amount}
-                  </p>
+    <Card className="w-full max-w-md">
+      <CardContent className="p-6">
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="">
+            <div className="grid gap-4 ">
+              <FormField
+                control={form.control}
+                name="amount"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel htmlFor="amount">Payment Amount</FormLabel>
+                    <FormControl>
+                      <Input
+                        id="amount"
+                        type="number"
+                        placeholder="Enter amount"
+                        max={maxPayableAmount}
+                        {...field}
+                        // Display empty string for 0 to avoid showing "0" initially
+                        value={field.value === 0 ? '' : field.value}
+                        disabled={isPending || maxPayableAmount <= 0}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
                 )}
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="method">Payment Method</Label>
-                <Select
-                  name="method"
-                  defaultValue="CASH"
-                  disabled={isSubmitting}
-                  required
-                  aria-label="Payment method"
+              />
+
+              <FormField
+                control={form.control}
+                name="method"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel htmlFor="method">Payment Method</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      disabled={isPending}
+                    >
+                      <FormControl>
+                        <SelectTrigger id="method">
+                          <SelectValue placeholder="Select payment method" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {Object.values(PaymentMethod).map((method) => (
+                          <SelectItem key={method} value={method}>
+                            {method.charAt(0) +
+                              method.slice(1).toLowerCase().replace(/_/g, ' ')}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="transactionId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel htmlFor="transaction">
+                      Transaction ID (Optional)
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        id="transaction"
+                        placeholder="Enter transaction reference"
+                        {...field}
+                        disabled={isPending}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="note"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel htmlFor="note">Note (Optional)</FormLabel>
+                    <FormControl>
+                      <Input
+                        id="note"
+                        placeholder="Add any additional note"
+                        {...field}
+                        disabled={isPending}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="payerId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel htmlFor="payerId">Payer ID (Optional)</FormLabel>
+                    <FormControl>
+                      <Input
+                        id="payerId"
+                        placeholder="Enter payer ID"
+                        {...field}
+                        disabled={isPending}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      if the payer ID is unknown. Ask Who is Paying USER ID
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <CardFooter className="w-full flex justify-center items-center p-0 mx-0">
+                <Button
+                  type="submit"
+                  disabled={isPending || maxPayableAmount <= 0}
+                  className="px-4 py-2 w-full mx-0"
                 >
-                  <SelectTrigger id="method">
-                    <SelectValue placeholder="Select payment method" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {PaymentMethodSchema.options.map((method) => (
-                      <SelectItem key={method} value={method}>
-                        {method.charAt(0) + method.slice(1).toLowerCase()}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="transaction">Transaction ID (Optional)</Label>
-                <Input
-                  id="transaction"
-                  name="transaction"
-                  placeholder="Enter transaction reference"
-                  disabled={isSubmitting}
-                  aria-label="Transaction ID"
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="note">Note (Optional)</Label>
-                <Input
-                  id="note"
-                  name="note"
-                  placeholder="Add any additional note"
-                  disabled={isSubmitting}
-                  aria-label="Payment note"
-                />
-              </div>
+                  {isPending ? 'Recording...' : 'Record Payment'}
+                </Button>
+              </CardFooter>
             </div>
-            <CardFooter className="w-full  flex justify-center items-center p-0 mx-0">
-              <Button
-                type="submit"
-                disabled={isSubmitting}
-                aria-label="Record payment"
-                className="px-4 py-2 w-full mx-0"
-              >
-                {isSubmitting ? 'Recording...' : 'Record Payment'}
-              </Button>
-            </CardFooter>
           </form>
-        )}
+        </Form>
       </CardContent>
     </Card>
   );
@@ -596,7 +617,26 @@ function FilterControls({
             </div>
           </DropdownMenuContent>
         </DropdownMenu>
-        <DropdownMenu>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button className=" flex items-center space-x-2 max-sm:w-full">
+              {' '}
+              <Send /> Send Reminders
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>Send Fee Reminders</DialogTitle>
+              <DialogDescription>
+                Send payment reminders to students or parents with outstanding
+                fees
+              </DialogDescription>
+            </DialogHeader>
+            <SendFeesReminderDialog initialRecipients={initialRecipients} />
+          </DialogContent>
+        </Dialog>
+
+        {/* <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
               variant="outline"
@@ -640,7 +680,7 @@ function FilterControls({
               </DialogContent>
             </Dialog>
           </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu> */}
       </div>
     </div>
   );
@@ -774,11 +814,11 @@ function FeeTableRow({ record }: FeeTableRowProps) {
           </span>
         </div>
       </TableCell>
-      <TableCell>
+      <TableCell className="whitespace-nowrap">
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <span>{record.feeCategory.name}</span>
+              <span className="capitalize">{record.feeCategory.name}</span>
             </TooltipTrigger>
             <TooltipContent>
               <p>{record.feeCategory.description ?? 'No description'}</p>
@@ -786,19 +826,19 @@ function FeeTableRow({ record }: FeeTableRowProps) {
           </Tooltip>
         </TooltipProvider>
       </TableCell>
-      <TableCell className="text-right font-medium">
-        <div>{formatCurrency(record.fee.totalFee)}</div>
+      <TableCell className="text-right font-medium whitespace-nowrap">
+        <div>{formatCurrencyIN(record.fee.totalFee)}</div>
         {record.fee.paidAmount > 0 &&
           record.fee.paidAmount < record.fee.totalFee && (
             <div className="text-xs text-muted-foreground">
-              Paid: {formatCurrency(record.fee.paidAmount)}
+              Paid: {formatCurrencyIN(record.fee.paidAmount)}
             </div>
           )}
       </TableCell>
       <TableCell className="whitespace-nowrap">
         <div className="flex items-center">
           <CalendarIcon className="mr-2 h-4 w-4 text-muted-foreground" />
-          {formatDate(record.fee.dueDate)}
+          {formatDateIN(record.fee.dueDate)}
         </div>
       </TableCell>
       <TableCell>
@@ -825,9 +865,11 @@ function FeeTableRow({ record }: FeeTableRowProps) {
       </TableCell>
       <TableCell>
         <Dialog>
-          <DialogTrigger className="flex items-center space-x-2">
-            <Eye className="mr-2 h-4 w-4" />
-            View
+          <DialogTrigger className="flex items-center space-x-2" asChild>
+            <Button variant="ghost" className="flex items-center space-x-2">
+              <Eye className="mr-2 h-4 w-4" />
+              View
+            </Button>
           </DialogTrigger>
           <DialogContent className="w-full max-w-[95vw] sm:max-w-4xl max-h-[90vh] overflow-y-auto p-4 sm:p-6">
             <DialogHeader>
@@ -849,6 +891,97 @@ const FeeDetailsContent = ({
 }: {
   selectedRecord: FeeRecord | null;
 }) => {
+  function downloadFeeDetails(record: FeeRecord) {
+    const data = JSON.stringify(record, null, 2);
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `fee-details-${record.fee.id}.json`;
+    link.click();
+    window.URL.revokeObjectURL(url);
+  }
+
+  function downloadFeeDetailsAsPDF(record: FeeRecord) {
+    const doc = new jsPDF();
+
+    doc.setFontSize(16);
+    doc.text('Fee Details Report', 14, 20);
+
+    // Student Information
+    doc.setFontSize(12);
+    doc.text('Student Information:', 14, 30);
+    autoTable(doc, {
+      margin: { top: 35 },
+      head: [['Field', 'Value']],
+      body: [
+        ['Name', `${record.student.firstName} ${record.student.lastName}`],
+        ['Roll Number', record.student.rollNumber],
+        ['Class', `${record.grade.grade} - ${record.section.name}`],
+        ['Email', record.student.email || 'N/A'],
+        ['Phone', record.student.phoneNumber || 'N/A'],
+      ],
+      theme: 'grid',
+      styles: { fontSize: 10 },
+    });
+
+    // Fee Information
+    let finalY = (doc as any).lastAutoTable.finalY + 10;
+    doc.text('Fee Information:', 14, finalY);
+
+    autoTable(doc, {
+      startY: finalY + 5,
+      head: [['Field', 'Value']],
+      body: [
+        ['Fee ID', record.fee.id],
+        ['Category', record.feeCategory.name],
+        ['Total Amount', record.fee.totalFee.toLocaleString()],
+        ['Paid Amount', record.fee.paidAmount.toLocaleString()],
+        ['Pending Amount', (record.fee.pendingAmount ?? 0).toLocaleString()],
+        ['Due Date', new Date(record.fee.dueDate).toLocaleDateString()],
+        ['Status', record.fee.status],
+      ],
+      theme: 'grid',
+      styles: { fontSize: 10 },
+    });
+
+    // Payment History
+    if (record.payments && record.payments.length > 0) {
+      finalY = (doc as any).lastAutoTable.finalY + 10;
+      doc.text('Payment History:', 14, finalY);
+
+      autoTable(doc, {
+        startY: finalY + 5,
+        head: [
+          [
+            'Receipt No.',
+            'Payer',
+            'Amount',
+            'Date',
+            'Method',
+            'Transaction ID',
+            'Payment Status',
+          ],
+        ],
+        body: record.payments.map((payment) => [
+          payment.receiptNumber,
+          payment.payer
+            ? `${payment.payer.firstName} ${payment.payer.lastName}`
+            : 'N/A',
+          payment.amountPaid.toLocaleString(),
+          new Date(payment.paymentDate).toLocaleDateString(),
+          payment.paymentMethod,
+          payment.transactionId || 'N/A',
+          payment.status,
+        ]),
+        styles: { fontSize: 9 },
+      });
+    }
+
+    // Save
+    doc.save(`fee-details-${record.fee.id}.pdf`);
+  }
+
   return (
     <>
       {selectedRecord && (
@@ -890,7 +1023,7 @@ const FeeDetailsContent = ({
                 </Card>
               </div>
               {selectedRecord.payments?.length > 0 && (
-                <>
+                <ScrollArea className="max-h-72">
                   <h3 className="text-sm font-medium mb-2">
                     Payment Information
                   </h3>
@@ -932,7 +1065,7 @@ const FeeDetailsContent = ({
                       </CardContent>
                     </Card>
                   ))}
-                </>
+                </ScrollArea>
               )}
             </div>
             {/* Fee Information */}
@@ -1112,8 +1245,23 @@ const FeeDetailsContent = ({
                           </TableCell>
 
                           <TableCell className="text-right">
-                            <span className="font-medium text-emerald-600">
-                              {formatCurrency(payment.amountPaid)}
+                            <span
+                              className={cn(
+                                'font-medium',
+                                payment.status === 'COMPLETED' &&
+                                  'text-emerald-600',
+                                payment.status === 'PENDING' &&
+                                  'text-yellow-600',
+                                payment.status === 'UNPAID' &&
+                                  'text-yellow-600',
+                                payment.status === 'FAILED' && 'text-red-600',
+                                payment.status === 'REFUNDED' &&
+                                  'text-purple-600',
+                                payment.status === 'CANCELLED' &&
+                                  'text-gray-500'
+                              )}
+                            >
+                              {formatCurrencyIN(payment.amountPaid)}
                             </span>
                           </TableCell>
                           {/* <TableCell className="text-right">
@@ -1175,18 +1323,15 @@ const FeeDetailsContent = ({
                     </div>
                     <div className="text-center">
                       <div className="text-2xl font-bold text-blue-600">
-                        {formatCurrency(
-                          selectedRecord.payments.reduce(
-                            (sum, p) => sum + p.amountPaid,
-                            0
-                          )
-                        )}
+                        {formatCurrencyIN(selectedRecord.fee.paidAmount)}
                       </div>
                       <div className="text-muted-foreground">Amount Paid</div>
                     </div>
                     <div className="text-center">
                       <div className="text-2xl font-bold text-amber-600">
-                        {formatCurrency(selectedRecord.fee.pendingAmount ?? 0)}
+                        {formatCurrencyIN(
+                          selectedRecord.fee.pendingAmount ?? 0
+                        )}
                       </div>
                       <div className="text-muted-foreground">Pending</div>
                     </div>
@@ -1206,8 +1351,8 @@ const FeeDetailsContent = ({
                     <div className="flex justify-between text-xs text-muted-foreground mb-1">
                       <span>Payment Progress</span>
                       <span>
-                        {formatCurrency(selectedRecord.fee.paidAmount)} /{' '}
-                        {formatCurrency(selectedRecord.fee.totalFee)}
+                        {formatCurrencyIN(selectedRecord.fee.paidAmount)} /{' '}
+                        {formatCurrencyIN(selectedRecord.fee.totalFee)}
                       </span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
@@ -1224,7 +1369,7 @@ const FeeDetailsContent = ({
             </div>
           )}
 
-          <DialogFooter className="gap-2 grid grid-cols-2 sm:gap-0">
+          <DialogFooter className="gap-2 grid grid-cols-2 ">
             {selectedRecord.fee.status !== 'PAID' && (
               <Dialog>
                 <DialogTrigger asChild>
@@ -1247,7 +1392,11 @@ const FeeDetailsContent = ({
                 </DialogContent>
               </Dialog>
             )}
-            <Button variant="outline" aria-label="Download details">
+            <Button
+              variant="outline"
+              aria-label="Download details"
+              onClick={() => downloadFeeDetailsAsPDF(selectedRecord)}
+            >
               <DownloadIcon className="h-4 w-4 mr-2" />
               Download Details
             </Button>
@@ -1294,7 +1443,7 @@ function PaginationControls({
         <p className="text-sm text-muted-foreground">
           Showing{' '}
           <strong>{Math.min(recordsPerPage, filteredRecordsCount)}</strong> of{' '}
-          <strong>{filteredRecordsCount}</strong> fee records
+          <strong>{filteredRecordsCount}</strong> Fee Records
         </p>
         <Select
           value={recordsPerPage.toString()}
