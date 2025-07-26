@@ -3,9 +3,9 @@ import { Resend } from 'resend';
 import { Knock } from '@knocklabs/node';
 import { User } from '@clerk/nextjs/server';
 import { NoticeEmailTemplate } from '@/components/email-templates/noticeMail';
-import { OrganizationType, Prisma } from '@/lib/generated/prisma';
-import { render, pretty } from '@react-email/render';
+import { render } from '@react-email/render';
 import { ReactElement } from 'react';
+import { Prisma } from '@/generated/prisma/client';
 
 type NoticeWithOrg = Prisma.NoticeGetPayload<{
   include: {

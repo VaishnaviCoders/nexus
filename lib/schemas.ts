@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { DocumentType, PaymentMethod } from './generated/prisma';
+import { DocumentType, PaymentMethod } from '@/generated/prisma/enums';
 // const ACCEPTED_IMAGE_TYPES = [
 //   'image/jpeg',
 //   'image/jpg',

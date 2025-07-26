@@ -4,16 +4,12 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { StudentProfileEditForm } from '@/components/dashboard/Student/StudentProfileEditForm';
 
-import { auth } from '@clerk/nextjs/server';
 import prisma from '@/lib/db';
+import { getCurrentUserId } from '@/lib/user';
 
 export async function getStudentProfile(studentId?: string) {
   try {
-    const { userId } = await auth();
-
-    if (!userId) {
-      throw new Error('Unauthorized');
-    }
+    const userId = await getCurrentUserId();
 
     let student;
 

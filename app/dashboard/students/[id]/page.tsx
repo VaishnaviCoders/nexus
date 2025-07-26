@@ -36,7 +36,7 @@ import { Badge } from '@/components/ui/badge';
 import { getOrganizationId } from '@/lib/organization';
 import { getCurrentAcademicYear } from '@/lib/academicYear';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
-import { formatDateIN } from '@/lib/utils';
+import { formatCurrencyIN, formatDateIN } from '@/lib/utils';
 
 const getStudentDashboardData = async (studentId: string) => {
   const start = performance.now();
@@ -54,8 +54,6 @@ const getStudentDashboardData = async (studentId: string) => {
     }),
   ]);
   const end = performance.now();
-
-  console.log('getDashboardStats took', end - start, 'ms');
 
   const totalFees = fees.reduce((sum, fee) => sum + fee.totalFee, 0);
   const paidFees = fees.reduce((sum, fee) => sum + fee.paidAmount, 0);
@@ -375,7 +373,7 @@ const StudentIdRoute = async ({
               <CardTitle className="flex justify-between items-center">
                 Fees Overview{' '}
                 <Link
-                  href={`/dashboard/students/${studentId}/fees`}
+                  href={`/dashboard/fees/admin`}
                   className="ml-5 text-blue-500 text-sm"
                 >
                   View All
@@ -388,21 +386,21 @@ const StudentIdRoute = async ({
                   <span>Total Fees:</span>
                   <span className="font-semibold flex items-center space-x-3 ">
                     <IndianRupee className="custom_color h-4 w-4" />
-                    {new Intl.NumberFormat('en-IN').format(totalFees)}
+                    {formatCurrencyIN(totalFees)}
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span>Paid:</span>
                   <span className="font-semibold flex items-center space-x-3 ">
                     <IndianRupee className="custom_color h-4 w-4" />
-                    {new Intl.NumberFormat('en-IN').format(paidFees)}
+                    {formatCurrencyIN(paidFees)}
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span>Due:</span>
                   <span className="font-semibold flex items-center space-x-3 text-red-500">
                     <IndianRupee className="custom_color h-4 w-4" />
-                    {new Intl.NumberFormat('en-IN').format(pendingFees)}
+                    {formatCurrencyIN(pendingFees)}
                   </span>
                 </div>
               </div>

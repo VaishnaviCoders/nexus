@@ -46,7 +46,6 @@ import {
 import { Calendar } from '@/components/ui/calendar';
 import { Checkbox } from '@/components/ui/checkbox';
 import { toast } from 'sonner';
-import type { Grade, Section } from '@/lib/generated/prisma';
 import {
   Select,
   SelectContent,
@@ -57,6 +56,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { createStudent } from '@/lib/data/student/create-student-form-action';
 import { Switch } from '@/components/ui/switch';
+import { Grade, Section } from '@/generated/prisma/client';
 
 interface DocumentFile {
   id: string;

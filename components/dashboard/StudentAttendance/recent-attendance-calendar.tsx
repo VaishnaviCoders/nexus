@@ -65,7 +65,7 @@ export function RecentAttendanceTimeline({
       <CardHeader className="pb-4">
         <CardTitle className="text-lg flex items-center gap-2">
           <Calendar className="h-5 w-5" />
-          Recent Activity
+          Recent Attendance
         </CardTitle>
       </CardHeader>
       <CardContent>

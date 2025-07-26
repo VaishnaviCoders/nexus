@@ -75,7 +75,7 @@ import {
 } from './SendFeesReminderDialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { recordOfflinePayment } from '@/lib/data/fee/recordOfflinePayment';
-import { PaymentMethod } from '@/lib/generated/prisma';
+import { PaymentMethod } from '@/generated/prisma/enums';
 import { offlinePaymentSchema, offlinePaymentFormData } from '@/lib/schemas';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -511,7 +511,7 @@ function FilterControls({
   }, [feeRecords]);
 
   return (
-    <div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0 mb-4">
+    <div className="flex flex-col space-y-4 lg:flex-row lg:items-center lg:justify-between lg:space-y-0 mb-4">
       <TabsList className="flex-wrap">
         {['all', 'paid', 'unpaid', 'overdue'].map((tab) => (
           <TabsTrigger

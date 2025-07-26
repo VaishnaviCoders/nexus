@@ -1,7 +1,8 @@
 'use server';
 
+import { PrismaClient } from '@/generated/prisma/client';
+
 // import { getDefaultAcademicYear } from '../lib/academicYear';
-import { PrismaClient } from '../lib/generated/prisma';
 
 const prisma = new PrismaClient();
 
