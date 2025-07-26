@@ -2,7 +2,7 @@ import { Webhook } from 'svix';
 import { headers } from 'next/headers';
 import { WebhookEvent } from '@clerk/nextjs/server';
 import prisma from '@/lib/db';
-import { Role } from '@/lib/generated/prisma';
+import { Role } from '@/generated/prisma/enums';
 
 export async function GET(req: Request) {
   console.log('Webhook GET request received');

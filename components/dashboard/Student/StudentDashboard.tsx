@@ -13,7 +13,7 @@ import { getCurrentUserId } from '@/lib/user';
 import StudentSubjectsRadar from './student-subjects-radar';
 import { RecentNoticesCards } from '../notice/recent-notices-cards';
 import { FeesQuickCard } from './FeesQuickCard';
-import { FeeStatus, PaymentMethod } from '@/lib/generated/prisma';
+import { FeeStatus, PaymentMethod } from '@/generated/prisma/enums';
 import { Button } from '@/components/ui/button';
 import { CreditCard, Download, Upload, MessageSquare, Zap } from 'lucide-react';
 

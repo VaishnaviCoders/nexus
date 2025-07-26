@@ -11,17 +11,9 @@ import Link from 'next/link';
 import { AttendanceStatsCards } from '@/components/dashboard/StudentAttendance/attendance-stats-cards';
 import { StudentAttendanceCalendar } from '@/components/dashboard/StudentAttendance/attendance-calendar';
 import prisma from '@/lib/db';
-import StudentCalendar from '@/components/dashboard/Student/StudentCalendar';
 import { RecentAttendanceTimeline } from '@/components/dashboard/StudentAttendance/recent-attendance-calendar';
-import { currentUser } from '@clerk/nextjs/server';
 import { getCurrentUserId } from '@/lib/user';
 import { getCurrentUserByRole } from '@/lib/auth';
-
-// import { AttendanceOverviewCards } from "@/components/student-attendance/attendance-overview-cards"
-// import { AttendanceCalendar } from "@/components/student-attendance/attendance-calendar"
-// import { AttendanceAchievements } from "@/components/student-attendance/attendance-achievements"
-// import { AttendanceTrendsChart } from "@/components/student-attendance/attendance-trends-chart"
-// import { RecentAttendanceTimeline } from "@/components/student-attendance/recent-attendance-timeline"
 
 export default async function page() {
   const userId = await getCurrentUserId();
@@ -70,7 +62,7 @@ export default async function page() {
     take: 7,
   });
   return (
-    <div className="p-4 space-y-6">
+    <div className="px-2 space-y-3">
       {/* Header */}
       <Card className="">
         <CardContent className="flex flex-col md:flex-row lg:items-center lg:justify-between p-6 gap-4">

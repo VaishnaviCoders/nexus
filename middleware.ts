@@ -4,12 +4,37 @@ import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 
 /* ───────────────────────── 1. Route groups ────────────────────────── */
 // Each matcher covers one “role island”.
-const isStudent = createRouteMatcher(['/dashboard/fees/student(.*)']);
-const isParent = createRouteMatcher(['/dashboard/fees/parent(.*)']);
-const isTeacher = createRouteMatcher(['/dashboard/fees/teacher(.*)']);
+const isStudent = createRouteMatcher([
+  '/dashboard/fees/student(.*)',
+  '/dashboard/assignments(.*)',
+  '/dashboard/my-attendance(.*)',
+  '/dashboard/documents(.*)',
+  // Add other student routes here
+]);
+
+const isParent = createRouteMatcher([
+  '/dashboard/fees/parent(.*)',
+  '/dashboard/my-children(.*)',
+  '/dashboard/child-attendance(.*)',
+  // Add other parent routes here
+]);
+
+const isTeacher = createRouteMatcher([
+  '/dashboard/fees/teacher(.*)',
+  // '/dashboard/fees/admin/assign',
+  // '/dashboard/attendance/mark(.*)',
+  // '/dashboard/grades(.*)',
+  // '/dashboard/holidays(.*)',
+  // Add other teacher routes here
+]);
+
 const isAdmin = createRouteMatcher([
   '/dashboard/fees/admin(.*)',
-  '/dashboard/admin(.*)', // other admin islands
+  // '/dashboard/admin(.*)',
+  // '/dashboard/grades(.*)',
+  // '/dashboard/holidays(.*)',
+  // '/dashboard/documents/verification(.*)',
+  // Add any other admin routes here
 ]);
 
 const isProtectedRoute = createRouteMatcher(['/dashboard(.*)', '/forum(.*)']);
@@ -17,10 +42,10 @@ const isProtectedRoute = createRouteMatcher(['/dashboard(.*)', '/forum(.*)']);
 export default clerkMiddleware(async (auth, req) => {
   if (isProtectedRoute(req)) await auth.protect();
 
-  // if (isStudent(req)) await auth.protect({ role: 'student' }); // 404 if wrong role
-  // if (isParent(req)) await auth.protect({ role: 'parent' });
-  // if (isTeacher(req)) await auth.protect({ role: 'teacher' });
-  // if (isAdmin(req)) await auth.protect({ role: 'admin' });
+  if (isStudent(req)) await auth.protect({ role: 'student' }); // 404 if wrong role
+  if (isParent(req)) await auth.protect({ role: 'parent' });
+  if (isTeacher(req)) await auth.protect({ role: 'teacher' });
+  if (isAdmin(req)) await auth.protect({ role: 'admin' });
 });
 
 export const config = {

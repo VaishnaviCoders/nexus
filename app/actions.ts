@@ -21,6 +21,12 @@ import { NoticeEmailTemplate } from '@/components/email-templates/noticeMail';
 import { Knock } from '@knocklabs/node';
 import { redirect } from 'next/navigation';
 import { parseWithZod } from '@conform-to/zod';
+import FilterStudents from '@/lib/data/student/FilterStudents';
+import { endOfDay, startOfDay, subDays } from 'date-fns';
+import { Role } from '@/generated/prisma/enums';
+import { getCurrentUserId } from '@/lib/user';
+import { DocumentVerificationAction } from '@/types/document';
+import prisma from '@/lib/db';
 
 import { v2 as cloudinary, UploadApiResponse } from 'cloudinary';
 import { performance } from 'perf_hooks';
@@ -502,13 +508,6 @@ export async function getDashboardStats(organizationId: string) {
     feeCategoryCount,
   };
 }
-
-import FilterStudents from '@/lib/data/student/FilterStudents';
-import { endOfDay, startOfDay, subDays } from 'date-fns';
-import { Role, StudentAttendance } from '@/lib/generated/prisma';
-import { getCurrentUserId } from '@/lib/user';
-import { DocumentVerificationAction } from '@/types/document';
-import prisma from '@/lib/db';
 
 export async function fetchFilteredStudents({
   search = '',

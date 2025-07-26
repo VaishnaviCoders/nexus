@@ -1,5 +1,5 @@
+import { Prisma } from '@/generated/prisma/client';
 import prisma from '@/lib/db';
-import { Prisma } from '@/lib/generated/prisma';
 import { getOrganizationId } from '@/lib/organization';
 
 interface FilterStudentsProps {

@@ -10,8 +10,8 @@ import {
 import { DeleteGradeButton } from '@/lib/SubmitButton';
 import { AlertTriangle, ArrowLeft, Trash2 } from 'lucide-react';
 import Link from 'next/link';
-import prisma from '@/lib/db';
 import { Badge } from '@/components/ui/badge';
+import prisma from '@/lib/db';
 
 export default async function DeleteGradePage({
   params,

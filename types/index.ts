@@ -3,7 +3,7 @@ import {
   PaymentMethod,
   PaymentStatus,
   Severity,
-} from '@/lib/generated/prisma';
+} from '@/generated/prisma/enums';
 import { type ClientUploadedFileData } from 'uploadthing/types';
 
 export interface UploadedFile<T = unknown> extends ClientUploadedFileData<T> {}

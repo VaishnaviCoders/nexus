@@ -7,9 +7,8 @@ import {
 import prisma from '@/lib/db';
 import {
   NotificationChannel,
-  Prisma,
   scheduledJobType,
-} from '@/lib/generated/prisma';
+} from '@/generated/prisma/enums';
 import { inngest } from '@/lib/inngest/client';
 import { getOrganizationId } from '@/lib/organization';
 import { getCurrentUser } from '@/lib/user';

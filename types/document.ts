@@ -1,4 +1,4 @@
-import type { DocumentType } from '@/lib/generated/prisma';
+import type { DocumentType } from '@/generated/prisma/enums';
 
 export interface StudentDocument {
   id: string;

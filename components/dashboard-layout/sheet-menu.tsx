@@ -12,7 +12,7 @@ import { auth } from '@clerk/nextjs/server';
 import { OrganizationSwitcher } from '@clerk/nextjs';
 import { DialogTitle } from '../ui/dialog';
 import { cn } from '@/lib/utils';
-import { Role } from '@/lib/generated/prisma';
+import { Role } from '@/generated/prisma/enums';
 
 export async function SheetMenu() {
   const { userId, orgRole } = await auth();

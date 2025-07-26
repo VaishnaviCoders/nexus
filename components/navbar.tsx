@@ -12,11 +12,10 @@ import { Suspense } from 'react';
 import { auth, currentUser } from '@clerk/nextjs/server';
 import { WelcomeMessage } from './dashboard-layout/WelcomeMessage';
 import NotificationFeed from '@/app/components/dashboardComponents/NotificationFeed';
-import { Bell, UserCircleIcon, Building2 } from 'lucide-react';
+import { Bell, UserCircleIcon } from 'lucide-react';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { Skeleton } from './ui/skeleton';
-import { Role } from '@/lib/generated/prisma';
 
 // Improved loading components
 const LoadingBell = () => (
