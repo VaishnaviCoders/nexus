@@ -165,6 +165,9 @@ export type Performance = Prisma.PerformanceModel
 export type PlanType = $Enums.PlanType
 export const PlanType = $Enums.PlanType
 
+export type NoticeType = $Enums.NoticeType
+export const NoticeType = $Enums.NoticeType
+
 export type OrganizationType = $Enums.OrganizationType
 export const OrganizationType = $Enums.OrganizationType
 

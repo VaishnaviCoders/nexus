@@ -16,6 +16,8 @@ import { FeesQuickCard } from './FeesQuickCard';
 import { FeeStatus, PaymentMethod } from '@/generated/prisma/enums';
 import { Button } from '@/components/ui/button';
 import { CreditCard, Download, Upload, MessageSquare, Zap } from 'lucide-react';
+import { getOrganizationId } from '@/lib/organization';
+import { getCurrentAcademicYearId } from '@/lib/academicYear';
 
 export async function getFeesStatus(studentId: string) {
   const fees = await prisma.fee.findMany({
@@ -126,8 +128,26 @@ const quickActions = [
   },
 ];
 
+async function getStudentNotices() {
+  const organizationId = await getOrganizationId();
+  const { academicYearId } = await getCurrentAcademicYearId();
+
+  const notices = await prisma.notice.findMany({
+    where: {
+      organizationId,
+      academicYearId,
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+  });
+  return notices;
+}
+
 const StudentDashboard = async () => {
   const userId = await getCurrentUserId();
+
+  const recentNotices = await getStudentNotices();
 
   const student = await prisma.student.findUnique({
     where: { userId },
@@ -206,7 +226,7 @@ const StudentDashboard = async () => {
 
         {/* Right Column - Quick Info Cards */}
         <div className="lg:col-span-5 xl:col-span-4 space-y-4 md:space-y-6 my-3">
-          <RecentNoticesCards />
+          <RecentNoticesCards recentNotices={recentNotices} />
           <FeesQuickCard feesData={feesData} />
         </div>
       </div>

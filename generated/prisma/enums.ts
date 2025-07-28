@@ -17,6 +17,20 @@ export const PlanType = {
 export type PlanType = (typeof PlanType)[keyof typeof PlanType]
 
 
+export const NoticeType = {
+  GENERAL: 'GENERAL',
+  EVENT: 'EVENT',
+  EXAM: 'EXAM',
+  HOLIDAY: 'HOLIDAY',
+  DEADLINE: 'DEADLINE',
+  TIMETABLE: 'TIMETABLE',
+  RESULT: 'RESULT',
+  SMS: 'SMS'
+} as const
+
+export type NoticeType = (typeof NoticeType)[keyof typeof NoticeType]
+
+
 export const OrganizationType = {
   SCHOOL: 'SCHOOL',
   COLLEGE: 'COLLEGE',

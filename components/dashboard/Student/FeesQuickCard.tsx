@@ -17,6 +17,7 @@ import {
   PaymentMethod,
   PaymentStatus,
 } from '@/generated/prisma/enums';
+import Link from 'next/link';
 
 const getStatusColor = (status: string) => {
   switch (status) {
@@ -158,9 +159,11 @@ export function FeesQuickCard({ className, feesData }: Props) {
         </div>
 
         {feesData.pendingAmount > 0 ? (
-          <Button className="w-full" size="sm">
-            Pay Now
-          </Button>
+          <Link href={'/dashboard/fees/student'}>
+            <Button className="w-full" size="sm">
+              Pay Now
+            </Button>
+          </Link>
         ) : (
           <Button className="w-full" size="sm">
             Already Paid

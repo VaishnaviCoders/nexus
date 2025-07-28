@@ -30,6 +30,7 @@ export type NoticeMinAggregateOutputType = {
   startDate: Date | null
   endDate: Date | null
   content: string | null
+  summary: string | null
   isNoticeApproved: boolean | null
   isDraft: boolean | null
   isPublished: boolean | null
@@ -51,6 +52,7 @@ export type NoticeMaxAggregateOutputType = {
   startDate: Date | null
   endDate: Date | null
   content: string | null
+  summary: string | null
   isNoticeApproved: boolean | null
   isDraft: boolean | null
   isPublished: boolean | null
@@ -72,6 +74,7 @@ export type NoticeCountAggregateOutputType = {
   startDate: number
   endDate: number
   content: number
+  summary: number
   isNoticeApproved: number
   isDraft: number
   isPublished: number
@@ -97,6 +100,7 @@ export type NoticeMinAggregateInputType = {
   startDate?: true
   endDate?: true
   content?: true
+  summary?: true
   isNoticeApproved?: true
   isDraft?: true
   isPublished?: true
@@ -118,6 +122,7 @@ export type NoticeMaxAggregateInputType = {
   startDate?: true
   endDate?: true
   content?: true
+  summary?: true
   isNoticeApproved?: true
   isDraft?: true
   isPublished?: true
@@ -139,6 +144,7 @@ export type NoticeCountAggregateInputType = {
   startDate?: true
   endDate?: true
   content?: true
+  summary?: true
   isNoticeApproved?: true
   isDraft?: true
   isPublished?: true
@@ -235,6 +241,7 @@ export type NoticeGroupByOutputType = {
   startDate: Date
   endDate: Date
   content: string
+  summary: string | null
   isNoticeApproved: boolean
   isDraft: boolean
   isPublished: boolean
@@ -279,6 +286,7 @@ export type NoticeWhereInput = {
   startDate?: Prisma.DateTimeFilter<"Notice"> | Date | string
   endDate?: Prisma.DateTimeFilter<"Notice"> | Date | string
   content?: Prisma.StringFilter<"Notice"> | string
+  summary?: Prisma.StringNullableFilter<"Notice"> | string | null
   isNoticeApproved?: Prisma.BoolFilter<"Notice"> | boolean
   isDraft?: Prisma.BoolFilter<"Notice"> | boolean
   isPublished?: Prisma.BoolFilter<"Notice"> | boolean
@@ -304,6 +312,7 @@ export type NoticeOrderByWithRelationInput = {
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
   content?: Prisma.SortOrder
+  summary?: Prisma.SortOrderInput | Prisma.SortOrder
   isNoticeApproved?: Prisma.SortOrder
   isDraft?: Prisma.SortOrder
   isPublished?: Prisma.SortOrder
@@ -333,6 +342,7 @@ export type NoticeWhereUniqueInput = Prisma.AtLeast<{
   startDate?: Prisma.DateTimeFilter<"Notice"> | Date | string
   endDate?: Prisma.DateTimeFilter<"Notice"> | Date | string
   content?: Prisma.StringFilter<"Notice"> | string
+  summary?: Prisma.StringNullableFilter<"Notice"> | string | null
   isNoticeApproved?: Prisma.BoolFilter<"Notice"> | boolean
   isDraft?: Prisma.BoolFilter<"Notice"> | boolean
   isPublished?: Prisma.BoolFilter<"Notice"> | boolean
@@ -358,6 +368,7 @@ export type NoticeOrderByWithAggregationInput = {
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
   content?: Prisma.SortOrder
+  summary?: Prisma.SortOrderInput | Prisma.SortOrder
   isNoticeApproved?: Prisma.SortOrder
   isDraft?: Prisma.SortOrder
   isPublished?: Prisma.SortOrder
@@ -387,6 +398,7 @@ export type NoticeScalarWhereWithAggregatesInput = {
   startDate?: Prisma.DateTimeWithAggregatesFilter<"Notice"> | Date | string
   endDate?: Prisma.DateTimeWithAggregatesFilter<"Notice"> | Date | string
   content?: Prisma.StringWithAggregatesFilter<"Notice"> | string
+  summary?: Prisma.StringNullableWithAggregatesFilter<"Notice"> | string | null
   isNoticeApproved?: Prisma.BoolWithAggregatesFilter<"Notice"> | boolean
   isDraft?: Prisma.BoolWithAggregatesFilter<"Notice"> | boolean
   isPublished?: Prisma.BoolWithAggregatesFilter<"Notice"> | boolean
@@ -410,6 +422,7 @@ export type NoticeCreateInput = {
   startDate: Date | string
   endDate: Date | string
   content: string
+  summary?: string | null
   isNoticeApproved?: boolean
   isDraft?: boolean
   isPublished?: boolean
@@ -433,6 +446,7 @@ export type NoticeUncheckedCreateInput = {
   startDate: Date | string
   endDate: Date | string
   content: string
+  summary?: string | null
   isNoticeApproved?: boolean
   isDraft?: boolean
   isPublished?: boolean
@@ -456,6 +470,7 @@ export type NoticeUpdateInput = {
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isNoticeApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -479,6 +494,7 @@ export type NoticeUncheckedUpdateInput = {
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isNoticeApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -502,6 +518,7 @@ export type NoticeCreateManyInput = {
   startDate: Date | string
   endDate: Date | string
   content: string
+  summary?: string | null
   isNoticeApproved?: boolean
   isDraft?: boolean
   isPublished?: boolean
@@ -525,6 +542,7 @@ export type NoticeUpdateManyMutationInput = {
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isNoticeApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -546,6 +564,7 @@ export type NoticeUncheckedUpdateManyInput = {
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isNoticeApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -585,6 +604,7 @@ export type NoticeCountOrderByAggregateInput = {
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
   content?: Prisma.SortOrder
+  summary?: Prisma.SortOrder
   isNoticeApproved?: Prisma.SortOrder
   isDraft?: Prisma.SortOrder
   isPublished?: Prisma.SortOrder
@@ -608,6 +628,7 @@ export type NoticeMaxOrderByAggregateInput = {
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
   content?: Prisma.SortOrder
+  summary?: Prisma.SortOrder
   isNoticeApproved?: Prisma.SortOrder
   isDraft?: Prisma.SortOrder
   isPublished?: Prisma.SortOrder
@@ -629,6 +650,7 @@ export type NoticeMinOrderByAggregateInput = {
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
   content?: Prisma.SortOrder
+  summary?: Prisma.SortOrder
   isNoticeApproved?: Prisma.SortOrder
   isDraft?: Prisma.SortOrder
   isPublished?: Prisma.SortOrder
@@ -743,6 +765,7 @@ export type NoticeCreateWithoutAcademicYearInput = {
   startDate: Date | string
   endDate: Date | string
   content: string
+  summary?: string | null
   isNoticeApproved?: boolean
   isDraft?: boolean
   isPublished?: boolean
@@ -765,6 +788,7 @@ export type NoticeUncheckedCreateWithoutAcademicYearInput = {
   startDate: Date | string
   endDate: Date | string
   content: string
+  summary?: string | null
   isNoticeApproved?: boolean
   isDraft?: boolean
   isPublished?: boolean
@@ -816,6 +840,7 @@ export type NoticeScalarWhereInput = {
   startDate?: Prisma.DateTimeFilter<"Notice"> | Date | string
   endDate?: Prisma.DateTimeFilter<"Notice"> | Date | string
   content?: Prisma.StringFilter<"Notice"> | string
+  summary?: Prisma.StringNullableFilter<"Notice"> | string | null
   isNoticeApproved?: Prisma.BoolFilter<"Notice"> | boolean
   isDraft?: Prisma.BoolFilter<"Notice"> | boolean
   isPublished?: Prisma.BoolFilter<"Notice"> | boolean
@@ -839,6 +864,7 @@ export type NoticeCreateWithoutOrganizationInput = {
   startDate: Date | string
   endDate: Date | string
   content: string
+  summary?: string | null
   isNoticeApproved?: boolean
   isDraft?: boolean
   isPublished?: boolean
@@ -861,6 +887,7 @@ export type NoticeUncheckedCreateWithoutOrganizationInput = {
   startDate: Date | string
   endDate: Date | string
   content: string
+  summary?: string | null
   isNoticeApproved?: boolean
   isDraft?: boolean
   isPublished?: boolean
@@ -909,6 +936,7 @@ export type NoticeCreateManyAcademicYearInput = {
   startDate: Date | string
   endDate: Date | string
   content: string
+  summary?: string | null
   isNoticeApproved?: boolean
   isDraft?: boolean
   isPublished?: boolean
@@ -931,6 +959,7 @@ export type NoticeUpdateWithoutAcademicYearInput = {
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isNoticeApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -953,6 +982,7 @@ export type NoticeUncheckedUpdateWithoutAcademicYearInput = {
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isNoticeApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -975,6 +1005,7 @@ export type NoticeUncheckedUpdateManyWithoutAcademicYearInput = {
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isNoticeApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -997,6 +1028,7 @@ export type NoticeCreateManyOrganizationInput = {
   startDate: Date | string
   endDate: Date | string
   content: string
+  summary?: string | null
   isNoticeApproved?: boolean
   isDraft?: boolean
   isPublished?: boolean
@@ -1019,6 +1051,7 @@ export type NoticeUpdateWithoutOrganizationInput = {
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isNoticeApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1041,6 +1074,7 @@ export type NoticeUncheckedUpdateWithoutOrganizationInput = {
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isNoticeApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1063,6 +1097,7 @@ export type NoticeUncheckedUpdateManyWithoutOrganizationInput = {
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isNoticeApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1087,6 +1122,7 @@ export type NoticeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   startDate?: boolean
   endDate?: boolean
   content?: boolean
+  summary?: boolean
   isNoticeApproved?: boolean
   isDraft?: boolean
   isPublished?: boolean
@@ -1112,6 +1148,7 @@ export type NoticeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   startDate?: boolean
   endDate?: boolean
   content?: boolean
+  summary?: boolean
   isNoticeApproved?: boolean
   isDraft?: boolean
   isPublished?: boolean
@@ -1137,6 +1174,7 @@ export type NoticeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   startDate?: boolean
   endDate?: boolean
   content?: boolean
+  summary?: boolean
   isNoticeApproved?: boolean
   isDraft?: boolean
   isPublished?: boolean
@@ -1162,6 +1200,7 @@ export type NoticeSelectScalar = {
   startDate?: boolean
   endDate?: boolean
   content?: boolean
+  summary?: boolean
   isNoticeApproved?: boolean
   isDraft?: boolean
   isPublished?: boolean
@@ -1178,7 +1217,7 @@ export type NoticeSelectScalar = {
   academicYearId?: boolean
 }
 
-export type NoticeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "noticeType" | "title" | "startDate" | "endDate" | "content" | "isNoticeApproved" | "isDraft" | "isPublished" | "emailNotification" | "pushNotification" | "WhatsAppNotification" | "smsNotification" | "targetAudience" | "attachments" | "publishedBy" | "organizationId" | "createdAt" | "updatedAt" | "academicYearId", ExtArgs["result"]["notice"]>
+export type NoticeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "noticeType" | "title" | "startDate" | "endDate" | "content" | "summary" | "isNoticeApproved" | "isDraft" | "isPublished" | "emailNotification" | "pushNotification" | "WhatsAppNotification" | "smsNotification" | "targetAudience" | "attachments" | "publishedBy" | "organizationId" | "createdAt" | "updatedAt" | "academicYearId", ExtArgs["result"]["notice"]>
 export type NoticeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   Organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   academicYear?: boolean | Prisma.Notice$academicYearArgs<ExtArgs>
@@ -1205,6 +1244,7 @@ export type $NoticePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     startDate: Date
     endDate: Date
     content: string
+    summary: string | null
     isNoticeApproved: boolean
     isDraft: boolean
     isPublished: boolean
@@ -1650,6 +1690,7 @@ export interface NoticeFieldRefs {
   readonly startDate: Prisma.FieldRef<"Notice", 'DateTime'>
   readonly endDate: Prisma.FieldRef<"Notice", 'DateTime'>
   readonly content: Prisma.FieldRef<"Notice", 'String'>
+  readonly summary: Prisma.FieldRef<"Notice", 'String'>
   readonly isNoticeApproved: Prisma.FieldRef<"Notice", 'Boolean'>
   readonly isDraft: Prisma.FieldRef<"Notice", 'Boolean'>
   readonly isPublished: Prisma.FieldRef<"Notice", 'Boolean'>

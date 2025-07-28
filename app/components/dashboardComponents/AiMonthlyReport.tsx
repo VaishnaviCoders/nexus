@@ -250,8 +250,6 @@ const AiMonthlyReport: React.FC<AiMonthlyReportProps> = ({ data }) => {
   const handleGenerate = async () => {
     startTransition(async () => {
       try {
-        console.log('data', data);
-
         const formattedText = formatFeeData(data);
 
         console.log('FormattedText', formattedText);

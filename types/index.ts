@@ -1,4 +1,5 @@
 import {
+  AttendanceStatus,
   ComplaintStatus,
   PaymentMethod,
   PaymentStatus,
@@ -161,4 +162,38 @@ export interface Complaint {
   updatedAt: Date;
   createdAt: Date;
   ComplaintStatusTimeline: ComplaintTimelineEntry[];
+}
+
+export interface WeeklyAttendanceReportData {
+  student: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    middleName?: string | null;
+    rollNumber: string;
+    profileImage?: string | null;
+    grade: { grade: string };
+    section: { name: string };
+  };
+  attendanceRecords: {
+    date: string;
+    present: boolean;
+    status: AttendanceStatus;
+    note?: string | null;
+  }[];
+  weekRange: {
+    startDate: string;
+    endDate: string;
+  };
+  organization: {
+    name: string | null;
+    organizationLogo?: string | null;
+    contactEmail?: string | null;
+    contactPhone?: string | null;
+  };
+  cumulativeStats?: {
+    totalDaysPresent: number;
+    totalPossibleDays: number;
+    attendancePercentage: number;
+  };
 }

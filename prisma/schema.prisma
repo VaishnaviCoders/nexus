@@ -1,7 +1,7 @@
 generator client {
   provider        = "prisma-client"
   output          = "../generated/prisma"
-  previewFeatures = ["fullTextSearchPostgres", "driverAdapters"]
+  previewFeatures = ["fullTextSearchPostgres"]
 }
 
 // , "queryCompiler", "driverAdapters"
@@ -17,6 +17,17 @@ enum PlanType {
   STANDARD
   PREMIUM
   ENTERPRISE
+}
+
+enum NoticeType {
+  GENERAL // plain circular
+  EVENT // Annual Day, Sports Day
+  EXAM // Mid-term, practical, board
+  HOLIDAY // Diwali break, 
+  DEADLINE // Fee last date, form submission
+  TIMETABLE // revised class schedule
+  RESULT // published marks / report-cards
+  SMS // only SMS blast, no portal tile
 }
 
 enum OrganizationType {
@@ -641,17 +652,23 @@ enum ComplaintStatus {
 }
 
 model Notice {
-  id         String   @id @default(uuid())
-  noticeType String
-  title      String
-  startDate  DateTime
-  endDate    DateTime
-  content    String
+  id         String @id @default(uuid())
+  noticeType String // change into enums after
 
-  isNoticeApproved Boolean @default(false)
-  isDraft          Boolean @default(false)
-  isPublished      Boolean @default(false)
+  title     String
+  startDate DateTime
+  endDate   DateTime
 
+  content String
+  summary String?
+
+  isNoticeApproved     Boolean @default(false)
+  isDraft              Boolean @default(false)
+  isPublished          Boolean @default(false)
+  // isApproved    Boolean   @default(false)
+  // approvedBy    String?
+  // approvedAt    DateTime?
+  // isUrgent        Boolean @default(false)
   emailNotification    Boolean @default(true)
   pushNotification     Boolean @default(false)
   WhatsAppNotification Boolean @default(false)

@@ -2622,6 +2622,7 @@ export const NoticeScalarFieldEnum = {
   startDate: 'startDate',
   endDate: 'endDate',
   content: 'content',
+  summary: 'summary',
   isNoticeApproved: 'isNoticeApproved',
   isDraft: 'isDraft',
   isPublished: 'isPublished',
@@ -3010,6 +3011,7 @@ export const NoticeOrderByRelevanceFieldEnum = {
   noticeType: 'noticeType',
   title: 'title',
   content: 'content',
+  summary: 'summary',
   targetAudience: 'targetAudience',
   publishedBy: 'publishedBy',
   organizationId: 'organizationId',
@@ -3467,10 +3469,6 @@ export interface PrismaClientOptions {
     timeout?: number
     isolationLevel?: TransactionIsolationLevel
   }
-  /**
-   * Instance of a Driver Adapter, e.g., like one provided by `@prisma/adapter-planetscale`
-   */
-  adapter?: runtime.SqlDriverAdapterFactory | null
   /**
    * Global configuration for omitting model fields by default.
    * 

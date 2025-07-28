@@ -6,7 +6,15 @@ import {
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Download, TrendingUp, Award, Clock } from 'lucide-react';
+import {
+  TrendingUp,
+  Calendar,
+  Target,
+  AlertCircle,
+  CheckCircle,
+  Clock,
+  ChevronLeft,
+} from 'lucide-react';
 import Link from 'next/link';
 import { AttendanceStatsCards } from '@/components/dashboard/StudentAttendance/attendance-stats-cards';
 import { StudentAttendanceCalendar } from '@/components/dashboard/StudentAttendance/attendance-calendar';
@@ -14,6 +22,8 @@ import prisma from '@/lib/db';
 import { RecentAttendanceTimeline } from '@/components/dashboard/StudentAttendance/recent-attendance-calendar';
 import { getCurrentUserId } from '@/lib/user';
 import { getCurrentUserByRole } from '@/lib/auth';
+import WeeklyAttendanceReportCard from '@/components/dashboard/StudentAttendance/WeeklyAttendanceReportCard';
+import { getWeeklyAttendanceReport } from '@/lib/data/attendance/get-weekly-attendance-report';
 
 export default async function page() {
   const userId = await getCurrentUserId();
@@ -32,7 +42,11 @@ export default async function page() {
               You are logged in as <strong>{user.role}</strong>.
             </p>
             <Link href="/dashboard">
-              <Button variant="outline" size="sm" className="mt-2">
+              <Button
+                variant="outline"
+                size="sm"
+                className="mt-2 bg-transparent"
+              >
                 Back to Dashboard
               </Button>
             </Link>
@@ -47,6 +61,11 @@ export default async function page() {
       id: user.studentId,
     },
   });
+
+  if (!student) return null;
+
+  const weeklyData = await getWeeklyAttendanceReport(student.id);
+
   const attendanceData = await prisma.studentAttendance.findMany({
     where: {
       studentId: student?.id,
@@ -61,38 +80,83 @@ export default async function page() {
     orderBy: { date: 'desc' },
     take: 7,
   });
+
+  // Calculate monthly stats
+  const currentMonth = new Date();
+  const monthStart = new Date(
+    currentMonth.getFullYear(),
+    currentMonth.getMonth(),
+    1
+  );
+  const monthEnd = new Date(
+    currentMonth.getFullYear(),
+    currentMonth.getMonth() + 1,
+    0
+  );
+
+  const monthlyAttendance = await prisma.studentAttendance.findMany({
+    where: {
+      studentId: student.id,
+      date: {
+        gte: monthStart,
+        lte: monthEnd,
+      },
+    },
+  });
+
+  const monthlyStats = {
+    totalDays: monthlyAttendance.length,
+    presentDays: monthlyAttendance.filter((record) => record.present).length,
+    lateDays: monthlyAttendance.filter((record) => record.status === 'LATE')
+      .length,
+    absentDays: monthlyAttendance.filter((record) => !record.present).length,
+  };
+
+  const monthlyPercentage =
+    monthlyStats.totalDays > 0
+      ? Math.round((monthlyStats.presentDays / monthlyStats.totalDays) * 100)
+      : 0;
+
+  // Calculate streak
+  let currentStreak = 0;
+  const sortedAttendance = [...attendanceData].reverse();
+  for (const record of sortedAttendance) {
+    if (record.present) {
+      currentStreak++;
+    } else {
+      break;
+    }
+  }
+
   return (
     <div className="px-2 space-y-3">
       {/* Header */}
-      <Card className="">
-        <CardContent className="flex flex-col md:flex-row lg:items-center lg:justify-between p-6 gap-4">
-          <div>
-            <CardTitle className="text-lg  flex items-center gap-2">
-              My Attendance Journey
-              <Badge
-                variant="outline"
-                className="bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950 dark:text-blue-300 dark:border-blue-800"
-              >
-                <TrendingUp className="w-3 h-3 mr-1" />
-                Academic Year 2025-26
-              </Badge>
-            </CardTitle>
-            <CardDescription className=" mt-1">
-              Track your school attendance, achievements, and build great habits
-            </CardDescription>
+      <Card className="py-4 px-2 flex items-center justify-between">
+        <div>
+          <CardTitle className="text-lg flex gap-3 items-center">
+            My Attendance
+            <Badge
+              variant="outline"
+              className="bg-blue-50 max-sm:hidden text-blue-700 border-blue-200 dark:bg-blue-950 dark:text-blue-300 dark:border-blue-800"
+            >
+              <TrendingUp className="w-3 h-3 mr-1" />
+              Academic Year 2025-26
+            </Badge>
+          </CardTitle>
+          <CardDescription className="text-sm">
+            Track your school attendance, reports
+          </CardDescription>
+        </div>
+        <div className="flex justify-center items-center space-x-3">
+          <div className="">
+            <WeeklyAttendanceReportCard data={weeklyData} />
           </div>
-          <div className="flex items-center gap-3">
-            <div className="flex gap-2">
-              <Button variant="outline" size="sm">
-                <Download className="w-4 h-4 mr-2" />
-                Export Report
-              </Button>
-              <Link href="/dashboard">
-                <Button size="sm">Back to Dashboard</Button>
-              </Link>
-            </div>
-          </div>
-        </CardContent>
+          <Link href="/dashboard">
+            <Button size="sm">
+              <ChevronLeft /> Dashboard
+            </Button>
+          </Link>
+        </div>
       </Card>
 
       {/* Overview Cards */}
@@ -100,89 +164,193 @@ export default async function page() {
 
       {/* Main Content Grid */}
       <div className="grid gap-6 lg:grid-cols-12">
-        {/* Left Column - Calendar & Trends */}
+        {/* Left Column - Calendar */}
         <div className="lg:col-span-8 space-y-6">
-          {/* Attendance Calendar */}
           <StudentAttendanceCalendar attendanceRecords={attendanceData} />
-          {/* <StudentCalendar /> */}
-
-          {/* Trends Chart */}
-          {/* <AttendanceTrendsChart initialData={attendanceData} /> */}
-        </div>
-
-        {/* Right Column - Timeline & Achievements */}
-        <div className="lg:col-span-4 space-y-6">
-          {/* Recent Timeline */}
-          <RecentAttendanceTimeline recentAttendance={recentAttendance} />
-
-          {/* Quick Stats */}
-          <Card className="border-0 bg-gradient-to-br from-card via-card to-indigo-50/20 dark:to-indigo-950/20">
+          <Card className="border-0 bg-gradient-to-br from-card via-card to-green-50/20 dark:to-green-950/20">
             <CardContent className="p-6">
-              <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+              <h3 className="text-lg font-semibold mb-4 text-green-800 dark:text-green-200 flex items-center gap-2">
                 <Clock className="w-5 h-5" />
-                Quick Stats
+                Smart Recommendations
               </h3>
               <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-muted-foreground">
-                    This Week
-                  </span>
-                  <Badge className="bg-green-100 text-green-800">
-                    5/5 Present
-                  </Badge>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-muted-foreground">
-                    Current Streak
-                  </span>
-                  <Badge className="bg-blue-100 text-blue-800">12 days</Badge>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-muted-foreground">
-                    Class Rank
-                  </span>
-                  <Badge className="bg-purple-100 text-purple-800">
-                    #3 of 45
-                  </Badge>
+                {monthlyPercentage >= 90 ? (
+                  <div className="p-3 bg-green-100 dark:bg-green-950/30 rounded-lg">
+                    <p className="text-sm font-medium text-green-800 dark:text-green-200">
+                      🎉 Excellent Attendance!
+                    </p>
+                    <p className="text-xs text-green-700 dark:text-green-300 mt-1">
+                      You're doing great! Keep maintaining this consistency.
+                    </p>
+                  </div>
+                ) : monthlyPercentage >= 75 ? (
+                  <div className="p-3 bg-blue-100 dark:bg-blue-950/30 rounded-lg">
+                    <p className="text-sm font-medium text-blue-800 dark:text-blue-200">
+                      📈 Good Progress
+                    </p>
+                    <p className="text-xs text-blue-700 dark:text-blue-300 mt-1">
+                      Try to avoid late arrivals on Fridays to improve your
+                      record.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="p-3 bg-orange-100 dark:bg-orange-950/30 rounded-lg">
+                    <p className="text-sm font-medium text-orange-800 dark:text-orange-200">
+                      ⚠️ Needs Improvement
+                    </p>
+                    <p className="text-xs text-orange-700 dark:text-orange-300 mt-1">
+                      Focus on consistent daily attendance to reach your goals.
+                    </p>
+                  </div>
+                )}
+
+                <div className="space-y-2">
+                  <h4 className="font-medium text-sm">Quick Tips</h4>
+                  <ul className="text-xs text-muted-foreground space-y-1">
+                    <li>• Set multiple alarms 15 minutes apart</li>
+                    <li>• Prepare school bag the night before</li>
+                    <li>• Track your sleep schedule</li>
+                    <li>• Plan your morning routine</li>
+                  </ul>
                 </div>
               </div>
             </CardContent>
           </Card>
         </div>
+
+        {/* Right Column - Timeline & Insights */}
+        <div className="lg:col-span-4 space-y-6">
+          {/* Recent Timeline */}
+          <RecentAttendanceTimeline recentAttendance={recentAttendance} />
+          <Card className="border-0 bg-gradient-to-br from-card via-card to-purple-50/20 dark:to-purple-950/20">
+            <CardContent className="p-6">
+              <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                <Target className="w-5 h-5" />
+                Attendance Goals
+              </h3>
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span>Monthly Target (85%)</span>
+                    <span
+                      className={
+                        monthlyPercentage >= 85
+                          ? 'text-green-600'
+                          : 'text-orange-600'
+                      }
+                    >
+                      {monthlyPercentage}%
+                    </span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div
+                      className={`h-2 rounded-full transition-all duration-300 ${
+                        monthlyPercentage >= 85
+                          ? 'bg-green-500'
+                          : 'bg-orange-500'
+                      }`}
+                      style={{ width: `${Math.min(monthlyPercentage, 100)}%` }}
+                    ></div>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span>Annual Target (90%)</span>
+                    <span className="text-blue-600">85%</span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div
+                      className="bg-blue-500 h-2 rounded-full transition-all duration-300"
+                      style={{ width: '85%' }}
+                    ></div>
+                  </div>
+                </div>
+
+                {monthlyPercentage < 85 && (
+                  <div className="p-3 bg-orange-50 dark:bg-orange-950/20 rounded-lg">
+                    <div className="flex items-start gap-2">
+                      <AlertCircle className="w-4 h-4 text-orange-500 mt-0.5 flex-shrink-0" />
+                      <div className="text-sm">
+                        <p className="font-medium text-orange-700 dark:text-orange-300">
+                          Attendance Alert
+                        </p>
+                        <p className="text-orange-600 dark:text-orange-400">
+                          You need{' '}
+                          {Math.ceil(
+                            (85 * monthlyStats.totalDays) / 100 -
+                              monthlyStats.presentDays
+                          )}{' '}
+                          more present days to reach your monthly goal.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+          {/* Monthly Insights */}
+          <Card className="border-0 bg-gradient-to-br from-card via-card to-blue-50/20 dark:to-blue-950/20">
+            <CardContent className="p-6">
+              <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                <Calendar className="w-5 h-5" />
+                This Month's Summary
+              </h3>
+              <div className="space-y-4">
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">
+                    {monthlyPercentage}%
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    Attendance Rate
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3 text-sm">
+                  <div className="text-center p-2 bg-green-50 dark:bg-green-950/20 rounded-lg">
+                    <div className="font-semibold text-green-700 dark:text-green-300">
+                      {monthlyStats.presentDays}
+                    </div>
+                    <div className="text-green-600 dark:text-green-400">
+                      Present
+                    </div>
+                  </div>
+                  <div className="text-center p-2 bg-orange-50 dark:bg-orange-950/20 rounded-lg">
+                    <div className="font-semibold text-orange-700 dark:text-orange-300">
+                      {monthlyStats.lateDays}
+                    </div>
+                    <div className="text-orange-600 dark:text-orange-400">
+                      Late
+                    </div>
+                  </div>
+                </div>
+
+                {currentStreak > 0 && (
+                  <div className="text-center p-3 bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-950/20 dark:to-blue-950/20 rounded-lg">
+                    <div className="flex items-center justify-center gap-2 text-green-700 dark:text-green-300">
+                      <CheckCircle className="w-4 h-4" />
+                      <span className="font-semibold">
+                        {currentStreak} Day Streak!
+                      </span>
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Keep it up!
+                    </p>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Attendance Goals */}
+        </div>
       </div>
 
-      {/* Achievements Section */}
-      {/* <AttendanceAchievements /> */}
-
-      {/* Attendance Tips */}
-      <Card className="border-0 bg-gradient-to-br from-card via-card to-green-50/20 dark:to-green-950/20">
-        <CardContent className="p-6">
-          <h3 className="text-lg font-semibold mb-4 text-green-800 dark:text-green-200 flex items-center gap-2">
-            <Award className="w-5 h-5" />
-            Attendance Tips
-          </h3>
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="space-y-2">
-              <h4 className="font-medium text-sm">Building Good Habits</h4>
-              <ul className="text-sm text-muted-foreground space-y-1">
-                <li>• Set a consistent sleep schedule</li>
-                <li>• Prepare school materials the night before</li>
-                <li>• Create a morning routine checklist</li>
-                <li>• Track your attendance goals</li>
-              </ul>
-            </div>
-            <div className="space-y-2">
-              <h4 className="font-medium text-sm">When You're Sick</h4>
-              <ul className="text-sm text-muted-foreground space-y-1">
-                <li>• Inform your teacher or school office</li>
-                <li>• Get a medical certificate if needed</li>
-                <li>• Catch up on missed assignments</li>
-                <li>• Rest well to recover quickly</li>
-              </ul>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      {/* Attendance Insights & Tips */}
+      <div className="grid gap-6 md:grid-cols-2">
+        {/* Smart Recommendations */}
+      </div>
 
       {/* Motivational Quote */}
       <Card className="border-0 bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 dark:from-blue-950 dark:via-purple-950 dark:to-pink-950">
