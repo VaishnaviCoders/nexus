@@ -14,27 +14,123 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 // import SecuritySettings from '@/components/settings/security-settings';
 // import FeeSettings from '@/components/settings/fee-settings';
 import { StudentProfileEditForm } from './StudentProfileEditForm';
-import StudentProfileEditPage, {
-  getStudentProfile,
-} from '@/app/dashboard/settings/profile/page';
-import { redirect } from 'next/navigation';
+
 import SidebarPreferences from '@/components/dashboard-layout/sidebar-preferences';
+import prisma from '@/lib/db';
+import { getCurrentUserId } from '@/lib/user';
+import { redirect } from 'next/navigation';
+
+export async function getStudentProfile(studentId?: string) {
+  try {
+    const userId = await getCurrentUserId();
+
+    let student;
+
+    if (studentId) {
+      // Get specific student (for parents/admins)
+      student = await prisma.student.findUnique({
+        where: { id: studentId },
+        include: {
+          user: true,
+          grade: true,
+          section: true,
+          organization: true,
+          ParentStudent: {
+            include: {
+              parent: {
+                include: {
+                  user: true,
+                },
+              },
+            },
+          },
+        },
+      });
+    } else {
+      // Get current user's student profile
+      student = await prisma.student.findFirst({
+        where: {
+          user: {
+            clerkId: userId,
+          },
+        },
+        include: {
+          user: true,
+          grade: true,
+          section: true,
+          organization: true,
+          ParentStudent: {
+            include: {
+              parent: {
+                include: {
+                  user: true,
+                },
+              },
+            },
+          },
+        },
+      });
+    }
+
+    if (!student) {
+      return null;
+    }
+
+    // Check permissions
+    const isOwnProfile = student.user?.clerkId === userId;
+    const isParent = student.ParentStudent.some(
+      (ps) => ps.parent.user?.clerkId === userId
+    );
+
+    if (!isOwnProfile && !isParent) {
+      throw new Error('Unauthorized to view this profile');
+    }
+
+    return {
+      id: student.id,
+      firstName: student.firstName,
+      lastName: student.lastName,
+      middleName: student.middleName,
+      motherName: student.motherName,
+      fullName: student.fullName,
+      dateOfBirth: student.dateOfBirth,
+      profileImage: student.profileImage,
+      rollNumber: student.rollNumber,
+      phoneNumber: student.phoneNumber,
+      whatsAppNumber: student.whatsAppNumber,
+      email: student.email,
+      emergencyContact: student.emergencyContact,
+      gender: student.gender,
+      grade: student.grade.grade,
+      section: student.section.name,
+      organization: student.organization.name || '',
+      canEditGrade: false, // Students/parents cannot edit grade
+      canEditParentDetails: false, // Cannot edit parent details after submission
+      isOwnProfile,
+      isParent,
+    };
+  } catch (error) {
+    console.error('Error fetching student profile:', error);
+    throw error;
+  }
+}
 
 export default async function StudentSettings() {
   const student = await getStudentProfile();
-
   if (!student) {
     redirect('/dashboard');
   }
-
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col space-y-2">
-        <h1 className="text-lg font-bold tracking-tight">Settings</h1>
-        <p className="text-muted-foreground">
-          Manage your account settings and preferences.
-        </p>
-      </div>
+    <div className="space-y-6 px-2">
+      <Card className="py-4 px-2 flex items-center justify-between   ">
+        {/* //max-sm:flex-col max-sm:items-start max-sm:space-y-3 */}
+        <div>
+          <CardTitle className="text-lg">Settings</CardTitle>
+          <CardDescription className="text-sm">
+            Manage your account settings and preferences.
+          </CardDescription>
+        </div>
+      </Card>
 
       <Tabs defaultValue="profile" className="space-y-6">
         <TabsList className="grid w-full grid-cols-4">
@@ -53,7 +149,7 @@ export default async function StudentSettings() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <StudentProfileEditPage />
+              <StudentProfileEditForm student={student} />
             </CardContent>
           </Card>
         </TabsContent>

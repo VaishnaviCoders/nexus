@@ -2,6 +2,7 @@ generator client {
   provider        = "prisma-client"
   output          = "../generated/prisma"
   previewFeatures = ["fullTextSearchPostgres"]
+  binaryTargets   = ["native", "rhel-openssl-3.0.x"]
 }
 
 // , "queryCompiler", "driverAdapters"

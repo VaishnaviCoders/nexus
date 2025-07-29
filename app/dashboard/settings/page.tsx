@@ -18,14 +18,7 @@ export default async function SettingPage() {
     case 'org:parent':
       return <ParentSettings />;
     case 'org:student':
-      return (
-        <>
-          <StudentSettings />
-          <Link href={'/dashboard/settings/profile'} passHref>
-            <Button variant="outline">Student Profile</Button>
-          </Link>
-        </>
-      );
+      return <StudentSettings />;
     default:
       redirect('/'); // Or show a fallback/unauthorized page
   }

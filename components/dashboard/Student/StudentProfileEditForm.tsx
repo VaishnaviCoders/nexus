@@ -218,17 +218,13 @@ export function StudentProfileEditForm({
                     <FormItem>
                       <FormLabel>Mother's Name</FormLabel>
                       <FormControl>
-                        <Input
-                          placeholder="Enter mother's name"
-                          {...field}
-                          disabled={!student.canEditParentDetails}
-                        />
+                        <Input placeholder="Enter mother's name" {...field} />
                       </FormControl>
-                      {!student.canEditParentDetails && (
+                      {/* {!student.canEditParentDetails && (
                         <FormDescription className="text-amber-600">
                           Parent details cannot be modified after submission
                         </FormDescription>
-                      )}
+                      )} */}
                       <FormMessage />
                     </FormItem>
                   )}
@@ -391,6 +387,7 @@ export function StudentProfileEditForm({
                           placeholder="Enter email address"
                           type="email"
                           {...field}
+                          disabled
                         />
                       </FormControl>
                       <FormDescription>
@@ -425,8 +422,8 @@ export function StudentProfileEditForm({
           </Card>
 
           {/* Submit Button */}
-          <Card className="border-0 bg-gradient-to-r from-card via-card to-green-50/20 dark:to-green-950/20">
-            <CardContent className="p-6">
+          <Card className="border-0 mb-4">
+            <CardContent className="p-2">
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="text-lg font-semibold">Save Changes</h3>
@@ -434,14 +431,7 @@ export function StudentProfileEditForm({
                     Review your information before saving
                   </p>
                 </div>
-                <div className="flex items-center space-x-3">
-                  {' '}
-                  <Link href="/dashboard/settings" passHref>
-                    <Button type="button" variant={'outline'} size="sm">
-                      <ArrowLeft className="w-4 h-4 mr-2" />
-                      Go Back
-                    </Button>
-                  </Link>
+                <div className="flex items-center ">
                   <Button type="submit" disabled={isPending} size="sm">
                     {isPending ? (
                       <>
