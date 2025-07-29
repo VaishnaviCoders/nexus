@@ -63,19 +63,19 @@ export default function RootLayout({
           <GoogleAnalytics gaId="G-Z9HW1EQ694" />
           <GoogleTagManager gtmId="GTM-WNFTTCM4" />
 
-          <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-            <NextSSRPlugin
-              /**
-               * The `extractRouterConfig` will extract **only** the route configs
-               * from the router to prevent additional information from being
-               * leaked to the client. The data passed to the client is the same
-               * as if you were to fetch `/api/uploadthing` directly.
-               */
-              routerConfig={extractRouterConfig(ourFileRouter)}
-            />
-            <NuqsAdapter>{children}</NuqsAdapter>
-            <Toaster position="bottom-right" />
-          </ThemeProvider>
+          {/* <ThemeProvider attribute="class" defaultTheme="light" enableSystem> */}
+          <NextSSRPlugin
+            /**
+             * The `extractRouterConfig` will extract **only** the route configs
+             * from the router to prevent additional information from being
+             * leaked to the client. The data passed to the client is the same
+             * as if you were to fetch `/api/uploadthing` directly.
+             */
+            routerConfig={extractRouterConfig(ourFileRouter)}
+          />
+          <NuqsAdapter>{children}</NuqsAdapter>
+          <Toaster position="bottom-right" />
+          {/* </ThemeProvider> */}
 
           <SpeedInsights />
         </body>

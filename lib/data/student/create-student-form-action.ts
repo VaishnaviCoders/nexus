@@ -1,5 +1,6 @@
 'use server';
 
+import { Prisma } from '@/generated/prisma/client';
 import prisma from '@/lib/db';
 import { getOrganizationId } from '@/lib/organization';
 import { studentSchema } from '@/lib/schemas';
@@ -90,6 +91,31 @@ async function cleanupFailedStudent(
   }
 }
 
+async function inviteUserIfNeeded(
+  email: string,
+  orgId: string,
+  roleCode: string,
+  redirectUrl: string,
+  inviterId: string
+) {
+  const client = await clerkClient();
+
+  try {
+    await client.organizations.createOrganizationInvitation({
+      organizationId: orgId,
+      emailAddress: email,
+      role: roleCode,
+      redirectUrl,
+      inviterUserId: inviterId,
+    });
+  } catch (e: any) {
+    // Ignore duplicate invitation errors, rethrow others
+    if (e.errors?.[0]?.code !== 'duplicate_invitations') {
+      throw e;
+    }
+  }
+}
+
 export async function createStudent(data: z.infer<typeof studentSchema>) {
   const organizationId = await getOrganizationId();
   const { userId } = await auth();
@@ -136,6 +162,14 @@ export async function createStudent(data: z.infer<typeof studentSchema>) {
     console.log(
       `✅ Membership check passed. Current: ${currentMemberCount}, Adding: ${requiredSlots}, Limit: ${membershipLimit}`
     );
+
+    // await inviteUserIfNeeded(
+    // //   validated.email,
+    // //   organizationId,
+    // //   'student',
+    // //   'https://shiksha.cloud/dashboard',
+    // //   userId || ''
+    // // );
 
     // Create or get student Clerk user
     console.log('👤 Processing student Clerk user...');
@@ -310,34 +344,6 @@ export async function createStudent(data: z.infer<typeof studentSchema>) {
     // Database transaction
     console.log('💾 Starting database transaction...');
     const student = await prisma.$transaction(async (tx) => {
-      // Create student
-      const newStudent = await tx.student.create({
-        data: {
-          userId: studentClerkUser.id,
-          organizationId,
-          rollNumber: validated.rollNumber,
-          firstName: validated.firstName,
-          middleName: validated.middleName,
-          lastName: validated.lastName,
-          fullName: `${validated.firstName} ${validated.middleName ?? ''} ${
-            validated.lastName
-          }`.trim(),
-          email: validated.email,
-          phoneNumber: validated.phoneNumber,
-          whatsAppNumber: validated.whatsAppNumber,
-          sectionId: validated.sectionId,
-          gradeId: validated.gradeId,
-          gender: validated.gender,
-          profileImage: validated.profileImage,
-          dateOfBirth: new Date(validated.dateOfBirth),
-          emergencyContact: validated.emergencyContact,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-      });
-      console.log('✅ Student created in database:', newStudent.id);
-
-      // Create or update student user record
       const studentUser = await tx.user.upsert({
         where: { clerkId: studentClerkUser.id },
         create: {
@@ -367,6 +373,35 @@ export async function createStudent(data: z.infer<typeof studentSchema>) {
         },
       });
       console.log('✅ Student user record processed:', studentUser.id);
+
+      // Create student
+      const newStudent = await tx.student.create({
+        data: {
+          userId: studentClerkUser.id,
+          organizationId,
+          rollNumber: validated.rollNumber,
+          firstName: validated.firstName,
+          middleName: validated.middleName,
+          lastName: validated.lastName,
+          fullName: `${validated.firstName} ${validated.middleName ?? ''} ${
+            validated.lastName
+          }`.trim(),
+          email: validated.email,
+          phoneNumber: validated.phoneNumber,
+          whatsAppNumber: validated.whatsAppNumber,
+          sectionId: validated.sectionId,
+          gradeId: validated.gradeId,
+          gender: validated.gender,
+          profileImage: validated.profileImage,
+          dateOfBirth: new Date(validated.dateOfBirth),
+          emergencyContact: validated.emergencyContact,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      });
+      console.log('✅ Student created in database:', newStudent.id);
+
+      // Create or update student user record
 
       // Process parents in database
       for (const { clerkUser, parentData } of parentClerkUsers) {
@@ -444,7 +479,12 @@ export async function createStudent(data: z.infer<typeof studentSchema>) {
     };
   } catch (error) {
     console.error('❌ Student creation failed:', error);
-
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === 'P2003') {
+        console.error('Foreign key constraint failed:', error.meta);
+        // Handle specific constraint violations
+      }
+    }
     // Cleanup Clerk users if database transaction failed
     if (createdClerkUsers.length > 0) {
       console.log('🧹 Attempting cleanup of created Clerk users...');

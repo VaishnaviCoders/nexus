@@ -25,9 +25,27 @@ import AdminQuickActions from '@/app/components/dashboardComponents/AdminQuickAc
 import AdminDashboardCards from '@/app/components/dashboardComponents/AdminDashboardCards';
 import AdminRecentActivity from '@/app/components/dashboardComponents/RecentActivity';
 import { UpcomingEvents } from '@/app/components/dashboardComponents/UpcomingEvents';
+import { getCurrentAcademicYear } from '@/lib/academicYear';
+import { redirect } from 'next/navigation';
 
 const AdminDashboard = async () => {
   const data = await getMonthlyFeeData(2025);
+  const academicYear = await getCurrentAcademicYear();
+
+  if (!academicYear) {
+    return (
+      <div className="p-6 flex flex-col items-center justify-center text-center space-y-4">
+        <h2 className="text-2xl font-semibold">Academic Year Not Set</h2>
+        <p className="text-muted-foreground max-w-md">
+          Please set the current academic year before using the dashboard
+          features.
+        </p>
+        <Button asChild>
+          <a href="/dashboard/settings">Go to Settings</a>
+        </Button>
+      </div>
+    );
+  }
 
   // const data = mockMonthlyFeeCollectionData;
   return (
@@ -93,40 +111,6 @@ const AdminDashboard = async () => {
 };
 
 export default AdminDashboard;
-
-// Loading Skeletons for better UX
-function StatsCardsSkeleton() {
-  return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-      {Array.from({ length: 4 }).map((_, i) => (
-        <Card key={i} className="animate-pulse">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <div className="h-4 bg-muted rounded w-20"></div>
-            <div className="h-4 w-4 bg-muted rounded"></div>
-          </CardHeader>
-          <CardContent>
-            <div className="h-8 bg-muted rounded w-16 mb-2"></div>
-            <div className="h-3 bg-muted rounded w-24"></div>
-          </CardContent>
-        </Card>
-      ))}
-    </div>
-  );
-}
-
-function ChartSkeleton() {
-  return (
-    <Card className="animate-pulse">
-      <CardHeader>
-        <div className="h-5 bg-muted rounded w-32"></div>
-        <div className="h-4 bg-muted rounded w-48"></div>
-      </CardHeader>
-      <CardContent>
-        <div className="h-64 bg-muted rounded"></div>
-      </CardContent>
-    </Card>
-  );
-}
 
 function ActivitySkeleton() {
   return (

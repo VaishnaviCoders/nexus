@@ -45,7 +45,10 @@ export default async function AdminFeeDashboard() {
 
         {/* Responsive Button Container */}
         <div className="flex sm:flex-row sm:items-center space-x-2">
-          <Button variant="outline" className="w-full sm:w-auto">
+          <Button
+            variant="outline"
+            className="w-full sm:w-auto cursor-not-allowed"
+          >
             <DownloadIcon className="mr-2 h-4 w-4" />
             <span className="sm:inline">Export Data</span>
           </Button>

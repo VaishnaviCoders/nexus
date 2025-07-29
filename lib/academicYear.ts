@@ -15,11 +15,7 @@ export async function getCurrentAcademicYear() {
     },
   });
 
-  if (!academicYear) {
-    throw new Error('No default academic year is set for this organization.');
-  }
-
-  return academicYear;
+  return academicYear || null;
 }
 
 export async function getCurrentAcademicYearId() {
@@ -35,11 +31,9 @@ export async function getCurrentAcademicYearId() {
     },
   });
 
-  if (!academicYear) {
-    throw new Error('No default academic year is set for this organization.');
-  }
-
-  return {
-    academicYearId: academicYear.id,
-  };
+  return academicYear
+    ? {
+        academicYearId: academicYear.id,
+      }
+    : null;
 }

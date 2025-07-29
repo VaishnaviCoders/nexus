@@ -732,8 +732,23 @@ export async function createAcademicYear(data: AcademicYearFormData) {
   try {
     const user = await currentUser();
     const userId = await getCurrentUserId();
+    const orgId = await getOrganizationId();
+
+    console.log(orgId, 'org');
+
+    const allOrgs = await prisma.organization.findMany();
+    console.log('All orgs in DB:', allOrgs);
+    const allUsers = await prisma.user.findMany();
+    console.log('All orgs in DB:', allUsers);
 
     const validatedData = academicYearSchema.parse(data);
+
+    console.log('Validated Data:', validatedData);
+
+    const org = await prisma.organization.findUnique({
+      where: { id: 'org_30WQlEXgBepgHNrZYoYzx0xlqJg' },
+    });
+    console.log('Resolved org:', org);
 
     // Check for overlapping academic years
     const overlapping = await prisma.academicYear.findFirst({
@@ -791,6 +806,7 @@ export async function createAcademicYear(data: AcademicYearFormData) {
     revalidatePath('/dashboard/settings');
     return { success: true };
   } catch (error) {
+    console.error('Academic year creation error:', error);
     if (error instanceof z.ZodError) {
       return {
         success: false,

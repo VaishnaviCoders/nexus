@@ -15,8 +15,15 @@ export const createSingleHolidayAction = async (
 
   const user = await currentUser();
   const organizationId = await getOrganizationId();
-  const { academicYearId } = await getCurrentAcademicYearId();
+  const academicYearData = await getCurrentAcademicYearId();
 
+  if (!academicYearData) {
+    // Handle the missing academic year here
+    // You can redirect, show a message, throw an error, etc.
+    throw new Error('No current academic year is set.');
+  }
+
+  const { academicYearId } = academicYearData;
   await prisma.academicCalendar.create({
     data: {
       name: validateData.name,

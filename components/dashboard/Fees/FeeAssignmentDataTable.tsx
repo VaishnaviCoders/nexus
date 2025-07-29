@@ -406,7 +406,7 @@ const FeeAssignmentDataTable = ({
                                     {fee.status}
                                   </span>
                                 </Badge>
-                                <span className="text-xs truncate max-w-[150px] sm:max-w-[200px] md:max-w-none">
+                                <span className="text-xs truncate max-w-[150px] sm:max-w-[200px] md:max-w-none capitalize">
                                   {fee.feeCategory.name}
                                 </span>
                               </div>
@@ -425,7 +425,7 @@ const FeeAssignmentDataTable = ({
                                   <Info className="h-4 w-4" />
                                   Fee Details
                                 </h4>
-                                <p className="text-sm text-muted-foreground">
+                                <p className="text-sm text-muted-foreground capitalize">
                                   {fee.feeCategory.name}
                                   {fee.feeCategory.description && (
                                     <span className="block mt-1 text-xs italic">

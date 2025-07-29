@@ -8,7 +8,7 @@ const isStudent = createRouteMatcher([
   '/dashboard/fees/student(.*)',
   '/dashboard/assignments(.*)',
   '/dashboard/my-attendance(.*)',
-  '/dashboard/documents(.*)',
+  '/dashboard/documents',
   // Add other student routes here
 ]);
 

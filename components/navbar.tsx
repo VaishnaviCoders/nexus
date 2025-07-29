@@ -16,6 +16,7 @@ import { Bell, UserCircleIcon } from 'lucide-react';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { Skeleton } from './ui/skeleton';
+import { syncUser } from '@/lib/syncUser';
 
 // Improved loading components
 const LoadingBell = () => (
@@ -99,6 +100,7 @@ export async function Navbar() {
 
     // Get user data for authenticated users
     const user = await currentUser();
+
     const firstName = user?.firstName ?? 'User';
     const lastName = user?.lastName ?? '';
     const fullName = `${firstName} ${lastName}`.trim();
@@ -150,7 +152,7 @@ export async function Navbar() {
 
             {/* Right section */}
             <div className="ml-auto flex items-center space-x-3">
-              <ModeToggle />
+              {/* <ModeToggle /> */}
 
               <SignedOut>
                 <SignInButton mode="modal">
