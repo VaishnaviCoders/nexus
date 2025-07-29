@@ -10,21 +10,29 @@ import { EmptyState } from '@/components/EmptyState';
 import { Activity, Pin, Newspaper } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Role } from '@/generated/prisma/enums';
-import { getCurrentAcademicYear } from '@/lib/academicYear';
+import { getCurrentAcademicYearId } from '@/lib/academicYear';
 import { performance } from 'perf_hooks';
 
 const page = async () => {
   const { orgRole } = await getOrganizationUserRole();
 
   const organizationId = await getOrganizationId();
-  const currentYear = await getCurrentAcademicYear();
+  const academicYearData = await getCurrentAcademicYearId();
+
+  if (!academicYearData) {
+    // Handle the missing academic year here
+    // You can redirect, show a message, throw an error, etc.
+    throw new Error('No current academic year is set.');
+  }
+
+  const { academicYearId } = academicYearData;
 
   const t0 = performance.now();
 
   const notices = await prisma.notice.findMany({
     where: {
       organizationId,
-      academicYearId: currentYear.id,
+      academicYearId,
     },
     orderBy: {
       createdAt: 'desc',

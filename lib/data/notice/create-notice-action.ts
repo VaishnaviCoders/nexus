@@ -1,6 +1,9 @@
 'use server';
 
-import { getCurrentAcademicYear } from '@/lib/academicYear';
+import {
+  getCurrentAcademicYear,
+  getCurrentAcademicYearId,
+} from '@/lib/academicYear';
 import prisma from '@/lib/db';
 import { getOrganizationId } from '@/lib/organization';
 import { CreateNoticeFormSchema } from '@/lib/schemas';
@@ -27,13 +30,22 @@ export const createNotice = async (
         size: file.size || 0,
       };
     });
+    const academicYearData = await getCurrentAcademicYearId();
+
+    if (!academicYearData) {
+      // Handle the missing academic year here
+      // You can redirect, show a message, throw an error, etc.
+      throw new Error('No current academic year is set.');
+    }
+
+    const { academicYearId } = academicYearData;
 
     await prisma.notice.create({
       data: {
         noticeType: validatedData.noticeType,
         title: validatedData.title,
         content: validatedData.content,
-        academicYearId: currentYear.id,
+        academicYearId,
 
         attachments: processedAttachments,
         targetAudience: validatedData.targetAudience,

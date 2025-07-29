@@ -34,7 +34,7 @@ import StudentPerformance from '@/components/dashboard/Student/StudentPerformanc
 import StudentAssignment from '@/components/dashboard/Student/StudentAssignment';
 import { Badge } from '@/components/ui/badge';
 import { getOrganizationId } from '@/lib/organization';
-import { getCurrentAcademicYear } from '@/lib/academicYear';
+import { getCurrentAcademicYearId } from '@/lib/academicYear';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { formatCurrencyIN, formatDateIN } from '@/lib/utils';
 
@@ -97,9 +97,17 @@ const StudentIdRoute = async ({
   const { id } = await params;
 
   const organizationId = await getOrganizationId();
-  const currentYear = await getCurrentAcademicYear();
+  const academicYearData = await getCurrentAcademicYearId();
 
-  const notices = await getNotices(organizationId, currentYear.id);
+  if (!academicYearData) {
+    // Handle the missing academic year here
+    // You can redirect, show a message, throw an error, etc.
+    throw new Error('No current academic year is set.');
+  }
+
+  const { academicYearId } = academicYearData;
+
+  const notices = await getNotices(organizationId, academicYearId);
   const studentId = id;
 
   const {

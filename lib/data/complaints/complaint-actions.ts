@@ -4,7 +4,7 @@ import { revalidatePath } from 'next/cache';
 import prisma from '@/lib/db';
 import type { ComplaintStatus, Severity } from '@/generated/prisma/enums';
 import { getOrganizationId } from '@/lib/organization';
-import { getCurrentAcademicYear } from '@/lib/academicYear';
+import { getCurrentAcademicYearId } from '@/lib/academicYear';
 import { Prisma } from '@/generated/prisma/client';
 
 interface ComplaintFilters {
@@ -19,10 +19,17 @@ interface ComplaintFilters {
 
 export async function getComplaintsWithFilters(filters: ComplaintFilters) {
   const organizationId = await getOrganizationId();
-  const currentYear = await getCurrentAcademicYear();
+  const academicYearData = await getCurrentAcademicYearId();
+
+  if (!academicYearData) {
+    // Handle the missing academic year here
+    // You can redirect, show a message, throw an error, etc.
+    throw new Error('No current academic year is set.');
+  }
+
+  const { academicYearId } = academicYearData;
 
   try {
-    const academicYearId = currentYear.id;
     const {
       status,
       severity,

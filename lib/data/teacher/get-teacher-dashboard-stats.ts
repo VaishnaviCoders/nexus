@@ -1,6 +1,9 @@
 'use server';
 
-import { getCurrentAcademicYear } from '@/lib/academicYear';
+import {
+  getCurrentAcademicYear,
+  getCurrentAcademicYearId,
+} from '@/lib/academicYear';
 import prisma from '@/lib/db';
 import { auth } from '@clerk/nextjs/server';
 import { cache } from 'react';
@@ -33,7 +36,15 @@ const getTeacherInfo = cache(async () => {
 });
 
 export async function getTeacherDashboardStats() {
-  const currentYear = await getCurrentAcademicYear();
+  const academicYearData = await getCurrentAcademicYearId();
+
+  if (!academicYearData) {
+    // Handle the missing academic year here
+    // You can redirect, show a message, throw an error, etc.
+    throw new Error('No current academic year is set.');
+  }
+
+  const { academicYearId } = academicYearData;
   const teacher = await getTeacherInfo();
 
   const today = new Date();
@@ -94,7 +105,7 @@ export async function getTeacherDashboardStats() {
 
     prisma.anonymousComplaint.count({
       where: {
-        academicYearId: currentYear.id,
+        academicYearId,
         organizationId: teacher.organizationId,
         currentStatus: {
           in: ['PENDING', 'UNDER_REVIEW', 'INVESTIGATING'],
