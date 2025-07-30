@@ -157,10 +157,25 @@ export type Notice = Prisma.NoticeModel
  */
 export type NotificationLog = Prisma.NotificationLogModel
 /**
+ * Model ExamSession
+ * 
+ */
+export type ExamSession = Prisma.ExamSessionModel
+/**
+ * Model Exam
+ * 
+ */
+export type Exam = Prisma.ExamModel
+/**
  * Model Performance
  * 
  */
 export type Performance = Prisma.PerformanceModel
+/**
+ * Model ReportCard
+ * 
+ */
+export type ReportCard = Prisma.ReportCardModel
 
 export type PlanType = $Enums.PlanType
 export const PlanType = $Enums.PlanType

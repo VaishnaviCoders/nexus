@@ -167,7 +167,7 @@ export default async function page() {
         {/* Left Column - Calendar */}
         <div className="lg:col-span-8 space-y-6">
           <StudentAttendanceCalendar attendanceRecords={attendanceData} />
-          <Card className="border-0 bg-gradient-to-br from-card via-card to-green-50/20 dark:to-green-950/20">
+          <Card className="border-0 ">
             <CardContent className="p-6">
               <h3 className="text-lg font-semibold mb-4 text-green-800 dark:text-green-200 flex items-center gap-2">
                 <Clock className="w-5 h-5" />
@@ -222,7 +222,7 @@ export default async function page() {
         <div className="lg:col-span-4 space-y-6">
           {/* Recent Timeline */}
           <RecentAttendanceTimeline recentAttendance={recentAttendance} />
-          <Card className="border-0 bg-gradient-to-br from-card via-card to-purple-50/20 dark:to-purple-950/20">
+          <Card className="border-0 ">
             <CardContent className="p-6">
               <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
                 <Target className="w-5 h-5" />
@@ -291,7 +291,7 @@ export default async function page() {
             </CardContent>
           </Card>
           {/* Monthly Insights */}
-          <Card className="border-0 bg-gradient-to-br from-card via-card to-blue-50/20 dark:to-blue-950/20">
+          <Card className="border-0 ">
             <CardContent className="p-6">
               <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
                 <Calendar className="w-5 h-5" />

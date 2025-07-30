@@ -311,6 +311,7 @@ export type StudentWhereInput = {
   StudentDocument?: Prisma.StudentDocumentListRelationFilter
   NotificationLog?: Prisma.NotificationLogListRelationFilter
   performance?: Prisma.PerformanceListRelationFilter
+  ReportCard?: Prisma.ReportCardListRelationFilter
 }
 
 export type StudentOrderByWithRelationInput = {
@@ -344,6 +345,7 @@ export type StudentOrderByWithRelationInput = {
   StudentDocument?: Prisma.StudentDocumentOrderByRelationAggregateInput
   NotificationLog?: Prisma.NotificationLogOrderByRelationAggregateInput
   performance?: Prisma.PerformanceOrderByRelationAggregateInput
+  ReportCard?: Prisma.ReportCardOrderByRelationAggregateInput
   _relevance?: Prisma.StudentOrderByRelevanceInput
 }
 
@@ -381,6 +383,7 @@ export type StudentWhereUniqueInput = Prisma.AtLeast<{
   StudentDocument?: Prisma.StudentDocumentListRelationFilter
   NotificationLog?: Prisma.NotificationLogListRelationFilter
   performance?: Prisma.PerformanceListRelationFilter
+  ReportCard?: Prisma.ReportCardListRelationFilter
 }, "id" | "userId" | "rollNumber">
 
 export type StudentOrderByWithAggregationInput = {
@@ -462,6 +465,7 @@ export type StudentCreateInput = {
   StudentDocument?: Prisma.StudentDocumentCreateNestedManyWithoutStudentInput
   NotificationLog?: Prisma.NotificationLogCreateNestedManyWithoutStudentInput
   performance?: Prisma.PerformanceCreateNestedManyWithoutStudentInput
+  ReportCard?: Prisma.ReportCardCreateNestedManyWithoutStudentInput
 }
 
 export type StudentUncheckedCreateInput = {
@@ -491,6 +495,7 @@ export type StudentUncheckedCreateInput = {
   StudentDocument?: Prisma.StudentDocumentUncheckedCreateNestedManyWithoutStudentInput
   NotificationLog?: Prisma.NotificationLogUncheckedCreateNestedManyWithoutStudentInput
   performance?: Prisma.PerformanceUncheckedCreateNestedManyWithoutStudentInput
+  ReportCard?: Prisma.ReportCardUncheckedCreateNestedManyWithoutStudentInput
 }
 
 export type StudentUpdateInput = {
@@ -520,6 +525,7 @@ export type StudentUpdateInput = {
   StudentDocument?: Prisma.StudentDocumentUpdateManyWithoutStudentNestedInput
   NotificationLog?: Prisma.NotificationLogUpdateManyWithoutStudentNestedInput
   performance?: Prisma.PerformanceUpdateManyWithoutStudentNestedInput
+  ReportCard?: Prisma.ReportCardUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentUncheckedUpdateInput = {
@@ -549,6 +555,7 @@ export type StudentUncheckedUpdateInput = {
   StudentDocument?: Prisma.StudentDocumentUncheckedUpdateManyWithoutStudentNestedInput
   NotificationLog?: Prisma.NotificationLogUncheckedUpdateManyWithoutStudentNestedInput
   performance?: Prisma.PerformanceUncheckedUpdateManyWithoutStudentNestedInput
+  ReportCard?: Prisma.ReportCardUncheckedUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentCreateManyInput = {
@@ -959,6 +966,20 @@ export type StudentUpdateOneRequiredWithoutPerformanceNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.StudentUpdateToOneWithWhereWithoutPerformanceInput, Prisma.StudentUpdateWithoutPerformanceInput>, Prisma.StudentUncheckedUpdateWithoutPerformanceInput>
 }
 
+export type StudentCreateNestedOneWithoutReportCardInput = {
+  create?: Prisma.XOR<Prisma.StudentCreateWithoutReportCardInput, Prisma.StudentUncheckedCreateWithoutReportCardInput>
+  connectOrCreate?: Prisma.StudentCreateOrConnectWithoutReportCardInput
+  connect?: Prisma.StudentWhereUniqueInput
+}
+
+export type StudentUpdateOneRequiredWithoutReportCardNestedInput = {
+  create?: Prisma.XOR<Prisma.StudentCreateWithoutReportCardInput, Prisma.StudentUncheckedCreateWithoutReportCardInput>
+  connectOrCreate?: Prisma.StudentCreateOrConnectWithoutReportCardInput
+  upsert?: Prisma.StudentUpsertWithoutReportCardInput
+  connect?: Prisma.StudentWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.StudentUpdateToOneWithWhereWithoutReportCardInput, Prisma.StudentUpdateWithoutReportCardInput>, Prisma.StudentUncheckedUpdateWithoutReportCardInput>
+}
+
 export type StudentCreateWithoutOrganizationInput = {
   id?: string
   firstName: string
@@ -985,6 +1006,7 @@ export type StudentCreateWithoutOrganizationInput = {
   StudentDocument?: Prisma.StudentDocumentCreateNestedManyWithoutStudentInput
   NotificationLog?: Prisma.NotificationLogCreateNestedManyWithoutStudentInput
   performance?: Prisma.PerformanceCreateNestedManyWithoutStudentInput
+  ReportCard?: Prisma.ReportCardCreateNestedManyWithoutStudentInput
 }
 
 export type StudentUncheckedCreateWithoutOrganizationInput = {
@@ -1013,6 +1035,7 @@ export type StudentUncheckedCreateWithoutOrganizationInput = {
   StudentDocument?: Prisma.StudentDocumentUncheckedCreateNestedManyWithoutStudentInput
   NotificationLog?: Prisma.NotificationLogUncheckedCreateNestedManyWithoutStudentInput
   performance?: Prisma.PerformanceUncheckedCreateNestedManyWithoutStudentInput
+  ReportCard?: Prisma.ReportCardUncheckedCreateNestedManyWithoutStudentInput
 }
 
 export type StudentCreateOrConnectWithoutOrganizationInput = {
@@ -1093,6 +1116,7 @@ export type StudentCreateWithoutUserInput = {
   StudentDocument?: Prisma.StudentDocumentCreateNestedManyWithoutStudentInput
   NotificationLog?: Prisma.NotificationLogCreateNestedManyWithoutStudentInput
   performance?: Prisma.PerformanceCreateNestedManyWithoutStudentInput
+  ReportCard?: Prisma.ReportCardCreateNestedManyWithoutStudentInput
 }
 
 export type StudentUncheckedCreateWithoutUserInput = {
@@ -1121,6 +1145,7 @@ export type StudentUncheckedCreateWithoutUserInput = {
   StudentDocument?: Prisma.StudentDocumentUncheckedCreateNestedManyWithoutStudentInput
   NotificationLog?: Prisma.NotificationLogUncheckedCreateNestedManyWithoutStudentInput
   performance?: Prisma.PerformanceUncheckedCreateNestedManyWithoutStudentInput
+  ReportCard?: Prisma.ReportCardUncheckedCreateNestedManyWithoutStudentInput
 }
 
 export type StudentCreateOrConnectWithoutUserInput = {
@@ -1165,6 +1190,7 @@ export type StudentUpdateWithoutUserInput = {
   StudentDocument?: Prisma.StudentDocumentUpdateManyWithoutStudentNestedInput
   NotificationLog?: Prisma.NotificationLogUpdateManyWithoutStudentNestedInput
   performance?: Prisma.PerformanceUpdateManyWithoutStudentNestedInput
+  ReportCard?: Prisma.ReportCardUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentUncheckedUpdateWithoutUserInput = {
@@ -1193,6 +1219,7 @@ export type StudentUncheckedUpdateWithoutUserInput = {
   StudentDocument?: Prisma.StudentDocumentUncheckedUpdateManyWithoutStudentNestedInput
   NotificationLog?: Prisma.NotificationLogUncheckedUpdateManyWithoutStudentNestedInput
   performance?: Prisma.PerformanceUncheckedUpdateManyWithoutStudentNestedInput
+  ReportCard?: Prisma.ReportCardUncheckedUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentCreateWithoutGradeInput = {
@@ -1221,6 +1248,7 @@ export type StudentCreateWithoutGradeInput = {
   StudentDocument?: Prisma.StudentDocumentCreateNestedManyWithoutStudentInput
   NotificationLog?: Prisma.NotificationLogCreateNestedManyWithoutStudentInput
   performance?: Prisma.PerformanceCreateNestedManyWithoutStudentInput
+  ReportCard?: Prisma.ReportCardCreateNestedManyWithoutStudentInput
 }
 
 export type StudentUncheckedCreateWithoutGradeInput = {
@@ -1249,6 +1277,7 @@ export type StudentUncheckedCreateWithoutGradeInput = {
   StudentDocument?: Prisma.StudentDocumentUncheckedCreateNestedManyWithoutStudentInput
   NotificationLog?: Prisma.NotificationLogUncheckedCreateNestedManyWithoutStudentInput
   performance?: Prisma.PerformanceUncheckedCreateNestedManyWithoutStudentInput
+  ReportCard?: Prisma.ReportCardUncheckedCreateNestedManyWithoutStudentInput
 }
 
 export type StudentCreateOrConnectWithoutGradeInput = {
@@ -1303,6 +1332,7 @@ export type StudentCreateWithoutSectionInput = {
   StudentDocument?: Prisma.StudentDocumentCreateNestedManyWithoutStudentInput
   NotificationLog?: Prisma.NotificationLogCreateNestedManyWithoutStudentInput
   performance?: Prisma.PerformanceCreateNestedManyWithoutStudentInput
+  ReportCard?: Prisma.ReportCardCreateNestedManyWithoutStudentInput
 }
 
 export type StudentUncheckedCreateWithoutSectionInput = {
@@ -1331,6 +1361,7 @@ export type StudentUncheckedCreateWithoutSectionInput = {
   StudentDocument?: Prisma.StudentDocumentUncheckedCreateNestedManyWithoutStudentInput
   NotificationLog?: Prisma.NotificationLogUncheckedCreateNestedManyWithoutStudentInput
   performance?: Prisma.PerformanceUncheckedCreateNestedManyWithoutStudentInput
+  ReportCard?: Prisma.ReportCardUncheckedCreateNestedManyWithoutStudentInput
 }
 
 export type StudentCreateOrConnectWithoutSectionInput = {
@@ -1385,6 +1416,7 @@ export type StudentCreateWithoutParentStudentInput = {
   StudentDocument?: Prisma.StudentDocumentCreateNestedManyWithoutStudentInput
   NotificationLog?: Prisma.NotificationLogCreateNestedManyWithoutStudentInput
   performance?: Prisma.PerformanceCreateNestedManyWithoutStudentInput
+  ReportCard?: Prisma.ReportCardCreateNestedManyWithoutStudentInput
 }
 
 export type StudentUncheckedCreateWithoutParentStudentInput = {
@@ -1413,6 +1445,7 @@ export type StudentUncheckedCreateWithoutParentStudentInput = {
   StudentDocument?: Prisma.StudentDocumentUncheckedCreateNestedManyWithoutStudentInput
   NotificationLog?: Prisma.NotificationLogUncheckedCreateNestedManyWithoutStudentInput
   performance?: Prisma.PerformanceUncheckedCreateNestedManyWithoutStudentInput
+  ReportCard?: Prisma.ReportCardUncheckedCreateNestedManyWithoutStudentInput
 }
 
 export type StudentCreateOrConnectWithoutParentStudentInput = {
@@ -1457,6 +1490,7 @@ export type StudentUpdateWithoutParentStudentInput = {
   StudentDocument?: Prisma.StudentDocumentUpdateManyWithoutStudentNestedInput
   NotificationLog?: Prisma.NotificationLogUpdateManyWithoutStudentNestedInput
   performance?: Prisma.PerformanceUpdateManyWithoutStudentNestedInput
+  ReportCard?: Prisma.ReportCardUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentUncheckedUpdateWithoutParentStudentInput = {
@@ -1485,6 +1519,7 @@ export type StudentUncheckedUpdateWithoutParentStudentInput = {
   StudentDocument?: Prisma.StudentDocumentUncheckedUpdateManyWithoutStudentNestedInput
   NotificationLog?: Prisma.NotificationLogUncheckedUpdateManyWithoutStudentNestedInput
   performance?: Prisma.PerformanceUncheckedUpdateManyWithoutStudentNestedInput
+  ReportCard?: Prisma.ReportCardUncheckedUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentCreateWithoutStudentAttendanceInput = {
@@ -1513,6 +1548,7 @@ export type StudentCreateWithoutStudentAttendanceInput = {
   StudentDocument?: Prisma.StudentDocumentCreateNestedManyWithoutStudentInput
   NotificationLog?: Prisma.NotificationLogCreateNestedManyWithoutStudentInput
   performance?: Prisma.PerformanceCreateNestedManyWithoutStudentInput
+  ReportCard?: Prisma.ReportCardCreateNestedManyWithoutStudentInput
 }
 
 export type StudentUncheckedCreateWithoutStudentAttendanceInput = {
@@ -1541,6 +1577,7 @@ export type StudentUncheckedCreateWithoutStudentAttendanceInput = {
   StudentDocument?: Prisma.StudentDocumentUncheckedCreateNestedManyWithoutStudentInput
   NotificationLog?: Prisma.NotificationLogUncheckedCreateNestedManyWithoutStudentInput
   performance?: Prisma.PerformanceUncheckedCreateNestedManyWithoutStudentInput
+  ReportCard?: Prisma.ReportCardUncheckedCreateNestedManyWithoutStudentInput
 }
 
 export type StudentCreateOrConnectWithoutStudentAttendanceInput = {
@@ -1585,6 +1622,7 @@ export type StudentUpdateWithoutStudentAttendanceInput = {
   StudentDocument?: Prisma.StudentDocumentUpdateManyWithoutStudentNestedInput
   NotificationLog?: Prisma.NotificationLogUpdateManyWithoutStudentNestedInput
   performance?: Prisma.PerformanceUpdateManyWithoutStudentNestedInput
+  ReportCard?: Prisma.ReportCardUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentUncheckedUpdateWithoutStudentAttendanceInput = {
@@ -1613,6 +1651,7 @@ export type StudentUncheckedUpdateWithoutStudentAttendanceInput = {
   StudentDocument?: Prisma.StudentDocumentUncheckedUpdateManyWithoutStudentNestedInput
   NotificationLog?: Prisma.NotificationLogUncheckedUpdateManyWithoutStudentNestedInput
   performance?: Prisma.PerformanceUncheckedUpdateManyWithoutStudentNestedInput
+  ReportCard?: Prisma.ReportCardUncheckedUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentCreateWithoutStudentDocumentInput = {
@@ -1641,6 +1680,7 @@ export type StudentCreateWithoutStudentDocumentInput = {
   StudentAttendance?: Prisma.StudentAttendanceCreateNestedManyWithoutStudentInput
   NotificationLog?: Prisma.NotificationLogCreateNestedManyWithoutStudentInput
   performance?: Prisma.PerformanceCreateNestedManyWithoutStudentInput
+  ReportCard?: Prisma.ReportCardCreateNestedManyWithoutStudentInput
 }
 
 export type StudentUncheckedCreateWithoutStudentDocumentInput = {
@@ -1669,6 +1709,7 @@ export type StudentUncheckedCreateWithoutStudentDocumentInput = {
   StudentAttendance?: Prisma.StudentAttendanceUncheckedCreateNestedManyWithoutStudentInput
   NotificationLog?: Prisma.NotificationLogUncheckedCreateNestedManyWithoutStudentInput
   performance?: Prisma.PerformanceUncheckedCreateNestedManyWithoutStudentInput
+  ReportCard?: Prisma.ReportCardUncheckedCreateNestedManyWithoutStudentInput
 }
 
 export type StudentCreateOrConnectWithoutStudentDocumentInput = {
@@ -1713,6 +1754,7 @@ export type StudentUpdateWithoutStudentDocumentInput = {
   StudentAttendance?: Prisma.StudentAttendanceUpdateManyWithoutStudentNestedInput
   NotificationLog?: Prisma.NotificationLogUpdateManyWithoutStudentNestedInput
   performance?: Prisma.PerformanceUpdateManyWithoutStudentNestedInput
+  ReportCard?: Prisma.ReportCardUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentUncheckedUpdateWithoutStudentDocumentInput = {
@@ -1741,6 +1783,7 @@ export type StudentUncheckedUpdateWithoutStudentDocumentInput = {
   StudentAttendance?: Prisma.StudentAttendanceUncheckedUpdateManyWithoutStudentNestedInput
   NotificationLog?: Prisma.NotificationLogUncheckedUpdateManyWithoutStudentNestedInput
   performance?: Prisma.PerformanceUncheckedUpdateManyWithoutStudentNestedInput
+  ReportCard?: Prisma.ReportCardUncheckedUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentCreateWithoutFeeInput = {
@@ -1769,6 +1812,7 @@ export type StudentCreateWithoutFeeInput = {
   StudentDocument?: Prisma.StudentDocumentCreateNestedManyWithoutStudentInput
   NotificationLog?: Prisma.NotificationLogCreateNestedManyWithoutStudentInput
   performance?: Prisma.PerformanceCreateNestedManyWithoutStudentInput
+  ReportCard?: Prisma.ReportCardCreateNestedManyWithoutStudentInput
 }
 
 export type StudentUncheckedCreateWithoutFeeInput = {
@@ -1797,6 +1841,7 @@ export type StudentUncheckedCreateWithoutFeeInput = {
   StudentDocument?: Prisma.StudentDocumentUncheckedCreateNestedManyWithoutStudentInput
   NotificationLog?: Prisma.NotificationLogUncheckedCreateNestedManyWithoutStudentInput
   performance?: Prisma.PerformanceUncheckedCreateNestedManyWithoutStudentInput
+  ReportCard?: Prisma.ReportCardUncheckedCreateNestedManyWithoutStudentInput
 }
 
 export type StudentCreateOrConnectWithoutFeeInput = {
@@ -1841,6 +1886,7 @@ export type StudentUpdateWithoutFeeInput = {
   StudentDocument?: Prisma.StudentDocumentUpdateManyWithoutStudentNestedInput
   NotificationLog?: Prisma.NotificationLogUpdateManyWithoutStudentNestedInput
   performance?: Prisma.PerformanceUpdateManyWithoutStudentNestedInput
+  ReportCard?: Prisma.ReportCardUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentUncheckedUpdateWithoutFeeInput = {
@@ -1869,6 +1915,7 @@ export type StudentUncheckedUpdateWithoutFeeInput = {
   StudentDocument?: Prisma.StudentDocumentUncheckedUpdateManyWithoutStudentNestedInput
   NotificationLog?: Prisma.NotificationLogUncheckedUpdateManyWithoutStudentNestedInput
   performance?: Prisma.PerformanceUncheckedUpdateManyWithoutStudentNestedInput
+  ReportCard?: Prisma.ReportCardUncheckedUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentCreateWithoutNotificationLogInput = {
@@ -1897,6 +1944,7 @@ export type StudentCreateWithoutNotificationLogInput = {
   StudentAttendance?: Prisma.StudentAttendanceCreateNestedManyWithoutStudentInput
   StudentDocument?: Prisma.StudentDocumentCreateNestedManyWithoutStudentInput
   performance?: Prisma.PerformanceCreateNestedManyWithoutStudentInput
+  ReportCard?: Prisma.ReportCardCreateNestedManyWithoutStudentInput
 }
 
 export type StudentUncheckedCreateWithoutNotificationLogInput = {
@@ -1925,6 +1973,7 @@ export type StudentUncheckedCreateWithoutNotificationLogInput = {
   StudentAttendance?: Prisma.StudentAttendanceUncheckedCreateNestedManyWithoutStudentInput
   StudentDocument?: Prisma.StudentDocumentUncheckedCreateNestedManyWithoutStudentInput
   performance?: Prisma.PerformanceUncheckedCreateNestedManyWithoutStudentInput
+  ReportCard?: Prisma.ReportCardUncheckedCreateNestedManyWithoutStudentInput
 }
 
 export type StudentCreateOrConnectWithoutNotificationLogInput = {
@@ -1969,6 +2018,7 @@ export type StudentUpdateWithoutNotificationLogInput = {
   StudentAttendance?: Prisma.StudentAttendanceUpdateManyWithoutStudentNestedInput
   StudentDocument?: Prisma.StudentDocumentUpdateManyWithoutStudentNestedInput
   performance?: Prisma.PerformanceUpdateManyWithoutStudentNestedInput
+  ReportCard?: Prisma.ReportCardUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentUncheckedUpdateWithoutNotificationLogInput = {
@@ -1997,6 +2047,7 @@ export type StudentUncheckedUpdateWithoutNotificationLogInput = {
   StudentAttendance?: Prisma.StudentAttendanceUncheckedUpdateManyWithoutStudentNestedInput
   StudentDocument?: Prisma.StudentDocumentUncheckedUpdateManyWithoutStudentNestedInput
   performance?: Prisma.PerformanceUncheckedUpdateManyWithoutStudentNestedInput
+  ReportCard?: Prisma.ReportCardUncheckedUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentCreateWithoutPerformanceInput = {
@@ -2025,6 +2076,7 @@ export type StudentCreateWithoutPerformanceInput = {
   StudentAttendance?: Prisma.StudentAttendanceCreateNestedManyWithoutStudentInput
   StudentDocument?: Prisma.StudentDocumentCreateNestedManyWithoutStudentInput
   NotificationLog?: Prisma.NotificationLogCreateNestedManyWithoutStudentInput
+  ReportCard?: Prisma.ReportCardCreateNestedManyWithoutStudentInput
 }
 
 export type StudentUncheckedCreateWithoutPerformanceInput = {
@@ -2053,6 +2105,7 @@ export type StudentUncheckedCreateWithoutPerformanceInput = {
   StudentAttendance?: Prisma.StudentAttendanceUncheckedCreateNestedManyWithoutStudentInput
   StudentDocument?: Prisma.StudentDocumentUncheckedCreateNestedManyWithoutStudentInput
   NotificationLog?: Prisma.NotificationLogUncheckedCreateNestedManyWithoutStudentInput
+  ReportCard?: Prisma.ReportCardUncheckedCreateNestedManyWithoutStudentInput
 }
 
 export type StudentCreateOrConnectWithoutPerformanceInput = {
@@ -2097,6 +2150,7 @@ export type StudentUpdateWithoutPerformanceInput = {
   StudentAttendance?: Prisma.StudentAttendanceUpdateManyWithoutStudentNestedInput
   StudentDocument?: Prisma.StudentDocumentUpdateManyWithoutStudentNestedInput
   NotificationLog?: Prisma.NotificationLogUpdateManyWithoutStudentNestedInput
+  ReportCard?: Prisma.ReportCardUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentUncheckedUpdateWithoutPerformanceInput = {
@@ -2125,6 +2179,139 @@ export type StudentUncheckedUpdateWithoutPerformanceInput = {
   StudentAttendance?: Prisma.StudentAttendanceUncheckedUpdateManyWithoutStudentNestedInput
   StudentDocument?: Prisma.StudentDocumentUncheckedUpdateManyWithoutStudentNestedInput
   NotificationLog?: Prisma.NotificationLogUncheckedUpdateManyWithoutStudentNestedInput
+  ReportCard?: Prisma.ReportCardUncheckedUpdateManyWithoutStudentNestedInput
+}
+
+export type StudentCreateWithoutReportCardInput = {
+  id?: string
+  firstName: string
+  lastName: string
+  middleName?: string | null
+  motherName?: string | null
+  fullName?: string | null
+  dateOfBirth: Date | string
+  profileImage?: string | null
+  rollNumber: string
+  phoneNumber: string
+  whatsAppNumber: string
+  email: string
+  emergencyContact: string
+  gender: $Enums.Gender
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutStudentInput
+  section: Prisma.SectionCreateNestedOneWithoutStudentsInput
+  grade: Prisma.GradeCreateNestedOneWithoutStudentsInput
+  organization: Prisma.OrganizationCreateNestedOneWithoutStudentInput
+  Fee?: Prisma.FeeCreateNestedManyWithoutStudentInput
+  ParentStudent?: Prisma.ParentStudentCreateNestedManyWithoutStudentInput
+  StudentAttendance?: Prisma.StudentAttendanceCreateNestedManyWithoutStudentInput
+  StudentDocument?: Prisma.StudentDocumentCreateNestedManyWithoutStudentInput
+  NotificationLog?: Prisma.NotificationLogCreateNestedManyWithoutStudentInput
+  performance?: Prisma.PerformanceCreateNestedManyWithoutStudentInput
+}
+
+export type StudentUncheckedCreateWithoutReportCardInput = {
+  id?: string
+  userId: string
+  firstName: string
+  lastName: string
+  middleName?: string | null
+  motherName?: string | null
+  fullName?: string | null
+  dateOfBirth: Date | string
+  profileImage?: string | null
+  rollNumber: string
+  phoneNumber: string
+  whatsAppNumber: string
+  email: string
+  emergencyContact: string
+  gender: $Enums.Gender
+  sectionId: string
+  gradeId: string
+  organizationId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  Fee?: Prisma.FeeUncheckedCreateNestedManyWithoutStudentInput
+  ParentStudent?: Prisma.ParentStudentUncheckedCreateNestedManyWithoutStudentInput
+  StudentAttendance?: Prisma.StudentAttendanceUncheckedCreateNestedManyWithoutStudentInput
+  StudentDocument?: Prisma.StudentDocumentUncheckedCreateNestedManyWithoutStudentInput
+  NotificationLog?: Prisma.NotificationLogUncheckedCreateNestedManyWithoutStudentInput
+  performance?: Prisma.PerformanceUncheckedCreateNestedManyWithoutStudentInput
+}
+
+export type StudentCreateOrConnectWithoutReportCardInput = {
+  where: Prisma.StudentWhereUniqueInput
+  create: Prisma.XOR<Prisma.StudentCreateWithoutReportCardInput, Prisma.StudentUncheckedCreateWithoutReportCardInput>
+}
+
+export type StudentUpsertWithoutReportCardInput = {
+  update: Prisma.XOR<Prisma.StudentUpdateWithoutReportCardInput, Prisma.StudentUncheckedUpdateWithoutReportCardInput>
+  create: Prisma.XOR<Prisma.StudentCreateWithoutReportCardInput, Prisma.StudentUncheckedCreateWithoutReportCardInput>
+  where?: Prisma.StudentWhereInput
+}
+
+export type StudentUpdateToOneWithWhereWithoutReportCardInput = {
+  where?: Prisma.StudentWhereInput
+  data: Prisma.XOR<Prisma.StudentUpdateWithoutReportCardInput, Prisma.StudentUncheckedUpdateWithoutReportCardInput>
+}
+
+export type StudentUpdateWithoutReportCardInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  motherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  profileImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rollNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  whatsAppNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emergencyContact?: Prisma.StringFieldUpdateOperationsInput | string
+  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutStudentNestedInput
+  section?: Prisma.SectionUpdateOneRequiredWithoutStudentsNestedInput
+  grade?: Prisma.GradeUpdateOneRequiredWithoutStudentsNestedInput
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutStudentNestedInput
+  Fee?: Prisma.FeeUpdateManyWithoutStudentNestedInput
+  ParentStudent?: Prisma.ParentStudentUpdateManyWithoutStudentNestedInput
+  StudentAttendance?: Prisma.StudentAttendanceUpdateManyWithoutStudentNestedInput
+  StudentDocument?: Prisma.StudentDocumentUpdateManyWithoutStudentNestedInput
+  NotificationLog?: Prisma.NotificationLogUpdateManyWithoutStudentNestedInput
+  performance?: Prisma.PerformanceUpdateManyWithoutStudentNestedInput
+}
+
+export type StudentUncheckedUpdateWithoutReportCardInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  motherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  profileImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rollNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  whatsAppNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emergencyContact?: Prisma.StringFieldUpdateOperationsInput | string
+  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  sectionId?: Prisma.StringFieldUpdateOperationsInput | string
+  gradeId?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  Fee?: Prisma.FeeUncheckedUpdateManyWithoutStudentNestedInput
+  ParentStudent?: Prisma.ParentStudentUncheckedUpdateManyWithoutStudentNestedInput
+  StudentAttendance?: Prisma.StudentAttendanceUncheckedUpdateManyWithoutStudentNestedInput
+  StudentDocument?: Prisma.StudentDocumentUncheckedUpdateManyWithoutStudentNestedInput
+  NotificationLog?: Prisma.NotificationLogUncheckedUpdateManyWithoutStudentNestedInput
+  performance?: Prisma.PerformanceUncheckedUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentCreateManyOrganizationInput = {
@@ -2175,6 +2362,7 @@ export type StudentUpdateWithoutOrganizationInput = {
   StudentDocument?: Prisma.StudentDocumentUpdateManyWithoutStudentNestedInput
   NotificationLog?: Prisma.NotificationLogUpdateManyWithoutStudentNestedInput
   performance?: Prisma.PerformanceUpdateManyWithoutStudentNestedInput
+  ReportCard?: Prisma.ReportCardUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentUncheckedUpdateWithoutOrganizationInput = {
@@ -2203,6 +2391,7 @@ export type StudentUncheckedUpdateWithoutOrganizationInput = {
   StudentDocument?: Prisma.StudentDocumentUncheckedUpdateManyWithoutStudentNestedInput
   NotificationLog?: Prisma.NotificationLogUncheckedUpdateManyWithoutStudentNestedInput
   performance?: Prisma.PerformanceUncheckedUpdateManyWithoutStudentNestedInput
+  ReportCard?: Prisma.ReportCardUncheckedUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentUncheckedUpdateManyWithoutOrganizationInput = {
@@ -2275,6 +2464,7 @@ export type StudentUpdateWithoutGradeInput = {
   StudentDocument?: Prisma.StudentDocumentUpdateManyWithoutStudentNestedInput
   NotificationLog?: Prisma.NotificationLogUpdateManyWithoutStudentNestedInput
   performance?: Prisma.PerformanceUpdateManyWithoutStudentNestedInput
+  ReportCard?: Prisma.ReportCardUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentUncheckedUpdateWithoutGradeInput = {
@@ -2303,6 +2493,7 @@ export type StudentUncheckedUpdateWithoutGradeInput = {
   StudentDocument?: Prisma.StudentDocumentUncheckedUpdateManyWithoutStudentNestedInput
   NotificationLog?: Prisma.NotificationLogUncheckedUpdateManyWithoutStudentNestedInput
   performance?: Prisma.PerformanceUncheckedUpdateManyWithoutStudentNestedInput
+  ReportCard?: Prisma.ReportCardUncheckedUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentUncheckedUpdateManyWithoutGradeInput = {
@@ -2375,6 +2566,7 @@ export type StudentUpdateWithoutSectionInput = {
   StudentDocument?: Prisma.StudentDocumentUpdateManyWithoutStudentNestedInput
   NotificationLog?: Prisma.NotificationLogUpdateManyWithoutStudentNestedInput
   performance?: Prisma.PerformanceUpdateManyWithoutStudentNestedInput
+  ReportCard?: Prisma.ReportCardUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentUncheckedUpdateWithoutSectionInput = {
@@ -2403,6 +2595,7 @@ export type StudentUncheckedUpdateWithoutSectionInput = {
   StudentDocument?: Prisma.StudentDocumentUncheckedUpdateManyWithoutStudentNestedInput
   NotificationLog?: Prisma.NotificationLogUncheckedUpdateManyWithoutStudentNestedInput
   performance?: Prisma.PerformanceUncheckedUpdateManyWithoutStudentNestedInput
+  ReportCard?: Prisma.ReportCardUncheckedUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentUncheckedUpdateManyWithoutSectionInput = {
@@ -2439,6 +2632,7 @@ export type StudentCountOutputType = {
   StudentDocument: number
   NotificationLog: number
   performance: number
+  ReportCard: number
 }
 
 export type StudentCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2448,6 +2642,7 @@ export type StudentCountOutputTypeSelect<ExtArgs extends runtime.Types.Extension
   StudentDocument?: boolean | StudentCountOutputTypeCountStudentDocumentArgs
   NotificationLog?: boolean | StudentCountOutputTypeCountNotificationLogArgs
   performance?: boolean | StudentCountOutputTypeCountPerformanceArgs
+  ReportCard?: boolean | StudentCountOutputTypeCountReportCardArgs
 }
 
 /**
@@ -2502,6 +2697,13 @@ export type StudentCountOutputTypeCountPerformanceArgs<ExtArgs extends runtime.T
   where?: Prisma.PerformanceWhereInput
 }
 
+/**
+ * StudentCountOutputType without action
+ */
+export type StudentCountOutputTypeCountReportCardArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ReportCardWhereInput
+}
+
 
 export type StudentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2534,6 +2736,7 @@ export type StudentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   StudentDocument?: boolean | Prisma.Student$StudentDocumentArgs<ExtArgs>
   NotificationLog?: boolean | Prisma.Student$NotificationLogArgs<ExtArgs>
   performance?: boolean | Prisma.Student$performanceArgs<ExtArgs>
+  ReportCard?: boolean | Prisma.Student$ReportCardArgs<ExtArgs>
   _count?: boolean | Prisma.StudentCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["student"]>
 
@@ -2626,6 +2829,7 @@ export type StudentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   StudentDocument?: boolean | Prisma.Student$StudentDocumentArgs<ExtArgs>
   NotificationLog?: boolean | Prisma.Student$NotificationLogArgs<ExtArgs>
   performance?: boolean | Prisma.Student$performanceArgs<ExtArgs>
+  ReportCard?: boolean | Prisma.Student$ReportCardArgs<ExtArgs>
   _count?: boolean | Prisma.StudentCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type StudentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2654,6 +2858,7 @@ export type $StudentPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     StudentDocument: Prisma.$StudentDocumentPayload<ExtArgs>[]
     NotificationLog: Prisma.$NotificationLogPayload<ExtArgs>[]
     performance: Prisma.$PerformancePayload<ExtArgs>[]
+    ReportCard: Prisma.$ReportCardPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -3080,6 +3285,7 @@ export interface Prisma__StudentClient<T, Null = never, ExtArgs extends runtime.
   StudentDocument<T extends Prisma.Student$StudentDocumentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Student$StudentDocumentArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   NotificationLog<T extends Prisma.Student$NotificationLogArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Student$NotificationLogArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotificationLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   performance<T extends Prisma.Student$performanceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Student$performanceArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PerformancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  ReportCard<T extends Prisma.Student$ReportCardArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Student$ReportCardArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReportCardPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3666,6 +3872,30 @@ export type Student$performanceArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   distinct?: Prisma.PerformanceScalarFieldEnum | Prisma.PerformanceScalarFieldEnum[]
+}
+
+/**
+ * Student.ReportCard
+ */
+export type Student$ReportCardArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ReportCard
+   */
+  select?: Prisma.ReportCardSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ReportCard
+   */
+  omit?: Prisma.ReportCardOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ReportCardInclude<ExtArgs> | null
+  where?: Prisma.ReportCardWhereInput
+  orderBy?: Prisma.ReportCardOrderByWithRelationInput | Prisma.ReportCardOrderByWithRelationInput[]
+  cursor?: Prisma.ReportCardWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ReportCardScalarFieldEnum | Prisma.ReportCardScalarFieldEnum[]
 }
 
 /**

@@ -127,12 +127,12 @@ Attendance Management
 | Track Present/Absent/Late Status          | ✅ DONE    | `AttendanceStatus` enum                      |
 | Academic Year Association                 | ✅ DONE    | Linked via `academicYearId`                  |
 | Record By (Teacher/Admin)                 | ✅ DONE    | Field: `recordedBy`                          |
-| Realtime Attendance Dashboard             | ✅ PENDING | Chart-based dashboard per class/date         |
-| Bulk Upload / Import Attendance           | ✅ PENDING | Support CSV/Excel + validation UI            |
+| Realtime Attendance Dashboard             | ✅ DONE    | Chart-based dashboard per class/date         |
+| Bulk Upload / Import Attendance           | ❌ MISSING | Support CSV/Excel + validation UI            |
 | Monthly Attendance Reports (AI Summary)   | ❌ MISSING | Add `MonthlyAttendanceReport` model          |
-| SMS Notification for Absentees            | ✅ DONE    | Powered by `NotificationLog` + channel logic |
-| WhatsApp Notification for Absentees       | ✅ DONE    |                                              |
-| Email Notification for Absentees          | ✅ DONE    |                                              |
+| SMS Notification for Absentees            | ✅ PENDING | Powered by `NotificationLog` + channel logic |
+| WhatsApp Notification for Absentees       | ✅ PENDING |                                              |
+| Email Notification for Absentees          | ✅ PENDING |                                              |
 | Attendance Alerts Template (SMS/WA/Email) | ✅ PENDING | Need editable templates                      |
 | Excused / Unexcused Leave Types           | ✅ PENDING | Expand `AttendanceStatus` enum               |
 | Leave Integration                         | ❌ MISSING | Add `Leave` model (as per your comment)      |

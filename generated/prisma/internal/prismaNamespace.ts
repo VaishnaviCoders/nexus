@@ -417,7 +417,10 @@ export const ModelName = {
   ComplaintStatusTimeline: 'ComplaintStatusTimeline',
   Notice: 'Notice',
   NotificationLog: 'NotificationLog',
-  Performance: 'Performance'
+  ExamSession: 'ExamSession',
+  Exam: 'Exam',
+  Performance: 'Performance',
+  ReportCard: 'ReportCard'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -433,7 +436,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "academicYear" | "organization" | "user" | "teacher" | "teacherProfile" | "subject" | "teachingAssignment" | "grade" | "section" | "student" | "parent" | "parentStudent" | "studentAttendance" | "studentDocument" | "fee" | "feePayment" | "scheduledJob" | "feeCategory" | "academicCalendar" | "anonymousComplaint" | "complaintStatusTimeline" | "notice" | "notificationLog" | "performance"
+    modelProps: "academicYear" | "organization" | "user" | "teacher" | "teacherProfile" | "subject" | "teachingAssignment" | "grade" | "section" | "student" | "parent" | "parentStudent" | "studentAttendance" | "studentDocument" | "fee" | "feePayment" | "scheduledJob" | "feeCategory" | "academicCalendar" | "anonymousComplaint" | "complaintStatusTimeline" | "notice" | "notificationLog" | "examSession" | "exam" | "performance" | "reportCard"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2139,6 +2142,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    ExamSession: {
+      payload: Prisma.$ExamSessionPayload<ExtArgs>
+      fields: Prisma.ExamSessionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ExamSessionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExamSessionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ExamSessionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExamSessionPayload>
+        }
+        findFirst: {
+          args: Prisma.ExamSessionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExamSessionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ExamSessionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExamSessionPayload>
+        }
+        findMany: {
+          args: Prisma.ExamSessionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExamSessionPayload>[]
+        }
+        create: {
+          args: Prisma.ExamSessionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExamSessionPayload>
+        }
+        createMany: {
+          args: Prisma.ExamSessionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ExamSessionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExamSessionPayload>[]
+        }
+        delete: {
+          args: Prisma.ExamSessionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExamSessionPayload>
+        }
+        update: {
+          args: Prisma.ExamSessionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExamSessionPayload>
+        }
+        deleteMany: {
+          args: Prisma.ExamSessionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ExamSessionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ExamSessionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExamSessionPayload>[]
+        }
+        upsert: {
+          args: Prisma.ExamSessionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExamSessionPayload>
+        }
+        aggregate: {
+          args: Prisma.ExamSessionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateExamSession>
+        }
+        groupBy: {
+          args: Prisma.ExamSessionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ExamSessionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ExamSessionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ExamSessionCountAggregateOutputType> | number
+        }
+      }
+    }
+    Exam: {
+      payload: Prisma.$ExamPayload<ExtArgs>
+      fields: Prisma.ExamFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ExamFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExamPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ExamFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExamPayload>
+        }
+        findFirst: {
+          args: Prisma.ExamFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExamPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ExamFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExamPayload>
+        }
+        findMany: {
+          args: Prisma.ExamFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExamPayload>[]
+        }
+        create: {
+          args: Prisma.ExamCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExamPayload>
+        }
+        createMany: {
+          args: Prisma.ExamCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ExamCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExamPayload>[]
+        }
+        delete: {
+          args: Prisma.ExamDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExamPayload>
+        }
+        update: {
+          args: Prisma.ExamUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExamPayload>
+        }
+        deleteMany: {
+          args: Prisma.ExamDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ExamUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ExamUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExamPayload>[]
+        }
+        upsert: {
+          args: Prisma.ExamUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExamPayload>
+        }
+        aggregate: {
+          args: Prisma.ExamAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateExam>
+        }
+        groupBy: {
+          args: Prisma.ExamGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ExamGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ExamCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ExamCountAggregateOutputType> | number
+        }
+      }
+    }
     Performance: {
       payload: Prisma.$PerformancePayload<ExtArgs>
       fields: Prisma.PerformanceFieldRefs
@@ -2210,6 +2361,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.PerformanceCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.PerformanceCountAggregateOutputType> | number
+        }
+      }
+    }
+    ReportCard: {
+      payload: Prisma.$ReportCardPayload<ExtArgs>
+      fields: Prisma.ReportCardFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ReportCardFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReportCardPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ReportCardFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReportCardPayload>
+        }
+        findFirst: {
+          args: Prisma.ReportCardFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReportCardPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ReportCardFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReportCardPayload>
+        }
+        findMany: {
+          args: Prisma.ReportCardFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReportCardPayload>[]
+        }
+        create: {
+          args: Prisma.ReportCardCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReportCardPayload>
+        }
+        createMany: {
+          args: Prisma.ReportCardCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ReportCardCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReportCardPayload>[]
+        }
+        delete: {
+          args: Prisma.ReportCardDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReportCardPayload>
+        }
+        update: {
+          args: Prisma.ReportCardUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReportCardPayload>
+        }
+        deleteMany: {
+          args: Prisma.ReportCardDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ReportCardUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ReportCardUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReportCardPayload>[]
+        }
+        upsert: {
+          args: Prisma.ReportCardUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReportCardPayload>
+        }
+        aggregate: {
+          args: Prisma.ReportCardAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateReportCard>
+        }
+        groupBy: {
+          args: Prisma.ReportCardGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ReportCardGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ReportCardCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ReportCardCountAggregateOutputType> | number
         }
       }
     }
@@ -2661,19 +2886,43 @@ export const NotificationLogScalarFieldEnum = {
 export type NotificationLogScalarFieldEnum = (typeof NotificationLogScalarFieldEnum)[keyof typeof NotificationLogScalarFieldEnum]
 
 
+export const ExamSessionScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  academicYearId: 'academicYearId',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  createdBy: 'createdBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ExamSessionScalarFieldEnum = (typeof ExamSessionScalarFieldEnum)[keyof typeof ExamSessionScalarFieldEnum]
+
+
+export const ExamScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  examSessionId: 'examSessionId',
+  subjectId: 'subjectId',
+  gradeId: 'gradeId',
+  sectionId: 'sectionId',
+  organizationId: 'organizationId',
+  maxMarks: 'maxMarks',
+  weightage: 'weightage',
+  evaluationType: 'evaluationType',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ExamScalarFieldEnum = (typeof ExamScalarFieldEnum)[keyof typeof ExamScalarFieldEnum]
+
+
 export const PerformanceScalarFieldEnum = {
   id: 'id',
   studentId: 'studentId',
-  subjectId: 'subjectId',
-  academicYearId: 'academicYearId',
-  organizationId: 'organizationId',
-  teacherId: 'teacherId',
-  gradeId: 'gradeId',
-  sectionId: 'sectionId',
-  evaluationTitle: 'evaluationTitle',
-  evaluationType: 'evaluationType',
-  evaluationDate: 'evaluationDate',
-  maxMarks: 'maxMarks',
+  examId: 'examId',
   obtainedMarks: 'obtainedMarks',
   gradeLabel: 'gradeLabel',
   remarks: 'remarks',
@@ -2684,6 +2933,22 @@ export const PerformanceScalarFieldEnum = {
 } as const
 
 export type PerformanceScalarFieldEnum = (typeof PerformanceScalarFieldEnum)[keyof typeof PerformanceScalarFieldEnum]
+
+
+export const ReportCardScalarFieldEnum = {
+  id: 'id',
+  studentId: 'studentId',
+  examSessionId: 'examSessionId',
+  totalMarks: 'totalMarks',
+  percentage: 'percentage',
+  resultStatus: 'resultStatus',
+  overallGrade: 'overallGrade',
+  remarks: 'remarks',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ReportCardScalarFieldEnum = (typeof ReportCardScalarFieldEnum)[keyof typeof ReportCardScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -3032,21 +3297,51 @@ export const NotificationLogOrderByRelevanceFieldEnum = {
 export type NotificationLogOrderByRelevanceFieldEnum = (typeof NotificationLogOrderByRelevanceFieldEnum)[keyof typeof NotificationLogOrderByRelevanceFieldEnum]
 
 
+export const ExamSessionOrderByRelevanceFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  academicYearId: 'academicYearId',
+  createdBy: 'createdBy'
+} as const
+
+export type ExamSessionOrderByRelevanceFieldEnum = (typeof ExamSessionOrderByRelevanceFieldEnum)[keyof typeof ExamSessionOrderByRelevanceFieldEnum]
+
+
+export const ExamOrderByRelevanceFieldEnum = {
+  id: 'id',
+  title: 'title',
+  examSessionId: 'examSessionId',
+  subjectId: 'subjectId',
+  gradeId: 'gradeId',
+  sectionId: 'sectionId',
+  organizationId: 'organizationId'
+} as const
+
+export type ExamOrderByRelevanceFieldEnum = (typeof ExamOrderByRelevanceFieldEnum)[keyof typeof ExamOrderByRelevanceFieldEnum]
+
+
 export const PerformanceOrderByRelevanceFieldEnum = {
   id: 'id',
   studentId: 'studentId',
-  subjectId: 'subjectId',
-  academicYearId: 'academicYearId',
-  organizationId: 'organizationId',
-  teacherId: 'teacherId',
-  gradeId: 'gradeId',
-  sectionId: 'sectionId',
-  evaluationTitle: 'evaluationTitle',
+  examId: 'examId',
   gradeLabel: 'gradeLabel',
   remarks: 'remarks'
 } as const
 
 export type PerformanceOrderByRelevanceFieldEnum = (typeof PerformanceOrderByRelevanceFieldEnum)[keyof typeof PerformanceOrderByRelevanceFieldEnum]
+
+
+export const ReportCardOrderByRelevanceFieldEnum = {
+  id: 'id',
+  studentId: 'studentId',
+  examSessionId: 'examSessionId',
+  resultStatus: 'resultStatus',
+  overallGrade: 'overallGrade',
+  remarks: 'remarks'
+} as const
+
+export type ReportCardOrderByRelevanceFieldEnum = (typeof ReportCardOrderByRelevanceFieldEnum)[keyof typeof ReportCardOrderByRelevanceFieldEnum]
 
 
 
@@ -3517,7 +3812,10 @@ export type GlobalOmitConfig = {
   complaintStatusTimeline?: Prisma.ComplaintStatusTimelineOmit
   notice?: Prisma.NoticeOmit
   notificationLog?: Prisma.NotificationLogOmit
+  examSession?: Prisma.ExamSessionOmit
+  exam?: Prisma.ExamOmit
   performance?: Prisma.PerformanceOmit
+  reportCard?: Prisma.ReportCardOmit
 }
 
 /* Types for Logging */

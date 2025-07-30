@@ -67,7 +67,7 @@ function StudentStatsCardSkeleton() {
 
 export function StudentStatsCard() {
   return (
-    <Card className="border-0 bg-gradient-to-br from-card via-card to-blue-50/20 dark:to-blue-950/20">
+    <Card className="border-0 ">
       <Suspense fallback={<StudentStatsCardSkeleton />}>
         <StudentStatsContent />
       </Suspense>

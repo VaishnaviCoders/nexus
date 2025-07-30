@@ -26,28 +26,17 @@ export type AggregatePerformance = {
 }
 
 export type PerformanceAvgAggregateOutputType = {
-  maxMarks: number | null
   obtainedMarks: number | null
 }
 
 export type PerformanceSumAggregateOutputType = {
-  maxMarks: number | null
   obtainedMarks: number | null
 }
 
 export type PerformanceMinAggregateOutputType = {
   id: string | null
   studentId: string | null
-  subjectId: string | null
-  academicYearId: string | null
-  organizationId: string | null
-  teacherId: string | null
-  gradeId: string | null
-  sectionId: string | null
-  evaluationTitle: string | null
-  evaluationType: $Enums.EvaluationType | null
-  evaluationDate: Date | null
-  maxMarks: number | null
+  examId: string | null
   obtainedMarks: number | null
   gradeLabel: string | null
   remarks: string | null
@@ -60,16 +49,7 @@ export type PerformanceMinAggregateOutputType = {
 export type PerformanceMaxAggregateOutputType = {
   id: string | null
   studentId: string | null
-  subjectId: string | null
-  academicYearId: string | null
-  organizationId: string | null
-  teacherId: string | null
-  gradeId: string | null
-  sectionId: string | null
-  evaluationTitle: string | null
-  evaluationType: $Enums.EvaluationType | null
-  evaluationDate: Date | null
-  maxMarks: number | null
+  examId: string | null
   obtainedMarks: number | null
   gradeLabel: string | null
   remarks: string | null
@@ -82,16 +62,7 @@ export type PerformanceMaxAggregateOutputType = {
 export type PerformanceCountAggregateOutputType = {
   id: number
   studentId: number
-  subjectId: number
-  academicYearId: number
-  organizationId: number
-  teacherId: number
-  gradeId: number
-  sectionId: number
-  evaluationTitle: number
-  evaluationType: number
-  evaluationDate: number
-  maxMarks: number
+  examId: number
   obtainedMarks: number
   gradeLabel: number
   remarks: number
@@ -104,28 +75,17 @@ export type PerformanceCountAggregateOutputType = {
 
 
 export type PerformanceAvgAggregateInputType = {
-  maxMarks?: true
   obtainedMarks?: true
 }
 
 export type PerformanceSumAggregateInputType = {
-  maxMarks?: true
   obtainedMarks?: true
 }
 
 export type PerformanceMinAggregateInputType = {
   id?: true
   studentId?: true
-  subjectId?: true
-  academicYearId?: true
-  organizationId?: true
-  teacherId?: true
-  gradeId?: true
-  sectionId?: true
-  evaluationTitle?: true
-  evaluationType?: true
-  evaluationDate?: true
-  maxMarks?: true
+  examId?: true
   obtainedMarks?: true
   gradeLabel?: true
   remarks?: true
@@ -138,16 +98,7 @@ export type PerformanceMinAggregateInputType = {
 export type PerformanceMaxAggregateInputType = {
   id?: true
   studentId?: true
-  subjectId?: true
-  academicYearId?: true
-  organizationId?: true
-  teacherId?: true
-  gradeId?: true
-  sectionId?: true
-  evaluationTitle?: true
-  evaluationType?: true
-  evaluationDate?: true
-  maxMarks?: true
+  examId?: true
   obtainedMarks?: true
   gradeLabel?: true
   remarks?: true
@@ -160,16 +111,7 @@ export type PerformanceMaxAggregateInputType = {
 export type PerformanceCountAggregateInputType = {
   id?: true
   studentId?: true
-  subjectId?: true
-  academicYearId?: true
-  organizationId?: true
-  teacherId?: true
-  gradeId?: true
-  sectionId?: true
-  evaluationTitle?: true
-  evaluationType?: true
-  evaluationDate?: true
-  maxMarks?: true
+  examId?: true
   obtainedMarks?: true
   gradeLabel?: true
   remarks?: true
@@ -269,16 +211,7 @@ export type PerformanceGroupByArgs<ExtArgs extends runtime.Types.Extensions.Inte
 export type PerformanceGroupByOutputType = {
   id: string
   studentId: string
-  subjectId: string
-  academicYearId: string
-  organizationId: string
-  teacherId: string | null
-  gradeId: string | null
-  sectionId: string | null
-  evaluationTitle: string
-  evaluationType: $Enums.EvaluationType
-  evaluationDate: Date | null
-  maxMarks: number
+  examId: string
   obtainedMarks: number
   gradeLabel: string | null
   remarks: string | null
@@ -314,16 +247,7 @@ export type PerformanceWhereInput = {
   NOT?: Prisma.PerformanceWhereInput | Prisma.PerformanceWhereInput[]
   id?: Prisma.StringFilter<"Performance"> | string
   studentId?: Prisma.StringFilter<"Performance"> | string
-  subjectId?: Prisma.StringFilter<"Performance"> | string
-  academicYearId?: Prisma.StringFilter<"Performance"> | string
-  organizationId?: Prisma.StringFilter<"Performance"> | string
-  teacherId?: Prisma.StringNullableFilter<"Performance"> | string | null
-  gradeId?: Prisma.StringNullableFilter<"Performance"> | string | null
-  sectionId?: Prisma.StringNullableFilter<"Performance"> | string | null
-  evaluationTitle?: Prisma.StringFilter<"Performance"> | string
-  evaluationType?: Prisma.EnumEvaluationTypeFilter<"Performance"> | $Enums.EvaluationType
-  evaluationDate?: Prisma.DateTimeNullableFilter<"Performance"> | Date | string | null
-  maxMarks?: Prisma.FloatFilter<"Performance"> | number
+  examId?: Prisma.StringFilter<"Performance"> | string
   obtainedMarks?: Prisma.FloatFilter<"Performance"> | number
   gradeLabel?: Prisma.StringNullableFilter<"Performance"> | string | null
   remarks?: Prisma.StringNullableFilter<"Performance"> | string | null
@@ -332,21 +256,13 @@ export type PerformanceWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Performance"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Performance"> | Date | string
   student?: Prisma.XOR<Prisma.StudentScalarRelationFilter, Prisma.StudentWhereInput>
+  exam?: Prisma.XOR<Prisma.ExamScalarRelationFilter, Prisma.ExamWhereInput>
 }
 
 export type PerformanceOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
-  subjectId?: Prisma.SortOrder
-  academicYearId?: Prisma.SortOrder
-  organizationId?: Prisma.SortOrder
-  teacherId?: Prisma.SortOrderInput | Prisma.SortOrder
-  gradeId?: Prisma.SortOrderInput | Prisma.SortOrder
-  sectionId?: Prisma.SortOrderInput | Prisma.SortOrder
-  evaluationTitle?: Prisma.SortOrder
-  evaluationType?: Prisma.SortOrder
-  evaluationDate?: Prisma.SortOrderInput | Prisma.SortOrder
-  maxMarks?: Prisma.SortOrder
+  examId?: Prisma.SortOrder
   obtainedMarks?: Prisma.SortOrder
   gradeLabel?: Prisma.SortOrderInput | Prisma.SortOrder
   remarks?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -355,26 +271,18 @@ export type PerformanceOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   student?: Prisma.StudentOrderByWithRelationInput
+  exam?: Prisma.ExamOrderByWithRelationInput
   _relevance?: Prisma.PerformanceOrderByRelevanceInput
 }
 
 export type PerformanceWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  studentId_subjectId_evaluationTitle_academicYearId?: Prisma.PerformanceStudentIdSubjectIdEvaluationTitleAcademicYearIdCompoundUniqueInput
+  studentId_examId?: Prisma.PerformanceStudentIdExamIdCompoundUniqueInput
   AND?: Prisma.PerformanceWhereInput | Prisma.PerformanceWhereInput[]
   OR?: Prisma.PerformanceWhereInput[]
   NOT?: Prisma.PerformanceWhereInput | Prisma.PerformanceWhereInput[]
   studentId?: Prisma.StringFilter<"Performance"> | string
-  subjectId?: Prisma.StringFilter<"Performance"> | string
-  academicYearId?: Prisma.StringFilter<"Performance"> | string
-  organizationId?: Prisma.StringFilter<"Performance"> | string
-  teacherId?: Prisma.StringNullableFilter<"Performance"> | string | null
-  gradeId?: Prisma.StringNullableFilter<"Performance"> | string | null
-  sectionId?: Prisma.StringNullableFilter<"Performance"> | string | null
-  evaluationTitle?: Prisma.StringFilter<"Performance"> | string
-  evaluationType?: Prisma.EnumEvaluationTypeFilter<"Performance"> | $Enums.EvaluationType
-  evaluationDate?: Prisma.DateTimeNullableFilter<"Performance"> | Date | string | null
-  maxMarks?: Prisma.FloatFilter<"Performance"> | number
+  examId?: Prisma.StringFilter<"Performance"> | string
   obtainedMarks?: Prisma.FloatFilter<"Performance"> | number
   gradeLabel?: Prisma.StringNullableFilter<"Performance"> | string | null
   remarks?: Prisma.StringNullableFilter<"Performance"> | string | null
@@ -383,21 +291,13 @@ export type PerformanceWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Performance"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Performance"> | Date | string
   student?: Prisma.XOR<Prisma.StudentScalarRelationFilter, Prisma.StudentWhereInput>
-}, "id" | "studentId_subjectId_evaluationTitle_academicYearId">
+  exam?: Prisma.XOR<Prisma.ExamScalarRelationFilter, Prisma.ExamWhereInput>
+}, "id" | "studentId_examId">
 
 export type PerformanceOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
-  subjectId?: Prisma.SortOrder
-  academicYearId?: Prisma.SortOrder
-  organizationId?: Prisma.SortOrder
-  teacherId?: Prisma.SortOrderInput | Prisma.SortOrder
-  gradeId?: Prisma.SortOrderInput | Prisma.SortOrder
-  sectionId?: Prisma.SortOrderInput | Prisma.SortOrder
-  evaluationTitle?: Prisma.SortOrder
-  evaluationType?: Prisma.SortOrder
-  evaluationDate?: Prisma.SortOrderInput | Prisma.SortOrder
-  maxMarks?: Prisma.SortOrder
+  examId?: Prisma.SortOrder
   obtainedMarks?: Prisma.SortOrder
   gradeLabel?: Prisma.SortOrderInput | Prisma.SortOrder
   remarks?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -418,16 +318,7 @@ export type PerformanceScalarWhereWithAggregatesInput = {
   NOT?: Prisma.PerformanceScalarWhereWithAggregatesInput | Prisma.PerformanceScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Performance"> | string
   studentId?: Prisma.StringWithAggregatesFilter<"Performance"> | string
-  subjectId?: Prisma.StringWithAggregatesFilter<"Performance"> | string
-  academicYearId?: Prisma.StringWithAggregatesFilter<"Performance"> | string
-  organizationId?: Prisma.StringWithAggregatesFilter<"Performance"> | string
-  teacherId?: Prisma.StringNullableWithAggregatesFilter<"Performance"> | string | null
-  gradeId?: Prisma.StringNullableWithAggregatesFilter<"Performance"> | string | null
-  sectionId?: Prisma.StringNullableWithAggregatesFilter<"Performance"> | string | null
-  evaluationTitle?: Prisma.StringWithAggregatesFilter<"Performance"> | string
-  evaluationType?: Prisma.EnumEvaluationTypeWithAggregatesFilter<"Performance"> | $Enums.EvaluationType
-  evaluationDate?: Prisma.DateTimeNullableWithAggregatesFilter<"Performance"> | Date | string | null
-  maxMarks?: Prisma.FloatWithAggregatesFilter<"Performance"> | number
+  examId?: Prisma.StringWithAggregatesFilter<"Performance"> | string
   obtainedMarks?: Prisma.FloatWithAggregatesFilter<"Performance"> | number
   gradeLabel?: Prisma.StringNullableWithAggregatesFilter<"Performance"> | string | null
   remarks?: Prisma.StringNullableWithAggregatesFilter<"Performance"> | string | null
@@ -439,16 +330,6 @@ export type PerformanceScalarWhereWithAggregatesInput = {
 
 export type PerformanceCreateInput = {
   id?: string
-  subjectId: string
-  academicYearId: string
-  organizationId: string
-  teacherId?: string | null
-  gradeId?: string | null
-  sectionId?: string | null
-  evaluationTitle: string
-  evaluationType?: $Enums.EvaluationType
-  evaluationDate?: Date | string | null
-  maxMarks: number
   obtainedMarks: number
   gradeLabel?: string | null
   remarks?: string | null
@@ -457,21 +338,13 @@ export type PerformanceCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   student: Prisma.StudentCreateNestedOneWithoutPerformanceInput
+  exam: Prisma.ExamCreateNestedOneWithoutPerformanceRecordsInput
 }
 
 export type PerformanceUncheckedCreateInput = {
   id?: string
   studentId: string
-  subjectId: string
-  academicYearId: string
-  organizationId: string
-  teacherId?: string | null
-  gradeId?: string | null
-  sectionId?: string | null
-  evaluationTitle: string
-  evaluationType?: $Enums.EvaluationType
-  evaluationDate?: Date | string | null
-  maxMarks: number
+  examId: string
   obtainedMarks: number
   gradeLabel?: string | null
   remarks?: string | null
@@ -483,16 +356,6 @@ export type PerformanceUncheckedCreateInput = {
 
 export type PerformanceUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  subjectId?: Prisma.StringFieldUpdateOperationsInput | string
-  academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
-  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
-  teacherId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  gradeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  sectionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  evaluationTitle?: Prisma.StringFieldUpdateOperationsInput | string
-  evaluationType?: Prisma.EnumEvaluationTypeFieldUpdateOperationsInput | $Enums.EvaluationType
-  evaluationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  maxMarks?: Prisma.FloatFieldUpdateOperationsInput | number
   obtainedMarks?: Prisma.FloatFieldUpdateOperationsInput | number
   gradeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -501,21 +364,13 @@ export type PerformanceUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   student?: Prisma.StudentUpdateOneRequiredWithoutPerformanceNestedInput
+  exam?: Prisma.ExamUpdateOneRequiredWithoutPerformanceRecordsNestedInput
 }
 
 export type PerformanceUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
-  subjectId?: Prisma.StringFieldUpdateOperationsInput | string
-  academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
-  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
-  teacherId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  gradeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  sectionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  evaluationTitle?: Prisma.StringFieldUpdateOperationsInput | string
-  evaluationType?: Prisma.EnumEvaluationTypeFieldUpdateOperationsInput | $Enums.EvaluationType
-  evaluationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  maxMarks?: Prisma.FloatFieldUpdateOperationsInput | number
+  examId?: Prisma.StringFieldUpdateOperationsInput | string
   obtainedMarks?: Prisma.FloatFieldUpdateOperationsInput | number
   gradeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -528,16 +383,7 @@ export type PerformanceUncheckedUpdateInput = {
 export type PerformanceCreateManyInput = {
   id?: string
   studentId: string
-  subjectId: string
-  academicYearId: string
-  organizationId: string
-  teacherId?: string | null
-  gradeId?: string | null
-  sectionId?: string | null
-  evaluationTitle: string
-  evaluationType?: $Enums.EvaluationType
-  evaluationDate?: Date | string | null
-  maxMarks: number
+  examId: string
   obtainedMarks: number
   gradeLabel?: string | null
   remarks?: string | null
@@ -549,16 +395,6 @@ export type PerformanceCreateManyInput = {
 
 export type PerformanceUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  subjectId?: Prisma.StringFieldUpdateOperationsInput | string
-  academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
-  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
-  teacherId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  gradeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  sectionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  evaluationTitle?: Prisma.StringFieldUpdateOperationsInput | string
-  evaluationType?: Prisma.EnumEvaluationTypeFieldUpdateOperationsInput | $Enums.EvaluationType
-  evaluationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  maxMarks?: Prisma.FloatFieldUpdateOperationsInput | number
   obtainedMarks?: Prisma.FloatFieldUpdateOperationsInput | number
   gradeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -571,16 +407,7 @@ export type PerformanceUpdateManyMutationInput = {
 export type PerformanceUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
-  subjectId?: Prisma.StringFieldUpdateOperationsInput | string
-  academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
-  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
-  teacherId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  gradeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  sectionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  evaluationTitle?: Prisma.StringFieldUpdateOperationsInput | string
-  evaluationType?: Prisma.EnumEvaluationTypeFieldUpdateOperationsInput | $Enums.EvaluationType
-  evaluationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  maxMarks?: Prisma.FloatFieldUpdateOperationsInput | number
+  examId?: Prisma.StringFieldUpdateOperationsInput | string
   obtainedMarks?: Prisma.FloatFieldUpdateOperationsInput | number
   gradeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -606,26 +433,15 @@ export type PerformanceOrderByRelevanceInput = {
   search: string
 }
 
-export type PerformanceStudentIdSubjectIdEvaluationTitleAcademicYearIdCompoundUniqueInput = {
+export type PerformanceStudentIdExamIdCompoundUniqueInput = {
   studentId: string
-  subjectId: string
-  evaluationTitle: string
-  academicYearId: string
+  examId: string
 }
 
 export type PerformanceCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
-  subjectId?: Prisma.SortOrder
-  academicYearId?: Prisma.SortOrder
-  organizationId?: Prisma.SortOrder
-  teacherId?: Prisma.SortOrder
-  gradeId?: Prisma.SortOrder
-  sectionId?: Prisma.SortOrder
-  evaluationTitle?: Prisma.SortOrder
-  evaluationType?: Prisma.SortOrder
-  evaluationDate?: Prisma.SortOrder
-  maxMarks?: Prisma.SortOrder
+  examId?: Prisma.SortOrder
   obtainedMarks?: Prisma.SortOrder
   gradeLabel?: Prisma.SortOrder
   remarks?: Prisma.SortOrder
@@ -636,23 +452,13 @@ export type PerformanceCountOrderByAggregateInput = {
 }
 
 export type PerformanceAvgOrderByAggregateInput = {
-  maxMarks?: Prisma.SortOrder
   obtainedMarks?: Prisma.SortOrder
 }
 
 export type PerformanceMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
-  subjectId?: Prisma.SortOrder
-  academicYearId?: Prisma.SortOrder
-  organizationId?: Prisma.SortOrder
-  teacherId?: Prisma.SortOrder
-  gradeId?: Prisma.SortOrder
-  sectionId?: Prisma.SortOrder
-  evaluationTitle?: Prisma.SortOrder
-  evaluationType?: Prisma.SortOrder
-  evaluationDate?: Prisma.SortOrder
-  maxMarks?: Prisma.SortOrder
+  examId?: Prisma.SortOrder
   obtainedMarks?: Prisma.SortOrder
   gradeLabel?: Prisma.SortOrder
   remarks?: Prisma.SortOrder
@@ -665,16 +471,7 @@ export type PerformanceMaxOrderByAggregateInput = {
 export type PerformanceMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
-  subjectId?: Prisma.SortOrder
-  academicYearId?: Prisma.SortOrder
-  organizationId?: Prisma.SortOrder
-  teacherId?: Prisma.SortOrder
-  gradeId?: Prisma.SortOrder
-  sectionId?: Prisma.SortOrder
-  evaluationTitle?: Prisma.SortOrder
-  evaluationType?: Prisma.SortOrder
-  evaluationDate?: Prisma.SortOrder
-  maxMarks?: Prisma.SortOrder
+  examId?: Prisma.SortOrder
   obtainedMarks?: Prisma.SortOrder
   gradeLabel?: Prisma.SortOrder
   remarks?: Prisma.SortOrder
@@ -685,7 +482,6 @@ export type PerformanceMinOrderByAggregateInput = {
 }
 
 export type PerformanceSumOrderByAggregateInput = {
-  maxMarks?: Prisma.SortOrder
   obtainedMarks?: Prisma.SortOrder
 }
 
@@ -731,22 +527,50 @@ export type PerformanceUncheckedUpdateManyWithoutStudentNestedInput = {
   deleteMany?: Prisma.PerformanceScalarWhereInput | Prisma.PerformanceScalarWhereInput[]
 }
 
-export type EnumEvaluationTypeFieldUpdateOperationsInput = {
-  set?: $Enums.EvaluationType
+export type PerformanceCreateNestedManyWithoutExamInput = {
+  create?: Prisma.XOR<Prisma.PerformanceCreateWithoutExamInput, Prisma.PerformanceUncheckedCreateWithoutExamInput> | Prisma.PerformanceCreateWithoutExamInput[] | Prisma.PerformanceUncheckedCreateWithoutExamInput[]
+  connectOrCreate?: Prisma.PerformanceCreateOrConnectWithoutExamInput | Prisma.PerformanceCreateOrConnectWithoutExamInput[]
+  createMany?: Prisma.PerformanceCreateManyExamInputEnvelope
+  connect?: Prisma.PerformanceWhereUniqueInput | Prisma.PerformanceWhereUniqueInput[]
+}
+
+export type PerformanceUncheckedCreateNestedManyWithoutExamInput = {
+  create?: Prisma.XOR<Prisma.PerformanceCreateWithoutExamInput, Prisma.PerformanceUncheckedCreateWithoutExamInput> | Prisma.PerformanceCreateWithoutExamInput[] | Prisma.PerformanceUncheckedCreateWithoutExamInput[]
+  connectOrCreate?: Prisma.PerformanceCreateOrConnectWithoutExamInput | Prisma.PerformanceCreateOrConnectWithoutExamInput[]
+  createMany?: Prisma.PerformanceCreateManyExamInputEnvelope
+  connect?: Prisma.PerformanceWhereUniqueInput | Prisma.PerformanceWhereUniqueInput[]
+}
+
+export type PerformanceUpdateManyWithoutExamNestedInput = {
+  create?: Prisma.XOR<Prisma.PerformanceCreateWithoutExamInput, Prisma.PerformanceUncheckedCreateWithoutExamInput> | Prisma.PerformanceCreateWithoutExamInput[] | Prisma.PerformanceUncheckedCreateWithoutExamInput[]
+  connectOrCreate?: Prisma.PerformanceCreateOrConnectWithoutExamInput | Prisma.PerformanceCreateOrConnectWithoutExamInput[]
+  upsert?: Prisma.PerformanceUpsertWithWhereUniqueWithoutExamInput | Prisma.PerformanceUpsertWithWhereUniqueWithoutExamInput[]
+  createMany?: Prisma.PerformanceCreateManyExamInputEnvelope
+  set?: Prisma.PerformanceWhereUniqueInput | Prisma.PerformanceWhereUniqueInput[]
+  disconnect?: Prisma.PerformanceWhereUniqueInput | Prisma.PerformanceWhereUniqueInput[]
+  delete?: Prisma.PerformanceWhereUniqueInput | Prisma.PerformanceWhereUniqueInput[]
+  connect?: Prisma.PerformanceWhereUniqueInput | Prisma.PerformanceWhereUniqueInput[]
+  update?: Prisma.PerformanceUpdateWithWhereUniqueWithoutExamInput | Prisma.PerformanceUpdateWithWhereUniqueWithoutExamInput[]
+  updateMany?: Prisma.PerformanceUpdateManyWithWhereWithoutExamInput | Prisma.PerformanceUpdateManyWithWhereWithoutExamInput[]
+  deleteMany?: Prisma.PerformanceScalarWhereInput | Prisma.PerformanceScalarWhereInput[]
+}
+
+export type PerformanceUncheckedUpdateManyWithoutExamNestedInput = {
+  create?: Prisma.XOR<Prisma.PerformanceCreateWithoutExamInput, Prisma.PerformanceUncheckedCreateWithoutExamInput> | Prisma.PerformanceCreateWithoutExamInput[] | Prisma.PerformanceUncheckedCreateWithoutExamInput[]
+  connectOrCreate?: Prisma.PerformanceCreateOrConnectWithoutExamInput | Prisma.PerformanceCreateOrConnectWithoutExamInput[]
+  upsert?: Prisma.PerformanceUpsertWithWhereUniqueWithoutExamInput | Prisma.PerformanceUpsertWithWhereUniqueWithoutExamInput[]
+  createMany?: Prisma.PerformanceCreateManyExamInputEnvelope
+  set?: Prisma.PerformanceWhereUniqueInput | Prisma.PerformanceWhereUniqueInput[]
+  disconnect?: Prisma.PerformanceWhereUniqueInput | Prisma.PerformanceWhereUniqueInput[]
+  delete?: Prisma.PerformanceWhereUniqueInput | Prisma.PerformanceWhereUniqueInput[]
+  connect?: Prisma.PerformanceWhereUniqueInput | Prisma.PerformanceWhereUniqueInput[]
+  update?: Prisma.PerformanceUpdateWithWhereUniqueWithoutExamInput | Prisma.PerformanceUpdateWithWhereUniqueWithoutExamInput[]
+  updateMany?: Prisma.PerformanceUpdateManyWithWhereWithoutExamInput | Prisma.PerformanceUpdateManyWithWhereWithoutExamInput[]
+  deleteMany?: Prisma.PerformanceScalarWhereInput | Prisma.PerformanceScalarWhereInput[]
 }
 
 export type PerformanceCreateWithoutStudentInput = {
   id?: string
-  subjectId: string
-  academicYearId: string
-  organizationId: string
-  teacherId?: string | null
-  gradeId?: string | null
-  sectionId?: string | null
-  evaluationTitle: string
-  evaluationType?: $Enums.EvaluationType
-  evaluationDate?: Date | string | null
-  maxMarks: number
   obtainedMarks: number
   gradeLabel?: string | null
   remarks?: string | null
@@ -754,20 +578,12 @@ export type PerformanceCreateWithoutStudentInput = {
   isPublished?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  exam: Prisma.ExamCreateNestedOneWithoutPerformanceRecordsInput
 }
 
 export type PerformanceUncheckedCreateWithoutStudentInput = {
   id?: string
-  subjectId: string
-  academicYearId: string
-  organizationId: string
-  teacherId?: string | null
-  gradeId?: string | null
-  sectionId?: string | null
-  evaluationTitle: string
-  evaluationType?: $Enums.EvaluationType
-  evaluationDate?: Date | string | null
-  maxMarks: number
+  examId: string
   obtainedMarks: number
   gradeLabel?: string | null
   remarks?: string | null
@@ -809,16 +625,7 @@ export type PerformanceScalarWhereInput = {
   NOT?: Prisma.PerformanceScalarWhereInput | Prisma.PerformanceScalarWhereInput[]
   id?: Prisma.StringFilter<"Performance"> | string
   studentId?: Prisma.StringFilter<"Performance"> | string
-  subjectId?: Prisma.StringFilter<"Performance"> | string
-  academicYearId?: Prisma.StringFilter<"Performance"> | string
-  organizationId?: Prisma.StringFilter<"Performance"> | string
-  teacherId?: Prisma.StringNullableFilter<"Performance"> | string | null
-  gradeId?: Prisma.StringNullableFilter<"Performance"> | string | null
-  sectionId?: Prisma.StringNullableFilter<"Performance"> | string | null
-  evaluationTitle?: Prisma.StringFilter<"Performance"> | string
-  evaluationType?: Prisma.EnumEvaluationTypeFilter<"Performance"> | $Enums.EvaluationType
-  evaluationDate?: Prisma.DateTimeNullableFilter<"Performance"> | Date | string | null
-  maxMarks?: Prisma.FloatFilter<"Performance"> | number
+  examId?: Prisma.StringFilter<"Performance"> | string
   obtainedMarks?: Prisma.FloatFilter<"Performance"> | number
   gradeLabel?: Prisma.StringNullableFilter<"Performance"> | string | null
   remarks?: Prisma.StringNullableFilter<"Performance"> | string | null
@@ -828,18 +635,59 @@ export type PerformanceScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Performance"> | Date | string
 }
 
+export type PerformanceCreateWithoutExamInput = {
+  id?: string
+  obtainedMarks: number
+  gradeLabel?: string | null
+  remarks?: string | null
+  isPassed?: boolean | null
+  isPublished?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  student: Prisma.StudentCreateNestedOneWithoutPerformanceInput
+}
+
+export type PerformanceUncheckedCreateWithoutExamInput = {
+  id?: string
+  studentId: string
+  obtainedMarks: number
+  gradeLabel?: string | null
+  remarks?: string | null
+  isPassed?: boolean | null
+  isPublished?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type PerformanceCreateOrConnectWithoutExamInput = {
+  where: Prisma.PerformanceWhereUniqueInput
+  create: Prisma.XOR<Prisma.PerformanceCreateWithoutExamInput, Prisma.PerformanceUncheckedCreateWithoutExamInput>
+}
+
+export type PerformanceCreateManyExamInputEnvelope = {
+  data: Prisma.PerformanceCreateManyExamInput | Prisma.PerformanceCreateManyExamInput[]
+  skipDuplicates?: boolean
+}
+
+export type PerformanceUpsertWithWhereUniqueWithoutExamInput = {
+  where: Prisma.PerformanceWhereUniqueInput
+  update: Prisma.XOR<Prisma.PerformanceUpdateWithoutExamInput, Prisma.PerformanceUncheckedUpdateWithoutExamInput>
+  create: Prisma.XOR<Prisma.PerformanceCreateWithoutExamInput, Prisma.PerformanceUncheckedCreateWithoutExamInput>
+}
+
+export type PerformanceUpdateWithWhereUniqueWithoutExamInput = {
+  where: Prisma.PerformanceWhereUniqueInput
+  data: Prisma.XOR<Prisma.PerformanceUpdateWithoutExamInput, Prisma.PerformanceUncheckedUpdateWithoutExamInput>
+}
+
+export type PerformanceUpdateManyWithWhereWithoutExamInput = {
+  where: Prisma.PerformanceScalarWhereInput
+  data: Prisma.XOR<Prisma.PerformanceUpdateManyMutationInput, Prisma.PerformanceUncheckedUpdateManyWithoutExamInput>
+}
+
 export type PerformanceCreateManyStudentInput = {
   id?: string
-  subjectId: string
-  academicYearId: string
-  organizationId: string
-  teacherId?: string | null
-  gradeId?: string | null
-  sectionId?: string | null
-  evaluationTitle: string
-  evaluationType?: $Enums.EvaluationType
-  evaluationDate?: Date | string | null
-  maxMarks: number
+  examId: string
   obtainedMarks: number
   gradeLabel?: string | null
   remarks?: string | null
@@ -851,16 +699,6 @@ export type PerformanceCreateManyStudentInput = {
 
 export type PerformanceUpdateWithoutStudentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  subjectId?: Prisma.StringFieldUpdateOperationsInput | string
-  academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
-  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
-  teacherId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  gradeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  sectionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  evaluationTitle?: Prisma.StringFieldUpdateOperationsInput | string
-  evaluationType?: Prisma.EnumEvaluationTypeFieldUpdateOperationsInput | $Enums.EvaluationType
-  evaluationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  maxMarks?: Prisma.FloatFieldUpdateOperationsInput | number
   obtainedMarks?: Prisma.FloatFieldUpdateOperationsInput | number
   gradeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -868,20 +706,12 @@ export type PerformanceUpdateWithoutStudentInput = {
   isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  exam?: Prisma.ExamUpdateOneRequiredWithoutPerformanceRecordsNestedInput
 }
 
 export type PerformanceUncheckedUpdateWithoutStudentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  subjectId?: Prisma.StringFieldUpdateOperationsInput | string
-  academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
-  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
-  teacherId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  gradeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  sectionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  evaluationTitle?: Prisma.StringFieldUpdateOperationsInput | string
-  evaluationType?: Prisma.EnumEvaluationTypeFieldUpdateOperationsInput | $Enums.EvaluationType
-  evaluationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  maxMarks?: Prisma.FloatFieldUpdateOperationsInput | number
+  examId?: Prisma.StringFieldUpdateOperationsInput | string
   obtainedMarks?: Prisma.FloatFieldUpdateOperationsInput | number
   gradeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -893,16 +723,55 @@ export type PerformanceUncheckedUpdateWithoutStudentInput = {
 
 export type PerformanceUncheckedUpdateManyWithoutStudentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  subjectId?: Prisma.StringFieldUpdateOperationsInput | string
-  academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
-  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
-  teacherId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  gradeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  sectionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  evaluationTitle?: Prisma.StringFieldUpdateOperationsInput | string
-  evaluationType?: Prisma.EnumEvaluationTypeFieldUpdateOperationsInput | $Enums.EvaluationType
-  evaluationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  maxMarks?: Prisma.FloatFieldUpdateOperationsInput | number
+  examId?: Prisma.StringFieldUpdateOperationsInput | string
+  obtainedMarks?: Prisma.FloatFieldUpdateOperationsInput | number
+  gradeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPassed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type PerformanceCreateManyExamInput = {
+  id?: string
+  studentId: string
+  obtainedMarks: number
+  gradeLabel?: string | null
+  remarks?: string | null
+  isPassed?: boolean | null
+  isPublished?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type PerformanceUpdateWithoutExamInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  obtainedMarks?: Prisma.FloatFieldUpdateOperationsInput | number
+  gradeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPassed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  student?: Prisma.StudentUpdateOneRequiredWithoutPerformanceNestedInput
+}
+
+export type PerformanceUncheckedUpdateWithoutExamInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  obtainedMarks?: Prisma.FloatFieldUpdateOperationsInput | number
+  gradeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPassed?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type PerformanceUncheckedUpdateManyWithoutExamInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  studentId?: Prisma.StringFieldUpdateOperationsInput | string
   obtainedMarks?: Prisma.FloatFieldUpdateOperationsInput | number
   gradeLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -917,16 +786,7 @@ export type PerformanceUncheckedUpdateManyWithoutStudentInput = {
 export type PerformanceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   studentId?: boolean
-  subjectId?: boolean
-  academicYearId?: boolean
-  organizationId?: boolean
-  teacherId?: boolean
-  gradeId?: boolean
-  sectionId?: boolean
-  evaluationTitle?: boolean
-  evaluationType?: boolean
-  evaluationDate?: boolean
-  maxMarks?: boolean
+  examId?: boolean
   obtainedMarks?: boolean
   gradeLabel?: boolean
   remarks?: boolean
@@ -935,21 +795,13 @@ export type PerformanceSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   createdAt?: boolean
   updatedAt?: boolean
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
+  exam?: boolean | Prisma.ExamDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["performance"]>
 
 export type PerformanceSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   studentId?: boolean
-  subjectId?: boolean
-  academicYearId?: boolean
-  organizationId?: boolean
-  teacherId?: boolean
-  gradeId?: boolean
-  sectionId?: boolean
-  evaluationTitle?: boolean
-  evaluationType?: boolean
-  evaluationDate?: boolean
-  maxMarks?: boolean
+  examId?: boolean
   obtainedMarks?: boolean
   gradeLabel?: boolean
   remarks?: boolean
@@ -958,21 +810,13 @@ export type PerformanceSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   createdAt?: boolean
   updatedAt?: boolean
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
+  exam?: boolean | Prisma.ExamDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["performance"]>
 
 export type PerformanceSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   studentId?: boolean
-  subjectId?: boolean
-  academicYearId?: boolean
-  organizationId?: boolean
-  teacherId?: boolean
-  gradeId?: boolean
-  sectionId?: boolean
-  evaluationTitle?: boolean
-  evaluationType?: boolean
-  evaluationDate?: boolean
-  maxMarks?: boolean
+  examId?: boolean
   obtainedMarks?: boolean
   gradeLabel?: boolean
   remarks?: boolean
@@ -981,21 +825,13 @@ export type PerformanceSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   createdAt?: boolean
   updatedAt?: boolean
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
+  exam?: boolean | Prisma.ExamDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["performance"]>
 
 export type PerformanceSelectScalar = {
   id?: boolean
   studentId?: boolean
-  subjectId?: boolean
-  academicYearId?: boolean
-  organizationId?: boolean
-  teacherId?: boolean
-  gradeId?: boolean
-  sectionId?: boolean
-  evaluationTitle?: boolean
-  evaluationType?: boolean
-  evaluationDate?: boolean
-  maxMarks?: boolean
+  examId?: boolean
   obtainedMarks?: boolean
   gradeLabel?: boolean
   remarks?: boolean
@@ -1005,35 +841,30 @@ export type PerformanceSelectScalar = {
   updatedAt?: boolean
 }
 
-export type PerformanceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "studentId" | "subjectId" | "academicYearId" | "organizationId" | "teacherId" | "gradeId" | "sectionId" | "evaluationTitle" | "evaluationType" | "evaluationDate" | "maxMarks" | "obtainedMarks" | "gradeLabel" | "remarks" | "isPassed" | "isPublished" | "createdAt" | "updatedAt", ExtArgs["result"]["performance"]>
+export type PerformanceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "studentId" | "examId" | "obtainedMarks" | "gradeLabel" | "remarks" | "isPassed" | "isPublished" | "createdAt" | "updatedAt", ExtArgs["result"]["performance"]>
 export type PerformanceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
+  exam?: boolean | Prisma.ExamDefaultArgs<ExtArgs>
 }
 export type PerformanceIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
+  exam?: boolean | Prisma.ExamDefaultArgs<ExtArgs>
 }
 export type PerformanceIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
+  exam?: boolean | Prisma.ExamDefaultArgs<ExtArgs>
 }
 
 export type $PerformancePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Performance"
   objects: {
     student: Prisma.$StudentPayload<ExtArgs>
+    exam: Prisma.$ExamPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     studentId: string
-    subjectId: string
-    academicYearId: string
-    organizationId: string
-    teacherId: string | null
-    gradeId: string | null
-    sectionId: string | null
-    evaluationTitle: string
-    evaluationType: $Enums.EvaluationType
-    evaluationDate: Date | null
-    maxMarks: number
+    examId: string
     obtainedMarks: number
     gradeLabel: string | null
     remarks: string | null
@@ -1436,6 +1267,7 @@ readonly fields: PerformanceFieldRefs;
 export interface Prisma__PerformanceClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   student<T extends Prisma.StudentDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StudentDefaultArgs<ExtArgs>>): Prisma.Prisma__StudentClient<runtime.Types.Result.GetResult<Prisma.$StudentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  exam<T extends Prisma.ExamDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ExamDefaultArgs<ExtArgs>>): Prisma.Prisma__ExamClient<runtime.Types.Result.GetResult<Prisma.$ExamPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1467,16 +1299,7 @@ export interface Prisma__PerformanceClient<T, Null = never, ExtArgs extends runt
 export interface PerformanceFieldRefs {
   readonly id: Prisma.FieldRef<"Performance", 'String'>
   readonly studentId: Prisma.FieldRef<"Performance", 'String'>
-  readonly subjectId: Prisma.FieldRef<"Performance", 'String'>
-  readonly academicYearId: Prisma.FieldRef<"Performance", 'String'>
-  readonly organizationId: Prisma.FieldRef<"Performance", 'String'>
-  readonly teacherId: Prisma.FieldRef<"Performance", 'String'>
-  readonly gradeId: Prisma.FieldRef<"Performance", 'String'>
-  readonly sectionId: Prisma.FieldRef<"Performance", 'String'>
-  readonly evaluationTitle: Prisma.FieldRef<"Performance", 'String'>
-  readonly evaluationType: Prisma.FieldRef<"Performance", 'EvaluationType'>
-  readonly evaluationDate: Prisma.FieldRef<"Performance", 'DateTime'>
-  readonly maxMarks: Prisma.FieldRef<"Performance", 'Float'>
+  readonly examId: Prisma.FieldRef<"Performance", 'String'>
   readonly obtainedMarks: Prisma.FieldRef<"Performance", 'Float'>
   readonly gradeLabel: Prisma.FieldRef<"Performance", 'String'>
   readonly remarks: Prisma.FieldRef<"Performance", 'String'>

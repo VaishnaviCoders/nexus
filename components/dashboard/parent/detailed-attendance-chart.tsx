@@ -102,7 +102,7 @@ export function DetailedAttendanceChart({
 
   if (loading) {
     return (
-      <Card className="border-0 bg-gradient-to-br from-card via-card to-blue-50/20 dark:to-blue-950/20">
+      <Card className="border-0 ">
         <CardHeader>
           <div className="h-6 bg-muted rounded w-48 animate-pulse"></div>
           <div className="h-4 bg-muted rounded w-64 animate-pulse"></div>
@@ -116,7 +116,7 @@ export function DetailedAttendanceChart({
 
   if (!attendanceData) {
     return (
-      <Card className="border-0 bg-gradient-to-br from-card via-card to-blue-50/20 dark:to-blue-950/20">
+      <Card className="border-0 ">
         <CardContent className="flex items-center justify-center py-12">
           <p className="text-muted-foreground">No attendance data available</p>
         </CardContent>
@@ -151,7 +151,7 @@ export function DetailedAttendanceChart({
   };
 
   return (
-    <Card className="border-0 bg-gradient-to-br from-card via-card to-blue-50/20 dark:to-blue-950/20">
+    <Card className="border-0 ">
       <CardHeader>
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>

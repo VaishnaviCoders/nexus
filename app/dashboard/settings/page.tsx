@@ -2,9 +2,7 @@ import AdminSettings from '@/components/dashboard/admin/AdminSettings';
 import ParentSettings from '@/components/dashboard/parent/ParentSettings';
 import StudentSettings from '@/components/dashboard/Student/StudentSettings';
 import TeacherSettings from '@/components/dashboard/teacher/TeacherSettings';
-import { Button } from '@/components/ui/button';
 import { auth } from '@clerk/nextjs/server';
-import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
 export default async function SettingPage() {

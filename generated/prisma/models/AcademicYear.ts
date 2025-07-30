@@ -235,6 +235,7 @@ export type AcademicYearWhereInput = {
   TeachingAssignment?: Prisma.TeachingAssignmentListRelationFilter
   StudentAttendance?: Prisma.StudentAttendanceListRelationFilter
   AcademicCalendar?: Prisma.AcademicCalendarListRelationFilter
+  ExamSession?: Prisma.ExamSessionListRelationFilter
 }
 
 export type AcademicYearOrderByWithRelationInput = {
@@ -255,6 +256,7 @@ export type AcademicYearOrderByWithRelationInput = {
   TeachingAssignment?: Prisma.TeachingAssignmentOrderByRelationAggregateInput
   StudentAttendance?: Prisma.StudentAttendanceOrderByRelationAggregateInput
   AcademicCalendar?: Prisma.AcademicCalendarOrderByRelationAggregateInput
+  ExamSession?: Prisma.ExamSessionOrderByRelationAggregateInput
   _relevance?: Prisma.AcademicYearOrderByRelevanceInput
 }
 
@@ -280,6 +282,7 @@ export type AcademicYearWhereUniqueInput = Prisma.AtLeast<{
   TeachingAssignment?: Prisma.TeachingAssignmentListRelationFilter
   StudentAttendance?: Prisma.StudentAttendanceListRelationFilter
   AcademicCalendar?: Prisma.AcademicCalendarListRelationFilter
+  ExamSession?: Prisma.ExamSessionListRelationFilter
 }, "id" | "organizationId_name">
 
 export type AcademicYearOrderByWithAggregationInput = {
@@ -333,6 +336,7 @@ export type AcademicYearCreateInput = {
   TeachingAssignment?: Prisma.TeachingAssignmentCreateNestedManyWithoutAcademicYearInput
   StudentAttendance?: Prisma.StudentAttendanceCreateNestedManyWithoutAcademicYearInput
   AcademicCalendar?: Prisma.AcademicCalendarCreateNestedManyWithoutAcademicYearInput
+  ExamSession?: Prisma.ExamSessionCreateNestedManyWithoutAcademicYearInput
 }
 
 export type AcademicYearUncheckedCreateInput = {
@@ -352,6 +356,7 @@ export type AcademicYearUncheckedCreateInput = {
   TeachingAssignment?: Prisma.TeachingAssignmentUncheckedCreateNestedManyWithoutAcademicYearInput
   StudentAttendance?: Prisma.StudentAttendanceUncheckedCreateNestedManyWithoutAcademicYearInput
   AcademicCalendar?: Prisma.AcademicCalendarUncheckedCreateNestedManyWithoutAcademicYearInput
+  ExamSession?: Prisma.ExamSessionUncheckedCreateNestedManyWithoutAcademicYearInput
 }
 
 export type AcademicYearUpdateInput = {
@@ -371,6 +376,7 @@ export type AcademicYearUpdateInput = {
   TeachingAssignment?: Prisma.TeachingAssignmentUpdateManyWithoutAcademicYearNestedInput
   StudentAttendance?: Prisma.StudentAttendanceUpdateManyWithoutAcademicYearNestedInput
   AcademicCalendar?: Prisma.AcademicCalendarUpdateManyWithoutAcademicYearNestedInput
+  ExamSession?: Prisma.ExamSessionUpdateManyWithoutAcademicYearNestedInput
 }
 
 export type AcademicYearUncheckedUpdateInput = {
@@ -390,6 +396,7 @@ export type AcademicYearUncheckedUpdateInput = {
   TeachingAssignment?: Prisma.TeachingAssignmentUncheckedUpdateManyWithoutAcademicYearNestedInput
   StudentAttendance?: Prisma.StudentAttendanceUncheckedUpdateManyWithoutAcademicYearNestedInput
   AcademicCalendar?: Prisma.AcademicCalendarUncheckedUpdateManyWithoutAcademicYearNestedInput
+  ExamSession?: Prisma.ExamSessionUncheckedUpdateManyWithoutAcademicYearNestedInput
 }
 
 export type AcademicYearCreateManyInput = {
@@ -499,6 +506,11 @@ export type AcademicYearOrderByRelationAggregateInput = {
 export type AcademicYearNullableScalarRelationFilter = {
   is?: Prisma.AcademicYearWhereInput | null
   isNot?: Prisma.AcademicYearWhereInput | null
+}
+
+export type AcademicYearScalarRelationFilter = {
+  is?: Prisma.AcademicYearWhereInput
+  isNot?: Prisma.AcademicYearWhereInput
 }
 
 export type StringFieldUpdateOperationsInput = {
@@ -643,6 +655,20 @@ export type AcademicYearUpdateOneWithoutNoticesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.AcademicYearUpdateToOneWithWhereWithoutNoticesInput, Prisma.AcademicYearUpdateWithoutNoticesInput>, Prisma.AcademicYearUncheckedUpdateWithoutNoticesInput>
 }
 
+export type AcademicYearCreateNestedOneWithoutExamSessionInput = {
+  create?: Prisma.XOR<Prisma.AcademicYearCreateWithoutExamSessionInput, Prisma.AcademicYearUncheckedCreateWithoutExamSessionInput>
+  connectOrCreate?: Prisma.AcademicYearCreateOrConnectWithoutExamSessionInput
+  connect?: Prisma.AcademicYearWhereUniqueInput
+}
+
+export type AcademicYearUpdateOneRequiredWithoutExamSessionNestedInput = {
+  create?: Prisma.XOR<Prisma.AcademicYearCreateWithoutExamSessionInput, Prisma.AcademicYearUncheckedCreateWithoutExamSessionInput>
+  connectOrCreate?: Prisma.AcademicYearCreateOrConnectWithoutExamSessionInput
+  upsert?: Prisma.AcademicYearUpsertWithoutExamSessionInput
+  connect?: Prisma.AcademicYearWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AcademicYearUpdateToOneWithWhereWithoutExamSessionInput, Prisma.AcademicYearUpdateWithoutExamSessionInput>, Prisma.AcademicYearUncheckedUpdateWithoutExamSessionInput>
+}
+
 export type AcademicYearCreateWithoutOrganizationInput = {
   id?: string
   name: string
@@ -659,6 +685,7 @@ export type AcademicYearCreateWithoutOrganizationInput = {
   TeachingAssignment?: Prisma.TeachingAssignmentCreateNestedManyWithoutAcademicYearInput
   StudentAttendance?: Prisma.StudentAttendanceCreateNestedManyWithoutAcademicYearInput
   AcademicCalendar?: Prisma.AcademicCalendarCreateNestedManyWithoutAcademicYearInput
+  ExamSession?: Prisma.ExamSessionCreateNestedManyWithoutAcademicYearInput
 }
 
 export type AcademicYearUncheckedCreateWithoutOrganizationInput = {
@@ -677,6 +704,7 @@ export type AcademicYearUncheckedCreateWithoutOrganizationInput = {
   TeachingAssignment?: Prisma.TeachingAssignmentUncheckedCreateNestedManyWithoutAcademicYearInput
   StudentAttendance?: Prisma.StudentAttendanceUncheckedCreateNestedManyWithoutAcademicYearInput
   AcademicCalendar?: Prisma.AcademicCalendarUncheckedCreateNestedManyWithoutAcademicYearInput
+  ExamSession?: Prisma.ExamSessionUncheckedCreateNestedManyWithoutAcademicYearInput
 }
 
 export type AcademicYearCreateOrConnectWithoutOrganizationInput = {
@@ -738,6 +766,7 @@ export type AcademicYearCreateWithoutTeachingAssignmentInput = {
   notices?: Prisma.NoticeCreateNestedManyWithoutAcademicYearInput
   StudentAttendance?: Prisma.StudentAttendanceCreateNestedManyWithoutAcademicYearInput
   AcademicCalendar?: Prisma.AcademicCalendarCreateNestedManyWithoutAcademicYearInput
+  ExamSession?: Prisma.ExamSessionCreateNestedManyWithoutAcademicYearInput
 }
 
 export type AcademicYearUncheckedCreateWithoutTeachingAssignmentInput = {
@@ -756,6 +785,7 @@ export type AcademicYearUncheckedCreateWithoutTeachingAssignmentInput = {
   notices?: Prisma.NoticeUncheckedCreateNestedManyWithoutAcademicYearInput
   StudentAttendance?: Prisma.StudentAttendanceUncheckedCreateNestedManyWithoutAcademicYearInput
   AcademicCalendar?: Prisma.AcademicCalendarUncheckedCreateNestedManyWithoutAcademicYearInput
+  ExamSession?: Prisma.ExamSessionUncheckedCreateNestedManyWithoutAcademicYearInput
 }
 
 export type AcademicYearCreateOrConnectWithoutTeachingAssignmentInput = {
@@ -790,6 +820,7 @@ export type AcademicYearUpdateWithoutTeachingAssignmentInput = {
   notices?: Prisma.NoticeUpdateManyWithoutAcademicYearNestedInput
   StudentAttendance?: Prisma.StudentAttendanceUpdateManyWithoutAcademicYearNestedInput
   AcademicCalendar?: Prisma.AcademicCalendarUpdateManyWithoutAcademicYearNestedInput
+  ExamSession?: Prisma.ExamSessionUpdateManyWithoutAcademicYearNestedInput
 }
 
 export type AcademicYearUncheckedUpdateWithoutTeachingAssignmentInput = {
@@ -808,6 +839,7 @@ export type AcademicYearUncheckedUpdateWithoutTeachingAssignmentInput = {
   notices?: Prisma.NoticeUncheckedUpdateManyWithoutAcademicYearNestedInput
   StudentAttendance?: Prisma.StudentAttendanceUncheckedUpdateManyWithoutAcademicYearNestedInput
   AcademicCalendar?: Prisma.AcademicCalendarUncheckedUpdateManyWithoutAcademicYearNestedInput
+  ExamSession?: Prisma.ExamSessionUncheckedUpdateManyWithoutAcademicYearNestedInput
 }
 
 export type AcademicYearCreateWithoutStudentAttendanceInput = {
@@ -826,6 +858,7 @@ export type AcademicYearCreateWithoutStudentAttendanceInput = {
   notices?: Prisma.NoticeCreateNestedManyWithoutAcademicYearInput
   TeachingAssignment?: Prisma.TeachingAssignmentCreateNestedManyWithoutAcademicYearInput
   AcademicCalendar?: Prisma.AcademicCalendarCreateNestedManyWithoutAcademicYearInput
+  ExamSession?: Prisma.ExamSessionCreateNestedManyWithoutAcademicYearInput
 }
 
 export type AcademicYearUncheckedCreateWithoutStudentAttendanceInput = {
@@ -844,6 +877,7 @@ export type AcademicYearUncheckedCreateWithoutStudentAttendanceInput = {
   notices?: Prisma.NoticeUncheckedCreateNestedManyWithoutAcademicYearInput
   TeachingAssignment?: Prisma.TeachingAssignmentUncheckedCreateNestedManyWithoutAcademicYearInput
   AcademicCalendar?: Prisma.AcademicCalendarUncheckedCreateNestedManyWithoutAcademicYearInput
+  ExamSession?: Prisma.ExamSessionUncheckedCreateNestedManyWithoutAcademicYearInput
 }
 
 export type AcademicYearCreateOrConnectWithoutStudentAttendanceInput = {
@@ -878,6 +912,7 @@ export type AcademicYearUpdateWithoutStudentAttendanceInput = {
   notices?: Prisma.NoticeUpdateManyWithoutAcademicYearNestedInput
   TeachingAssignment?: Prisma.TeachingAssignmentUpdateManyWithoutAcademicYearNestedInput
   AcademicCalendar?: Prisma.AcademicCalendarUpdateManyWithoutAcademicYearNestedInput
+  ExamSession?: Prisma.ExamSessionUpdateManyWithoutAcademicYearNestedInput
 }
 
 export type AcademicYearUncheckedUpdateWithoutStudentAttendanceInput = {
@@ -896,6 +931,7 @@ export type AcademicYearUncheckedUpdateWithoutStudentAttendanceInput = {
   notices?: Prisma.NoticeUncheckedUpdateManyWithoutAcademicYearNestedInput
   TeachingAssignment?: Prisma.TeachingAssignmentUncheckedUpdateManyWithoutAcademicYearNestedInput
   AcademicCalendar?: Prisma.AcademicCalendarUncheckedUpdateManyWithoutAcademicYearNestedInput
+  ExamSession?: Prisma.ExamSessionUncheckedUpdateManyWithoutAcademicYearNestedInput
 }
 
 export type AcademicYearCreateWithoutAcademicCalendarInput = {
@@ -914,6 +950,7 @@ export type AcademicYearCreateWithoutAcademicCalendarInput = {
   notices?: Prisma.NoticeCreateNestedManyWithoutAcademicYearInput
   TeachingAssignment?: Prisma.TeachingAssignmentCreateNestedManyWithoutAcademicYearInput
   StudentAttendance?: Prisma.StudentAttendanceCreateNestedManyWithoutAcademicYearInput
+  ExamSession?: Prisma.ExamSessionCreateNestedManyWithoutAcademicYearInput
 }
 
 export type AcademicYearUncheckedCreateWithoutAcademicCalendarInput = {
@@ -932,6 +969,7 @@ export type AcademicYearUncheckedCreateWithoutAcademicCalendarInput = {
   notices?: Prisma.NoticeUncheckedCreateNestedManyWithoutAcademicYearInput
   TeachingAssignment?: Prisma.TeachingAssignmentUncheckedCreateNestedManyWithoutAcademicYearInput
   StudentAttendance?: Prisma.StudentAttendanceUncheckedCreateNestedManyWithoutAcademicYearInput
+  ExamSession?: Prisma.ExamSessionUncheckedCreateNestedManyWithoutAcademicYearInput
 }
 
 export type AcademicYearCreateOrConnectWithoutAcademicCalendarInput = {
@@ -966,6 +1004,7 @@ export type AcademicYearUpdateWithoutAcademicCalendarInput = {
   notices?: Prisma.NoticeUpdateManyWithoutAcademicYearNestedInput
   TeachingAssignment?: Prisma.TeachingAssignmentUpdateManyWithoutAcademicYearNestedInput
   StudentAttendance?: Prisma.StudentAttendanceUpdateManyWithoutAcademicYearNestedInput
+  ExamSession?: Prisma.ExamSessionUpdateManyWithoutAcademicYearNestedInput
 }
 
 export type AcademicYearUncheckedUpdateWithoutAcademicCalendarInput = {
@@ -984,6 +1023,7 @@ export type AcademicYearUncheckedUpdateWithoutAcademicCalendarInput = {
   notices?: Prisma.NoticeUncheckedUpdateManyWithoutAcademicYearNestedInput
   TeachingAssignment?: Prisma.TeachingAssignmentUncheckedUpdateManyWithoutAcademicYearNestedInput
   StudentAttendance?: Prisma.StudentAttendanceUncheckedUpdateManyWithoutAcademicYearNestedInput
+  ExamSession?: Prisma.ExamSessionUncheckedUpdateManyWithoutAcademicYearNestedInput
 }
 
 export type AcademicYearCreateWithoutComplaintsInput = {
@@ -1002,6 +1042,7 @@ export type AcademicYearCreateWithoutComplaintsInput = {
   TeachingAssignment?: Prisma.TeachingAssignmentCreateNestedManyWithoutAcademicYearInput
   StudentAttendance?: Prisma.StudentAttendanceCreateNestedManyWithoutAcademicYearInput
   AcademicCalendar?: Prisma.AcademicCalendarCreateNestedManyWithoutAcademicYearInput
+  ExamSession?: Prisma.ExamSessionCreateNestedManyWithoutAcademicYearInput
 }
 
 export type AcademicYearUncheckedCreateWithoutComplaintsInput = {
@@ -1020,6 +1061,7 @@ export type AcademicYearUncheckedCreateWithoutComplaintsInput = {
   TeachingAssignment?: Prisma.TeachingAssignmentUncheckedCreateNestedManyWithoutAcademicYearInput
   StudentAttendance?: Prisma.StudentAttendanceUncheckedCreateNestedManyWithoutAcademicYearInput
   AcademicCalendar?: Prisma.AcademicCalendarUncheckedCreateNestedManyWithoutAcademicYearInput
+  ExamSession?: Prisma.ExamSessionUncheckedCreateNestedManyWithoutAcademicYearInput
 }
 
 export type AcademicYearCreateOrConnectWithoutComplaintsInput = {
@@ -1054,6 +1096,7 @@ export type AcademicYearUpdateWithoutComplaintsInput = {
   TeachingAssignment?: Prisma.TeachingAssignmentUpdateManyWithoutAcademicYearNestedInput
   StudentAttendance?: Prisma.StudentAttendanceUpdateManyWithoutAcademicYearNestedInput
   AcademicCalendar?: Prisma.AcademicCalendarUpdateManyWithoutAcademicYearNestedInput
+  ExamSession?: Prisma.ExamSessionUpdateManyWithoutAcademicYearNestedInput
 }
 
 export type AcademicYearUncheckedUpdateWithoutComplaintsInput = {
@@ -1072,6 +1115,7 @@ export type AcademicYearUncheckedUpdateWithoutComplaintsInput = {
   TeachingAssignment?: Prisma.TeachingAssignmentUncheckedUpdateManyWithoutAcademicYearNestedInput
   StudentAttendance?: Prisma.StudentAttendanceUncheckedUpdateManyWithoutAcademicYearNestedInput
   AcademicCalendar?: Prisma.AcademicCalendarUncheckedUpdateManyWithoutAcademicYearNestedInput
+  ExamSession?: Prisma.ExamSessionUncheckedUpdateManyWithoutAcademicYearNestedInput
 }
 
 export type AcademicYearCreateWithoutNoticesInput = {
@@ -1090,6 +1134,7 @@ export type AcademicYearCreateWithoutNoticesInput = {
   TeachingAssignment?: Prisma.TeachingAssignmentCreateNestedManyWithoutAcademicYearInput
   StudentAttendance?: Prisma.StudentAttendanceCreateNestedManyWithoutAcademicYearInput
   AcademicCalendar?: Prisma.AcademicCalendarCreateNestedManyWithoutAcademicYearInput
+  ExamSession?: Prisma.ExamSessionCreateNestedManyWithoutAcademicYearInput
 }
 
 export type AcademicYearUncheckedCreateWithoutNoticesInput = {
@@ -1108,6 +1153,7 @@ export type AcademicYearUncheckedCreateWithoutNoticesInput = {
   TeachingAssignment?: Prisma.TeachingAssignmentUncheckedCreateNestedManyWithoutAcademicYearInput
   StudentAttendance?: Prisma.StudentAttendanceUncheckedCreateNestedManyWithoutAcademicYearInput
   AcademicCalendar?: Prisma.AcademicCalendarUncheckedCreateNestedManyWithoutAcademicYearInput
+  ExamSession?: Prisma.ExamSessionUncheckedCreateNestedManyWithoutAcademicYearInput
 }
 
 export type AcademicYearCreateOrConnectWithoutNoticesInput = {
@@ -1142,6 +1188,7 @@ export type AcademicYearUpdateWithoutNoticesInput = {
   TeachingAssignment?: Prisma.TeachingAssignmentUpdateManyWithoutAcademicYearNestedInput
   StudentAttendance?: Prisma.StudentAttendanceUpdateManyWithoutAcademicYearNestedInput
   AcademicCalendar?: Prisma.AcademicCalendarUpdateManyWithoutAcademicYearNestedInput
+  ExamSession?: Prisma.ExamSessionUpdateManyWithoutAcademicYearNestedInput
 }
 
 export type AcademicYearUncheckedUpdateWithoutNoticesInput = {
@@ -1157,6 +1204,99 @@ export type AcademicYearUncheckedUpdateWithoutNoticesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   complaints?: Prisma.AnonymousComplaintUncheckedUpdateManyWithoutAcademicYearNestedInput
+  TeachingAssignment?: Prisma.TeachingAssignmentUncheckedUpdateManyWithoutAcademicYearNestedInput
+  StudentAttendance?: Prisma.StudentAttendanceUncheckedUpdateManyWithoutAcademicYearNestedInput
+  AcademicCalendar?: Prisma.AcademicCalendarUncheckedUpdateManyWithoutAcademicYearNestedInput
+  ExamSession?: Prisma.ExamSessionUncheckedUpdateManyWithoutAcademicYearNestedInput
+}
+
+export type AcademicYearCreateWithoutExamSessionInput = {
+  id?: string
+  name: string
+  startDate: Date | string
+  endDate: Date | string
+  type?: $Enums.YearType
+  isCurrent?: boolean
+  description?: string | null
+  createdBy: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  organization: Prisma.OrganizationCreateNestedOneWithoutAcademicYearInput
+  complaints?: Prisma.AnonymousComplaintCreateNestedManyWithoutAcademicYearInput
+  notices?: Prisma.NoticeCreateNestedManyWithoutAcademicYearInput
+  TeachingAssignment?: Prisma.TeachingAssignmentCreateNestedManyWithoutAcademicYearInput
+  StudentAttendance?: Prisma.StudentAttendanceCreateNestedManyWithoutAcademicYearInput
+  AcademicCalendar?: Prisma.AcademicCalendarCreateNestedManyWithoutAcademicYearInput
+}
+
+export type AcademicYearUncheckedCreateWithoutExamSessionInput = {
+  id?: string
+  organizationId: string
+  name: string
+  startDate: Date | string
+  endDate: Date | string
+  type?: $Enums.YearType
+  isCurrent?: boolean
+  description?: string | null
+  createdBy: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  complaints?: Prisma.AnonymousComplaintUncheckedCreateNestedManyWithoutAcademicYearInput
+  notices?: Prisma.NoticeUncheckedCreateNestedManyWithoutAcademicYearInput
+  TeachingAssignment?: Prisma.TeachingAssignmentUncheckedCreateNestedManyWithoutAcademicYearInput
+  StudentAttendance?: Prisma.StudentAttendanceUncheckedCreateNestedManyWithoutAcademicYearInput
+  AcademicCalendar?: Prisma.AcademicCalendarUncheckedCreateNestedManyWithoutAcademicYearInput
+}
+
+export type AcademicYearCreateOrConnectWithoutExamSessionInput = {
+  where: Prisma.AcademicYearWhereUniqueInput
+  create: Prisma.XOR<Prisma.AcademicYearCreateWithoutExamSessionInput, Prisma.AcademicYearUncheckedCreateWithoutExamSessionInput>
+}
+
+export type AcademicYearUpsertWithoutExamSessionInput = {
+  update: Prisma.XOR<Prisma.AcademicYearUpdateWithoutExamSessionInput, Prisma.AcademicYearUncheckedUpdateWithoutExamSessionInput>
+  create: Prisma.XOR<Prisma.AcademicYearCreateWithoutExamSessionInput, Prisma.AcademicYearUncheckedCreateWithoutExamSessionInput>
+  where?: Prisma.AcademicYearWhereInput
+}
+
+export type AcademicYearUpdateToOneWithWhereWithoutExamSessionInput = {
+  where?: Prisma.AcademicYearWhereInput
+  data: Prisma.XOR<Prisma.AcademicYearUpdateWithoutExamSessionInput, Prisma.AcademicYearUncheckedUpdateWithoutExamSessionInput>
+}
+
+export type AcademicYearUpdateWithoutExamSessionInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  type?: Prisma.EnumYearTypeFieldUpdateOperationsInput | $Enums.YearType
+  isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdBy?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutAcademicYearNestedInput
+  complaints?: Prisma.AnonymousComplaintUpdateManyWithoutAcademicYearNestedInput
+  notices?: Prisma.NoticeUpdateManyWithoutAcademicYearNestedInput
+  TeachingAssignment?: Prisma.TeachingAssignmentUpdateManyWithoutAcademicYearNestedInput
+  StudentAttendance?: Prisma.StudentAttendanceUpdateManyWithoutAcademicYearNestedInput
+  AcademicCalendar?: Prisma.AcademicCalendarUpdateManyWithoutAcademicYearNestedInput
+}
+
+export type AcademicYearUncheckedUpdateWithoutExamSessionInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  type?: Prisma.EnumYearTypeFieldUpdateOperationsInput | $Enums.YearType
+  isCurrent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdBy?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  complaints?: Prisma.AnonymousComplaintUncheckedUpdateManyWithoutAcademicYearNestedInput
+  notices?: Prisma.NoticeUncheckedUpdateManyWithoutAcademicYearNestedInput
   TeachingAssignment?: Prisma.TeachingAssignmentUncheckedUpdateManyWithoutAcademicYearNestedInput
   StudentAttendance?: Prisma.StudentAttendanceUncheckedUpdateManyWithoutAcademicYearNestedInput
   AcademicCalendar?: Prisma.AcademicCalendarUncheckedUpdateManyWithoutAcademicYearNestedInput
@@ -1191,6 +1331,7 @@ export type AcademicYearUpdateWithoutOrganizationInput = {
   TeachingAssignment?: Prisma.TeachingAssignmentUpdateManyWithoutAcademicYearNestedInput
   StudentAttendance?: Prisma.StudentAttendanceUpdateManyWithoutAcademicYearNestedInput
   AcademicCalendar?: Prisma.AcademicCalendarUpdateManyWithoutAcademicYearNestedInput
+  ExamSession?: Prisma.ExamSessionUpdateManyWithoutAcademicYearNestedInput
 }
 
 export type AcademicYearUncheckedUpdateWithoutOrganizationInput = {
@@ -1209,6 +1350,7 @@ export type AcademicYearUncheckedUpdateWithoutOrganizationInput = {
   TeachingAssignment?: Prisma.TeachingAssignmentUncheckedUpdateManyWithoutAcademicYearNestedInput
   StudentAttendance?: Prisma.StudentAttendanceUncheckedUpdateManyWithoutAcademicYearNestedInput
   AcademicCalendar?: Prisma.AcademicCalendarUncheckedUpdateManyWithoutAcademicYearNestedInput
+  ExamSession?: Prisma.ExamSessionUncheckedUpdateManyWithoutAcademicYearNestedInput
 }
 
 export type AcademicYearUncheckedUpdateManyWithoutOrganizationInput = {
@@ -1235,6 +1377,7 @@ export type AcademicYearCountOutputType = {
   TeachingAssignment: number
   StudentAttendance: number
   AcademicCalendar: number
+  ExamSession: number
 }
 
 export type AcademicYearCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1243,6 +1386,7 @@ export type AcademicYearCountOutputTypeSelect<ExtArgs extends runtime.Types.Exte
   TeachingAssignment?: boolean | AcademicYearCountOutputTypeCountTeachingAssignmentArgs
   StudentAttendance?: boolean | AcademicYearCountOutputTypeCountStudentAttendanceArgs
   AcademicCalendar?: boolean | AcademicYearCountOutputTypeCountAcademicCalendarArgs
+  ExamSession?: boolean | AcademicYearCountOutputTypeCountExamSessionArgs
 }
 
 /**
@@ -1290,6 +1434,13 @@ export type AcademicYearCountOutputTypeCountAcademicCalendarArgs<ExtArgs extends
   where?: Prisma.AcademicCalendarWhereInput
 }
 
+/**
+ * AcademicYearCountOutputType without action
+ */
+export type AcademicYearCountOutputTypeCountExamSessionArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ExamSessionWhereInput
+}
+
 
 export type AcademicYearSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1309,6 +1460,7 @@ export type AcademicYearSelect<ExtArgs extends runtime.Types.Extensions.Internal
   TeachingAssignment?: boolean | Prisma.AcademicYear$TeachingAssignmentArgs<ExtArgs>
   StudentAttendance?: boolean | Prisma.AcademicYear$StudentAttendanceArgs<ExtArgs>
   AcademicCalendar?: boolean | Prisma.AcademicYear$AcademicCalendarArgs<ExtArgs>
+  ExamSession?: boolean | Prisma.AcademicYear$ExamSessionArgs<ExtArgs>
   _count?: boolean | Prisma.AcademicYearCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["academicYear"]>
 
@@ -1364,6 +1516,7 @@ export type AcademicYearInclude<ExtArgs extends runtime.Types.Extensions.Interna
   TeachingAssignment?: boolean | Prisma.AcademicYear$TeachingAssignmentArgs<ExtArgs>
   StudentAttendance?: boolean | Prisma.AcademicYear$StudentAttendanceArgs<ExtArgs>
   AcademicCalendar?: boolean | Prisma.AcademicYear$AcademicCalendarArgs<ExtArgs>
+  ExamSession?: boolean | Prisma.AcademicYear$ExamSessionArgs<ExtArgs>
   _count?: boolean | Prisma.AcademicYearCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type AcademicYearIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1382,6 +1535,7 @@ export type $AcademicYearPayload<ExtArgs extends runtime.Types.Extensions.Intern
     TeachingAssignment: Prisma.$TeachingAssignmentPayload<ExtArgs>[]
     StudentAttendance: Prisma.$StudentAttendancePayload<ExtArgs>[]
     AcademicCalendar: Prisma.$AcademicCalendarPayload<ExtArgs>[]
+    ExamSession: Prisma.$ExamSessionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1795,6 +1949,7 @@ export interface Prisma__AcademicYearClient<T, Null = never, ExtArgs extends run
   TeachingAssignment<T extends Prisma.AcademicYear$TeachingAssignmentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AcademicYear$TeachingAssignmentArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TeachingAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   StudentAttendance<T extends Prisma.AcademicYear$StudentAttendanceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AcademicYear$StudentAttendanceArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentAttendancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   AcademicCalendar<T extends Prisma.AcademicYear$AcademicCalendarArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AcademicYear$AcademicCalendarArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AcademicCalendarPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  ExamSession<T extends Prisma.AcademicYear$ExamSessionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AcademicYear$ExamSessionArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExamSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2348,6 +2503,30 @@ export type AcademicYear$AcademicCalendarArgs<ExtArgs extends runtime.Types.Exte
   take?: number
   skip?: number
   distinct?: Prisma.AcademicCalendarScalarFieldEnum | Prisma.AcademicCalendarScalarFieldEnum[]
+}
+
+/**
+ * AcademicYear.ExamSession
+ */
+export type AcademicYear$ExamSessionArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ExamSession
+   */
+  select?: Prisma.ExamSessionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ExamSession
+   */
+  omit?: Prisma.ExamSessionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ExamSessionInclude<ExtArgs> | null
+  where?: Prisma.ExamSessionWhereInput
+  orderBy?: Prisma.ExamSessionOrderByWithRelationInput | Prisma.ExamSessionOrderByWithRelationInput[]
+  cursor?: Prisma.ExamSessionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ExamSessionScalarFieldEnum | Prisma.ExamSessionScalarFieldEnum[]
 }
 
 /**

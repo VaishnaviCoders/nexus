@@ -61,7 +61,7 @@ export function RecentAttendanceTimeline({
   };
 
   return (
-    <Card className="border-0 bg-gradient-to-br from-card via-card to-purple-50/20 dark:to-purple-950/20">
+    <Card className="border-0 h-[40vh]">
       <CardHeader className="pb-4">
         <CardTitle className="text-lg flex items-center gap-2">
           <Calendar className="h-5 w-5" />
@@ -93,14 +93,12 @@ export function RecentAttendanceTimeline({
                   </div>
 
                   {record.note && (
-                    <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
-                      {record.note}
-                    </p>
+                    <p className="text-xs  mt-1">{record.note}</p>
                   )}
                 </div>
 
                 {index < timelineData.length - 1 && (
-                  <div className="absolute left-6 mt-8 w-px h-4 bg-gray-200 dark:bg-gray-700" />
+                  <div className="absolute left-6 mt-8 w-px h-4 " />
                 )}
               </div>
             );
@@ -108,7 +106,7 @@ export function RecentAttendanceTimeline({
         </div>
 
         {timelineData.length === 0 && (
-          <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+          <div className="text-center py-8 ">
             <Calendar className="h-12 w-12 mx-auto mb-2 opacity-50" />
             <p>No recent attendance records</p>
           </div>

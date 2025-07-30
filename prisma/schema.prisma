@@ -68,6 +68,7 @@ model AcademicYear {
   TeachingAssignment TeachingAssignment[]
   StudentAttendance  StudentAttendance[]
   AcademicCalendar   AcademicCalendar[]
+  ExamSession        ExamSession[]
 
   @@unique([organizationId, name])
   @@index([organizationId, isCurrent])
@@ -218,6 +219,7 @@ model Subject {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  Exam      Exam[]
 
   @@index([organizationId, name, code])
 }
@@ -329,6 +331,7 @@ model Student {
   updatedAt       DateTime          @updatedAt
   NotificationLog NotificationLog[]
   performance     Performance[]
+  ReportCard      ReportCard[]
 
   @@index([email]) // User lookup
   @@index([phoneNumber])
@@ -776,47 +779,82 @@ enum EvaluationType {
   OTHER
 }
 
-model Performance {
-  id             String @id @default(cuid())
-  studentId      String
-  subjectId      String
+model ExamSession {
+  id             String       @id @default(cuid())
+  title          String // "Midterm 2024"
+  description    String?
   academicYearId String
+  academicYear   AcademicYear @relation(fields: [academicYearId], references: [id])
+  startDate      DateTime
+  endDate        DateTime
+  createdBy      String
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  exams      Exam[]
+  ReportCard ReportCard[]
+
+  @@unique([academicYearId, title])
+}
+
+model Exam {
+  id             String         @id @default(cuid())
+  title          String // "Maths Midterm"
+  examSessionId  String
+  examSession    ExamSession    @relation(fields: [examSessionId], references: [id])
+  subjectId      String
+  subject        Subject        @relation(fields: [subjectId], references: [id])
+  gradeId        String
+  sectionId      String
   organizationId String
+  maxMarks       Float
+  weightage      Float // for GPA, if needed
+  evaluationType EvaluationType
 
-  // Optional but recommended context
-  teacherId String?
-  gradeId   String?
-  sectionId String?
-
-  // Evaluation metadata
-  evaluationTitle String // e.g., "Midterm Exam", "Unit Test 1"
-  evaluationType  EvaluationType @default(TEST)
-  evaluationDate  DateTime?
-  maxMarks        Float
-  obtainedMarks   Float
-  // For GPA/weighted average calculations
-
-  // Performance labels and feedback
-  gradeLabel  String? // e.g., A+, B
-  remarks     String?
-  isPassed    Boolean?
-  isPublished Boolean  @default(false) // visibility toggle for students
-
-  // Relations
-  student Student @relation(fields: [studentId], references: [id])
-  // subject       Subject       @relation(fields: [subjectId], references: [id])
-  // academicYear  AcademicYear @relation(fields: [academicYearId], references: [id])
-  // organization  Organization  @relation(fields: [organizationId], references: [id])
-  // teacher       Teacher?      @relation(fields: [teacherId], references: [id])
-  // grade         Grade?        @relation(fields: [gradeId], references: [id])
-  // section       Section?      @relation(fields: [sectionId], references: [id])
+  performanceRecords Performance[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@unique([studentId, subjectId, evaluationTitle, academicYearId])
-  @@index([teacherId])
-  @@index([organizationId, academicYearId])
+  @@unique([examSessionId, subjectId, gradeId, sectionId])
+}
+
+model Performance {
+  id            String   @id @default(cuid())
+  studentId     String
+  examId        String
+  obtainedMarks Float
+  gradeLabel    String?
+  remarks       String?
+  isPassed      Boolean?
+  isPublished   Boolean  @default(false)
+
+  student Student @relation(fields: [studentId], references: [id])
+  exam    Exam    @relation(fields: [examId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([studentId, examId])
+}
+
+model ReportCard {
+  id            String  @id @default(cuid())
+  studentId     String
+  examSessionId String
+  totalMarks    Float
+  percentage    Float
+  resultStatus  String // "Passed", "Failed", "Needs Improvement"
+  overallGrade  String
+  remarks       String?
+
+  student     Student     @relation(fields: [studentId], references: [id])
+  examSession ExamSession @relation(fields: [examSessionId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([studentId, examSessionId])
 }
 
 // FeedBackCollection
