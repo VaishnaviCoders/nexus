@@ -2,10 +2,10 @@
 
 import { revalidatePath } from 'next/cache';
 import prisma from '@/lib/db';
-import type { ComplaintStatus, Severity } from '@/app/generated/prisma/enums';
+import type { ComplaintStatus, Severity } from '@/generated/prisma/enums';
 import { getOrganizationId } from '@/lib/organization';
 import { getCurrentAcademicYearId } from '@/lib/academicYear';
-import { Prisma } from '@/app/generated/prisma/client';
+import { Prisma } from '@/generated/prisma/client';
 
 interface ComplaintFilters {
   status?: string;

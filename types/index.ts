@@ -4,7 +4,7 @@ import {
   PaymentMethod,
   PaymentStatus,
   Severity,
-} from '@/app/generated/prisma/enums';
+} from '@/generated/prisma/enums';
 import { type ClientUploadedFileData } from 'uploadthing/types';
 
 export interface UploadedFile<T = unknown> extends ClientUploadedFileData<T> {}

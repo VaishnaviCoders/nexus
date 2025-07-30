@@ -5,7 +5,7 @@ import { User } from '@clerk/nextjs/server';
 import { NoticeEmailTemplate } from '@/components/email-templates/noticeMail';
 import { render } from '@react-email/render';
 import { ReactElement } from 'react';
-import { Prisma } from '@/app/generated/prisma/client';
+import { Prisma } from '@/generated/prisma/client';
 
 type NoticeWithOrg = Prisma.NoticeGetPayload<{
   include: {

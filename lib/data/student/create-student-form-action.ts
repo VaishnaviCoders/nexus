@@ -1,6 +1,6 @@
 'use server';
 
-import { Prisma } from '@/app/generated/prisma/client';
+import { Prisma } from '@/generated/prisma/client';
 import prisma from '@/lib/db';
 import { getOrganizationId } from '@/lib/organization';
 import { studentSchema } from '@/lib/schemas';

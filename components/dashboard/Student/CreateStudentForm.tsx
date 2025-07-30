@@ -56,7 +56,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { createStudent } from '@/lib/data/student/create-student-form-action';
 import { Switch } from '@/components/ui/switch';
-import { Grade, Section } from '@/app/generated/prisma/client';
+import { Grade, Section } from '@/generated/prisma/client';
 
 interface DocumentFile {
   id: string;

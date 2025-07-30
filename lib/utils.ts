@@ -1,6 +1,6 @@
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import { NotificationChannel } from '@/app/generated/prisma/enums';
+import { NotificationChannel } from '@/generated/prisma/enums';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

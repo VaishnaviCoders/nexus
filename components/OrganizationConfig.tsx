@@ -34,7 +34,7 @@ import {
 } from '@/components/ui/select';
 import { toast } from 'sonner';
 
-import { OrganizationType } from '@/app/generated/prisma/enums';
+import { OrganizationType } from '@/generated/prisma/enums';
 import { OrganizationFormData, organizationSchema } from '@/lib/schemas';
 import { updateOrganization } from '@/lib/data/update-organization';
 

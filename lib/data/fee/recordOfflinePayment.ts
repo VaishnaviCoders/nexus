@@ -5,7 +5,7 @@ import {
   FeeStatus,
   PaymentMethod,
   PaymentStatus,
-} from '@/app/generated/prisma/enums';
+} from '@/generated/prisma/enums';
 import { getOrganizationId } from '@/lib/organization';
 import { offlinePaymentFormData, offlinePaymentSchema } from '@/lib/schemas';
 import { getCurrentUserId } from '@/lib/user';

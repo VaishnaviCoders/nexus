@@ -23,7 +23,7 @@ import { redirect } from 'next/navigation';
 import { parseWithZod } from '@conform-to/zod';
 import FilterStudents from '@/lib/data/student/FilterStudents';
 import { endOfDay, startOfDay, subDays } from 'date-fns';
-import { Role } from '@/app/generated/prisma/enums';
+import { Role } from '@/generated/prisma/enums';
 import { getCurrentUserId } from '@/lib/user';
 import { DocumentVerificationAction } from '@/types/document';
 import prisma from '@/lib/db';
