@@ -16,7 +16,7 @@ import {
   FeeStatus,
   PaymentMethod,
   PaymentStatus,
-} from '@/generated/prisma/enums';
+} from '@/app/generated/prisma/enums';
 import Link from 'next/link';
 
 const getStatusColor = (status: string) => {

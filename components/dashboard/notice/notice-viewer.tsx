@@ -35,7 +35,7 @@ import { formatBytes, formatDateIN } from '@/lib/utils';
 import { toast } from 'sonner';
 import Image from 'next/image';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Role } from '@/generated/prisma/enums';
+import { Role } from '@/app/generated/prisma/enums';
 import { updateNoticeApprovalStatus } from '@/lib/data/notice/update-notice-approval-status';
 
 type Attachment = {

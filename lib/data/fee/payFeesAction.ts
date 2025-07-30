@@ -6,7 +6,7 @@ import {
   PaymentMethod,
   PaymentStatus,
   FeeStatus,
-} from '@/generated/prisma/enums';
+} from '@/app/generated/prisma/enums';
 import { currentUser } from '@clerk/nextjs/server';
 import prisma from '@/lib/db';
 import { getOrganizationId } from '@/lib/organization';

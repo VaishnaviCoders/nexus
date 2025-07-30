@@ -9,7 +9,7 @@ import { getOrganizationId, getOrganizationUserRole } from '@/lib/organization';
 import { EmptyState } from '@/components/EmptyState';
 import { Activity, Pin, Newspaper } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Role } from '@/generated/prisma/enums';
+import { Role } from '@/app/generated/prisma/enums';
 import { getCurrentAcademicYearId } from '@/lib/academicYear';
 import { performance } from 'perf_hooks';
 
