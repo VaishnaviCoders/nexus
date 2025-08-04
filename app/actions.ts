@@ -1,14 +1,15 @@
 'use server';
 
-import { auth, currentUser, User } from '@clerk/nextjs/server';
+import { auth, currentUser, User, clerkClient } from '@clerk/nextjs/server';
 import {
   AcademicYearFormData,
   academicYearSchema,
   AcademicYearUpdateFormData,
   academicYearUpdateSchema,
+  CreateTeacherFormData,
+  createTeacherSchema,
   DocumentUploadFormData,
   documentUploadSchema,
-  feeCategorySchema,
   gradeSchema,
   sectionSchema,
   TeacherProfileFormData,
@@ -16,9 +17,6 @@ import {
 } from '../lib/schemas';
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
-import { Resend } from 'resend';
-import { NoticeEmailTemplate } from '@/components/email-templates/noticeMail';
-import { Knock } from '@knocklabs/node';
 import { redirect } from 'next/navigation';
 import { parseWithZod } from '@conform-to/zod';
 import FilterStudents from '@/lib/data/student/FilterStudents';
@@ -727,29 +725,129 @@ export async function updateTeacherProfileAction({
     });
   }
 }
+export async function createTeacherFormAction(data: CreateTeacherFormData) {
+  try {
+    const organizationId = await getOrganizationId();
+    const inviterUserId = await getCurrentUserId();
+    const client = await clerkClient();
+    const validatedData = createTeacherSchema.parse(data);
+
+    // 1. Create Clerk User
+    const clerkUser = await client.users.createUser({
+      emailAddress: [validatedData.email],
+      lastName: validatedData.lastName,
+      firstName: validatedData.firstName,
+      externalId: validatedData.contactPhone,
+      skipPasswordRequirement: true,
+    });
+
+    // 2. Send Invitation
+    await client.organizations.createOrganizationInvitation({
+      organizationId,
+      inviterUserId,
+      emailAddress: validatedData.email,
+      role: 'org:teacher',
+      redirectUrl: 'https://shiksha.cloud/dashboard',
+    });
+
+    // 3. Create records in DB
+    await prisma.$transaction(async (tx) => {
+      await tx.user.create({
+        data: {
+          id: clerkUser.id,
+          email: validatedData.email,
+          firstName: validatedData.firstName,
+          lastName: validatedData.lastName,
+          role: 'TEACHER',
+          password: validatedData.contactPhone,
+          organizationId,
+          createdAt: new Date(),
+          clerkId: clerkUser.id,
+          profileImage: clerkUser.imageUrl,
+        },
+      });
+
+      await tx.teacher.create({
+        data: {
+          userId: clerkUser.id,
+          employeeCode: validatedData.employeeCode,
+          employmentStatus: 'ACTIVE',
+          organizationId,
+          isActive: true,
+          createdAt: new Date(),
+          profile: {
+            create: {
+              idProofUrl: validatedData.idProofUrl || '',
+              joinedAt: validatedData.joinedAt,
+              contactEmail: validatedData.contactEmail,
+              contactPhone: validatedData.contactPhone,
+              address: validatedData.address,
+              city: validatedData.city,
+              state: validatedData.state,
+              dateOfBirth: validatedData.dateOfBirth,
+              qualification: validatedData.qualification,
+              experienceInYears: validatedData.experienceInYears,
+              bio: validatedData.bio,
+              teachingPhilosophy: validatedData.teachingPhilosophy,
+              specializedSubjects: validatedData.specializedSubjects,
+              preferredGrades: validatedData.preferredGrades,
+              linkedinPortfolio: validatedData.linkedinPortfolio,
+              languagesKnown: validatedData.languagesKnown,
+            },
+          },
+        },
+      });
+    });
+
+    revalidatePath('/dashboard/teachers');
+    return { success: true };
+  } catch (error: any) {
+    console.error('Teacher creation failed:', error);
+
+    // Optional Clerk error log
+    if (error?.errors) {
+      console.error('Clerk Error:', {
+        status: error?.status,
+        errors: error.errors,
+        traceId: error?.clerkTraceId,
+      });
+    }
+
+    // Don't throw error, fail silently or log only
+    return null;
+  }
+}
+
+export async function toggleTeacherStatus(teacherId: string) {
+  // First get the current status
+  const teacher = await prisma.teacher.findUnique({
+    where: { id: teacherId },
+    select: { isActive: true },
+  });
+
+  if (!teacher) {
+    throw new Error('Teacher not found');
+  }
+
+  // Toggle the status
+  await prisma.teacher.update({
+    where: { id: teacherId },
+    data: {
+      isActive: !teacher.isActive,
+    },
+  });
+
+  revalidatePath('/dashboard/teachers');
+
+  console.log('Teacher status toggled');
+}
 
 export async function createAcademicYear(data: AcademicYearFormData) {
   try {
     const user = await currentUser();
     const userId = await getCurrentUserId();
-    const orgId = await getOrganizationId();
-
-    console.log(orgId, 'org');
-
-    const allOrgs = await prisma.organization.findMany();
-    console.log('All orgs in DB:', allOrgs);
-    const allUsers = await prisma.user.findMany();
-    console.log('All orgs in DB:', allUsers);
 
     const validatedData = academicYearSchema.parse(data);
-
-    console.log('Validated Data:', validatedData);
-
-    const org = await prisma.organization.findUnique({
-      where: { id: 'org_30WQlEXgBepgHNrZYoYzx0xlqJg' },
-    });
-    console.log('Resolved org:', org);
-
     // Check for overlapping academic years
     const overlapping = await prisma.academicYear.findFirst({
       where: {

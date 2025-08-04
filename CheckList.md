@@ -20,7 +20,7 @@
 - Receipts Are Generate Properly after Payment SUCCESS / FAILED / COMPLETED
 - Push Notification Are sending Properly => Fee Reminders / Notice
 - Email Sending Properly => FEE Reminder / Notice / Attendance Report / Fees Receipts
-- Whats-Up Message Sending Properly => FEE Reminder / Urgent Notice / Daily Live Attendance / Fees Receipts
+- Whats-Up Message Sending Properly => FEE Reminder / Urgent Notice / Daily Live - Attendance / Fees Receipts
 
 # High Priority Issues
 
@@ -79,6 +79,13 @@ Notice Management :
 - Change Name : Announcement/
 - Change or Enhance Schema And remove Json
 - Notice Template
+
+Teacher Management :
+
+- Add Teachers -Testing
+- Edit Teachers
+- Delete Teachers
+- Teacher Profile Modal Make Responsive
 
 Attendance Templates
 Notification Badge In Sidebar

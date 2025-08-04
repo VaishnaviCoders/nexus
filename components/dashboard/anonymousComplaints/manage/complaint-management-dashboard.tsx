@@ -233,7 +233,7 @@ export function ComplaintManagementDashboard({
 
         <TabsContent value="overview" className="space-y-6">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+            <Card className="backdrop-blur-sm">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
@@ -255,7 +255,7 @@ export function ComplaintManagementDashboard({
               </CardContent>
             </Card>
 
-            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+            <Card className=" backdrop-blur-sm">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
@@ -277,7 +277,7 @@ export function ComplaintManagementDashboard({
               </CardContent>
             </Card>
 
-            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+            <Card className=" backdrop-blur-sm">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
@@ -307,7 +307,7 @@ export function ComplaintManagementDashboard({
               </CardContent>
             </Card>
 
-            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+            <Card className=" backdrop-blur-sm">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
@@ -332,7 +332,7 @@ export function ComplaintManagementDashboard({
           </div>
           <div className="grid gap-6 lg:grid-cols-2">
             {/* Recent Critical Complaints */}
-            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+            <Card className=" backdrop-blur-sm">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <AlertTriangle className="h-5 w-5 text-red-600" />
@@ -394,7 +394,7 @@ export function ComplaintManagementDashboard({
             </Card>
 
             {/* Recent Activity */}
-            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+            <Card className=" backdrop-blur-sm">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Clock className="h-5 w-5 text-blue-600" />
@@ -447,7 +447,7 @@ export function ComplaintManagementDashboard({
 
         <TabsContent value="complaints" className="space-y-6">
           {/* Filters and Search */}
-          <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+          <Card className=" backdrop-blur-sm">
             <CardContent className="p-6">
               <div className="flex flex-col lg:flex-row gap-4">
                 <div className="flex-1">
@@ -521,7 +521,7 @@ export function ComplaintManagementDashboard({
           </Card>
 
           {/* Complaints List */}
-          <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+          <Card className=" backdrop-blur-sm">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>

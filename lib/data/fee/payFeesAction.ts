@@ -60,7 +60,7 @@ export const phonePayInitPayment = async (feeId: string) => {
     merchantId: process.env.NEXT_PUBLIC_PAYMENT_MERCHANT_ID,
     merchantTransactionId: transactionId,
     merchantUserId: 'MUID-' + randomUUID().toString().slice(-6),
-    amount: totalPayableAmount * 100,
+    amount: Math.round(totalPayableAmount * 100),
     redirectUrl: `${process.env.NEXT_PUBLIC_APP_URL}/api/phonepay-callback/${transactionId}`,
     redirectMode: 'REDIRECT',
     callbackUrl: `${process.env.NEXT_PUBLIC_APP_URL}/api/phonepay-callback/${transactionId}`,

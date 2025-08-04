@@ -19,7 +19,7 @@ import { TeacherProfileForm } from './TeacherProfileForm';
 import prisma from '@/lib/db';
 import { getCurrentUserId } from '@/lib/user';
 
-async function getTeacher(userId: string) {
+export async function getTeacher(userId: string) {
   const teacher = await prisma.teacher.findUnique({
     where: { userId },
     select: {
@@ -94,10 +94,8 @@ async function getTeacher(userId: string) {
 
 const TeacherSettings = async () => {
   const userId = await getCurrentUserId();
-  console.log('userId', userId);
 
   const teacher = await getTeacher(userId);
-  console.log('teacher', teacher);
 
   if (!teacher) return <div>No teacher profile found</div>;
   return (

@@ -67,7 +67,7 @@ export default async function IndexPage() {
         </div>
 
         <div className="flex items-center space-x-2">
-          <ModeToggle />
+          {/* <ModeToggle /> */}
 
           <SignedOut>
             <SignInButton forceRedirectUrl={'/dashboard'}>

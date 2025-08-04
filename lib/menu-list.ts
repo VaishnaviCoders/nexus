@@ -13,6 +13,7 @@ import {
   ShieldAlert,
   FileIcon,
   BadgeCheck,
+  GraduationCap,
 } from 'lucide-react';
 
 type Submenu = {
@@ -59,11 +60,11 @@ export const roleMenus: Record<string, Group[]> = {
           label: 'Class Management',
           icon: School,
         },
-        // {
-        //   href: '/dashboard/teachers',
-        //   label: 'Teacher Management',
-        //   icon: GraduationCap,
-        // },
+        {
+          href: '/dashboard/teachers',
+          label: 'Teacher Management',
+          icon: GraduationCap,
+        },
         {
           href: '/dashboard/students',
           label: 'Student Management',

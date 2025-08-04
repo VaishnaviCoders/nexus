@@ -207,6 +207,11 @@ model TeacherProfile {
   certificateUrls   String[]
 }
 
+// model TeacherAttendance {}
+// model TeacherFeedback {}
+// model TeacherSalary {}
+// model TeacherLeave {}
+// 
 model Subject {
   id             String @id @default(cuid())
   name           String

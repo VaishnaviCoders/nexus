@@ -114,7 +114,7 @@ export function ComplaintAnalytics({ analytics }: AnalyticsProps) {
     <div className="space-y-6">
       {/* Key Metrics */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+        <Card className=" backdrop-blur-sm">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
@@ -136,7 +136,7 @@ export function ComplaintAnalytics({ analytics }: AnalyticsProps) {
           </CardContent>
         </Card>
 
-        <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+        <Card className=" backdrop-blur-sm">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
@@ -158,7 +158,7 @@ export function ComplaintAnalytics({ analytics }: AnalyticsProps) {
           </CardContent>
         </Card>
 
-        <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+        <Card className=" backdrop-blur-sm">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
@@ -181,7 +181,7 @@ export function ComplaintAnalytics({ analytics }: AnalyticsProps) {
           </CardContent>
         </Card>
 
-        <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+        <Card className=" backdrop-blur-sm">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
@@ -206,7 +206,7 @@ export function ComplaintAnalytics({ analytics }: AnalyticsProps) {
       {/* Charts */}
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Monthly Trends */}
-        <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+        <Card className=" backdrop-blur-sm">
           <CardHeader>
             <CardTitle>Monthly Trends</CardTitle>
             <CardDescription>
@@ -244,7 +244,7 @@ export function ComplaintAnalytics({ analytics }: AnalyticsProps) {
         </Card>
 
         {/* Category Breakdown */}
-        <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+        <Card className=" backdrop-blur-sm">
           <CardHeader>
             <CardTitle>Complaints by Category</CardTitle>
             <CardDescription>
@@ -265,7 +265,7 @@ export function ComplaintAnalytics({ analytics }: AnalyticsProps) {
         </Card>
 
         {/* Severity Distribution */}
-        <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+        <Card className=" backdrop-blur-sm">
           <CardHeader>
             <CardTitle>Severity Distribution</CardTitle>
             <CardDescription>
@@ -298,7 +298,7 @@ export function ComplaintAnalytics({ analytics }: AnalyticsProps) {
         </Card>
 
         {/* Status Distribution */}
-        <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+        <Card className=" backdrop-blur-sm">
           <CardHeader>
             <CardTitle>Status Distribution</CardTitle>
             <CardDescription>
@@ -332,7 +332,7 @@ export function ComplaintAnalytics({ analytics }: AnalyticsProps) {
       </div>
 
       {/* Resolution Rate Trend */}
-      <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+      <Card className=" backdrop-blur-sm">
         <CardHeader>
           <CardTitle>Resolution Rate Trend</CardTitle>
           <CardDescription>
@@ -363,7 +363,7 @@ export function ComplaintAnalytics({ analytics }: AnalyticsProps) {
 
       {/* Summary Cards */}
       <div className="grid gap-4 md:grid-cols-3">
-        <Card className="border-0 shadow-lg bg-gradient-to-r from-green-50 to-emerald-50">
+        <Card className="bg-gradient-to-r from-green-50 to-emerald-50">
           <CardContent className="p-6">
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-semibold text-green-800">Top Performing</h3>
@@ -386,7 +386,7 @@ export function ComplaintAnalytics({ analytics }: AnalyticsProps) {
           </CardContent>
         </Card>
 
-        <Card className="border-0 shadow-lg bg-gradient-to-r from-yellow-50 to-amber-50">
+        <Card className=" bg-gradient-to-r from-yellow-50 to-amber-50">
           <CardContent className="p-6">
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-semibold text-yellow-800">Needs Attention</h3>
@@ -407,7 +407,7 @@ export function ComplaintAnalytics({ analytics }: AnalyticsProps) {
           </CardContent>
         </Card>
 
-        <Card className="border-0 shadow-lg bg-gradient-to-r from-blue-50 to-indigo-50">
+        <Card className=" bg-gradient-to-r from-blue-50 to-indigo-50">
           <CardContent className="p-6">
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-semibold text-blue-800">Insights</h3>

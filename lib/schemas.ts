@@ -15,8 +15,8 @@ export const CreateNoticeFormSchema = z.object({
     .min(3, {
       message: 'Title must be at least 3 characters.',
     })
-    .max(28, {
-      message: 'Title must be at most 28 characters.',
+    .max(48, {
+      message: 'Title must be at most 48 characters.',
     }),
   startDate: z.date(),
   // startDate: z
@@ -235,9 +235,9 @@ export const teacherProfileSchema = z.object({
   address: z.string().min(10, 'Please enter a complete address'),
   city: z.string().optional(),
   state: z.string().optional(),
-  dateOfBirth: z.date({
-    required_error: 'Date of birth is required',
-  }),
+  dateOfBirth: z
+    .date()
+    .max(new Date(), { message: 'Date of birth must be in the past' }),
 
   // Professional Information
   qualification: z.string().min(5, 'Please enter your qualification details'),
@@ -281,6 +281,47 @@ export const teacherProfileSchema = z.object({
 });
 
 export type TeacherProfileFormData = z.infer<typeof teacherProfileSchema>;
+
+export const createTeacherSchema = z.object({
+  // Basic Information
+  firstName: z.string().min(2, 'First name must be at least 2 characters'),
+  lastName: z.string().min(2, 'Last name must be at least 2 characters'),
+  email: z.string().email('Invalid email address'),
+  employeeCode: z
+    .string()
+    .min(3, 'Employee code must be at least 3 characters'),
+
+  // Contact Information
+  contactEmail: z.string().email('Invalid email address'),
+  contactPhone: z.string().min(10, 'Phone number must be at least 10 digits'),
+  address: z.string().min(10, 'Address must be at least 10 characters'),
+  city: z.string().min(2, 'City is required'),
+  state: z.string().min(2, 'State is required'),
+
+  // Professional Information
+  dateOfBirth: z
+    .date()
+    .max(new Date(), { message: 'Date of birth must be in the past' }),
+  qualification: z.string().min(2, 'Qualification is required'),
+  experienceInYears: z.number().min(0, 'Experience cannot be negative'),
+  joinedAt: z.date({ required_error: 'Joining date is required' }),
+
+  idProofUrl: z.string().url().optional(),
+
+  // Teaching Information
+  specializedSubjects: z
+    .array(z.string())
+    .min(1, 'At least one subject is required'),
+  preferredGrades: z.array(z.string()).min(1, 'At least one grade is required'),
+
+  // Optional Information
+  bio: z.string().optional(),
+  teachingPhilosophy: z.string().optional(),
+  linkedinPortfolio: z.string().url().optional().or(z.literal('')),
+  languagesKnown: z.array(z.string()).optional(),
+});
+
+export type CreateTeacherFormData = z.infer<typeof createTeacherSchema>;
 
 export const academicYearSchema = z.object({
   name: z.string().min(1, 'Name is required').max(100, 'Name is too long'),
