@@ -23,39 +23,39 @@ import { getOrganizationId } from '@/lib/organization';
 import { AddTeacherForm } from '@/components/dashboard/teacher/AddTeacherForm';
 import { TeacherManagementStatsCards } from '@/components/dashboard/teacher/TeacherManagementStatsCards';
 
-export const getTeacherStatusBadge = (
-  isActive: boolean,
-  employmentStatus: string
-) => {
-  if (!isActive) {
-    return <Badge variant="secondary">Inactive</Badge>;
-  }
+// export const getTeacherStatusBadge = (
+//   isActive: boolean,
+//   employmentStatus: string
+// ) => {
+//   if (!isActive) {
+//     return <Badge variant="secondary">Inactive</Badge>;
+//   }
 
-  switch (employmentStatus) {
-    case 'ACTIVE':
-      return (
-        <Badge variant="default" className="bg-green-500">
-          Active
-        </Badge>
-      );
-    case 'ON_LEAVE':
-      return (
-        <Badge variant="outline" className="border-yellow-500 text-yellow-600">
-          On Leave
-        </Badge>
-      );
-    case 'PROBATION':
-      return (
-        <Badge variant="outline" className="border-blue-500 text-blue-600">
-          Probation
-        </Badge>
-      );
-    case 'SUSPENDED':
-      return <Badge variant="destructive">Suspended</Badge>;
-    default:
-      return <Badge variant="secondary">{employmentStatus}</Badge>;
-  }
-};
+//   switch (employmentStatus) {
+//     case 'ACTIVE':
+//       return (
+//         <Badge variant="default" className="bg-green-500">
+//           Active
+//         </Badge>
+//       );
+//     case 'ON_LEAVE':
+//       return (
+//         <Badge variant="outline" className="border-yellow-500 text-yellow-600">
+//           On Leave
+//         </Badge>
+//       );
+//     case 'PROBATION':
+//       return (
+//         <Badge variant="outline" className="border-blue-500 text-blue-600">
+//           Probation
+//         </Badge>
+//       );
+//     case 'SUSPENDED':
+//       return <Badge variant="destructive">Suspended</Badge>;
+//     default:
+//       return <Badge variant="secondary">{employmentStatus}</Badge>;
+//   }
+// };
 async function getAllTeachers() {
   const organizationId = await getOrganizationId();
   const teachers = await prisma.teacher.findMany({
