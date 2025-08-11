@@ -4,7 +4,7 @@ import {
   PaymentMethod,
   PaymentStatus,
   Severity,
-} from '@/generated/prisma/enums';
+} from '@/generated/prisma';
 import { type ClientUploadedFileData } from 'uploadthing/types';
 
 export interface UploadedFile<T = unknown> extends ClientUploadedFileData<T> {}
@@ -178,11 +178,7 @@ export interface WeeklyAttendanceReportData {
   attendanceRecords: {
     date: string;
     present: boolean;
-<<<<<<< HEAD
     status: AttendanceStatus | 'NOT_MARKED';
-=======
-    status: AttendanceStatus;
->>>>>>> 0a0cbd6 (added weekly attendance report)
     note?: string | null;
   }[];
   weekRange: {

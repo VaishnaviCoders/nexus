@@ -3,7 +3,7 @@
 
 import prisma from '@/lib/db';
 import { FeeRecord } from '@/types';
-import { FeeStatus, PaymentStatus } from '@/generated/prisma/enums';
+import { FeeStatus, PaymentStatus } from '@/generated/prisma';
 
 export async function getAssignedStudentsFees(
   teacherId: string

@@ -3,7 +3,7 @@ import { auth } from '@clerk/nextjs/server';
 import { AlertCircle } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import NoticeViewer from '@/components/dashboard/notice/notice-viewer';
-import { Role } from '@/generated/prisma/enums';
+import { Role } from '@/generated/prisma';
 
 type Attachment = {
   name: string;

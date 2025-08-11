@@ -19,7 +19,7 @@ import {
   Slash,
 } from 'lucide-react';
 import { formatCurrencyIN, formatDateIN } from '@/lib/utils';
-import { PaymentStatus } from '@/generated/prisma/enums';
+import { PaymentStatus } from '@/generated/prisma';
 import { generateReceiptPDF } from '@/lib/data/generate-receipt';
 
 interface PaymentData {

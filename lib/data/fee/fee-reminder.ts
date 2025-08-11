@@ -5,10 +5,7 @@ import {
   SendReminderData,
 } from '@/components/dashboard/Fees/SendFeesReminderDialog';
 import prisma from '@/lib/db';
-import {
-  NotificationChannel,
-  scheduledJobType,
-} from '@/generated/prisma/enums';
+import { NotificationChannel, scheduledJobType } from '@/generated/prisma';
 import { inngest } from '@/lib/inngest/client';
 import { getOrganizationId } from '@/lib/organization';
 import { getCurrentUser } from '@/lib/user';

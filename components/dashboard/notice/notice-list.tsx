@@ -34,7 +34,7 @@ import {
 import { cn } from '@/lib/utils';
 import { deleteNotice } from '@/app/actions';
 import { DeleteNoticeButton } from '@/lib/SubmitButton';
-import { Role } from '@/generated/prisma/enums';
+import { Role } from '@/generated/prisma';
 
 interface Notice {
   id: string;

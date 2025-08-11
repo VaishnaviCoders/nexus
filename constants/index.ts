@@ -1,4 +1,4 @@
-import { DocumentType } from '@/generated/prisma/enums';
+import { DocumentType } from '@/generated/prisma';
 import { StudentDocument } from '@/types/document';
 import {
   ChartColumnBigIcon,

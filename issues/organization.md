@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { SidebarToggle } from './sidebar-toggle';
 import { Menu } from './menu';
 import { OrganizationSwitcher } from '@clerk/nextjs';
-import type { Role } from '@/generated/prisma/enums';
+import type { Role } from '@/generated/prisma';
 
 interface SidebarProps {
   role: Role;

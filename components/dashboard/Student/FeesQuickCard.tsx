@@ -12,7 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { CreditCard, AlertTriangle, CheckCircle, Clock } from 'lucide-react';
 import { cn, formatCurrencyIN, formatDateIN } from '@/lib/utils';
-import { FeeStatus, PaymentMethod } from '@/generated/prisma/enums';
+import { FeeStatus, PaymentMethod } from '@/generated/prisma';
 import Link from 'next/link';
 
 const getStatusIcon = (status: string) => {

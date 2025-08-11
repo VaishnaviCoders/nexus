@@ -1,11 +1,7 @@
 'use server';
 
 import prisma from '@/lib/db';
-import {
-  FeeStatus,
-  PaymentMethod,
-  PaymentStatus,
-} from '@/generated/prisma/enums';
+import { FeeStatus, PaymentMethod, PaymentStatus } from '@/generated/prisma';
 import { getOrganizationId } from '@/lib/organization';
 import { offlinePaymentFormData, offlinePaymentSchema } from '@/lib/schemas';
 import { getCurrentUserId } from '@/lib/user';

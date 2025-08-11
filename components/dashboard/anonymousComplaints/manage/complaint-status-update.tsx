@@ -22,7 +22,7 @@ import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { MessageSquare, AlertTriangle, CheckCircle2 } from 'lucide-react';
 import { Complaint } from '@/types';
-import { ComplaintStatus } from '@/generated/prisma/enums';
+import { ComplaintStatus } from '@/generated/prisma';
 
 interface ComplaintStatusUpdateProps {
   complaint: Complaint;

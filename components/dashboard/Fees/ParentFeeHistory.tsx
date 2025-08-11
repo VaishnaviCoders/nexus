@@ -36,7 +36,7 @@ import {
 import { FeeReceiptCard } from './FeeReceiptCard';
 import { formatCurrencyIN } from '@/lib/utils';
 import PayFeeButton from '@/components/PayFeeButton';
-import { PaymentStatus } from '@/generated/prisma/enums';
+import { PaymentStatus } from '@/generated/prisma';
 
 interface ParentData {
   name: string;

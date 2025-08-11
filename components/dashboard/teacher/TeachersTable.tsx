@@ -45,7 +45,7 @@ import {
   UserX,
 } from 'lucide-react';
 import { TeacherProfile, User } from '@/generated/prisma';
-import { EmploymentStatus } from '@/generated/prisma/enums';
+import { EmploymentStatus } from '@/generated/prisma';
 import { TeacherDetailsModal } from './TeacherDetailsModal';
 import { toggleTeacherStatus } from '@/app/actions';
 

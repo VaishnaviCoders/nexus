@@ -33,7 +33,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-import { YearType } from '@/generated/prisma/enums';
+import { YearType } from '@/generated/prisma';
 import { AcademicYearForm } from './AcademicYearForm';
 import { deleteAcademicYear, setDefaultAcademicYear } from '@/app/actions';
 
