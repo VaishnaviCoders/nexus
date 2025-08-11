@@ -115,15 +115,12 @@ export function RecentNoticesCards({ className, recentNotices }: Props) {
               </div>
             ))}
           </div>
-<<<<<<< HEAD
           {recentNotices.length === 0 && (
             <div className="text-center  ">
               <Calendar className="h-12 w-12 mx-auto mb-2 opacity-50" />
               <p>No recent attendance records</p>
             </div>
           )}
-=======
->>>>>>> 0a0cbd6 (added weekly attendance report)
         </ScrollArea>
       </CardContent>
     </Card>
