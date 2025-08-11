@@ -4,6 +4,7 @@ Generate a modern, high-performance Next.js 15 application using server actions,
 
 Lead Management : https://tnks-data-table.vercel.app/
 For Big Calender: https://big-calendar.vercel.app/month-view
+For student Register Multi Loader: https://inspira-ui.com/docs/components/miscellaneous/multi-step-loader  
 Need To Buy : RFID biometric retina reader
 Alpha shop Pimpri arket
 

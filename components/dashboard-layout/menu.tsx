@@ -1,9 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import { Ellipsis, LogOut } from 'lucide-react';
+import { Ellipsis, LogOut, LucideIcon } from 'lucide-react';
 import { usePathname } from 'next/navigation';
-import { memo, useEffect } from 'react';
+import { memo } from 'react';
 
 import { cn } from '@/lib/utils';
 import { roleMenus } from '@/lib/menu-list';
@@ -35,7 +35,7 @@ const MenuItem = memo(
   }: {
     href: string;
     label: string;
-    icon: any;
+    icon: LucideIcon;
     active?: boolean;
     isOpen?: boolean;
     pathname: string;

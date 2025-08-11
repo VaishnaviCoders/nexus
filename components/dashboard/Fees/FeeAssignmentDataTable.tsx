@@ -163,11 +163,6 @@ const FeeAssignmentDataTable = ({
 
   async function onSubmit(data: z.infer<typeof feeAssignmentSchema>) {
     try {
-      // console.log('Assigning fees to:', selectedStudents);
-      // console.log('Fee amount:', data.feeAmount);
-      // console.log('Category:', data.feeCategoryId);
-      // console.log('Due date:', data.dueDate);
-
       const payload = {
         ...data,
         studentIds: selectedStudents,

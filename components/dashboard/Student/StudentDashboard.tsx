@@ -7,7 +7,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-
 import prisma from '@/lib/db';
 import { getCurrentUserId } from '@/lib/user';
 import StudentSubjectsRadar from './student-subjects-radar';
@@ -16,8 +15,7 @@ import { FeesQuickCard } from './FeesQuickCard';
 import { FeeStatus, PaymentMethod } from '@/generated/prisma/enums';
 import { Button } from '@/components/ui/button';
 import { CreditCard, Download, Upload, MessageSquare, Zap } from 'lucide-react';
-import { getOrganizationId } from '@/lib/organization';
-import { getCurrentAcademicYearId } from '@/lib/academicYear';
+import { getStudentNotices } from '@/lib/data/notice/get-student-notices';
 
 export async function getFeesStatus(studentId: string) {
   const fees = await prisma.fee.findMany({
@@ -127,30 +125,6 @@ const quickActions = [
     link: '/dashboard/anonymous-complaints',
   },
 ];
-
-async function getStudentNotices() {
-  const organizationId = await getOrganizationId();
-  const academicYearData = await getCurrentAcademicYearId();
-
-  if (!academicYearData) {
-    // Handle the missing academic year here
-    // You can redirect, show a message, throw an error, etc.
-    throw new Error('No current academic year is set.');
-  }
-
-  const { academicYearId } = academicYearData;
-
-  const notices = await prisma.notice.findMany({
-    where: {
-      organizationId,
-      academicYearId,
-    },
-    orderBy: {
-      createdAt: 'desc',
-    },
-  });
-  return notices;
-}
 
 const StudentDashboard = async () => {
   const userId = await getCurrentUserId();

@@ -99,7 +99,7 @@ export default async function TeacherDashboard() {
               <div className="space-y-2">
                 <h4 className="font-medium text-sm">Daily Best Practices</h4>
                 <ul className="text-sm text-muted-foreground space-y-1">
-                  <li>• Take attendance within first 10 minutes</li>
+                  <li>• Take attendance within first 20 minutes</li>
                   <li>• Review previous day's performance</li>
                   <li>• Prepare materials before class starts</li>
                   <li>• Engage with students regularly</li>

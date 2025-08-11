@@ -58,7 +58,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
-import { useAuth } from '@clerk/nextjs';
 import { toast } from 'sonner';
 import { getPreviousDayAttendance, markAttendance } from '@/app/actions';
 

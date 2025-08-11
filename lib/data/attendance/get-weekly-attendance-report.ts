@@ -7,6 +7,7 @@ import {
   startOfWeek,
   eachDayOfInterval,
   isWeekend,
+  format,
 } from 'date-fns';
 
 export async function getWeeklyAttendanceReport(studentId: string) {
@@ -17,10 +18,9 @@ export async function getWeeklyAttendanceReport(studentId: string) {
   });
   if (!student) throw new Error('Student not found');
 
-  // 2. weekly window (Mon–Sun)
   // 2️⃣  past weekly window (Mon–Sun that ended last Sunday)
   const today = new Date();
-  const weekStart = startOfWeek(addDays(today, -7), { weekStartsOn: 1 }); // last Mon 00:00
+  const weekStart = startOfWeek(today, { weekStartsOn: 1 });
   const weekEnd = addDays(weekStart, 6); // last Sun 23:59
 
   // 3. fetch rows for the week
@@ -29,22 +29,27 @@ export async function getWeeklyAttendanceReport(studentId: string) {
     orderBy: { date: 'asc' },
   });
 
-  // 4. build 7 daily records (fill gaps → absent)
+  // 4. build daily records (only past dates, fill gaps → NOT_MARKED)
   const weekDays = eachDayOfInterval({ start: weekStart, end: weekEnd });
   const weeklyRecords = weekDays.map((d) => {
-    const row = weeklyRows.find((r) =>
-      r.date.toISOString().startsWith(formatISO(d, { representation: 'date' }))
+    const dateStr = format(d, 'yyyy-MM-dd');
+
+    const record = weeklyRows.find(
+      (r) => format(r.date, 'yyyy-MM-dd') === dateStr
     );
+
     return {
-      date: formatISO(d, { representation: 'date' }),
-      present: row?.present ?? false,
-      status: row?.status ?? AttendanceStatus.ABSENT,
-      note: row?.note ?? null,
+      date: dateStr,
+      present: record?.present ?? false,
+      // ✅ Show NOT_MARKED if no record exists for past dates
+      status: (record?.status ?? 'NOT_MARKED') as
+        | AttendanceStatus
+        | 'NOT_MARKED',
+      note: record?.note ?? null,
     };
   });
 
   // 5. cumulative stats for the *whole academic year*
-  //    We assume the organisation uses weekdays only.
   const yearRows = await prisma.studentAttendance.findMany({
     where: { studentId },
   });

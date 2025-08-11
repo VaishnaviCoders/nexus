@@ -12,7 +12,7 @@ import { Suspense } from 'react';
 import { auth, currentUser } from '@clerk/nextjs/server';
 import { WelcomeMessage } from './dashboard-layout/WelcomeMessage';
 import NotificationFeed from '@/app/components/dashboardComponents/NotificationFeed';
-import { Bell, UserCircleIcon } from 'lucide-react';
+import { Bell, Building2, UserCircleIcon } from 'lucide-react';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { Skeleton } from './ui/skeleton';
@@ -130,12 +130,13 @@ export async function Navbar() {
             </div>
 
             {/* Center section - Organization switcher */}
-            {/* {orgId && (
-              <div className="hidden md:flex items-center justify-center flex-1 max-w-md mx-4">
+            {!orgId && (
+              <div className="flex items-center justify-center flex-1 max-w-md mx-4">
                 <Suspense fallback={<LoadingOrgSwitcher />}>
                   <div className="flex items-center space-x-2 px-3 py-1.5 rounded-md border bg-muted/50">
-                    <Building2 className="h-4 w-4 text-muted-foreground" />
+                    <Building2 className="h-4 w-4 text-muted-foreground max-sm:hidden" />
                     <OrganizationSwitcher
+                      hidePersonal={true}
                       appearance={{
                         elements: {
                           organizationSwitcherTrigger:
@@ -148,7 +149,7 @@ export async function Navbar() {
                   </div>
                 </Suspense>
               </div>
-            )} */}
+            )}
 
             {/* Right section */}
             <div className="ml-auto flex items-center space-x-3">

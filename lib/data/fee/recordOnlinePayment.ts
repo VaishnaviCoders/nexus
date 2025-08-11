@@ -181,6 +181,18 @@ export const verifyPhonePePayment = async (transactionId: string) => {
     return { success: false, status: state ?? 'UNKNOWN' };
   }
 
+  if (state === 'PENDING') {
+    // Update DB to reflect pending state if not already saved
+    return {
+      success: false,
+      status: 'PENDING',
+      message: 'Payment is processing',
+    };
+  }
+  if (state === 'FAILED') {
+    return { success: false, status: 'FAILED' };
+  }
+
   const paymentMethod = json?.data?.paymentInstrument?.type;
 
   await prisma.$transaction(async (tx) => {

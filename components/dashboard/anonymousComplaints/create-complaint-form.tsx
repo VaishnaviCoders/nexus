@@ -61,6 +61,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { createAnonymousComplaintAction } from '@/lib/data/complaints/create-anonymous-complaint';
+import { MentionUser } from '@/lib/data/complaints/getMentionUsers';
 
 interface MentionedPerson {
   id: string;
@@ -99,7 +100,15 @@ export const anonymousComplaintSchema = z.object({
   evidenceUrls: z.array(z.string()).optional(),
 });
 
-export default function CreateAnonymousComplaintForm() {
+interface CreateAnonymousComplaintFormProps {
+  initialUsers: MentionUser[];
+  organizationId: string;
+}
+
+export default function CreateAnonymousComplaintForm({
+  initialUsers,
+  organizationId,
+}: CreateAnonymousComplaintFormProps) {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -116,6 +125,7 @@ export default function CreateAnonymousComplaintForm() {
   const [cursorPosition, setCursorPosition] = useState(0);
   const [users, setUsers] = useState<User[]>([]);
   const [isPending, startTransition] = useTransition();
+  const [allUsers, setAllUsers] = useState<MentionUser[]>(initialUsers);
 
   const form = useForm<z.infer<typeof anonymousComplaintSchema>>({
     resolver: zodResolver(anonymousComplaintSchema),
@@ -128,100 +138,24 @@ export default function CreateAnonymousComplaintForm() {
     },
   });
 
-  // Mock data for mention suggestions - simulating large organization
-  const mockPeople = useMemo(() => {
-    const departments = [
-      'Computer Science',
-      'Mathematics',
-      'Physics',
-      'Chemistry',
-      'Biology',
-      'English',
-      'History',
-      'Administration',
-    ];
-    const roles = [
-      'Professor',
-      'Associate Professor',
-      'Assistant Professor',
-      'Lecturer',
-      'TA',
-      'Student',
-      'Admin Staff',
-      'Department Head',
-    ];
-    const firstNames = [
-      'John',
-      'Jane',
-      'Michael',
-      'Sarah',
-      'David',
-      'Lisa',
-      'Robert',
-      'Emily',
-      'James',
-      'Maria',
-      'William',
-      'Jennifer',
-      'Richard',
-      'Patricia',
-      'Charles',
-      'Linda',
-    ];
-    const lastNames = [
-      'Smith',
-      'Johnson',
-      'Williams',
-      'Brown',
-      'Jones',
-      'Garcia',
-      'Miller',
-      'Davis',
-      'Rodriguez',
-      'Martinez',
-      'Hernandez',
-      'Lopez',
-      'Gonzalez',
-      'Wilson',
-      'Anderson',
-      'Thomas',
-    ];
-
-    const people: MentionedPerson[] = [];
-
-    // Generate 300+ people
-    for (let i = 0; i < 350; i++) {
-      const firstName =
-        firstNames[Math.floor(Math.random() * firstNames.length)];
-      const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
-      const role = roles[Math.floor(Math.random() * roles.length)];
-      const department =
-        departments[Math.floor(Math.random() * departments.length)];
-
-      people.push({
-        id: `person-${i + 1}`,
-        name: `${firstName} ${lastName}`,
-        role,
-        department,
-      });
+  // Replace the filteredPeople useMemo with this:
+  const filteredPeople = useMemo(() => {
+    if (!mentionSearch || mentionSearch.length < 1) {
+      return allUsers.slice(0, 10); // Show first 10 users by default
     }
 
-    return people;
-  }, []);
-
-  // Filter people based on search
-  const filteredPeople = useMemo(() => {
-    if (!mentionSearch) return mockPeople.slice(0, 10); // Show first 10 by default
-
-    return mockPeople
+    return allUsers
       .filter(
         (person) =>
           person.name.toLowerCase().includes(mentionSearch.toLowerCase()) ||
           person.role?.toLowerCase().includes(mentionSearch.toLowerCase()) ||
-          person.department?.toLowerCase().includes(mentionSearch.toLowerCase())
+          person.department
+            ?.toLowerCase()
+            .includes(mentionSearch.toLowerCase()) ||
+          person.email?.toLowerCase().includes(mentionSearch.toLowerCase())
       )
       .slice(0, 10); // Limit to 10 results for performance
-  }, [mentionSearch, mockPeople]);
+  }, [mentionSearch, allUsers]);
 
   const onSubmit = async (data: z.infer<typeof anonymousComplaintSchema>) => {
     setIsUploading(true);
@@ -308,7 +242,7 @@ export default function CreateAnonymousComplaintForm() {
     setEvidenceFiles((prev) => prev.filter((file) => file.id !== id));
   };
 
-  const handleDescriptionChange = (value: string) => {
+  const handleDescriptionChange = async (value: string) => {
     form.setValue('description', value);
 
     // Check for @ mentions
@@ -327,17 +261,43 @@ export default function CreateAnonymousComplaintForm() {
         setMentionSearch(textAfterAt);
         setCursorPosition(cursorPos);
         setShowMentionPopover(true);
+
+        // If search query is 2+ characters, fetch fresh results from server
+        if (textAfterAt.length >= 2) {
+          startTransition(async () => {
+            try {
+              const { getMentionUsers } = await import(
+                '@/lib/data/complaints/getMentionUsers'
+              );
+              const searchResults = await getMentionUsers(
+                organizationId,
+                textAfterAt
+              );
+              setAllUsers(searchResults);
+            } catch (error) {
+              console.error('Error searching users:', error);
+              // Fallback to initial users on error
+              setAllUsers(initialUsers);
+            }
+          });
+        } else {
+          // Reset to initial users for short queries
+          setAllUsers(initialUsers);
+        }
       } else {
         setShowMentionPopover(false);
         setMentionSearch('');
+        setAllUsers(initialUsers);
       }
     } else {
       setShowMentionPopover(false);
       setMentionSearch('');
+      setAllUsers(initialUsers);
     }
   };
 
-  const addMention = (person: MentionedPerson) => {
+  const addMention = (person: MentionUser) => {
+    // Change from MentionedPerson to MentionUser
     const currentDescription = form.getValues('description');
     const textarea = textareaRef.current;
 
@@ -354,9 +314,17 @@ export default function CreateAnonymousComplaintForm() {
       const newDescription = `${beforeAt}@${person.name} ${afterCursor}`;
       form.setValue('description', newDescription);
 
+      // Convert MentionUser to MentionedPerson for the mentioned people list
+      const mentionedPerson: MentionedPerson = {
+        id: person.id,
+        name: person.name,
+        role: person.role,
+        department: person.department,
+      };
+
       // Add to mentioned people if not already added
       if (!mentionedPeople.find((p) => p.id === person.id)) {
-        setMentionedPeople((prev) => [...prev, person]);
+        setMentionedPeople((prev) => [...prev, mentionedPerson]);
       }
     }
 
@@ -399,8 +367,8 @@ export default function CreateAnonymousComplaintForm() {
     <div className="">
       <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] -z-10" />
 
-      <main className="flex-1 py-8">
-        <div className="container px-4 md:px-6">
+      <main className="flex-1 py-8 ">
+        <div className=" ">
           {submitted ? (
             <div className="mx-auto max-w-2xl">
               <Card className="border-0 shadow-2xl bg-white/80 backdrop-blur-sm">
@@ -470,7 +438,7 @@ export default function CreateAnonymousComplaintForm() {
               </Card>
             </div>
           ) : (
-            <div className="grid gap-8 lg:grid-cols-3">
+            <div className="grid gap-8 lg:grid-cols-3 ">
               {/* Left Column - Information */}
               <div className="space-y-6">
                 <div>
@@ -730,7 +698,7 @@ export default function CreateAnonymousComplaintForm() {
                                                     {person.name}
                                                   </span>
                                                   <span className="text-xs text-slate-500">
-                                                    •{person.role}
+                                                    {person.role}
                                                   </span>
                                                 </div>
                                               </CommandItem>

@@ -114,7 +114,10 @@ export default async function GradePage({
                     </p>
                     <p className="flex items-center gap-2">
                       <BookOpen className="h-4 w-4" />
-                      <span>Class Teacher: Not Assigned</span>
+                      <span>
+                        Class Teacher:{' '}
+                        {section.classTeacherId || 'Not Assigned'}
+                      </span>
                     </p>
                     <Badge
                       variant="outline"

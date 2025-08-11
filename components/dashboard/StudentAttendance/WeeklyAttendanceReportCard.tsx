@@ -46,11 +46,23 @@ const WeeklyAttendanceReportCard: React.FC<{
     const lateDays = attendanceRecords.filter(
       (r) => r.status === 'LATE'
     ).length;
-    const absentDays = totalDays - presentDays - lateDays;
+    const notMarkedDays = attendanceRecords.filter(
+      (r) => r.status === 'NOT_MARKED'
+    ).length;
+    const absentDays = attendanceRecords.filter(
+      (r) => r.status === 'ABSENT'
+    ).length;
 
+    console.log(
+      'Status for each record:',
+      attendanceRecords.map((r) => r.status)
+    );
+
+    // Calculate percentage excluding NOT_MARKED days
+    const markedDays = totalDays - notMarkedDays;
     const attendancePercentage =
-      totalDays > 0
-        ? Math.round(((presentDays + lateDays) / totalDays) * 100)
+      markedDays > 0
+        ? Math.round(((presentDays + lateDays) / markedDays) * 100)
         : 0;
 
     return {
@@ -58,6 +70,7 @@ const WeeklyAttendanceReportCard: React.FC<{
       presentDays,
       lateDays,
       absentDays,
+      notMarkedDays,
       attendancePercentage,
     };
   }, [attendanceRecords]);
@@ -112,9 +125,24 @@ const WeeklyAttendanceReportCard: React.FC<{
       label: 'Early Dismissal',
       emoji: '🏃',
     },
+    NOT_MARKED: {
+      icon: AlertTriangle,
+      color: 'text-gray-500',
+      bgColor: 'bg-gray-50',
+      borderColor: 'border-gray-200',
+      label: 'Not Marked',
+      emoji: '❓',
+    },
   };
 
-  const getAttendanceMessage = (percentage: number) => {
+  const getAttendanceMessage = (percentage: number, notMarkedDays: number) => {
+    if (notMarkedDays > 0) {
+      return {
+        message: `${notMarkedDays} day(s) not yet marked. Attendance percentage calculated from marked days only.`,
+        color: 'text-gray-600',
+      };
+    }
+
     if (percentage >= 95)
       return {
         message: 'Excellent attendance! Keep up the outstanding work.',
@@ -143,7 +171,8 @@ const WeeklyAttendanceReportCard: React.FC<{
   };
 
   const attendanceMessage = getAttendanceMessage(
-    weeklyStats.attendancePercentage
+    weeklyStats.attendancePercentage,
+    weeklyStats.notMarkedDays
   );
 
   return (
@@ -222,7 +251,7 @@ const WeeklyAttendanceReportCard: React.FC<{
                   )}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h2 className="text-2xl font-bold text-gray-900 truncate">
+                  <h2 className="lg:text-2xl font-bold text-gray-900 truncate">
                     {student.firstName}{' '}
                     {student.middleName && `${student.middleName} `}
                     {student.lastName}
@@ -251,7 +280,7 @@ const WeeklyAttendanceReportCard: React.FC<{
               <h3 className="text-lg font-semibold text-gray-900 mb-4">
                 Weekly Summary
               </h3>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
                 <div className="bg-white rounded-lg p-4 text-center shadow-sm">
                   <div className="text-3xl font-bold text-blue-600">
                     {weeklyStats.attendancePercentage}%
@@ -282,6 +311,12 @@ const WeeklyAttendanceReportCard: React.FC<{
                     Late Arrivals
                   </div>
                 </div>
+                <div className="bg-white rounded-lg p-4 text-center shadow-sm">
+                  <div className="text-3xl font-bold text-gray-600">
+                    {weeklyStats.notMarkedDays}
+                  </div>
+                  <div className="text-sm text-gray-600 mt-1">Not Marked</div>
+                </div>
               </div>
 
               {/* Attendance Progress Bar */}
@@ -291,7 +326,9 @@ const WeeklyAttendanceReportCard: React.FC<{
                     Weekly Progress
                   </span>
                   <span className="text-sm text-gray-500">
-                    {weeklyStats.attendancePercentage}%
+                    {weeklyStats.attendancePercentage}% (
+                    {weeklyStats.presentDays + weeklyStats.lateDays}/
+                    {weeklyStats.totalDays - weeklyStats.notMarkedDays})
                   </span>
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-3">
@@ -321,6 +358,8 @@ const WeeklyAttendanceReportCard: React.FC<{
                 {attendanceRecords.map((record, index) => {
                   const config = statusConfig[record.status];
                   const IconComponent = config.icon;
+
+                  console.log(record.status);
 
                   return (
                     <div

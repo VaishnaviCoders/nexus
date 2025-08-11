@@ -18,115 +18,29 @@ import {
 import Link from 'next/link';
 import { AttendanceStatsCards } from '@/components/dashboard/StudentAttendance/attendance-stats-cards';
 import { StudentAttendanceCalendar } from '@/components/dashboard/StudentAttendance/attendance-calendar';
-import prisma from '@/lib/db';
 import { RecentAttendanceTimeline } from '@/components/dashboard/StudentAttendance/recent-attendance-calendar';
 import { getCurrentUserId } from '@/lib/user';
-import { getCurrentUserByRole } from '@/lib/auth';
 import WeeklyAttendanceReportCard from '@/components/dashboard/StudentAttendance/WeeklyAttendanceReportCard';
 import { getWeeklyAttendanceReport } from '@/lib/data/attendance/get-weekly-attendance-report';
+import { Progress } from '@/components/ui/progress';
+import { getMyAttendance } from '@/lib/data/attendance/my-attendance';
 
 export default async function page() {
   const userId = await getCurrentUserId();
-  const user = await getCurrentUserByRole();
 
-  if (user.role !== 'STUDENT') {
-    return (
-      <div className="p-6">
-        <Card>
-          <CardContent className="p-6 space-y-2">
-            <CardTitle>Unauthorized</CardTitle>
-            <CardDescription>
-              This page is only accessible to students.
-            </CardDescription>
-            <p className="text-muted-foreground">
-              You are logged in as <strong>{user.role}</strong>.
-            </p>
-            <Link href="/dashboard">
-              <Button
-                variant="outline"
-                size="sm"
-                className="mt-2 bg-transparent"
-              >
-                Back to Dashboard
-              </Button>
-            </Link>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
+  const {
+    annualPercentage,
+    attendanceData,
+    currentStreak,
+    student,
+    monthlyPercentage,
+    monthlyStats,
+    recentAttendance,
+  } = await getMyAttendance(userId);
 
-  const student = await prisma.student.findUnique({
-    where: {
-      id: user.studentId,
-    },
-  });
+  const weeklyReportData = await getWeeklyAttendanceReport(student.id);
 
-  if (!student) return null;
-
-  const weeklyData = await getWeeklyAttendanceReport(student.id);
-
-  const attendanceData = await prisma.studentAttendance.findMany({
-    where: {
-      studentId: student?.id,
-    },
-    orderBy: { date: 'desc' },
-  });
-
-  const recentAttendance = await prisma.studentAttendance.findMany({
-    where: {
-      studentId: student?.id,
-    },
-    orderBy: { date: 'desc' },
-    take: 7,
-  });
-
-  // Calculate monthly stats
-  const currentMonth = new Date();
-  const monthStart = new Date(
-    currentMonth.getFullYear(),
-    currentMonth.getMonth(),
-    1
-  );
-  const monthEnd = new Date(
-    currentMonth.getFullYear(),
-    currentMonth.getMonth() + 1,
-    0
-  );
-
-  const monthlyAttendance = await prisma.studentAttendance.findMany({
-    where: {
-      studentId: student.id,
-      date: {
-        gte: monthStart,
-        lte: monthEnd,
-      },
-    },
-  });
-
-  const monthlyStats = {
-    totalDays: monthlyAttendance.length,
-    presentDays: monthlyAttendance.filter((record) => record.present).length,
-    lateDays: monthlyAttendance.filter((record) => record.status === 'LATE')
-      .length,
-    absentDays: monthlyAttendance.filter((record) => !record.present).length,
-  };
-
-  const monthlyPercentage =
-    monthlyStats.totalDays > 0
-      ? Math.round((monthlyStats.presentDays / monthlyStats.totalDays) * 100)
-      : 0;
-
-  // Calculate streak
-  let currentStreak = 0;
-  const sortedAttendance = [...attendanceData].reverse();
-  for (const record of sortedAttendance) {
-    if (record.present) {
-      currentStreak++;
-    } else {
-      break;
-    }
-  }
+  console.log('weekly report data', weeklyReportData);
 
   return (
     <div className="px-2 space-y-3">
@@ -149,9 +63,9 @@ export default async function page() {
         </div>
         <div className="flex justify-center items-center space-x-3">
           <div className="">
-            <WeeklyAttendanceReportCard data={weeklyData} />
+            <WeeklyAttendanceReportCard data={weeklyReportData} />
           </div>
-          <Link href="/dashboard">
+          <Link href="/dashboard" className="max-sm:hidden">
             <Button size="sm">
               <ChevronLeft /> Dashboard
             </Button>
@@ -242,29 +156,32 @@ export default async function page() {
                       {monthlyPercentage}%
                     </span>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div
-                      className={`h-2 rounded-full transition-all duration-300 ${
-                        monthlyPercentage >= 85
-                          ? 'bg-green-500'
-                          : 'bg-orange-500'
-                      }`}
-                      style={{ width: `${Math.min(monthlyPercentage, 100)}%` }}
-                    ></div>
-                  </div>
+
+                  <Progress
+                    value={monthlyPercentage}
+                    max={100}
+                    className="h-2 rounded-full transition-all duration-300"
+                  />
                 </div>
 
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span>Annual Target (90%)</span>
-                    <span className="text-blue-600">85%</span>
+                    <span
+                      className={
+                        annualPercentage >= 85
+                          ? 'text-green-600'
+                          : 'text-orange-600'
+                      }
+                    >
+                      {annualPercentage}%
+                    </span>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div
-                      className="bg-blue-500 h-2 rounded-full transition-all duration-300"
-                      style={{ width: '85%' }}
-                    ></div>
-                  </div>
+                  <Progress
+                    value={annualPercentage}
+                    max={100}
+                    className="h-2 rounded-full transition-all duration-300"
+                  />
                 </div>
 
                 {monthlyPercentage < 85 && (

@@ -6,11 +6,18 @@ import { getTeacherFeeSummary } from '@/lib/data/teacher/get-teacher-fee-summary
 import { getCurrentUserId } from '@/lib/user';
 import prisma from '@/lib/db';
 import { formatCurrencyIN } from '@/lib/utils';
+import { getCurrentUserByRole } from '@/lib/auth';
 
 const FeeStatsCardForTeacherContent = async () => {
-  const userId = await getCurrentUserId();
+  const currentUser = await getCurrentUserByRole();
 
-  const stats = await getTeacherFeeSummary(userId);
+  if (currentUser.role !== 'TEACHER') {
+    throw new Error('Only TEACHER can access this');
+  }
+
+  const teacherId = currentUser.teacherId;
+
+  const stats = await getTeacherFeeSummary(teacherId);
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       <Card className="overflow-hidden border-border/50 transition-all hover:border-primary/20  hover:shadow-sm">

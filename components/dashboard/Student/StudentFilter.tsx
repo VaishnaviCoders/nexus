@@ -268,7 +268,7 @@ export default function StudentFilter({
               )}
               {searchQuery && (
                 <div className="absolute -bottom-6 left-0 text-xs text-muted-foreground bg-blue-50 dark:bg-blue-950/20 px-2 py-1 rounded-md">
-                  🔍 Searching for "{searchQuery}"
+                  🔍 Searching for {searchQuery}
                 </div>
               )}
             </div>

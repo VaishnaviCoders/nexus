@@ -82,7 +82,7 @@ export default async function StudentFeePage() {
       </Card>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card className="overflow-hidden border-border/50 transition-all hover:border-primary/20 hover:shadow-md">
+        <Card className="overflow-hidden border-border/50 transition-all hover:border-primary/20 hover:shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Fees</CardTitle>
             <div className="rounded-md bg-primary/10 p-1">
@@ -93,7 +93,7 @@ export default async function StudentFeePage() {
             <div className="flex items-baseline space-x-1">
               <IndianRupee className="h-4 w-4 text-muted-foreground" />
               <span className="text-2xl font-bold">
-                {totalFees.toLocaleString('en-IN')}
+                {formatCurrencyIN(totalFees)}
               </span>
             </div>
             <p className="text-xs text-muted-foreground mt-1">
@@ -102,7 +102,7 @@ export default async function StudentFeePage() {
           </CardContent>
         </Card>
 
-        <Card className="overflow-hidden border-border/50 transition-all hover:border-emerald-500/20 hover:shadow-md">
+        <Card className="overflow-hidden border-border/50 transition-all hover:border-emerald-500/20 hover:shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Paid Fees</CardTitle>
             <div className="rounded-md bg-emerald-500/10 p-1">
@@ -113,7 +113,7 @@ export default async function StudentFeePage() {
             <div className="flex items-baseline space-x-1">
               <IndianRupee className="h-4 w-4 text-muted-foreground" />
               <span className="text-2xl font-bold">
-                {paidFees.toLocaleString('en-IN')}
+                {formatCurrencyIN(paidFees)}
               </span>
             </div>
             <p className="text-xs text-muted-foreground mt-1">
@@ -122,7 +122,7 @@ export default async function StudentFeePage() {
           </CardContent>
         </Card>
 
-        <Card className="overflow-hidden border-border/50 transition-all hover:border-amber-500/20 hover:shadow-md">
+        <Card className="overflow-hidden border-border/50 transition-all hover:border-amber-500/20 hover:shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Pending Fee</CardTitle>
             <div className="rounded-md bg-amber-500/10 p-1">
@@ -133,7 +133,7 @@ export default async function StudentFeePage() {
             <div className="flex items-baseline space-x-1">
               <IndianRupee className="h-4 w-4 text-muted-foreground" />
               <span className="text-2xl font-bold">
-                {pendingFees.toLocaleString('en-IN')}
+                {formatCurrencyIN(pendingFees)}
               </span>
             </div>
             <p className="text-xs text-muted-foreground mt-1">
@@ -143,7 +143,7 @@ export default async function StudentFeePage() {
           </CardContent>
         </Card>
 
-        <Card className="overflow-hidden border-border/50 transition-all hover:border-violet-500/20 hover:shadow-md">
+        <Card className="overflow-hidden border-border/50 transition-all hover:border-violet-500/20 hover:shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
               Admission Date
@@ -154,11 +154,7 @@ export default async function StudentFeePage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {new Intl.DateTimeFormat('en-IN', {
-                day: '2-digit',
-                month: 'short',
-                year: 'numeric',
-              }).format(student.createdAt)}
+              {formatDateIN(student.createdAt)}
             </div>
             <p className="text-xs text-muted-foreground mt-1">
               {Math.floor(
@@ -184,7 +180,7 @@ export default async function StudentFeePage() {
           {fees.map((fee) => (
             <Card
               key={fee.id}
-              className="overflow-hidden border-border/50 transition-all hover:shadow-md"
+              className="overflow-hidden border-border/50 transition-all hover:shadow-sm"
             >
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
@@ -199,8 +195,10 @@ export default async function StudentFeePage() {
                         fee.status === 'PAID'
                           ? 'bg-emerald-50 text-emerald-700 hover:bg-emerald-50 border-emerald-200'
                           : fee.status === 'UNPAID'
-                            ? 'bg-red-50 text-red-700 hover:bg-red-50 border-red-200'
-                            : ''
+                            ? 'bg-yellow-50 text-yellow-700 hover:bg-yellow-50 border-yellow-200'
+                            : fee.status === 'OVERDUE'
+                              ? 'bg-red-50 text-red-700 hover:bg-red-50 border-red-200'
+                              : ''
                       )}
                     >
                       {fee.status}

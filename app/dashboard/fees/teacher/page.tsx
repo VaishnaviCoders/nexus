@@ -1,5 +1,4 @@
 import { Suspense } from 'react';
-
 import StudentPaymentHistoryTable from '@/components/dashboard/Fees/StudentPaymentHistoryTable';
 import { getFeeRecords } from '@/lib/data/fee/get-all-students-fees';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -7,16 +6,24 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardHeader,
   CardTitle,
 } from '@/components/ui/card';
 import { FeeStatsCardForTeacher } from '@/components/dashboard/teacher/FeeStatsCardForTeacher';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { PlusIcon } from 'lucide-react';
+import { getAssignedStudentsFees } from '@/lib/data/fee/getAssignedStudentsFees';
+import { getCurrentUserByRole } from '@/lib/auth';
 
 export default async function TeacherFeesManagementDashboard() {
-  const feeRecords = await getFeeRecords();
+  const currentUser = await getCurrentUserByRole();
+
+  if (currentUser.role !== 'TEACHER') {
+    throw new Error('Only TEACHER can access this');
+  }
+
+  const teacherId = currentUser.teacherId;
+  const feeRecords = await getAssignedStudentsFees(teacherId);
 
   return (
     <div className="">

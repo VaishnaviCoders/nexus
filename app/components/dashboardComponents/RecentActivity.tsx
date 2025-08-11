@@ -6,7 +6,6 @@ import {
   GraduationCap,
   IndianRupee,
   Calendar,
-  MessageSquare,
   UserPlus,
   AlertTriangle,
   FileText,
@@ -16,13 +15,8 @@ import {
   CreditCard,
   BookOpen,
   UserCheck,
-  Phone,
-  Mail,
-  Building,
-  Star,
   TrendingUp,
   Activity,
-  Settings,
 } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Card, CardContent } from '@/components/ui/card';

@@ -75,7 +75,5 @@ export default async function FilterStudents({
   } catch (error) {
     console.error('Error filtering students:', error);
     throw new Error('Failed to fetch students');
-  } finally {
-    await prisma.$disconnect();
   }
 }

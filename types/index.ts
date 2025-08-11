@@ -178,7 +178,7 @@ export interface WeeklyAttendanceReportData {
   attendanceRecords: {
     date: string;
     present: boolean;
-    status: AttendanceStatus;
+    status: AttendanceStatus | 'NOT_MARKED';
     note?: string | null;
   }[];
   weekRange: {

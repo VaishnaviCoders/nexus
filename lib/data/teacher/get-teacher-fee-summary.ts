@@ -1,14 +1,7 @@
 import prisma from '@/lib/db';
 
-export async function getTeacherFeeSummary(userId: string) {
+export async function getTeacherFeeSummary(teacherId: string) {
   // Step 1: Find teacher
-  const user = await prisma.user.findUnique({
-    where: { id: userId },
-    include: { teacher: true },
-  });
-
-  const teacherId = user?.teacher?.id;
-  if (!teacherId) throw new Error('Teacher not found');
 
   // Step 2: Find assigned sections
   const assignments = await prisma.teachingAssignment.findMany({

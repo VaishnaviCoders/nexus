@@ -5,7 +5,7 @@ import { FeeStatus, PaymentStatus } from '@/generated/prisma/enums';
 export async function getFeeRecords(count: number = 50): Promise<FeeRecord[]> {
   try {
     const fees = await prisma.fee.findMany({
-      take: count, // Limit the number of records
+      take: count,
       include: {
         student: {
           select: {
@@ -72,6 +72,9 @@ export async function getFeeRecords(count: number = 50): Promise<FeeRecord[]> {
                 email: true,
               },
             },
+          },
+          orderBy: {
+            paymentDate: 'desc',
           },
         },
       },

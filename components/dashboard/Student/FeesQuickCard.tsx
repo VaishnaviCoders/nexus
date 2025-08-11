@@ -12,25 +12,8 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { CreditCard, AlertTriangle, CheckCircle, Clock } from 'lucide-react';
 import { cn, formatCurrencyIN, formatDateIN } from '@/lib/utils';
-import {
-  FeeStatus,
-  PaymentMethod,
-  PaymentStatus,
-} from '@/generated/prisma/enums';
+import { FeeStatus, PaymentMethod } from '@/generated/prisma/enums';
 import Link from 'next/link';
-
-const getStatusColor = (status: string) => {
-  switch (status) {
-    case 'COMPLETED':
-      return 'text-green-600';
-    case 'PENDING':
-      return 'text-amber-600';
-    case 'FAILED':
-      return 'text-red-600';
-    default:
-      return 'text-gray-600';
-  }
-};
 
 const getStatusIcon = (status: string) => {
   switch (status) {

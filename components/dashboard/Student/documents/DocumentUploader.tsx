@@ -28,7 +28,6 @@ import { DOCUMENT_TYPE_LABELS } from '@/types/document';
 import { toast } from 'sonner';
 import { DocumentUploadFormData, documentUploadSchema } from '@/lib/schemas';
 import { uploadStudentDocuments } from '@/app/actions';
-import { DocumentType } from '@/generated/prisma/enums';
 
 interface DocumentUploadFormProps {
   studentId: string;

@@ -3,7 +3,7 @@
 import React, { useTransition } from 'react';
 import { Button } from './ui/button';
 import { CreditCard, Loader2 } from 'lucide-react';
-import { phonePayInitPayment } from '@/lib/data/fee/payFeesAction';
+import { phonePayInitPayment } from '@/lib/data/fee/recordOnlinePayment';
 import { useRouter } from 'next/navigation';
 
 type PayFeeButtonProps = {
@@ -13,25 +13,40 @@ type PayFeeButtonProps = {
 const PayFeeButton = ({ feeId }: PayFeeButtonProps) => {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
+
   const handleClick = () => {
     startTransition(async () => {
       try {
-        console.log('Clicked fee ID:', feeId);
-
         const result = await phonePayInitPayment(feeId);
-        console.log('Payment action result:', result);
-        if (result.success && result.redirectUrl) {
-          // Redirect to PhonePe payment page
-          router.push(result.redirectUrl);
-        } else {
-          console.error('No redirect URL received');
-          alert('Failed to initialize payment. Please try again.');
+
+        if (!result || typeof result !== 'object') {
+          throw new Error('Invalid server response. Please try again.');
         }
+
+        const { success, redirectUrl, transactionId } = result;
+
+        if (!success) {
+          throw new Error('Payment initialization failed. Please try again.');
+        }
+
+        if (!redirectUrl || typeof redirectUrl !== 'string') {
+          throw new Error('Payment gateway URL is missing.');
+        }
+
+        console.log('Payment initialized:', {
+          transactionId,
+          redirectUrl,
+        });
+
+        // Ensure redirect happens after logs flush
+        setTimeout(() => {
+          router.push(redirectUrl);
+        }, 50);
       } catch (error) {
         console.error('Payment error:', error);
         alert(error instanceof Error ? error.message : 'Payment failed');
       } finally {
-        console.log('Payment button clicked');
+        console.log('PayFeeButton click flow completed');
       }
     });
   };

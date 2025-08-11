@@ -3,7 +3,7 @@
 import { useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ArrowLeft, CalendarIcon, Loader2, Save, User } from 'lucide-react';
+import { CalendarIcon, Loader2, Save, User } from 'lucide-react';
 import { format } from 'date-fns';
 
 import { Button } from '@/components/ui/button';
@@ -40,12 +40,10 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-// import { useToast } from "@/hooks/use-toast"
 import { cn } from '@/lib/utils';
 import { StudentProfileFormData, studentProfileSchema } from '@/lib/schemas';
 import { toast } from 'sonner';
 import { editStudentProfileForm } from '@/lib/data/student/edit-student-form-action';
-import Link from 'next/link';
 
 interface StudentProfileEditFormProps {
   student: {
@@ -98,7 +96,7 @@ export function StudentProfileEditForm({
   function onSubmit(data: StudentProfileFormData) {
     startTransition(async () => {
       try {
-        const result = await editStudentProfileForm(student.id, data);
+        await editStudentProfileForm(student.id, data);
 
         toast.success('Student profile updated successfully');
       } catch (error) {
@@ -144,7 +142,7 @@ export function StudentProfileEditForm({
               className="bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950 dark:text-blue-300 dark:border-blue-800"
             >
               <User className="w-3 h-3 mr-1" />
-              {student.isOwnProfile ? 'Your Profile' : "Child's Profile"}
+              {student.isOwnProfile ? 'Your Profile' : 'Child&apos;s Profile'}
             </Badge>
           </div>
         </CardContent>

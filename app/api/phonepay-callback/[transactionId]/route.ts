@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { verifyPhonePePayment } from '@/lib/data/fee/payFeesAction';
+import { verifyPhonePePayment } from '@/lib/data/fee/recordOnlinePayment';
 
 export async function GET(
   request: Request,

@@ -53,9 +53,6 @@ model AcademicYear {
 
   // Meta Data
   description String?
-  createdBy   String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
 
   // Relation Targets (Optional but Needed)
   // fees               Fee[]
@@ -69,6 +66,10 @@ model AcademicYear {
   StudentAttendance  StudentAttendance[]
   AcademicCalendar   AcademicCalendar[]
   ExamSession        ExamSession[]
+
+  createdBy String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@unique([organizationId, name])
   @@index([organizationId, isCurrent])

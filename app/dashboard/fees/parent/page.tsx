@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { DashboardCardSkeleton } from '@/lib/skeletons/DashboardCardSkeleton';
 import { Calendar, Receipt, User } from 'lucide-react';
 import ParentFeeHistory from '@/components/dashboard/Fees/ParentFeeHistory';
-import GetFeesByParentId from '@/lib/data/fee/parent-fee';
+import GetFeesByParentId from '@/lib/data/fee/GetFeesByParentId';
 import { formatCurrencyIN } from '@/lib/utils';
 import { redirect } from 'next/navigation';
 

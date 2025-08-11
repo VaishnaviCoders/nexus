@@ -1042,9 +1042,31 @@ const FeeDetailsContent = ({
                           <dd>{`${payment.payer.firstName} ${payment.payer.lastName}`}</dd>
 
                           <dt className="font-medium text-muted-foreground">
+                            Payment Status:
+                          </dt>
+                          <dd
+                            className={cn(
+                              payment.status === 'COMPLETED' &&
+                                'text-emerald-600',
+                              payment.status === 'PENDING' && 'text-yellow-600',
+                              payment.status === 'FAILED' && 'text-red-600',
+                              payment.status === 'UNPAID' && 'text-gray-600',
+                              payment.status === 'REFUNDED' &&
+                                'text-purple-600',
+                              payment.status === 'CANCELLED' && 'text-gray-500'
+                            )}
+                          >
+                            {payment.status}
+                          </dd>
+
+                          <dt className="font-medium text-muted-foreground">
                             Amount Paid:
                           </dt>
-                          <dd>{formatCurrencyIN(payment.amountPaid)}</dd>
+                          <dd>
+                            {payment.status === 'COMPLETED'
+                              ? formatCurrencyIN(payment.amountPaid)
+                              : formatCurrencyIN(0)}
+                          </dd>
 
                           <dt className="font-medium text-muted-foreground">
                             Payment Date:
