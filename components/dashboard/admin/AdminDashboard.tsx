@@ -25,11 +25,8 @@ import AdminQuickActions from '@/app/components/dashboardComponents/AdminQuickAc
 import AdminDashboardCards from '@/app/components/dashboardComponents/AdminDashboardCards';
 import AdminRecentActivity from '@/app/components/dashboardComponents/RecentActivity';
 import { UpcomingEvents } from '@/app/components/dashboardComponents/UpcomingEvents';
-<<<<<<< HEAD
 import { getCurrentAcademicYear } from '@/lib/academicYear';
 import { redirect } from 'next/navigation';
-=======
->>>>>>> 0a0cbd6 (added weekly attendance report)
 
 const AdminDashboard = async () => {
   const data = await getMonthlyFeeData(2025);

@@ -15,12 +15,7 @@ import { FeesQuickCard } from './FeesQuickCard';
 import { FeeStatus, PaymentMethod } from '@/generated/prisma/enums';
 import { Button } from '@/components/ui/button';
 import { CreditCard, Download, Upload, MessageSquare, Zap } from 'lucide-react';
-<<<<<<< HEAD
 import { getStudentNotices } from '@/lib/data/notice/get-student-notices';
-=======
-import { getOrganizationId } from '@/lib/organization';
-import { getCurrentAcademicYearId } from '@/lib/academicYear';
->>>>>>> 0a0cbd6 (added weekly attendance report)
 
 export async function getFeesStatus(studentId: string) {
   const fees = await prisma.fee.findMany({
@@ -130,22 +125,6 @@ const quickActions = [
     link: '/dashboard/anonymous-complaints',
   },
 ];
-
-async function getStudentNotices() {
-  const organizationId = await getOrganizationId();
-  const { academicYearId } = await getCurrentAcademicYearId();
-
-  const notices = await prisma.notice.findMany({
-    where: {
-      organizationId,
-      academicYearId,
-    },
-    orderBy: {
-      createdAt: 'desc',
-    },
-  });
-  return notices;
-}
 
 const StudentDashboard = async () => {
   const userId = await getCurrentUserId();

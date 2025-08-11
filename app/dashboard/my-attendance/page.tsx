@@ -20,21 +20,14 @@ import { AttendanceStatsCards } from '@/components/dashboard/StudentAttendance/a
 import { StudentAttendanceCalendar } from '@/components/dashboard/StudentAttendance/attendance-calendar';
 import { RecentAttendanceTimeline } from '@/components/dashboard/StudentAttendance/recent-attendance-calendar';
 import { getCurrentUserId } from '@/lib/user';
-<<<<<<< HEAD
 import WeeklyAttendanceReportCard from '@/components/dashboard/StudentAttendance/WeeklyAttendanceReportCard';
 import { getWeeklyAttendanceReport } from '@/lib/data/attendance/get-weekly-attendance-report';
 import { Progress } from '@/components/ui/progress';
 import { getMyAttendance } from '@/lib/data/attendance/my-attendance';
-=======
-import { getCurrentUserByRole } from '@/lib/auth';
-import WeeklyAttendanceReportCard from '@/components/dashboard/StudentAttendance/WeeklyAttendanceReportCard';
-import { getWeeklyAttendanceReport } from '@/lib/data/attendance/get-weekly-attendance-report';
->>>>>>> 0a0cbd6 (added weekly attendance report)
 
 export default async function page() {
   const userId = await getCurrentUserId();
 
-<<<<<<< HEAD
   const {
     annualPercentage,
     attendanceData,
@@ -49,107 +42,6 @@ export default async function page() {
 
   console.log('weekly report data', weeklyReportData);
 
-=======
-  if (user.role !== 'STUDENT') {
-    return (
-      <div className="p-6">
-        <Card>
-          <CardContent className="p-6 space-y-2">
-            <CardTitle>Unauthorized</CardTitle>
-            <CardDescription>
-              This page is only accessible to students.
-            </CardDescription>
-            <p className="text-muted-foreground">
-              You are logged in as <strong>{user.role}</strong>.
-            </p>
-            <Link href="/dashboard">
-              <Button
-                variant="outline"
-                size="sm"
-                className="mt-2 bg-transparent"
-              >
-                Back to Dashboard
-              </Button>
-            </Link>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
-  const student = await prisma.student.findUnique({
-    where: {
-      id: user.studentId,
-    },
-  });
-
-  if (!student) return null;
-
-  const weeklyData = await getWeeklyAttendanceReport(student.id);
-
-  const attendanceData = await prisma.studentAttendance.findMany({
-    where: {
-      studentId: student?.id,
-    },
-    orderBy: { date: 'desc' },
-  });
-
-  const recentAttendance = await prisma.studentAttendance.findMany({
-    where: {
-      studentId: student?.id,
-    },
-    orderBy: { date: 'desc' },
-    take: 7,
-  });
-
-  // Calculate monthly stats
-  const currentMonth = new Date();
-  const monthStart = new Date(
-    currentMonth.getFullYear(),
-    currentMonth.getMonth(),
-    1
-  );
-  const monthEnd = new Date(
-    currentMonth.getFullYear(),
-    currentMonth.getMonth() + 1,
-    0
-  );
-
-  const monthlyAttendance = await prisma.studentAttendance.findMany({
-    where: {
-      studentId: student.id,
-      date: {
-        gte: monthStart,
-        lte: monthEnd,
-      },
-    },
-  });
-
-  const monthlyStats = {
-    totalDays: monthlyAttendance.length,
-    presentDays: monthlyAttendance.filter((record) => record.present).length,
-    lateDays: monthlyAttendance.filter((record) => record.status === 'LATE')
-      .length,
-    absentDays: monthlyAttendance.filter((record) => !record.present).length,
-  };
-
-  const monthlyPercentage =
-    monthlyStats.totalDays > 0
-      ? Math.round((monthlyStats.presentDays / monthlyStats.totalDays) * 100)
-      : 0;
-
-  // Calculate streak
-  let currentStreak = 0;
-  const sortedAttendance = [...attendanceData].reverse();
-  for (const record of sortedAttendance) {
-    if (record.present) {
-      currentStreak++;
-    } else {
-      break;
-    }
-  }
-
->>>>>>> 0a0cbd6 (added weekly attendance report)
   return (
     <div className="px-2 space-y-3">
       {/* Header */}
@@ -171,15 +63,9 @@ export default async function page() {
         </div>
         <div className="flex justify-center items-center space-x-3">
           <div className="">
-<<<<<<< HEAD
             <WeeklyAttendanceReportCard data={weeklyReportData} />
           </div>
           <Link href="/dashboard" className="max-sm:hidden">
-=======
-            <WeeklyAttendanceReportCard data={weeklyData} />
-          </div>
-          <Link href="/dashboard">
->>>>>>> 0a0cbd6 (added weekly attendance report)
             <Button size="sm">
               <ChevronLeft /> Dashboard
             </Button>
@@ -195,11 +81,7 @@ export default async function page() {
         {/* Left Column - Calendar */}
         <div className="lg:col-span-8 space-y-6">
           <StudentAttendanceCalendar attendanceRecords={attendanceData} />
-<<<<<<< HEAD
           <Card className="border-0 ">
-=======
-          <Card className="border-0 bg-gradient-to-br from-card via-card to-green-50/20 dark:to-green-950/20">
->>>>>>> 0a0cbd6 (added weekly attendance report)
             <CardContent className="p-6">
               <h3 className="text-lg font-semibold mb-4 text-green-800 dark:text-green-200 flex items-center gap-2">
                 <Clock className="w-5 h-5" />
@@ -254,11 +136,7 @@ export default async function page() {
         <div className="lg:col-span-4 space-y-6">
           {/* Recent Timeline */}
           <RecentAttendanceTimeline recentAttendance={recentAttendance} />
-<<<<<<< HEAD
           <Card className="border-0 ">
-=======
-          <Card className="border-0 bg-gradient-to-br from-card via-card to-purple-50/20 dark:to-purple-950/20">
->>>>>>> 0a0cbd6 (added weekly attendance report)
             <CardContent className="p-6">
               <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
                 <Target className="w-5 h-5" />
@@ -278,31 +156,17 @@ export default async function page() {
                       {monthlyPercentage}%
                     </span>
                   </div>
-<<<<<<< HEAD
 
                   <Progress
                     value={monthlyPercentage}
                     max={100}
                     className="h-2 rounded-full transition-all duration-300"
                   />
-=======
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div
-                      className={`h-2 rounded-full transition-all duration-300 ${
-                        monthlyPercentage >= 85
-                          ? 'bg-green-500'
-                          : 'bg-orange-500'
-                      }`}
-                      style={{ width: `${Math.min(monthlyPercentage, 100)}%` }}
-                    ></div>
-                  </div>
->>>>>>> 0a0cbd6 (added weekly attendance report)
                 </div>
 
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span>Annual Target (90%)</span>
-<<<<<<< HEAD
                     <span
                       className={
                         annualPercentage >= 85
@@ -318,16 +182,6 @@ export default async function page() {
                     max={100}
                     className="h-2 rounded-full transition-all duration-300"
                   />
-=======
-                    <span className="text-blue-600">85%</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div
-                      className="bg-blue-500 h-2 rounded-full transition-all duration-300"
-                      style={{ width: '85%' }}
-                    ></div>
-                  </div>
->>>>>>> 0a0cbd6 (added weekly attendance report)
                 </div>
 
                 {monthlyPercentage < 85 && (
@@ -354,11 +208,7 @@ export default async function page() {
             </CardContent>
           </Card>
           {/* Monthly Insights */}
-<<<<<<< HEAD
           <Card className="border-0 ">
-=======
-          <Card className="border-0 bg-gradient-to-br from-card via-card to-blue-50/20 dark:to-blue-950/20">
->>>>>>> 0a0cbd6 (added weekly attendance report)
             <CardContent className="p-6">
               <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
                 <Calendar className="w-5 h-5" />
