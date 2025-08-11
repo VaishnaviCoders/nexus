@@ -7,7 +7,10 @@ import {
   startOfWeek,
   eachDayOfInterval,
   isWeekend,
+<<<<<<< HEAD
   format,
+=======
+>>>>>>> 0a0cbd6 (added weekly attendance report)
 } from 'date-fns';
 
 export async function getWeeklyAttendanceReport(studentId: string) {
@@ -18,9 +21,16 @@ export async function getWeeklyAttendanceReport(studentId: string) {
   });
   if (!student) throw new Error('Student not found');
 
+<<<<<<< HEAD
   // 2️⃣  past weekly window (Mon–Sun that ended last Sunday)
   const today = new Date();
   const weekStart = startOfWeek(today, { weekStartsOn: 1 });
+=======
+  // 2. weekly window (Mon–Sun)
+  // 2️⃣  past weekly window (Mon–Sun that ended last Sunday)
+  const today = new Date();
+  const weekStart = startOfWeek(addDays(today, -7), { weekStartsOn: 1 }); // last Mon 00:00
+>>>>>>> 0a0cbd6 (added weekly attendance report)
   const weekEnd = addDays(weekStart, 6); // last Sun 23:59
 
   // 3. fetch rows for the week
@@ -29,6 +39,7 @@ export async function getWeeklyAttendanceReport(studentId: string) {
     orderBy: { date: 'asc' },
   });
 
+<<<<<<< HEAD
   // 4. build daily records (only past dates, fill gaps → NOT_MARKED)
   const weekDays = eachDayOfInterval({ start: weekStart, end: weekEnd });
   const weeklyRecords = weekDays.map((d) => {
@@ -46,10 +57,27 @@ export async function getWeeklyAttendanceReport(studentId: string) {
         | AttendanceStatus
         | 'NOT_MARKED',
       note: record?.note ?? null,
+=======
+  // 4. build 7 daily records (fill gaps → absent)
+  const weekDays = eachDayOfInterval({ start: weekStart, end: weekEnd });
+  const weeklyRecords = weekDays.map((d) => {
+    const row = weeklyRows.find((r) =>
+      r.date.toISOString().startsWith(formatISO(d, { representation: 'date' }))
+    );
+    return {
+      date: formatISO(d, { representation: 'date' }),
+      present: row?.present ?? false,
+      status: row?.status ?? AttendanceStatus.ABSENT,
+      note: row?.note ?? null,
+>>>>>>> 0a0cbd6 (added weekly attendance report)
     };
   });
 
   // 5. cumulative stats for the *whole academic year*
+<<<<<<< HEAD
+=======
+  //    We assume the organisation uses weekdays only.
+>>>>>>> 0a0cbd6 (added weekly attendance report)
   const yearRows = await prisma.studentAttendance.findMany({
     where: { studentId },
   });

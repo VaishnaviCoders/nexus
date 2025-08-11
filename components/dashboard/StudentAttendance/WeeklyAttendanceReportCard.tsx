@@ -45,13 +45,17 @@ const WeeklyAttendanceReportCard: React.FC<{
     const presentDays = attendanceRecords.filter((r) => r.present).length;
     const lateDays = attendanceRecords.filter(
       (r) => r.status === 'LATE'
+<<<<<<< HEAD
     ).length;
     const notMarkedDays = attendanceRecords.filter(
       (r) => r.status === 'NOT_MARKED'
     ).length;
     const absentDays = attendanceRecords.filter(
       (r) => r.status === 'ABSENT'
+=======
+>>>>>>> 0a0cbd6 (added weekly attendance report)
     ).length;
+    const absentDays = totalDays - presentDays - lateDays;
 
     console.log(
       'Status for each record:',
@@ -61,8 +65,13 @@ const WeeklyAttendanceReportCard: React.FC<{
     // Calculate percentage excluding NOT_MARKED days
     const markedDays = totalDays - notMarkedDays;
     const attendancePercentage =
+<<<<<<< HEAD
       markedDays > 0
         ? Math.round(((presentDays + lateDays) / markedDays) * 100)
+=======
+      totalDays > 0
+        ? Math.round(((presentDays + lateDays) / totalDays) * 100)
+>>>>>>> 0a0cbd6 (added weekly attendance report)
         : 0;
 
     return {
@@ -70,7 +79,10 @@ const WeeklyAttendanceReportCard: React.FC<{
       presentDays,
       lateDays,
       absentDays,
+<<<<<<< HEAD
       notMarkedDays,
+=======
+>>>>>>> 0a0cbd6 (added weekly attendance report)
       attendancePercentage,
     };
   }, [attendanceRecords]);
@@ -251,7 +263,11 @@ const WeeklyAttendanceReportCard: React.FC<{
                   )}
                 </div>
                 <div className="flex-1 min-w-0">
+<<<<<<< HEAD
                   <h2 className="lg:text-2xl font-bold text-gray-900 truncate">
+=======
+                  <h2 className="text-2xl font-bold text-gray-900 truncate">
+>>>>>>> 0a0cbd6 (added weekly attendance report)
                     {student.firstName}{' '}
                     {student.middleName && `${student.middleName} `}
                     {student.lastName}
@@ -280,7 +296,11 @@ const WeeklyAttendanceReportCard: React.FC<{
               <h3 className="text-lg font-semibold text-gray-900 mb-4">
                 Weekly Summary
               </h3>
+<<<<<<< HEAD
               <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+=======
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+>>>>>>> 0a0cbd6 (added weekly attendance report)
                 <div className="bg-white rounded-lg p-4 text-center shadow-sm">
                   <div className="text-3xl font-bold text-blue-600">
                     {weeklyStats.attendancePercentage}%
@@ -311,12 +331,15 @@ const WeeklyAttendanceReportCard: React.FC<{
                     Late Arrivals
                   </div>
                 </div>
+<<<<<<< HEAD
                 <div className="bg-white rounded-lg p-4 text-center shadow-sm">
                   <div className="text-3xl font-bold text-gray-600">
                     {weeklyStats.notMarkedDays}
                   </div>
                   <div className="text-sm text-gray-600 mt-1">Not Marked</div>
                 </div>
+=======
+>>>>>>> 0a0cbd6 (added weekly attendance report)
               </div>
 
               {/* Attendance Progress Bar */}
@@ -326,9 +349,13 @@ const WeeklyAttendanceReportCard: React.FC<{
                     Weekly Progress
                   </span>
                   <span className="text-sm text-gray-500">
+<<<<<<< HEAD
                     {weeklyStats.attendancePercentage}% (
                     {weeklyStats.presentDays + weeklyStats.lateDays}/
                     {weeklyStats.totalDays - weeklyStats.notMarkedDays})
+=======
+                    {weeklyStats.attendancePercentage}%
+>>>>>>> 0a0cbd6 (added weekly attendance report)
                   </span>
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-3">
@@ -359,8 +386,11 @@ const WeeklyAttendanceReportCard: React.FC<{
                   const config = statusConfig[record.status];
                   const IconComponent = config.icon;
 
+<<<<<<< HEAD
                   console.log(record.status);
 
+=======
+>>>>>>> 0a0cbd6 (added weekly attendance report)
                   return (
                     <div
                       key={index}
