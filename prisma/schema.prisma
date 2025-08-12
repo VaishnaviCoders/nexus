@@ -157,6 +157,36 @@ model User {
   @@index([organizationId])
 }
 
+model Grade {
+  id                 String               @id @default(cuid())
+  grade              String
+  organizationId     String
+  organization       Organization         @relation(fields: [organizationId], references: [id])
+  students           Student[]
+  section            Section[]
+  TeachingAssignment TeachingAssignment[]
+
+  @@index([organizationId, grade])
+}
+
+model Section {
+  id             String       @id @default(cuid())
+  name           String // e.g., "A", "B", "C"
+  gradeId        String
+  organizationId String
+  grade          Grade        @relation(fields: [gradeId], references: [id], onDelete: Cascade)
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  classTeacherId String?
+  classTeacher   Teacher?     @relation(fields: [classTeacherId], references: [id])
+
+  students           Student[] // Students in this section
+  StudentAttendance  StudentAttendance[]
+  TeachingAssignment TeachingAssignment[]
+
+  @@unique([name, gradeId])
+  @@index([organizationId, name, gradeId])
+}
+
 model Teacher {
   id     String @id @default(cuid())
   userId String @unique
@@ -255,7 +285,7 @@ model TeachingAssignment {
   academicYearId String?
 
   // ✅ Proper unique constraint
-  @@unique([teacherId, subjectId, gradeId, sectionId, academicYear])
+  @@unique([teacherId, subjectId, gradeId, sectionId, academicYearId])
   @@index([teacherId])
   @@index([subjectId, sectionId])
   @@index([organizationId])
@@ -266,36 +296,6 @@ enum AssignmentStatus {
   ASSIGNED
   COMPLETED
   INACTIVE
-}
-
-model Grade {
-  id                 String               @id @default(cuid())
-  grade              String
-  organizationId     String
-  organization       Organization         @relation(fields: [organizationId], references: [id])
-  students           Student[]
-  section            Section[]
-  TeachingAssignment TeachingAssignment[]
-
-  @@index([organizationId, grade])
-}
-
-model Section {
-  id             String       @id @default(cuid())
-  name           String // e.g., "A", "B", "C"
-  gradeId        String
-  organizationId String
-  grade          Grade        @relation(fields: [gradeId], references: [id], onDelete: Cascade)
-  organization   Organization @relation(fields: [organizationId], references: [id])
-  classTeacherId String?
-  classTeacher   Teacher?     @relation(fields: [classTeacherId], references: [id])
-
-  students           Student[] // Students in this section
-  StudentAttendance  StudentAttendance[]
-  TeachingAssignment TeachingAssignment[]
-
-  @@unique([name, gradeId])
-  @@index([organizationId, name, gradeId])
 }
 
 model Student {

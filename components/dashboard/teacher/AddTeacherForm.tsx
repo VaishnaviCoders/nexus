@@ -34,7 +34,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { CalendarIcon, ChevronDownIcon, Mail, Phone } from 'lucide-react';
+import { CalendarIcon, Mail, Phone } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Calendar } from '@/components/ui/calendar';
 

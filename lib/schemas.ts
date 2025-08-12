@@ -370,3 +370,27 @@ export const offlinePaymentSchema = z.object({
 });
 
 export type offlinePaymentFormData = z.infer<typeof offlinePaymentSchema>;
+
+export const subjectSchema = z.object({
+  name: z
+    .string()
+    .min(2, 'Subject name must be at least 2 characters')
+    .max(100, 'Subject name must be less than 100 characters'),
+  code: z
+    .string()
+    .min(1, 'Subject code is required')
+    .min(2, 'Subject code must be at least 2 characters')
+    .max(10, 'Subject code must be less than 10 characters')
+    .regex(
+      /^[A-Z0-9]+$/,
+      'Subject code must contain only uppercase letters and numbers'
+    )
+    .transform((val) => val.toUpperCase()),
+
+  description: z
+    .string()
+    .max(512, 'Description must be less than 512 characters')
+    .optional(),
+});
+
+export type SubjectFormData = z.infer<typeof subjectSchema>;
