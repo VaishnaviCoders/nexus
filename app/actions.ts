@@ -29,6 +29,8 @@ import prisma from '@/lib/db';
 import { v2 as cloudinary, UploadApiResponse } from 'cloudinary';
 import { performance } from 'perf_hooks';
 import { getOrganizationId } from '@/lib/organization';
+import { redis } from '@/lib/redis';
+import { SupportFormData } from '@/components/websiteComp/SupportPopup';
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -273,20 +275,6 @@ export async function markAttendance(
     );
   }
 
-  // Optional: Add validation if you want to restrict date range
-  // const today = new Date();
-  // today.setHours(0, 0, 0, 0);
-  // const maxPastDays = 7; // Allow marking up to 7 days ago
-  // const minDate = new Date(today.getTime() - (maxPastDays * 24 * 60 * 60 * 1000));
-
-  // if (attendanceDate < minDate || attendanceDate > today) {
-  //   throw new Error(`Attendance can only be marked within ${maxPastDays} days.`);
-  // }
-
-  //   if (new Date().setHours(0, 0, 0, 0) !== today.getTime()) {
-  // throw new Error('Attendance can only be marked for today.');
-  // }
-
   const attendanceDate = new Date(selectedDate);
   attendanceDate.setHours(0, 0, 0, 0);
 
@@ -327,8 +315,6 @@ export async function markAttendance(
       prisma.studentAttendance.upsert(updateData)
     )
   );
-
-  console.log('Attendance data updated:', data);
 
   // redirect('/dashboard/attendance/analytics');
 }
@@ -1070,4 +1056,17 @@ export async function deleteAcademicYear(id: string) {
       error: errorMessage,
     };
   }
+}
+
+export async function submitSupportForm(data: SupportFormData) {
+  const submission = {
+    ...data,
+    id: Date.now().toString(), // simple unique ID
+    createdAt: new Date().toISOString(),
+  };
+
+  // Append to a Redis list
+  await redis.rpush('support-submissions', JSON.stringify(submission));
+
+  return { success: true, submission };
 }

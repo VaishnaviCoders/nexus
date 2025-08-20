@@ -59,6 +59,14 @@ export const roleMenus: Record<string, Group[]> = {
           href: '/dashboard/grades',
           label: 'Class Management',
           icon: School,
+          submenus: [
+            { href: '/dashboard/grades', label: 'Grades & Sections' },
+            { href: '/dashboard/subjects', label: 'Subjects' },
+            {
+              href: '/dashboard/teaching-assignments',
+              label: 'Teaching Assignments',
+            },
+          ],
         },
         {
           href: '/dashboard/teachers',

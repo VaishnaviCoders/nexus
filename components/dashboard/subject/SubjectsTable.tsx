@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { Plus, Search, Edit, Trash2, Upload } from 'lucide-react';
+import { Search, Edit, Trash2, Upload } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/table';
 import { Subject } from '@/generated/prisma';
 import { deleteSubject } from '@/lib/data/subjects/subject-action';
-import { AlertTriangle, Loader2 } from 'lucide-react';
+import { AlertTriangle } from 'lucide-react';
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -39,7 +39,6 @@ interface SubjectsClientProps {
 export function SubjectsTable({ initialSubjects }: SubjectsClientProps) {
   const [subjects, setSubjects] = useState(initialSubjects);
   const [searchTerm, setSearchTerm] = useState('');
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isCSVImportOpen, setIsCSVImportOpen] = useState(false);
   const [editingSubject, setEditingSubject] = useState<Subject | null>(null);
   const [deleteError, setDeleteError] = useState<string | null>(null);
@@ -55,11 +54,6 @@ export function SubjectsTable({ initialSubjects }: SubjectsClientProps) {
         subject.code.toLowerCase().includes(term)
     );
   }, [subjects, searchTerm]);
-
-  const handleSubjectAdded = (newSubject: Subject) => {
-    setSubjects((prev) => [newSubject, ...prev]);
-    setIsAddModalOpen(false);
-  };
 
   const handleSubjectUpdated = (updatedSubject: Subject) => {
     setSubjects((prev) =>
@@ -146,18 +140,18 @@ export function SubjectsTable({ initialSubjects }: SubjectsClientProps) {
                 </TableCell>
                 <TableCell className="text-right">
                   <div className="flex justify-end gap-2">
-                    <Button
+                    {/* <Button
                       variant="ghost"
                       size="sm"
                       onClick={() => setEditingSubject(subject)}
                     >
-                      <Edit className="h-4 w-4" />
-                    </Button>
+                      <Pencil className="h-4 w-4" />
+                    </Button> */}
 
                     <AlertDialog>
                       <AlertDialogTrigger asChild>
                         <Button
-                          variant="ghost"
+                          variant="destructive"
                           size="sm"
                           onClick={() => {
                             setDeleteError(null);

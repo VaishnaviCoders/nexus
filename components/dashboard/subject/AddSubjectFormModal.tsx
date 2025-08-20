@@ -1,6 +1,12 @@
 'use client';
 
-import { useState, useEffect, useTransition } from 'react';
+import {
+  useState,
+  useEffect,
+  useTransition,
+  useMemo,
+  useCallback,
+} from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -13,6 +19,7 @@ import {
   BookOpen,
   Brain,
   Zap,
+  Info,
 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -34,43 +41,32 @@ import {
 import { subjectSchema, type SubjectFormData } from '@/lib/schemas';
 
 import {
-  geminiAI,
   type AISubjectSuggestion,
+  createDebouncedSuggestions,
+  getAISubjectSuggestions,
 } from '@/ai/gemini-subject-service';
 import { Subject } from '@/generated/prisma';
 import { toast } from 'sonner';
-import {
-  checkSimilarSubjects,
-  createSubject,
-  checkDuplicateSubject,
-} from '@/lib/data/subjects/subject-action';
+import { createSubject } from '@/lib/data/subjects/subject-action';
 import { useRouter } from 'next/navigation';
 
 interface AddSubjectModalProps {
   subjects: Subject[];
 }
 
-function generateCodeFromName(name: string): string {
-  return name
-    .split(' ')
-    .filter((w) => w.length > 0)
-    .map((w) => w.charAt(0).toUpperCase())
-    .join('')
-    .slice(0, 6);
-}
-
 export function AddSubjectFormModal({ subjects }: AddSubjectModalProps) {
-  const [similarSubjects, setSimilarSubjects] = useState<
-    Array<Pick<Subject, 'id' | 'name' | 'code'>>
-  >([]);
-  const [isCheckingSimilar, setIsCheckingSimilar] = useState(false);
   const [aiSuggestion, setAiSuggestion] = useState<AISubjectSuggestion | null>(
     null
   );
   const [isLoadingAI, setIsLoadingAI] = useState(false);
-
   const [isPending, startTransition] = useTransition();
+  const [showSimilarWarning, setShowSimilarWarning] = useState(false);
   const router = useRouter();
+
+  const debouncedGetSuggestions = useMemo(
+    () => createDebouncedSuggestions(800),
+    []
+  );
 
   const form = useForm<SubjectFormData>({
     resolver: zodResolver(subjectSchema),
@@ -82,67 +78,44 @@ export function AddSubjectFormModal({ subjects }: AddSubjectModalProps) {
     mode: 'onChange',
   });
 
-  const nameValue = form.watch('name');
-  const codeValue = form.watch('code');
-  const descriptionValue = form.watch('description');
-
-  // Auto-generate code when name changes
-  useEffect(() => {
-    if (nameValue && !codeValue) {
-      form.setValue('code', generateCodeFromName(nameValue));
-    }
-  }, [nameValue, codeValue, form]);
-
-  //   Check for similar subjects when name changes
-  useEffect(() => {
-    if (nameValue && nameValue.length >= 3) {
-      setIsCheckingSimilar(true);
-      const timeoutId = setTimeout(async () => {
-        try {
-          const similar = await checkSimilarSubjects(nameValue);
-          setSimilarSubjects(
-            similar.filter(
-              (s) => s.name.toLowerCase() !== nameValue.toLowerCase()
-            )
-          );
-        } catch (error) {
-          console.error('Error checking similar subjects:', error);
-        } finally {
-          setIsCheckingSimilar(false);
-        }
-      }, 500);
-
-      return () => clearTimeout(timeoutId);
-    } else {
-      setSimilarSubjects([]);
-    }
-  }, [nameValue]);
+  const watchedName = form.watch('name');
 
   // Get AI suggestions when name changes
-  useEffect(() => {
-    if (nameValue && nameValue.length >= 3) {
-      setIsLoadingAI(true);
-      const timeoutId = setTimeout(async () => {
-        try {
-          const suggestion = await geminiAI.analyzeSubjectName(
-            nameValue,
-            similarSubjects.map((s) => s.name)
-          );
-          setAiSuggestion(suggestion);
-        } catch (error) {
-          console.error('Error getting AI suggestions:', error);
-        } finally {
-          setIsLoadingAI(false);
-        }
-      }, 1000);
+  const getSuggestions = useCallback(
+    async (name: string) => {
+      if (!name || name.length < 2) {
+        setAiSuggestion(null);
+        setShowSimilarWarning(false);
+        setIsLoadingAI(false);
+        return;
+      }
 
-      return () => clearTimeout(timeoutId);
-    } else {
-      setAiSuggestion(null);
-    }
-  }, [nameValue, similarSubjects]);
+      setIsLoadingAI(true);
+      try {
+        const suggestions = await debouncedGetSuggestions(name, subjects);
+        setAiSuggestion(suggestions);
+        setShowSimilarWarning(suggestions.similarSubjects.length > 0);
+      } catch (error) {
+        console.error('Error getting AI suggestions:', error);
+        toast.error('Failed to get AI suggestions');
+      } finally {
+        setIsLoadingAI(false);
+      }
+    },
+    [subjects, debouncedGetSuggestions]
+  );
+
+  useEffect(() => {
+    getSuggestions(watchedName);
+  }, [watchedName, getSuggestions]);
 
   const onSubmit = (data: SubjectFormData) => {
+    if (aiSuggestion?.similarSubjects.some((s) => s.similarity > 0.9)) {
+      toast.error(
+        'This subject appears to be very similar to an existing one. Please verify.'
+      );
+      return;
+    }
     startTransition(async () => {
       try {
         const result = await createSubject(data);
@@ -151,7 +124,6 @@ export function AddSubjectFormModal({ subjects }: AddSubjectModalProps) {
           toast.success(result.message);
           router.refresh();
           form.reset({ name: '', code: '', description: '' });
-          setSimilarSubjects([]);
           setAiSuggestion(null);
         } else {
           toast.error(result.message);
@@ -164,24 +136,46 @@ export function AddSubjectFormModal({ subjects }: AddSubjectModalProps) {
 
   const handleApplyCorrectedName = () => {
     if (aiSuggestion?.correctedName) {
-      form.setValue('name', aiSuggestion.correctedName);
+      form.setValue('name', aiSuggestion.correctedName, {
+        shouldValidate: true,
+      });
     }
   };
-
   const handleApplyDescription = () => {
     if (aiSuggestion?.description) {
-      form.setValue('description', aiSuggestion.description);
+      form.setValue('description', aiSuggestion.description, {
+        shouldValidate: true,
+      });
     }
   };
 
   const handleApplyCode = (suggestedCode: string) => {
-    form.setValue('code', suggestedCode);
+    form.setValue('code', suggestedCode, { shouldValidate: true });
   };
 
-  const generateNewCode = () => {
-    if (nameValue) {
-      const newCode = generateCodeFromName(nameValue);
-      form.setValue('code', newCode);
+  const generateNewCode = async () => {
+    const currentName = form.getValues('name');
+    if (!currentName) {
+      toast.error('Please enter a subject name first');
+      return;
+    }
+
+    setIsLoadingAI(true);
+    try {
+      const suggestions = await getAISubjectSuggestions(currentName, subjects);
+      if (suggestions.codeSuggestions.length > 0) {
+        setAiSuggestion((prev) =>
+          prev
+            ? { ...prev, codeSuggestions: suggestions.codeSuggestions }
+            : suggestions
+        );
+      } else {
+        toast.error('No code suggestions available');
+      }
+    } catch (error) {
+      toast.error('Failed to generate code suggestions');
+    } finally {
+      setIsLoadingAI(false);
     }
   };
 
@@ -210,71 +204,63 @@ export function AddSubjectFormModal({ subjects }: AddSubjectModalProps) {
                   <FormMessage />
 
                   {/* AI Name Correction Suggestion */}
-                  <div
-                    className={`
-                    transition-all duration-300 ease-in-out overflow-hidden
-                    ${aiSuggestion?.correctedName ? 'max-h-20 opacity-100' : 'max-h-0 opacity-0'}
-                  `}
-                  >
-                    {aiSuggestion?.correctedName && (
-                      <Alert className="border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50">
-                        <Sparkles className="h-4 w-4 text-blue-600" />
-                        <AlertDescription className="flex items-center justify-between text-blue-800">
-                          <span className="font-medium">
-                            AI suggests: "{aiSuggestion.correctedName}"
-                          </span>
-                          <Button
-                            type="button"
-                            size="sm"
-                            variant="outline"
-                            onClick={handleApplyCorrectedName}
-                            className="h-7 text-xs border-blue-300 hover:bg-blue-100 bg-transparent"
-                          >
-                            <Zap className="h-3 w-3 mr-1" />
-                            Apply
-                          </Button>
+                  {aiSuggestion?.correctedName && (
+                    <Alert className="border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50 animate-in slide-in-from-top-2 duration-300">
+                      <Sparkles className="h-4 w-4 text-blue-600" />
+                      <AlertDescription className="flex items-center justify-between text-blue-800">
+                        <span className="font-medium">
+                          AI suggests: "{aiSuggestion.correctedName}"
+                        </span>
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant="outline"
+                          onClick={handleApplyCorrectedName}
+                          className="h-7 text-xs border-blue-300 hover:bg-blue-100 bg-transparent"
+                        >
+                          <Zap className="h-3 w-3 mr-1" />
+                          Apply
+                        </Button>
+                      </AlertDescription>
+                    </Alert>
+                  )}
+                  {/* Similar Subjects Warning */}
+                  {showSimilarWarning &&
+                    aiSuggestion?.similarSubjects &&
+                    aiSuggestion.similarSubjects.length > 0 && (
+                      <Alert className="border-amber-200 bg-gradient-to-r from-amber-50 to-orange-50 animate-in slide-in-from-top-2 duration-300">
+                        <AlertTriangle className="h-4 w-4 text-amber-600" />
+                        <AlertDescription className="text-amber-800">
+                          <div className="space-y-3">
+                            <p className="font-medium">
+                              Similar subjects found:
+                            </p>
+                            <div className="flex flex-wrap gap-2">
+                              {aiSuggestion.similarSubjects.map((similar) => (
+                                <Badge
+                                  key={similar.id}
+                                  variant="outline"
+                                  className="text-xs border-amber-300 text-amber-700 hover:bg-amber-100 transition-colors"
+                                  title={`${Math.round(similar.similarity * 100)}% similar`}
+                                >
+                                  {similar.name} ({similar.code})
+                                </Badge>
+                              ))}
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <Info className="h-3 w-3" />
+                              <p className="text-sm">
+                                Please verify this isn't a duplicate before
+                                proceeding.
+                              </p>
+                            </div>
+                          </div>
                         </AlertDescription>
                       </Alert>
                     )}
-                  </div>
                 </FormItem>
               )}
             />
-
-            {/* Similar Subjects Warning */}
-
-            {similarSubjects.length > 0 && (
-              <Alert className="border-amber-200 bg-gradient-to-r from-amber-50 to-orange-50">
-                <AlertTriangle className="h-4 w-4 text-amber-600" />
-                <AlertDescription className="text-amber-800">
-                  <div className="space-y-3">
-                    <p className="font-medium">Similar subjects found:</p>
-                    <div className="flex flex-wrap gap-2">
-                      {similarSubjects.map((similar) => (
-                        <Badge
-                          key={similar.id}
-                          variant="outline"
-                          className="text-xs border-amber-300 text-amber-700"
-                        >
-                          {similar.name} ({similar.code})
-                        </Badge>
-                      ))}
-                    </div>
-                    <p className="text-sm">
-                      Please verify this isn't a duplicate.
-                    </p>
-                  </div>
-                </AlertDescription>
-              </Alert>
-            )}
-
-            {/* Loading indicator for similarity check */}
-            {isCheckingSimilar && (
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Loader2 className="h-3 w-3 animate-spin" />
-                Checking for similar subjects...
-              </div>
-            )}
 
             {/* Subject Code */}
             <FormField
@@ -292,11 +278,15 @@ export function AddSubjectFormModal({ subjects }: AddSubjectModalProps) {
                       variant="outline"
                       size="sm"
                       onClick={generateNewCode}
-                      disabled={!nameValue}
+                      disabled={isLoadingAI || !watchedName}
                       className="h-7 text-xs bg-transparent"
                     >
-                      <Sparkles className="h-4 w-4 animate-pulse text-blue-600" />
-                      AI suggestion
+                      {isLoadingAI ? (
+                        <Loader2 className="h-3 w-3 animate-spin" />
+                      ) : (
+                        <Sparkles className="h-4 w-4 text-blue-600" />
+                      )}
+                      Generate
                     </Button>
                   </div>
                   <FormControl>
@@ -319,7 +309,7 @@ export function AddSubjectFormModal({ subjects }: AddSubjectModalProps) {
                   {/* AI Code Suggestions */}
                   {aiSuggestion?.codeSuggestions &&
                     aiSuggestion.codeSuggestions.length > 0 && (
-                      <div className="space-y-3">
+                      <div className="space-y-3 animate-in slide-in-from-top-2 duration-300">
                         <div className="flex items-center gap-2">
                           <Lightbulb className="h-3 w-3 text-yellow-600" />
                           <span className="text-xs font-medium text-muted-foreground">
@@ -360,7 +350,7 @@ export function AddSubjectFormModal({ subjects }: AddSubjectModalProps) {
                         (Optional)
                       </span>
                     </FormLabel>
-                    {aiSuggestion?.description && !descriptionValue && (
+                    {aiSuggestion?.description && (
                       <Button
                         type="button"
                         size="sm"
@@ -368,8 +358,8 @@ export function AddSubjectFormModal({ subjects }: AddSubjectModalProps) {
                         onClick={handleApplyDescription}
                         className="h-7 text-xs hover:bg-gradient-to-r hover:from-green-50 hover:to-blue-50"
                       >
-                        <Sparkles className="h-4 w-4 animate-pulse text-blue-600" />
-                        AI suggestion
+                        <Sparkles className="h-4 w-4 text-blue-600 mr-1" />
+                        Apply AI
                       </Button>
                     )}
                   </div>
@@ -391,8 +381,8 @@ export function AddSubjectFormModal({ subjects }: AddSubjectModalProps) {
                   <FormMessage />
 
                   {/* AI Description Suggestion */}
-                  {aiSuggestion?.description && !descriptionValue && (
-                    <div className="p-4 bg-gradient-to-r from-green-50 to-blue-50 border border-green-200 rounded-lg">
+                  {aiSuggestion?.description && !field.value && (
+                    <div className="p-4 bg-gradient-to-r from-green-50 to-blue-50 border border-green-200 rounded-lg animate-in slide-in-from-top-2 duration-300">
                       <div className="flex items-center gap-2 mb-2">
                         <Sparkles className="h-4 w-4 text-green-600" />
                         <span className="text-sm font-medium text-green-800">
@@ -407,25 +397,50 @@ export function AddSubjectFormModal({ subjects }: AddSubjectModalProps) {
                 </FormItem>
               )}
             />
-
-            {/* AI Loading indicator */}
-            {isLoadingAI && (
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Sparkles className="h-4 w-4 animate-pulse text-blue-600" />
-                Getting AI suggestions...
+            {/* AI Confidence Indicator */}
+            {aiSuggestion && (
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                <div className="flex items-center gap-1">
+                  <div className="h-1.5 w-1.5 rounded-full bg-green-500" />
+                  <span>
+                    AI Confidence:{' '}
+                    {Math.round((aiSuggestion.confidence || 0) * 100)}%
+                  </span>
+                </div>
+                {aiSuggestion.hasSpellingError && (
+                  <Badge variant="secondary" className="h-4 text-[10px]">
+                    Spell-checked
+                  </Badge>
+                )}
               </div>
             )}
 
             {/* Form Actions */}
             <div className="flex justify-end gap-3 pt-6 border-t">
-              <Button type="button" variant="outline" disabled={isPending}>
-                Cancel
+              <Button
+                type="button"
+                variant="outline"
+                disabled={isPending}
+                onClick={() => {
+                  form.reset();
+                  setAiSuggestion(null);
+                  setShowSimilarWarning(false);
+                }}
+              >
+                Clear
               </Button>
               <Button
                 variant={'gradient'}
                 type="submit"
                 className=""
-                disabled={isPending || !form.formState.isValid}
+                disabled={
+                  isPending ||
+                  !form.formState.isValid ||
+                  (showSimilarWarning &&
+                    aiSuggestion?.similarSubjects?.some(
+                      (s) => s.similarity > 0.95
+                    ))
+                }
               >
                 {isPending ? (
                   <>

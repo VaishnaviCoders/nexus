@@ -8,9 +8,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { SubjectsTable } from '@/components/dashboard/subject/SubjectsTable';
-import { Subject } from '@/generated/prisma';
-import { getOrganizationId } from '@/lib/organization';
-import prisma from '@/lib/db';
+
 import {
   Dialog,
   DialogContent,
@@ -22,18 +20,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import { AddSubjectFormModal } from '@/components/dashboard/subject/AddSubjectFormModal';
-
-// Get all subjects for the organization
-export async function getAllSubjectsByOrganizationId(): Promise<Subject[]> {
-  const organizationId = await getOrganizationId();
-
-  const subjects = await prisma.subject.findMany({
-    where: { organizationId },
-    orderBy: { createdAt: 'desc' },
-  });
-
-  return subjects;
-}
+import { getAllSubjectsByOrganizationId } from '@/lib/data/subjects/get-all-subjects-by-organization-id';
 
 export default async function SubjectsPage() {
   const subjects = await getAllSubjectsByOrganizationId();

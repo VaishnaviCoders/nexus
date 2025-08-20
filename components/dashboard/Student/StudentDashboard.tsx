@@ -144,7 +144,7 @@ const StudentDashboard = async () => {
   return (
     <div className="grid gap-4 md:gap-6">
       {/* Main Content Grid - Responsive Layout */}
-      <StudentDashboardStatsCards />
+      <StudentDashboardStatsCards studentId={student.id} />
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-6">
         {/* Left Column - Subject Performance (Takes more space on desktop) */}
         <div className="lg:col-span-7 xl:col-span-8">

@@ -240,6 +240,16 @@ export default function FeaturesPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-gray-50">
       {/* Header Section */}
+
+      {/* <iframe
+        src="https://gamma.app/embed/gtpghwx8wdrjyxs"
+        allow="fullscreen"
+        allowFullScreen={true}
+        width={2000}
+        height={2000}
+        frameBorder="0"
+        title="Shiksha.cloud: Transforming Indian Education"
+      ></iframe> */}
       <section className="pt-20 pb-16 px-4">
         <div className="max-w-7xl mx-auto text-center">
           <motion.div

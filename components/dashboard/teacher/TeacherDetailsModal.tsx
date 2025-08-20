@@ -11,7 +11,6 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
@@ -59,7 +58,10 @@ interface TeacherDetailsModalProps {
   onActivate?: (teacherId: string) => void;
 }
 
-const getStatusConfig = (status: EmploymentStatus, isActive: boolean) => {
+export const getStatusConfig = (
+  status: EmploymentStatus,
+  isActive: boolean
+) => {
   if (!isActive) {
     return {
       color: 'bg-red-50 text-red-700 border-red-200',
@@ -201,7 +203,7 @@ export function TeacherDetailsModal({
         <DialogHeader>
           <DialogTitle>Teacher Details</DialogTitle>
         </DialogHeader>
-        <DialogContent className="max-w-6xl max-h-[95vh] flex flex-col p-0 gap-0 min-h-0">
+        <DialogContent className="max-w-6xl h-[75vh] flex flex-col p-0 ">
           {/* Header */}
           <div className="flex items-start space-x-6 p-5">
             <div className="relative">
@@ -227,7 +229,7 @@ export function TeacherDetailsModal({
               </div>
               <div className="flex items-center space-x-3">
                 <Badge
-                  className={`${statusConfig.color} border font-medium px-3 py-1`}
+                  className={`${statusConfig.color} border font-medium px-3 py-1 hover:bg-${statusConfig.color}-100`}
                 >
                   <div
                     className={`w-2 h-2 rounded-full ${statusConfig.dot} mr-2`}
@@ -254,7 +256,7 @@ export function TeacherDetailsModal({
           </div>
 
           {/* Content */}
-          <div className="p-4">
+          <div className="p-4 overflow-y-auto">
             <Tabs defaultValue="overview" className="w-full">
               <TabsList className="grid w-full grid-cols-4 mb-8 bg-gray-100 p-1 rounded-lg">
                 <TabsTrigger
@@ -283,94 +285,92 @@ export function TeacherDetailsModal({
                 </TabsTrigger>
               </TabsList>
 
-              <TabsContent value="overview" className="space-y-8">
-                <ScrollArea className="flex-1 ">
-                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <InfoCard
-                      icon={User}
-                      title="Personal Information"
-                      className="lg:col-span-2"
-                    >
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <DataPoint
-                          label="Full Name"
-                          value={fullName}
-                          icon={User}
-                        />
-                        <DataPoint
-                          label="Email Address"
-                          value={user.email}
-                          icon={Mail}
-                        />
-                        <DataPoint
-                          label="Employee ID"
-                          value={teacher.employeeCode}
-                          icon={Building}
-                        />
-                        <DataPoint
-                          label="Role"
-                          value={user.role
-                            .toLowerCase()
-                            .replace(/\b\w/g, (l) => l.toUpperCase())}
-                          icon={Briefcase}
-                        />
-                      </div>
-                    </InfoCard>
+              <TabsContent value="overview" className="space-y-3">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 space-y-3">
+                  <InfoCard
+                    icon={User}
+                    title="Personal Information"
+                    className="lg:col-span-2"
+                  >
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <DataPoint
+                        label="Full Name"
+                        value={fullName}
+                        icon={User}
+                      />
+                      <DataPoint
+                        label="Email Address"
+                        value={user.email}
+                        icon={Mail}
+                      />
+                      <DataPoint
+                        label="Employee ID"
+                        value={teacher.employeeCode}
+                        icon={Building}
+                      />
+                      <DataPoint
+                        label="Role"
+                        value={user.role
+                          .toLowerCase()
+                          .replace(/\b\w/g, (l) => l.toUpperCase())}
+                        icon={Briefcase}
+                      />
+                    </div>
+                  </InfoCard>
 
-                    <InfoCard icon={Calendar} title="Important Dates">
-                      <div className="space-y-4">
-                        {profile?.dateOfBirth && (
-                          <DataPoint
-                            label="Date of Birth"
-                            value={format(
-                              new Date(profile.dateOfBirth),
-                              'MMM dd, yyyy'
-                            )}
-                            icon={Calendar}
-                          />
-                        )}
-                        {profile?.joinedAt && (
-                          <DataPoint
-                            label="Joined Date"
-                            value={format(
-                              new Date(profile.joinedAt),
-                              'MMM dd, yyyy'
-                            )}
-                            icon={Calendar}
-                          />
-                        )}
+                  <InfoCard icon={Calendar} title="Important Dates">
+                    <div className="space-y-4">
+                      {profile?.dateOfBirth && (
                         <DataPoint
-                          label="Account Created"
+                          label="Date of Birth"
                           value={format(
-                            new Date(teacher.createdAt),
+                            new Date(profile.dateOfBirth),
                             'MMM dd, yyyy'
                           )}
                           icon={Calendar}
                         />
-                      </div>
-                    </InfoCard>
-                  </div>
+                      )}
+                      {profile?.joinedAt && (
+                        <DataPoint
+                          label="Joined Date"
+                          value={format(
+                            new Date(profile.joinedAt),
+                            'MMM dd, yyyy'
+                          )}
+                          icon={Calendar}
+                        />
+                      )}
+                      <DataPoint
+                        label="Account Created"
+                        value={format(
+                          new Date(teacher.createdAt),
+                          'MMM dd, yyyy'
+                        )}
+                        icon={Calendar}
+                      />
+                    </div>
+                  </InfoCard>
+                </div>
 
-                  {profile?.bio && (
-                    <InfoCard icon={FileText} title="Biography">
-                      <div className="prose prose-sm max-w-none">
-                        <p className="text-gray-700 leading-relaxed">
-                          {profile.bio}
-                        </p>
-                      </div>
-                    </InfoCard>
-                  )}
+                {profile?.bio && (
+                  <InfoCard icon={FileText} title="Biography">
+                    <div className="prose prose-sm max-w-none">
+                      <p className="text-gray-700 leading-relaxed">
+                        {profile.bio}
+                      </p>
+                    </div>
+                  </InfoCard>
+                )}
 
-                  {profile?.teachingPhilosophy && (
-                    <InfoCard icon={Heart} title="Teaching Philosophy">
-                      <div className="prose prose-sm max-w-none">
-                        <p className="text-gray-700 leading-relaxed">
-                          {profile.teachingPhilosophy}
-                        </p>
-                      </div>
-                    </InfoCard>
-                  )}
-                </ScrollArea>
+                {profile?.teachingPhilosophy && (
+                  <InfoCard icon={Heart} title="Teaching Philosophy">
+                    <div className="prose prose-sm max-w-none">
+                      <p className="text-gray-700 leading-relaxed">
+                        {profile.teachingPhilosophy}
+                      </p>
+                    </div>
+                  </InfoCard>
+                )}
               </TabsContent>
 
               <TabsContent value="contact" className="space-y-8">

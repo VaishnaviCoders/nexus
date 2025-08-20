@@ -63,7 +63,7 @@ export default async function IndexPage() {
       <header className="flex items-center justify-between my-3">
         <div className="flex items-center space-x-2">
           <ShieldCheck className="h-6 w-6 text-green-400" />
-          <h1>Shiksha Cloud CRM</h1>
+          <h1 className="text-primary font-medium">Shiksha Cloud</h1>
         </div>
 
         <div className="flex items-center space-x-2">

@@ -62,6 +62,48 @@ export function formatDateIN(dateValue?: string | Date | null): string {
   });
 }
 
+export function formatDateTimeIN(dateValue?: string | Date | null): string {
+  if (!dateValue) return '-';
+  const date = new Date(dateValue);
+  if (isNaN(date.getTime())) return '-';
+  return date.toLocaleDateString('en-IN', {
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: 'Asia/Kolkata',
+  });
+}
+
+export function getRelativeTime(dateValue?: string | Date | null): string {
+  if (!dateValue) return '-';
+
+  const date = new Date(dateValue);
+  if (isNaN(date.getTime())) return '-';
+
+  const now = new Date();
+  const diffInMinutes = Math.floor(
+    (now.getTime() - date.getTime()) / (1000 * 60)
+  );
+
+  if (diffInMinutes < 1) return 'Just now';
+  if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
+
+  const diffInHours = Math.floor(diffInMinutes / 60);
+  if (diffInHours < 24) return `${diffInHours}h ago`;
+
+  const diffInDays = Math.floor(diffInHours / 24);
+  if (diffInDays < 7) return `${diffInDays}d ago`;
+
+  // Show proper Indian date format instead of default
+  return date.toLocaleDateString('en-IN', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+    timeZone: 'Asia/Kolkata',
+  });
+}
+
 // Format number as INR currency (e.g., 1,23,456)
 export function formatCurrencyIN(amount: number): string {
   return new Intl.NumberFormat('en-IN', {

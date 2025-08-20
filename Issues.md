@@ -11,7 +11,8 @@ As a software developer, I've always been passionate about building things that 
 
 Website Pending
 
-- Feedback Form : ExtractUrl || ExtractUserId ||ExtractUserOrgId || DropDown Subject || Message || Feedback Submitted Message with Icon || Error/ Crash Auto Submit Form Like Microsoft
+- Feedback Form : ExtractUrl || ExtractUserId ||ExtractUserOrgId || DropDown Subject || Message || Feedback Submitted Message with Icon : ✅ Fixed
+  || Error/ Crash Auto Submit Form Like Microsoft : Dynamic Pending/ server action Pending
 - List of Features : {
   "Name": Online Fee Payment
   "description": ""
@@ -23,7 +24,6 @@ Website Pending
 - What Admin/ Teacher Get benefits page
 - 101 Reason To buy software
 - Who can buy software : School || Collages || Coaching Classes
-
 - Pricing Model : 12K Per Month || 79 INR Per Student/Month
 
 Revenue Model
@@ -53,7 +53,7 @@ Utility Functions:
 - Attendance :Date Range is not working : ✅ Fixed
 - Send Reminder (SMS, Whatsapp Mail ) only mail Done
 - View Receipt : ✅ Fixed , Platform Fee is pending
-- Download Fees Details
+- Download Fees Details : ✅ Fixed
 - Download Receipt : ✅ Fixed
 - Delete Fee Category Page : Completed but if have data in fees then show error Foreign key constraint violated: `Fee_feeCategoryId_fkey (index)` : ✅ Fixed
 - Full Academic Calendar : Holidays || Events || Exams ||
@@ -88,20 +88,19 @@ In Teacher
 2. Setting Page : ✅ Fixed
 3. Update Teacher Profile : ✅ Fixed
 4. Recent Activities : ✅ Fixed
-5. Assignment creation by teachers
-6. Teacher Fees Page : Show only related Fees don't show all fees
+5. Assignment creation for teachers
+6. Teacher Fees Page : Show only related Fees don't show all fees : ✅ Solved
 7. Teacher Today's Schedule : Make dynamic
 
 In Student
 
-1. Student Attendance History : Own Attendance History
+1. Student Attendance History/ Page : Own Attendance History : ✅ Solved
 2. Dashboard : Weekly Attendance || Subject Performance || Dashboard Stats
 3. Pay Fees / Download Receipt : ✅ Fixed
 4. Assignments Page
 5. Teacher Feedback Page
 6. Settings Page: 40% Remaining
 7. Performance Page
-8. Attendance Page : Show only Own Attendance
 
 In Admin
 
@@ -129,41 +128,40 @@ In Parent
 
 Email Templates
 
-- Admisson success or not : Success Asel tr Next Details , Location Time
+- Admission : Success/Fail (If success → Next Details, Location, Time)
 - Fees : Enrolment Fees
 - Class Time Table
 - Exam | Notice | Event | Result Declare | hall Ticket
--
 - Attendance Reports : Weekly, Monthly , Yearly => PARENT
 - Document Verified || Rejected with Reason => PARENT , STUDENT
 - Smart Fee reminder scheduling (7 days before, due date, overdue) => PARENT
 - Instant receipt generation & delivery
 
-WhatsApp Templates
+💬 WhatsApp Templates
 
 - For Holidays
 - Urgent Notice
 
-Whatsapp Risk
+📲 SMS Templates
 
-- Number Block
+Holidays / School Closed Tomorrow
 
-SMS Templates
+Urgent Problems
 
-- Holidays or Closed Tommawro
-- Big Problem
+🔮 Future Enhancements
 
 1. TimeTable
-2. Pay Fees At Home
+2. Pay Fees At Home : ✅ Solved
 3. Ai Reports :
 4. Complaints Management : ✅ Solved
 5. Teacher Salary :
-6. Student Attendance :✅ Solved
-7. Teacher Attendance : Track Performance
-8. Transport : Track Bus Location || Driver All Details || Number Plate
-9. Instant Customer Support
-10. LMS
-11. Own Webinar Like Scaler, Zoom
+6. Teacher Attendance : Track Performance // Teacher Leave System
+7. Student Attendance :✅ Solved
+8. Teacher Attendance : Track Performance
+9. Transport : Track Bus Location || Driver All Details || Number Plate
+10. Instant Customer Support
+11. own LMS
+12. Own Webinar Like Scaler, Zoom
 
 <!-- FEES Model-->
 

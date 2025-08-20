@@ -3,6 +3,7 @@ import prisma from '@/lib/db';
 import { getOrganizationId } from '@/lib/organization';
 import { Card, CardDescription, CardTitle } from '@/components/ui/card';
 import { AcademicYearConfig } from './adminConfig/AcademicYearConfig';
+import APIVoiceCallQuota from './billing/APIVoiceCallQuota';
 
 async function getOrganization(organizationId: string) {
   const organization = await prisma.organization.findUnique({
@@ -65,6 +66,7 @@ const AdminSettings = async () => {
           academicYears={academicYears}
           organizationId={organizationId}
         />
+        <APIVoiceCallQuota />
       </div>
     </div>
   );

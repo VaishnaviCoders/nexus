@@ -46,7 +46,7 @@ import {
 } from 'lucide-react';
 import { TeacherProfile, User } from '@/generated/prisma';
 import { EmploymentStatus } from '@/generated/prisma';
-import { TeacherDetailsModal } from './TeacherDetailsModal';
+import { getStatusConfig, TeacherDetailsModal } from './TeacherDetailsModal';
 import { toggleTeacherStatus } from '@/app/actions';
 
 interface TeachersProps {
@@ -78,6 +78,7 @@ export type SelectedTeacher = {
 } | null;
 
 const TeachersTable = ({ teachers }: TeachersProps) => {
+  console.log('teachers', teachers);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [employmentFilter, setEmploymentFilter] = useState('all');
@@ -190,116 +191,131 @@ const TeachersTable = ({ teachers }: TeachersProps) => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredTeachers.map((teacher) => (
-                  <TableRow key={teacher.id}>
-                    <TableCell>
-                      <div className="flex items-center space-x-3">
-                        <Avatar className="h-8 w-8">
-                          <AvatarImage
-                            src={
-                              teacher.user.profileImage || '/placeholder.svg'
-                            }
-                          />
-                          <AvatarFallback>
-                            {teacher.user.firstName[0]}
-                            {teacher.user.lastName[0]}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <div className="font-medium">
-                            {teacher.user.firstName} {teacher.user.lastName}
-                          </div>
-                          <div className="text-sm text-muted-foreground">
-                            {teacher.user.email}
+                {filteredTeachers.map((teacher) => {
+                  console.log('teacher', teacher);
+                  const statusConfig = getStatusConfig(
+                    teacher.employmentStatus,
+                    teacher.isActive
+                  );
+                  return (
+                    <TableRow key={teacher.id}>
+                      <TableCell>
+                        <div className="flex items-center space-x-3">
+                          <Avatar className="h-8 w-8">
+                            <AvatarImage
+                              src={
+                                teacher.user.profileImage || '/placeholder.svg'
+                              }
+                            />
+                            <AvatarFallback>
+                              {teacher.user.firstName[0]}
+                              {teacher.user.lastName[0]}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <div className="font-medium">
+                              {teacher.user.firstName} {teacher.user.lastName}
+                            </div>
+                            <div className="text-sm text-muted-foreground">
+                              {teacher.user.email}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </TableCell>
-                    <TableCell className="font-mono text-sm whitespace-nowrap">
-                      {teacher.employeeCode ?? '-'}
-                    </TableCell>
-                    <TableCell>
-                      {teacher.profile?.contactPhone ?? '—'}
-                    </TableCell>
-                    <TableCell>
-                      {teacher.profile?.qualification ?? '—'}
-                    </TableCell>
+                      </TableCell>
+                      <TableCell className="font-mono text-sm whitespace-nowrap">
+                        {teacher.employeeCode ?? '-'}
+                      </TableCell>
+                      <TableCell>
+                        {teacher.profile?.contactPhone ?? '—'}
+                      </TableCell>
+                      <TableCell>
+                        {teacher.profile?.qualification ?? '—'}
+                      </TableCell>
 
-                    <TableCell>
-                      {teacher.profile?.experienceInYears} Years
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex flex-wrap gap-1">
-                        {teacher.profile?.specializedSubjects
-                          .slice(0, 2)
-                          .map((subject) => (
-                            <Badge
-                              key={subject}
-                              variant="outline"
-                              className="text-xs"
-                            >
-                              {subject}
-                            </Badge>
-                          ))}
-                        {/* {teacher.profile.specializedSubjects.length > 2 && (
+                      <TableCell>
+                        {teacher.profile?.experienceInYears} Years
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex flex-wrap gap-1">
+                          {teacher.profile?.specializedSubjects
+                            .slice(0, 2)
+                            .map((subject) => (
+                              <Badge
+                                key={subject}
+                                variant="outline"
+                                className="text-xs"
+                              >
+                                {subject}
+                              </Badge>
+                            ))}
+                          {/* {teacher.profile.specializedSubjects.length > 2 && (
                         <Badge variant="outline" className="text-xs">
                           +{teacher.profile.specializedSubjects.length - 2}
                         </Badge>
                       )} */}
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      {teacher.isActive ? 'Active' : 'DeActive'}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" className="h-8 w-8 p-0">
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                          <DropdownMenuItem
-                            onClick={() => handleViewDetails(teacher)}
-                          >
-                            <Eye className="mr-2 h-4 w-4" />
-                            View Details
-                          </DropdownMenuItem>
-                          {/* <DropdownMenuItem
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        {' '}
+                        <Badge
+                          className={`${statusConfig.color} border font-medium px-3 py-1 hover:bg-${statusConfig.color}-100 cursor-pointer`}
+                        >
+                          <div
+                            className={`w-2 h-2 rounded-full ${statusConfig.dot} mr-2`}
+                          />
+                          {statusConfig.label}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" className="h-8 w-8 p-0">
+                              <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                            <DropdownMenuItem
+                              onClick={() => handleViewDetails(teacher)}
+                            >
+                              <Eye className="mr-2 h-4 w-4" />
+                              View Details
+                            </DropdownMenuItem>
+                            {/* <DropdownMenuItem
                             onClick={() => handleEditTeacher(teacher)}
                           >
                             <Edit className="mr-2 h-4 w-4" />
                             Edit Teacher
                           </DropdownMenuItem> */}
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem
-                            onClick={() => handleToggleStatus(teacher.id)}
-                          >
-                            {teacher.isActive ? (
-                              <>
-                                <UserX className="mr-2 h-4 w-4" />
-                                Deactivate
-                              </>
-                            ) : (
-                              <>
-                                <UserCheck className="mr-2 h-4 w-4" />
-                                Activate
-                              </>
-                            )}
-                          </DropdownMenuItem>
-                          {/* <DropdownMenuItem
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem
+                              onClick={() => handleToggleStatus(teacher.id)}
+                            >
+                              {teacher.isActive ? (
+                                <>
+                                  <UserX className="mr-2 h-4 w-4" />
+                                  Deactivate
+                                </>
+                              ) : (
+                                <>
+                                  <UserCheck className="mr-2 h-4 w-4" />
+                                  Activate
+                                </>
+                              )}
+                            </DropdownMenuItem>
+                            {/* <DropdownMenuItem
                             onClick={() => handleDeleteTeacher(teacher.id)}
                             className="text-red-600"
                           >
                             <Trash2 className="mr-2 h-4 w-4" />
                             Delete
                           </DropdownMenuItem> */}
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
               </TableBody>
             </Table>
           </div>

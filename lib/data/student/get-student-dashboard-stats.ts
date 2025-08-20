@@ -1,13 +1,10 @@
 'use server';
 
 import prisma from '@/lib/db';
-import { getCurrentUserId } from '@/lib/user';
 
-export const getStudentDashboardStats = async () => {
-  const userId = await getCurrentUserId();
-
-  const student = await prisma.student.findFirst({
-    where: { userId },
+export const getStudentDashboardStats = async (studentId: string) => {
+  const student = await prisma.student.findUnique({
+    where: { id: studentId },
     select: {
       id: true,
       sectionId: true,

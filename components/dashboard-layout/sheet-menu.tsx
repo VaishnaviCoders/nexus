@@ -46,7 +46,7 @@ export async function SheetMenu() {
         className="sm:w-80 px-0 h-full flex flex-col bg-white dark:bg-slate-900 border-l border-slate-200/60 dark:border-slate-700/60"
         side="left"
       >
-        <SheetHeader className="px-4 py-4 border-b border-slate-200/60 dark:border-slate-700/60">
+        <SheetHeader className="px-4 border-b border-slate-200/60 dark:border-slate-700/60">
           <DialogTitle className="sr-only">Navigation menu</DialogTitle>
           <div className="w-full flex items-center justify-center">
             {/* Make the entire organization switcher clickable on mobile */}

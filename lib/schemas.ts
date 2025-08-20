@@ -380,7 +380,6 @@ export const subjectSchema = z.object({
     .string()
     .min(1, 'Subject code is required')
     .min(2, 'Subject code must be at least 2 characters')
-    .max(10, 'Subject code must be less than 10 characters')
     .regex(
       /^[A-Z0-9]+$/,
       'Subject code must contain only uppercase letters and numbers'

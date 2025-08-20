@@ -1,6 +1,5 @@
 import { Suspense } from 'react';
 import StudentPaymentHistoryTable from '@/components/dashboard/Fees/StudentPaymentHistoryTable';
-import { getFeeRecords } from '@/lib/data/fee/get-all-students-fees';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
   Card,

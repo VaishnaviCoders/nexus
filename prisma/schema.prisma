@@ -529,7 +529,6 @@ enum FeeStatus {
   UNPAID
   OVERDUE
 }
-
 model ScheduledJob {
   id          String                @id @default(cuid())
   data        Json

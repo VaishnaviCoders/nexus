@@ -1,10 +1,15 @@
+import SupportPage from '@/components/websiteComp/SupportPage';
 import React from 'react';
 
-const page = () => {
+import { getOrganizationId } from '@/lib/organization';
+import { getCurrentUserId } from '@/lib/user';
+
+const page = async () => {
+  const userId = await getCurrentUserId();
+  const organizationId = await getOrganizationId();
   return (
     <div>
-      <h1>Support Page</h1>
-      <p> Contact: 8459324821</p>
+      <SupportPage userId={userId} organizationId={organizationId} />
     </div>
   );
 };

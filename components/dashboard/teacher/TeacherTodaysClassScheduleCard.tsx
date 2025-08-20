@@ -52,21 +52,21 @@ async function TodayScheduleContent() {
   };
 
   return (
-    <Card className="border-0 ">
+    <Card className="">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-lg">
           <Clock className="w-5 h-5" />
           Today's Schedule (Mock)
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4 h-80">
+      <CardContent className="space-y-4  overflow-y-auto">
         {schedule.length === 0 ? (
           <div className="text-center py-8 text-muted-foreground">
             <Clock className="w-12 h-12 mx-auto mb-4 opacity-50" />
             <p className="text-sm">No classes scheduled for today</p>
           </div>
         ) : (
-          <ScrollArea className="h-80 space-y-4">
+          <ScrollArea className="h-80 space-y-4 ">
             {schedule.map((class_item) => (
               <div
                 key={class_item.id}

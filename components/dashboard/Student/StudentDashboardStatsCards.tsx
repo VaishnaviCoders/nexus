@@ -34,8 +34,12 @@ function StudentDashboardStatsCardsSkeleton() {
   );
 }
 
-const StudentDashboardStatsContent = async () => {
-  const stats = await getStudentDashboardStats();
+const StudentDashboardStatsContent = async ({
+  studentId,
+}: {
+  studentId: string;
+}) => {
+  const stats = await getStudentDashboardStats(studentId);
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
       <Card className="border-2 border-green-200/50 dark:border-green-800/50 bg-gradient-to-br from-white to-green-50/30 dark:from-gray-900 dark:to-green-950/10 hover:shadow-lg transition-all duration-300">
@@ -118,10 +122,14 @@ const StudentDashboardStatsContent = async () => {
   );
 };
 
-export function StudentDashboardStatsCards() {
+export function StudentDashboardStatsCards({
+  studentId,
+}: {
+  studentId: string;
+}) {
   return (
     <Suspense fallback={<StudentDashboardStatsCardsSkeleton />}>
-      <StudentDashboardStatsContent />
+      <StudentDashboardStatsContent studentId={studentId} />
     </Suspense>
   );
 }

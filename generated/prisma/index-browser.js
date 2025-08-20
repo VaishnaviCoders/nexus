@@ -169,6 +169,20 @@ exports.Prisma.UserScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.GradeScalarFieldEnum = {
+  id: 'id',
+  grade: 'grade',
+  organizationId: 'organizationId'
+};
+
+exports.Prisma.SectionScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  gradeId: 'gradeId',
+  organizationId: 'organizationId',
+  classTeacherId: 'classTeacherId'
+};
+
 exports.Prisma.TeacherScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -225,20 +239,6 @@ exports.Prisma.TeachingAssignmentScalarFieldEnum = {
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   academicYearId: 'academicYearId'
-};
-
-exports.Prisma.GradeScalarFieldEnum = {
-  id: 'id',
-  grade: 'grade',
-  organizationId: 'organizationId'
-};
-
-exports.Prisma.SectionScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  gradeId: 'gradeId',
-  organizationId: 'organizationId',
-  classTeacherId: 'classTeacherId'
 };
 
 exports.Prisma.StudentScalarFieldEnum = {
@@ -567,6 +567,20 @@ exports.Prisma.UserOrderByRelevanceFieldEnum = {
   organizationId: 'organizationId'
 };
 
+exports.Prisma.GradeOrderByRelevanceFieldEnum = {
+  id: 'id',
+  grade: 'grade',
+  organizationId: 'organizationId'
+};
+
+exports.Prisma.SectionOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  gradeId: 'gradeId',
+  organizationId: 'organizationId',
+  classTeacherId: 'classTeacherId'
+};
+
 exports.Prisma.TeacherOrderByRelevanceFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -611,20 +625,6 @@ exports.Prisma.TeachingAssignmentOrderByRelevanceFieldEnum = {
   organizationId: 'organizationId',
   academicYear: 'academicYear',
   academicYearId: 'academicYearId'
-};
-
-exports.Prisma.GradeOrderByRelevanceFieldEnum = {
-  id: 'id',
-  grade: 'grade',
-  organizationId: 'organizationId'
-};
-
-exports.Prisma.SectionOrderByRelevanceFieldEnum = {
-  id: 'id',
-  name: 'name',
-  gradeId: 'gradeId',
-  organizationId: 'organizationId',
-  classTeacherId: 'classTeacherId'
 };
 
 exports.Prisma.StudentOrderByRelevanceFieldEnum = {
@@ -969,12 +969,12 @@ exports.Prisma.ModelName = {
   AcademicYear: 'AcademicYear',
   Organization: 'Organization',
   User: 'User',
+  Grade: 'Grade',
+  Section: 'Section',
   Teacher: 'Teacher',
   TeacherProfile: 'TeacherProfile',
   Subject: 'Subject',
   TeachingAssignment: 'TeachingAssignment',
-  Grade: 'Grade',
-  Section: 'Section',
   Student: 'Student',
   Parent: 'Parent',
   ParentStudent: 'ParentStudent',
