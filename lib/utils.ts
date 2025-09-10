@@ -120,6 +120,44 @@ export function formatCurrencyINWithSymbol(amount: number): string {
   }).format(amount);
 }
 
+export function timeUntil(target: Date) {
+  const now = Date.now();
+  const diff = new Date(target).getTime() - now;
+  if (diff <= 0) return 'Starts soon';
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+  if (days > 0) return `${days}d ${hours}h`;
+  if (hours > 0) return `${hours}h ${mins}m`;
+  return `${mins}m`;
+}
+
+export function formatDateRange(start: Date, end: Date) {
+  const s = new Date(start);
+  const e = new Date(end);
+  const sameDay = s.toDateString() === e.toDateString();
+  const date = s.toLocaleDateString(undefined, {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  });
+  const st = s.toLocaleTimeString(undefined, {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+  const et = e.toLocaleTimeString(undefined, {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+  return sameDay
+    ? `${date} • ${st} – ${et}`
+    : `${date} – ${e.toLocaleDateString(undefined, {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+      })}`;
+}
+
 /**
  * Cost mapping for each notification channel (INR per unit).
  */

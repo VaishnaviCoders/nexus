@@ -121,9 +121,11 @@ model Organization {
   AcademicYear       AcademicYear[]
   scheduledJob       ScheduledJob[]
 
-  createdBy String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdBy  String?
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  Exam       Exam[]
+  hallTicket HallTicket[]
 
   @@index([id])
   @@index([organizationSlug])
@@ -338,8 +340,10 @@ model Student {
   updatedAt       DateTime          @updatedAt
   NotificationLog NotificationLog[]
   performance     Performance[]
-  ReportCard      ReportCard[]
+  reportCard      ReportCard[]
+  hallTicket      HallTicket[]
 
+  @@unique([organizationId, rollNumber])
   @@index([email]) // User lookup
   @@index([phoneNumber])
   @@index([rollNumber])
@@ -786,44 +790,108 @@ enum EvaluationType {
   OTHER
 }
 
+enum ExamStatus {
+  UPCOMING
+  LIVE
+  COMPLETED
+  CANCELLED
+}
+
+enum StudentExamStatus {
+  ENROLLED // Default if in grade/section
+  ATTENDED
+  MISSED
+  ABSENT
+  EXEMPT // e.g., medical leave
+}
+
+enum ExamMode {
+  ONLINE
+  OFFLINE
+  PRACTICAL
+  VIVA
+  TAKE_HOME
+}
+
 model ExamSession {
   id             String       @id @default(cuid())
   title          String // "Midterm 2024"
   description    String?
   academicYearId String
   academicYear   AcademicYear @relation(fields: [academicYearId], references: [id])
-  startDate      DateTime
-  endDate        DateTime
+  startDate      DateTime // Session Start
+  endDate        DateTime // Session End  
   createdBy      String
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
 
-  exams      Exam[]
-  ReportCard ReportCard[]
+  exams       Exam[]
+  reportCards ReportCard[]
+  hallTickets HallTicket[]
 
   @@unique([academicYearId, title])
+  @@index([academicYearId])
+  @@index([startDate, endDate])
 }
 
 model Exam {
-  id             String         @id @default(cuid())
-  title          String // "Maths Midterm"
-  examSessionId  String
-  examSession    ExamSession    @relation(fields: [examSessionId], references: [id])
-  subjectId      String
-  subject        Subject        @relation(fields: [subjectId], references: [id])
-  gradeId        String
-  sectionId      String
-  organizationId String
-  maxMarks       Float
-  weightage      Float // for GPA, if needed
-  evaluationType EvaluationType
-
-  performanceRecords Performance[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                String         @id @default(cuid())
+  title             String // "Maths Midterm"
+  description       String?
+  examSessionId     String
+  examSession       ExamSession    @relation(fields: [examSessionId], references: [id])
+  subjectId         String
+  subject           Subject        @relation(fields: [subjectId], references: [id])
+  gradeId           String
+  sectionId         String
+  // batchId           String? // Only For coaching batches (link to Batch model if exists) 
+  organizationId    String
+  organization      Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  maxMarks          Float
+  passingMarks      Float? // Optional threshold for pass/fail
+  weightage         Float?
+  evaluationType    EvaluationType
+  mode              ExamMode
+  status            ExamStatus     @default(UPCOMING)
+  instructions      String?
+  durationInMinutes Int? // Minutes
+  venueMapUrl       String?
+  venue             String?
+  performances      Performance[]
+  resultsPublished  Boolean        @default(false)
+  supervisors       String[] // Separate by comma 
+  startDate         DateTime // Specific exam start (overrides session if needed)
+  endDate           DateTime
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+  hallTickets       HallTicket[]
 
   @@unique([examSessionId, subjectId, gradeId, sectionId])
+  @@index([organizationId, status])
+  @@index([gradeId, sectionId])
+  // @@index([batchId])
+  @@index([startDate, endDate])
+}
+
+model HallTicket {
+  id             String    @id @default(cuid())
+  studentId      String
+  examId         String?
+  examSessionId  String?
+  pdfUrl         String // S3 link with student details, QR code
+  generatedAt    DateTime  @default(now())
+  downloadedAt   DateTime? // Track downloads
+  expiryDate     DateTime? // Post-exam expiry
+  organizationId String
+
+  student      Student      @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  exam         Exam?        @relation(fields: [examId], references: [id], onDelete: Cascade)
+  examSession  ExamSession? @relation(fields: [examSessionId], references: [id], onDelete: Cascade)
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@unique([studentId, examId])
+  @@index([studentId, generatedAt])
+  @@index([organizationId])
 }
 
 model Performance {
@@ -846,7 +914,7 @@ model Performance {
 }
 
 model ReportCard {
-  id            String  @id @default(cuid())
+  id            String      @id @default(cuid())
   studentId     String
   examSessionId String
   totalMarks    Float
@@ -854,9 +922,11 @@ model ReportCard {
   resultStatus  String // "Passed", "Failed", "Needs Improvement"
   overallGrade  String
   remarks       String?
-
-  student     Student     @relation(fields: [studentId], references: [id])
-  examSession ExamSession @relation(fields: [examSessionId], references: [id])
+  rank          Int? // Overall session rank
+  pdfUrl        String? // Generated PDF (e.g., S3 link)
+  generatedAt   DateTime? // When PDF was created
+  student       Student     @relation(fields: [studentId], references: [id])
+  examSession   ExamSession @relation(fields: [examSessionId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

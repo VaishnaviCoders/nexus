@@ -1,9 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { format } from 'date-fns';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -86,7 +85,7 @@ const languages = [
 ];
 
 export function AddTeacherForm() {
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
   const form = useForm<CreateTeacherFormData>({
     resolver: zodResolver(createTeacherSchema),
@@ -114,17 +113,16 @@ export function AddTeacherForm() {
   });
 
   const onSubmit = async (data: CreateTeacherFormData) => {
-    setIsSubmitting(true);
-    try {
-      console.log('Frontend Teacher Data', data);
-      await createTeacherFormAction(data);
-      toast.success('Teacher profile has been created successfully.');
-      form.reset();
-    } catch (error) {
-      toast.error('Failed to create teacher profile. Please try again.');
-    } finally {
-      setIsSubmitting(false);
-    }
+    startTransition(async () => {
+      try {
+        console.log('Frontend Teacher Data', data);
+        await createTeacherFormAction(data);
+        toast.success('Teacher profile has been created successfully.');
+        form.reset();
+      } catch (error) {
+        toast.error('Failed to create teacher profile. Please try again.');
+      }
+    });
   };
 
   console.log('Form errors:', form.formState.errors);
@@ -653,12 +651,12 @@ export function AddTeacherForm() {
               type="button"
               variant="outline"
               onClick={() => form.reset()}
-              disabled={isSubmitting}
+              disabled={isPending}
             >
               Reset Form
             </Button>
-            <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? 'Creating Teacher...' : 'Create Teacher'}
+            <Button type="submit" disabled={isPending}>
+              {isPending ? 'Creating Teacher...' : 'Create Teacher'}
             </Button>
           </div>
         </form>

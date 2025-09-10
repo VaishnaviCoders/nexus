@@ -1,6 +1,6 @@
 'use server';
 
-import { PrismaClient } from '@/generated/prisma/client';
+import { Exam, PrismaClient } from '@/generated/prisma/client';
 
 // import { getDefaultAcademicYear } from '../lib/academicYear';
 
@@ -191,3 +191,31 @@ main()
 //   },
 // });
 // console.log('feePayment', feePayment);
+
+// const exam:Exam = await prisma.exam.create({
+//   data: {
+//     title: 'Mathematics Midterm',
+
+//     description:
+//       'Class 10 Mathematics paper covering Algebra, Geometry, and Trigonometry',
+//     examSessionId: examSession.id,
+//     subject: {
+//       connect: { id: 'subject-math-id' }, // Replace with real Subject ID
+//     },
+//     gradeId: 'grade-10-id', // Replace with real Grade ID
+//     sectionId: 'section-a-id', // Replace with real Section ID
+//     organizationId:"org_30WQlEXgBepgHNrZYoYzx0xlqJg",
+//     maxMarks: 100,
+//     passingMarks: 35,
+//     weightage: 0.4,
+//     evaluationType: 'EXAM',
+//     mode: 'OFFLINE',
+//     status: 'UPCOMING',
+//     instructions: 'Answer all questions. Calculators not allowed.',
+//     durationInMinutes: 180,
+//     venue: 'Room 201',
+//     supervisors: ['teacher-1-id', 'teacher-2-id'], // Replace with actual teacher IDs
+//     startDate: new Date('2025-09-18T09:00:00.000Z'),
+//     endDate: new Date('2025-09-18T12:00:00.000Z'),
+//   },
+// });

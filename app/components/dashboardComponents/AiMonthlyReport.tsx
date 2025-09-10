@@ -299,11 +299,7 @@ const AiMonthlyReport: React.FC<AiMonthlyReportProps> = ({ data }) => {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button
-          size="sm"
-          variant="outline"
-          className="gap-2 text-blue-500 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 transition-all duration-300 border-dashed hover:border-solid"
-        >
+        <Button size="sm" variant="ai">
           <Sparkles className="w-4 h-4 text-blue-400 " />
           AI
           {/* Generate AI Summary */}

@@ -475,16 +475,40 @@ exports.Prisma.ExamSessionScalarFieldEnum = {
 exports.Prisma.ExamScalarFieldEnum = {
   id: 'id',
   title: 'title',
+  description: 'description',
   examSessionId: 'examSessionId',
   subjectId: 'subjectId',
   gradeId: 'gradeId',
   sectionId: 'sectionId',
   organizationId: 'organizationId',
   maxMarks: 'maxMarks',
+  passingMarks: 'passingMarks',
   weightage: 'weightage',
   evaluationType: 'evaluationType',
+  mode: 'mode',
+  status: 'status',
+  instructions: 'instructions',
+  durationInMinutes: 'durationInMinutes',
+  venueMapUrl: 'venueMapUrl',
+  venue: 'venue',
+  resultsPublished: 'resultsPublished',
+  supervisors: 'supervisors',
+  startDate: 'startDate',
+  endDate: 'endDate',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.HallTicketScalarFieldEnum = {
+  id: 'id',
+  studentId: 'studentId',
+  examId: 'examId',
+  examSessionId: 'examSessionId',
+  pdfUrl: 'pdfUrl',
+  generatedAt: 'generatedAt',
+  downloadedAt: 'downloadedAt',
+  expiryDate: 'expiryDate',
+  organizationId: 'organizationId'
 };
 
 exports.Prisma.PerformanceScalarFieldEnum = {
@@ -509,6 +533,9 @@ exports.Prisma.ReportCardScalarFieldEnum = {
   resultStatus: 'resultStatus',
   overallGrade: 'overallGrade',
   remarks: 'remarks',
+  rank: 'rank',
+  pdfUrl: 'pdfUrl',
+  generatedAt: 'generatedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -783,10 +810,24 @@ exports.Prisma.ExamSessionOrderByRelevanceFieldEnum = {
 exports.Prisma.ExamOrderByRelevanceFieldEnum = {
   id: 'id',
   title: 'title',
+  description: 'description',
   examSessionId: 'examSessionId',
   subjectId: 'subjectId',
   gradeId: 'gradeId',
   sectionId: 'sectionId',
+  organizationId: 'organizationId',
+  instructions: 'instructions',
+  venueMapUrl: 'venueMapUrl',
+  venue: 'venue',
+  supervisors: 'supervisors'
+};
+
+exports.Prisma.HallTicketOrderByRelevanceFieldEnum = {
+  id: 'id',
+  studentId: 'studentId',
+  examId: 'examId',
+  examSessionId: 'examSessionId',
+  pdfUrl: 'pdfUrl',
   organizationId: 'organizationId'
 };
 
@@ -804,7 +845,8 @@ exports.Prisma.ReportCardOrderByRelevanceFieldEnum = {
   examSessionId: 'examSessionId',
   resultStatus: 'resultStatus',
   overallGrade: 'overallGrade',
-  remarks: 'remarks'
+  remarks: 'remarks',
+  pdfUrl: 'pdfUrl'
 };
 exports.YearType = exports.$Enums.YearType = {
   ANNUAL: 'ANNUAL',
@@ -965,6 +1007,21 @@ exports.EvaluationType = exports.$Enums.EvaluationType = {
   OTHER: 'OTHER'
 };
 
+exports.ExamMode = exports.$Enums.ExamMode = {
+  ONLINE: 'ONLINE',
+  OFFLINE: 'OFFLINE',
+  PRACTICAL: 'PRACTICAL',
+  VIVA: 'VIVA',
+  TAKE_HOME: 'TAKE_HOME'
+};
+
+exports.ExamStatus = exports.$Enums.ExamStatus = {
+  UPCOMING: 'UPCOMING',
+  LIVE: 'LIVE',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED'
+};
+
 exports.Prisma.ModelName = {
   AcademicYear: 'AcademicYear',
   Organization: 'Organization',
@@ -991,6 +1048,7 @@ exports.Prisma.ModelName = {
   NotificationLog: 'NotificationLog',
   ExamSession: 'ExamSession',
   Exam: 'Exam',
+  HallTicket: 'HallTicket',
   Performance: 'Performance',
   ReportCard: 'ReportCard'
 };

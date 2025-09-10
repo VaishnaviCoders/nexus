@@ -8,11 +8,6 @@ const google = createGoogleGenerativeAI({
     process.env.GOOGLE_GENERATIVE_AI_API_KEY!,
 });
 
-const apiKey = process.env.NEXT_PUBLIC_GOOGLE_GEMINI_AI;
-
-if (!apiKey) {
-  throw new Error('No API key available');
-}
 export interface AISubjectSuggestion {
   correctedName?: string;
   description?: string;

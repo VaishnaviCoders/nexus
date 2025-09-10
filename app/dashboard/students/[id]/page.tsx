@@ -46,9 +46,6 @@ const getStudentAdminData = async (studentId: string) => {
       prisma.studentAttendance.findMany({
         where: {
           studentId,
-          date: {
-            gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
-          },
         },
         select: {
           present: true,

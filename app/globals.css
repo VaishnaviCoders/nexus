@@ -114,7 +114,7 @@ body {
   }
 
   /* Lighter custom scrollbar */
-  ::-webkit-scrollbar {
+  /* ::-webkit-scrollbar {
     width: 4px;
   }
 
@@ -129,6 +129,7 @@ body {
   ::-webkit-scrollbar-thumb:hover {
     @apply bg-slate-400/80 dark:bg-slate-500/80;
   }
+} */
 }
 
 /* Responsive utilities */
@@ -157,24 +158,14 @@ body {
   color: white !important;
 }
 
-/* Custom Scrollbar */
-.scrollbar-thin {
-  scrollbar-width: thin;
+::-webkit-scrollbar {
+  @apply w-2 h-2;
 }
-.scrollbar-thin::-webkit-scrollbar {
-  height: 6px;
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
 }
-.scrollbar-thin::-webkit-scrollbar-thumb {
-  background-color: rgba(
-    59,
-    130,
-    246,
-    0.3
-  ); /* Matches Tailwind's blue-500/30 */
-  border-radius: 9999px;
-}
-.scrollbar-thin::-webkit-scrollbar-track {
-  background: transparent;
+::-webkit-scrollbar-thumb {
+  @apply rounded-full bg-border border-transparent border-solid;
 }
 
 /* Animation improvements */

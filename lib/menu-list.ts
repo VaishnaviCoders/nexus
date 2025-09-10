@@ -14,6 +14,9 @@ import {
   FileIcon,
   BadgeCheck,
   GraduationCap,
+  PaperclipIcon,
+  ClipboardList,
+  Paperclip,
 } from 'lucide-react';
 
 type Submenu = {
@@ -68,6 +71,7 @@ export const roleMenus: Record<string, Group[]> = {
             },
           ],
         },
+
         {
           href: '/dashboard/teachers',
           label: 'Teacher Management',
@@ -88,6 +92,11 @@ export const roleMenus: Record<string, Group[]> = {
           href: '/dashboard/holidays',
           label: 'Holidays Management',
           icon: Calendar,
+        },
+        {
+          href: '/dashboard/exams',
+          label: 'Exam Management',
+          icon: Paperclip,
         },
         {
           href: '/dashboard/documents/verification',
@@ -228,6 +237,11 @@ export const roleMenus: Record<string, Group[]> = {
           href: '/dashboard/my-attendance',
           label: 'Attendance',
           icon: Calendar,
+        },
+        {
+          href: '/dashboard/exams',
+          label: 'Exams',
+          icon: ClipboardList,
         },
         {
           href: '/dashboard/fees/student',

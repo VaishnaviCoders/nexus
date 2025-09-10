@@ -242,7 +242,7 @@ export default function NoticeList({
             {sortedNotices.map((notice) => (
               <TableRow key={notice.id}>
                 {/* <TableCell className="font-medium">{notice.id}</TableCell> */}
-                <TableCell className="truncate  text-clip">
+                <TableCell className="truncate text-clip">
                   {notice.title}
                 </TableCell>
                 <TableCell>

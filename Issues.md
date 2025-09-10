@@ -97,10 +97,12 @@ In Student
 1. Student Attendance History/ Page : Own Attendance History : ✅ Solved
 2. Dashboard : Weekly Attendance || Subject Performance || Dashboard Stats
 3. Pay Fees / Download Receipt : ✅ Fixed
-4. Assignments Page
-5. Teacher Feedback Page
+4. Assignments Page : ❌ Pending
+5. Teacher Feedback Page : ❌ Pending
 6. Settings Page: 40% Remaining
-7. Performance Page
+7. Performance/Exam Result Radar component : : ❌ Pending
+8. Exams : All Exams , Exam Details Page, Get Hall Ticket , Add to Calendar , Performance/ Marks , Participants , Pass Rate , Average Score || Venue Map Option
+9. Exam Result : Download Single Exam Result , Download Exam Session result , Download Combine Result (Selected Sessions)
 
 In Admin
 
@@ -111,10 +113,16 @@ In Admin
 5. Attendance : Date Range is not working : ✅ Fixed
 6. Dashboard : Monthly Fee Collection Responsive || Upcoming Events : ✅ Fixed
 7. Fee Details Dialog : Transaction ID / Payer Information missing : ✅ Fixed
-8. Set Background Jobs TO Correct Fees Status
+8. Set Background Jobs TO Correct Fees Status : ❌ Fixed But Check Again
 9. Document Verification: Send Message After Reject or Approve Document / Image || AI Suggestion For Notes , Reject Note ✅ Completed
-10. Full Calendar : https://originui.com/
+10. Full Calendar : https://originui.com/ => Events || Exams || Notices || Holidays || Emergency Declare
 11. Add Option To Upload Student Documents on create Student
+12. Exam: Create Exam , Issue Hall Tickets , Fill Exam Results , Delete Exam, Edit Exam, Venue Map Option , Auto Change Exam Status ,Exam Card With Proper Logic and Conditional render
+    Need To Check Conflicts [Student/Supervisors A Have Same Date Same time 2 Exams] Should i Use AI for this ? : ❌ Research
+
+13. 9. Exam Result : Upload Single Exam Result , Upload Exam Session result , Upload Combine Result (Selected Sessions) : 🧠 Research
+
+14. Student: Change Grade / Section || Discount || Withdraw Student(Withdraw Date, Leaving Reason) : 🧠 Research
 
 In Parent
 
@@ -125,6 +133,8 @@ In Parent
 5. Attendance Reports : Weekly, Monthly , Yearly
 6. Automated Email Attendance Reports : Weekly, Monthly , Yearly
 7. Automated Whatsapp PDF Attendance Reports : Weekly, Monthly , Yearly
+8. Exams : All Exams , Exam Details Page, Get Hall Ticket / Print /Download , Add to Calendar , Performance/ Marks , Participants , Pass Rate , Average Score ,Venue Map Option , Teacher/Supervisor Names instead of ID's
+9. Exam Result : Download Single Exam Result , Download Exam Session result , Download Combine Result (Selected Sessions)
 
 Email Templates
 
@@ -150,9 +160,9 @@ Urgent Problems
 
 🔮 Future Enhancements
 
-1. TimeTable
+1. TimeTable : Exam TimeTable , Daily Class TimeTable : ❌ Pending
 2. Pay Fees At Home : ✅ Solved
-3. Ai Reports :
+3. Ai Reports : ❌ Pending
 4. Complaints Management : ✅ Solved
 5. Teacher Salary :
 6. Teacher Attendance : Track Performance // Teacher Leave System
@@ -162,6 +172,7 @@ Urgent Problems
 10. Instant Customer Support
 11. own LMS
 12. Own Webinar Like Scaler, Zoom
+13. Exam , Hall Tickets, Exam Results/ Performance
 
 <!-- FEES Model-->
 

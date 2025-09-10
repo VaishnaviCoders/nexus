@@ -97,7 +97,7 @@ export async function updateTeachingAssignmentStatus(
       data: { status },
     });
 
-    revalidatePath('/teaching-assignments');
+    revalidatePath('/dashboard/teaching-assignments');
     return { success: true };
   } catch (error) {
     console.error('Error updating teaching assignment status:', error);

@@ -1,5 +1,10 @@
-import { z } from 'zod';
-import { DocumentType, PaymentMethod } from '@/generated/prisma';
+import { object, z } from 'zod';
+import {
+  DocumentType,
+  EvaluationType,
+  ExamMode,
+  PaymentMethod,
+} from '@/generated/prisma';
 // const ACCEPTED_IMAGE_TYPES = [
 //   'image/jpeg',
 //   'image/jpg',
@@ -393,3 +398,49 @@ export const subjectSchema = z.object({
 });
 
 export type SubjectFormData = z.infer<typeof subjectSchema>;
+
+// Exams
+
+export const RowSchema = z
+  .object({
+    subjectId: z.string().min(1, 'Select a subject'),
+    title: z.string().min(1, 'Title is required'),
+    startDate: z.string().min(1, 'Start date/time must be an ISO date-time'),
+    endDate: z.string().min(1, 'End date/time must be an ISO date-time'),
+    max: z.coerce.number().min(1).max(1000),
+    pass: z.coerce.number().min(0),
+    mode: z.enum(Object.values(ExamMode) as [string, ...string[]]),
+    weightage: z.coerce.number().min(0).optional().default(0),
+    evaluationType: z
+      .enum(Object.values(EvaluationType) as [string, ...string[]])
+      .optional()
+      .default(EvaluationType.EXAM),
+    venue: z.string().optional().default(''),
+    venueMapUrl: z.string().optional(),
+    supervisors: z.array(z.string()).default([]),
+    description: z.string().optional(),
+    instructions: z.string().optional(),
+  })
+  .refine(
+    (v) => new Date(v.endDate).getTime() > new Date(v.startDate).getTime(),
+    {
+      message: 'End time must be after start time',
+      path: ['endDate'],
+    }
+  )
+  .refine((v) => v.pass <= v.max, {
+    message: 'Pass must be <= Max',
+    path: ['pass'],
+  });
+
+export type bulkExamRowFormData = z.infer<typeof RowSchema>;
+
+export const bulkExamSchema = z.object({
+  sessionId: z.string().min(1, 'Pick session'),
+  gradeId: z.string().min(1, 'Pick grade'),
+  sectionId: z.string().min(1, 'Pick section'),
+  // Optional session window for client-side validation; server will also enforce
+  rows: z.array(RowSchema).min(1, 'Add at least one exam'),
+});
+
+export type bulkExamFormData = z.infer<typeof bulkExamSchema>;

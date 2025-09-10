@@ -12,6 +12,8 @@ import {
   TrendingUp,
 } from 'lucide-react';
 import { getStudentDashboardStats } from '@/lib/data/student/get-student-dashboard-stats';
+import { formatDateIN, timeUntil } from '@/lib/utils';
+import Link from 'next/link';
 
 function StudentDashboardStatsCardsSkeleton() {
   return (
@@ -88,13 +90,31 @@ const StudentDashboardStatsContent = async ({
           </div>
         </CardHeader>
         <CardContent className="pt-4">
-          <div className="text-2xl font-bold text-blue-700 dark:text-blue-300">
-            {stats.upcomingExams}
-          </div>
-          <p className="text-xs text-muted-foreground">Next: Math (May 15)</p>
-          <div className="mt-2 flex items-center text-xs text-blue-600 dark:text-blue-400">
-            <Clock className="w-3 h-3 mr-1" />2 days remaining
-          </div>
+          {stats.upcomingExams.length > 0 ? (
+            <>
+              {/* Show count */}
+              <div className="text-2xl font-bold text-blue-700 dark:text-blue-300">
+                {stats.upcomingExams.length}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                <Link
+                  href={'dashboard/exams'}
+                  className="hover:underline hover:text-blue-500"
+                >
+                  {stats.upcomingExams[0].subject.name}
+                </Link>{' '}
+                at {formatDateIN(stats.upcomingExams[0].startDate)}
+              </p>
+              <div className="mt-2 flex items-center text-xs text-blue-600 dark:text-blue-400">
+                <Clock className="w-3 h-3 mr-1" />
+                {timeUntil(stats.upcomingExams[0].startDate)} remaining
+              </div>
+            </>
+          ) : (
+            <p className="text-sm text-muted-foreground">
+              No upcoming exams 🎉
+            </p>
+          )}
         </CardContent>
       </Card>
 

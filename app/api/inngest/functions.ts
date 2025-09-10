@@ -89,3 +89,49 @@ export const scheduledFeeReminder = inngest.createFunction(
     return result;
   }
 );
+
+export const updateExamStatuses = inngest.createFunction(
+  { id: 'exam-status-updater' },
+  { cron: '*/15 * * * *' }, // every 15 minutes
+  async ({ step }) => {
+    const now = new Date();
+
+    // 1. Mark as UPCOMING (future exams not cancelled)
+    const upcoming = await step.run('set-upcoming', async () =>
+      prisma.exam.updateMany({
+        where: {
+          status: { notIn: ['CANCELLED', 'UPCOMING'] },
+          startDate: { gt: now },
+        },
+        data: { status: 'UPCOMING' },
+      })
+    );
+
+    // 2. Mark as LIVE (currently ongoing exams)
+    const live = await step.run('set-live', async () =>
+      prisma.exam.updateMany({
+        where: {
+          status: { notIn: ['CANCELLED', 'LIVE'] },
+          startDate: { lte: now },
+          endDate: { gte: now },
+        },
+        data: { status: 'LIVE' },
+      })
+    );
+
+    // 3. Mark as COMPLETED (past exams)
+    const completed = await step.run('set-completed', async () =>
+      prisma.exam.updateMany({
+        where: {
+          status: { notIn: ['CANCELLED', 'COMPLETED'] },
+          endDate: { lt: now },
+        },
+        data: { status: 'COMPLETED' },
+      })
+    );
+
+    return {
+      message: `Updated Exam statuses → UPCOMING: ${upcoming.count}, LIVE: ${live.count}, COMPLETED: ${completed.count}`,
+    };
+  }
+);

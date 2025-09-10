@@ -17,9 +17,6 @@ export const getStudentDashboardStats = async (studentId: string) => {
   const attendanceRecords = await prisma.studentAttendance.findMany({
     where: {
       studentId: student.id,
-      date: {
-        gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
-      },
     },
     select: {
       present: true,
@@ -34,7 +31,27 @@ export const getStudentDashboardStats = async (studentId: string) => {
   const gpa = 3.6; // You can calculate or mock this if no mark/performance model exists yet.
 
   // Upcoming Exams (Mock until exams model added)
-  const upcomingExams = 2;
+  const upcomingExams = await prisma.exam.findMany({
+    where: {
+      sectionId: student.sectionId,
+      status: 'UPCOMING',
+      startDate: {
+        gte: new Date(),
+      },
+    },
+    select: {
+      startDate: true,
+      title: true,
+      subject: {
+        select: {
+          name: true,
+          code: true,
+        },
+      },
+    },
+    orderBy: { startDate: 'asc' },
+    take: 5,
+  });
 
   // Pending Assignments (Mock until assignments model added)
   const pendingAssignments = 4;

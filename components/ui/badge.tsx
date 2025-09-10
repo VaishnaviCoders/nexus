@@ -30,6 +30,13 @@ const badgeVariants = cva(
         verified:
           'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
         rejected: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
+
+        // For Exams
+        LIVE: 'bg-green-700/10 text-green-800 border-green-700/20',
+        UPCOMING: 'bg-yellow-600/10 text-yellow-700 border-yellow-600/20',
+        OPEN: 'bg-blue-700/10 text-blue-800 border-blue-700/20',
+        COMPLETED: 'bg-muted text-foreground/70 border-border',
+        CANCELLED: 'bg-red-600/10 text-red-700 border-red-600/20',
       },
     },
     defaultVariants: {
