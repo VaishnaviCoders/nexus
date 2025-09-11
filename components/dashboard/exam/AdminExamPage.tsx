@@ -176,12 +176,11 @@ export function AdminExamsPage({
 
   return (
     <section className="px-2 space-y-3">
-      {userRole}
       <Card className="py-4 px-2 flex items-center justify-between">
         <div>
-          <CardTitle className="text-lg">My Exams</CardTitle>
+          <CardTitle className="text-lg">All Exams</CardTitle>
           <CardDescription className="text-sm">
-            Browse all your exams by session, subject.
+            Browse all exams by session, subject.
           </CardDescription>
         </div>
         <div className="flex justify-center items-center space-x-3">

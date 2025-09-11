@@ -2,6 +2,7 @@
 
 import prisma from '../lib/db';
 import { getOrganizationId } from '../lib/organization';
+import { cache } from 'react';
 
 export async function getCurrentAcademicYear() {
   const organizationId = await getOrganizationId();
@@ -18,10 +19,10 @@ export async function getCurrentAcademicYear() {
   return academicYear || null;
 }
 
-export async function getCurrentAcademicYearId() {
+export const getCurrentAcademicYearId = cache(async (): Promise<string> => {
   const organizationId = await getOrganizationId();
 
-  const academicYear = await prisma.academicYear.findFirst({
+  const currentYear = await prisma.academicYear.findFirst({
     where: {
       organizationId,
       isCurrent: true,
@@ -31,9 +32,9 @@ export async function getCurrentAcademicYearId() {
     },
   });
 
-  return academicYear
-    ? {
-        academicYearId: academicYear.id,
-      }
-    : null;
-}
+  if (!currentYear) {
+    throw new Error('No current academic year found for organization');
+  }
+
+  return currentYear.id;
+});

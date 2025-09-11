@@ -29,7 +29,7 @@ export async function editStudentProfileForm(
       where: { id: studentId },
       include: {
         user: true,
-        ParentStudent: {
+        parents: {
           include: {
             parent: {
               include: {
@@ -50,7 +50,7 @@ export async function editStudentProfileForm(
 
     // Check permissions - student can edit their own profile, parents can edit their children's profiles
     const isOwnProfile = student.user?.clerkId === userId;
-    const isParent = student.ParentStudent.some(
+    const isParent = student.parents.some(
       (ps) => ps.parent.user?.clerkId === userId
     );
 
@@ -69,7 +69,7 @@ export async function editStudentProfileForm(
         lastName: validatedData.lastName,
         middleName: validatedData.middleName,
         motherName: validatedData.motherName,
-        dateOfBirth: new Date(validatedData.dateOfBirth),
+        dateOfBirth: validatedData.dateOfBirth,
         gender: validatedData.gender,
         phoneNumber: validatedData.phoneNumber,
         whatsAppNumber: validatedData.whatsAppNumber,

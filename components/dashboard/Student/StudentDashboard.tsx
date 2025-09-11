@@ -16,6 +16,7 @@ import { FeeStatus, PaymentMethod } from '@/generated/prisma';
 import { Button } from '@/components/ui/button';
 import { CreditCard, Download, Upload, MessageSquare, Zap } from 'lucide-react';
 import { getStudentNotices } from '@/lib/data/notice/get-student-notices';
+import { getCurrentAcademicYear } from '@/lib/academicYear';
 
 export async function getFeesStatus(studentId: string) {
   const fees = await prisma.fee.findMany({
@@ -140,6 +141,22 @@ const StudentDashboard = async () => {
   if (!student) throw new Error('Student not found');
 
   const feesData = await getFeesStatus(student.id);
+  const academicYear = await getCurrentAcademicYear();
+
+  if (!academicYear) {
+    return (
+      <div className="p-6 flex flex-col items-center justify-center text-center space-y-4">
+        <h2 className="text-2xl font-semibold">Academic Year Not Set</h2>
+        <p className="text-muted-foreground max-w-md">
+          Please set the current academic year before using the dashboard
+          features.
+        </p>
+        <Button asChild>
+          <a href="/dashboard/settings">Go to Settings</a>
+        </Button>
+      </div>
+    );
+  }
 
   return (
     <div className="grid gap-4 md:gap-6">

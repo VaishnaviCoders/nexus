@@ -13,15 +13,7 @@ export const ImportGoogleSheetHolidayAction = async (
   try {
     const organizationId = await getOrganizationId();
     const user = await currentUser();
-    const academicYearData = await getCurrentAcademicYearId();
-
-    if (!academicYearData) {
-      // Handle the missing academic year here
-      // You can redirect, show a message, throw an error, etc.
-      throw new Error('No current academic year is set.');
-    }
-
-    const { academicYearId } = academicYearData;
+    const academicYearId = await getCurrentAcademicYearId();
 
     // Validate data against schema
     const validatedData = goggleImportHolidayFormSchema.parse(data);

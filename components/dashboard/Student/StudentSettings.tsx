@@ -35,7 +35,7 @@ export async function getStudentProfile(studentId?: string) {
           grade: true,
           section: true,
           organization: true,
-          ParentStudent: {
+          parents: {
             include: {
               parent: {
                 include: {
@@ -59,7 +59,7 @@ export async function getStudentProfile(studentId?: string) {
           grade: true,
           section: true,
           organization: true,
-          ParentStudent: {
+          parents: {
             include: {
               parent: {
                 include: {
@@ -78,7 +78,7 @@ export async function getStudentProfile(studentId?: string) {
 
     // Check permissions
     const isOwnProfile = student.user?.clerkId === userId;
-    const isParent = student.ParentStudent.some(
+    const isParent = student.parents.some(
       (ps) => ps.parent.user?.clerkId === userId
     );
 

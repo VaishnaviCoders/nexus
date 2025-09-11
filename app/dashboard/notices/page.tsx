@@ -17,15 +17,7 @@ const page = async () => {
   const { orgRole } = await getOrganizationUserRole();
 
   const organizationId = await getOrganizationId();
-  const academicYearData = await getCurrentAcademicYearId();
-
-  if (!academicYearData) {
-    // Handle the missing academic year here
-    // You can redirect, show a message, throw an error, etc.
-    throw new Error('No current academic year is set.');
-  }
-
-  const { academicYearId } = academicYearData;
+  const academicYearId = await getCurrentAcademicYearId();
 
   const t0 = performance.now();
 

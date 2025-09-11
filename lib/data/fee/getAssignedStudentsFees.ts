@@ -56,7 +56,7 @@ export async function getAssignedStudentsFees(
               grade: true,
             },
           },
-          ParentStudent: {
+          parents: {
             where: { isPrimary: true },
             select: {
               isPrimary: true,
@@ -133,7 +133,7 @@ export async function getAssignedStudentsFees(
       phoneNumber: fee.student.phoneNumber,
       gradeId: fee.student.gradeId,
       sectionId: fee.student.sectionId,
-      ParentStudent: fee.student.ParentStudent,
+      parents: fee.student.parents,
     },
     feeCategory: {
       id: fee.feeCategory.id,

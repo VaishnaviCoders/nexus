@@ -12,7 +12,6 @@ import { buildICS, downloadICS } from '@/lib/ics';
 import { ExamWithRelations } from './StudentExamsPage';
 
 export default function ExamHeader({ exam }: { exam: ExamWithRelations }) {
-  //   const { toast } = useToast();
   const [now, setNow] = useState<Date>(new Date());
 
   const start = useMemo(() => new Date(exam.startDate), [exam.startDate]);
