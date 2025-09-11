@@ -72,7 +72,7 @@ const getStudentAdminData = async (studentId: string) => {
         where: { studentId },
         orderBy: { uploadedAt: 'desc' },
       }),
-      prisma.performance.findMany({
+      prisma.examResult.findMany({
         where: { studentId },
         include: {
           exam: {
@@ -131,7 +131,7 @@ const StudentAdminRoute = async ({
   const averageGrade =
     performance.length > 0
       ? performance.reduce(
-          (sum, p) => sum + (p.obtainedMarks / p.exam.maxMarks) * 100,
+          (sum, p) => sum + ((p.obtainedMarks ?? 0) / p.exam.maxMarks) * 100,
           0
         ) / performance.length
       : 0;
@@ -655,7 +655,7 @@ const StudentAdminRoute = async ({
                                 </span>
                                 <div className="text-xs text-slate-500">
                                   {Math.round(
-                                    (record.obtainedMarks /
+                                    ((record.obtainedMarks ?? 0) /
                                       record.exam.maxMarks) *
                                       100
                                   )}

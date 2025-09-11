@@ -5,15 +5,8 @@ import { eachDayOfInterval, isSaturday, isSunday } from 'date-fns';
 
 export const getAcademicYearSummary = async () => {
   const organizationId = await getOrganizationId();
-  const academicYearData = await getCurrentAcademicYearId();
+  const academicYearId = await getCurrentAcademicYearId();
 
-  if (!academicYearData) {
-    // Handle the missing academic year here
-    // You can redirect, show a message, throw an error, etc.
-    throw new Error('No current academic year is set.');
-  }
-
-  const { academicYearId } = academicYearData;
   // ✅ Fetch academic year start and end dates
   const academicYear = await prisma.academicYear.findUnique({
     where: { id: academicYearId },

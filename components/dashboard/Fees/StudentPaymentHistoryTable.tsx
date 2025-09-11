@@ -472,7 +472,7 @@ function FilterControls({
     return feeRecords
       .filter((record) => ['UNPAID', 'OVERDUE'].includes(record.fee.status))
       .map((record) => {
-        const primaryParent = record.student.ParentStudent?.find(
+        const primaryParent = record.student.parents?.find(
           (ps) => ps.isPrimary
         )?.parent;
 

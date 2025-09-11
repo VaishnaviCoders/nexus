@@ -55,7 +55,7 @@ export default async function ExamsPage() {
       const children = await prisma.student.findMany({
         where: {
           organizationId,
-          ParentStudent: { some: { parentId: currentUser.parentId } },
+          parents: { some: { parentId: currentUser.parentId } },
         },
         select: { id: true, gradeId: true, sectionId: true },
       });

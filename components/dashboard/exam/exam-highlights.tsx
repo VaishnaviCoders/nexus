@@ -11,7 +11,7 @@ import { Award, ShieldCheck, Users, FileText } from 'lucide-react';
 type Exam = {
   maxMarks?: number | null;
   passingMarks?: number | null;
-  performances?: Array<{
+  examResults?: Array<{
     isPassed?: boolean | null;
     obtainedMarks?: number | null;
   }> | null;
@@ -24,8 +24,8 @@ export default function ExamHighlights({
   exam: Exam;
   className?: string;
 }) {
-  const total = exam.performances?.length ?? 0;
-  const passed = exam.performances?.filter((p) => p.isPassed).length ?? 0;
+  const total = exam.examResults?.length ?? 0;
+  const passed = exam.examResults?.filter((p) => p.isPassed).length ?? 0;
   const passRate = total > 0 ? Math.round((passed / total) * 100) : 0;
 
   const maxMarks =
@@ -37,7 +37,7 @@ export default function ExamHighlights({
   const avg =
     total > 0
       ? Math.round(
-          ((exam.performances ?? [])
+          ((exam.examResults ?? [])
             .map((p) => p.obtainedMarks ?? 0)
             .reduce((a, b) => a + b, 0) /
             total) *

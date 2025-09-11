@@ -36,15 +36,8 @@ const getTeacherInfo = cache(async () => {
 });
 
 export async function getTeacherDashboardStats() {
-  const academicYearData = await getCurrentAcademicYearId();
+  const academicYearId = await getCurrentAcademicYearId();
 
-  if (!academicYearData) {
-    // Handle the missing academic year here
-    // You can redirect, show a message, throw an error, etc.
-    throw new Error('No current academic year is set.');
-  }
-
-  const { academicYearId } = academicYearData;
   const teacher = await getTeacherInfo();
 
   const today = new Date();

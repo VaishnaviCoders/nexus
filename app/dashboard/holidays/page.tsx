@@ -11,15 +11,8 @@ export default async function page() {
   const summary = await getAcademicYearSummary();
 
   const organizationId = await getOrganizationId();
-  const academicYearData = await getCurrentAcademicYearId();
+  const academicYearId = await getCurrentAcademicYearId();
 
-  if (!academicYearData) {
-    // Handle the missing academic year here
-    // You can redirect, show a message, throw an error, etc.
-    throw new Error('No current academic year is set.');
-  }
-
-  const { academicYearId } = academicYearData;
   const holidays = await prisma.academicCalendar.findMany({
     where: {
       organizationId,

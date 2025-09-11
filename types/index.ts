@@ -35,7 +35,7 @@ export interface FeeRecord {
     phoneNumber: string;
     gradeId: string;
     sectionId: string;
-    ParentStudent?: {
+    parents?: {
       isPrimary: boolean | null;
       parent: {
         userId: string | null;

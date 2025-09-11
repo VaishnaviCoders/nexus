@@ -491,10 +491,36 @@ exports.Prisma.ExamScalarFieldEnum = {
   durationInMinutes: 'durationInMinutes',
   venueMapUrl: 'venueMapUrl',
   venue: 'venue',
-  resultsPublished: 'resultsPublished',
+  isResultsPublished: 'isResultsPublished',
   supervisors: 'supervisors',
   startDate: 'startDate',
   endDate: 'endDate',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ExamEnrollmentScalarFieldEnum = {
+  id: 'id',
+  studentId: 'studentId',
+  examId: 'examId',
+  status: 'status',
+  enrolledAt: 'enrolledAt',
+  exemptionReason: 'exemptionReason'
+};
+
+exports.Prisma.ExamResultScalarFieldEnum = {
+  id: 'id',
+  studentId: 'studentId',
+  examId: 'examId',
+  subjectId: 'subjectId',
+  maxMarks: 'maxMarks',
+  obtainedMarks: 'obtainedMarks',
+  percentage: 'percentage',
+  gradeLabel: 'gradeLabel',
+  remarks: 'remarks',
+  isPassed: 'isPassed',
+  isAbsent: 'isAbsent',
+  isResultsPublished: 'isResultsPublished',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -505,34 +531,29 @@ exports.Prisma.HallTicketScalarFieldEnum = {
   examId: 'examId',
   examSessionId: 'examSessionId',
   pdfUrl: 'pdfUrl',
+  qrCode: 'qrCode',
   generatedAt: 'generatedAt',
   downloadedAt: 'downloadedAt',
   expiryDate: 'expiryDate',
   organizationId: 'organizationId'
 };
 
-exports.Prisma.PerformanceScalarFieldEnum = {
-  id: 'id',
-  studentId: 'studentId',
-  examId: 'examId',
-  obtainedMarks: 'obtainedMarks',
-  gradeLabel: 'gradeLabel',
-  remarks: 'remarks',
-  isPassed: 'isPassed',
-  isPublished: 'isPublished',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
 exports.Prisma.ReportCardScalarFieldEnum = {
   id: 'id',
   studentId: 'studentId',
   examSessionId: 'examSessionId',
-  totalMarks: 'totalMarks',
+  totalMaxMarks: 'totalMaxMarks',
+  totalObtained: 'totalObtained',
   percentage: 'percentage',
-  resultStatus: 'resultStatus',
+  cgpa: 'cgpa',
   overallGrade: 'overallGrade',
+  resultStatus: 'resultStatus',
+  classRank: 'classRank',
+  gradeRank: 'gradeRank',
+  attendancePercent: 'attendancePercent',
+  conductGrade: 'conductGrade',
   remarks: 'remarks',
+  principalRemarks: 'principalRemarks',
   rank: 'rank',
   pdfUrl: 'pdfUrl',
   generatedAt: 'generatedAt',
@@ -822,30 +843,40 @@ exports.Prisma.ExamOrderByRelevanceFieldEnum = {
   supervisors: 'supervisors'
 };
 
+exports.Prisma.ExamEnrollmentOrderByRelevanceFieldEnum = {
+  id: 'id',
+  studentId: 'studentId',
+  examId: 'examId',
+  exemptionReason: 'exemptionReason'
+};
+
+exports.Prisma.ExamResultOrderByRelevanceFieldEnum = {
+  id: 'id',
+  studentId: 'studentId',
+  examId: 'examId',
+  subjectId: 'subjectId',
+  gradeLabel: 'gradeLabel',
+  remarks: 'remarks'
+};
+
 exports.Prisma.HallTicketOrderByRelevanceFieldEnum = {
   id: 'id',
   studentId: 'studentId',
   examId: 'examId',
   examSessionId: 'examSessionId',
   pdfUrl: 'pdfUrl',
+  qrCode: 'qrCode',
   organizationId: 'organizationId'
-};
-
-exports.Prisma.PerformanceOrderByRelevanceFieldEnum = {
-  id: 'id',
-  studentId: 'studentId',
-  examId: 'examId',
-  gradeLabel: 'gradeLabel',
-  remarks: 'remarks'
 };
 
 exports.Prisma.ReportCardOrderByRelevanceFieldEnum = {
   id: 'id',
   studentId: 'studentId',
   examSessionId: 'examSessionId',
-  resultStatus: 'resultStatus',
   overallGrade: 'overallGrade',
+  conductGrade: 'conductGrade',
   remarks: 'remarks',
+  principalRemarks: 'principalRemarks',
   pdfUrl: 'pdfUrl'
 };
 exports.YearType = exports.$Enums.YearType = {
@@ -1022,6 +1053,22 @@ exports.ExamStatus = exports.$Enums.ExamStatus = {
   CANCELLED: 'CANCELLED'
 };
 
+exports.StudentExamStatus = exports.$Enums.StudentExamStatus = {
+  ENROLLED: 'ENROLLED',
+  ATTENDED: 'ATTENDED',
+  ABSENT: 'ABSENT',
+  EXEMPT: 'EXEMPT',
+  DISQUALIFIED: 'DISQUALIFIED'
+};
+
+exports.ResultStatus = exports.$Enums.ResultStatus = {
+  PASSED: 'PASSED',
+  FAILED: 'FAILED',
+  PROMOTED: 'PROMOTED',
+  COMPARTMENT: 'COMPARTMENT',
+  WITHHELD: 'WITHHELD'
+};
+
 exports.Prisma.ModelName = {
   AcademicYear: 'AcademicYear',
   Organization: 'Organization',
@@ -1048,8 +1095,9 @@ exports.Prisma.ModelName = {
   NotificationLog: 'NotificationLog',
   ExamSession: 'ExamSession',
   Exam: 'Exam',
+  ExamEnrollment: 'ExamEnrollment',
+  ExamResult: 'ExamResult',
   HallTicket: 'HallTicket',
-  Performance: 'Performance',
   ReportCard: 'ReportCard'
 };
 

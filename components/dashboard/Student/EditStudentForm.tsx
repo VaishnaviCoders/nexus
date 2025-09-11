@@ -78,7 +78,7 @@ type StudentWithRelations = Student & {
   user: User;
   grade: Grade;
   section: Section;
-  ParentStudent: (ParentStudent & {
+  parents: (ParentStudent & {
     parent: Parent;
   })[];
 };
@@ -118,7 +118,7 @@ export default function EditStudentForm({
       fullName: student.fullName || '',
       emergencyContact: student.emergencyContact || '',
       profileImage: student.profileImage || '',
-      parents: student.ParentStudent.map((ps) => ({
+      parents: student.parents.map((ps) => ({
         firstName: ps.parent.firstName,
         lastName: ps.parent.lastName,
         email: ps.parent.email,
@@ -165,8 +165,8 @@ export default function EditStudentForm({
         emergencyContact: student.emergencyContact || '',
         profileImage: student.profileImage || '',
         parents:
-          student.ParentStudent && student.ParentStudent.length > 0
-            ? student.ParentStudent.map((ps) => ({
+          student.parents && student.parents.length > 0
+            ? student.parents.map((ps) => ({
                 firstName: ps.parent.firstName,
                 lastName: ps.parent.lastName,
                 email: ps.parent.email,

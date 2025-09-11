@@ -1,6 +1,4 @@
-'use server';
-
-import { Exam, PrismaClient } from '@/generated/prisma/client';
+import { Exam, PrismaClient } from '../generated/prisma/client';
 
 // import { getDefaultAcademicYear } from '../lib/academicYear';
 
@@ -55,18 +53,18 @@ const main = async () => {
   // });
   // console.log(`✅ Created ${result.count} notices successfully!`);
 
-  await prisma.scheduledJob.create({
-    data: {
-      organizationId: 'org_2yikjYDIq5D8AjIyLvq2T6K5jZF',
-      type: 'FEE_REMINDER',
-      scheduledAt: new Date('2025-07-22T22:00:00Z'),
-      channels: ['EMAIL', 'WHATSAPP'], // must be array of enums
-      data: {
-        studentId: '...',
-        feeId: '...',
-      },
-    },
-  });
+  // await prisma.scheduledJob.create({
+  //   data: {
+  //     organizationId: 'org_2yikjYDIq5D8AjIyLvq2T6K5jZF',
+  //     type: 'FEE_REMINDER',
+  //     scheduledAt: new Date('2025-07-22T22:00:00Z'),
+  //     channels: ['EMAIL', 'WHATSAPP'], // must be array of enums
+  //     data: {
+  //       studentId: '...',
+  //       feeId: '...',
+  //     },
+  //   },
+  // });
 
   const sampleNotices = await prisma.notice.findMany({
     take: 5,
@@ -85,6 +83,14 @@ const main = async () => {
       `${index + 1}. ${notice.title} (${notice.noticeType}) - Published: ${notice.isPublished}`
     );
   });
+
+  const exams = await prisma.exam.findMany({
+    where: {
+      organizationId: 'org_2yikjYDIq5D8AjIyLvq2T6K5jZF',
+    },
+  });
+
+  console.log('📋 Sample exams created:', exams);
 };
 
 main()

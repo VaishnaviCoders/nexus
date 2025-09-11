@@ -256,9 +256,10 @@ model Subject {
   organization        Organization         @relation(fields: [organizationId], references: [id])
   teachingAssignments TeachingAssignment[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  Exam      Exam[]
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  exam       Exam[]
+  examResult ExamResult[]
 
   @@index([organizationId, name, code])
 }
@@ -328,20 +329,21 @@ model Student {
   organizationId String
 
   Fee               Fee[]
-  ParentStudent     ParentStudent[] // Change to parents
+  parents           ParentStudent[]
   StudentAttendance StudentAttendance[]
   StudentDocument   StudentDocument[]
   // performances   Performance[]
   // assignments    Assignment[]
   // complaints     Complaint[]
-  // marks          Mark[]
 
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime          @updatedAt
   NotificationLog NotificationLog[]
-  performance     Performance[]
   reportCard      ReportCard[]
   hallTicket      HallTicket[]
+  examResult      ExamResult[]
+
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  examEnrollment ExamEnrollment[]
 
   @@unique([organizationId, rollNumber])
   @@index([email]) // User lookup
@@ -791,18 +793,19 @@ enum EvaluationType {
 }
 
 enum ExamStatus {
-  UPCOMING
+  UPCOMING //SCHEDULED   // ✅ Better than UPCOMING
   LIVE
   COMPLETED
   CANCELLED
+  //  POSTPONED   // Rescheduled
 }
 
 enum StudentExamStatus {
-  ENROLLED // Default if in grade/section
-  ATTENDED
-  MISSED
-  ABSENT
-  EXEMPT // e.g., medical leave
+  ENROLLED // Default for all students
+  ATTENDED // Appeared for exam
+  ABSENT // Didn't appear
+  EXEMPT // Medical leave, etc.
+  DISQUALIFIED // Disciplinary action
 }
 
 enum ExamMode {
@@ -835,36 +838,38 @@ model ExamSession {
 }
 
 model Exam {
-  id                String         @id @default(cuid())
-  title             String // "Maths Midterm"
-  description       String?
-  examSessionId     String
-  examSession       ExamSession    @relation(fields: [examSessionId], references: [id])
-  subjectId         String
-  subject           Subject        @relation(fields: [subjectId], references: [id])
-  gradeId           String
-  sectionId         String
+  id          String  @id @default(cuid())
+  title       String // "Maths Midterm"
+  description String?
+
+  examSessionId      String
+  examSession        ExamSession      @relation(fields: [examSessionId], references: [id])
+  subjectId          String
+  subject            Subject          @relation(fields: [subjectId], references: [id])
+  gradeId            String
+  sectionId          String
   // batchId           String? // Only For coaching batches (link to Batch model if exists) 
-  organizationId    String
-  organization      Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  maxMarks          Float
-  passingMarks      Float? // Optional threshold for pass/fail
-  weightage         Float?
-  evaluationType    EvaluationType
-  mode              ExamMode
-  status            ExamStatus     @default(UPCOMING)
-  instructions      String?
-  durationInMinutes Int? // Minutes
-  venueMapUrl       String?
-  venue             String?
-  performances      Performance[]
-  resultsPublished  Boolean        @default(false)
-  supervisors       String[] // Separate by comma 
-  startDate         DateTime // Specific exam start (overrides session if needed)
-  endDate           DateTime
-  createdAt         DateTime       @default(now())
-  updatedAt         DateTime       @updatedAt
-  hallTickets       HallTicket[]
+  organizationId     String
+  organization       Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  maxMarks           Float
+  passingMarks       Float? // Optional threshold for pass/fail
+  weightage          Float?
+  evaluationType     EvaluationType
+  mode               ExamMode
+  status             ExamStatus       @default(UPCOMING)
+  instructions       String?
+  durationInMinutes  Int? // Minutes
+  venueMapUrl        String?
+  venue              String?
+  isResultsPublished Boolean          @default(false)
+  supervisors        String[] // Separate by comma 
+  startDate          DateTime // Specific exam start (overrides session if needed)
+  endDate            DateTime
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+  hallTickets        HallTicket[]
+  examResult         ExamResult[]
+  examEnrollment     ExamEnrollment[]
 
   @@unique([examSessionId, subjectId, gradeId, sectionId])
   @@index([organizationId, status])
@@ -873,12 +878,54 @@ model Exam {
   @@index([startDate, endDate])
 }
 
+model ExamEnrollment {
+  id              String            @id @default(cuid())
+  studentId       String
+  examId          String
+  status          StudentExamStatus @default(ENROLLED)
+  enrolledAt      DateTime          @default(now())
+  exemptionReason String? // Medical leave, etc.
+
+  student Student @relation(fields: [studentId], references: [id])
+  exam    Exam    @relation(fields: [examId], references: [id])
+
+  @@unique([studentId, examId])
+}
+
+model ExamResult {
+  id                 String   @id @default(cuid())
+  studentId          String
+  examId             String
+  subjectId          String?
+  maxMarks           Float
+  obtainedMarks      Float?
+  percentage         Float? // Auto-calculated
+  gradeLabel         String?
+  remarks            String?
+  isPassed           Boolean?
+  isAbsent           Boolean  @default(false)
+  isResultsPublished Boolean  @default(false)
+
+  student Student  @relation(fields: [studentId], references: [id])
+  exam    Exam     @relation(fields: [examId], references: [id])
+  subject Subject? @relation(fields: [subjectId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([examId, studentId, subjectId])
+  @@index([examId])
+  @@index([studentId])
+}
+
 model HallTicket {
-  id             String    @id @default(cuid())
-  studentId      String
-  examId         String?
-  examSessionId  String?
+  id            String  @id @default(cuid())
+  studentId     String
+  examId        String?
+  examSessionId String?
+
   pdfUrl         String // S3 link with student details, QR code
+  qrCode         String?
   generatedAt    DateTime  @default(now())
   downloadedAt   DateTime? // Track downloads
   expiryDate     DateTime? // Post-exam expiry
@@ -894,44 +941,46 @@ model HallTicket {
   @@index([organizationId])
 }
 
-model Performance {
-  id            String   @id @default(cuid())
-  studentId     String
-  examId        String
-  obtainedMarks Float
-  gradeLabel    String?
-  remarks       String?
-  isPassed      Boolean?
-  isPublished   Boolean  @default(false)
-
-  student Student @relation(fields: [studentId], references: [id])
-  exam    Exam    @relation(fields: [examId], references: [id])
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@unique([studentId, examId])
-}
-
 model ReportCard {
-  id            String      @id @default(cuid())
+  id            String @id @default(cuid())
   studentId     String
   examSessionId String
-  totalMarks    Float
-  percentage    Float
-  resultStatus  String // "Passed", "Failed", "Needs Improvement"
-  overallGrade  String
-  remarks       String?
-  rank          Int? // Overall session rank
-  pdfUrl        String? // Generated PDF (e.g., S3 link)
-  generatedAt   DateTime? // When PDF was created
-  student       Student     @relation(fields: [studentId], references: [id])
-  examSession   ExamSession @relation(fields: [examSessionId], references: [id])
+  // Academic Performance
+  totalMaxMarks Float // Sum of all exam max marks
+  totalObtained Float // Sum of obtained marks
+  percentage    Float // Auto-calculated
+  cgpa          Float? // If applicable
+
+  // Results
+  overallGrade String // A+, A, B+, etc.
+  resultStatus ResultStatus
+  classRank    Int? // Rank in class
+  gradeRank    Int? // Rank in grade
+
+  // Additional Details
+  attendancePercent Float? // Overall attendance
+  conductGrade      String? // A, B, C for conduct
+  remarks           String?
+  principalRemarks  String?
+
+  rank        Int? // Overall session rank
+  pdfUrl      String? // Generated PDF (e.g., S3 link)
+  generatedAt DateTime? // When PDF was created
+  student     Student     @relation(fields: [studentId], references: [id])
+  examSession ExamSession @relation(fields: [examSessionId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@unique([studentId, examSessionId])
+}
+
+enum ResultStatus {
+  PASSED
+  FAILED
+  PROMOTED // Promoted to next class despite failure
+  COMPARTMENT // Failed in some subjects
+  WITHHELD // Results withheld due to issues
 }
 
 // FeedBackCollection
