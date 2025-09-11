@@ -30,15 +30,7 @@ export const createNotice = async (
         size: file.size || 0,
       };
     });
-    const academicYearData = await getCurrentAcademicYearId();
-
-    if (!academicYearData) {
-      // Handle the missing academic year here
-      // You can redirect, show a message, throw an error, etc.
-      throw new Error('No current academic year is set.');
-    }
-
-    const { academicYearId } = academicYearData;
+    const academicYearId = await getCurrentAcademicYearId();
 
     await prisma.notice.create({
       data: {
@@ -54,7 +46,7 @@ export const createNotice = async (
         isPublished: validatedData.isPublished ?? false,
         isNoticeApproved: false,
 
-        publishedBy: user?.fullName || user?.firstName || 'Unknown User',
+        publishedBy: user?.fullName || user?.firstName || 'System',
         organizationId,
         startDate: validatedData.startDate,
         endDate: validatedData.endDate,

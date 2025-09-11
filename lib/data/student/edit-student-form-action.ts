@@ -69,7 +69,7 @@ export async function editStudentProfileForm(
         lastName: validatedData.lastName,
         middleName: validatedData.middleName,
         motherName: validatedData.motherName,
-        dateOfBirth: new Date(validatedData.dateOfBirth),
+        dateOfBirth: validatedData.dateOfBirth,
         gender: validatedData.gender,
         phoneNumber: validatedData.phoneNumber,
         whatsAppNumber: validatedData.whatsAppNumber,

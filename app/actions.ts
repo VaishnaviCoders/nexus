@@ -869,7 +869,7 @@ export async function createAcademicYear(data: AcademicYearFormData) {
       };
     }
 
-    // If this is set as default, unset other defaults
+    // If this is set as current, unset other currents
     if (validatedData.isCurrent) {
       await prisma.academicYear.updateMany({
         where: {
@@ -945,7 +945,7 @@ export async function updateAcademicYear(data: AcademicYearUpdateFormData) {
       };
     }
 
-    // If this is set as default, unset other defaults
+    // If this is set as current, unset other currents
     if (validatedData.isCurrent) {
       await prisma.academicYear.updateMany({
         where: {
@@ -987,12 +987,12 @@ export async function updateAcademicYear(data: AcademicYearUpdateFormData) {
   }
 }
 
-export async function setDefaultAcademicYear(
+export async function setCurrentAcademicYear(
   yearId: string,
   organizationId: string
 ) {
   try {
-    // Unset all other defaults
+    // Unset all other currents
     await prisma.academicYear.updateMany({
       where: {
         organizationId,
@@ -1004,7 +1004,7 @@ export async function setDefaultAcademicYear(
       },
     });
 
-    // Set selected year as default
+    // Set selected year as current
     await prisma.academicYear.update({
       where: {
         id: yearId,
@@ -1017,10 +1017,10 @@ export async function setDefaultAcademicYear(
     revalidatePath('/dashboard/settings');
     return { success: true };
   } catch (error) {
-    console.error('Failed to set default academic year:', error);
+    console.error('Failed to set current academic year:', error);
     return {
       success: false,
-      error: 'Unable to set default academic year',
+      error: 'Unable to set currents academic year',
     };
   }
 }

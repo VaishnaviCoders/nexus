@@ -42,8 +42,8 @@ const AdminSettings = async () => {
 
   const academicYears = await getAcademicYears(organizationId);
   return (
-    <div className="px-4 space-y-4">
-      <Card className="px-4 py-3">
+    <div className="px-2 space-y-4">
+      <Card className="px-2 py-3">
         <CardTitle className="text-lg">Admin Settings</CardTitle>
         <CardDescription>
           Manage your organization and system settings

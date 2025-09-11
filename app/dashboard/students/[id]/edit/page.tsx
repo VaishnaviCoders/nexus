@@ -12,7 +12,7 @@ async function getStudent(id: string) {
       user: true,
       grade: true,
       section: true,
-      ParentStudent: {
+      parents: {
         include: {
           parent: true,
         },

@@ -29,6 +29,7 @@ import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { formatCurrencyIN, formatDateIN } from '@/lib/utils';
 import { Separator } from '@/components/ui/separator';
+import { StudentDashboardStatsCards } from '@/components/dashboard/Student/StudentDashboardStatsCards';
 
 const getStudentAdminData = async (studentId: string) => {
   const [student, attendance, fees, parents, documents, performance] =
@@ -128,16 +129,6 @@ const StudentAdminRoute = async ({
     fees,
   } = studentData;
 
-  const averageGrade =
-    performance.length > 0
-      ? performance.reduce(
-          (sum, p) => sum + ((p.obtainedMarks ?? 0) / p.exam.maxMarks) * 100,
-          0
-        ) / performance.length
-      : 0;
-  const upcomingExams = 3; // This would come from actual exam data
-  const pendingAssignments = 5; // This would come from actual assignment data
-
   return (
     <div className="">
       <div className="mx-2 space-y-8 pb-8">
@@ -217,114 +208,7 @@ const StudentAdminRoute = async ({
             </div>
           </div>
         </div>
-
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          <Card className="border-2 border-green-200/50 dark:border-green-800/50 bg-gradient-to-br from-white to-green-50/30 dark:from-gray-900 dark:to-green-950/10 hover:shadow-sm hover:scale-105 transition-all duration-300 overflow-hidden">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 rounded-t-lg">
-              <CardTitle className="text-sm font-medium text-green-700 dark:text-green-300">
-                Attendance Rate
-              </CardTitle>
-              <div className="p-2 rounded-lg bg-green-100 dark:bg-green-900/50 shadow-sm">
-                <CalendarDays className="h-4 w-4 text-green-600 dark:text-green-400" />
-              </div>
-            </CardHeader>
-            <CardContent className="pt-4">
-              <div className="text-2xl font-bold text-green-700 dark:text-green-300 mb-2">
-                {Math.round(attendanceRate)}%
-              </div>
-              <div className="w-full bg-green-100 dark:bg-green-900/30 rounded-full h-2 mb-3">
-                <div
-                  className="bg-gradient-to-r from-green-500 to-emerald-500 h-2 rounded-full transition-all duration-500"
-                  style={{ width: `${attendanceRate}%` }}
-                ></div>
-              </div>
-              <p className="text-xs text-green-600 dark:text-green-400 flex items-center font-medium">
-                <CheckCircle className="w-3 h-3 mr-1" />
-                {attendanceRate >= 90
-                  ? 'Excellent'
-                  : attendanceRate >= 75
-                    ? 'Good'
-                    : 'Needs Improvement'}
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="border-2 border-purple-200/50 dark:border-purple-800/50 bg-gradient-to-br from-white to-purple-50/30 dark:from-gray-900 dark:to-purple-950/10 hover:shadow-sm hover:scale-105 transition-all duration-300 overflow-hidden">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-950/20 dark:to-indigo-950/20 rounded-t-lg">
-              <CardTitle className="text-sm font-medium text-purple-700 dark:text-purple-300">
-                Average Grade
-              </CardTitle>
-              <div className="p-2 rounded-lg bg-purple-100 dark:bg-purple-900/50 shadow-sm">
-                <GraduationCap className="h-4 w-4 text-purple-600 dark:text-purple-400" />
-              </div>
-            </CardHeader>
-            <CardContent className="pt-4">
-              <div className="text-2xl font-bold text-purple-700 dark:text-purple-300 mb-1">
-                {averageGrade >= 90
-                  ? 'A+'
-                  : averageGrade >= 80
-                    ? 'A'
-                    : averageGrade >= 70
-                      ? 'B+'
-                      : averageGrade >= 60
-                        ? 'B'
-                        : 'C'}
-              </div>
-              <p className="text-xs text-purple-600 dark:text-purple-400 mb-2">
-                {Math.round(averageGrade)}% Average
-              </p>
-              <div className="flex items-center text-xs text-purple-600 dark:text-purple-400 font-medium">
-                <div className="w-2 h-2 rounded-full bg-purple-500 mr-2"></div>
-                {averageGrade >= 80 ? 'Above Average' : 'Average Performance'}
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="border-2 border-blue-200/50 dark:border-blue-800/50 bg-gradient-to-br from-white to-blue-50/30 dark:from-gray-900 dark:to-blue-950/10 hover:shadow-sm hover:scale-105 transition-all duration-300 overflow-hidden">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-950/20 dark:to-cyan-950/20 rounded-t-lg">
-              <CardTitle className="text-sm font-medium text-blue-700 dark:text-blue-300">
-                Upcoming Exams
-              </CardTitle>
-              <div className="p-2 rounded-lg bg-blue-100 dark:bg-blue-900/50 shadow-sm">
-                <FileText className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-              </div>
-            </CardHeader>
-            <CardContent className="pt-4">
-              <div className="text-2xl font-bold text-blue-700 dark:text-blue-300 mb-1">
-                {upcomingExams}
-              </div>
-              <p className="text-xs text-blue-600 dark:text-blue-400 mb-2">
-                Next: Mathematics
-              </p>
-              <div className="flex items-center text-xs text-blue-600 dark:text-blue-400 font-medium">
-                <Clock className="w-3 h-3 mr-1" />5 days remaining
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="border-2 border-orange-200/50 dark:border-orange-800/50 bg-gradient-to-br from-white to-orange-50/30 dark:from-gray-900 dark:to-orange-950/10 hover:shadow-sm hover:scale-105 transition-all duration-300 overflow-hidden">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-950/20 dark:to-red-950/20 rounded-t-lg">
-              <CardTitle className="text-sm font-medium text-orange-700 dark:text-orange-300">
-                Pending Fees
-              </CardTitle>
-              <div className="p-2 rounded-lg bg-orange-100 dark:bg-orange-900/50 shadow-sm">
-                <IndianRupee className="h-4 w-4 text-orange-600 dark:text-orange-400" />
-              </div>
-            </CardHeader>
-            <CardContent className="pt-4">
-              <div className="text-2xl font-bold text-orange-700 dark:text-orange-300 mb-1">
-                ₹{formatCurrencyIN(pendingFees)}
-              </div>
-              <p className="text-xs text-orange-600 dark:text-orange-400 mb-2">
-                Due this month
-              </p>
-              <div className="flex items-center text-xs text-orange-600 dark:text-orange-400 font-medium">
-                <AlertCircle className="w-3 h-3 mr-1" />
-                {pendingFees > 0 ? 'Payment Required' : 'All Clear'}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+        <StudentDashboardStatsCards studentId={studentId} />
 
         <div className=" rounded-xl">
           <Tabs defaultValue="overview" className="space-y-0">

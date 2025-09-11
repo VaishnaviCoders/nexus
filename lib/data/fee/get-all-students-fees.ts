@@ -29,7 +29,7 @@ export async function getFeeRecords(count: number = 50): Promise<FeeRecord[]> {
                 grade: true,
               },
             },
-            ParentStudent: {
+            parents: {
               where: { isPrimary: true },
               select: {
                 isPrimary: true,
@@ -108,7 +108,7 @@ export async function getFeeRecords(count: number = 50): Promise<FeeRecord[]> {
         phoneNumber: fee.student.phoneNumber,
         gradeId: fee.student.gradeId,
         sectionId: fee.student.sectionId,
-        ParentStudent: fee.student.ParentStudent,
+        parents: fee.student.parents,
       },
       feeCategory: {
         id: fee.feeCategory.id,

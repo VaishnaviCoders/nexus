@@ -35,7 +35,7 @@ import {
 
 import { YearType } from '@/generated/prisma';
 import { AcademicYearForm } from './AcademicYearForm';
-import { deleteAcademicYear, setDefaultAcademicYear } from '@/app/actions';
+import { deleteAcademicYear, setCurrentAcademicYear } from '@/app/actions';
 
 interface AcademicYear {
   id: string;
@@ -70,11 +70,11 @@ export function AcademicYearConfig({
   const [yearToDelete, setYearToDelete] = useState<AcademicYear | null>(null);
   const [isPending, startTransition] = useTransition();
 
-  const handleSetDefault = (year: AcademicYear) => {
+  const handleSetCurrent = (year: AcademicYear) => {
     startTransition(async () => {
-      const result = await setDefaultAcademicYear(year.id, organizationId);
+      const result = await setCurrentAcademicYear(year.id, organizationId);
       if (result.success) {
-        toast.success('Default academic year updated');
+        toast.success('Current academic year updated');
       } else {
         toast.error(result.error);
       }
@@ -183,7 +183,7 @@ export function AcademicYearConfig({
                     {year.isCurrent && (
                       <Badge variant="outline" className="h-5 text-xs">
                         <Star className="mr-1 h-3 w-3 fill-current text-amber-300" />
-                        Default
+                        Current
                       </Badge>
                     )}
                     <Badge
@@ -217,12 +217,12 @@ export function AcademicYearConfig({
                   </DropdownMenuItem>
                   {!year.isCurrent && (
                     <DropdownMenuItem
-                      onClick={() => handleSetDefault(year)}
+                      onClick={() => handleSetCurrent(year)}
                       disabled={isPending}
                       className="cursor-pointer"
                     >
                       <Star className="mr-2 h-4 w-4" />
-                      Set as Default
+                      Set as Current
                     </DropdownMenuItem>
                   )}
                   <DropdownMenuSeparator />

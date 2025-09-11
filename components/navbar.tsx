@@ -9,7 +9,7 @@ import {
   UserButton,
 } from '@clerk/nextjs';
 import { Suspense } from 'react';
-import { auth, currentUser } from '@clerk/nextjs/server';
+import { auth, currentUser, clerkClient } from '@clerk/nextjs/server';
 import { WelcomeMessage } from './dashboard-layout/WelcomeMessage';
 import NotificationFeed from '@/app/components/dashboardComponents/NotificationFeed';
 import { Bell, Building2, UserCircleIcon } from 'lucide-react';
@@ -17,6 +17,7 @@ import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { Skeleton } from './ui/skeleton';
 import { syncUser } from '@/lib/syncUser';
+import prisma from '@/lib/db';
 
 // Improved loading components
 const LoadingBell = () => (
@@ -63,11 +64,33 @@ const RoleBadge = ({ role }: { role: string }) => {
   );
 };
 
+async function syncClerkOrganizationDB() {
+  const { orgId, orgSlug, orgRole, userId } = await auth();
+  const { organizations } = await clerkClient();
+
+  const orgData = await organizations.getOrganization({
+    organizationId: orgId || '',
+  });
+
+  await prisma.organization.create({
+    data: {
+      organizationSlug: orgSlug || '',
+      id: orgId || '',
+      createdBy: userId || '',
+      createdAt: new Date(orgData.createdAt),
+      organizationLogo: orgData.imageUrl,
+      name: orgData.name,
+    },
+  });
+}
+
 export async function Navbar() {
   try {
     // Get auth data
     const { orgId, orgRole, userId } = await auth();
 
+    // Add Condition when should Call >
+    // await syncClerkOrganizationDB();
     // If not authenticated, show guest navbar
     if (!userId) {
       return (

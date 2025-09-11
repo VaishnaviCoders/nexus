@@ -3816,7 +3816,7 @@ export namespace Prisma {
     TeachingAssignment: number
     StudentAttendance: number
     AcademicCalendar: number
-    ExamSession: number
+    examSession: number
   }
 
   export type AcademicYearCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3825,7 +3825,7 @@ export namespace Prisma {
     TeachingAssignment?: boolean | AcademicYearCountOutputTypeCountTeachingAssignmentArgs
     StudentAttendance?: boolean | AcademicYearCountOutputTypeCountStudentAttendanceArgs
     AcademicCalendar?: boolean | AcademicYearCountOutputTypeCountAcademicCalendarArgs
-    ExamSession?: boolean | AcademicYearCountOutputTypeCountExamSessionArgs
+    examSession?: boolean | AcademicYearCountOutputTypeCountExamSessionArgs
   }
 
   // Custom InputTypes
@@ -3904,7 +3904,7 @@ export namespace Prisma {
     NotificationLog: number
     AcademicYear: number
     scheduledJob: number
-    Exam: number
+    exam: number
     hallTicket: number
   }
 
@@ -3926,7 +3926,7 @@ export namespace Prisma {
     NotificationLog?: boolean | OrganizationCountOutputTypeCountNotificationLogArgs
     AcademicYear?: boolean | OrganizationCountOutputTypeCountAcademicYearArgs
     scheduledJob?: boolean | OrganizationCountOutputTypeCountScheduledJobArgs
-    Exam?: boolean | OrganizationCountOutputTypeCountExamArgs
+    exam?: boolean | OrganizationCountOutputTypeCountExamArgs
     hallTicket?: boolean | OrganizationCountOutputTypeCountHallTicketArgs
   }
 
@@ -4858,7 +4858,7 @@ export namespace Prisma {
     TeachingAssignment?: boolean | AcademicYear$TeachingAssignmentArgs<ExtArgs>
     StudentAttendance?: boolean | AcademicYear$StudentAttendanceArgs<ExtArgs>
     AcademicCalendar?: boolean | AcademicYear$AcademicCalendarArgs<ExtArgs>
-    ExamSession?: boolean | AcademicYear$ExamSessionArgs<ExtArgs>
+    examSession?: boolean | AcademicYear$examSessionArgs<ExtArgs>
     _count?: boolean | AcademicYearCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["academicYear"]>
 
@@ -4914,7 +4914,7 @@ export namespace Prisma {
     TeachingAssignment?: boolean | AcademicYear$TeachingAssignmentArgs<ExtArgs>
     StudentAttendance?: boolean | AcademicYear$StudentAttendanceArgs<ExtArgs>
     AcademicCalendar?: boolean | AcademicYear$AcademicCalendarArgs<ExtArgs>
-    ExamSession?: boolean | AcademicYear$ExamSessionArgs<ExtArgs>
+    examSession?: boolean | AcademicYear$examSessionArgs<ExtArgs>
     _count?: boolean | AcademicYearCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type AcademicYearIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4933,7 +4933,7 @@ export namespace Prisma {
       TeachingAssignment: Prisma.$TeachingAssignmentPayload<ExtArgs>[]
       StudentAttendance: Prisma.$StudentAttendancePayload<ExtArgs>[]
       AcademicCalendar: Prisma.$AcademicCalendarPayload<ExtArgs>[]
-      ExamSession: Prisma.$ExamSessionPayload<ExtArgs>[]
+      examSession: Prisma.$ExamSessionPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -5347,7 +5347,7 @@ export namespace Prisma {
     TeachingAssignment<T extends AcademicYear$TeachingAssignmentArgs<ExtArgs> = {}>(args?: Subset<T, AcademicYear$TeachingAssignmentArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TeachingAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     StudentAttendance<T extends AcademicYear$StudentAttendanceArgs<ExtArgs> = {}>(args?: Subset<T, AcademicYear$StudentAttendanceArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StudentAttendancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     AcademicCalendar<T extends AcademicYear$AcademicCalendarArgs<ExtArgs> = {}>(args?: Subset<T, AcademicYear$AcademicCalendarArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AcademicCalendarPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    ExamSession<T extends AcademicYear$ExamSessionArgs<ExtArgs> = {}>(args?: Subset<T, AcademicYear$ExamSessionArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExamSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    examSession<T extends AcademicYear$examSessionArgs<ExtArgs> = {}>(args?: Subset<T, AcademicYear$examSessionArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExamSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5904,9 +5904,9 @@ export namespace Prisma {
   }
 
   /**
-   * AcademicYear.ExamSession
+   * AcademicYear.examSession
    */
-  export type AcademicYear$ExamSessionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type AcademicYear$examSessionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the ExamSession
      */
@@ -6257,7 +6257,7 @@ export namespace Prisma {
     NotificationLog?: boolean | Organization$NotificationLogArgs<ExtArgs>
     AcademicYear?: boolean | Organization$AcademicYearArgs<ExtArgs>
     scheduledJob?: boolean | Organization$scheduledJobArgs<ExtArgs>
-    Exam?: boolean | Organization$ExamArgs<ExtArgs>
+    exam?: boolean | Organization$examArgs<ExtArgs>
     hallTicket?: boolean | Organization$hallTicketArgs<ExtArgs>
     _count?: boolean | OrganizationCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["organization"]>
@@ -6341,7 +6341,7 @@ export namespace Prisma {
     NotificationLog?: boolean | Organization$NotificationLogArgs<ExtArgs>
     AcademicYear?: boolean | Organization$AcademicYearArgs<ExtArgs>
     scheduledJob?: boolean | Organization$scheduledJobArgs<ExtArgs>
-    Exam?: boolean | Organization$ExamArgs<ExtArgs>
+    exam?: boolean | Organization$examArgs<ExtArgs>
     hallTicket?: boolean | Organization$hallTicketArgs<ExtArgs>
     _count?: boolean | OrganizationCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -6368,7 +6368,7 @@ export namespace Prisma {
       NotificationLog: Prisma.$NotificationLogPayload<ExtArgs>[]
       AcademicYear: Prisma.$AcademicYearPayload<ExtArgs>[]
       scheduledJob: Prisma.$ScheduledJobPayload<ExtArgs>[]
-      Exam: Prisma.$ExamPayload<ExtArgs>[]
+      exam: Prisma.$ExamPayload<ExtArgs>[]
       hallTicket: Prisma.$HallTicketPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -6800,7 +6800,7 @@ export namespace Prisma {
     NotificationLog<T extends Organization$NotificationLogArgs<ExtArgs> = {}>(args?: Subset<T, Organization$NotificationLogArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotificationLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     AcademicYear<T extends Organization$AcademicYearArgs<ExtArgs> = {}>(args?: Subset<T, Organization$AcademicYearArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AcademicYearPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     scheduledJob<T extends Organization$scheduledJobArgs<ExtArgs> = {}>(args?: Subset<T, Organization$scheduledJobArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ScheduledJobPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    Exam<T extends Organization$ExamArgs<ExtArgs> = {}>(args?: Subset<T, Organization$ExamArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExamPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    exam<T extends Organization$examArgs<ExtArgs> = {}>(args?: Subset<T, Organization$examArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExamPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     hallTicket<T extends Organization$hallTicketArgs<ExtArgs> = {}>(args?: Subset<T, Organization$hallTicketArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$HallTicketPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -7644,9 +7644,9 @@ export namespace Prisma {
   }
 
   /**
-   * Organization.Exam
+   * Organization.exam
    */
-  export type Organization$ExamArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Organization$examArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Exam
      */
@@ -42056,7 +42056,7 @@ export namespace Prisma {
     TeachingAssignment?: TeachingAssignmentListRelationFilter
     StudentAttendance?: StudentAttendanceListRelationFilter
     AcademicCalendar?: AcademicCalendarListRelationFilter
-    ExamSession?: ExamSessionListRelationFilter
+    examSession?: ExamSessionListRelationFilter
   }
 
   export type AcademicYearOrderByWithRelationInput = {
@@ -42077,7 +42077,7 @@ export namespace Prisma {
     TeachingAssignment?: TeachingAssignmentOrderByRelationAggregateInput
     StudentAttendance?: StudentAttendanceOrderByRelationAggregateInput
     AcademicCalendar?: AcademicCalendarOrderByRelationAggregateInput
-    ExamSession?: ExamSessionOrderByRelationAggregateInput
+    examSession?: ExamSessionOrderByRelationAggregateInput
     _relevance?: AcademicYearOrderByRelevanceInput
   }
 
@@ -42103,7 +42103,7 @@ export namespace Prisma {
     TeachingAssignment?: TeachingAssignmentListRelationFilter
     StudentAttendance?: StudentAttendanceListRelationFilter
     AcademicCalendar?: AcademicCalendarListRelationFilter
-    ExamSession?: ExamSessionListRelationFilter
+    examSession?: ExamSessionListRelationFilter
   }, "id" | "organizationId_name">
 
   export type AcademicYearOrderByWithAggregationInput = {
@@ -42178,7 +42178,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogListRelationFilter
     AcademicYear?: AcademicYearListRelationFilter
     scheduledJob?: ScheduledJobListRelationFilter
-    Exam?: ExamListRelationFilter
+    exam?: ExamListRelationFilter
     hallTicket?: HallTicketListRelationFilter
   }
 
@@ -42217,7 +42217,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogOrderByRelationAggregateInput
     AcademicYear?: AcademicYearOrderByRelationAggregateInput
     scheduledJob?: ScheduledJobOrderByRelationAggregateInput
-    Exam?: ExamOrderByRelationAggregateInput
+    exam?: ExamOrderByRelationAggregateInput
     hallTicket?: HallTicketOrderByRelationAggregateInput
     _relevance?: OrganizationOrderByRelevanceInput
   }
@@ -42260,7 +42260,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogListRelationFilter
     AcademicYear?: AcademicYearListRelationFilter
     scheduledJob?: ScheduledJobListRelationFilter
-    Exam?: ExamListRelationFilter
+    exam?: ExamListRelationFilter
     hallTicket?: HallTicketListRelationFilter
   }, "id" | "organizationSlug">
 
@@ -45037,7 +45037,7 @@ export namespace Prisma {
     TeachingAssignment?: TeachingAssignmentCreateNestedManyWithoutAcademicYearInput
     StudentAttendance?: StudentAttendanceCreateNestedManyWithoutAcademicYearInput
     AcademicCalendar?: AcademicCalendarCreateNestedManyWithoutAcademicYearInput
-    ExamSession?: ExamSessionCreateNestedManyWithoutAcademicYearInput
+    examSession?: ExamSessionCreateNestedManyWithoutAcademicYearInput
   }
 
   export type AcademicYearUncheckedCreateInput = {
@@ -45057,7 +45057,7 @@ export namespace Prisma {
     TeachingAssignment?: TeachingAssignmentUncheckedCreateNestedManyWithoutAcademicYearInput
     StudentAttendance?: StudentAttendanceUncheckedCreateNestedManyWithoutAcademicYearInput
     AcademicCalendar?: AcademicCalendarUncheckedCreateNestedManyWithoutAcademicYearInput
-    ExamSession?: ExamSessionUncheckedCreateNestedManyWithoutAcademicYearInput
+    examSession?: ExamSessionUncheckedCreateNestedManyWithoutAcademicYearInput
   }
 
   export type AcademicYearUpdateInput = {
@@ -45077,7 +45077,7 @@ export namespace Prisma {
     TeachingAssignment?: TeachingAssignmentUpdateManyWithoutAcademicYearNestedInput
     StudentAttendance?: StudentAttendanceUpdateManyWithoutAcademicYearNestedInput
     AcademicCalendar?: AcademicCalendarUpdateManyWithoutAcademicYearNestedInput
-    ExamSession?: ExamSessionUpdateManyWithoutAcademicYearNestedInput
+    examSession?: ExamSessionUpdateManyWithoutAcademicYearNestedInput
   }
 
   export type AcademicYearUncheckedUpdateInput = {
@@ -45097,7 +45097,7 @@ export namespace Prisma {
     TeachingAssignment?: TeachingAssignmentUncheckedUpdateManyWithoutAcademicYearNestedInput
     StudentAttendance?: StudentAttendanceUncheckedUpdateManyWithoutAcademicYearNestedInput
     AcademicCalendar?: AcademicCalendarUncheckedUpdateManyWithoutAcademicYearNestedInput
-    ExamSession?: ExamSessionUncheckedUpdateManyWithoutAcademicYearNestedInput
+    examSession?: ExamSessionUncheckedUpdateManyWithoutAcademicYearNestedInput
   }
 
   export type AcademicYearCreateManyInput = {
@@ -45176,7 +45176,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogCreateNestedManyWithoutOrganizationInput
     AcademicYear?: AcademicYearCreateNestedManyWithoutOrganizationInput
     scheduledJob?: ScheduledJobCreateNestedManyWithoutOrganizationInput
-    Exam?: ExamCreateNestedManyWithoutOrganizationInput
+    exam?: ExamCreateNestedManyWithoutOrganizationInput
     hallTicket?: HallTicketCreateNestedManyWithoutOrganizationInput
   }
 
@@ -45215,7 +45215,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogUncheckedCreateNestedManyWithoutOrganizationInput
     AcademicYear?: AcademicYearUncheckedCreateNestedManyWithoutOrganizationInput
     scheduledJob?: ScheduledJobUncheckedCreateNestedManyWithoutOrganizationInput
-    Exam?: ExamUncheckedCreateNestedManyWithoutOrganizationInput
+    exam?: ExamUncheckedCreateNestedManyWithoutOrganizationInput
     hallTicket?: HallTicketUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
@@ -45254,7 +45254,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogUpdateManyWithoutOrganizationNestedInput
     AcademicYear?: AcademicYearUpdateManyWithoutOrganizationNestedInput
     scheduledJob?: ScheduledJobUpdateManyWithoutOrganizationNestedInput
-    Exam?: ExamUpdateManyWithoutOrganizationNestedInput
+    exam?: ExamUpdateManyWithoutOrganizationNestedInput
     hallTicket?: HallTicketUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -45293,7 +45293,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogUncheckedUpdateManyWithoutOrganizationNestedInput
     AcademicYear?: AcademicYearUncheckedUpdateManyWithoutOrganizationNestedInput
     scheduledJob?: ScheduledJobUncheckedUpdateManyWithoutOrganizationNestedInput
-    Exam?: ExamUncheckedUpdateManyWithoutOrganizationNestedInput
+    exam?: ExamUncheckedUpdateManyWithoutOrganizationNestedInput
     hallTicket?: HallTicketUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -55529,7 +55529,7 @@ export namespace Prisma {
     TeachingAssignment?: TeachingAssignmentCreateNestedManyWithoutOrganizationInput
     NotificationLog?: NotificationLogCreateNestedManyWithoutOrganizationInput
     scheduledJob?: ScheduledJobCreateNestedManyWithoutOrganizationInput
-    Exam?: ExamCreateNestedManyWithoutOrganizationInput
+    exam?: ExamCreateNestedManyWithoutOrganizationInput
     hallTicket?: HallTicketCreateNestedManyWithoutOrganizationInput
   }
 
@@ -55567,7 +55567,7 @@ export namespace Prisma {
     TeachingAssignment?: TeachingAssignmentUncheckedCreateNestedManyWithoutOrganizationInput
     NotificationLog?: NotificationLogUncheckedCreateNestedManyWithoutOrganizationInput
     scheduledJob?: ScheduledJobUncheckedCreateNestedManyWithoutOrganizationInput
-    Exam?: ExamUncheckedCreateNestedManyWithoutOrganizationInput
+    exam?: ExamUncheckedCreateNestedManyWithoutOrganizationInput
     hallTicket?: HallTicketUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
@@ -55867,7 +55867,7 @@ export namespace Prisma {
     TeachingAssignment?: TeachingAssignmentUpdateManyWithoutOrganizationNestedInput
     NotificationLog?: NotificationLogUpdateManyWithoutOrganizationNestedInput
     scheduledJob?: ScheduledJobUpdateManyWithoutOrganizationNestedInput
-    Exam?: ExamUpdateManyWithoutOrganizationNestedInput
+    exam?: ExamUpdateManyWithoutOrganizationNestedInput
     hallTicket?: HallTicketUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -55905,7 +55905,7 @@ export namespace Prisma {
     TeachingAssignment?: TeachingAssignmentUncheckedUpdateManyWithoutOrganizationNestedInput
     NotificationLog?: NotificationLogUncheckedUpdateManyWithoutOrganizationNestedInput
     scheduledJob?: ScheduledJobUncheckedUpdateManyWithoutOrganizationNestedInput
-    Exam?: ExamUncheckedUpdateManyWithoutOrganizationNestedInput
+    exam?: ExamUncheckedUpdateManyWithoutOrganizationNestedInput
     hallTicket?: HallTicketUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -56760,7 +56760,7 @@ export namespace Prisma {
     TeachingAssignment?: TeachingAssignmentCreateNestedManyWithoutAcademicYearInput
     StudentAttendance?: StudentAttendanceCreateNestedManyWithoutAcademicYearInput
     AcademicCalendar?: AcademicCalendarCreateNestedManyWithoutAcademicYearInput
-    ExamSession?: ExamSessionCreateNestedManyWithoutAcademicYearInput
+    examSession?: ExamSessionCreateNestedManyWithoutAcademicYearInput
   }
 
   export type AcademicYearUncheckedCreateWithoutOrganizationInput = {
@@ -56779,7 +56779,7 @@ export namespace Prisma {
     TeachingAssignment?: TeachingAssignmentUncheckedCreateNestedManyWithoutAcademicYearInput
     StudentAttendance?: StudentAttendanceUncheckedCreateNestedManyWithoutAcademicYearInput
     AcademicCalendar?: AcademicCalendarUncheckedCreateNestedManyWithoutAcademicYearInput
-    ExamSession?: ExamSessionUncheckedCreateNestedManyWithoutAcademicYearInput
+    examSession?: ExamSessionUncheckedCreateNestedManyWithoutAcademicYearInput
   }
 
   export type AcademicYearCreateOrConnectWithoutOrganizationInput = {
@@ -57539,7 +57539,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogCreateNestedManyWithoutOrganizationInput
     AcademicYear?: AcademicYearCreateNestedManyWithoutOrganizationInput
     scheduledJob?: ScheduledJobCreateNestedManyWithoutOrganizationInput
-    Exam?: ExamCreateNestedManyWithoutOrganizationInput
+    exam?: ExamCreateNestedManyWithoutOrganizationInput
     hallTicket?: HallTicketCreateNestedManyWithoutOrganizationInput
   }
 
@@ -57577,7 +57577,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogUncheckedCreateNestedManyWithoutOrganizationInput
     AcademicYear?: AcademicYearUncheckedCreateNestedManyWithoutOrganizationInput
     scheduledJob?: ScheduledJobUncheckedCreateNestedManyWithoutOrganizationInput
-    Exam?: ExamUncheckedCreateNestedManyWithoutOrganizationInput
+    exam?: ExamUncheckedCreateNestedManyWithoutOrganizationInput
     hallTicket?: HallTicketUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
@@ -57844,7 +57844,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogUpdateManyWithoutOrganizationNestedInput
     AcademicYear?: AcademicYearUpdateManyWithoutOrganizationNestedInput
     scheduledJob?: ScheduledJobUpdateManyWithoutOrganizationNestedInput
-    Exam?: ExamUpdateManyWithoutOrganizationNestedInput
+    exam?: ExamUpdateManyWithoutOrganizationNestedInput
     hallTicket?: HallTicketUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -57882,7 +57882,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogUncheckedUpdateManyWithoutOrganizationNestedInput
     AcademicYear?: AcademicYearUncheckedUpdateManyWithoutOrganizationNestedInput
     scheduledJob?: ScheduledJobUncheckedUpdateManyWithoutOrganizationNestedInput
-    Exam?: ExamUncheckedUpdateManyWithoutOrganizationNestedInput
+    exam?: ExamUncheckedUpdateManyWithoutOrganizationNestedInput
     hallTicket?: HallTicketUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -58099,7 +58099,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogCreateNestedManyWithoutOrganizationInput
     AcademicYear?: AcademicYearCreateNestedManyWithoutOrganizationInput
     scheduledJob?: ScheduledJobCreateNestedManyWithoutOrganizationInput
-    Exam?: ExamCreateNestedManyWithoutOrganizationInput
+    exam?: ExamCreateNestedManyWithoutOrganizationInput
     hallTicket?: HallTicketCreateNestedManyWithoutOrganizationInput
   }
 
@@ -58137,7 +58137,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogUncheckedCreateNestedManyWithoutOrganizationInput
     AcademicYear?: AcademicYearUncheckedCreateNestedManyWithoutOrganizationInput
     scheduledJob?: ScheduledJobUncheckedCreateNestedManyWithoutOrganizationInput
-    Exam?: ExamUncheckedCreateNestedManyWithoutOrganizationInput
+    exam?: ExamUncheckedCreateNestedManyWithoutOrganizationInput
     hallTicket?: HallTicketUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
@@ -58329,7 +58329,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogUpdateManyWithoutOrganizationNestedInput
     AcademicYear?: AcademicYearUpdateManyWithoutOrganizationNestedInput
     scheduledJob?: ScheduledJobUpdateManyWithoutOrganizationNestedInput
-    Exam?: ExamUpdateManyWithoutOrganizationNestedInput
+    exam?: ExamUpdateManyWithoutOrganizationNestedInput
     hallTicket?: HallTicketUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -58367,7 +58367,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogUncheckedUpdateManyWithoutOrganizationNestedInput
     AcademicYear?: AcademicYearUncheckedUpdateManyWithoutOrganizationNestedInput
     scheduledJob?: ScheduledJobUncheckedUpdateManyWithoutOrganizationNestedInput
-    Exam?: ExamUncheckedUpdateManyWithoutOrganizationNestedInput
+    exam?: ExamUncheckedUpdateManyWithoutOrganizationNestedInput
     hallTicket?: HallTicketUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -58474,7 +58474,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogCreateNestedManyWithoutOrganizationInput
     AcademicYear?: AcademicYearCreateNestedManyWithoutOrganizationInput
     scheduledJob?: ScheduledJobCreateNestedManyWithoutOrganizationInput
-    Exam?: ExamCreateNestedManyWithoutOrganizationInput
+    exam?: ExamCreateNestedManyWithoutOrganizationInput
     hallTicket?: HallTicketCreateNestedManyWithoutOrganizationInput
   }
 
@@ -58512,7 +58512,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogUncheckedCreateNestedManyWithoutOrganizationInput
     AcademicYear?: AcademicYearUncheckedCreateNestedManyWithoutOrganizationInput
     scheduledJob?: ScheduledJobUncheckedCreateNestedManyWithoutOrganizationInput
-    Exam?: ExamUncheckedCreateNestedManyWithoutOrganizationInput
+    exam?: ExamUncheckedCreateNestedManyWithoutOrganizationInput
     hallTicket?: HallTicketUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
@@ -58768,7 +58768,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogUpdateManyWithoutOrganizationNestedInput
     AcademicYear?: AcademicYearUpdateManyWithoutOrganizationNestedInput
     scheduledJob?: ScheduledJobUpdateManyWithoutOrganizationNestedInput
-    Exam?: ExamUpdateManyWithoutOrganizationNestedInput
+    exam?: ExamUpdateManyWithoutOrganizationNestedInput
     hallTicket?: HallTicketUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -58806,7 +58806,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogUncheckedUpdateManyWithoutOrganizationNestedInput
     AcademicYear?: AcademicYearUncheckedUpdateManyWithoutOrganizationNestedInput
     scheduledJob?: ScheduledJobUncheckedUpdateManyWithoutOrganizationNestedInput
-    Exam?: ExamUncheckedUpdateManyWithoutOrganizationNestedInput
+    exam?: ExamUncheckedUpdateManyWithoutOrganizationNestedInput
     hallTicket?: HallTicketUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -58972,7 +58972,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogCreateNestedManyWithoutOrganizationInput
     AcademicYear?: AcademicYearCreateNestedManyWithoutOrganizationInput
     scheduledJob?: ScheduledJobCreateNestedManyWithoutOrganizationInput
-    Exam?: ExamCreateNestedManyWithoutOrganizationInput
+    exam?: ExamCreateNestedManyWithoutOrganizationInput
     hallTicket?: HallTicketCreateNestedManyWithoutOrganizationInput
   }
 
@@ -59010,7 +59010,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogUncheckedCreateNestedManyWithoutOrganizationInput
     AcademicYear?: AcademicYearUncheckedCreateNestedManyWithoutOrganizationInput
     scheduledJob?: ScheduledJobUncheckedCreateNestedManyWithoutOrganizationInput
-    Exam?: ExamUncheckedCreateNestedManyWithoutOrganizationInput
+    exam?: ExamUncheckedCreateNestedManyWithoutOrganizationInput
     hallTicket?: HallTicketUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
@@ -59228,7 +59228,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogUpdateManyWithoutOrganizationNestedInput
     AcademicYear?: AcademicYearUpdateManyWithoutOrganizationNestedInput
     scheduledJob?: ScheduledJobUpdateManyWithoutOrganizationNestedInput
-    Exam?: ExamUpdateManyWithoutOrganizationNestedInput
+    exam?: ExamUpdateManyWithoutOrganizationNestedInput
     hallTicket?: HallTicketUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -59266,7 +59266,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogUncheckedUpdateManyWithoutOrganizationNestedInput
     AcademicYear?: AcademicYearUncheckedUpdateManyWithoutOrganizationNestedInput
     scheduledJob?: ScheduledJobUncheckedUpdateManyWithoutOrganizationNestedInput
-    Exam?: ExamUncheckedUpdateManyWithoutOrganizationNestedInput
+    exam?: ExamUncheckedUpdateManyWithoutOrganizationNestedInput
     hallTicket?: HallTicketUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -59459,7 +59459,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogCreateNestedManyWithoutOrganizationInput
     AcademicYear?: AcademicYearCreateNestedManyWithoutOrganizationInput
     scheduledJob?: ScheduledJobCreateNestedManyWithoutOrganizationInput
-    Exam?: ExamCreateNestedManyWithoutOrganizationInput
+    exam?: ExamCreateNestedManyWithoutOrganizationInput
     hallTicket?: HallTicketCreateNestedManyWithoutOrganizationInput
   }
 
@@ -59497,7 +59497,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogUncheckedCreateNestedManyWithoutOrganizationInput
     AcademicYear?: AcademicYearUncheckedCreateNestedManyWithoutOrganizationInput
     scheduledJob?: ScheduledJobUncheckedCreateNestedManyWithoutOrganizationInput
-    Exam?: ExamUncheckedCreateNestedManyWithoutOrganizationInput
+    exam?: ExamUncheckedCreateNestedManyWithoutOrganizationInput
     hallTicket?: HallTicketUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
@@ -59697,7 +59697,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogUpdateManyWithoutOrganizationNestedInput
     AcademicYear?: AcademicYearUpdateManyWithoutOrganizationNestedInput
     scheduledJob?: ScheduledJobUpdateManyWithoutOrganizationNestedInput
-    Exam?: ExamUpdateManyWithoutOrganizationNestedInput
+    exam?: ExamUpdateManyWithoutOrganizationNestedInput
     hallTicket?: HallTicketUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -59735,7 +59735,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogUncheckedUpdateManyWithoutOrganizationNestedInput
     AcademicYear?: AcademicYearUncheckedUpdateManyWithoutOrganizationNestedInput
     scheduledJob?: ScheduledJobUncheckedUpdateManyWithoutOrganizationNestedInput
-    Exam?: ExamUncheckedUpdateManyWithoutOrganizationNestedInput
+    exam?: ExamUncheckedUpdateManyWithoutOrganizationNestedInput
     hallTicket?: HallTicketUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -59947,7 +59947,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogCreateNestedManyWithoutOrganizationInput
     AcademicYear?: AcademicYearCreateNestedManyWithoutOrganizationInput
     scheduledJob?: ScheduledJobCreateNestedManyWithoutOrganizationInput
-    Exam?: ExamCreateNestedManyWithoutOrganizationInput
+    exam?: ExamCreateNestedManyWithoutOrganizationInput
     hallTicket?: HallTicketCreateNestedManyWithoutOrganizationInput
   }
 
@@ -59985,7 +59985,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogUncheckedCreateNestedManyWithoutOrganizationInput
     AcademicYear?: AcademicYearUncheckedCreateNestedManyWithoutOrganizationInput
     scheduledJob?: ScheduledJobUncheckedCreateNestedManyWithoutOrganizationInput
-    Exam?: ExamUncheckedCreateNestedManyWithoutOrganizationInput
+    exam?: ExamUncheckedCreateNestedManyWithoutOrganizationInput
     hallTicket?: HallTicketUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
@@ -60010,7 +60010,7 @@ export namespace Prisma {
     notices?: NoticeCreateNestedManyWithoutAcademicYearInput
     StudentAttendance?: StudentAttendanceCreateNestedManyWithoutAcademicYearInput
     AcademicCalendar?: AcademicCalendarCreateNestedManyWithoutAcademicYearInput
-    ExamSession?: ExamSessionCreateNestedManyWithoutAcademicYearInput
+    examSession?: ExamSessionCreateNestedManyWithoutAcademicYearInput
   }
 
   export type AcademicYearUncheckedCreateWithoutTeachingAssignmentInput = {
@@ -60029,7 +60029,7 @@ export namespace Prisma {
     notices?: NoticeUncheckedCreateNestedManyWithoutAcademicYearInput
     StudentAttendance?: StudentAttendanceUncheckedCreateNestedManyWithoutAcademicYearInput
     AcademicCalendar?: AcademicCalendarUncheckedCreateNestedManyWithoutAcademicYearInput
-    ExamSession?: ExamSessionUncheckedCreateNestedManyWithoutAcademicYearInput
+    examSession?: ExamSessionUncheckedCreateNestedManyWithoutAcademicYearInput
   }
 
   export type AcademicYearCreateOrConnectWithoutTeachingAssignmentInput = {
@@ -60212,7 +60212,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogUpdateManyWithoutOrganizationNestedInput
     AcademicYear?: AcademicYearUpdateManyWithoutOrganizationNestedInput
     scheduledJob?: ScheduledJobUpdateManyWithoutOrganizationNestedInput
-    Exam?: ExamUpdateManyWithoutOrganizationNestedInput
+    exam?: ExamUpdateManyWithoutOrganizationNestedInput
     hallTicket?: HallTicketUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -60250,7 +60250,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogUncheckedUpdateManyWithoutOrganizationNestedInput
     AcademicYear?: AcademicYearUncheckedUpdateManyWithoutOrganizationNestedInput
     scheduledJob?: ScheduledJobUncheckedUpdateManyWithoutOrganizationNestedInput
-    Exam?: ExamUncheckedUpdateManyWithoutOrganizationNestedInput
+    exam?: ExamUncheckedUpdateManyWithoutOrganizationNestedInput
     hallTicket?: HallTicketUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -60281,7 +60281,7 @@ export namespace Prisma {
     notices?: NoticeUpdateManyWithoutAcademicYearNestedInput
     StudentAttendance?: StudentAttendanceUpdateManyWithoutAcademicYearNestedInput
     AcademicCalendar?: AcademicCalendarUpdateManyWithoutAcademicYearNestedInput
-    ExamSession?: ExamSessionUpdateManyWithoutAcademicYearNestedInput
+    examSession?: ExamSessionUpdateManyWithoutAcademicYearNestedInput
   }
 
   export type AcademicYearUncheckedUpdateWithoutTeachingAssignmentInput = {
@@ -60300,7 +60300,7 @@ export namespace Prisma {
     notices?: NoticeUncheckedUpdateManyWithoutAcademicYearNestedInput
     StudentAttendance?: StudentAttendanceUncheckedUpdateManyWithoutAcademicYearNestedInput
     AcademicCalendar?: AcademicCalendarUncheckedUpdateManyWithoutAcademicYearNestedInput
-    ExamSession?: ExamSessionUncheckedUpdateManyWithoutAcademicYearNestedInput
+    examSession?: ExamSessionUncheckedUpdateManyWithoutAcademicYearNestedInput
   }
 
   export type UserCreateWithoutStudentInput = {
@@ -60426,7 +60426,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogCreateNestedManyWithoutOrganizationInput
     AcademicYear?: AcademicYearCreateNestedManyWithoutOrganizationInput
     scheduledJob?: ScheduledJobCreateNestedManyWithoutOrganizationInput
-    Exam?: ExamCreateNestedManyWithoutOrganizationInput
+    exam?: ExamCreateNestedManyWithoutOrganizationInput
     hallTicket?: HallTicketCreateNestedManyWithoutOrganizationInput
   }
 
@@ -60464,7 +60464,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogUncheckedCreateNestedManyWithoutOrganizationInput
     AcademicYear?: AcademicYearUncheckedCreateNestedManyWithoutOrganizationInput
     scheduledJob?: ScheduledJobUncheckedCreateNestedManyWithoutOrganizationInput
-    Exam?: ExamUncheckedCreateNestedManyWithoutOrganizationInput
+    exam?: ExamUncheckedCreateNestedManyWithoutOrganizationInput
     hallTicket?: HallTicketUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
@@ -60977,7 +60977,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogUpdateManyWithoutOrganizationNestedInput
     AcademicYear?: AcademicYearUpdateManyWithoutOrganizationNestedInput
     scheduledJob?: ScheduledJobUpdateManyWithoutOrganizationNestedInput
-    Exam?: ExamUpdateManyWithoutOrganizationNestedInput
+    exam?: ExamUpdateManyWithoutOrganizationNestedInput
     hallTicket?: HallTicketUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -61015,7 +61015,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogUncheckedUpdateManyWithoutOrganizationNestedInput
     AcademicYear?: AcademicYearUncheckedUpdateManyWithoutOrganizationNestedInput
     scheduledJob?: ScheduledJobUncheckedUpdateManyWithoutOrganizationNestedInput
-    Exam?: ExamUncheckedUpdateManyWithoutOrganizationNestedInput
+    exam?: ExamUncheckedUpdateManyWithoutOrganizationNestedInput
     hallTicket?: HallTicketUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -61716,7 +61716,7 @@ export namespace Prisma {
     notices?: NoticeCreateNestedManyWithoutAcademicYearInput
     TeachingAssignment?: TeachingAssignmentCreateNestedManyWithoutAcademicYearInput
     AcademicCalendar?: AcademicCalendarCreateNestedManyWithoutAcademicYearInput
-    ExamSession?: ExamSessionCreateNestedManyWithoutAcademicYearInput
+    examSession?: ExamSessionCreateNestedManyWithoutAcademicYearInput
   }
 
   export type AcademicYearUncheckedCreateWithoutStudentAttendanceInput = {
@@ -61735,7 +61735,7 @@ export namespace Prisma {
     notices?: NoticeUncheckedCreateNestedManyWithoutAcademicYearInput
     TeachingAssignment?: TeachingAssignmentUncheckedCreateNestedManyWithoutAcademicYearInput
     AcademicCalendar?: AcademicCalendarUncheckedCreateNestedManyWithoutAcademicYearInput
-    ExamSession?: ExamSessionUncheckedCreateNestedManyWithoutAcademicYearInput
+    examSession?: ExamSessionUncheckedCreateNestedManyWithoutAcademicYearInput
   }
 
   export type AcademicYearCreateOrConnectWithoutStudentAttendanceInput = {
@@ -61874,7 +61874,7 @@ export namespace Prisma {
     notices?: NoticeUpdateManyWithoutAcademicYearNestedInput
     TeachingAssignment?: TeachingAssignmentUpdateManyWithoutAcademicYearNestedInput
     AcademicCalendar?: AcademicCalendarUpdateManyWithoutAcademicYearNestedInput
-    ExamSession?: ExamSessionUpdateManyWithoutAcademicYearNestedInput
+    examSession?: ExamSessionUpdateManyWithoutAcademicYearNestedInput
   }
 
   export type AcademicYearUncheckedUpdateWithoutStudentAttendanceInput = {
@@ -61893,7 +61893,7 @@ export namespace Prisma {
     notices?: NoticeUncheckedUpdateManyWithoutAcademicYearNestedInput
     TeachingAssignment?: TeachingAssignmentUncheckedUpdateManyWithoutAcademicYearNestedInput
     AcademicCalendar?: AcademicCalendarUncheckedUpdateManyWithoutAcademicYearNestedInput
-    ExamSession?: ExamSessionUncheckedUpdateManyWithoutAcademicYearNestedInput
+    examSession?: ExamSessionUncheckedUpdateManyWithoutAcademicYearNestedInput
   }
 
   export type StudentCreateWithoutStudentDocumentInput = {
@@ -61997,7 +61997,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogCreateNestedManyWithoutOrganizationInput
     AcademicYear?: AcademicYearCreateNestedManyWithoutOrganizationInput
     scheduledJob?: ScheduledJobCreateNestedManyWithoutOrganizationInput
-    Exam?: ExamCreateNestedManyWithoutOrganizationInput
+    exam?: ExamCreateNestedManyWithoutOrganizationInput
     hallTicket?: HallTicketCreateNestedManyWithoutOrganizationInput
   }
 
@@ -62035,7 +62035,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogUncheckedCreateNestedManyWithoutOrganizationInput
     AcademicYear?: AcademicYearUncheckedCreateNestedManyWithoutOrganizationInput
     scheduledJob?: ScheduledJobUncheckedCreateNestedManyWithoutOrganizationInput
-    Exam?: ExamUncheckedCreateNestedManyWithoutOrganizationInput
+    exam?: ExamUncheckedCreateNestedManyWithoutOrganizationInput
     hallTicket?: HallTicketUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
@@ -62162,7 +62162,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogUpdateManyWithoutOrganizationNestedInput
     AcademicYear?: AcademicYearUpdateManyWithoutOrganizationNestedInput
     scheduledJob?: ScheduledJobUpdateManyWithoutOrganizationNestedInput
-    Exam?: ExamUpdateManyWithoutOrganizationNestedInput
+    exam?: ExamUpdateManyWithoutOrganizationNestedInput
     hallTicket?: HallTicketUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -62200,7 +62200,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogUncheckedUpdateManyWithoutOrganizationNestedInput
     AcademicYear?: AcademicYearUncheckedUpdateManyWithoutOrganizationNestedInput
     scheduledJob?: ScheduledJobUncheckedUpdateManyWithoutOrganizationNestedInput
-    Exam?: ExamUncheckedUpdateManyWithoutOrganizationNestedInput
+    exam?: ExamUncheckedUpdateManyWithoutOrganizationNestedInput
     hallTicket?: HallTicketUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -62328,7 +62328,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogCreateNestedManyWithoutOrganizationInput
     AcademicYear?: AcademicYearCreateNestedManyWithoutOrganizationInput
     scheduledJob?: ScheduledJobCreateNestedManyWithoutOrganizationInput
-    Exam?: ExamCreateNestedManyWithoutOrganizationInput
+    exam?: ExamCreateNestedManyWithoutOrganizationInput
     hallTicket?: HallTicketCreateNestedManyWithoutOrganizationInput
   }
 
@@ -62366,7 +62366,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogUncheckedCreateNestedManyWithoutOrganizationInput
     AcademicYear?: AcademicYearUncheckedCreateNestedManyWithoutOrganizationInput
     scheduledJob?: ScheduledJobUncheckedCreateNestedManyWithoutOrganizationInput
-    Exam?: ExamUncheckedCreateNestedManyWithoutOrganizationInput
+    exam?: ExamUncheckedCreateNestedManyWithoutOrganizationInput
     hallTicket?: HallTicketUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
@@ -62566,7 +62566,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogUpdateManyWithoutOrganizationNestedInput
     AcademicYear?: AcademicYearUpdateManyWithoutOrganizationNestedInput
     scheduledJob?: ScheduledJobUpdateManyWithoutOrganizationNestedInput
-    Exam?: ExamUpdateManyWithoutOrganizationNestedInput
+    exam?: ExamUpdateManyWithoutOrganizationNestedInput
     hallTicket?: HallTicketUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -62604,7 +62604,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogUncheckedUpdateManyWithoutOrganizationNestedInput
     AcademicYear?: AcademicYearUncheckedUpdateManyWithoutOrganizationNestedInput
     scheduledJob?: ScheduledJobUncheckedUpdateManyWithoutOrganizationNestedInput
-    Exam?: ExamUncheckedUpdateManyWithoutOrganizationNestedInput
+    exam?: ExamUncheckedUpdateManyWithoutOrganizationNestedInput
     hallTicket?: HallTicketUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -62734,7 +62734,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogCreateNestedManyWithoutOrganizationInput
     AcademicYear?: AcademicYearCreateNestedManyWithoutOrganizationInput
     scheduledJob?: ScheduledJobCreateNestedManyWithoutOrganizationInput
-    Exam?: ExamCreateNestedManyWithoutOrganizationInput
+    exam?: ExamCreateNestedManyWithoutOrganizationInput
     hallTicket?: HallTicketCreateNestedManyWithoutOrganizationInput
   }
 
@@ -62772,7 +62772,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogUncheckedCreateNestedManyWithoutOrganizationInput
     AcademicYear?: AcademicYearUncheckedCreateNestedManyWithoutOrganizationInput
     scheduledJob?: ScheduledJobUncheckedCreateNestedManyWithoutOrganizationInput
-    Exam?: ExamUncheckedCreateNestedManyWithoutOrganizationInput
+    exam?: ExamUncheckedCreateNestedManyWithoutOrganizationInput
     hallTicket?: HallTicketUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
@@ -62914,7 +62914,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogUpdateManyWithoutOrganizationNestedInput
     AcademicYear?: AcademicYearUpdateManyWithoutOrganizationNestedInput
     scheduledJob?: ScheduledJobUpdateManyWithoutOrganizationNestedInput
-    Exam?: ExamUpdateManyWithoutOrganizationNestedInput
+    exam?: ExamUpdateManyWithoutOrganizationNestedInput
     hallTicket?: HallTicketUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -62952,7 +62952,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogUncheckedUpdateManyWithoutOrganizationNestedInput
     AcademicYear?: AcademicYearUncheckedUpdateManyWithoutOrganizationNestedInput
     scheduledJob?: ScheduledJobUncheckedUpdateManyWithoutOrganizationNestedInput
-    Exam?: ExamUncheckedUpdateManyWithoutOrganizationNestedInput
+    exam?: ExamUncheckedUpdateManyWithoutOrganizationNestedInput
     hallTicket?: HallTicketUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -62990,7 +62990,7 @@ export namespace Prisma {
     TeachingAssignment?: TeachingAssignmentCreateNestedManyWithoutOrganizationInput
     NotificationLog?: NotificationLogCreateNestedManyWithoutOrganizationInput
     AcademicYear?: AcademicYearCreateNestedManyWithoutOrganizationInput
-    Exam?: ExamCreateNestedManyWithoutOrganizationInput
+    exam?: ExamCreateNestedManyWithoutOrganizationInput
     hallTicket?: HallTicketCreateNestedManyWithoutOrganizationInput
   }
 
@@ -63028,7 +63028,7 @@ export namespace Prisma {
     TeachingAssignment?: TeachingAssignmentUncheckedCreateNestedManyWithoutOrganizationInput
     NotificationLog?: NotificationLogUncheckedCreateNestedManyWithoutOrganizationInput
     AcademicYear?: AcademicYearUncheckedCreateNestedManyWithoutOrganizationInput
-    Exam?: ExamUncheckedCreateNestedManyWithoutOrganizationInput
+    exam?: ExamUncheckedCreateNestedManyWithoutOrganizationInput
     hallTicket?: HallTicketUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
@@ -63082,7 +63082,7 @@ export namespace Prisma {
     TeachingAssignment?: TeachingAssignmentUpdateManyWithoutOrganizationNestedInput
     NotificationLog?: NotificationLogUpdateManyWithoutOrganizationNestedInput
     AcademicYear?: AcademicYearUpdateManyWithoutOrganizationNestedInput
-    Exam?: ExamUpdateManyWithoutOrganizationNestedInput
+    exam?: ExamUpdateManyWithoutOrganizationNestedInput
     hallTicket?: HallTicketUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -63120,7 +63120,7 @@ export namespace Prisma {
     TeachingAssignment?: TeachingAssignmentUncheckedUpdateManyWithoutOrganizationNestedInput
     NotificationLog?: NotificationLogUncheckedUpdateManyWithoutOrganizationNestedInput
     AcademicYear?: AcademicYearUncheckedUpdateManyWithoutOrganizationNestedInput
-    Exam?: ExamUncheckedUpdateManyWithoutOrganizationNestedInput
+    exam?: ExamUncheckedUpdateManyWithoutOrganizationNestedInput
     hallTicket?: HallTicketUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -63196,7 +63196,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogCreateNestedManyWithoutOrganizationInput
     AcademicYear?: AcademicYearCreateNestedManyWithoutOrganizationInput
     scheduledJob?: ScheduledJobCreateNestedManyWithoutOrganizationInput
-    Exam?: ExamCreateNestedManyWithoutOrganizationInput
+    exam?: ExamCreateNestedManyWithoutOrganizationInput
     hallTicket?: HallTicketCreateNestedManyWithoutOrganizationInput
   }
 
@@ -63234,7 +63234,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogUncheckedCreateNestedManyWithoutOrganizationInput
     AcademicYear?: AcademicYearUncheckedCreateNestedManyWithoutOrganizationInput
     scheduledJob?: ScheduledJobUncheckedCreateNestedManyWithoutOrganizationInput
-    Exam?: ExamUncheckedCreateNestedManyWithoutOrganizationInput
+    exam?: ExamUncheckedCreateNestedManyWithoutOrganizationInput
     hallTicket?: HallTicketUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
@@ -63304,7 +63304,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogUpdateManyWithoutOrganizationNestedInput
     AcademicYear?: AcademicYearUpdateManyWithoutOrganizationNestedInput
     scheduledJob?: ScheduledJobUpdateManyWithoutOrganizationNestedInput
-    Exam?: ExamUpdateManyWithoutOrganizationNestedInput
+    exam?: ExamUpdateManyWithoutOrganizationNestedInput
     hallTicket?: HallTicketUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -63342,7 +63342,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogUncheckedUpdateManyWithoutOrganizationNestedInput
     AcademicYear?: AcademicYearUncheckedUpdateManyWithoutOrganizationNestedInput
     scheduledJob?: ScheduledJobUncheckedUpdateManyWithoutOrganizationNestedInput
-    Exam?: ExamUncheckedUpdateManyWithoutOrganizationNestedInput
+    exam?: ExamUncheckedUpdateManyWithoutOrganizationNestedInput
     hallTicket?: HallTicketUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -63380,7 +63380,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogCreateNestedManyWithoutOrganizationInput
     AcademicYear?: AcademicYearCreateNestedManyWithoutOrganizationInput
     scheduledJob?: ScheduledJobCreateNestedManyWithoutOrganizationInput
-    Exam?: ExamCreateNestedManyWithoutOrganizationInput
+    exam?: ExamCreateNestedManyWithoutOrganizationInput
     hallTicket?: HallTicketCreateNestedManyWithoutOrganizationInput
   }
 
@@ -63418,7 +63418,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogUncheckedCreateNestedManyWithoutOrganizationInput
     AcademicYear?: AcademicYearUncheckedCreateNestedManyWithoutOrganizationInput
     scheduledJob?: ScheduledJobUncheckedCreateNestedManyWithoutOrganizationInput
-    Exam?: ExamUncheckedCreateNestedManyWithoutOrganizationInput
+    exam?: ExamUncheckedCreateNestedManyWithoutOrganizationInput
     hallTicket?: HallTicketUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
@@ -63443,7 +63443,7 @@ export namespace Prisma {
     notices?: NoticeCreateNestedManyWithoutAcademicYearInput
     TeachingAssignment?: TeachingAssignmentCreateNestedManyWithoutAcademicYearInput
     StudentAttendance?: StudentAttendanceCreateNestedManyWithoutAcademicYearInput
-    ExamSession?: ExamSessionCreateNestedManyWithoutAcademicYearInput
+    examSession?: ExamSessionCreateNestedManyWithoutAcademicYearInput
   }
 
   export type AcademicYearUncheckedCreateWithoutAcademicCalendarInput = {
@@ -63462,7 +63462,7 @@ export namespace Prisma {
     notices?: NoticeUncheckedCreateNestedManyWithoutAcademicYearInput
     TeachingAssignment?: TeachingAssignmentUncheckedCreateNestedManyWithoutAcademicYearInput
     StudentAttendance?: StudentAttendanceUncheckedCreateNestedManyWithoutAcademicYearInput
-    ExamSession?: ExamSessionUncheckedCreateNestedManyWithoutAcademicYearInput
+    examSession?: ExamSessionUncheckedCreateNestedManyWithoutAcademicYearInput
   }
 
   export type AcademicYearCreateOrConnectWithoutAcademicCalendarInput = {
@@ -63515,7 +63515,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogUpdateManyWithoutOrganizationNestedInput
     AcademicYear?: AcademicYearUpdateManyWithoutOrganizationNestedInput
     scheduledJob?: ScheduledJobUpdateManyWithoutOrganizationNestedInput
-    Exam?: ExamUpdateManyWithoutOrganizationNestedInput
+    exam?: ExamUpdateManyWithoutOrganizationNestedInput
     hallTicket?: HallTicketUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -63553,7 +63553,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogUncheckedUpdateManyWithoutOrganizationNestedInput
     AcademicYear?: AcademicYearUncheckedUpdateManyWithoutOrganizationNestedInput
     scheduledJob?: ScheduledJobUncheckedUpdateManyWithoutOrganizationNestedInput
-    Exam?: ExamUncheckedUpdateManyWithoutOrganizationNestedInput
+    exam?: ExamUncheckedUpdateManyWithoutOrganizationNestedInput
     hallTicket?: HallTicketUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -63584,7 +63584,7 @@ export namespace Prisma {
     notices?: NoticeUpdateManyWithoutAcademicYearNestedInput
     TeachingAssignment?: TeachingAssignmentUpdateManyWithoutAcademicYearNestedInput
     StudentAttendance?: StudentAttendanceUpdateManyWithoutAcademicYearNestedInput
-    ExamSession?: ExamSessionUpdateManyWithoutAcademicYearNestedInput
+    examSession?: ExamSessionUpdateManyWithoutAcademicYearNestedInput
   }
 
   export type AcademicYearUncheckedUpdateWithoutAcademicCalendarInput = {
@@ -63603,7 +63603,7 @@ export namespace Prisma {
     notices?: NoticeUncheckedUpdateManyWithoutAcademicYearNestedInput
     TeachingAssignment?: TeachingAssignmentUncheckedUpdateManyWithoutAcademicYearNestedInput
     StudentAttendance?: StudentAttendanceUncheckedUpdateManyWithoutAcademicYearNestedInput
-    ExamSession?: ExamSessionUncheckedUpdateManyWithoutAcademicYearNestedInput
+    examSession?: ExamSessionUncheckedUpdateManyWithoutAcademicYearNestedInput
   }
 
   export type OrganizationCreateWithoutAnonymousComplaintInput = {
@@ -63640,7 +63640,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogCreateNestedManyWithoutOrganizationInput
     AcademicYear?: AcademicYearCreateNestedManyWithoutOrganizationInput
     scheduledJob?: ScheduledJobCreateNestedManyWithoutOrganizationInput
-    Exam?: ExamCreateNestedManyWithoutOrganizationInput
+    exam?: ExamCreateNestedManyWithoutOrganizationInput
     hallTicket?: HallTicketCreateNestedManyWithoutOrganizationInput
   }
 
@@ -63678,7 +63678,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogUncheckedCreateNestedManyWithoutOrganizationInput
     AcademicYear?: AcademicYearUncheckedCreateNestedManyWithoutOrganizationInput
     scheduledJob?: ScheduledJobUncheckedCreateNestedManyWithoutOrganizationInput
-    Exam?: ExamUncheckedCreateNestedManyWithoutOrganizationInput
+    exam?: ExamUncheckedCreateNestedManyWithoutOrganizationInput
     hallTicket?: HallTicketUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
@@ -63731,7 +63731,7 @@ export namespace Prisma {
     TeachingAssignment?: TeachingAssignmentCreateNestedManyWithoutAcademicYearInput
     StudentAttendance?: StudentAttendanceCreateNestedManyWithoutAcademicYearInput
     AcademicCalendar?: AcademicCalendarCreateNestedManyWithoutAcademicYearInput
-    ExamSession?: ExamSessionCreateNestedManyWithoutAcademicYearInput
+    examSession?: ExamSessionCreateNestedManyWithoutAcademicYearInput
   }
 
   export type AcademicYearUncheckedCreateWithoutComplaintsInput = {
@@ -63750,7 +63750,7 @@ export namespace Prisma {
     TeachingAssignment?: TeachingAssignmentUncheckedCreateNestedManyWithoutAcademicYearInput
     StudentAttendance?: StudentAttendanceUncheckedCreateNestedManyWithoutAcademicYearInput
     AcademicCalendar?: AcademicCalendarUncheckedCreateNestedManyWithoutAcademicYearInput
-    ExamSession?: ExamSessionUncheckedCreateNestedManyWithoutAcademicYearInput
+    examSession?: ExamSessionUncheckedCreateNestedManyWithoutAcademicYearInput
   }
 
   export type AcademicYearCreateOrConnectWithoutComplaintsInput = {
@@ -63803,7 +63803,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogUpdateManyWithoutOrganizationNestedInput
     AcademicYear?: AcademicYearUpdateManyWithoutOrganizationNestedInput
     scheduledJob?: ScheduledJobUpdateManyWithoutOrganizationNestedInput
-    Exam?: ExamUpdateManyWithoutOrganizationNestedInput
+    exam?: ExamUpdateManyWithoutOrganizationNestedInput
     hallTicket?: HallTicketUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -63841,7 +63841,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogUncheckedUpdateManyWithoutOrganizationNestedInput
     AcademicYear?: AcademicYearUncheckedUpdateManyWithoutOrganizationNestedInput
     scheduledJob?: ScheduledJobUncheckedUpdateManyWithoutOrganizationNestedInput
-    Exam?: ExamUncheckedUpdateManyWithoutOrganizationNestedInput
+    exam?: ExamUncheckedUpdateManyWithoutOrganizationNestedInput
     hallTicket?: HallTicketUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -63901,7 +63901,7 @@ export namespace Prisma {
     TeachingAssignment?: TeachingAssignmentUpdateManyWithoutAcademicYearNestedInput
     StudentAttendance?: StudentAttendanceUpdateManyWithoutAcademicYearNestedInput
     AcademicCalendar?: AcademicCalendarUpdateManyWithoutAcademicYearNestedInput
-    ExamSession?: ExamSessionUpdateManyWithoutAcademicYearNestedInput
+    examSession?: ExamSessionUpdateManyWithoutAcademicYearNestedInput
   }
 
   export type AcademicYearUncheckedUpdateWithoutComplaintsInput = {
@@ -63920,7 +63920,7 @@ export namespace Prisma {
     TeachingAssignment?: TeachingAssignmentUncheckedUpdateManyWithoutAcademicYearNestedInput
     StudentAttendance?: StudentAttendanceUncheckedUpdateManyWithoutAcademicYearNestedInput
     AcademicCalendar?: AcademicCalendarUncheckedUpdateManyWithoutAcademicYearNestedInput
-    ExamSession?: ExamSessionUncheckedUpdateManyWithoutAcademicYearNestedInput
+    examSession?: ExamSessionUncheckedUpdateManyWithoutAcademicYearNestedInput
   }
 
   export type AnonymousComplaintCreateWithoutComplaintStatusTimelineInput = {
@@ -64037,7 +64037,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogCreateNestedManyWithoutOrganizationInput
     AcademicYear?: AcademicYearCreateNestedManyWithoutOrganizationInput
     scheduledJob?: ScheduledJobCreateNestedManyWithoutOrganizationInput
-    Exam?: ExamCreateNestedManyWithoutOrganizationInput
+    exam?: ExamCreateNestedManyWithoutOrganizationInput
     hallTicket?: HallTicketCreateNestedManyWithoutOrganizationInput
   }
 
@@ -64075,7 +64075,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogUncheckedCreateNestedManyWithoutOrganizationInput
     AcademicYear?: AcademicYearUncheckedCreateNestedManyWithoutOrganizationInput
     scheduledJob?: ScheduledJobUncheckedCreateNestedManyWithoutOrganizationInput
-    Exam?: ExamUncheckedCreateNestedManyWithoutOrganizationInput
+    exam?: ExamUncheckedCreateNestedManyWithoutOrganizationInput
     hallTicket?: HallTicketUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
@@ -64100,7 +64100,7 @@ export namespace Prisma {
     TeachingAssignment?: TeachingAssignmentCreateNestedManyWithoutAcademicYearInput
     StudentAttendance?: StudentAttendanceCreateNestedManyWithoutAcademicYearInput
     AcademicCalendar?: AcademicCalendarCreateNestedManyWithoutAcademicYearInput
-    ExamSession?: ExamSessionCreateNestedManyWithoutAcademicYearInput
+    examSession?: ExamSessionCreateNestedManyWithoutAcademicYearInput
   }
 
   export type AcademicYearUncheckedCreateWithoutNoticesInput = {
@@ -64119,7 +64119,7 @@ export namespace Prisma {
     TeachingAssignment?: TeachingAssignmentUncheckedCreateNestedManyWithoutAcademicYearInput
     StudentAttendance?: StudentAttendanceUncheckedCreateNestedManyWithoutAcademicYearInput
     AcademicCalendar?: AcademicCalendarUncheckedCreateNestedManyWithoutAcademicYearInput
-    ExamSession?: ExamSessionUncheckedCreateNestedManyWithoutAcademicYearInput
+    examSession?: ExamSessionUncheckedCreateNestedManyWithoutAcademicYearInput
   }
 
   export type AcademicYearCreateOrConnectWithoutNoticesInput = {
@@ -64172,7 +64172,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogUpdateManyWithoutOrganizationNestedInput
     AcademicYear?: AcademicYearUpdateManyWithoutOrganizationNestedInput
     scheduledJob?: ScheduledJobUpdateManyWithoutOrganizationNestedInput
-    Exam?: ExamUpdateManyWithoutOrganizationNestedInput
+    exam?: ExamUpdateManyWithoutOrganizationNestedInput
     hallTicket?: HallTicketUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -64210,7 +64210,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogUncheckedUpdateManyWithoutOrganizationNestedInput
     AcademicYear?: AcademicYearUncheckedUpdateManyWithoutOrganizationNestedInput
     scheduledJob?: ScheduledJobUncheckedUpdateManyWithoutOrganizationNestedInput
-    Exam?: ExamUncheckedUpdateManyWithoutOrganizationNestedInput
+    exam?: ExamUncheckedUpdateManyWithoutOrganizationNestedInput
     hallTicket?: HallTicketUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -64241,7 +64241,7 @@ export namespace Prisma {
     TeachingAssignment?: TeachingAssignmentUpdateManyWithoutAcademicYearNestedInput
     StudentAttendance?: StudentAttendanceUpdateManyWithoutAcademicYearNestedInput
     AcademicCalendar?: AcademicCalendarUpdateManyWithoutAcademicYearNestedInput
-    ExamSession?: ExamSessionUpdateManyWithoutAcademicYearNestedInput
+    examSession?: ExamSessionUpdateManyWithoutAcademicYearNestedInput
   }
 
   export type AcademicYearUncheckedUpdateWithoutNoticesInput = {
@@ -64260,7 +64260,7 @@ export namespace Prisma {
     TeachingAssignment?: TeachingAssignmentUncheckedUpdateManyWithoutAcademicYearNestedInput
     StudentAttendance?: StudentAttendanceUncheckedUpdateManyWithoutAcademicYearNestedInput
     AcademicCalendar?: AcademicCalendarUncheckedUpdateManyWithoutAcademicYearNestedInput
-    ExamSession?: ExamSessionUncheckedUpdateManyWithoutAcademicYearNestedInput
+    examSession?: ExamSessionUncheckedUpdateManyWithoutAcademicYearNestedInput
   }
 
   export type OrganizationCreateWithoutNotificationLogInput = {
@@ -64297,7 +64297,7 @@ export namespace Prisma {
     TeachingAssignment?: TeachingAssignmentCreateNestedManyWithoutOrganizationInput
     AcademicYear?: AcademicYearCreateNestedManyWithoutOrganizationInput
     scheduledJob?: ScheduledJobCreateNestedManyWithoutOrganizationInput
-    Exam?: ExamCreateNestedManyWithoutOrganizationInput
+    exam?: ExamCreateNestedManyWithoutOrganizationInput
     hallTicket?: HallTicketCreateNestedManyWithoutOrganizationInput
   }
 
@@ -64335,7 +64335,7 @@ export namespace Prisma {
     TeachingAssignment?: TeachingAssignmentUncheckedCreateNestedManyWithoutOrganizationInput
     AcademicYear?: AcademicYearUncheckedCreateNestedManyWithoutOrganizationInput
     scheduledJob?: ScheduledJobUncheckedCreateNestedManyWithoutOrganizationInput
-    Exam?: ExamUncheckedCreateNestedManyWithoutOrganizationInput
+    exam?: ExamUncheckedCreateNestedManyWithoutOrganizationInput
     hallTicket?: HallTicketUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
@@ -64530,7 +64530,7 @@ export namespace Prisma {
     TeachingAssignment?: TeachingAssignmentUpdateManyWithoutOrganizationNestedInput
     AcademicYear?: AcademicYearUpdateManyWithoutOrganizationNestedInput
     scheduledJob?: ScheduledJobUpdateManyWithoutOrganizationNestedInput
-    Exam?: ExamUpdateManyWithoutOrganizationNestedInput
+    exam?: ExamUpdateManyWithoutOrganizationNestedInput
     hallTicket?: HallTicketUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -64568,7 +64568,7 @@ export namespace Prisma {
     TeachingAssignment?: TeachingAssignmentUncheckedUpdateManyWithoutOrganizationNestedInput
     AcademicYear?: AcademicYearUncheckedUpdateManyWithoutOrganizationNestedInput
     scheduledJob?: ScheduledJobUncheckedUpdateManyWithoutOrganizationNestedInput
-    Exam?: ExamUncheckedUpdateManyWithoutOrganizationNestedInput
+    exam?: ExamUncheckedUpdateManyWithoutOrganizationNestedInput
     hallTicket?: HallTicketUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -66287,7 +66287,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogCreateNestedManyWithoutOrganizationInput
     AcademicYear?: AcademicYearCreateNestedManyWithoutOrganizationInput
     scheduledJob?: ScheduledJobCreateNestedManyWithoutOrganizationInput
-    Exam?: ExamCreateNestedManyWithoutOrganizationInput
+    exam?: ExamCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutHallTicketInput = {
@@ -66325,7 +66325,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogUncheckedCreateNestedManyWithoutOrganizationInput
     AcademicYear?: AcademicYearUncheckedCreateNestedManyWithoutOrganizationInput
     scheduledJob?: ScheduledJobUncheckedCreateNestedManyWithoutOrganizationInput
-    Exam?: ExamUncheckedCreateNestedManyWithoutOrganizationInput
+    exam?: ExamUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutHallTicketInput = {
@@ -66560,7 +66560,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogUpdateManyWithoutOrganizationNestedInput
     AcademicYear?: AcademicYearUpdateManyWithoutOrganizationNestedInput
     scheduledJob?: ScheduledJobUpdateManyWithoutOrganizationNestedInput
-    Exam?: ExamUpdateManyWithoutOrganizationNestedInput
+    exam?: ExamUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutHallTicketInput = {
@@ -66598,7 +66598,7 @@ export namespace Prisma {
     NotificationLog?: NotificationLogUncheckedUpdateManyWithoutOrganizationNestedInput
     AcademicYear?: AcademicYearUncheckedUpdateManyWithoutOrganizationNestedInput
     scheduledJob?: ScheduledJobUncheckedUpdateManyWithoutOrganizationNestedInput
-    Exam?: ExamUncheckedUpdateManyWithoutOrganizationNestedInput
+    exam?: ExamUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type StudentCreateWithoutReportCardInput = {
@@ -68152,7 +68152,7 @@ export namespace Prisma {
     TeachingAssignment?: TeachingAssignmentUpdateManyWithoutAcademicYearNestedInput
     StudentAttendance?: StudentAttendanceUpdateManyWithoutAcademicYearNestedInput
     AcademicCalendar?: AcademicCalendarUpdateManyWithoutAcademicYearNestedInput
-    ExamSession?: ExamSessionUpdateManyWithoutAcademicYearNestedInput
+    examSession?: ExamSessionUpdateManyWithoutAcademicYearNestedInput
   }
 
   export type AcademicYearUncheckedUpdateWithoutOrganizationInput = {
@@ -68171,7 +68171,7 @@ export namespace Prisma {
     TeachingAssignment?: TeachingAssignmentUncheckedUpdateManyWithoutAcademicYearNestedInput
     StudentAttendance?: StudentAttendanceUncheckedUpdateManyWithoutAcademicYearNestedInput
     AcademicCalendar?: AcademicCalendarUncheckedUpdateManyWithoutAcademicYearNestedInput
-    ExamSession?: ExamSessionUncheckedUpdateManyWithoutAcademicYearNestedInput
+    examSession?: ExamSessionUncheckedUpdateManyWithoutAcademicYearNestedInput
   }
 
   export type AcademicYearUncheckedUpdateManyWithoutOrganizationInput = {
