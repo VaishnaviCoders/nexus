@@ -16,3 +16,11 @@ import { generateText } from 'ai';
 Stack: Nextjs 15 , prisma , shadcn , react-form-hook, server actions only , zod , react Suspence
 
 schema: Check Pasted file
+
+<!--  Form Prompt  -->
+
+Create proper shadcn Form using Nextjs 15 , prisma , shadcn , shadcn From , react-form-hook, server actions only , zod , useTransition , sonner ,
+
+<!-- End Prompt -->
+
+I Know you can do design /alignment better than we think

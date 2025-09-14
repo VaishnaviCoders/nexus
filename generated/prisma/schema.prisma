@@ -256,10 +256,9 @@ model Subject {
   organization        Organization         @relation(fields: [organizationId], references: [id])
   teachingAssignments TeachingAssignment[]
 
-  createdAt  DateTime     @default(now())
-  updatedAt  DateTime     @updatedAt
-  exam       Exam[]
-  examResult ExamResult[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  exam      Exam[]
 
   @@index([organizationId, name, code])
 }
@@ -892,11 +891,10 @@ model ExamEnrollment {
 }
 
 model ExamResult {
-  id                 String   @id @default(cuid())
-  studentId          String
-  examId             String
-  subjectId          String?
-  maxMarks           Float
+  id        String @id @default(cuid())
+  studentId String
+  examId    String
+
   obtainedMarks      Float?
   percentage         Float? // Auto-calculated
   gradeLabel         String?
@@ -905,14 +903,13 @@ model ExamResult {
   isAbsent           Boolean  @default(false)
   isResultsPublished Boolean  @default(false)
 
-  student Student  @relation(fields: [studentId], references: [id])
-  exam    Exam     @relation(fields: [examId], references: [id])
-  subject Subject? @relation(fields: [subjectId], references: [id])
+  student Student @relation(fields: [studentId], references: [id])
+  exam    Exam    @relation(fields: [examId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@unique([examId, studentId, subjectId])
+  @@unique([examId, studentId])
   @@index([examId])
   @@index([studentId])
 }

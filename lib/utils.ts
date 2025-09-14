@@ -190,3 +190,178 @@ export function calculateNotificationCost(
   const unitCost = getChannelUnitCost(channel);
   return parseFloat((unitCost * units).toFixed(2));
 }
+
+// Grading system utilities for flexible grade calculation
+
+export interface GradeScale {
+  id: string;
+  name: string;
+  grades: Grade[];
+}
+
+export interface Grade {
+  label: string;
+  minPercentage: number;
+  maxPercentage: number;
+  points?: number;
+  description?: string;
+}
+
+// Predefined grading scales
+export const GRADING_SCALES: GradeScale[] = [
+  {
+    id: 'standard',
+    name: 'Standard (A-F)',
+    grades: [
+      { label: 'A+', minPercentage: 97, maxPercentage: 100, points: 4.0 },
+      { label: 'A', minPercentage: 93, maxPercentage: 96.99, points: 4.0 },
+      { label: 'A-', minPercentage: 90, maxPercentage: 92.99, points: 3.7 },
+      { label: 'B+', minPercentage: 87, maxPercentage: 89.99, points: 3.3 },
+      { label: 'B', minPercentage: 83, maxPercentage: 86.99, points: 3.0 },
+      { label: 'B-', minPercentage: 80, maxPercentage: 82.99, points: 2.7 },
+      { label: 'C+', minPercentage: 77, maxPercentage: 79.99, points: 2.3 },
+      { label: 'C', minPercentage: 73, maxPercentage: 76.99, points: 2.0 },
+      { label: 'C-', minPercentage: 70, maxPercentage: 72.99, points: 1.7 },
+      { label: 'D+', minPercentage: 67, maxPercentage: 69.99, points: 1.3 },
+      { label: 'D', minPercentage: 65, maxPercentage: 66.99, points: 1.0 },
+      { label: 'F', minPercentage: 0, maxPercentage: 64.99, points: 0.0 },
+    ],
+  },
+  {
+    id: 'outstanding',
+    name: 'Outstanding (O-E)',
+    grades: [
+      {
+        label: 'O+',
+        minPercentage: 95,
+        maxPercentage: 100,
+        description: 'Outstanding Plus',
+      },
+      {
+        label: 'O',
+        minPercentage: 90,
+        maxPercentage: 94.99,
+        description: 'Outstanding',
+      },
+      {
+        label: 'A+',
+        minPercentage: 85,
+        maxPercentage: 89.99,
+        description: 'Excellent Plus',
+      },
+      {
+        label: 'A',
+        minPercentage: 80,
+        maxPercentage: 84.99,
+        description: 'Excellent',
+      },
+      {
+        label: 'B+',
+        minPercentage: 75,
+        maxPercentage: 79.99,
+        description: 'Very Good Plus',
+      },
+      {
+        label: 'B',
+        minPercentage: 70,
+        maxPercentage: 74.99,
+        description: 'Very Good',
+      },
+      {
+        label: 'C+',
+        minPercentage: 65,
+        maxPercentage: 69.99,
+        description: 'Good Plus',
+      },
+      {
+        label: 'C',
+        minPercentage: 60,
+        maxPercentage: 64.99,
+        description: 'Good',
+      },
+      {
+        label: 'D',
+        minPercentage: 50,
+        maxPercentage: 59.99,
+        description: 'Satisfactory',
+      },
+      {
+        label: 'E',
+        minPercentage: 0,
+        maxPercentage: 49.99,
+        description: 'Needs Improvement',
+      },
+    ],
+  },
+  {
+    id: 'cbse',
+    name: 'CBSE (A1-E2)',
+    grades: [
+      { label: 'A1', minPercentage: 91, maxPercentage: 100, points: 10 },
+      { label: 'A2', minPercentage: 81, maxPercentage: 90.99, points: 9 },
+      { label: 'B1', minPercentage: 71, maxPercentage: 80.99, points: 8 },
+      { label: 'B2', minPercentage: 61, maxPercentage: 70.99, points: 7 },
+      { label: 'C1', minPercentage: 51, maxPercentage: 60.99, points: 6 },
+      { label: 'C2', minPercentage: 41, maxPercentage: 50.99, points: 5 },
+      { label: 'D', minPercentage: 33, maxPercentage: 40.99, points: 4 },
+      { label: 'E1', minPercentage: 21, maxPercentage: 32.99, points: 0 },
+      { label: 'E2', minPercentage: 0, maxPercentage: 20.99, points: 0 },
+    ],
+  },
+  {
+    id: 'simple',
+    name: 'Simple (Pass/Fail)',
+    grades: [
+      { label: 'Pass', minPercentage: 33, maxPercentage: 100 },
+      { label: 'Fail', minPercentage: 0, maxPercentage: 32.99 },
+    ],
+  },
+];
+
+export function calculateGrade(
+  percentage: number,
+  gradeScale: GradeScale
+): Grade | null {
+  if (percentage < 0 || percentage > 100) return null;
+
+  return (
+    gradeScale.grades.find(
+      (grade) =>
+        percentage >= grade.minPercentage && percentage <= grade.maxPercentage
+    ) || null
+  );
+}
+
+export function getGradeColorBadge(
+  grade: Grade,
+  isPassed: boolean,
+  passingMarks: number
+):
+  | 'default'
+  | 'secondary'
+  | 'destructive'
+  | 'outline'
+  | 'verified'
+  | 'pending'
+  | 'pass'
+  | 'failed' {
+  // Handle failed grades
+  if (!isPassed) return 'failed';
+
+  const percentage = (grade.minPercentage + grade.maxPercentage) / 2;
+
+  // Use specific badge variants for better visual distinction
+  if (percentage >= 90) return 'verified'; // Excellent - Green
+  if (percentage >= 80) return 'pass'; // Very Good - Light Green
+  if (percentage >= 70) return 'secondary'; // Good - Secondary color
+  if (percentage >= 60) return 'outline'; // Satisfactory - Outline
+  if (percentage >= passingMarks) return 'pending'; // Just passed - Yellow
+  return 'failed'; // Below passing marks - Red
+}
+
+export function isPassingGrade(
+  percentage: number,
+  passingPercentage = 33
+): boolean {
+  return percentage >= passingPercentage;
+}

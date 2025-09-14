@@ -10,14 +10,13 @@ import {
 } from '@/components/ui/card';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { studentSchema } from '@/lib/schemas';
+import { updateStudentSchema } from '@/lib/schemas';
 import type { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import useSWR from 'swr';
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -56,7 +55,6 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import {
-  Gender,
   Grade,
   Parent,
   ParentStudent,
@@ -64,6 +62,7 @@ import {
   Student,
   User,
 } from '@/generated/prisma';
+import { UpdateStudentAction } from '@/lib/data/student/update-student';
 
 interface DocumentFile {
   id: string;
@@ -82,15 +81,15 @@ type StudentWithRelations = Student & {
     parent: Parent;
   })[];
 };
-interface EditStudentFormProps {
+interface UpdateStudentFormProps {
   student: StudentWithRelations;
   onSuccess?: () => void;
 }
 
-export default function EditStudentForm({
+export default function UpdateStudentForm({
   student,
   onSuccess,
-}: EditStudentFormProps) {
+}: UpdateStudentFormProps) {
   const [selectedGradeId, setSelectedGradeId] = useState<string | null>(
     student.gradeId || null
   );
@@ -100,9 +99,10 @@ export default function EditStudentForm({
   const [documents, setDocuments] = useState<DocumentFile[]>([]);
   const [pending, setPending] = useState(false);
 
-  const form = useForm<z.infer<typeof studentSchema>>({
-    resolver: zodResolver(studentSchema),
+  const form = useForm<z.infer<typeof updateStudentSchema>>({
+    resolver: zodResolver(updateStudentSchema),
     defaultValues: {
+      id: student.id,
       firstName: student.firstName || '',
       middleName: student.middleName || '',
       lastName: student.lastName || '',
@@ -134,6 +134,8 @@ export default function EditStudentForm({
     },
   });
 
+  console.log('Update Student Form Errors', form.formState.errors);
+
   const {
     fields: parents,
     append,
@@ -147,15 +149,14 @@ export default function EditStudentForm({
   useEffect(() => {
     if (student) {
       form.reset({
+        id: student.id,
         firstName: student.firstName || '',
         middleName: student.middleName || '',
         lastName: student.lastName || '',
         email: student.email || '',
         phoneNumber: student.phoneNumber || '',
         whatsAppNumber: student.whatsAppNumber || '',
-        dateOfBirth: student.dateOfBirth
-          ? new Date(student.dateOfBirth)
-          : new Date(),
+        dateOfBirth: student.dateOfBirth,
         gender: student.gender || 'MALE',
         rollNumber: student.rollNumber || '',
         gradeId: student.gradeId || '',
@@ -213,10 +214,10 @@ export default function EditStudentForm({
     return data.secure_url;
   }
 
-  const onSubmit = async (data: z.infer<typeof studentSchema>) => {
+  const onSubmit = async (data: z.infer<typeof updateStudentSchema>) => {
     try {
       setPending(true);
-      //   await updateStudent(student.id, data); // Pass student ID for update
+      await UpdateStudentAction(data);
 
       console.log('Frontend Student Update Data', data);
 

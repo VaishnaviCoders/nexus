@@ -4260,13 +4260,11 @@ export namespace Prisma {
   export type SubjectCountOutputType = {
     teachingAssignments: number
     exam: number
-    examResult: number
   }
 
   export type SubjectCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     teachingAssignments?: boolean | SubjectCountOutputTypeCountTeachingAssignmentsArgs
     exam?: boolean | SubjectCountOutputTypeCountExamArgs
-    examResult?: boolean | SubjectCountOutputTypeCountExamResultArgs
   }
 
   // Custom InputTypes
@@ -4292,13 +4290,6 @@ export namespace Prisma {
    */
   export type SubjectCountOutputTypeCountExamArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ExamWhereInput
-  }
-
-  /**
-   * SubjectCountOutputType without action
-   */
-  export type SubjectCountOutputTypeCountExamResultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ExamResultWhereInput
   }
 
 
@@ -13942,7 +13933,6 @@ export namespace Prisma {
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     teachingAssignments?: boolean | Subject$teachingAssignmentsArgs<ExtArgs>
     exam?: boolean | Subject$examArgs<ExtArgs>
-    examResult?: boolean | Subject$examResultArgs<ExtArgs>
     _count?: boolean | SubjectCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["subject"]>
 
@@ -13983,7 +13973,6 @@ export namespace Prisma {
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     teachingAssignments?: boolean | Subject$teachingAssignmentsArgs<ExtArgs>
     exam?: boolean | Subject$examArgs<ExtArgs>
-    examResult?: boolean | Subject$examResultArgs<ExtArgs>
     _count?: boolean | SubjectCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type SubjectIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -13999,7 +13988,6 @@ export namespace Prisma {
       organization: Prisma.$OrganizationPayload<ExtArgs>
       teachingAssignments: Prisma.$TeachingAssignmentPayload<ExtArgs>[]
       exam: Prisma.$ExamPayload<ExtArgs>[]
-      examResult: Prisma.$ExamResultPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -14406,7 +14394,6 @@ export namespace Prisma {
     organization<T extends OrganizationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrganizationDefaultArgs<ExtArgs>>): Prisma__OrganizationClient<$Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     teachingAssignments<T extends Subject$teachingAssignmentsArgs<ExtArgs> = {}>(args?: Subset<T, Subject$teachingAssignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TeachingAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     exam<T extends Subject$examArgs<ExtArgs> = {}>(args?: Subset<T, Subject$examArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExamPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    examResult<T extends Subject$examResultArgs<ExtArgs> = {}>(args?: Subset<T, Subject$examResultArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExamResultPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -14884,30 +14871,6 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ExamScalarFieldEnum | ExamScalarFieldEnum[]
-  }
-
-  /**
-   * Subject.examResult
-   */
-  export type Subject$examResultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ExamResult
-     */
-    select?: ExamResultSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ExamResult
-     */
-    omit?: ExamResultOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ExamResultInclude<ExtArgs> | null
-    where?: ExamResultWhereInput
-    orderBy?: ExamResultOrderByWithRelationInput | ExamResultOrderByWithRelationInput[]
-    cursor?: ExamResultWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: ExamResultScalarFieldEnum | ExamResultScalarFieldEnum[]
   }
 
   /**
@@ -36901,13 +36864,11 @@ export namespace Prisma {
   }
 
   export type ExamResultAvgAggregateOutputType = {
-    maxMarks: number | null
     obtainedMarks: number | null
     percentage: number | null
   }
 
   export type ExamResultSumAggregateOutputType = {
-    maxMarks: number | null
     obtainedMarks: number | null
     percentage: number | null
   }
@@ -36916,8 +36877,6 @@ export namespace Prisma {
     id: string | null
     studentId: string | null
     examId: string | null
-    subjectId: string | null
-    maxMarks: number | null
     obtainedMarks: number | null
     percentage: number | null
     gradeLabel: string | null
@@ -36933,8 +36892,6 @@ export namespace Prisma {
     id: string | null
     studentId: string | null
     examId: string | null
-    subjectId: string | null
-    maxMarks: number | null
     obtainedMarks: number | null
     percentage: number | null
     gradeLabel: string | null
@@ -36950,8 +36907,6 @@ export namespace Prisma {
     id: number
     studentId: number
     examId: number
-    subjectId: number
-    maxMarks: number
     obtainedMarks: number
     percentage: number
     gradeLabel: number
@@ -36966,13 +36921,11 @@ export namespace Prisma {
 
 
   export type ExamResultAvgAggregateInputType = {
-    maxMarks?: true
     obtainedMarks?: true
     percentage?: true
   }
 
   export type ExamResultSumAggregateInputType = {
-    maxMarks?: true
     obtainedMarks?: true
     percentage?: true
   }
@@ -36981,8 +36934,6 @@ export namespace Prisma {
     id?: true
     studentId?: true
     examId?: true
-    subjectId?: true
-    maxMarks?: true
     obtainedMarks?: true
     percentage?: true
     gradeLabel?: true
@@ -36998,8 +36949,6 @@ export namespace Prisma {
     id?: true
     studentId?: true
     examId?: true
-    subjectId?: true
-    maxMarks?: true
     obtainedMarks?: true
     percentage?: true
     gradeLabel?: true
@@ -37015,8 +36964,6 @@ export namespace Prisma {
     id?: true
     studentId?: true
     examId?: true
-    subjectId?: true
-    maxMarks?: true
     obtainedMarks?: true
     percentage?: true
     gradeLabel?: true
@@ -37119,8 +37066,6 @@ export namespace Prisma {
     id: string
     studentId: string
     examId: string
-    subjectId: string | null
-    maxMarks: number
     obtainedMarks: number | null
     percentage: number | null
     gradeLabel: string | null
@@ -37155,8 +37100,6 @@ export namespace Prisma {
     id?: boolean
     studentId?: boolean
     examId?: boolean
-    subjectId?: boolean
-    maxMarks?: boolean
     obtainedMarks?: boolean
     percentage?: boolean
     gradeLabel?: boolean
@@ -37168,15 +37111,12 @@ export namespace Prisma {
     updatedAt?: boolean
     student?: boolean | StudentDefaultArgs<ExtArgs>
     exam?: boolean | ExamDefaultArgs<ExtArgs>
-    subject?: boolean | ExamResult$subjectArgs<ExtArgs>
   }, ExtArgs["result"]["examResult"]>
 
   export type ExamResultSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     studentId?: boolean
     examId?: boolean
-    subjectId?: boolean
-    maxMarks?: boolean
     obtainedMarks?: boolean
     percentage?: boolean
     gradeLabel?: boolean
@@ -37188,15 +37128,12 @@ export namespace Prisma {
     updatedAt?: boolean
     student?: boolean | StudentDefaultArgs<ExtArgs>
     exam?: boolean | ExamDefaultArgs<ExtArgs>
-    subject?: boolean | ExamResult$subjectArgs<ExtArgs>
   }, ExtArgs["result"]["examResult"]>
 
   export type ExamResultSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     studentId?: boolean
     examId?: boolean
-    subjectId?: boolean
-    maxMarks?: boolean
     obtainedMarks?: boolean
     percentage?: boolean
     gradeLabel?: boolean
@@ -37208,15 +37145,12 @@ export namespace Prisma {
     updatedAt?: boolean
     student?: boolean | StudentDefaultArgs<ExtArgs>
     exam?: boolean | ExamDefaultArgs<ExtArgs>
-    subject?: boolean | ExamResult$subjectArgs<ExtArgs>
   }, ExtArgs["result"]["examResult"]>
 
   export type ExamResultSelectScalar = {
     id?: boolean
     studentId?: boolean
     examId?: boolean
-    subjectId?: boolean
-    maxMarks?: boolean
     obtainedMarks?: boolean
     percentage?: boolean
     gradeLabel?: boolean
@@ -37228,21 +37162,18 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type ExamResultOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "studentId" | "examId" | "subjectId" | "maxMarks" | "obtainedMarks" | "percentage" | "gradeLabel" | "remarks" | "isPassed" | "isAbsent" | "isResultsPublished" | "createdAt" | "updatedAt", ExtArgs["result"]["examResult"]>
+  export type ExamResultOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "studentId" | "examId" | "obtainedMarks" | "percentage" | "gradeLabel" | "remarks" | "isPassed" | "isAbsent" | "isResultsPublished" | "createdAt" | "updatedAt", ExtArgs["result"]["examResult"]>
   export type ExamResultInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     student?: boolean | StudentDefaultArgs<ExtArgs>
     exam?: boolean | ExamDefaultArgs<ExtArgs>
-    subject?: boolean | ExamResult$subjectArgs<ExtArgs>
   }
   export type ExamResultIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     student?: boolean | StudentDefaultArgs<ExtArgs>
     exam?: boolean | ExamDefaultArgs<ExtArgs>
-    subject?: boolean | ExamResult$subjectArgs<ExtArgs>
   }
   export type ExamResultIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     student?: boolean | StudentDefaultArgs<ExtArgs>
     exam?: boolean | ExamDefaultArgs<ExtArgs>
-    subject?: boolean | ExamResult$subjectArgs<ExtArgs>
   }
 
   export type $ExamResultPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -37250,14 +37181,11 @@ export namespace Prisma {
     objects: {
       student: Prisma.$StudentPayload<ExtArgs>
       exam: Prisma.$ExamPayload<ExtArgs>
-      subject: Prisma.$SubjectPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       studentId: string
       examId: string
-      subjectId: string | null
-      maxMarks: number
       obtainedMarks: number | null
       percentage: number | null
       gradeLabel: string | null
@@ -37663,7 +37591,6 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     student<T extends StudentDefaultArgs<ExtArgs> = {}>(args?: Subset<T, StudentDefaultArgs<ExtArgs>>): Prisma__StudentClient<$Result.GetResult<Prisma.$StudentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     exam<T extends ExamDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ExamDefaultArgs<ExtArgs>>): Prisma__ExamClient<$Result.GetResult<Prisma.$ExamPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    subject<T extends ExamResult$subjectArgs<ExtArgs> = {}>(args?: Subset<T, ExamResult$subjectArgs<ExtArgs>>): Prisma__SubjectClient<$Result.GetResult<Prisma.$SubjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -37696,8 +37623,6 @@ export namespace Prisma {
     readonly id: FieldRef<"ExamResult", 'String'>
     readonly studentId: FieldRef<"ExamResult", 'String'>
     readonly examId: FieldRef<"ExamResult", 'String'>
-    readonly subjectId: FieldRef<"ExamResult", 'String'>
-    readonly maxMarks: FieldRef<"ExamResult", 'Float'>
     readonly obtainedMarks: FieldRef<"ExamResult", 'Float'>
     readonly percentage: FieldRef<"ExamResult", 'Float'>
     readonly gradeLabel: FieldRef<"ExamResult", 'String'>
@@ -38100,25 +38025,6 @@ export namespace Prisma {
      * Limit how many ExamResults to delete.
      */
     limit?: number
-  }
-
-  /**
-   * ExamResult.subject
-   */
-  export type ExamResult$subjectArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Subject
-     */
-    select?: SubjectSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Subject
-     */
-    omit?: SubjectOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: SubjectInclude<ExtArgs> | null
-    where?: SubjectWhereInput
   }
 
   /**
@@ -41132,8 +41038,6 @@ export namespace Prisma {
     id: 'id',
     studentId: 'studentId',
     examId: 'examId',
-    subjectId: 'subjectId',
-    maxMarks: 'maxMarks',
     obtainedMarks: 'obtainedMarks',
     percentage: 'percentage',
     gradeLabel: 'gradeLabel',
@@ -41579,7 +41483,6 @@ export namespace Prisma {
     id: 'id',
     studentId: 'studentId',
     examId: 'examId',
-    subjectId: 'subjectId',
     gradeLabel: 'gradeLabel',
     remarks: 'remarks'
   };
@@ -42775,7 +42678,6 @@ export namespace Prisma {
     organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
     teachingAssignments?: TeachingAssignmentListRelationFilter
     exam?: ExamListRelationFilter
-    examResult?: ExamResultListRelationFilter
   }
 
   export type SubjectOrderByWithRelationInput = {
@@ -42789,7 +42691,6 @@ export namespace Prisma {
     organization?: OrganizationOrderByWithRelationInput
     teachingAssignments?: TeachingAssignmentOrderByRelationAggregateInput
     exam?: ExamOrderByRelationAggregateInput
-    examResult?: ExamResultOrderByRelationAggregateInput
     _relevance?: SubjectOrderByRelevanceInput
   }
 
@@ -42807,7 +42708,6 @@ export namespace Prisma {
     organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
     teachingAssignments?: TeachingAssignmentListRelationFilter
     exam?: ExamListRelationFilter
-    examResult?: ExamResultListRelationFilter
   }, "id" | "code">
 
   export type SubjectOrderByWithAggregationInput = {
@@ -44689,8 +44589,6 @@ export namespace Prisma {
     id?: StringFilter<"ExamResult"> | string
     studentId?: StringFilter<"ExamResult"> | string
     examId?: StringFilter<"ExamResult"> | string
-    subjectId?: StringNullableFilter<"ExamResult"> | string | null
-    maxMarks?: FloatFilter<"ExamResult"> | number
     obtainedMarks?: FloatNullableFilter<"ExamResult"> | number | null
     percentage?: FloatNullableFilter<"ExamResult"> | number | null
     gradeLabel?: StringNullableFilter<"ExamResult"> | string | null
@@ -44702,15 +44600,12 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"ExamResult"> | Date | string
     student?: XOR<StudentScalarRelationFilter, StudentWhereInput>
     exam?: XOR<ExamScalarRelationFilter, ExamWhereInput>
-    subject?: XOR<SubjectNullableScalarRelationFilter, SubjectWhereInput> | null
   }
 
   export type ExamResultOrderByWithRelationInput = {
     id?: SortOrder
     studentId?: SortOrder
     examId?: SortOrder
-    subjectId?: SortOrderInput | SortOrder
-    maxMarks?: SortOrder
     obtainedMarks?: SortOrderInput | SortOrder
     percentage?: SortOrderInput | SortOrder
     gradeLabel?: SortOrderInput | SortOrder
@@ -44722,20 +44617,17 @@ export namespace Prisma {
     updatedAt?: SortOrder
     student?: StudentOrderByWithRelationInput
     exam?: ExamOrderByWithRelationInput
-    subject?: SubjectOrderByWithRelationInput
     _relevance?: ExamResultOrderByRelevanceInput
   }
 
   export type ExamResultWhereUniqueInput = Prisma.AtLeast<{
     id?: string
-    examId_studentId_subjectId?: ExamResultExamIdStudentIdSubjectIdCompoundUniqueInput
+    examId_studentId?: ExamResultExamIdStudentIdCompoundUniqueInput
     AND?: ExamResultWhereInput | ExamResultWhereInput[]
     OR?: ExamResultWhereInput[]
     NOT?: ExamResultWhereInput | ExamResultWhereInput[]
     studentId?: StringFilter<"ExamResult"> | string
     examId?: StringFilter<"ExamResult"> | string
-    subjectId?: StringNullableFilter<"ExamResult"> | string | null
-    maxMarks?: FloatFilter<"ExamResult"> | number
     obtainedMarks?: FloatNullableFilter<"ExamResult"> | number | null
     percentage?: FloatNullableFilter<"ExamResult"> | number | null
     gradeLabel?: StringNullableFilter<"ExamResult"> | string | null
@@ -44747,15 +44639,12 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"ExamResult"> | Date | string
     student?: XOR<StudentScalarRelationFilter, StudentWhereInput>
     exam?: XOR<ExamScalarRelationFilter, ExamWhereInput>
-    subject?: XOR<SubjectNullableScalarRelationFilter, SubjectWhereInput> | null
-  }, "id" | "examId_studentId_subjectId">
+  }, "id" | "examId_studentId">
 
   export type ExamResultOrderByWithAggregationInput = {
     id?: SortOrder
     studentId?: SortOrder
     examId?: SortOrder
-    subjectId?: SortOrderInput | SortOrder
-    maxMarks?: SortOrder
     obtainedMarks?: SortOrderInput | SortOrder
     percentage?: SortOrderInput | SortOrder
     gradeLabel?: SortOrderInput | SortOrder
@@ -44779,8 +44668,6 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"ExamResult"> | string
     studentId?: StringWithAggregatesFilter<"ExamResult"> | string
     examId?: StringWithAggregatesFilter<"ExamResult"> | string
-    subjectId?: StringNullableWithAggregatesFilter<"ExamResult"> | string | null
-    maxMarks?: FloatWithAggregatesFilter<"ExamResult"> | number
     obtainedMarks?: FloatNullableWithAggregatesFilter<"ExamResult"> | number | null
     percentage?: FloatNullableWithAggregatesFilter<"ExamResult"> | number | null
     gradeLabel?: StringNullableWithAggregatesFilter<"ExamResult"> | string | null
@@ -45856,7 +45743,6 @@ export namespace Prisma {
     organization: OrganizationCreateNestedOneWithoutSubjectInput
     teachingAssignments?: TeachingAssignmentCreateNestedManyWithoutSubjectInput
     exam?: ExamCreateNestedManyWithoutSubjectInput
-    examResult?: ExamResultCreateNestedManyWithoutSubjectInput
   }
 
   export type SubjectUncheckedCreateInput = {
@@ -45869,7 +45755,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     teachingAssignments?: TeachingAssignmentUncheckedCreateNestedManyWithoutSubjectInput
     exam?: ExamUncheckedCreateNestedManyWithoutSubjectInput
-    examResult?: ExamResultUncheckedCreateNestedManyWithoutSubjectInput
   }
 
   export type SubjectUpdateInput = {
@@ -45882,7 +45767,6 @@ export namespace Prisma {
     organization?: OrganizationUpdateOneRequiredWithoutSubjectNestedInput
     teachingAssignments?: TeachingAssignmentUpdateManyWithoutSubjectNestedInput
     exam?: ExamUpdateManyWithoutSubjectNestedInput
-    examResult?: ExamResultUpdateManyWithoutSubjectNestedInput
   }
 
   export type SubjectUncheckedUpdateInput = {
@@ -45895,7 +45779,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     teachingAssignments?: TeachingAssignmentUncheckedUpdateManyWithoutSubjectNestedInput
     exam?: ExamUncheckedUpdateManyWithoutSubjectNestedInput
-    examResult?: ExamResultUncheckedUpdateManyWithoutSubjectNestedInput
   }
 
   export type SubjectCreateManyInput = {
@@ -47933,7 +47816,6 @@ export namespace Prisma {
 
   export type ExamResultCreateInput = {
     id?: string
-    maxMarks: number
     obtainedMarks?: number | null
     percentage?: number | null
     gradeLabel?: string | null
@@ -47945,15 +47827,12 @@ export namespace Prisma {
     updatedAt?: Date | string
     student: StudentCreateNestedOneWithoutExamResultInput
     exam: ExamCreateNestedOneWithoutExamResultInput
-    subject?: SubjectCreateNestedOneWithoutExamResultInput
   }
 
   export type ExamResultUncheckedCreateInput = {
     id?: string
     studentId: string
     examId: string
-    subjectId?: string | null
-    maxMarks: number
     obtainedMarks?: number | null
     percentage?: number | null
     gradeLabel?: string | null
@@ -47967,7 +47846,6 @@ export namespace Prisma {
 
   export type ExamResultUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    maxMarks?: FloatFieldUpdateOperationsInput | number
     obtainedMarks?: NullableFloatFieldUpdateOperationsInput | number | null
     percentage?: NullableFloatFieldUpdateOperationsInput | number | null
     gradeLabel?: NullableStringFieldUpdateOperationsInput | string | null
@@ -47979,15 +47857,12 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     student?: StudentUpdateOneRequiredWithoutExamResultNestedInput
     exam?: ExamUpdateOneRequiredWithoutExamResultNestedInput
-    subject?: SubjectUpdateOneWithoutExamResultNestedInput
   }
 
   export type ExamResultUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     studentId?: StringFieldUpdateOperationsInput | string
     examId?: StringFieldUpdateOperationsInput | string
-    subjectId?: NullableStringFieldUpdateOperationsInput | string | null
-    maxMarks?: FloatFieldUpdateOperationsInput | number
     obtainedMarks?: NullableFloatFieldUpdateOperationsInput | number | null
     percentage?: NullableFloatFieldUpdateOperationsInput | number | null
     gradeLabel?: NullableStringFieldUpdateOperationsInput | string | null
@@ -48003,8 +47878,6 @@ export namespace Prisma {
     id?: string
     studentId: string
     examId: string
-    subjectId?: string | null
-    maxMarks: number
     obtainedMarks?: number | null
     percentage?: number | null
     gradeLabel?: string | null
@@ -48018,7 +47891,6 @@ export namespace Prisma {
 
   export type ExamResultUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    maxMarks?: FloatFieldUpdateOperationsInput | number
     obtainedMarks?: NullableFloatFieldUpdateOperationsInput | number | null
     percentage?: NullableFloatFieldUpdateOperationsInput | number | null
     gradeLabel?: NullableStringFieldUpdateOperationsInput | string | null
@@ -48034,8 +47906,6 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     studentId?: StringFieldUpdateOperationsInput | string
     examId?: StringFieldUpdateOperationsInput | string
-    subjectId?: NullableStringFieldUpdateOperationsInput | string | null
-    maxMarks?: FloatFieldUpdateOperationsInput | number
     obtainedMarks?: NullableFloatFieldUpdateOperationsInput | number | null
     percentage?: NullableFloatFieldUpdateOperationsInput | number | null
     gradeLabel?: NullableStringFieldUpdateOperationsInput | string | null
@@ -49184,16 +49054,6 @@ export namespace Prisma {
     _max?: NestedIntFilter<$PrismaModel>
   }
 
-  export type ExamResultListRelationFilter = {
-    every?: ExamResultWhereInput
-    some?: ExamResultWhereInput
-    none?: ExamResultWhereInput
-  }
-
-  export type ExamResultOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
   export type SubjectOrderByRelevanceInput = {
     fields: SubjectOrderByRelevanceFieldEnum | SubjectOrderByRelevanceFieldEnum[]
     sort: SortOrder
@@ -49337,6 +49197,12 @@ export namespace Prisma {
     none?: ReportCardWhereInput
   }
 
+  export type ExamResultListRelationFilter = {
+    every?: ExamResultWhereInput
+    some?: ExamResultWhereInput
+    none?: ExamResultWhereInput
+  }
+
   export type ExamEnrollmentListRelationFilter = {
     every?: ExamEnrollmentWhereInput
     some?: ExamEnrollmentWhereInput
@@ -49348,6 +49214,10 @@ export namespace Prisma {
   }
 
   export type ReportCardOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ExamResultOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -50846,29 +50716,21 @@ export namespace Prisma {
     _max?: NestedEnumStudentExamStatusFilter<$PrismaModel>
   }
 
-  export type SubjectNullableScalarRelationFilter = {
-    is?: SubjectWhereInput | null
-    isNot?: SubjectWhereInput | null
-  }
-
   export type ExamResultOrderByRelevanceInput = {
     fields: ExamResultOrderByRelevanceFieldEnum | ExamResultOrderByRelevanceFieldEnum[]
     sort: SortOrder
     search: string
   }
 
-  export type ExamResultExamIdStudentIdSubjectIdCompoundUniqueInput = {
+  export type ExamResultExamIdStudentIdCompoundUniqueInput = {
     examId: string
     studentId: string
-    subjectId: string
   }
 
   export type ExamResultCountOrderByAggregateInput = {
     id?: SortOrder
     studentId?: SortOrder
     examId?: SortOrder
-    subjectId?: SortOrder
-    maxMarks?: SortOrder
     obtainedMarks?: SortOrder
     percentage?: SortOrder
     gradeLabel?: SortOrder
@@ -50881,7 +50743,6 @@ export namespace Prisma {
   }
 
   export type ExamResultAvgOrderByAggregateInput = {
-    maxMarks?: SortOrder
     obtainedMarks?: SortOrder
     percentage?: SortOrder
   }
@@ -50890,8 +50751,6 @@ export namespace Prisma {
     id?: SortOrder
     studentId?: SortOrder
     examId?: SortOrder
-    subjectId?: SortOrder
-    maxMarks?: SortOrder
     obtainedMarks?: SortOrder
     percentage?: SortOrder
     gradeLabel?: SortOrder
@@ -50907,8 +50766,6 @@ export namespace Prisma {
     id?: SortOrder
     studentId?: SortOrder
     examId?: SortOrder
-    subjectId?: SortOrder
-    maxMarks?: SortOrder
     obtainedMarks?: SortOrder
     percentage?: SortOrder
     gradeLabel?: SortOrder
@@ -50921,7 +50778,6 @@ export namespace Prisma {
   }
 
   export type ExamResultSumOrderByAggregateInput = {
-    maxMarks?: SortOrder
     obtainedMarks?: SortOrder
     percentage?: SortOrder
   }
@@ -52945,13 +52801,6 @@ export namespace Prisma {
     connect?: ExamWhereUniqueInput | ExamWhereUniqueInput[]
   }
 
-  export type ExamResultCreateNestedManyWithoutSubjectInput = {
-    create?: XOR<ExamResultCreateWithoutSubjectInput, ExamResultUncheckedCreateWithoutSubjectInput> | ExamResultCreateWithoutSubjectInput[] | ExamResultUncheckedCreateWithoutSubjectInput[]
-    connectOrCreate?: ExamResultCreateOrConnectWithoutSubjectInput | ExamResultCreateOrConnectWithoutSubjectInput[]
-    createMany?: ExamResultCreateManySubjectInputEnvelope
-    connect?: ExamResultWhereUniqueInput | ExamResultWhereUniqueInput[]
-  }
-
   export type TeachingAssignmentUncheckedCreateNestedManyWithoutSubjectInput = {
     create?: XOR<TeachingAssignmentCreateWithoutSubjectInput, TeachingAssignmentUncheckedCreateWithoutSubjectInput> | TeachingAssignmentCreateWithoutSubjectInput[] | TeachingAssignmentUncheckedCreateWithoutSubjectInput[]
     connectOrCreate?: TeachingAssignmentCreateOrConnectWithoutSubjectInput | TeachingAssignmentCreateOrConnectWithoutSubjectInput[]
@@ -52964,13 +52813,6 @@ export namespace Prisma {
     connectOrCreate?: ExamCreateOrConnectWithoutSubjectInput | ExamCreateOrConnectWithoutSubjectInput[]
     createMany?: ExamCreateManySubjectInputEnvelope
     connect?: ExamWhereUniqueInput | ExamWhereUniqueInput[]
-  }
-
-  export type ExamResultUncheckedCreateNestedManyWithoutSubjectInput = {
-    create?: XOR<ExamResultCreateWithoutSubjectInput, ExamResultUncheckedCreateWithoutSubjectInput> | ExamResultCreateWithoutSubjectInput[] | ExamResultUncheckedCreateWithoutSubjectInput[]
-    connectOrCreate?: ExamResultCreateOrConnectWithoutSubjectInput | ExamResultCreateOrConnectWithoutSubjectInput[]
-    createMany?: ExamResultCreateManySubjectInputEnvelope
-    connect?: ExamResultWhereUniqueInput | ExamResultWhereUniqueInput[]
   }
 
   export type OrganizationUpdateOneRequiredWithoutSubjectNestedInput = {
@@ -53009,20 +52851,6 @@ export namespace Prisma {
     deleteMany?: ExamScalarWhereInput | ExamScalarWhereInput[]
   }
 
-  export type ExamResultUpdateManyWithoutSubjectNestedInput = {
-    create?: XOR<ExamResultCreateWithoutSubjectInput, ExamResultUncheckedCreateWithoutSubjectInput> | ExamResultCreateWithoutSubjectInput[] | ExamResultUncheckedCreateWithoutSubjectInput[]
-    connectOrCreate?: ExamResultCreateOrConnectWithoutSubjectInput | ExamResultCreateOrConnectWithoutSubjectInput[]
-    upsert?: ExamResultUpsertWithWhereUniqueWithoutSubjectInput | ExamResultUpsertWithWhereUniqueWithoutSubjectInput[]
-    createMany?: ExamResultCreateManySubjectInputEnvelope
-    set?: ExamResultWhereUniqueInput | ExamResultWhereUniqueInput[]
-    disconnect?: ExamResultWhereUniqueInput | ExamResultWhereUniqueInput[]
-    delete?: ExamResultWhereUniqueInput | ExamResultWhereUniqueInput[]
-    connect?: ExamResultWhereUniqueInput | ExamResultWhereUniqueInput[]
-    update?: ExamResultUpdateWithWhereUniqueWithoutSubjectInput | ExamResultUpdateWithWhereUniqueWithoutSubjectInput[]
-    updateMany?: ExamResultUpdateManyWithWhereWithoutSubjectInput | ExamResultUpdateManyWithWhereWithoutSubjectInput[]
-    deleteMany?: ExamResultScalarWhereInput | ExamResultScalarWhereInput[]
-  }
-
   export type TeachingAssignmentUncheckedUpdateManyWithoutSubjectNestedInput = {
     create?: XOR<TeachingAssignmentCreateWithoutSubjectInput, TeachingAssignmentUncheckedCreateWithoutSubjectInput> | TeachingAssignmentCreateWithoutSubjectInput[] | TeachingAssignmentUncheckedCreateWithoutSubjectInput[]
     connectOrCreate?: TeachingAssignmentCreateOrConnectWithoutSubjectInput | TeachingAssignmentCreateOrConnectWithoutSubjectInput[]
@@ -53049,20 +52877,6 @@ export namespace Prisma {
     update?: ExamUpdateWithWhereUniqueWithoutSubjectInput | ExamUpdateWithWhereUniqueWithoutSubjectInput[]
     updateMany?: ExamUpdateManyWithWhereWithoutSubjectInput | ExamUpdateManyWithWhereWithoutSubjectInput[]
     deleteMany?: ExamScalarWhereInput | ExamScalarWhereInput[]
-  }
-
-  export type ExamResultUncheckedUpdateManyWithoutSubjectNestedInput = {
-    create?: XOR<ExamResultCreateWithoutSubjectInput, ExamResultUncheckedCreateWithoutSubjectInput> | ExamResultCreateWithoutSubjectInput[] | ExamResultUncheckedCreateWithoutSubjectInput[]
-    connectOrCreate?: ExamResultCreateOrConnectWithoutSubjectInput | ExamResultCreateOrConnectWithoutSubjectInput[]
-    upsert?: ExamResultUpsertWithWhereUniqueWithoutSubjectInput | ExamResultUpsertWithWhereUniqueWithoutSubjectInput[]
-    createMany?: ExamResultCreateManySubjectInputEnvelope
-    set?: ExamResultWhereUniqueInput | ExamResultWhereUniqueInput[]
-    disconnect?: ExamResultWhereUniqueInput | ExamResultWhereUniqueInput[]
-    delete?: ExamResultWhereUniqueInput | ExamResultWhereUniqueInput[]
-    connect?: ExamResultWhereUniqueInput | ExamResultWhereUniqueInput[]
-    update?: ExamResultUpdateWithWhereUniqueWithoutSubjectInput | ExamResultUpdateWithWhereUniqueWithoutSubjectInput[]
-    updateMany?: ExamResultUpdateManyWithWhereWithoutSubjectInput | ExamResultUpdateManyWithWhereWithoutSubjectInput[]
-    deleteMany?: ExamResultScalarWhereInput | ExamResultScalarWhereInput[]
   }
 
   export type TeacherCreateNestedOneWithoutTeachingAssignmentInput = {
@@ -54667,12 +54481,6 @@ export namespace Prisma {
     connect?: ExamWhereUniqueInput
   }
 
-  export type SubjectCreateNestedOneWithoutExamResultInput = {
-    create?: XOR<SubjectCreateWithoutExamResultInput, SubjectUncheckedCreateWithoutExamResultInput>
-    connectOrCreate?: SubjectCreateOrConnectWithoutExamResultInput
-    connect?: SubjectWhereUniqueInput
-  }
-
   export type StudentUpdateOneRequiredWithoutExamResultNestedInput = {
     create?: XOR<StudentCreateWithoutExamResultInput, StudentUncheckedCreateWithoutExamResultInput>
     connectOrCreate?: StudentCreateOrConnectWithoutExamResultInput
@@ -54687,16 +54495,6 @@ export namespace Prisma {
     upsert?: ExamUpsertWithoutExamResultInput
     connect?: ExamWhereUniqueInput
     update?: XOR<XOR<ExamUpdateToOneWithWhereWithoutExamResultInput, ExamUpdateWithoutExamResultInput>, ExamUncheckedUpdateWithoutExamResultInput>
-  }
-
-  export type SubjectUpdateOneWithoutExamResultNestedInput = {
-    create?: XOR<SubjectCreateWithoutExamResultInput, SubjectUncheckedCreateWithoutExamResultInput>
-    connectOrCreate?: SubjectCreateOrConnectWithoutExamResultInput
-    upsert?: SubjectUpsertWithoutExamResultInput
-    disconnect?: SubjectWhereInput | boolean
-    delete?: SubjectWhereInput | boolean
-    connect?: SubjectWhereUniqueInput
-    update?: XOR<XOR<SubjectUpdateToOneWithWhereWithoutExamResultInput, SubjectUpdateWithoutExamResultInput>, SubjectUncheckedUpdateWithoutExamResultInput>
   }
 
   export type StudentCreateNestedOneWithoutHallTicketInput = {
@@ -56643,7 +56441,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     teachingAssignments?: TeachingAssignmentCreateNestedManyWithoutSubjectInput
     exam?: ExamCreateNestedManyWithoutSubjectInput
-    examResult?: ExamResultCreateNestedManyWithoutSubjectInput
   }
 
   export type SubjectUncheckedCreateWithoutOrganizationInput = {
@@ -56655,7 +56452,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     teachingAssignments?: TeachingAssignmentUncheckedCreateNestedManyWithoutSubjectInput
     exam?: ExamUncheckedCreateNestedManyWithoutSubjectInput
-    examResult?: ExamResultUncheckedCreateNestedManyWithoutSubjectInput
   }
 
   export type SubjectCreateOrConnectWithoutOrganizationInput = {
@@ -59610,48 +59406,6 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type ExamResultCreateWithoutSubjectInput = {
-    id?: string
-    maxMarks: number
-    obtainedMarks?: number | null
-    percentage?: number | null
-    gradeLabel?: string | null
-    remarks?: string | null
-    isPassed?: boolean | null
-    isAbsent?: boolean
-    isResultsPublished?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    student: StudentCreateNestedOneWithoutExamResultInput
-    exam: ExamCreateNestedOneWithoutExamResultInput
-  }
-
-  export type ExamResultUncheckedCreateWithoutSubjectInput = {
-    id?: string
-    studentId: string
-    examId: string
-    maxMarks: number
-    obtainedMarks?: number | null
-    percentage?: number | null
-    gradeLabel?: string | null
-    remarks?: string | null
-    isPassed?: boolean | null
-    isAbsent?: boolean
-    isResultsPublished?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type ExamResultCreateOrConnectWithoutSubjectInput = {
-    where: ExamResultWhereUniqueInput
-    create: XOR<ExamResultCreateWithoutSubjectInput, ExamResultUncheckedCreateWithoutSubjectInput>
-  }
-
-  export type ExamResultCreateManySubjectInputEnvelope = {
-    data: ExamResultCreateManySubjectInput | ExamResultCreateManySubjectInput[]
-    skipDuplicates?: boolean
-  }
-
   export type OrganizationUpsertWithoutSubjectInput = {
     update: XOR<OrganizationUpdateWithoutSubjectInput, OrganizationUncheckedUpdateWithoutSubjectInput>
     create: XOR<OrganizationCreateWithoutSubjectInput, OrganizationUncheckedCreateWithoutSubjectInput>
@@ -59771,42 +59525,6 @@ export namespace Prisma {
     data: XOR<ExamUpdateManyMutationInput, ExamUncheckedUpdateManyWithoutSubjectInput>
   }
 
-  export type ExamResultUpsertWithWhereUniqueWithoutSubjectInput = {
-    where: ExamResultWhereUniqueInput
-    update: XOR<ExamResultUpdateWithoutSubjectInput, ExamResultUncheckedUpdateWithoutSubjectInput>
-    create: XOR<ExamResultCreateWithoutSubjectInput, ExamResultUncheckedCreateWithoutSubjectInput>
-  }
-
-  export type ExamResultUpdateWithWhereUniqueWithoutSubjectInput = {
-    where: ExamResultWhereUniqueInput
-    data: XOR<ExamResultUpdateWithoutSubjectInput, ExamResultUncheckedUpdateWithoutSubjectInput>
-  }
-
-  export type ExamResultUpdateManyWithWhereWithoutSubjectInput = {
-    where: ExamResultScalarWhereInput
-    data: XOR<ExamResultUpdateManyMutationInput, ExamResultUncheckedUpdateManyWithoutSubjectInput>
-  }
-
-  export type ExamResultScalarWhereInput = {
-    AND?: ExamResultScalarWhereInput | ExamResultScalarWhereInput[]
-    OR?: ExamResultScalarWhereInput[]
-    NOT?: ExamResultScalarWhereInput | ExamResultScalarWhereInput[]
-    id?: StringFilter<"ExamResult"> | string
-    studentId?: StringFilter<"ExamResult"> | string
-    examId?: StringFilter<"ExamResult"> | string
-    subjectId?: StringNullableFilter<"ExamResult"> | string | null
-    maxMarks?: FloatFilter<"ExamResult"> | number
-    obtainedMarks?: FloatNullableFilter<"ExamResult"> | number | null
-    percentage?: FloatNullableFilter<"ExamResult"> | number | null
-    gradeLabel?: StringNullableFilter<"ExamResult"> | string | null
-    remarks?: StringNullableFilter<"ExamResult"> | string | null
-    isPassed?: BoolNullableFilter<"ExamResult"> | boolean | null
-    isAbsent?: BoolFilter<"ExamResult"> | boolean
-    isResultsPublished?: BoolFilter<"ExamResult"> | boolean
-    createdAt?: DateTimeFilter<"ExamResult"> | Date | string
-    updatedAt?: DateTimeFilter<"ExamResult"> | Date | string
-  }
-
   export type TeacherCreateWithoutTeachingAssignmentInput = {
     id?: string
     employeeCode?: string | null
@@ -59847,7 +59565,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     organization: OrganizationCreateNestedOneWithoutSubjectInput
     exam?: ExamCreateNestedManyWithoutSubjectInput
-    examResult?: ExamResultCreateNestedManyWithoutSubjectInput
   }
 
   export type SubjectUncheckedCreateWithoutTeachingAssignmentsInput = {
@@ -59859,7 +59576,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     exam?: ExamUncheckedCreateNestedManyWithoutSubjectInput
-    examResult?: ExamResultUncheckedCreateNestedManyWithoutSubjectInput
   }
 
   export type SubjectCreateOrConnectWithoutTeachingAssignmentsInput = {
@@ -60094,7 +59810,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organization?: OrganizationUpdateOneRequiredWithoutSubjectNestedInput
     exam?: ExamUpdateManyWithoutSubjectNestedInput
-    examResult?: ExamResultUpdateManyWithoutSubjectNestedInput
   }
 
   export type SubjectUncheckedUpdateWithoutTeachingAssignmentsInput = {
@@ -60106,7 +59821,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     exam?: ExamUncheckedUpdateManyWithoutSubjectNestedInput
-    examResult?: ExamResultUncheckedUpdateManyWithoutSubjectNestedInput
   }
 
   export type GradeUpsertWithoutTeachingAssignmentInput = {
@@ -60759,7 +60473,6 @@ export namespace Prisma {
 
   export type ExamResultCreateWithoutStudentInput = {
     id?: string
-    maxMarks: number
     obtainedMarks?: number | null
     percentage?: number | null
     gradeLabel?: string | null
@@ -60770,14 +60483,11 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     exam: ExamCreateNestedOneWithoutExamResultInput
-    subject?: SubjectCreateNestedOneWithoutExamResultInput
   }
 
   export type ExamResultUncheckedCreateWithoutStudentInput = {
     id?: string
     examId: string
-    subjectId?: string | null
-    maxMarks: number
     obtainedMarks?: number | null
     percentage?: number | null
     gradeLabel?: string | null
@@ -61182,6 +60892,24 @@ export namespace Prisma {
   export type ExamResultUpdateManyWithWhereWithoutStudentInput = {
     where: ExamResultScalarWhereInput
     data: XOR<ExamResultUpdateManyMutationInput, ExamResultUncheckedUpdateManyWithoutStudentInput>
+  }
+
+  export type ExamResultScalarWhereInput = {
+    AND?: ExamResultScalarWhereInput | ExamResultScalarWhereInput[]
+    OR?: ExamResultScalarWhereInput[]
+    NOT?: ExamResultScalarWhereInput | ExamResultScalarWhereInput[]
+    id?: StringFilter<"ExamResult"> | string
+    studentId?: StringFilter<"ExamResult"> | string
+    examId?: StringFilter<"ExamResult"> | string
+    obtainedMarks?: FloatNullableFilter<"ExamResult"> | number | null
+    percentage?: FloatNullableFilter<"ExamResult"> | number | null
+    gradeLabel?: StringNullableFilter<"ExamResult"> | string | null
+    remarks?: StringNullableFilter<"ExamResult"> | string | null
+    isPassed?: BoolNullableFilter<"ExamResult"> | boolean | null
+    isAbsent?: BoolFilter<"ExamResult"> | boolean
+    isResultsPublished?: BoolFilter<"ExamResult"> | boolean
+    createdAt?: DateTimeFilter<"ExamResult"> | Date | string
+    updatedAt?: DateTimeFilter<"ExamResult"> | Date | string
   }
 
   export type ExamEnrollmentUpsertWithWhereUniqueWithoutStudentInput = {
@@ -65069,7 +64797,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     organization: OrganizationCreateNestedOneWithoutSubjectInput
     teachingAssignments?: TeachingAssignmentCreateNestedManyWithoutSubjectInput
-    examResult?: ExamResultCreateNestedManyWithoutSubjectInput
   }
 
   export type SubjectUncheckedCreateWithoutExamInput = {
@@ -65081,7 +64808,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     teachingAssignments?: TeachingAssignmentUncheckedCreateNestedManyWithoutSubjectInput
-    examResult?: ExamResultUncheckedCreateNestedManyWithoutSubjectInput
   }
 
   export type SubjectCreateOrConnectWithoutExamInput = {
@@ -65206,7 +64932,6 @@ export namespace Prisma {
 
   export type ExamResultCreateWithoutExamInput = {
     id?: string
-    maxMarks: number
     obtainedMarks?: number | null
     percentage?: number | null
     gradeLabel?: string | null
@@ -65217,14 +64942,11 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     student: StudentCreateNestedOneWithoutExamResultInput
-    subject?: SubjectCreateNestedOneWithoutExamResultInput
   }
 
   export type ExamResultUncheckedCreateWithoutExamInput = {
     id?: string
     studentId: string
-    subjectId?: string | null
-    maxMarks: number
     obtainedMarks?: number | null
     percentage?: number | null
     gradeLabel?: string | null
@@ -65331,7 +65053,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organization?: OrganizationUpdateOneRequiredWithoutSubjectNestedInput
     teachingAssignments?: TeachingAssignmentUpdateManyWithoutSubjectNestedInput
-    examResult?: ExamResultUpdateManyWithoutSubjectNestedInput
   }
 
   export type SubjectUncheckedUpdateWithoutExamInput = {
@@ -65343,7 +65064,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     teachingAssignments?: TeachingAssignmentUncheckedUpdateManyWithoutSubjectNestedInput
-    examResult?: ExamResultUncheckedUpdateManyWithoutSubjectNestedInput
   }
 
   export type OrganizationUpsertWithoutExamInput = {
@@ -65883,35 +65603,6 @@ export namespace Prisma {
     create: XOR<ExamCreateWithoutExamResultInput, ExamUncheckedCreateWithoutExamResultInput>
   }
 
-  export type SubjectCreateWithoutExamResultInput = {
-    id?: string
-    name: string
-    code: string
-    description: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    organization: OrganizationCreateNestedOneWithoutSubjectInput
-    teachingAssignments?: TeachingAssignmentCreateNestedManyWithoutSubjectInput
-    exam?: ExamCreateNestedManyWithoutSubjectInput
-  }
-
-  export type SubjectUncheckedCreateWithoutExamResultInput = {
-    id?: string
-    name: string
-    code: string
-    description: string
-    organizationId: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    teachingAssignments?: TeachingAssignmentUncheckedCreateNestedManyWithoutSubjectInput
-    exam?: ExamUncheckedCreateNestedManyWithoutSubjectInput
-  }
-
-  export type SubjectCreateOrConnectWithoutExamResultInput = {
-    where: SubjectWhereUniqueInput
-    create: XOR<SubjectCreateWithoutExamResultInput, SubjectUncheckedCreateWithoutExamResultInput>
-  }
-
   export type StudentUpsertWithoutExamResultInput = {
     update: XOR<StudentUpdateWithoutExamResultInput, StudentUncheckedUpdateWithoutExamResultInput>
     create: XOR<StudentCreateWithoutExamResultInput, StudentUncheckedCreateWithoutExamResultInput>
@@ -66052,41 +65743,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     hallTickets?: HallTicketUncheckedUpdateManyWithoutExamNestedInput
     examEnrollment?: ExamEnrollmentUncheckedUpdateManyWithoutExamNestedInput
-  }
-
-  export type SubjectUpsertWithoutExamResultInput = {
-    update: XOR<SubjectUpdateWithoutExamResultInput, SubjectUncheckedUpdateWithoutExamResultInput>
-    create: XOR<SubjectCreateWithoutExamResultInput, SubjectUncheckedCreateWithoutExamResultInput>
-    where?: SubjectWhereInput
-  }
-
-  export type SubjectUpdateToOneWithWhereWithoutExamResultInput = {
-    where?: SubjectWhereInput
-    data: XOR<SubjectUpdateWithoutExamResultInput, SubjectUncheckedUpdateWithoutExamResultInput>
-  }
-
-  export type SubjectUpdateWithoutExamResultInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    organization?: OrganizationUpdateOneRequiredWithoutSubjectNestedInput
-    teachingAssignments?: TeachingAssignmentUpdateManyWithoutSubjectNestedInput
-    exam?: ExamUpdateManyWithoutSubjectNestedInput
-  }
-
-  export type SubjectUncheckedUpdateWithoutExamResultInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    organizationId?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    teachingAssignments?: TeachingAssignmentUncheckedUpdateManyWithoutSubjectNestedInput
-    exam?: ExamUncheckedUpdateManyWithoutSubjectNestedInput
   }
 
   export type StudentCreateWithoutHallTicketInput = {
@@ -68028,7 +67684,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     teachingAssignments?: TeachingAssignmentUpdateManyWithoutSubjectNestedInput
     exam?: ExamUpdateManyWithoutSubjectNestedInput
-    examResult?: ExamResultUpdateManyWithoutSubjectNestedInput
   }
 
   export type SubjectUncheckedUpdateWithoutOrganizationInput = {
@@ -68040,7 +67695,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     teachingAssignments?: TeachingAssignmentUncheckedUpdateManyWithoutSubjectNestedInput
     exam?: ExamUncheckedUpdateManyWithoutSubjectNestedInput
-    examResult?: ExamResultUncheckedUpdateManyWithoutSubjectNestedInput
   }
 
   export type SubjectUncheckedUpdateManyWithoutOrganizationInput = {
@@ -69004,22 +68658,6 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
-  export type ExamResultCreateManySubjectInput = {
-    id?: string
-    studentId: string
-    examId: string
-    maxMarks: number
-    obtainedMarks?: number | null
-    percentage?: number | null
-    gradeLabel?: string | null
-    remarks?: string | null
-    isPassed?: boolean | null
-    isAbsent?: boolean
-    isResultsPublished?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
   export type TeachingAssignmentUpdateWithoutSubjectInput = {
     id?: StringFieldUpdateOperationsInput | string
     academicYear?: NullableStringFieldUpdateOperationsInput | string | null
@@ -69143,54 +68781,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type ExamResultUpdateWithoutSubjectInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    maxMarks?: FloatFieldUpdateOperationsInput | number
-    obtainedMarks?: NullableFloatFieldUpdateOperationsInput | number | null
-    percentage?: NullableFloatFieldUpdateOperationsInput | number | null
-    gradeLabel?: NullableStringFieldUpdateOperationsInput | string | null
-    remarks?: NullableStringFieldUpdateOperationsInput | string | null
-    isPassed?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    isAbsent?: BoolFieldUpdateOperationsInput | boolean
-    isResultsPublished?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    student?: StudentUpdateOneRequiredWithoutExamResultNestedInput
-    exam?: ExamUpdateOneRequiredWithoutExamResultNestedInput
-  }
-
-  export type ExamResultUncheckedUpdateWithoutSubjectInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    studentId?: StringFieldUpdateOperationsInput | string
-    examId?: StringFieldUpdateOperationsInput | string
-    maxMarks?: FloatFieldUpdateOperationsInput | number
-    obtainedMarks?: NullableFloatFieldUpdateOperationsInput | number | null
-    percentage?: NullableFloatFieldUpdateOperationsInput | number | null
-    gradeLabel?: NullableStringFieldUpdateOperationsInput | string | null
-    remarks?: NullableStringFieldUpdateOperationsInput | string | null
-    isPassed?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    isAbsent?: BoolFieldUpdateOperationsInput | boolean
-    isResultsPublished?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type ExamResultUncheckedUpdateManyWithoutSubjectInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    studentId?: StringFieldUpdateOperationsInput | string
-    examId?: StringFieldUpdateOperationsInput | string
-    maxMarks?: FloatFieldUpdateOperationsInput | number
-    obtainedMarks?: NullableFloatFieldUpdateOperationsInput | number | null
-    percentage?: NullableFloatFieldUpdateOperationsInput | number | null
-    gradeLabel?: NullableStringFieldUpdateOperationsInput | string | null
-    remarks?: NullableStringFieldUpdateOperationsInput | string | null
-    isPassed?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    isAbsent?: BoolFieldUpdateOperationsInput | boolean
-    isResultsPublished?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
   export type FeeCreateManyStudentInput = {
     id?: string
     totalFee: number
@@ -69300,8 +68890,6 @@ export namespace Prisma {
   export type ExamResultCreateManyStudentInput = {
     id?: string
     examId: string
-    subjectId?: string | null
-    maxMarks: number
     obtainedMarks?: number | null
     percentage?: number | null
     gradeLabel?: string | null
@@ -69643,7 +69231,6 @@ export namespace Prisma {
 
   export type ExamResultUpdateWithoutStudentInput = {
     id?: StringFieldUpdateOperationsInput | string
-    maxMarks?: FloatFieldUpdateOperationsInput | number
     obtainedMarks?: NullableFloatFieldUpdateOperationsInput | number | null
     percentage?: NullableFloatFieldUpdateOperationsInput | number | null
     gradeLabel?: NullableStringFieldUpdateOperationsInput | string | null
@@ -69654,14 +69241,11 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     exam?: ExamUpdateOneRequiredWithoutExamResultNestedInput
-    subject?: SubjectUpdateOneWithoutExamResultNestedInput
   }
 
   export type ExamResultUncheckedUpdateWithoutStudentInput = {
     id?: StringFieldUpdateOperationsInput | string
     examId?: StringFieldUpdateOperationsInput | string
-    subjectId?: NullableStringFieldUpdateOperationsInput | string | null
-    maxMarks?: FloatFieldUpdateOperationsInput | number
     obtainedMarks?: NullableFloatFieldUpdateOperationsInput | number | null
     percentage?: NullableFloatFieldUpdateOperationsInput | number | null
     gradeLabel?: NullableStringFieldUpdateOperationsInput | string | null
@@ -69676,8 +69260,6 @@ export namespace Prisma {
   export type ExamResultUncheckedUpdateManyWithoutStudentInput = {
     id?: StringFieldUpdateOperationsInput | string
     examId?: StringFieldUpdateOperationsInput | string
-    subjectId?: NullableStringFieldUpdateOperationsInput | string | null
-    maxMarks?: FloatFieldUpdateOperationsInput | number
     obtainedMarks?: NullableFloatFieldUpdateOperationsInput | number | null
     percentage?: NullableFloatFieldUpdateOperationsInput | number | null
     gradeLabel?: NullableStringFieldUpdateOperationsInput | string | null
@@ -70220,8 +69802,6 @@ export namespace Prisma {
   export type ExamResultCreateManyExamInput = {
     id?: string
     studentId: string
-    subjectId?: string | null
-    maxMarks: number
     obtainedMarks?: number | null
     percentage?: number | null
     gradeLabel?: string | null
@@ -70279,7 +69859,6 @@ export namespace Prisma {
 
   export type ExamResultUpdateWithoutExamInput = {
     id?: StringFieldUpdateOperationsInput | string
-    maxMarks?: FloatFieldUpdateOperationsInput | number
     obtainedMarks?: NullableFloatFieldUpdateOperationsInput | number | null
     percentage?: NullableFloatFieldUpdateOperationsInput | number | null
     gradeLabel?: NullableStringFieldUpdateOperationsInput | string | null
@@ -70290,14 +69869,11 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     student?: StudentUpdateOneRequiredWithoutExamResultNestedInput
-    subject?: SubjectUpdateOneWithoutExamResultNestedInput
   }
 
   export type ExamResultUncheckedUpdateWithoutExamInput = {
     id?: StringFieldUpdateOperationsInput | string
     studentId?: StringFieldUpdateOperationsInput | string
-    subjectId?: NullableStringFieldUpdateOperationsInput | string | null
-    maxMarks?: FloatFieldUpdateOperationsInput | number
     obtainedMarks?: NullableFloatFieldUpdateOperationsInput | number | null
     percentage?: NullableFloatFieldUpdateOperationsInput | number | null
     gradeLabel?: NullableStringFieldUpdateOperationsInput | string | null
@@ -70312,8 +69888,6 @@ export namespace Prisma {
   export type ExamResultUncheckedUpdateManyWithoutExamInput = {
     id?: StringFieldUpdateOperationsInput | string
     studentId?: StringFieldUpdateOperationsInput | string
-    subjectId?: NullableStringFieldUpdateOperationsInput | string | null
-    maxMarks?: FloatFieldUpdateOperationsInput | number
     obtainedMarks?: NullableFloatFieldUpdateOperationsInput | number | null
     percentage?: NullableFloatFieldUpdateOperationsInput | number | null
     gradeLabel?: NullableStringFieldUpdateOperationsInput | string | null

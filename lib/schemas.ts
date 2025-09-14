@@ -99,6 +99,9 @@ export const studentSchema = z.object({
     .min(1, 'At least one parent is required')
     .optional(),
 });
+export const updateStudentSchema = studentSchema.extend({
+  id: z.string().min(1, 'ID is required'),
+});
 
 export const documentUploadSchema = z.object({
   type: z.nativeEnum(DocumentType, {
@@ -444,3 +447,20 @@ export const bulkExamSchema = z.object({
 });
 
 export type bulkExamFormData = z.infer<typeof bulkExamSchema>;
+
+export const studentExamResultSchema = z.object({
+  results: z.array(
+    z.object({
+      studentId: z.string(),
+      examId: z.string(),
+      obtainedMarks: z.number().nullable(),
+      percentage: z.number().nullable(),
+      gradeLabel: z.string().optional().nullable(),
+      remarks: z.string().optional().nullable(),
+      isPassed: z.boolean().optional().nullable(),
+      isAbsent: z.boolean().default(false),
+    })
+  ),
+});
+
+export type studentExamResultFormData = z.infer<typeof studentExamResultSchema>;

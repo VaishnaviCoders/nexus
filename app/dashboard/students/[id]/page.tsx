@@ -578,9 +578,10 @@ const StudentAdminRoute = async ({
                         <CalendarDays className="w-5 h-5" />
                         Attendance Management
                       </div>
-                      <Button>
-                        <Plus className="w-4 h-4 mr-2" />
-                        Mark Attendance
+                      <Button asChild>
+                        <Link href={'/dashboard/attendance/mark'}>
+                          Mark Attendance
+                        </Link>
                       </Button>
                     </CardTitle>
                   </CardHeader>

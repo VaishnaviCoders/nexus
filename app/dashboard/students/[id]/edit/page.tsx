@@ -1,4 +1,4 @@
-import EditStudentForm from '@/components/dashboard/Student/EditStudentForm';
+import UpdateStudentForm from '@/components/dashboard/Student/UpdateStudentForm';
 import prisma from '@/lib/db';
 import { notFound } from 'next/navigation';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -32,7 +32,7 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
 
   return (
     <Suspense fallback={<StudentProfileEditSkeleton />}>
-      <EditStudentForm student={student} />
+      <UpdateStudentForm student={student} />
     </Suspense>
   );
 };

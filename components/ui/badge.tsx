@@ -37,6 +37,11 @@ const badgeVariants = cva(
         OPEN: 'bg-blue-700/10 text-blue-800 border-blue-700/20',
         COMPLETED: 'bg-muted text-foreground/70 border-border',
         CANCELLED: 'bg-red-600/10 text-red-700 border-red-600/20',
+        //  Student Exam Status
+
+        pass: 'border-transparent bg-green-100 text-green-600 hover:bg-green-200 cursor-pointer',
+        failed:
+          'border-transparent bg-red-100 text-red-600 hover:bg-red-200 cursor-pointer',
       },
     },
     defaultVariants: {

@@ -1,5 +1,5 @@
 import prisma from '@/lib/db';
-import { User } from '@clerk/nextjs/server';
+import { User, clerkClient } from '@clerk/nextjs/server';
 import { Role } from '@/generated/prisma';
 
 // Map Clerk org roles to Prisma roles
@@ -41,10 +41,14 @@ const isValidOrganization = async (orgId: string): Promise<boolean> => {
 };
 
 export const syncUser = async (
-  user: User,
+  userId: string,
   orgId: string,
   orgRole: string
 ): Promise<void> => {
+  const client = await clerkClient();
+
+  const user = await client.users.getUser(userId);
+
   const role = roleMap[orgRole] ?? 'STUDENT';
 
   if (!orgId) throw new Error('Missing orgId');
@@ -105,12 +109,12 @@ export const syncUser = async (
 };
 
 export const syncUserAsync = async (
-  user: User,
+  userId: string,
   orgId: string,
   orgRole: string
 ): Promise<void> => {
   try {
-    await syncUser(user, orgId, orgRole);
+    await syncUser(userId, orgId, orgRole);
   } catch (err) {
     console.error('Background sync failed:', err);
   }
@@ -133,14 +137,14 @@ export const getCurrentUser = async (clerkId: string) => {
 };
 
 export const syncUsersInBatch = async (
-  users: Array<{ user: User; orgId: string; orgRole: string }>
+  users: Array<{ userId: string; orgId: string; orgRole: string }>
 ): Promise<void> => {
   const batchSize = 10;
   for (let i = 0; i < users.length; i += batchSize) {
     const batch = users.slice(i, i + batchSize);
     await Promise.allSettled(
-      batch.map(({ user, orgId, orgRole }) =>
-        syncUserAsync(user, orgId, orgRole)
+      batch.map(({ userId, orgId, orgRole }) =>
+        syncUserAsync(userId, orgId, orgRole)
       )
     );
   }

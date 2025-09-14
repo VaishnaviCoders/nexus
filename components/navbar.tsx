@@ -91,6 +91,7 @@ export async function Navbar() {
 
     // Add Condition when should Call >
     // await syncClerkOrganizationDB();
+    // await syncUser(userId, orgId, orgRole);
     // If not authenticated, show guest navbar
     if (!userId) {
       return (

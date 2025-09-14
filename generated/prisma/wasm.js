@@ -512,8 +512,6 @@ exports.Prisma.ExamResultScalarFieldEnum = {
   id: 'id',
   studentId: 'studentId',
   examId: 'examId',
-  subjectId: 'subjectId',
-  maxMarks: 'maxMarks',
   obtainedMarks: 'obtainedMarks',
   percentage: 'percentage',
   gradeLabel: 'gradeLabel',
@@ -854,7 +852,6 @@ exports.Prisma.ExamResultOrderByRelevanceFieldEnum = {
   id: 'id',
   studentId: 'studentId',
   examId: 'examId',
-  subjectId: 'subjectId',
   gradeLabel: 'gradeLabel',
   remarks: 'remarks'
 };
