@@ -44,6 +44,7 @@ export default async function ExamsPage() {
           subject: true,
           examSession: true,
           hallTickets: { where: { studentId: currentUser.studentId } },
+          examResult: { where: { studentId: currentUser.studentId } },
         },
         orderBy: { startDate: 'desc' },
       });
@@ -64,6 +65,7 @@ export default async function ExamsPage() {
 
       const gradeIds = [...new Set(children.map((c) => c.gradeId))];
       const sectionIds = [...new Set(children.map((c) => c.sectionId))];
+      const childIds = children.map((c) => c.id);
 
       exams = await prisma.exam.findMany({
         where: {
@@ -75,6 +77,7 @@ export default async function ExamsPage() {
           subject: true,
           examSession: true,
           hallTickets: true,
+          examResult: { where: { studentId: { in: childIds } } },
         },
         orderBy: { startDate: 'desc' },
       });
@@ -89,6 +92,7 @@ export default async function ExamsPage() {
           subject: true,
           examSession: true,
           hallTickets: true,
+          examResult: true,
         },
         orderBy: { startDate: 'desc' },
       });
@@ -102,6 +106,7 @@ export default async function ExamsPage() {
           subject: true,
           examSession: true,
           hallTickets: true,
+          examResult: true,
         },
         orderBy: { startDate: 'desc' },
       });

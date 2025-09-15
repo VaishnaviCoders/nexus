@@ -986,9 +986,6 @@ enum ResultStatus {
 // "FeedbackCategory",         // Optional - categorize feedback (e.g., Academics, Behavior)
 // "Assignment",            // Not in schema - could be needed for academic tracking
 // "AssignmentSubmission"    // Not in schema - could be needed for academic tracking
-// "Performance",           // Mentioned in comment but not implemented
-// "Marks",                 // Mentioned in comment but not implemented
-//  Subject 
 // LeaveManagement
 // Lead Management
 // Courses and Batches

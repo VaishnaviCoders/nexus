@@ -42,6 +42,20 @@ const badgeVariants = cva(
         pass: 'border-transparent bg-green-100 text-green-600 hover:bg-green-200 cursor-pointer',
         failed:
           'border-transparent bg-red-100 text-red-600 hover:bg-red-200 cursor-pointer',
+        excellent:
+          'border-transparent bg-emerald-100 text-emerald-700 hover:bg-emerald-200 cursor-pointer',
+        outstanding:
+          'border-transparent bg-green-100 text-green-700 hover:bg-green-200 cursor-pointer',
+        veryGood:
+          'border-transparent bg-lime-100 text-lime-700 hover:bg-lime-200 cursor-pointer',
+        good: 'border-transparent bg-yellow-100 text-yellow-700 hover:bg-yellow-200 cursor-pointer',
+        aboveAverage:
+          'border-transparent bg-orange-100 text-orange-700 hover:bg-orange-200 cursor-pointer',
+        average:
+          'border-transparent bg-blue-100 text-blue-700 hover:bg-blue-200 cursor-pointer',
+        belowAverage:
+          'border-transparent bg-purple-100 text-purple-700 hover:bg-purple-200 cursor-pointer',
+        poor: 'border-transparent bg-pink-100 text-pink-700 hover:bg-pink-200 cursor-pointer',
       },
     },
     defaultVariants: {

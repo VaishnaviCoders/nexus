@@ -12,8 +12,8 @@ import {
 } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { cn, formatDateTimeIN } from '@/lib/utils';
-import { ExamWithRelations } from './StudentExamsPage';
-import { ExamMode, ExamStatus } from '@/generated/prisma';
+import type { ExamStatus, ExamResult, HallTicket } from '@/generated/prisma';
+import type { ExamWithRelations } from './StudentExamsPage';
 
 type ExamCardProps = {
   exam: ExamWithRelations;
@@ -21,9 +21,7 @@ type ExamCardProps = {
   onJoin?: (examId: string) => void;
   onGenerateHallTicket?: (examId: string) => void;
   onViewResult?: (examId: string) => void;
-  onViewInstructions?: (examId: string) => void;
   onAddToCalendar?: (examId: string) => void;
-  onOpenVenueMap?: (url: string, examId: string) => void;
 };
 
 export function formatHM(minutes?: number | null) {
@@ -40,117 +38,65 @@ export function ExamCard({
   onJoin,
   onGenerateHallTicket,
   onViewResult,
-  onViewInstructions,
   onAddToCalendar,
-  onOpenVenueMap,
 }: ExamCardProps) {
-  // Live time context
+  // Live time context (tick every 30s for countdown labels)
   const [now, setNow] = React.useState<Date>(new Date());
   React.useEffect(() => {
-    const t = setInterval(() => setNow(new Date()), 30_000);
-    return () => clearInterval(t);
+    const timerId = setInterval(() => setNow(new Date()), 30_000);
+    return () => clearInterval(timerId);
   }, []);
 
-  const start = exam.startDate;
-  const end = exam.endDate;
+  const start = new Date(exam.startDate);
+  const end = new Date(exam.endDate);
 
-  const minutesBetween = (from: Date, to: Date) =>
-    Math.round((to.getTime() - from.getTime()) / 60_000);
-  const minsToStart = minutesBetween(now, start);
-  const minsToEnd = minutesBetween(now, end);
-  const isInWindow = now >= start && now <= end;
-  const isPast = now > end;
-  const isBefore = now < start;
+  const {
+    minutesUntilStart,
+    minutesUntilEnd,
+    isWithinExamWindow,
+    isPastWindow,
+    isBeforeWindow,
+  } = getTimeState(now, start, end);
 
-  // Allow joining online within X minutes before start
-  const JOIN_EARLY_MIN = 10;
-  const canEarlyJoin =
-    exam.mode === ExamMode.ONLINE &&
-    isBefore &&
-    minsToStart <= JOIN_EARLY_MIN &&
-    minsToStart >= -1;
-  const canJoinNow =
-    exam.mode === ExamMode.ONLINE &&
-    (exam.status === ExamStatus.LIVE || isInWindow);
-  const canJoin = canJoinNow || canEarlyJoin;
-
-  // Status badge mapping aligned with your Badge variants (LIVE, UPCOMING, OPEN, COMPLETED, CANCELLED)
-  const statusVariant = exam.status as ExamStatus; // valid keys exist in your badge variants
-
-  // Evaluation type styling: use "meta" variant as subtle pill
+  const statusVariant = exam.status as ExamStatus;
   const evalLabel = labelize(exam.evaluationType);
 
-  // Student-context actions
-  const hallTicketUrl = (
-    Array.isArray((exam as any).hallTickets)
-      ? (exam as any).hallTickets?.[0]?.pdfUrl
-      : undefined
-  ) as string | undefined;
-  const hasHallTicket = !!hallTicketUrl;
-  const perf: any = (exam as any).performance ?? undefined;
-  const resultReady = perf?.isPublished === true;
-  const hasResult = resultReady && typeof perf?.obtainedMarks === 'number';
+  // Narrow related data
+  const hallTickets = (exam.hallTickets ?? []) as HallTicket[];
+  const hallTicketUrl = hallTickets[0]?.pdfUrl;
+  const hasHallTicket = Boolean(hallTicketUrl);
 
-  // Primary Action decision tree
-  let primaryAction: {
-    label: string;
-    onClick?: () => void;
-    href?: string;
-    disabled?: boolean;
-    variant?:
-      | 'default'
-      | 'secondary'
-      | 'outline'
-      | 'destructive'
-      | 'ghost'
-      | 'link';
-  } | null = null;
+  const examResults = (exam.examResult ?? []) as ExamResult[];
+  const publishedResult =
+    examResults.find((r) => r.isResultsPublished) ?? examResults[0];
+  // Consider either per-student/child-level or exam-wide publication
+  const resultReady = Boolean(
+    exam.isResultsPublished || examResults.some((r) => r.isResultsPublished)
+  );
+  const hasResultMarks = typeof publishedResult?.obtainedMarks === 'number';
 
-  if (exam.status === ExamStatus.CANCELLED) {
-    primaryAction = {
-      label: 'Cancelled',
-      disabled: true,
-      variant: 'secondary',
-    };
-  } else if (exam.status === ExamStatus.COMPLETED) {
-    if (resultReady) {
-      primaryAction = {
-        label: 'View Result',
-        onClick: () => onViewResult?.(exam.id),
-      };
-    } else {
-      primaryAction = {
-        label: 'Result Pending',
-        disabled: true,
-        variant: 'secondary',
-      };
-    }
-  } else if (exam.mode === ExamMode.ONLINE) {
-    if (canJoin) {
-      primaryAction = { label: 'Join Exam', onClick: () => onJoin?.(exam.id) };
-    } else {
-      primaryAction = {
-        label: `Join Available ${JOIN_EARLY_MIN}m before`,
-        disabled: true,
-        variant: 'secondary',
-      };
-    }
-  } else {
-    // OFFLINE / others
-    if (hasHallTicket && hallTicketUrl) {
-      primaryAction = { label: 'View Hall Ticket', href: hallTicketUrl };
-    } else {
-      primaryAction = {
-        label: 'Generate Hall Ticket',
-        onClick: () => onGenerateHallTicket?.(exam.id),
-        variant: 'outline',
-      };
-    }
-  }
+  const { canJoin } = getCapabilities({
+    examMode: exam.mode,
+    examStatus: exam.status,
+    isBeforeWindow,
+    isWithinExamWindow,
+    minutesUntilStart,
+  });
 
-  // Secondary actions
-  const showVenue = !!exam.venueMapUrl;
-  const showCalendar = true;
+  const primaryAction = buildPrimaryAction({
+    examStatus: exam.status,
+    examId: exam.id,
+    examMode: exam.mode,
+    canJoin,
+    hallTicketUrl,
+    resultReady,
+    hasResult: hasResultMarks,
+    onJoin,
+    onViewResult,
+    onGenerateHallTicket,
+  });
+
+  const showCalendar = exam.status === 'UPCOMING';
 
   // Header subline
   const subline = [exam.subject?.name, exam.examSession?.title]
@@ -159,22 +105,22 @@ export function ExamCard({
 
   // Footer info (marks / pass)
   const marksInfo =
-    typeof perf?.obtainedMarks === 'number'
-      ? `${perf.obtainedMarks}/${exam.maxMarks}${typeof exam.passingMarks === 'number' ? ` • Pass ≥ ${exam.passingMarks}` : ''}`
+    typeof publishedResult?.obtainedMarks === 'number'
+      ? `${publishedResult.obtainedMarks}/${exam.maxMarks}${typeof exam.passingMarks === 'number' ? ` • Pass ≥ ${exam.passingMarks}` : ''}`
       : `${exam.maxMarks} max${typeof exam.passingMarks === 'number' ? ` • Pass ≥ ${exam.passingMarks}` : ''}`;
 
-  const passFlag = perf?.isPublished ? perf?.isPassed : undefined;
+  const passFlag = resultReady ? publishedResult?.isPassed : undefined;
 
   // Countdown label
-  let timeLabel = '';
-  if (exam.status === ExamStatus.LIVE || isInWindow) {
-    timeLabel = minsToEnd > 0 ? `Ends in ${fmtMin(minsToEnd)}` : 'Ending...';
-  } else if (exam.status === ExamStatus.UPCOMING || isBefore) {
-    timeLabel =
-      minsToStart > 0 ? `Starts in ${fmtMin(minsToStart)}` : 'Starting soon';
-  } else if (exam.status === ExamStatus.COMPLETED || isPast) {
-    timeLabel = `Ended ${formatDateTimeIN(end)}`;
-  }
+  const timeLabel = getTimeLabel({
+    status: exam.status,
+    isWithinExamWindow,
+    isBeforeWindow,
+    isPastWindow,
+    minutesUntilStart,
+    minutesUntilEnd,
+    end,
+  });
 
   return (
     <Card className="h-full min-h-72 flex flex-col">
@@ -205,7 +151,7 @@ export function ExamCard({
           <span>{formatHM(exam.durationInMinutes)}</span>
           <span aria-hidden>•</span>
           <span>{modeToLabel(exam.mode)}</span>
-          {exam.mode !== ExamMode.ONLINE && exam.venue ? (
+          {exam.mode !== 'ONLINE' && exam.venue ? (
             <>
               <span aria-hidden>•</span>
               <span className="truncate max-w-[10rem]" title={exam.venue}>
@@ -222,7 +168,10 @@ export function ExamCard({
             </Badge>
           ) : null} */}
           {timeLabel ? (
-            <Badge variant="secondary" className="px-2.5 py-0.5">
+            <Badge
+              variant={`${exam.status === 'UPCOMING' ? 'UPCOMING' : 'outline'}`}
+              className="px-2.5 py-0.5"
+            >
               {timeLabel}
             </Badge>
           ) : null}
@@ -297,18 +246,6 @@ export function ExamCard({
 
       <CardFooter className="pt-4 flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">
-          {showVenue ? (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() =>
-                exam.venueMapUrl && onOpenVenueMap?.(exam.venueMapUrl, exam.id)
-              }
-            >
-              Venue
-            </Button>
-          ) : null}
-
           {showCalendar ? (
             <Button
               variant="ghost"
@@ -320,28 +257,7 @@ export function ExamCard({
           ) : null}
         </div>
 
-        {primaryAction ? (
-          primaryAction.href ? (
-            <Button asChild size="sm" variant={primaryAction.variant}>
-              <Link
-                href={primaryAction.href}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {primaryAction.label}
-              </Link>
-            </Button>
-          ) : (
-            <Button
-              size="sm"
-              variant={primaryAction.variant}
-              onClick={primaryAction.onClick}
-              disabled={primaryAction.disabled}
-            >
-              {primaryAction.label}
-            </Button>
-          )
-        ) : null}
+        {renderPrimaryAction(primaryAction)}
       </CardFooter>
     </Card>
   );
@@ -352,17 +268,17 @@ function labelize(s: string | number) {
   return String(s).replace(/_/g, ' ');
 }
 
-function modeToLabel(mode: ExamMode) {
+function modeToLabel(mode: string) {
   switch (mode) {
-    case ExamMode.ONLINE:
+    case 'ONLINE':
       return 'Online';
-    case ExamMode.OFFLINE:
+    case 'OFFLINE':
       return 'Offline';
-    case ExamMode.PRACTICAL:
+    case 'PRACTICAL':
       return 'Practical';
-    case ExamMode.VIVA:
+    case 'VIVA':
       return 'Viva';
-    case ExamMode.TAKE_HOME:
+    case 'TAKE_HOME':
       return 'Take Home';
     default:
       return labelize(mode);
@@ -375,6 +291,182 @@ function fmtMin(total: number) {
   const h = Math.floor(total / 60);
   const m = total % 60;
   return m ? `${h}h ${m}m` : `${h}h`;
+}
+
+type PrimaryAction =
+  | {
+      label: string;
+      variant?:
+        | 'default'
+        | 'secondary'
+        | 'outline'
+        | 'destructive'
+        | 'ghost'
+        | 'link';
+      disabled?: boolean;
+      href: string;
+    }
+  | {
+      label: string;
+      variant?:
+        | 'default'
+        | 'secondary'
+        | 'outline'
+        | 'destructive'
+        | 'ghost'
+        | 'link';
+      disabled?: boolean;
+      onClick: () => void;
+    }
+  | null;
+
+function renderPrimaryAction(action: PrimaryAction) {
+  if (!action) return null;
+  if ('href' in action) {
+    return (
+      <Button asChild size="sm" variant={action.variant}>
+        <Link href={action.href} target="_blank" rel="noopener noreferrer">
+          {action.label}
+        </Link>
+      </Button>
+    );
+  }
+  return (
+    <Button
+      size="sm"
+      variant={action.variant}
+      onClick={action.onClick}
+      disabled={action.disabled}
+    >
+      {action.label}
+    </Button>
+  );
+}
+
+function getTimeState(now: Date, start: Date, end: Date) {
+  const diffInMinutes = (from: Date, to: Date) =>
+    Math.round((to.getTime() - from.getTime()) / 60_000);
+
+  const minutesUntilStart = diffInMinutes(now, start);
+  const minutesUntilEnd = diffInMinutes(now, end);
+  const isWithinExamWindow = now >= start && now <= end;
+  const isPastWindow = now > end;
+  const isBeforeWindow = now < start;
+
+  return {
+    minutesUntilStart,
+    minutesUntilEnd,
+    isWithinExamWindow,
+    isPastWindow,
+    isBeforeWindow,
+  };
+}
+
+function getCapabilities(args: {
+  examMode: string;
+  examStatus: string;
+  isBeforeWindow: boolean;
+  isWithinExamWindow: boolean;
+  minutesUntilStart: number;
+}) {
+  const EARLY_JOIN_MINUTES = 10;
+
+  const canEarlyJoin =
+    args.examMode === 'ONLINE' &&
+    args.isBeforeWindow &&
+    args.minutesUntilStart <= EARLY_JOIN_MINUTES &&
+    args.minutesUntilStart >= -1;
+
+  const canJoinNow =
+    args.examMode === 'ONLINE' &&
+    (args.examStatus === 'LIVE' || args.isWithinExamWindow);
+
+  const canJoin = canJoinNow || canEarlyJoin;
+  return { canJoin };
+}
+
+function buildPrimaryAction(args: {
+  examStatus: string;
+  examId: string;
+  examMode: string;
+  canJoin: boolean;
+  hallTicketUrl?: string;
+  resultReady: boolean;
+  hasResult: boolean;
+  onJoin?: (id: string) => void;
+  onViewResult?: (id: string) => void;
+  onGenerateHallTicket?: (id: string) => void;
+}): PrimaryAction {
+  if (args.examStatus === 'CANCELLED') {
+    return {
+      label: 'Cancelled',
+      disabled: true,
+      variant: 'secondary',
+      onClick: () => {},
+    } as PrimaryAction;
+  }
+
+  if (args.examStatus === 'COMPLETED') {
+    if (args.resultReady && args.hasResult) {
+      return {
+        label: 'View Result',
+        onClick: () => args.onViewResult?.(args.examId),
+      };
+    }
+    return {
+      label: 'Result Pending',
+      disabled: true,
+      variant: 'secondary',
+      onClick: () => {},
+    } as PrimaryAction;
+  }
+
+  if (args.examMode === 'ONLINE') {
+    if (args.canJoin) {
+      return { label: 'Join Exam', onClick: () => args.onJoin?.(args.examId) };
+    }
+    return {
+      label: 'Join available 10m before',
+      disabled: true,
+      variant: 'secondary',
+      onClick: () => {},
+    } as PrimaryAction;
+  }
+
+  // OFFLINE and others
+  if (args.hallTicketUrl) {
+    return { label: 'View Hall Ticket', href: args.hallTicketUrl };
+  }
+  return {
+    label: 'Download Hall Ticket',
+    variant: 'outline',
+    onClick: () => args.onGenerateHallTicket?.(args.examId),
+  };
+}
+
+function getTimeLabel(args: {
+  status: string;
+  isWithinExamWindow: boolean;
+  isBeforeWindow: boolean;
+  isPastWindow: boolean;
+  minutesUntilStart: number;
+  minutesUntilEnd: number;
+  end: Date;
+}) {
+  if (args.status === 'LIVE' || args.isWithinExamWindow) {
+    return args.minutesUntilEnd > 0
+      ? `Ends in ${fmtMin(args.minutesUntilEnd)}`
+      : 'Ending...';
+  }
+  if (args.status === 'UPCOMING' || args.isBeforeWindow) {
+    return args.minutesUntilStart > 0
+      ? `Starts in ${fmtMin(args.minutesUntilStart)}`
+      : 'Starting soon';
+  }
+  if (args.status === 'COMPLETED' || args.isPastWindow) {
+    return `Ended ${formatDateTimeIN(args.end)}`;
+  }
+  return '';
 }
 
 /*

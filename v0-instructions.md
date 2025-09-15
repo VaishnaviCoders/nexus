@@ -23,4 +23,5 @@ Create proper shadcn Form using Nextjs 15 , prisma , shadcn , shadcn From , reac
 
 <!-- End Prompt -->
 
+i want clean and proper code , dont write unnesserasy code
 I Know you can do design /alignment better than we think

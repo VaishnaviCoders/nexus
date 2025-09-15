@@ -35,10 +35,11 @@ import type {
   ExamStatus,
   Subject,
   ExamSession,
+  ExamResult,
+  HallTicket,
 } from '@/generated/prisma';
 import { ExamCard } from './ExamCard';
-import { formatDateRange, timeUntil } from '@/lib/utils';
-import HallTicketUI from './HallTicketUI';
+import { formatDateRange } from '@/lib/utils';
 
 export type ExamWithRelations = {
   id: string;
@@ -67,8 +68,9 @@ export type ExamWithRelations = {
   performance?: unknown;
   subject: Subject;
   examSession: ExamSession;
-  // Optional - present when included in the page query
-  hallTickets?: Array<{ pdfUrl?: string | null }> | null;
+  hallTickets?: HallTicket[];
+  examResult?: ExamResult[];
+  isResultsPublished: boolean;
 };
 
 type Filters = {
@@ -203,7 +205,6 @@ export function StudentExamsPage({ exams }: { exams: ExamWithRelations[] }) {
   return (
     <section className="px-2 space-y-3">
       <Card className="py-4 px-2 flex items-center justify-between">
-        {/* //max-sm:flex-col max-sm:items-start max-sm:space-y-3 */}
         <div>
           <CardTitle className="text-lg">My Exams</CardTitle>
           <CardDescription className="text-sm">

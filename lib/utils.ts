@@ -344,18 +344,27 @@ export function getGradeColorBadge(
   | 'verified'
   | 'pending'
   | 'pass'
-  | 'failed' {
-  // Handle failed grades
+  | 'failed'
+  | 'excellent'
+  | 'outstanding'
+  | 'veryGood'
+  | 'good'
+  | 'aboveAverage'
+  | 'average'
+  | 'belowAverage'
+  | 'poor' {
   if (!isPassed) return 'failed';
 
   const percentage = (grade.minPercentage + grade.maxPercentage) / 2;
 
   // Use specific badge variants for better visual distinction
-  if (percentage >= 90) return 'verified'; // Excellent - Green
-  if (percentage >= 80) return 'pass'; // Very Good - Light Green
-  if (percentage >= 70) return 'secondary'; // Good - Secondary color
-  if (percentage >= 60) return 'outline'; // Satisfactory - Outline
-  if (percentage >= passingMarks) return 'pending'; // Just passed - Yellow
+  if (percentage >= 90) return 'excellent'; // 90-100% - Emerald (best performance)
+  if (percentage >= 80) return 'outstanding'; // 80-89% - Green (very good)
+  if (percentage >= 70) return 'veryGood'; // 70-79% - Lime (good)
+  if (percentage >= 60) return 'good'; // 60-69% - Yellow (satisfactory)
+  if (percentage >= 50) return 'aboveAverage'; // 50-59% - Orange (above average)
+  if (percentage >= passingMarks) return 'pass'; // Just passed - Light Green
+
   return 'failed'; // Below passing marks - Red
 }
 

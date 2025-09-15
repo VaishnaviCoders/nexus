@@ -1,88 +1,115 @@
-import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
-import { cn } from '@/lib/utils';
+import { getOrganizationId } from '@/lib/organization';
+import { ExamDetailsPage } from '@/components/dashboard/exam/ExamDetailsPage';
 import prisma from '@/lib/db';
-import ExamHeader from '@/components/dashboard/exam/exam-header';
-import ExamTabs from '@/components/dashboard/exam/exam-summary';
-import ExamHighlights from '@/components/dashboard/exam/exam-highlights';
+import { getCurrentUserId } from '@/lib/user';
 
-async function getExamById(id: string) {
-  const exam = await prisma.exam.findUnique({
-    where: {
-      id,
-    },
-    include: {
-      subject: true,
-      examSession: true,
-    },
-  });
-
-  return exam;
-}
-export default async function ExamDetailsPage({
+export default async function ExamPage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const exam = await getExamById(id);
+  const organizationId = await getOrganizationId();
+  const currentUserId = await getCurrentUserId();
+
+  // First, get the student record for the current user
+  const student = await prisma.student.findFirst({
+    where: {
+      userId: currentUserId,
+      organizationId,
+    },
+    select: {
+      id: true,
+    },
+  });
+
+  if (!student) {
+    return notFound();
+  }
+
+  // Fetch exam with comprehensive related data
+  const exam = await prisma.exam.findFirst({
+    where: {
+      id,
+      organizationId,
+    },
+    include: {
+      subject: {
+        select: {
+          id: true,
+          name: true,
+          code: true,
+          description: true,
+        },
+      },
+      examSession: {
+        select: {
+          id: true,
+          title: true,
+          description: true,
+          startDate: true,
+          endDate: true,
+        },
+      },
+      examResult: {
+        where: {
+          studentId: student.id,
+        },
+      },
+      examEnrollment: {
+        where: {
+          studentId: student.id,
+        },
+      },
+      hallTickets: {
+        where: {
+          studentId: student.id,
+        },
+        orderBy: {
+          generatedAt: 'desc',
+        },
+        take: 1,
+      },
+      _count: {
+        select: {
+          examEnrollment: true,
+          examResult: true,
+        },
+      },
+    },
+  });
 
   if (!exam) return notFound();
 
-  return (
-    <div className="w-full mx-auto max-w-7xl px-2">
-      <Suspense fallback={<PageSkeleton />}>
-        <div className={cn('space-y-6')}>
-          <ExamHeader exam={exam} />
-          <Card className="overflow-hidden">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-pretty">Exam Highlights</CardTitle>
-            </CardHeader>
-            <CardContent className="pt-0">
-              <ExamHighlights exam={exam} />
-            </CardContent>
-          </Card>
-          <ExamTabs exam={exam} />
-        </div>
-      </Suspense>
-    </div>
-  );
-}
+  // Get all exam results for statistics (separate query for better performance)
+  const allExamResults = await prisma.examResult.findMany({
+    where: {
+      examId: id,
+    },
+    select: {
+      obtainedMarks: true,
+      isPassed: true,
+      isAbsent: true,
+      percentage: true,
+    },
+  });
 
-function PageSkeleton() {
+  // Extract the specific student's data
+  const studentEnrollment = exam.examEnrollment[0] || null;
+  const studentResult = exam.examResult[0] || null;
+  const studentHallTicket = exam.hallTickets[0] || null;
+  const enrolledStudentsCount = exam._count.examEnrollment;
+
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col gap-4">
-        <Skeleton className="h-8 w-64" />
-        <div className="flex gap-2">
-          <Skeleton className="h-6 w-20" />
-          <Skeleton className="h-6 w-24" />
-          <Skeleton className="h-6 w-28" />
-        </div>
-        <Skeleton className="h-10 w-80" />
-      </div>
-      <Card>
-        <CardHeader>
-          <Skeleton className="h-6 w-40" />
-        </CardHeader>
-        <CardContent className="grid gap-6 md:grid-cols-3">
-          <Skeleton className="h-40 w-full rounded-lg" />
-          <Skeleton className="h-40 w-full rounded-lg" />
-          <Skeleton className="h-40 w-full rounded-lg" />
-        </CardContent>
-      </Card>
-      <Card>
-        <CardHeader>
-          <Skeleton className="h-6 w-48" />
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <Skeleton className="h-10 w-full" />
-          <Skeleton className="h-10 w-full" />
-          <Skeleton className="h-10 w-full" />
-        </CardContent>
-      </Card>
-    </div>
+    <ExamDetailsPage
+      exam={exam}
+      studentId={student.id}
+      enrolledStudentsCount={enrolledStudentsCount}
+      studentEnrollment={studentEnrollment}
+      studentResult={studentResult}
+      studentHallTicket={studentHallTicket}
+      allExamResults={allExamResults}
+    />
   );
 }

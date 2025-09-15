@@ -17,7 +17,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { GRADING_SCALES, type GradeScale } from '@/lib/utils';
+import {
+  getGradeColorBadge,
+  GRADING_SCALES,
+  type GradeScale,
+} from '@/lib/utils';
 import { Eye, EyeOff } from 'lucide-react';
 
 interface GradeScaleSelectorProps {
@@ -86,7 +90,10 @@ export default function GradeScaleSelector({
                   key={index}
                   className="flex flex-col items-center p-2 border rounded-md"
                 >
-                  <Badge variant="outline" className="mb-1">
+                  <Badge
+                    variant={getGradeColorBadge(grade, true, 33)}
+                    className="mb-1"
+                  >
                     {grade.label}
                   </Badge>
                   <span className="text-xs text-muted-foreground">
