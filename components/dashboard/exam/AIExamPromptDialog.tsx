@@ -41,7 +41,7 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
-import type { EvaluationType, ExamMode } from '@/generated/prisma';
+import type { EvaluationType, ExamMode } from '@/generated/prisma/enums';
 import { generateExamSchedule } from '@/lib/data/exam/create-bulk-exams';
 
 // Types

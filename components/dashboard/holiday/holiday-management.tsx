@@ -71,7 +71,7 @@ import { createSingleHolidayAction } from '@/lib/data/holiday/create-single-holi
 import { deleteSingleHolidayAction } from '@/lib/data/holiday/delete-single-holiday';
 import { createCsvHolidayAction } from '@/lib/data/holiday/create-csv-holiday';
 import { deleteAllHolidaysAction } from '@/lib/data/holiday/delete-all-holidays';
-import { CalendarEventType } from '@/generated/prisma';
+import { CalendarEventType } from '@/generated/prisma/enums';
 
 interface HolidayManagementProps {
   holidays: Holiday[];

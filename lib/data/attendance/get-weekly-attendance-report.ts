@@ -1,5 +1,5 @@
 'use server';
-import { AttendanceStatus } from '@/generated/prisma';
+import { AttendanceStatus } from '@/generated/prisma/enums';
 import prisma from '@/lib/db';
 import {
   addDays,

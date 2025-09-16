@@ -1,16 +1,13 @@
 'use server';
 
 import { auth } from '@clerk/nextjs/server';
+import { cache } from 'react';
 
-export async function getOrganizationId() {
+export const getOrganizationId = cache(async function getOrganizationId() {
   const { orgId } = await auth();
-
-  if (!orgId) {
-    throw new Error('No organization ID found');
-  }
-
+  if (!orgId) throw new Error('No organization ID found');
   return orgId;
-}
+});
 
 export async function getOrganization() {
   const { orgId, orgRole, orgSlug } = await auth();

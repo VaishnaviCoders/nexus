@@ -4,6 +4,10 @@ import { getCurrentUserByRole } from '@/lib/auth';
 import prisma from '@/lib/db';
 import { getOrganizationId } from '@/lib/organization';
 import { notFound } from 'next/navigation';
+import { Card, CardContent } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Suspense } from 'react';
+import { ExamsPageSkeleton } from '@/components/exam-skeleton';
 
 const ExamAccessError = ({ error }: { error: string }) => (
   <div className="flex items-center justify-center min-h-[400px]">
@@ -49,7 +53,11 @@ export default async function ExamsPage() {
         orderBy: { startDate: 'desc' },
       });
 
-      return <StudentExamsPage exams={exams} />;
+      return (
+        <Suspense fallback={<ExamsPageSkeleton />}>
+          <StudentExamsPage exams={exams} />
+        </Suspense>
+      );
     }
 
     case 'PARENT': {
@@ -82,7 +90,11 @@ export default async function ExamsPage() {
         orderBy: { startDate: 'desc' },
       });
 
-      return <StudentExamsPage exams={exams} />;
+      return (
+        <Suspense fallback={<ExamsPageSkeleton />}>
+          <StudentExamsPage exams={exams} />
+        </Suspense>
+      );
     }
 
     case 'TEACHER':
@@ -97,7 +109,11 @@ export default async function ExamsPage() {
         orderBy: { startDate: 'desc' },
       });
 
-      return <AdminExamsPage exams={exams} userRole="TEACHER" />;
+      return (
+        <Suspense fallback={<ExamsPageSkeleton />}>
+          <AdminExamsPage exams={exams} userRole="TEACHER" />
+        </Suspense>
+      );
 
     case 'ADMIN':
       exams = await prisma.exam.findMany({
@@ -111,6 +127,10 @@ export default async function ExamsPage() {
         orderBy: { startDate: 'desc' },
       });
 
-      return <AdminExamsPage exams={exams} userRole="ADMIN" />;
+      return (
+        <Suspense fallback={<ExamsPageSkeleton />}>
+          <AdminExamsPage exams={exams} userRole="ADMIN" />
+        </Suspense>
+      );
   }
 }

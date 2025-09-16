@@ -17,7 +17,6 @@ import {
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import CTA from '@/components/websiteComp/ctc';
-import { Metadata } from 'next';
 
 // export const metadata: Metadata = {
 //   title: 'Features – Shiksha.cloud | School Management CRM',

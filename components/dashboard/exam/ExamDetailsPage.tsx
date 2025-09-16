@@ -29,8 +29,6 @@ import {
   XCircle,
   Clock,
   User,
-  MapIcon,
-  MapPinCheckIcon,
   Home,
 } from 'lucide-react';
 import { toast } from 'sonner';
@@ -39,13 +37,10 @@ import {
   ExamEnrollment,
   ExamResult,
   HallTicket,
-  Subject,
-  ExamSession,
-} from '@/generated/prisma';
+} from '@/generated/prisma/client';
 import { enrollStudentToExam } from '@/lib/data/exam/enroll-student-to-exam';
 import { formatDateTimeIN } from '@/lib/utils';
 import Link from 'next/link';
-import { Input } from '@/components/ui/input';
 
 function onCopy(examId: string) {
   navigator.clipboard

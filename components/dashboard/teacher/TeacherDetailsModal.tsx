@@ -47,7 +47,7 @@ import {
   LucideIcon,
 } from 'lucide-react';
 import { SelectedTeacher } from './TeachersTable';
-import { EmploymentStatus } from '@/generated/prisma';
+import { EmploymentStatus } from '@/generated/prisma/enums';
 
 interface TeacherDetailsModalProps {
   teacher: SelectedTeacher;
@@ -312,7 +312,7 @@ export function TeacherDetailsModal({
                         label="Role"
                         value={user.role
                           .toLowerCase()
-                          .replace(/\b\w/g, (l) => l.toUpperCase())}
+                          .replace(/\b\w/g, (l: string) => l.toUpperCase())}
                         icon={Briefcase}
                       />
                     </div>
@@ -478,7 +478,7 @@ export function TeacherDetailsModal({
                         {profile?.languagesKnown &&
                         profile.languagesKnown.length > 0 ? (
                           <div className="flex flex-wrap gap-2">
-                            {profile.languagesKnown.map((language) => (
+                            {profile.languagesKnown.map((language: string) => (
                               <Badge
                                 key={language}
                                 variant="secondary"
@@ -509,14 +509,16 @@ export function TeacherDetailsModal({
                       {profile?.specializedSubjects &&
                       profile.specializedSubjects.length > 0 ? (
                         <div className="flex flex-wrap gap-2">
-                          {profile.specializedSubjects.map((subject) => (
-                            <Badge
-                              key={subject}
-                              className="bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100"
-                            >
-                              {subject}
-                            </Badge>
-                          ))}
+                          {profile.specializedSubjects.map(
+                            (subject: string) => (
+                              <Badge
+                                key={subject}
+                                className="bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100"
+                              >
+                                {subject}
+                              </Badge>
+                            )
+                          )}
                         </div>
                       ) : (
                         <p className="text-sm text-gray-500">
@@ -534,7 +536,7 @@ export function TeacherDetailsModal({
                       {profile?.preferredGrades &&
                       profile.preferredGrades.length > 0 ? (
                         <div className="flex flex-wrap gap-2">
-                          {profile.preferredGrades.map((grade) => (
+                          {profile.preferredGrades.map((grade: string) => (
                             <Badge
                               key={grade}
                               variant="outline"

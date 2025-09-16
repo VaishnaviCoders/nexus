@@ -22,7 +22,7 @@ import StudentPaymentHistoryTable from '@/components/dashboard/Fees/StudentPayme
 
 import { getFeeRecords } from '@/lib/data/fee/get-all-students-fees';
 import { DashboardCardSkeleton } from '@/lib/skeletons/DashboardCardSkeleton';
-import PaymentReceivedAlert from '@/components/ui/payment-received-alert';
+// import PaymentReceivedAlert from '@/components/ui/payment-received-alert';
 import { getFeeCategoryDistribution } from '@/lib/data/fee/get-fee-category-distribution';
 
 export default async function AdminFeeDashboard() {

@@ -4,7 +4,7 @@ import {
   EvaluationType,
   ExamMode,
   PaymentMethod,
-} from '@/generated/prisma';
+} from '@/generated/prisma/enums';
 // const ACCEPTED_IMAGE_TYPES = [
 //   'image/jpeg',
 //   'image/jpg',

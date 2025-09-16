@@ -1,6 +1,6 @@
 import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { generateText } from 'ai';
-import { Subject } from '@/generated/prisma';
+import { Subject } from '@/generated/prisma/client';
 
 const google = createGoogleGenerativeAI({
   apiKey:
@@ -276,7 +276,6 @@ async function generateAIDescription(subjectName: string): Promise<string> {
     const result = await generateText({
       model: google('gemini-1.5-flash'),
       prompt,
-      maxTokens: 200,
       temperature: 0.7,
     });
 

@@ -4,7 +4,7 @@ import { ArrowRight, Shield, Lock, Eye } from 'lucide-react';
 
 export default function page() {
   return (
-    <main className="flex-1">
+    <main className="flex-1 px-2">
       <section className="w-full my-5">
         <div className="flex flex-col items-center justify-center space-y-8 text-center">
           <div className="space-y-4">

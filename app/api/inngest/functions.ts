@@ -1,10 +1,6 @@
-import {
-  executeReminders,
-  sendFeeReminders,
-} from '@/lib/data/fee/fee-reminder';
+import { executeReminders } from '@/lib/data/fee/fee-reminder';
 import prisma from '@/lib/db';
 import { inngest } from '@/lib/inngest/client';
-import { Ingest } from 'svix/dist/api/ingest';
 
 export const updateOverdueFeesAutomation = inngest.createFunction(
   { id: 'fee-status-overdue-automation' },

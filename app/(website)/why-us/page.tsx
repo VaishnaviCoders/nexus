@@ -1,4 +1,3 @@
-import { PrincipalBenefits } from '@/components/websiteComp/principal-benefits';
 import PrincipalConvincer from '@/components/websiteComp/principal-convincer';
 import { SecurityTrust } from '@/components/websiteComp/security-trust';
 import React from 'react';

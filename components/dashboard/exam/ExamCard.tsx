@@ -12,7 +12,8 @@ import {
 } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { cn, formatDateTimeIN } from '@/lib/utils';
-import type { ExamStatus, ExamResult, HallTicket } from '@/generated/prisma';
+import type { ExamStatus } from '@/generated/prisma/enums';
+import { ExamResult, HallTicket } from '@/generated/prisma/client';
 import type { ExamWithRelations } from './StudentExamsPage';
 
 type ExamCardProps = {

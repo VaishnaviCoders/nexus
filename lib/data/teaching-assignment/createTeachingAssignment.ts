@@ -2,7 +2,6 @@
 
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
 import { Prisma } from '@/generated/prisma/client';
 import prisma from '@/lib/db';
 import { getOrganizationId } from '@/lib/organization';

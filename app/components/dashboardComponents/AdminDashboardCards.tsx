@@ -1,29 +1,25 @@
 import React from 'react';
-import { BarChart3, CheckCircle, Clock } from 'lucide-react';
-
-import { Card, CardContent } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
 import { StudentStatsCard } from './student-stats';
 import { RevenueStatsCard } from './revenue-stats';
 import { IssuesStatsCard } from './issues-stats';
 import { TeacherStatsCard } from './teacher-stats';
 
-const stats = {
-  totalSections: 45,
-  totalStudents: 1250,
-  totalPresentStudent: 1100,
-  totalTeachers: 85,
-  attendancePercentage: 88, // (1100/1250) * 100
-  completionPercentage: 75,
-  totalRevenue: 2500000, // 25 lakhs expected
-  collectedRevenue: 1875000, // 18.75 lakhs collected
-  revenuePercentage: 75, // (1875000/2500000) * 100
-  totalIssues: 12,
-  pendingIssues: 4,
-  solvedIssues: 8,
-  overdueFeesCount: 45,
-  upcomingEvents: 3,
-};
+// const stats = {
+//   totalSections: 45,
+//   totalStudents: 1250,
+//   totalPresentStudent: 1100,
+//   totalTeachers: 85,
+//   attendancePercentage: 88, // (1100/1250) * 100
+//   completionPercentage: 75,
+//   totalRevenue: 2500000, // 25 lakhs expected
+//   collectedRevenue: 1875000, // 18.75 lakhs collected
+//   revenuePercentage: 75, // (1875000/2500000) * 100
+//   totalIssues: 12,
+//   pendingIssues: 4,
+//   solvedIssues: 8,
+//   overdueFeesCount: 45,
+//   upcomingEvents: 3,
+// };
 
 // Calculate Total Students
 // Calculate Active Students
@@ -43,12 +39,12 @@ const stats = {
 // Calculate Solved Issues
 
 const AdminDashboardCards = () => {
-  const attendancePercentage = Math.round(
-    (stats.totalPresentStudent / stats.totalStudents) * 100
-  );
-  const revenuePercentage = Math.round(
-    (stats.collectedRevenue / stats.totalRevenue) * 100
-  );
+  // const attendancePercentage = Math.round(
+  //   (stats.totalPresentStudent / stats.totalStudents) * 100
+  // );
+  // const revenuePercentage = Math.round(
+  //   (stats.collectedRevenue / stats.totalRevenue) * 100
+  // );
 
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">

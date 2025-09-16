@@ -1,11 +1,7 @@
 'use server';
 
-import {
-  EvaluationType,
-  ExamMode,
-  Prisma,
-  ExamStatus,
-} from '@/generated/prisma';
+import { Prisma } from '@/generated/prisma/client';
+import { EvaluationType, ExamMode, ExamStatus } from '@/generated/prisma/enums';
 import prisma from '@/lib/db';
 import { getOrganizationId } from '@/lib/organization';
 import { revalidatePath } from 'next/cache';

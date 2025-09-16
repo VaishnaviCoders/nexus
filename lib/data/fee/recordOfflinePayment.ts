@@ -1,12 +1,11 @@
 'use server';
 
 import prisma from '@/lib/db';
-import { FeeStatus, PaymentMethod, PaymentStatus } from '@/generated/prisma';
+import { FeeStatus, PaymentStatus } from '@/generated/prisma/enums';
 import { getOrganizationId } from '@/lib/organization';
 import { offlinePaymentFormData, offlinePaymentSchema } from '@/lib/schemas';
 import { getCurrentUserId } from '@/lib/user';
 import { formatCurrencyIN } from '@/lib/utils';
-import { currentUser } from '@clerk/nextjs/server';
 import { randomUUID } from 'crypto';
 import { revalidatePath } from 'next/cache';
 

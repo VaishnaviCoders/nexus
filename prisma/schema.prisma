@@ -1,11 +1,18 @@
-generator client {
-  provider        = "prisma-client-js"
-  output          = "../generated/prisma"
-  previewFeatures = ["fullTextSearchPostgres"]
-  binaryTargets   = ["native", "rhel-openssl-3.0.x"]
-}
+// generator client {
+//   provider        = "prisma-client-js"
+//   output          = "../generated/prisma"
+//   previewFeatures = ["fullTextSearchPostgres"]
+//   binaryTargets   = ["native", "rhel-openssl-3.0.x"]
+// }
 
 // , "queryCompiler", "driverAdapters"
+
+generator client {
+  provider   = "prisma-client" // (or "prisma-client-js") 
+  output     = "../generated/prisma"
+  engineType = "client"
+}
+
 datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")

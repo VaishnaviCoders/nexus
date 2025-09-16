@@ -16,7 +16,7 @@ import {
   bulkExamSchema,
   RowSchema,
 } from '@/lib/schemas';
-import { EvaluationType, ExamMode } from '@/generated/prisma';
+import { EvaluationType, ExamMode } from '@/generated/prisma/enums';
 import z from 'zod';
 import { GeneratedExam } from '@/components/dashboard/exam/AIExamPromptDialog';
 import { revalidatePath } from 'next/cache';

@@ -1,6 +1,6 @@
 import prisma from '@/lib/db';
 import { User, clerkClient } from '@clerk/nextjs/server';
-import { Role } from '@/generated/prisma';
+import { Role } from '@/generated/prisma/enums';
 
 // Map Clerk org roles to Prisma roles
 const roleMap: Record<string, Role> = {

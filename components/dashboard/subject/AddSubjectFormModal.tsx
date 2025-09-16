@@ -45,7 +45,7 @@ import {
   createDebouncedSuggestions,
   getAISubjectSuggestions,
 } from '@/ai/gemini-subject-service';
-import { Subject } from '@/generated/prisma';
+import { Subject } from '@/generated/prisma/client';
 import { toast } from 'sonner';
 import { createSubject } from '@/lib/data/subjects/subject-action';
 import { useRouter } from 'next/navigation';

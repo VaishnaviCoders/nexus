@@ -34,8 +34,8 @@ import {
   Target,
   PieChart,
 } from 'lucide-react';
-import { generateAISummaryOpenRouter } from '@/ai/ai-monthly-fee-report';
-import { mockMonthlyFeeCollectionData } from '@/constants';
+// import { generateAISummaryOpenRouter } from '@/ai/ai-monthly-fee-report';
+// import { mockMonthlyFeeCollectionData } from '@/constants';
 import { generateAiMonthlyFeesReportAction } from '@/ai/gemini-monthly-fee-report';
 import AIStateLoading from '@/components/websiteComp/AILoadingState';
 

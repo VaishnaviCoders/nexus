@@ -61,7 +61,7 @@ import {
   Section,
   Student,
   User,
-} from '@/generated/prisma';
+} from '@/generated/prisma/client';
 import { UpdateStudentAction } from '@/lib/data/student/update-student';
 
 interface DocumentFile {

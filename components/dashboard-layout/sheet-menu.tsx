@@ -8,24 +8,13 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { Menu } from './menu';
-import { auth } from '@clerk/nextjs/server';
 import { OrganizationSwitcher } from '@clerk/nextjs';
 import { DialogTitle } from '../ui/dialog';
 import { cn } from '@/lib/utils';
-import { Role } from '@/generated/prisma';
+import { getCurrentUser } from '@/lib/user';
 
 export async function SheetMenu() {
-  const { userId, orgRole } = await auth();
-  if (!userId) return null;
-
-  const roleMap: Record<string, Role> = {
-    'org:admin': 'ADMIN',
-    'org:teacher': 'TEACHER',
-    'org:student': 'STUDENT',
-    'org:parent': 'PARENT',
-  };
-
-  const role = orgRole && roleMap[orgRole] ? roleMap[orgRole] : 'STUDENT';
+  const { id, role } = await getCurrentUser();
 
   return (
     <Sheet>

@@ -2,7 +2,11 @@
 
 import { createHash, randomUUID } from 'crypto';
 
-import { PaymentMethod, PaymentStatus, FeeStatus } from '@/generated/prisma';
+import {
+  PaymentMethod,
+  PaymentStatus,
+  FeeStatus,
+} from '@/generated/prisma/enums';
 import { currentUser } from '@clerk/nextjs/server';
 import prisma from '@/lib/db';
 import { getOrganizationId } from '@/lib/organization';

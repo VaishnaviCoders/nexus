@@ -75,7 +75,7 @@ import {
 } from './SendFeesReminderDialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { recordOfflinePayment } from '@/lib/data/fee/recordOfflinePayment';
-import { PaymentMethod } from '@/generated/prisma';
+import { PaymentMethod } from '@/generated/prisma/enums';
 import { offlinePaymentSchema, offlinePaymentFormData } from '@/lib/schemas';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';

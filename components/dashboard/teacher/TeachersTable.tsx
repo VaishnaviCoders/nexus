@@ -44,8 +44,8 @@ import {
   UserCheck,
   UserX,
 } from 'lucide-react';
-import { TeacherProfile, User } from '@/generated/prisma';
-import { EmploymentStatus } from '@/generated/prisma';
+import { TeacherProfile, User } from '@/generated/prisma/client';
+import { EmploymentStatus } from '@/generated/prisma/enums';
 import { getStatusConfig, TeacherDetailsModal } from './TeacherDetailsModal';
 import { toggleTeacherStatus } from '@/app/actions';
 

@@ -44,7 +44,7 @@ import {
   Clock,
   Pause,
 } from 'lucide-react';
-import type { AssignmentStatus } from '@/generated/prisma';
+import type { AssignmentStatus } from '@/generated/prisma/enums';
 import { AddTeachingAssignmentForm } from './AddTeachingAssignmentForm';
 import {
   deleteTeachingAssignment,

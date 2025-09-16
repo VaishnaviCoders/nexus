@@ -49,7 +49,7 @@ import {
   detectConflicts,
 } from '@/lib/data/exam/create-bulk-exams';
 import { bulkExamFormData, bulkExamSchema } from '@/lib/schemas';
-import { EvaluationType, ExamMode } from '@/generated/prisma';
+import { EvaluationType, ExamMode } from '@/generated/prisma/enums';
 import { ConflictCheckSheet } from './ExamConflictSheet';
 import { toast } from 'sonner';
 import { Textarea } from '@/components/ui/textarea';

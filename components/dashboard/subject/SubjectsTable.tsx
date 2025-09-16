@@ -13,7 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Subject } from '@/generated/prisma';
+import { Subject } from '@/generated/prisma/client';
 import { deleteSubject } from '@/lib/data/subjects/subject-action';
 import { AlertTriangle } from 'lucide-react';
 import {

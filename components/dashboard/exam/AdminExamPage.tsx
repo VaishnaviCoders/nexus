@@ -30,12 +30,7 @@ import {
 import { cn } from '@/lib/utils';
 import { Filter } from 'lucide-react';
 import Link from 'next/link';
-import type {
-  ExamMode,
-  ExamStatus,
-  Subject,
-  ExamSession,
-} from '@/generated/prisma';
+import type { ExamMode, ExamStatus } from '@/generated/prisma/enums';
 import { formatDateRange, timeUntil } from '@/lib/utils';
 import { ExamWithRelations } from './StudentExamsPage';
 

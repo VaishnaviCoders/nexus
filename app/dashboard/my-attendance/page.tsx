@@ -40,8 +40,6 @@ export default async function page() {
 
   const weeklyReportData = await getWeeklyAttendanceReport(student.id);
 
-  console.log('weekly report data', weeklyReportData);
-
   return (
     <div className="px-2 space-y-3">
       {/* Header */}

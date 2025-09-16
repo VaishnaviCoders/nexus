@@ -9,7 +9,7 @@ import { getOrganizationId, getOrganizationUserRole } from '@/lib/organization';
 import { EmptyState } from '@/components/EmptyState';
 import { Activity, Pin, Newspaper } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Role } from '@/generated/prisma';
+import { Role } from '@/generated/prisma/enums';
 import { getCurrentAcademicYearId } from '@/lib/academicYear';
 import { performance } from 'perf_hooks';
 
@@ -18,8 +18,6 @@ const page = async () => {
 
   const organizationId = await getOrganizationId();
   const academicYearId = await getCurrentAcademicYearId();
-
-  const t0 = performance.now();
 
   const notices = await prisma.notice.findMany({
     where: {
@@ -31,9 +29,6 @@ const page = async () => {
     },
   });
 
-  const t1 = performance.now();
-  console.log(`⏱  Notices query took ${(t1 - t0).toFixed(2)} ms`);
-
   const roleMap: Record<string, Role> = {
     'org:admin': 'ADMIN',
     'org:teacher': 'TEACHER',
@@ -42,7 +37,6 @@ const page = async () => {
   };
 
   const role = orgRole && roleMap[orgRole] ? roleMap[orgRole] : 'STUDENT';
-  // console.log('Detected Clerk Role:', role);
 
   return (
     <div className="w-full mx-auto ">

@@ -1,4 +1,4 @@
-import { currentUser } from '@clerk/nextjs/server';
+import { auth, currentUser } from '@clerk/nextjs/server';
 import { redis } from '@/lib/redis';
 import { cache } from 'react';
 
@@ -57,30 +57,35 @@ export const getCurrentUserId = cache(async () => {
   return user.id;
 });
 
+type Role = 'ADMIN' | 'TEACHER' | 'STUDENT' | 'PARENT';
+
+const roleMap: Record<string, Role> = {
+  'org:admin': 'ADMIN',
+  'org:teacher': 'TEACHER',
+  'org:student': 'STUDENT',
+  'org:parent': 'PARENT',
+};
+
 export const getCurrentUser = async () => {
   const user = await currentUser();
+  const { orgRole } = await auth();
 
   if (!user || !user.id) {
     throw new Error('No user found');
   }
 
-  const {
-    id,
-    firstName,
-    lastName,
-    emailAddresses,
-    imageUrl,
-    username,
-    publicMetadata,
-  } = user;
+  // Map Clerk's orgRole (can be undefined!)
+  const role: Role =
+    orgRole && orgRole in roleMap ? roleMap[orgRole] : 'STUDENT';
 
   return {
-    id,
-    firstName,
-    lastName,
-    email: emailAddresses?.[0]?.emailAddress ?? null,
-    imageUrl,
-    username,
-    metadata: publicMetadata,
+    id: user.id,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    email: user.emailAddresses?.[0]?.emailAddress ?? null,
+    imageUrl: user.imageUrl,
+    username: user.username,
+    role, // <- your resolved Role here!
+    metadata: user.publicMetadata,
   };
 };

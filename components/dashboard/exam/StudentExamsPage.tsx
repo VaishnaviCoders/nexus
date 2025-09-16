@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { Suspense, useMemo, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -30,16 +30,17 @@ import {
 import { cn } from '@/lib/utils';
 import { Filter } from 'lucide-react';
 import Link from 'next/link';
-import type {
-  ExamMode,
-  ExamStatus,
+import type { ExamMode, ExamStatus } from '@/generated/prisma/enums';
+
+import { ExamCard } from './ExamCard';
+import { formatDateRange } from '@/lib/utils';
+import { ExamCardSkeleton } from '@/components/exam-skeleton';
+import {
   Subject,
   ExamSession,
   ExamResult,
   HallTicket,
-} from '@/generated/prisma';
-import { ExamCard } from './ExamCard';
-import { formatDateRange } from '@/lib/utils';
+} from '@/generated/prisma/client';
 
 export type ExamWithRelations = {
   id: string;
@@ -179,10 +180,26 @@ export function StudentExamsPage({ exams }: { exams: ExamWithRelations[] }) {
   }, [filters, exams]);
 
   const stats = useMemo(() => {
-    const total = exams.length;
-    const upcoming = exams.filter((e) => e.status === 'UPCOMING').length;
-    const live = exams.filter((e) => e.status === 'LIVE').length;
-    const completed = exams.filter((e) => e.status === 'COMPLETED').length;
+    let total = 0,
+      upcoming = 0,
+      live = 0,
+      completed = 0;
+
+    for (const exam of exams) {
+      total++;
+      switch (exam.status) {
+        case 'UPCOMING':
+          upcoming++;
+          break;
+        case 'LIVE':
+          live++;
+          break;
+        case 'COMPLETED':
+          completed++;
+          break;
+      }
+    }
+
     return { total, upcoming, live, completed };
   }, [exams]);
 
@@ -397,7 +414,9 @@ export function StudentExamsPage({ exams }: { exams: ExamWithRelations[] }) {
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((e) => (
             <Link href={`/dashboard/exams/${e.id}`} key={e.id}>
-              <ExamCard key={e.id} exam={e} />
+              <Suspense fallback={<ExamCardSkeleton />}>
+                <ExamCard key={e.id} exam={e} />
+              </Suspense>
             </Link>
           ))}
 

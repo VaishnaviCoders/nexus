@@ -2,9 +2,9 @@ import { Webhook } from 'svix';
 import { headers } from 'next/headers';
 import { WebhookEvent } from '@clerk/nextjs/server';
 import prisma from '@/lib/db';
-import { Role } from '@/generated/prisma';
+import { Role } from '@/generated/prisma/enums';
 
-export async function GET(req: Request) {
+export async function GET() {
   console.log('Webhook GET request received');
   return new Response('Webhook received successfully', { status: 200 });
 }
