@@ -17,7 +17,6 @@ import { CreditCard, Download, Upload, MessageSquare, Zap } from 'lucide-react';
 import { getStudentNotices } from '@/lib/data/notice/get-student-notices';
 import { getCurrentAcademicYear } from '@/lib/academicYear';
 import { getCurrentUserByRole } from '@/lib/auth';
-import { HallTicketPDF } from '@/lib/pdf-generator/hall-ticketPDF';
 
 export async function getFeesStatus(studentId: string) {
   const fees = await prisma.fee.findMany({
