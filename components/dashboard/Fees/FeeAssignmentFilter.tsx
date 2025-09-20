@@ -12,7 +12,7 @@ import {
 import { useQueryState } from 'nuqs';
 import { fetchGradesAndSections } from '@/app/actions';
 import { Label } from '@/components/ui/label';
-import { Search } from 'lucide-react';
+import { PlusIcon, Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import {
   Select,
@@ -21,6 +21,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 
 type GradeAndSection = {
   id: string;
@@ -72,71 +74,78 @@ const FeeAssignmentFilter = ({ organizationId }: AttendanceFiltersProps) => {
     setSelectedSection('all');
   }, [selectedGrade]);
   return (
-    <div>
-      <Card>
-        <CardHeader>
-          <CardTitle>Students</CardTitle>
-          <CardDescription>filter students to assign fees</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="w-full space-y-2">
-            <Label htmlFor="search">Search</Label>
-            <div className="relative">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input
-                id="search"
-                type="search"
-                placeholder="Search by name or roll no..."
-                className="pl-8"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
+    <Card>
+      <CardHeader className="flex flex-row items-center justify-between ">
+        <div>
+          <CardTitle className="text-lg">Filter Students</CardTitle>
+          <CardDescription className="text-sm">
+            Search and filter students by grade and section to quickly assign
+            fees.
+          </CardDescription>
+        </div>
+
+        <Link href="/dashboard/fees/admin/fee-categories">
+          <Button>
+            <PlusIcon className="mr-2 h-4 w-4" />
+            <span className="sm:inline">Create Category</span>
+          </Button>
+        </Link>
+      </CardHeader>
+      <CardContent>
+        <div className="w-full space-y-2">
+          <Label htmlFor="search">Search</Label>
+          <div className="relative">
+            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input
+              id="search"
+              type="search"
+              placeholder="Search by name or roll no..."
+              className="pl-8"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4 mt-4">
+          <div className="space-y-2">
+            <Label htmlFor="grade">Grade</Label>
+            <Select value={selectedGrade} onValueChange={setSelectedGrade}>
+              <SelectTrigger id="grade">
+                <SelectValue placeholder="Select Grade" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Grades</SelectItem>
+                {grades.map((grade) => (
+                  <SelectItem key={grade.id} value={grade.id}>
+                    {grade.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 mt-4">
-            <div className="space-y-2">
-              <Label htmlFor="grade">Grade</Label>
-              <Select value={selectedGrade} onValueChange={setSelectedGrade}>
-                <SelectTrigger id="grade">
-                  <SelectValue placeholder="Select Grade" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Grades</SelectItem>
-                  {grades.map((grade) => (
-                    <SelectItem key={grade.id} value={grade.id}>
-                      {grade.name}
+          <div className="space-y-2">
+            <Label htmlFor="section">Section</Label>
+            <Select value={selectedSection} onValueChange={setSelectedSection}>
+              <SelectTrigger id="section">
+                <SelectValue placeholder="select section" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Sections</SelectItem>
+                {grades
+                  .find((g) => g.id === selectedGrade)
+                  ?.sections.map((sec) => (
+                    <SelectItem key={sec.id} value={sec.id}>
+                      {sec.name}
                     </SelectItem>
                   ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="section">Section</Label>
-              <Select
-                value={selectedSection}
-                onValueChange={setSelectedSection}
-              >
-                <SelectTrigger id="section">
-                  <SelectValue placeholder="select section" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Sections</SelectItem>
-                  {grades
-                    .find((g) => g.id === selectedGrade)
-                    ?.sections.map((sec) => (
-                      <SelectItem key={sec.id} value={sec.id}>
-                        {sec.name}
-                      </SelectItem>
-                    ))}
-                </SelectContent>
-              </Select>
-            </div>
+              </SelectContent>
+            </Select>
           </div>
-        </CardContent>
-      </Card>
-    </div>
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 

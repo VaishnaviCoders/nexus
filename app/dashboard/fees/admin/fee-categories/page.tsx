@@ -6,10 +6,10 @@ import { Card, CardDescription, CardTitle } from '@/components/ui/card';
 
 export default async function FeeCategoriesPage() {
   return (
-    <div className=" space-y-3">
+    <div className="px-2 space-y-3">
       <Card className="flex items-center justify-between p-6">
         <div>
-          <CardTitle className="text-lg">Fee Category Management</CardTitle>
+          <CardTitle>Fee Category Management</CardTitle>
           <CardDescription>
             Manage fee categories for your organization
           </CardDescription>
@@ -28,14 +28,8 @@ export default async function FeeCategoriesPage() {
 
         <div className="lg:col-span-2">
           <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-xl font-semibold mb-4">Fee Categories</h2>
-            <Suspense
-              fallback={
-                <div className="h-96 flex items-center justify-center">
-                  Loading fee categories...
-                </div>
-              }
-            >
+            <h2 className="font-semibold mb-4">Fee Categories</h2>
+            <Suspense fallback={<FeeCategoryFormSkeleton />}>
               <FeeCategoryList />
             </Suspense>
           </div>

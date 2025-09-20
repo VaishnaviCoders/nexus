@@ -3,37 +3,26 @@
 import { auth } from '@clerk/nextjs/server';
 import { cache } from 'react';
 
-export const getOrganizationId = cache(async function getOrganizationId() {
+export const getOrganizationId = cache(async () => {
   const { orgId } = await auth();
   if (!orgId) throw new Error('No organization ID found');
   return orgId;
 });
 
-export async function getOrganization() {
+export const getOrganization = cache(async () => {
   const { orgId, orgRole, orgSlug } = await auth();
-  if (!orgId) {
-    throw new Error('No organization ID found');
-  }
-
-  if (!orgRole) {
-    throw new Error('No organization role found');
-  }
-
-  if (!orgSlug) {
-    throw new Error('No organization slug found');
-  }
-
+  if (!orgId) throw new Error('No organization ID found');
+  if (!orgRole) throw new Error('No organization role found');
+  if (!orgSlug) throw new Error('No organization slug found');
   return {
     orgId,
     orgRole,
     orgSlug,
   };
-}
+});
 
-export async function getOrganizationUserRole() {
+export const getOrganizationUserRole = cache(async () => {
   const { orgRole } = await auth();
-  if (!orgRole) {
-    throw new Error('No organization role found');
-  }
-  return { orgRole };
-}
+  if (!orgRole) throw new Error('No organization role found');
+  return orgRole;
+});

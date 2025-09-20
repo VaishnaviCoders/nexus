@@ -876,7 +876,8 @@ model Exam {
   examResult         ExamResult[]
   examEnrollment     ExamEnrollment[]
 
-  @@unique([examSessionId, subjectId, gradeId, sectionId])
+  // @@unique([examSessionId, subjectId, gradeId, sectionId])
+  @@unique([examSessionId, gradeId, sectionId, subjectId, title])
   @@index([organizationId, status])
   @@index([gradeId, sectionId])
   // @@index([batchId])

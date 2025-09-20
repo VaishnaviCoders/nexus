@@ -5,7 +5,6 @@ import { revalidatePath } from 'next/cache';
 import { Prisma } from '@/generated/prisma/client';
 import prisma from '@/lib/db';
 import { getOrganizationId } from '@/lib/organization';
-import { getCurrentUserId } from '@/lib/user';
 
 const teachingAssignmentSchema = z.object({
   teacherId: z.string().min(1, 'Teacher is required'),
@@ -22,7 +21,6 @@ export async function createTeachingAssignment(
   data: TeachingAssignmentFormData
 ) {
   try {
-    console.log('formData', data);
     const validatedData = teachingAssignmentSchema.safeParse(data);
 
     const organizationId = await getOrganizationId();
@@ -75,7 +73,6 @@ export async function updateTeachingAssignmentStatus(
   status: 'PENDING' | 'ASSIGNED' | 'COMPLETED' | 'INACTIVE'
 ): Promise<{ success?: boolean; error?: string }> {
   try {
-    const userId = await getCurrentUserId();
     const organizationId = await getOrganizationId();
 
     //  Verify assignment belongs to organization
@@ -109,8 +106,6 @@ export async function deleteTeachingAssignment(
   assignmentId: string
 ): Promise<{ success?: boolean; error?: string }> {
   try {
-    const userId = await getCurrentUserId();
-
     const organizationId = await getOrganizationId();
 
     //  Verify assignment belongs to organization

@@ -418,7 +418,7 @@ export type ExamOrderByWithRelationInput = {
 
 export type ExamWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  examSessionId_subjectId_gradeId_sectionId?: Prisma.ExamExamSessionIdSubjectIdGradeIdSectionIdCompoundUniqueInput
+  examSessionId_gradeId_sectionId_subjectId_title?: Prisma.ExamExamSessionIdGradeIdSectionIdSubjectIdTitleCompoundUniqueInput
   AND?: Prisma.ExamWhereInput | Prisma.ExamWhereInput[]
   OR?: Prisma.ExamWhereInput[]
   NOT?: Prisma.ExamWhereInput | Prisma.ExamWhereInput[]
@@ -451,7 +451,7 @@ export type ExamWhereUniqueInput = Prisma.AtLeast<{
   hallTickets?: Prisma.HallTicketListRelationFilter
   examResult?: Prisma.ExamResultListRelationFilter
   examEnrollment?: Prisma.ExamEnrollmentListRelationFilter
-}, "id" | "examSessionId_subjectId_gradeId_sectionId">
+}, "id" | "examSessionId_gradeId_sectionId_subjectId_title">
 
 export type ExamOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -723,11 +723,12 @@ export type ExamOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
-export type ExamExamSessionIdSubjectIdGradeIdSectionIdCompoundUniqueInput = {
+export type ExamExamSessionIdGradeIdSectionIdSubjectIdTitleCompoundUniqueInput = {
   examSessionId: string
-  subjectId: string
   gradeId: string
   sectionId: string
+  subjectId: string
+  title: string
 }
 
 export type ExamCountOrderByAggregateInput = {

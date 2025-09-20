@@ -162,28 +162,22 @@ const FeeAssignmentDataTable = ({
   });
 
   async function onSubmit(data: z.infer<typeof feeAssignmentSchema>) {
-    try {
-      const payload = {
-        ...data,
-        studentIds: selectedStudents,
-      };
-      startTransition(() => {
-        (async () => {
-          await AssignFeeToStudents(payload);
-
-          toast.success('Fees assigned successfully');
-          form.reset();
-          setIsDialogOpen(false);
-          setSelectedStudents([]);
-        })().catch((error) => {
-          toast.error('Something went wrong');
-          console.error(error);
-        });
-      });
-    } catch (error) {
-      toast.error('Something went wrong');
-      console.error(error);
-    }
+    startTransition(async () => {
+      try {
+        const payload = {
+          ...data,
+          studentIds: selectedStudents,
+        };
+        await AssignFeeToStudents(payload);
+        toast.success('Fees assigned successfully');
+        form.reset();
+        setIsDialogOpen(false);
+        setSelectedStudents([]);
+      } catch (error) {
+        toast.error('Something went wrong');
+        console.error(error);
+      }
+    });
   }
 
   return (
@@ -247,27 +241,32 @@ const FeeAssignmentDataTable = ({
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {feeCategories.map((category) => (
-                            <SelectItem
-                              value={category.id}
-                              key={category.id}
-                              className="capitalize"
-                            >
-                              {category.name}
-                            </SelectItem>
-                          ))}
+                          {feeCategories.length > 0 ? (
+                            feeCategories.map((category) => (
+                              <SelectItem
+                                key={category.id}
+                                value={category.id}
+                                className="capitalize"
+                              >
+                                {category.name}
+                              </SelectItem>
+                            ))
+                          ) : (
+                            <div className="p-2 text-sm text-muted-foreground">
+                              No categories found
+                            </div>
+                          )}
                         </SelectContent>
                       </Select>
                       <FormDescription>
-                        If don't see your category, please create it from
+                        Don’t see your category?
                         <Link
                           target="_blank"
                           href="/dashboard/fees/admin/fee-categories"
                           className="text-blue-500 ml-2"
                         >
-                          Create Category
+                          Create one
                         </Link>
-                        .
                       </FormDescription>
                       <FormMessage />
                     </FormItem>

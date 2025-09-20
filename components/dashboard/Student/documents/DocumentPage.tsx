@@ -41,6 +41,7 @@ export default function DocumentsPage({
   studentId: string;
   data: StudentDocument[];
 }) {
+  console.log('data', data);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState<string>('all');
   const [filterStatus, setFilterStatus] = useState<string>('all');
@@ -80,16 +81,16 @@ export default function DocumentsPage({
   const isCloudinaryUploadActive = true;
 
   return (
-    <div className="space-y-3 px-2">
+    <div className="space-y-4 px-2 sm:px-4">
       <Card className="">
-        <CardContent className="flex flex-col lg:flex-row lg:items-center lg:justify-between p-6 gap-4">
-          <div>
-            <CardTitle className="text-lg font-bold flex items-center gap-2">
-              Documents{' '}
+        <CardContent className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 sm:p-6 gap-4">
+          <div className="flex-1 min-w-0">
+            <CardTitle className="text-lg font-bold flex flex-col sm:flex-row sm:items-center gap-2">
+              <span>Documents</span>
               {isCloudinaryUploadActive ? (
                 <Badge
                   variant="outline"
-                  className="bg-green-50 text-green-700 border-green-200 dark:bg-green-950 dark:text-green-300 dark:border-green-800"
+                  className="bg-green-50 text-green-700 border-green-200 dark:bg-green-950 dark:text-green-300 dark:border-green-800 text-xs"
                 >
                   <CheckCircle className="w-3 h-3 mr-1" />
                   Upload System Active
@@ -97,36 +98,36 @@ export default function DocumentsPage({
               ) : (
                 <Badge
                   variant="destructive"
-                  className="bg-red-50 text-red-700 border-red-200 dark:bg-red-950 dark:text-red-300 dark:border-red-800"
+                  className="bg-red-50 text-red-700 border-red-200 dark:bg-red-950 dark:text-red-300 dark:border-red-800 text-xs"
                 >
                   <CheckCircle className="w-3 h-3 mr-1" />
                   Upload System InActive
                 </Badge>
               )}
             </CardTitle>
-            <CardDescription className="text-base mt-1">
+            <CardDescription className="text-sm sm:text-base mt-1">
               Manage and view all student documents
             </CardDescription>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 w-full sm:w-auto">
             <Dialog>
               <DialogTrigger asChild>
-                <Button size="sm">
+                <Button size="sm" className="w-full sm:w-auto">
                   <UploadCloud className="w-4 h-4 mr-2" />
-                  Upload Document
+                  <span className="hidden sm:inline">Upload Document</span>
+                  <span className="sm:hidden">Upload</span>
                 </Button>
               </DialogTrigger>
 
-              <DialogContent className="max-w-4xl">
-                <DialogHeader>
-                  <DialogTitle> Upload Document</DialogTitle>
+              <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto p-2">
+                <DialogHeader className="px-6 pt-6 pb-4">
+                  <DialogTitle>Upload Document</DialogTitle>
                   <DialogDescription>
-                    {' '}
                     Add a new document for verification. We support PDF, JPEG,
-                    PNG, and WebP files up to 10MB.
+                    PNG, and WebP files up to 2MB.
                   </DialogDescription>
-                  <DocumentUploadForm studentId={studentId} />
                 </DialogHeader>
+                <DocumentUploadForm studentId={studentId} />
               </DialogContent>
             </Dialog>
           </div>
@@ -134,7 +135,7 @@ export default function DocumentsPage({
       </Card>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
@@ -172,20 +173,28 @@ export default function DocumentsPage({
         </Card>
       </div>
 
-      <Tabs defaultValue="all" className="space-y-6">
-        <TabsList>
-          <TabsTrigger value="all">All Documents</TabsTrigger>
-          <TabsTrigger value="upload">Upload New</TabsTrigger>
+      <Tabs defaultValue="all" className="space-y-4 sm:space-y-6">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="all" className="text-xs sm:text-sm">
+            <span className="hidden sm:inline">All Documents</span>
+            <span className="sm:hidden">All</span>
+          </TabsTrigger>
+          <TabsTrigger value="upload" className="text-xs sm:text-sm">
+            <span className="hidden sm:inline">Upload New</span>
+            <span className="sm:hidden">Upload</span>
+          </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="all" className="space-y-6">
+        <TabsContent value="all" className="space-y-4 sm:space-y-6">
           {/* Filters */}
           <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Filter Documents</CardTitle>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base sm:text-lg">
+                Filter Documents
+              </CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="flex flex-col sm:flex-row gap-4">
+            <CardContent className="pt-0">
+              <div className="flex flex-col gap-3 sm:gap-4">
                 <div className="flex-1">
                   <div className="relative">
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -197,39 +206,41 @@ export default function DocumentsPage({
                     />
                   </div>
                 </div>
-                <Select value={filterType} onValueChange={setFilterType}>
-                  <SelectTrigger className="w-full sm:w-[200px]">
-                    <SelectValue placeholder="Document type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Types</SelectItem>
-                    {Object.entries(DOCUMENT_TYPE_LABELS).map(
-                      ([value, label]) => (
-                        <SelectItem key={value} value={value}>
-                          {label}
-                        </SelectItem>
-                      )
-                    )}
-                  </SelectContent>
-                </Select>
-                <Select value={filterStatus} onValueChange={setFilterStatus}>
-                  <SelectTrigger className="w-full sm:w-[150px]">
-                    <SelectValue placeholder="Status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Status</SelectItem>
-                    <SelectItem value="verified">Verified</SelectItem>
-                    <SelectItem value="pending">Pending</SelectItem>
-                    <SelectItem value="rejected">Rejected</SelectItem>
-                  </SelectContent>
-                </Select>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                  <Select value={filterType} onValueChange={setFilterType}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Document type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Types</SelectItem>
+                      {Object.entries(DOCUMENT_TYPE_LABELS).map(
+                        ([value, label]) => (
+                          <SelectItem key={value} value={value}>
+                            {label}
+                          </SelectItem>
+                        )
+                      )}
+                    </SelectContent>
+                  </Select>
+                  <Select value={filterStatus} onValueChange={setFilterStatus}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Status</SelectItem>
+                      <SelectItem value="verified">Verified</SelectItem>
+                      <SelectItem value="pending">Pending</SelectItem>
+                      <SelectItem value="rejected">Rejected</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
             </CardContent>
           </Card>
 
           {/* Documents Grid */}
           {filteredDocuments.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {filteredDocuments.map((document) => (
                 <DocumentCard
                   key={document.id}
@@ -240,12 +251,12 @@ export default function DocumentsPage({
             </div>
           ) : (
             <Card>
-              <CardContent className="flex flex-col items-center justify-center py-12">
-                <FileText className="h-16 w-16 text-muted-foreground mb-4" />
-                <h3 className="text-lg font-semibold mb-2">
+              <CardContent className="flex flex-col items-center justify-center py-8 sm:py-12 px-4">
+                <FileText className="h-12 w-12 sm:h-16 sm:w-16 text-muted-foreground mb-4" />
+                <h3 className="text-base sm:text-lg font-semibold mb-2 text-center">
                   No documents found
                 </h3>
-                <p className="text-muted-foreground text-center mb-4">
+                <p className="text-muted-foreground text-center mb-4 text-sm sm:text-base">
                   {searchTerm || filterType !== 'all' || filterStatus !== 'all'
                     ? 'Try adjusting your search or filters'
                     : 'Upload your first document to get started'}
@@ -256,6 +267,8 @@ export default function DocumentsPage({
                     setFilterType('all');
                     setFilterStatus('all');
                   }}
+                  size="sm"
+                  className="w-full sm:w-auto"
                 >
                   Clear Filters
                 </Button>
@@ -264,8 +277,20 @@ export default function DocumentsPage({
           )}
         </TabsContent>
 
-        <TabsContent value="upload">
-          <DocumentUploadForm studentId={studentId} />
+        <TabsContent value="upload" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base sm:text-lg">
+                Upload New Document
+              </CardTitle>
+              <CardDescription>
+                Upload documents for verification. Maximum file size: 2MB
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <DocumentUploadForm studentId={studentId} />
+            </CardContent>
+          </Card>
         </TabsContent>
       </Tabs>
     </div>

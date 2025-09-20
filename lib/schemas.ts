@@ -3,6 +3,7 @@ import {
   DocumentType,
   EvaluationType,
   ExamMode,
+  ExamStatus,
   PaymentMethod,
 } from '@/generated/prisma/enums';
 // const ACCEPTED_IMAGE_TYPES = [
@@ -110,8 +111,8 @@ export const documentUploadSchema = z.object({
   file: z
     .instanceof(File)
     .refine(
-      (file) => file.size <= 10 * 1024 * 1024,
-      'File size must be less than 10MB'
+      (file) => file.size <= 2 * 1024 * 1024,
+      'File size must be less than 2MB'
     )
     .refine(
       (file) =>
@@ -404,46 +405,94 @@ export type SubjectFormData = z.infer<typeof subjectSchema>;
 
 // Exams
 
-export const RowSchema = z
+export const examSchema = z
   .object({
-    subjectId: z.string().min(1, 'Select a subject'),
-    title: z.string().min(1, 'Title is required'),
-    startDate: z.string().min(1, 'Start date/time must be an ISO date-time'),
-    endDate: z.string().min(1, 'End date/time must be an ISO date-time'),
-    max: z.coerce.number().min(1).max(1000),
-    pass: z.coerce.number().min(0),
-    mode: z.enum(Object.values(ExamMode) as [string, ...string[]]),
-    weightage: z.coerce.number().min(0).optional().default(0),
-    evaluationType: z
-      .enum(Object.values(EvaluationType) as [string, ...string[]])
-      .optional()
-      .default(EvaluationType.EXAM),
-    venue: z.string().optional().default(''),
+    title: z.string().min(3, 'Title must be at least 3 characters'),
+    description: z.string().max(1000).optional().or(z.literal('')),
+    subjectId: z.string().min(1, 'Subject is required'),
+    gradeSectionKey: z.string().min(1, 'Class & Section is required'), // "GradeName||SectionName"
+    maxMarks: z.coerce
+      .number()
+      .positive('Max marks must be > 0')
+      .max(1000, 'Max too large'),
+    passingMarks: z
+      .union([z.coerce.number(), z.literal('')])
+      .transform((v) => (v === '' ? undefined : v))
+      .optional(),
+    weightage: z.coerce.number().optional(),
+    evaluationType: z.nativeEnum(EvaluationType),
+    mode: z.nativeEnum(ExamMode),
+    status: z.nativeEnum(ExamStatus).default('UPCOMING'),
+    instructions: z.string().max(2000).optional().or(z.literal('')),
+    durationInMinutes: z.coerce.number().optional(),
     venueMapUrl: z.string().optional(),
-    supervisors: z.array(z.string()).default([]),
-    description: z.string().optional(),
-    instructions: z.string().optional(),
+
+    venue: z.string().max(200).optional().or(z.literal('')),
+    supervisors: z.array(z.string()).default([]), // teacher IDs
+    startDate: z.string().min(1, 'Start date/time is required'), // ISO string
+    endDate: z.string().min(1, 'End date/time is required'),
+    // Optional: link to session later. DB schema requires, but allow backend to attach by policy.
+    examSessionId: z.string().or(z.literal('')),
   })
   .refine(
-    (v) => new Date(v.endDate).getTime() > new Date(v.startDate).getTime(),
-    {
-      message: 'End time must be after start time',
-      path: ['endDate'],
-    }
+    (v) => {
+      const start = new Date(v.startDate);
+      const end = new Date(v.endDate);
+      return start < end;
+    },
+    { path: ['endDate'], message: 'End must be after start' }
   )
-  .refine((v) => v.pass <= v.max, {
-    message: 'Pass must be <= Max',
-    path: ['pass'],
-  });
+  .refine(
+    (v) => {
+      if (v.passingMarks == null) return true;
+      return v.passingMarks <= v.maxMarks;
+    },
+    { path: ['passingMarks'], message: 'Passing marks must be ≤ Max marks' }
+  )
+  .refine(
+    (v) => {
+      // For OFFLINE/PRACTICAL/VIVA, require at least one supervisor
+      if (['OFFLINE', 'PRACTICAL', 'VIVA'].includes(v.mode)) {
+        return v.supervisors && v.supervisors.length > 0;
+      }
+      return true;
+    },
+    {
+      path: ['supervisors'],
+      message:
+        'At least one supervisor is required for offline/practical/viva exams',
+    }
+  );
 
-export type bulkExamRowFormData = z.infer<typeof RowSchema>;
+export type ExamFormData = z.infer<typeof examSchema>;
+
+//
 
 export const bulkExamSchema = z.object({
   sessionId: z.string().min(1, 'Pick session'),
   gradeId: z.string().min(1, 'Pick grade'),
   sectionId: z.string().min(1, 'Pick section'),
-  // Optional session window for client-side validation; server will also enforce
-  rows: z.array(RowSchema).min(1, 'Add at least one exam'),
+  exams: z.array(
+    z.object({
+      subjectId: z.string().min(1, 'Select a subject'),
+      title: z.string().min(1, 'Title is required'),
+      startDate: z.string().min(1, 'Start date/time must be an ISO date-time'),
+      endDate: z.string().min(1, 'End date/time must be an ISO date-time'),
+      max: z.coerce.number().min(1).max(1000),
+      pass: z.coerce.number().min(0),
+      mode: z.enum(Object.values(ExamMode) as [string, ...string[]]),
+      weightage: z.coerce.number().min(0).optional().default(0),
+      evaluationType: z
+        .enum(Object.values(EvaluationType) as [string, ...string[]])
+        .optional()
+        .default(EvaluationType.EXAM),
+      venue: z.string().optional().default(''),
+      venueMapUrl: z.string().optional(),
+      supervisors: z.array(z.string()).default([]),
+      description: z.string().optional(),
+      instructions: z.string().optional(),
+    })
+  ),
 });
 
 export type bulkExamFormData = z.infer<typeof bulkExamSchema>;

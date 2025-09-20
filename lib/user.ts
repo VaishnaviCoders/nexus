@@ -89,3 +89,32 @@ export const getCurrentUser = async () => {
     metadata: user.publicMetadata,
   };
 };
+
+export const getAuthContext = cache(async () => {
+  const { userId, orgId, orgRole, orgSlug } = await auth();
+  if (!userId) throw new Error('Not authenticated');
+  if (!orgId) throw new Error('No organization ID found');
+
+  const user = await currentUser();
+  if (!user) throw new Error('User not found');
+
+  const role: Role =
+    orgRole && orgRole in roleMap ? roleMap[orgRole] : 'STUDENT';
+
+  return {
+    user: {
+      id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.emailAddresses?.[0]?.emailAddress ?? null,
+      imageUrl: user.imageUrl,
+      username: user.username,
+      metadata: user.publicMetadata,
+    },
+    org: {
+      id: orgId,
+      role,
+      slug: orgSlug,
+    },
+  };
+});

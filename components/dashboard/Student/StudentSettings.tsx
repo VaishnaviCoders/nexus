@@ -18,7 +18,7 @@ import { StudentProfileEditForm } from './StudentProfileEditForm';
 import SidebarPreferences from '@/components/dashboard-layout/sidebar-preferences';
 import prisma from '@/lib/db';
 import { getCurrentUserId } from '@/lib/user';
-import { redirect } from 'next/navigation';
+import { getCurrentUserByRole } from '@/lib/auth';
 
 export async function getStudentProfile(studentId?: string) {
   try {
@@ -116,14 +116,30 @@ export async function getStudentProfile(studentId?: string) {
 }
 
 export default async function StudentSettings() {
-  const student = await getStudentProfile();
-  if (!student) {
-    redirect('/dashboard');
+  const currentUser = await getCurrentUserByRole();
+
+  // ✅ Only allow students here
+  if (currentUser.role !== 'STUDENT') {
+    return (
+      <div className="p-8 text-center text-red-600 font-semibold text-lg">
+        Only students can access this page.
+      </div>
+    );
   }
+
+  const student = await getStudentProfile(currentUser.studentId);
+
+  if (!student) {
+    return (
+      <div className="p-8 text-center text-red-600 font-semibold text-lg">
+        Student profile not found.
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6 px-2">
-      <Card className="py-4 px-2 flex items-center justify-between   ">
-        {/* //max-sm:flex-col max-sm:items-start max-sm:space-y-3 */}
+      <Card className="py-4 px-2 flex items-center justify-between">
         <div>
           <CardTitle className="text-lg">Settings</CardTitle>
           <CardDescription className="text-sm">
@@ -137,7 +153,7 @@ export default async function StudentSettings() {
           <TabsTrigger value="profile">Profile</TabsTrigger>
           <TabsTrigger value="notifications">Notifications</TabsTrigger>
           <TabsTrigger value="emergency">Emergency</TabsTrigger>
-          <TabsTrigger value="security">Security/ Settings</TabsTrigger>
+          <TabsTrigger value="settings">Settings</TabsTrigger>
         </TabsList>
 
         <TabsContent value="profile" className="space-y-6">
@@ -148,7 +164,7 @@ export default async function StudentSettings() {
                 Update your personal information and profile details.
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="px-1">
               <StudentProfileEditForm student={student} />
             </CardContent>
           </Card>
@@ -187,10 +203,10 @@ export default async function StudentSettings() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="security" className="space-y-6">
+        <TabsContent value="settings" className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Security / Settings</CardTitle>
+              <CardTitle>Settings</CardTitle>
               <CardDescription>
                 Manage your password and account security preferences.
               </CardDescription>

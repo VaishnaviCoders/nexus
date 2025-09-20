@@ -37,6 +37,7 @@ import { Calendar } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
 import { createExam } from '@/lib/data/exam/create-exam';
 import MultipleSelector from '@/components/ui/multi-select';
+import { ExamFormData, examSchema } from '@/lib/schemas';
 
 // Types inferred from your server page and schema
 type Subject = { id: string; name: string; code?: string | null };
@@ -75,67 +76,6 @@ const examStatusOptions = [
   'CANCELLED',
 ] as const;
 
-const ExamFormSchema = z
-  .object({
-    title: z.string().min(3, 'Title must be at least 3 characters'),
-    description: z.string().max(1000).optional().or(z.literal('')),
-    subjectId: z.string().min(1, 'Subject is required'),
-    gradeSectionKey: z.string().min(1, 'Class & Section is required'), // "GradeName||SectionName"
-    maxMarks: z.coerce
-      .number()
-      .positive('Max marks must be > 0')
-      .max(1000, 'Max too large'),
-    passingMarks: z
-      .union([z.coerce.number(), z.literal('')])
-      .transform((v) => (v === '' ? undefined : v))
-      .optional(),
-    weightage: z.coerce.number().optional(),
-    evaluationType: z.enum(evaluationTypeOptions),
-    mode: z.enum(examModeOptions),
-    status: z.enum(examStatusOptions).default('UPCOMING'),
-    instructions: z.string().max(2000).optional().or(z.literal('')),
-    durationInMinutes: z.coerce.number().optional(),
-    venueMapUrl: z.string().optional(),
-
-    venue: z.string().max(200).optional().or(z.literal('')),
-    supervisors: z.array(z.string()).default([]), // teacher IDs
-    startDate: z.string().min(1, 'Start date/time is required'), // ISO string
-    endDate: z.string().min(1, 'End date/time is required'),
-    // Optional: link to session later. DB schema requires, but allow backend to attach by policy.
-    examSessionId: z.string().or(z.literal('')),
-  })
-  .refine(
-    (v) => {
-      const start = new Date(v.startDate);
-      const end = new Date(v.endDate);
-      return start < end;
-    },
-    { path: ['endDate'], message: 'End must be after start' }
-  )
-  .refine(
-    (v) => {
-      if (v.passingMarks == null) return true;
-      return v.passingMarks <= v.maxMarks;
-    },
-    { path: ['passingMarks'], message: 'Passing marks must be ≤ Max marks' }
-  )
-  .refine(
-    (v) => {
-      // For OFFLINE/PRACTICAL/VIVA, require at least one supervisor
-      if (['OFFLINE', 'PRACTICAL', 'VIVA'].includes(v.mode)) {
-        return v.supervisors && v.supervisors.length > 0;
-      }
-      return true;
-    },
-    {
-      path: ['supervisors'],
-      message:
-        'At least one supervisor is required for offline/practical/viva exams',
-    }
-  );
-
-export type ExamFormData = z.infer<typeof ExamFormSchema>;
-
 export function ExamCreateForm(props: {
   subjects: Subject[];
   teachers: Teacher[];
@@ -156,7 +96,7 @@ export function ExamCreateForm(props: {
   });
 
   const form = useForm<ExamFormData>({
-    resolver: zodResolver(ExamFormSchema),
+    resolver: zodResolver(examSchema),
     mode: 'onSubmit',
     defaultValues: {
       title: '',

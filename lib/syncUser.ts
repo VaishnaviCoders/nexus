@@ -1,5 +1,5 @@
 import prisma from '@/lib/db';
-import { User, clerkClient } from '@clerk/nextjs/server';
+import { clerkClient } from '@clerk/nextjs/server';
 import { Role } from '@/generated/prisma/enums';
 
 // Map Clerk org roles to Prisma roles

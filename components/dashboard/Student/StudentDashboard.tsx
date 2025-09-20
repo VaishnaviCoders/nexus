@@ -8,7 +8,6 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import prisma from '@/lib/db';
-import { getCurrentUserId } from '@/lib/user';
 import StudentSubjectsRadar from './student-subjects-radar';
 import { RecentNoticesCards } from '../notice/recent-notices-cards';
 import { FeesQuickCard } from './FeesQuickCard';
@@ -17,6 +16,8 @@ import { Button } from '@/components/ui/button';
 import { CreditCard, Download, Upload, MessageSquare, Zap } from 'lucide-react';
 import { getStudentNotices } from '@/lib/data/notice/get-student-notices';
 import { getCurrentAcademicYear } from '@/lib/academicYear';
+import { getCurrentUserByRole } from '@/lib/auth';
+import { HallTicketPDF } from '@/lib/pdf-generator/hall-ticketPDF';
 
 export async function getFeesStatus(studentId: string) {
   const fees = await prisma.fee.findMany({
@@ -128,19 +129,20 @@ const quickActions = [
 ];
 
 const StudentDashboard = async () => {
-  const userId = await getCurrentUserId();
-
   const recentNotices = await getStudentNotices();
 
-  const student = await prisma.student.findUnique({
-    where: { userId },
-    select: {
-      id: true,
-    },
-  });
-  if (!student) throw new Error('Student not found');
+  const currentUser = await getCurrentUserByRole();
 
-  const feesData = await getFeesStatus(student.id);
+  // ✅ Only allow students here
+  if (currentUser.role !== 'STUDENT') {
+    return (
+      <div className="p-8 text-center text-red-600 font-semibold text-lg">
+        Only students can access this page.
+      </div>
+    );
+  }
+
+  const feesData = await getFeesStatus(currentUser.studentId);
   const academicYear = await getCurrentAcademicYear();
 
   if (!academicYear) {
@@ -159,9 +161,10 @@ const StudentDashboard = async () => {
   }
 
   return (
-    <div className="grid gap-4 md:gap-6">
+    <div className="grid gap-4 md:gap-6 px-2">
       {/* Main Content Grid - Responsive Layout */}
-      <StudentDashboardStatsCards studentId={student.id} />
+
+      <StudentDashboardStatsCards studentId={currentUser.studentId} />
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-6">
         {/* Left Column - Subject Performance (Takes more space on desktop) */}
         <div className="lg:col-span-7 xl:col-span-8">

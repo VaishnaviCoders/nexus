@@ -13,24 +13,13 @@ export async function getFeeCategories() {
         name: true,
         description: true,
         createdAt: true,
-        Organization: {
-          select: {
-            name: true,
-          },
-        },
       },
       orderBy: {
         createdAt: 'desc',
       },
     });
 
-    return categories.map((category) => ({
-      id: category.id,
-      name: category.name,
-      description: category.description,
-      organizationName: category.Organization.name || 'Unknown',
-      createdAt: category.createdAt,
-    }));
+    return categories;
   } catch (error) {
     console.error('Failed to fetch fee categories:', error);
     return [];
@@ -45,7 +34,6 @@ export async function getFeeCategory(id: string) {
         id: true,
         name: true,
         description: true,
-        organizationId: true,
         createdAt: true,
       },
     });

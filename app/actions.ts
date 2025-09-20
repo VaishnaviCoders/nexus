@@ -462,7 +462,6 @@ export async function CustomDatesSectionAttendance(
 // Fees
 
 export async function getDashboardStats(organizationId: string) {
-  const start = performance.now();
   const [totalRevenue, totalPending, studentCount, feeCategoryCount] =
     await Promise.all([
       prisma.fee.aggregate({
@@ -480,10 +479,6 @@ export async function getDashboardStats(organizationId: string) {
         where: { organizationId },
       }),
     ]);
-
-  const end = performance.now();
-
-  console.log('getDashboardStats took', end - start, 'ms');
 
   return {
     totalRevenue: totalRevenue._sum.paidAmount || 0,

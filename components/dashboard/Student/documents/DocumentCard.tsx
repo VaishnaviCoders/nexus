@@ -26,6 +26,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from '@/components/ui/dialog';
 import { type StudentDocument, DOCUMENT_TYPE_LABELS } from '@/types/document';
 import { formatFileSize, getFileTypeFromUrl } from '@/lib/cloudinary';
@@ -179,6 +180,10 @@ export function DocumentCard({ studentDocument, onDelete }: DocumentCardProps) {
             <DialogTitle>
               {DOCUMENT_TYPE_LABELS[studentDocument.type]}
             </DialogTitle>
+            <DialogDescription>
+              Document preview for {DOCUMENT_TYPE_LABELS[studentDocument.type]}
+              {studentDocument.fileName && ` - ${studentDocument.fileName}`}
+            </DialogDescription>
           </DialogHeader>
           <div className="flex-1 overflow-hidden">
             {isPDF ? (

@@ -38,6 +38,9 @@ export function DocumentUploadForm({ studentId }: DocumentUploadFormProps) {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [dragActive, setDragActive] = useState(false);
 
+  // File size limit: 2MB in bytes
+  const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
+
   const form = useForm<DocumentUploadFormData>({
     resolver: zodResolver(documentUploadSchema),
     defaultValues: {
@@ -63,6 +66,15 @@ export function DocumentUploadForm({ studentId }: DocumentUploadFormProps) {
     const files = e.dataTransfer.files;
     if (files && files[0]) {
       const file = files[0];
+
+      // Check file size
+      if (file.size > MAX_FILE_SIZE) {
+        toast.error('File too large', {
+          description: `File size must be less than 2MB. Current size: ${formatFileSize(file.size)}`,
+        });
+        return;
+      }
+
       setSelectedFile(file);
       form.setValue('file', file);
       form.clearErrors('file');
@@ -72,6 +84,16 @@ export function DocumentUploadForm({ studentId }: DocumentUploadFormProps) {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
+      // Check file size
+      if (file.size > MAX_FILE_SIZE) {
+        toast.error('File too large', {
+          description: `File size must be less than 2MB. Current size: ${formatFileSize(file.size)}`,
+        });
+        // Clear the input
+        event.target.value = '';
+        return;
+      }
+
       setSelectedFile(file);
       form.setValue('file', file);
       form.clearErrors('file');
@@ -87,11 +109,8 @@ export function DocumentUploadForm({ studentId }: DocumentUploadFormProps) {
 
   const onSubmit = async (data: DocumentUploadFormData) => {
     try {
-      console.log('Document Upload Data:', data);
       setIsUploading(true);
       const documentUrl = await uploadToCloudinary(data.file);
-
-      console.log('Document URL:', documentUrl);
 
       await uploadStudentDocuments(data, documentUrl, studentId);
 
@@ -215,11 +234,14 @@ export function DocumentUploadForm({ studentId }: DocumentUploadFormProps) {
                                 WebP
                               </span>
                             </div>
+                            <p className="text-xs text-muted-foreground mt-2">
+                              Maximum file size: 2MB
+                            </p>
                           </div>
                         </div>
                       </div>
                     ) : (
-                      <Card className="border-2 border-primary/20 bg-primary/5 max-sm:max-w-md">
+                      <Card className="border-2 border-primary/20 bg-primary/5 max-sm:max-w-lg">
                         <CardContent className="p-6">
                           <div className="flex items-center gap-4">
                             <div className="flex-shrink-0">
@@ -246,6 +268,11 @@ export function DocumentUploadForm({ studentId }: DocumentUploadFormProps) {
                                 {formatFileSize(selectedFile.size)} •{' '}
                                 {selectedFile.type}
                               </p>
+                              {selectedFile.size > MAX_FILE_SIZE * 0.8 && (
+                                <p className="text-xs text-amber-600 mt-1">
+                                  ⚠️ File is close to 2MB limit
+                                </p>
+                              )}
                             </div>
                             <div className="flex items-center gap-2">
                               <CheckCircle2 className="h-5 w-5 text-green-500" />

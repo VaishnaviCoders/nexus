@@ -46,7 +46,6 @@ import {
 import {
   aiConflictCheck,
   createBulkExams,
-  detectConflicts,
 } from '@/lib/data/exam/create-bulk-exams';
 import { bulkExamFormData, bulkExamSchema } from '@/lib/schemas';
 import { EvaluationType, ExamMode } from '@/generated/prisma/enums';
@@ -113,7 +112,7 @@ export function BulkExamCreateForm({
       sessionId: defaultSessionId || '',
       gradeId: defaultGradeId || '',
       sectionId: defaultSectionId || '',
-      rows: [
+      exams: [
         {
           subjectId: '',
           title: '',
@@ -136,7 +135,7 @@ export function BulkExamCreateForm({
   });
   const { fields, append, remove, replace } = useFieldArray({
     control: form.control,
-    name: 'rows',
+    name: 'exams',
   });
 
   const selectedSessionId = form.watch('sessionId');
@@ -173,7 +172,7 @@ export function BulkExamCreateForm({
   }
 
   // CSV helpers (use startDate/endDate columns)
-  function rowsToCsv(rows: FormData['rows']): string {
+  function rowsToCsv(rows: FormData['exams']): string {
     const flat = rows.map((r) => ({
       subjectId: r.subjectId,
       title: r.title,
@@ -203,7 +202,7 @@ export function BulkExamCreateForm({
   }
   async function parseCsv(
     file: File
-  ): Promise<{ rows: FormData['rows']; error?: string }> {
+  ): Promise<{ rows: FormData['exams']; error?: string }> {
     return new Promise((resolve) => {
       Papa.parse(file, {
         header: true,
@@ -262,7 +261,7 @@ export function BulkExamCreateForm({
 
   const onExportCsv = () => {
     const data = form.getValues();
-    downloadCsv('exams.csv', rowsToCsv(data.rows));
+    downloadCsv('exams.csv', rowsToCsv(data.exams));
   };
 
   const onUploadCsv = async (file: File) => {
@@ -276,37 +275,35 @@ export function BulkExamCreateForm({
   };
 
   const [conflictOpen, setConflictOpen] = React.useState(false);
-  const [manualConflicts, setManualConflicts] = React.useState<string[]>([]);
   const [aiConflicts, setAiConflicts] = React.useState<string[]>([]);
   const [isPending, startTransition] = React.useTransition();
 
   const runChecks = async () => {
     try {
       const v = form.getValues();
-      toast.info('Running conflict checks...');
+      toast.info('Running AI conflict check...');
 
-      // Run manual conflict detection
-      const manual = await detectConflicts(v.rows);
-      setManualConflicts(manual);
-
-      // Run AI conflict detection
+      // Run only AI conflict detection
       let ai: string[] = [];
       try {
-        const { issues } = await aiConflictCheck({ rows: v.rows });
+        const { issues } = await aiConflictCheck({ exams: v.exams });
         ai = issues;
       } catch (aiError) {
         console.warn('AI conflict check failed:', aiError);
-        ai = ['AI conflict check is currently unavailable.'];
+        ai = [
+          'AI conflict check is currently unavailable. Please check your configuration.',
+        ];
       }
       setAiConflicts(ai);
 
       setConflictOpen(true);
 
-      const totalConflicts = manual.length + ai.length;
-      if (totalConflicts === 0) {
-        toast.success('No conflicts found!');
+      if (ai.length === 0) {
+        toast.success('No conflicts found! Your exam schedule looks good.');
       } else {
-        toast.warning(`Found ${totalConflicts} potential conflicts`);
+        toast.warning(
+          `Found ${ai.length} potential issue${ai.length > 1 ? 's' : ''}`
+        );
       }
     } catch (error) {
       console.error('Conflict check failed:', error);
@@ -318,8 +315,7 @@ export function BulkExamCreateForm({
     startTransition(async () => {
       try {
         console.log('Frontend ExamS Data', data);
-        const v = form.getValues();
-        await createBulkExams(v);
+        await createBulkExams(data);
         toast.success('Exams has been created successfully.');
       } catch (error) {
         toast.error('Failed to Exams. Please try again.');
@@ -369,7 +365,7 @@ export function BulkExamCreateForm({
 
   const handleExamsGenerated = (generatedExams: GeneratedExam[]) => {
     // Convert GeneratedExam[] to FormData['rows'] format
-    const newRows: FormData['rows'] = generatedExams.map((exam) => ({
+    const newRows: FormData['exams'] = generatedExams.map((exam) => ({
       subjectId: exam.subjectId,
       title: exam.title,
       startDate: exam.startDate,
@@ -379,7 +375,7 @@ export function BulkExamCreateForm({
       mode: exam.mode,
       evaluationType: exam.evaluationType,
       venue: exam.venue,
-      supervisors: exam.supervisors,
+      supervisors: exam.supervisors || [],
       weightage: 0, // Default weightage
       venueMapUrl: '', // Default empty
       description: exam.description || '',
@@ -498,8 +494,9 @@ export function BulkExamCreateForm({
               <CardTitle className="text-pretty">Step 2: Add Exams</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="flex justify-between items-center gap-2">
-                <div className="flex space-x-3 items-center">
+              <div className="flex items-center justify-between gap-3">
+                {/* Left group */}
+                <div className="flex flex-wrap items-center gap-3">
                   <Button variant="default" onClick={addEmptyRow}>
                     Add Row
                   </Button>
@@ -508,7 +505,7 @@ export function BulkExamCreateForm({
                   </Button>
                   <CSVUploadButton onUpload={onUploadCsv} />
                 </div>
-                <div className="flex space-x-3 items-center">
+                <div className="flex flex-wrap items-center gap-3">
                   <AIExamPromptDialog
                     examSessions={examSessions}
                     grades={grades}
@@ -560,7 +557,7 @@ export function BulkExamCreateForm({
                         <TableCell>
                           <FormField
                             control={form.control}
-                            name={`rows.${idx}.subjectId`}
+                            name={`exams.${idx}.subjectId`}
                             render={({ field }) => (
                               <FormItem>
                                 <FormControl>
@@ -588,7 +585,7 @@ export function BulkExamCreateForm({
                         <TableCell>
                           <FormField
                             control={form.control}
-                            name={`rows.${idx}.title`}
+                            name={`exams.${idx}.title`}
                             render={({ field }) => (
                               <FormItem>
                                 <FormControl>
@@ -606,7 +603,7 @@ export function BulkExamCreateForm({
                         <TableCell>
                           <FormField
                             control={form.control}
-                            name={`rows.${idx}.startDate`}
+                            name={`exams.${idx}.startDate`}
                             render={({ field }) => {
                               const currentDate = extractDateFromISO(
                                 field.value
@@ -703,7 +700,7 @@ export function BulkExamCreateForm({
                         <TableCell>
                           <FormField
                             control={form.control}
-                            name={`rows.${idx}.endDate`}
+                            name={`exams.${idx}.endDate`}
                             render={({ field }) => {
                               const currentDate = extractDateFromISO(
                                 field.value
@@ -800,7 +797,7 @@ export function BulkExamCreateForm({
                         <TableCell>
                           <FormField
                             control={form.control}
-                            name={`rows.${idx}.max`}
+                            name={`exams.${idx}.max`}
                             render={({ field }) => (
                               <FormItem>
                                 <FormControl>
@@ -814,7 +811,7 @@ export function BulkExamCreateForm({
                         <TableCell>
                           <FormField
                             control={form.control}
-                            name={`rows.${idx}.pass`}
+                            name={`exams.${idx}.pass`}
                             render={({ field }) => (
                               <FormItem>
                                 <FormControl>
@@ -828,7 +825,7 @@ export function BulkExamCreateForm({
                         <TableCell>
                           <FormField
                             control={form.control}
-                            name={`rows.${idx}.mode`}
+                            name={`exams.${idx}.mode`}
                             render={({ field }) => (
                               <FormItem className="md:col-span-2">
                                 <Select
@@ -857,7 +854,7 @@ export function BulkExamCreateForm({
                         <TableCell>
                           <FormField
                             control={form.control}
-                            name={`rows.${idx}.evaluationType`}
+                            name={`exams.${idx}.evaluationType`}
                             render={({ field }) => (
                               <FormItem className="md:col-span-2">
                                 <Select
@@ -885,7 +882,7 @@ export function BulkExamCreateForm({
                         <TableCell>
                           <FormField
                             control={form.control}
-                            name={`rows.${idx}.venue`}
+                            name={`exams.${idx}.venue`}
                             render={({ field }) => (
                               <FormItem>
                                 <FormControl>
@@ -944,7 +941,6 @@ export function BulkExamCreateForm({
           <ConflictCheckSheet
             open={conflictOpen}
             onOpenChange={setConflictOpen}
-            manual={manualConflicts}
             ai={aiConflicts}
           />
         </div>
@@ -977,7 +973,7 @@ function RowOptionalFieldsSheet({
 
         <div className="mt-6 flex flex-col gap-4">
           <FormField
-            name={`rows.${index}.supervisors`}
+            name={`exams.${index}.supervisors`}
             render={({ field }) => {
               const teacherOptions = teachers.map((t) => ({
                 value: t.id,
@@ -1007,7 +1003,7 @@ function RowOptionalFieldsSheet({
             }}
           />
           <FormField
-            name={`rows.${index}.weightage`}
+            name={`exams.${index}.weightage`}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Weightage</FormLabel>
@@ -1020,7 +1016,7 @@ function RowOptionalFieldsSheet({
           />
 
           <FormField
-            name={`rows.${index}.venueMapUrl`}
+            name={`exams.${index}.venueMapUrl`}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Venue Map URL</FormLabel>
@@ -1037,7 +1033,7 @@ function RowOptionalFieldsSheet({
           />
 
           <FormField
-            name={`rows.${index}.description`}
+            name={`exams.${index}.description`}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Description</FormLabel>
@@ -1054,7 +1050,7 @@ function RowOptionalFieldsSheet({
           />
 
           <FormField
-            name={`rows.${index}.instructions`}
+            name={`exams.${index}.instructions`}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Instructions</FormLabel>

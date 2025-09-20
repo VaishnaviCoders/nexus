@@ -52,11 +52,6 @@ const WeeklyAttendanceReportCard: React.FC<{
 
     const absentDays = totalDays - presentDays - lateDays;
 
-    console.log(
-      'Status for each record:',
-      attendanceRecords.map((r) => r.status)
-    );
-
     // Calculate percentage excluding NOT_MARKED days
     const markedDays = totalDays - notMarkedDays;
     const attendancePercentage =
@@ -203,7 +198,7 @@ const WeeklyAttendanceReportCard: React.FC<{
         </DialogHeader>
         <div className="w-full mx-auto  bg-white rounded-xl shadow-lg overflow-hidden print:shadow-none print:max-w-none">
           {/* Header with School Branding */}
-          <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white p-6 print:bg-blue-600">
+          <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white p-2 print:bg-blue-600">
             <div className="flex items-center justify-between flex-wrap gap-4">
               <div className="flex items-center space-x-4">
                 {organization.organizationLogo && (

@@ -28,7 +28,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { cn } from '@/lib/utils';
-import { Filter } from 'lucide-react';
+import { BookA, Filter, Paperclip, School } from 'lucide-react';
 import Link from 'next/link';
 import type { ExamMode, ExamStatus } from '@/generated/prisma/enums';
 
@@ -41,6 +41,7 @@ import {
   ExamResult,
   HallTicket,
 } from '@/generated/prisma/client';
+import { EmptyState } from '@/components/EmptyState';
 
 export type ExamWithRelations = {
   id: string;
@@ -421,11 +422,14 @@ export function StudentExamsPage({ exams }: { exams: ExamWithRelations[] }) {
           ))}
 
           {filtered.length === 0 && (
-            <Card className="col-span-full">
-              <CardContent className="py-12 text-center text-sm text-muted-foreground">
-                No exams match your filters.
-              </CardContent>
-            </Card>
+            <div className="flex items-center justify-center col-span-full ">
+              <EmptyState
+                className=""
+                title="No Exams Found"
+                description="There are currently no exams matching your filters. Please adjust your search or check back later."
+                icons={[BookA, School, Paperclip]}
+              />
+            </div>
           )}
         </div>
       ) : (

@@ -1,6 +1,6 @@
 'use client';
-import React, { useEffect, useState } from 'react';
-import { motion, useAnimation } from 'framer-motion';
+import React, { useEffect, useRef, useState } from 'react';
+import { motion, useAnimation, useReducedMotion } from 'framer-motion';
 
 // Interface for grid configuration structure
 interface GridConfig {
@@ -15,10 +15,12 @@ interface GridConfig {
 const Loading = () => {
   const [windowWidth, setWindowWidth] = useState(0); // State to store window width for responsiveness
   const controls = useAnimation(); // Controls for Framer Motion animations
+  const prefersReducedMotion = useReducedMotion();
+  const rafIdRef = useRef<number | null>(null);
 
   // Dynamically calculates grid configuration based on window width
   const getGridConfig = (width: number): GridConfig => {
-    const numCards = 24; // Fixed number of cards
+    const numCards = prefersReducedMotion ? 8 : 16; // Fewer cards to reduce CPU/GPU
     const cols = width >= 1024 ? 3 : width >= 640 ? 2 : 1; // Set columns based on screen width
     return {
       numCards,
@@ -49,7 +51,7 @@ const Loading = () => {
     }
 
     // Shuffle positions to create random animations
-    const numRandomCards = 4;
+    const numRandomCards = prefersReducedMotion ? 2 : 4;
     const shuffledPositions = allPositions
       .sort(() => Math.random() - 0.5)
       .slice(0, numRandomCards);
@@ -61,30 +63,42 @@ const Loading = () => {
       x: shuffledPositions.map((pos) => pos.x),
       y: shuffledPositions.map((pos) => pos.y),
       scale: Array(shuffledPositions.length).fill(1.2),
-      transition: {
-        duration: shuffledPositions.length * 2,
-        repeat: Infinity, // Loop animation infinitely
-        ease: [0.4, 0, 0.2, 1], // Ease function for smooth animation
-        times: shuffledPositions.map(
-          (_, i) => i / (shuffledPositions.length - 1)
-        ),
-      },
+      transition: prefersReducedMotion
+        ? { duration: 0 }
+        : {
+            duration: shuffledPositions.length * 1.6,
+            repeat: Infinity, // Loop animation infinitely
+            ease: [0.4, 0, 0.2, 1], // Ease function for smooth animation
+            times: shuffledPositions.map(
+              (_, i) => i / (shuffledPositions.length - 1)
+            ),
+          },
     };
   };
 
   // Handles window resize events and updates the window width
   useEffect(() => {
     setWindowWidth(window.innerWidth);
-    const handleResize = () => setWindowWidth(window.innerWidth);
+    const handleResize = () => {
+      if (rafIdRef.current !== null) return;
+      rafIdRef.current = window.requestAnimationFrame(() => {
+        setWindowWidth(window.innerWidth);
+        rafIdRef.current = null;
+      });
+    };
     window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      if (rafIdRef.current !== null) cancelAnimationFrame(rafIdRef.current);
+    };
   }, []);
 
   // Updates animation path whenever the window width changes
   useEffect(() => {
+    if (prefersReducedMotion) return;
     const config = getGridConfig(windowWidth);
     controls.start(generateSearchPath(config));
-  }, [windowWidth, controls]);
+  }, [windowWidth, controls, prefersReducedMotion]);
 
   // Variants for frame animations
   const frameVariants = {
@@ -99,25 +113,29 @@ const Loading = () => {
       // Animate based on card index
       y: 0,
       opacity: 1,
-      transition: { delay: i * 0.1, duration: 0.4 }, // Staggered animation
+      transition: prefersReducedMotion
+        ? { duration: 0 }
+        : { delay: i * 0.06, duration: 0.3 }, // Lighter stagger
     }),
   };
 
   // Glow effect variants for the search icon
   const glowVariants = {
-    animate: {
-      boxShadow: [
-        '0 0 20px rgba(59, 130, 246, 0.2)',
-        '0 0 35px rgba(59, 130, 246, 0.4)',
-        '0 0 20px rgba(59, 130, 246, 0.2)',
-      ],
-      scale: [1, 1.1, 1], // Pulsating effect
-      transition: {
-        duration: 1,
-        repeat: Infinity,
-        ease: 'easeInOut', // Smooth pulsation
-      },
-    },
+    animate: prefersReducedMotion
+      ? { boxShadow: 'none', scale: 1 }
+      : {
+          boxShadow: [
+            '0 0 10px rgba(59, 130, 246, 0.15)',
+            '0 0 18px rgba(59, 130, 246, 0.3)',
+            '0 0 10px rgba(59, 130, 246, 0.15)',
+          ],
+          scale: [1, 1.05, 1], // Softer pulsating
+          transition: {
+            duration: 1.2,
+            repeat: Infinity,
+            ease: 'easeInOut', // Smooth pulsation
+          },
+        },
   };
 
   const config = getGridConfig(windowWidth); // Get current grid configuration
@@ -161,17 +179,33 @@ const Loading = () => {
         <div className="flex items-center justify-between  z-50  ">
           <motion.div
             className="h-12 bg-green-400 rounded-md mb-3"
-            animate={{
-              background: ['#f3f4f6', '#e5e7eb', '#f3f4f6'],
-            }}
-            transition={{ duration: 1.5, repeat: Infinity }}
+            animate={
+              prefersReducedMotion
+                ? undefined
+                : {
+                    background: ['#f3f4f6', '#e5e7eb', '#f3f4f6'],
+                  }
+            }
+            transition={
+              prefersReducedMotion
+                ? undefined
+                : { duration: 1.6, repeat: Infinity }
+            }
           />
           <motion.div
             className="h-12 bg-red-400 selection:rounded-md mb-3"
-            animate={{
-              background: ['#f3f4f6', '#e5e7eb', '#f3f4f6'],
-            }}
-            transition={{ duration: 1.5, repeat: Infinity }}
+            animate={
+              prefersReducedMotion
+                ? undefined
+                : {
+                    background: ['#f3f4f6', '#e5e7eb', '#f3f4f6'],
+                  }
+            }
+            transition={
+              prefersReducedMotion
+                ? undefined
+                : { duration: 1.6, repeat: Infinity }
+            }
           />
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -188,24 +222,48 @@ const Loading = () => {
               {/* Card placeholders */}
               <motion.div
                 className="h-44 bg-gray-200 rounded-md mb-3"
-                animate={{
-                  background: ['#f3f4f6', '#e5e7eb', '#f3f4f6'],
-                }}
-                transition={{ duration: 1.5, repeat: Infinity }}
+                animate={
+                  prefersReducedMotion
+                    ? undefined
+                    : {
+                        background: ['#f3f4f6', '#e5e7eb', '#f3f4f6'],
+                      }
+                }
+                transition={
+                  prefersReducedMotion
+                    ? undefined
+                    : { duration: 1.6, repeat: Infinity }
+                }
               />
               <motion.div
                 className="h-3 w-3/4 bg-gray-200 rounded mb-2"
-                animate={{
-                  background: ['#f3f4f6', '#e5e7eb', '#f3f4f6'],
-                }}
-                transition={{ duration: 1.5, repeat: Infinity }}
+                animate={
+                  prefersReducedMotion
+                    ? undefined
+                    : {
+                        background: ['#f3f4f6', '#e5e7eb', '#f3f4f6'],
+                      }
+                }
+                transition={
+                  prefersReducedMotion
+                    ? undefined
+                    : { duration: 1.6, repeat: Infinity }
+                }
               />
               <motion.div
                 className="h-3 w-1/2  bg-gray-200 rounded"
-                animate={{
-                  background: ['#f3f4f6', '#e5e7eb', '#f3f4f6'],
-                }}
-                transition={{ duration: 1.5, repeat: Infinity }}
+                animate={
+                  prefersReducedMotion
+                    ? undefined
+                    : {
+                        background: ['#f3f4f6', '#e5e7eb', '#f3f4f6'],
+                      }
+                }
+                transition={
+                  prefersReducedMotion
+                    ? undefined
+                    : { duration: 1.6, repeat: Infinity }
+                }
               />
             </motion.div>
           ))}

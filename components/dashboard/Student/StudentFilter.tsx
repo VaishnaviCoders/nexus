@@ -3,7 +3,14 @@
 import type React from 'react';
 
 import { useRouter } from 'next/navigation';
-import { useEffect, useState, useCallback } from 'react';
+import {
+  useEffect,
+  useState,
+  useCallback,
+  useTransition,
+  useMemo,
+  useRef,
+} from 'react';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import {
@@ -16,7 +23,7 @@ import {
   BookOpen,
   CheckIcon,
 } from 'lucide-react';
-import { useQueryState } from 'nuqs';
+// NOTE: Removed nuqs URL sync to avoid full RSC re-renders on each change
 import { fetchGradesAndSections } from '@/app/actions';
 import { Input } from '@/components/ui/input';
 import {
@@ -68,51 +75,78 @@ interface Student {
 interface StudentFilterProps {
   organizationId: string;
   initialStudents: Student[];
+  initialGradeId?: string;
+  initialSectionId?: string;
+  initialSearch?: string;
 }
 
 export default function StudentFilter({
   organizationId,
   initialStudents,
+  initialGradeId = 'all',
+  initialSectionId = 'all',
+  initialSearch = '',
 }: StudentFilterProps) {
   const [grades, setGrades] = useState<GradeAndSection[]>([]);
   const [students, setStudents] = useState<Student[]>(initialStudents);
-  const [isLoading, setIsLoading] = useState(false);
-  const [showFilters, setShowFilters] = useState(false);
-  const [activeFiltersCount, setActiveFiltersCount] = useState(0);
 
-  const [selectedGrade, setGrade] = useQueryState('gradeId', {
-    defaultValue: 'all',
-  });
-  const [selectedSection, setSection] = useQueryState('sectionId', {
-    defaultValue: 'all',
-  });
-  const [searchQuery, setSearchQuery] = useQueryState('search', {
-    defaultValue: '',
-    shallow: true,
-    throttleMs: 80,
-  });
+  const [isPending, startTransition] = useTransition();
+  const [showFilters, setShowFilters] = useState(false);
+
+  // Local component state instead of URL-synced state to prevent navigation-induced Suspense reloads
+  const [selectedGrade, setGrade] = useState<string>(initialGradeId);
+  const [selectedSection, setSection] = useState<string>(initialSectionId);
+  const [searchQuery, setSearchQuery] = useState<string>(initialSearch);
+  const isFirstLoadRef = useRef(true);
 
   const router = useRouter();
 
-  // Fetch grades and sections
-  useEffect(() => {
-    async function loadGrades() {
-      setIsLoading(true);
-      const data = await fetchGradesAndSections(organizationId);
-      setGrades(data || []);
-      setIsLoading(false);
-    }
-    loadGrades();
-  }, [organizationId]);
-
-  // Count active filters
-  useEffect(() => {
+  // Memoize active filters count
+  const activeFiltersCount = useMemo(() => {
     let count = 0;
     if (selectedGrade !== 'all') count++;
     if (selectedSection !== 'all') count++;
     if (searchQuery) count++;
-    setActiveFiltersCount(count);
+    return count;
   }, [selectedGrade, selectedSection, searchQuery]);
+
+  // Memoize selected grade and section objects
+  const selectedGradeObj = useMemo(
+    () => grades.find((g) => g.id === selectedGrade),
+    [grades, selectedGrade]
+  );
+
+  const selectedSectionObj = useMemo(
+    () => selectedGradeObj?.sections.find((s) => s.id === selectedSection),
+    [selectedGradeObj, selectedSection]
+  );
+
+  // Count active filters (memoized via activeFiltersCount)
+
+  const selectedGradeName = selectedGradeObj?.name || 'All Grades';
+  const selectedSectionName = selectedSectionObj?.name || 'All Sections';
+
+  // Fetch grades and sections only once
+  useEffect(() => {
+    let mounted = true;
+
+    async function loadGrades() {
+      try {
+        const data = await fetchGradesAndSections(organizationId);
+        if (mounted) {
+          setGrades(data || []);
+        }
+      } catch (error) {
+        console.error('Error loading grades:', error);
+      }
+    }
+
+    loadGrades();
+
+    return () => {
+      mounted = false;
+    };
+  }, [organizationId]);
 
   // Reset section when grade changes
   useEffect(() => {
@@ -122,20 +156,21 @@ export default function StudentFilter({
   // Fetch students with debouncing
   const fetchStudents = useCallback(
     debounce(async (search: string, gradeId: string, sectionId: string) => {
-      setIsLoading(true);
       try {
-        const data = await fetchFilteredStudents({
-          search,
-          gradeId,
-          sectionId,
+        startTransition(async () => {
+          // Avoid capturing stale closure by passing args through
+          const data = await fetchFilteredStudents({
+            search: search.trim(),
+            gradeId,
+            sectionId,
+          });
+
+          setStudents(data || []);
         });
-        setStudents(data);
       } catch (error) {
         console.error('Error fetching students:', error);
-      } finally {
-        setIsLoading(false);
       }
-    }, 300),
+    }, 250),
     []
   );
 
@@ -146,33 +181,21 @@ export default function StudentFilter({
     };
   }, [fetchStudents]);
 
-  // Update URL and fetch students
+  // Fetch students on filter changes without updating the URL
   useEffect(() => {
-    const query = new URLSearchParams();
-    if (searchQuery) query.set('search', searchQuery);
-    if (selectedGrade !== 'all') query.set('gradeId', selectedGrade);
-    if (selectedSection !== 'all') query.set('sectionId', selectedSection);
-
-    router.replace(`/dashboard/students?${query.toString()}`, {
-      scroll: false,
-    });
-
+    if (isFirstLoadRef.current) {
+      // Skip first run to avoid showing loading state when initialStudents already rendered
+      isFirstLoadRef.current = false;
+      return;
+    }
     fetchStudents(searchQuery, selectedGrade, selectedSection);
-  }, [selectedGrade, selectedSection, searchQuery, router, fetchStudents]);
+  }, [selectedGrade, selectedSection, searchQuery, fetchStudents]);
 
   const resetFilters = () => {
     setGrade('all');
     setSection('all');
     setSearchQuery('');
   };
-
-  const selectedGradeObj = grades.find((g) => g.id === selectedGrade);
-  const selectedSectionObj = selectedGradeObj?.sections.find(
-    (s) => s.id === selectedSection
-  );
-
-  const selectedGradeName = selectedGradeObj?.name || 'All Grades';
-  const selectedSectionName = selectedSectionObj?.name || 'All Sections';
 
   const hasActiveFilters = activeFiltersCount > 0;
   const isFilteringComplete =
@@ -504,7 +527,7 @@ export default function StudentFilter({
             )}
 
             {/* Loading State */}
-            {isLoading && (
+            {isPending && (
               <div className="flex justify-center items-center py-4 bg-blue-50/50 dark:bg-blue-950/10 rounded-lg border border-blue-200/30 dark:border-blue-800/30">
                 <Loader2 className="h-5 w-5 animate-spin text-blue-600 dark:text-blue-400 mr-2" />
                 <span className="text-sm text-blue-700 dark:text-blue-300">

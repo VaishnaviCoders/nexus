@@ -2,7 +2,6 @@
 
 import { revalidatePath } from 'next/cache';
 import prisma from '@/lib/db';
-import { auth } from '@clerk/nextjs/server';
 import { getOrganizationId } from '../../organization';
 
 interface FeeCategoryData {

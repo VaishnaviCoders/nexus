@@ -23,6 +23,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { ProgressSteps } from '@/components/ui/progress-steps';
 import {
   Sparkles,
   Loader2,
@@ -31,16 +32,17 @@ import {
   BookOpen,
   AlertTriangle,
   CheckCircle,
-  Wand2,
   Edit3,
   Trash2,
   Plus,
   Brain,
-  Target,
-  Zap,
+  Clock,
+  MapPin,
+  Award,
+  ArrowLeft,
 } from 'lucide-react';
 import { toast } from 'sonner';
-import { cn } from '@/lib/utils';
+import { cn, formatDateIN, formatTimeIN } from '@/lib/utils';
 import type { EvaluationType, ExamMode } from '@/generated/prisma/enums';
 import { generateExamSchedule } from '@/lib/data/exam/create-bulk-exams';
 
@@ -87,32 +89,67 @@ type Props = {
   onExamsGenerated: (exams: GeneratedExam[]) => void;
 };
 
-// Smart prompt suggestions based on common teacher needs
-const smartSuggestions = [
+const examSuggestions = [
   {
-    category: 'Quick Start',
+    category: '🚀 Quick Templates',
+    description: 'Ready-to-use exam schedules',
     prompts: [
-      'Create final exams for all subjects, 3 hours each, 100 marks',
-      'Schedule midterm tests for core subjects with 2-day gaps',
-      'Generate unit tests for this week, 1 hour each',
+      {
+        text: 'Create final exams for all subjects, 3 hours each, 100 marks',
+        description: 'Standard final exam setup',
+      },
+      {
+        text: 'Schedule midterm tests for core subjects with 2-day gaps',
+        description: 'Balanced midterm schedule',
+      },
+      {
+        text: 'Generate unit tests for this week, 1 hour each',
+        description: 'Quick weekly assessments',
+      },
     ],
   },
   {
-    category: 'Detailed Planning',
+    category: '⚙️ Detailed Planning',
+    description: 'Comprehensive exam configurations',
     prompts: [
-      'Create comprehensive finals: Math (3h, 100 marks), Science (2.5h, 80 marks), English (2h, 60 marks) with 2-day gaps starting Monday',
-      'Schedule practical exams for Science subjects in labs, 2 hours each with viva',
-      'Generate weekly assessments for all subjects, morning slots only, avoid Fridays',
+      {
+        text: 'Create comprehensive finals: Math (3h, 100 marks), Science (2.5h, 80 marks), English (2h, 60 marks) with 2-day gaps starting Monday',
+        description: 'Subject-specific requirements',
+      },
+      {
+        text: 'Schedule practical exams for Science subjects in labs, 2 hours each with viva',
+        description: 'Lab-based practical exams',
+      },
+      {
+        text: 'Generate weekly assessments for all subjects, morning slots only, avoid Fridays',
+        description: 'Time-specific scheduling',
+      },
     ],
   },
   {
-    category: 'Special Requirements',
+    category: '🎯 Special Requirements',
+    description: 'Custom exam scenarios',
     prompts: [
-      'Create makeup exams for absent students, flexible timing',
-      'Schedule oral exams for language subjects, 30 minutes per student',
-      'Generate project presentations, 1 hour slots in auditorium',
+      {
+        text: 'Create makeup exams for absent students, flexible timing',
+        description: 'Makeup exam arrangements',
+      },
+      {
+        text: 'Schedule oral exams for language subjects, 30 minutes per student',
+        description: 'Individual oral assessments',
+      },
+      {
+        text: 'Generate project presentations, 1 hour slots in auditorium',
+        description: 'Presentation-based evaluations',
+      },
     ],
   },
+];
+
+const progressSteps = [
+  { id: 'prompt', title: 'Describe', description: 'Your requirements' },
+  { id: 'preview', title: 'Review', description: 'Generated exams' },
+  { id: 'apply', title: 'Apply', description: 'Add to schedule' },
 ];
 
 export default function AIExamPromptDialog({
@@ -130,10 +167,8 @@ export default function AIExamPromptDialog({
   const [prompt, setPrompt] = useState('');
   const [generatedExams, setGeneratedExams] = useState<GeneratedExam[]>([]);
   const [editingExam, setEditingExam] = useState<number | null>(null);
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [showPreview, setShowPreview] = useState(false);
   const [isPending, startTransition] = useTransition();
-  const [activeStep, setActiveStep] = useState<'prompt' | 'preview' | 'edit'>(
+  const [activeStep, setActiveStep] = useState<'prompt' | 'preview' | 'apply'>(
     'prompt'
   );
 
@@ -144,17 +179,14 @@ export default function AIExamPromptDialog({
   const canGenerate =
     selectedSessionId && selectedGradeId && selectedSectionId && prompt.trim();
 
-  // Enhanced AI generation with better error handling
   const handleGenerate = async () => {
     if (!canGenerate) {
       toast.error('Please complete all selections and enter a prompt');
       return;
     }
 
-    setIsGenerating(true);
-
-    try {
-      const result = await generateExamSchedule({
+    startTransition(async () => {
+      const { success, data, error } = await generateExamSchedule({
         prompt,
         examSession: selectedSession!,
         grade: selectedGrade!,
@@ -163,32 +195,16 @@ export default function AIExamPromptDialog({
         teachers,
       });
 
-      if (!result.success) {
-        toast.error(result.error || 'Failed to generate exams');
-        return;
+      if (success && data) {
+        setGeneratedExams(data);
+        setActiveStep('preview');
+        toast.success(`Generated ${data.length} exams successfully`);
+      } else {
+        toast.error(error || 'Failed to generate exams');
       }
-
-      if (!result.data || result.data.length === 0) {
-        toast.error(
-          'No exams were generated. Try being more specific in your prompt.'
-        );
-        return;
-      }
-
-      setGeneratedExams(result.data);
-      setActiveStep('preview');
-      toast.success(
-        `🎉 Generated ${result.data.length} exams! Review and customize as needed.`
-      );
-    } catch (error) {
-      console.error('Generation error:', error);
-      toast.error('Something went wrong. Please try again.');
-    } finally {
-      setIsGenerating(false);
-    }
+    });
   };
 
-  // Quick edit functionality
   const updateExam = (index: number, updates: Partial<GeneratedExam>) => {
     setGeneratedExams((prev) =>
       prev.map((exam, i) => (i === index ? { ...exam, ...updates } : exam))
@@ -222,7 +238,7 @@ export default function AIExamPromptDialog({
       setOpen(false);
       resetDialog();
       toast.success(
-        `✅ Successfully added ${generatedExams.length} exams to your schedule!`
+        `Successfully added ${generatedExams.length} exams to your schedule`
       );
     });
   };
@@ -239,95 +255,74 @@ export default function AIExamPromptDialog({
   ).length;
   const readyCount = generatedExams.length - conflictCount;
 
+  const completedSteps = activeStep === 'preview' ? ['prompt'] : [];
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="lg" variant={'ai'}>
+        <Button
+          size="sm"
+          className="bg-primary text-primary-foreground hover:bg-primary/90 border border-border shadow-sm"
+        >
+          <Brain className="w-4 h-4 mr-2" />
           AI Exam Creator
-          <Sparkles className="w-4 h-4 ml-2" />
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="max-w-6xl max-h-[95vh] overflow-hidden flex flex-col">
-        <DialogHeader className="space-y-3">
-          <DialogTitle className="flex items-center gap-3 text-xl">
-            <div className="p-2 rounded-lg bg-gradient-to-r from-violet-100 to-purple-100">
-              <Brain className="w-6 h-6 text-violet-600" />
+      <DialogContent className="max-w-6xl max-h-[95vh] overflow-hidden flex flex-col bg-card border border-border">
+        <DialogHeader className="space-y-4 pb-6 border-b border-border">
+          <DialogTitle className="flex items-center gap-3 text-xl font-semibold">
+            <div className="p-2 rounded-lg bg-muted">
+              <Brain className="w-5 h-5" />
             </div>
-            AI-Powered Exam Creator
+            AI Exam Creator
           </DialogTitle>
-          <DialogDescription className="text-base">
-            Describe your exam needs in plain English. Our AI will create a
-            complete schedule that you can review and customize.
+          <DialogDescription className="text-muted-foreground">
+            Describe your exam requirements and let AI create a complete
+            schedule for you to review and customize.
           </DialogDescription>
 
-          {/* Progress indicator */}
-          <div className="flex items-center gap-2 text-sm">
-            <div
-              className={cn(
-                'flex items-center gap-2 px-3 py-1 rounded-full transition-colors',
-                activeStep === 'prompt'
-                  ? 'bg-violet-100 text-violet-700'
-                  : 'bg-gray-100 text-gray-500'
-              )}
-            >
-              <Wand2 className="w-4 h-4" />
-              Describe
-            </div>
-            <div className="w-8 h-px bg-gray-200" />
-            <div
-              className={cn(
-                'flex items-center gap-2 px-3 py-1 rounded-full transition-colors',
-                activeStep === 'preview'
-                  ? 'bg-violet-100 text-violet-700'
-                  : 'bg-gray-100 text-gray-500'
-              )}
-            >
-              <Target className="w-4 h-4" />
-              Review
-            </div>
-            <div className="w-8 h-px bg-gray-200" />
-            <div
-              className={cn(
-                'flex items-center gap-2 px-3 py-1 rounded-full transition-colors',
-                generatedExams.length > 0
-                  ? 'bg-green-100 text-green-700'
-                  : 'bg-gray-100 text-gray-500'
-              )}
-            >
-              <CheckCircle className="w-4 h-4" />
-              Apply
-            </div>
-          </div>
+          <ProgressSteps
+            steps={progressSteps}
+            currentStep={activeStep}
+            completedSteps={completedSteps}
+            className="py-4"
+          />
         </DialogHeader>
 
         {activeStep === 'prompt' && (
-          <div className="flex-1 space-y-6 overflow-y-auto">
-            {/* Context Card - Compact */}
-            <Card className="border-violet-200 bg-gradient-to-r from-violet-50 to-purple-50">
+          <div className="flex-1 space-y-6 overflow-y-auto p-1">
+            {/* Context Card */}
+            <Card className="border border-border">
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-6 text-sm">
+                  <div className="flex items-center gap-8 text-sm">
                     <div className="flex items-center gap-2">
-                      <Calendar className="w-4 h-4 text-violet-600" />
-                      <span className="font-medium">
-                        {selectedSession?.title || 'Select Session'}
-                      </span>
+                      <Calendar className="w-4 h-4 text-muted-foreground" />
+                      <div>
+                        <span className="text-muted-foreground">Session</span>
+                        <p className="font-medium">
+                          {selectedSession?.title || 'Select Session'}
+                        </p>
+                      </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Users className="w-4 h-4 text-violet-600" />
-                      <span className="font-medium">
-                        Grade {selectedGrade?.grade || '?'} -{' '}
-                        {selectedSection?.name || 'Select Section'}
-                      </span>
+                      <Users className="w-4 h-4 text-muted-foreground" />
+                      <div>
+                        <span className="text-muted-foreground">Class</span>
+                        <p className="font-medium">
+                          Grade {selectedGrade?.grade || '?'} -{' '}
+                          {selectedSection?.name || 'Select Section'}
+                        </p>
+                      </div>
                     </div>
                   </div>
                   <div className="flex gap-2">
-                    <Badge variant="secondary" className="bg-white/80">
+                    <Badge variant="secondary">
                       <BookOpen className="w-3 h-3 mr-1" />
                       {subjects.length} Subjects
                     </Badge>
-                    <Badge variant="secondary" className="bg-white/80">
+                    <Badge variant="secondary">
                       <Users className="w-3 h-3 mr-1" />
                       {teachers.length} Teachers
                     </Badge>
@@ -336,46 +331,45 @@ export default function AIExamPromptDialog({
               </CardContent>
             </Card>
 
-            {/* Main Prompt Area */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Zap className="w-5 h-5 text-violet-600" />
+            {/* Prompt Input Card */}
+            <Card className="border border-border">
+              <CardHeader className="pb-4">
+                <CardTitle className="flex items-center gap-2 text-lg">
+                  <Sparkles className="w-5 h-5 text-muted-foreground" />
                   What exams do you need?
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <Textarea
-                  placeholder="Just tell me what you need! For example:
+                  placeholder="Describe your exam requirements in plain English. For example:
 • Create final exams for Math, Science, and English - 3 hours each with 100 marks
-• Schedule midterm tests for all subjects with 2-day gaps between them
+• Schedule midterm tests for all subjects with 2-day gaps between them  
 • Generate unit tests for this week, 1 hour duration, use regular classrooms
 • Create practical exams for Science subjects in their labs with viva components"
                   value={prompt}
                   onChange={(e) => setPrompt(e.target.value)}
-                  rows={4}
-                  className="text-base resize-none border-violet-200 focus:border-violet-400"
+                  rows={6}
+                  className="text-sm resize-none"
                 />
 
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between items-center pt-2">
                   <p className="text-sm text-muted-foreground">
-                    💡 Be as specific or general as you like - I'll figure out
-                    the details!
+                    Be as specific or general as you like - AI will handle the
+                    details
                   </p>
                   <Button
                     onClick={handleGenerate}
-                    disabled={isGenerating}
-                    size="lg"
-                    className="bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700"
+                    disabled={isPending || !canGenerate}
+                    className="bg-primary text-primary-foreground hover:bg-primary/90"
                   >
-                    {isGenerating ? (
+                    {isPending ? (
                       <>
-                        <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                        Creating Magic...
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        Generating...
                       </>
                     ) : (
                       <>
-                        <Sparkles className="w-5 h-5 mr-2" />
+                        <Sparkles className="w-4 h-4 mr-2" />
                         Generate Exams
                       </>
                     )}
@@ -384,31 +378,43 @@ export default function AIExamPromptDialog({
               </CardContent>
             </Card>
 
-            {/* Smart Suggestions */}
-            <Card>
+            <Card className="border border-border">
               <CardHeader>
                 <CardTitle className="text-base">
-                  💡 Need inspiration? Try these:
+                  💡 Smart Suggestions
                 </CardTitle>
+                <p className="text-sm text-muted-foreground">
+                  Click any suggestion to use it as your prompt, then customize
+                  as needed
+                </p>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  {smartSuggestions.map((category) => (
+                <div className="space-y-6">
+                  {examSuggestions.map((category) => (
                     <div key={category.category}>
-                      <h4 className="text-sm font-medium text-muted-foreground mb-2">
-                        {category.category}
-                      </h4>
-                      <div className="grid gap-2">
+                      <div className="mb-3">
+                        <h4 className="text-sm font-semibold text-foreground mb-1">
+                          {category.category}
+                        </h4>
+                        <p className="text-xs text-muted-foreground">
+                          {category.description}
+                        </p>
+                      </div>
+                      <div className="grid gap-3">
                         {category.prompts.map((suggestion, index) => (
                           <Button
                             key={index}
                             variant="ghost"
-                            className="h-auto p-3 text-left justify-start text-sm bg-gray-50 hover:bg-violet-50 hover:text-violet-700 border border-transparent hover:border-violet-200"
-                            onClick={() => setPrompt(suggestion)}
+                            className="h-auto p-4 text-left justify-start border border-border hover:bg-muted/50 hover:border-primary/20 transition-all"
+                            onClick={() => setPrompt(suggestion.text)}
                           >
-                            <div className="flex items-start gap-2">
-                              <div className="w-1.5 h-1.5 rounded-full bg-violet-400 mt-2 flex-shrink-0" />
-                              <span className="text-wrap">{suggestion}</span>
+                            <div className="text-wrap">
+                              <p className="font-medium text-sm leading-relaxed mb-1">
+                                {suggestion.text}
+                              </p>
+                              <p className="text-xs text-muted-foreground">
+                                {suggestion.description}
+                              </p>
                             </div>
                           </Button>
                         ))}
@@ -422,22 +428,21 @@ export default function AIExamPromptDialog({
         )}
 
         {activeStep === 'preview' && (
-          <div className="flex-1 space-y-4 overflow-y-auto">
-            {/* Header with stats */}
+          <div className="flex-1 space-y-4 overflow-y-auto p-1">
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-lg font-semibold flex items-center gap-2">
-                  <CheckCircle className="w-5 h-5 text-green-600" />
+                  <CheckCircle className="w-5 h-5 text-success" />
                   Generated {generatedExams.length} Exams
                 </h3>
                 <div className="flex items-center gap-4 text-sm text-muted-foreground mt-1">
                   <span className="flex items-center gap-1">
-                    <div className="w-2 h-2 rounded-full bg-green-500" />
+                    <div className="w-2 h-2 rounded-full bg-success" />
                     {readyCount} Ready
                   </span>
                   {conflictCount > 0 && (
                     <span className="flex items-center gap-1">
-                      <div className="w-2 h-2 rounded-full bg-orange-500" />
+                      <div className="w-2 h-2 rounded-full bg-warning" />
                       {conflictCount} Need Review
                     </span>
                   )}
@@ -447,14 +452,16 @@ export default function AIExamPromptDialog({
                 <Button
                   variant="outline"
                   onClick={() => setActiveStep('prompt')}
+                  size="sm"
                 >
-                  <Edit3 className="w-4 h-4 mr-2" />
-                  Edit Prompt
+                  <ArrowLeft className="w-4 h-4 mr-2" />
+                  Back
                 </Button>
                 <Button
                   onClick={confirmAndApply}
                   disabled={isPending || generatedExams.length === 0}
-                  className="bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700"
+                  className="bg-success text-success-foreground hover:bg-success/90"
+                  size="sm"
                 >
                   {isPending ? (
                     <>
@@ -471,26 +478,26 @@ export default function AIExamPromptDialog({
               </div>
             </div>
 
-            {/* Exams List */}
             <ScrollArea className="h-[500px]">
               <div className="space-y-3">
                 {generatedExams.map((exam, index) => (
                   <Card
                     key={index}
                     className={cn(
-                      'transition-all duration-200 hover:shadow-md',
+                      'border transition-colors',
                       exam.conflicts && exam.conflicts.length > 0
-                        ? 'border-orange-200 bg-orange-50/50'
-                        : 'border-green-200 bg-green-50/30'
+                        ? 'border-warning/50 bg-warning/5'
+                        : 'border-border'
                     )}
                   >
                     <CardContent className="p-4">
                       {editingExam === index ? (
-                        /* Inline Edit Mode */
                         <div className="space-y-4">
                           <div className="grid grid-cols-2 gap-4">
-                            <div>
-                              <Label>Title</Label>
+                            <div className="space-y-2">
+                              <Label className="text-sm font-medium">
+                                Title
+                              </Label>
                               <Input
                                 value={exam.title}
                                 onChange={(e) =>
@@ -498,8 +505,10 @@ export default function AIExamPromptDialog({
                                 }
                               />
                             </div>
-                            <div>
-                              <Label>Subject</Label>
+                            <div className="space-y-2">
+                              <Label className="text-sm font-medium">
+                                Subject
+                              </Label>
                               <Select
                                 value={exam.subjectId}
                                 onValueChange={(value) => {
@@ -529,9 +538,11 @@ export default function AIExamPromptDialog({
                             </div>
                           </div>
 
-                          <div className="grid grid-cols-4 gap-4">
-                            <div>
-                              <Label>Max Marks</Label>
+                          <div className="grid grid-cols-4 gap-3">
+                            <div className="space-y-2">
+                              <Label className="text-sm font-medium">
+                                Max Marks
+                              </Label>
                               <Input
                                 type="number"
                                 value={exam.maxMarks}
@@ -543,8 +554,10 @@ export default function AIExamPromptDialog({
                                 }
                               />
                             </div>
-                            <div>
-                              <Label>Pass Marks</Label>
+                            <div className="space-y-2">
+                              <Label className="text-sm font-medium">
+                                Pass Marks
+                              </Label>
                               <Input
                                 type="number"
                                 value={exam.passingMarks}
@@ -556,8 +569,10 @@ export default function AIExamPromptDialog({
                                 }
                               />
                             </div>
-                            <div>
-                              <Label>Duration (min)</Label>
+                            <div className="space-y-2">
+                              <Label className="text-sm font-medium">
+                                Duration (min)
+                              </Label>
                               <Input
                                 type="number"
                                 value={exam.durationMinutes}
@@ -569,8 +584,10 @@ export default function AIExamPromptDialog({
                                 }
                               />
                             </div>
-                            <div>
-                              <Label>Venue</Label>
+                            <div className="space-y-2">
+                              <Label className="text-sm font-medium">
+                                Venue
+                              </Label>
                               <Input
                                 value={exam.venue}
                                 onChange={(e) =>
@@ -580,7 +597,7 @@ export default function AIExamPromptDialog({
                             </div>
                           </div>
 
-                          <div className="flex justify-end gap-2">
+                          <div className="flex justify-end gap-2 pt-3 border-t border-border">
                             <Button
                               variant="outline"
                               size="sm"
@@ -591,34 +608,27 @@ export default function AIExamPromptDialog({
                             <Button
                               size="sm"
                               onClick={() => setEditingExam(null)}
-                              className="bg-green-600 hover:bg-green-700"
+                              className="bg-success text-success-foreground hover:bg-success/90"
                             >
                               Save Changes
                             </Button>
                           </div>
                         </div>
                       ) : (
-                        /* Display Mode */
                         <div className="space-y-3">
                           <div className="flex items-start justify-between">
                             <div className="space-y-2 flex-1">
-                              <div className="flex items-center gap-3">
+                              <div className="flex items-center gap-3 flex-wrap">
                                 <h4 className="font-semibold text-lg">
                                   {exam.title}
                                 </h4>
-                                <Badge
-                                  variant="secondary"
-                                  className="bg-violet-100 text-violet-700"
-                                >
+                                <Badge variant="secondary">
                                   {exam.subjectName}
                                 </Badge>
                                 <Badge variant="outline">{exam.mode}</Badge>
                                 {exam.conflicts &&
                                   exam.conflicts.length > 0 && (
-                                    <Badge
-                                      variant="destructive"
-                                      className="animate-pulse"
-                                    >
+                                    <Badge className="bg-warning text-warning-foreground">
                                       <AlertTriangle className="w-3 h-3 mr-1" />
                                       {exam.conflicts.length} Conflict
                                       {exam.conflicts.length > 1 ? 's' : ''}
@@ -627,65 +637,56 @@ export default function AIExamPromptDialog({
                               </div>
 
                               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                                <div>
-                                  <span className="text-muted-foreground">
-                                    Date & Time:
-                                  </span>
+                                <div className="space-y-1">
+                                  <div className="flex items-center gap-2 text-muted-foreground">
+                                    <Calendar className="w-4 h-4" />
+                                    <span>Date & Time</span>
+                                  </div>
                                   <p className="font-medium">
-                                    {new Date(
-                                      exam.startDate
-                                    ).toLocaleDateString()}
+                                    {formatDateIN(exam.startDate)}
                                   </p>
-                                  <p className="text-xs text-muted-foreground">
-                                    {new Date(
-                                      exam.startDate
-                                    ).toLocaleTimeString([], {
-                                      hour: '2-digit',
-                                      minute: '2-digit',
-                                    })}{' '}
-                                    -{' '}
-                                    {new Date(exam.endDate).toLocaleTimeString(
-                                      [],
-                                      {
-                                        hour: '2-digit',
-                                        minute: '2-digit',
-                                      }
-                                    )}
+                                  <p className="text-muted-foreground">
+                                    {formatTimeIN(exam.startDate)} -{' '}
+                                    {formatTimeIN(exam.endDate)}
                                   </p>
                                 </div>
-                                <div>
-                                  <span className="text-muted-foreground">
-                                    Marks:
-                                  </span>
+                                <div className="space-y-1">
+                                  <div className="flex items-center gap-2 text-muted-foreground">
+                                    <Award className="w-4 h-4" />
+                                    <span>Marks</span>
+                                  </div>
                                   <p className="font-medium">
                                     {exam.maxMarks} total
                                   </p>
-                                  <p className="text-xs text-muted-foreground">
+                                  <p className="text-muted-foreground">
                                     Pass: {exam.passingMarks}
                                   </p>
                                 </div>
-                                <div>
-                                  <span className="text-muted-foreground">
-                                    Duration:
-                                  </span>
+                                <div className="space-y-1">
+                                  <div className="flex items-center gap-2 text-muted-foreground">
+                                    <Clock className="w-4 h-4" />
+                                    <span>Duration</span>
+                                  </div>
                                   <p className="font-medium">
                                     {Math.floor(exam.durationMinutes / 60)}h{' '}
                                     {exam.durationMinutes % 60}m
                                   </p>
                                 </div>
-                                <div>
-                                  <span className="text-muted-foreground">
-                                    Venue:
-                                  </span>
+                                <div className="space-y-1">
+                                  <div className="flex items-center gap-2 text-muted-foreground">
+                                    <MapPin className="w-4 h-4" />
+                                    <span>Venue</span>
+                                  </div>
                                   <p className="font-medium">{exam.venue}</p>
                                 </div>
                               </div>
 
                               {exam.supervisorNames.length > 0 && (
-                                <div className="text-sm">
-                                  <span className="text-muted-foreground">
-                                    Supervisors:{' '}
-                                  </span>
+                                <div className="bg-muted/50 rounded-lg p-3 border border-border">
+                                  <div className="flex items-center gap-2 text-muted-foreground text-sm mb-1">
+                                    <Users className="w-4 h-4" />
+                                    Supervisors
+                                  </div>
                                   <span className="font-medium">
                                     {exam.supervisorNames.join(', ')}
                                   </span>
@@ -693,18 +694,18 @@ export default function AIExamPromptDialog({
                               )}
 
                               {exam.conflicts && exam.conflicts.length > 0 && (
-                                <div className="p-3 bg-orange-100 rounded-lg border border-orange-200">
-                                  <div className="flex items-center gap-2 text-orange-800 font-medium text-sm mb-1">
+                                <div className="p-3 bg-warning/10 rounded-lg border border-warning/20">
+                                  <div className="flex items-center gap-2 text-warning-foreground font-medium text-sm mb-2">
                                     <AlertTriangle className="w-4 h-4" />
                                     Conflicts Detected
                                   </div>
-                                  <ul className="text-orange-700 text-sm space-y-1">
+                                  <ul className="text-sm space-y-1">
                                     {exam.conflicts.map((conflict, i) => (
                                       <li
                                         key={i}
                                         className="flex items-start gap-2"
                                       >
-                                        <span className="text-orange-500 mt-1">
+                                        <span className="text-warning mt-1">
                                           •
                                         </span>
                                         {conflict}
@@ -720,7 +721,7 @@ export default function AIExamPromptDialog({
                                 variant="ghost"
                                 size="sm"
                                 onClick={() => setEditingExam(index)}
-                                className="hover:bg-blue-50 hover:text-blue-700"
+                                className="p-2"
                               >
                                 <Edit3 className="w-4 h-4" />
                               </Button>
@@ -728,7 +729,7 @@ export default function AIExamPromptDialog({
                                 variant="ghost"
                                 size="sm"
                                 onClick={() => duplicateExam(index)}
-                                className="hover:bg-green-50 hover:text-green-700"
+                                className="p-2"
                               >
                                 <Plus className="w-4 h-4" />
                               </Button>
@@ -736,7 +737,7 @@ export default function AIExamPromptDialog({
                                 variant="ghost"
                                 size="sm"
                                 onClick={() => removeExam(index)}
-                                className="hover:bg-red-50 hover:text-red-700"
+                                className="p-2 hover:bg-destructive/10 hover:text-destructive"
                               >
                                 <Trash2 className="w-4 h-4" />
                               </Button>

@@ -8,7 +8,12 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { cn, formatCurrencyIN, formatDateIN } from '@/lib/utils';
+import {
+  cn,
+  formatCurrencyIN,
+  formatDateIN,
+  formatDateRange,
+} from '@/lib/utils';
 import prisma from '@/lib/db';
 import {
   Activity,
@@ -20,18 +25,7 @@ import { redirect } from 'next/navigation';
 import { auth } from '@clerk/nextjs/server';
 import PayFeeButton from '@/components/PayFeeButton';
 import { ReceiptDownloadButton } from '@/components/ReceiptDownloadButton';
-
-async function getStudentFromUser(userId: string) {
-  return await prisma.student.findUnique({
-    where: {
-      userId: userId,
-    },
-    select: {
-      id: true,
-      createdAt: true,
-    },
-  });
-}
+import { getCurrentUserByRole } from '@/lib/auth';
 
 async function getFees(studentId: string) {
   return await prisma.fee.findMany({
@@ -52,23 +46,37 @@ async function getFees(studentId: string) {
 }
 
 export default async function StudentFeePage() {
-  const { userId } = await auth();
+  const currentUser = await getCurrentUserByRole();
 
-  if (!userId) {
-    return redirect('/sign-in');
+  // ✅ Only allow students here
+  if (currentUser.role !== 'STUDENT') {
+    return (
+      <div className="p-8 text-center text-red-600 font-semibold text-lg">
+        Only students can access this page.
+      </div>
+    );
   }
 
-  const student = await getStudentFromUser(userId);
+  const student = await prisma.student.findUnique({
+    where: {
+      id: currentUser.studentId,
+    },
+    select: {
+      createdAt: true,
+    },
+  });
 
-  if (!student) {
-    return redirect('/dashboard'); // Or show access denied
-  }
-
-  const fees = await getFees(student.id);
+  const fees = await getFees(currentUser.studentId);
 
   const totalFees = fees.reduce((acc, fee) => acc + fee.totalFee, 0);
   const paidFees = fees.reduce((acc, fee) => acc + fee.paidAmount, 0);
   const pendingFees = totalFees - paidFees;
+  const admissionDate = student?.createdAt;
+  const monthsEnrolled = admissionDate
+    ? Math.floor(
+        (Date.now() - admissionDate.getTime()) / (1000 * 60 * 60 * 24 * 30)
+      )
+    : 0;
 
   return (
     <div className="space-y-3 px-2">
@@ -154,115 +162,107 @@ export default async function StudentFeePage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {formatDateIN(student.createdAt)}
+              {formatDateIN(admissionDate)}
             </div>
             <p className="text-xs text-muted-foreground mt-1">
-              {Math.floor(
-                (new Date().getTime() - new Date(student.createdAt).getTime()) /
-                  (1000 * 60 * 60 * 24 * 30)
-              )}{' '}
-              months enrolled
+              {monthsEnrolled} months enrolled
             </p>
           </CardContent>
         </Card>
       </div>
 
-      <div>
-        <div className="flex items-center justify-between">
-          <h3 className="text-lg font-medium">Fee Records</h3>
-          <Badge variant="outline" className="text-xs">
-            {fees.length} Records
-          </Badge>
-        </div>
-        <Separator className="my-4" />
+      <div className="flex items-center justify-between px-2">
+        <h3 className="text-lg font-medium">Fee Records</h3>
+        <Badge variant="outline" className="text-xs">
+          {fees.length} Records
+        </Badge>
+      </div>
+      <Separator className="my-4" />
 
-        <div className="space-y-4">
-          {fees.map((fee) => (
-            <Card
-              key={fee.id}
-              className="overflow-hidden border-border/50 transition-all hover:shadow-sm"
-            >
-              <CardHeader className="pb-3">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <CardTitle className="text-base capitalize">
-                      Fee : {fee.feeCategory.name}
-                    </CardTitle>
-                    <Badge
-                      variant="outline"
-                      className={cn(
-                        'font-normal',
-                        fee.status === 'PAID'
-                          ? 'bg-emerald-50 text-emerald-700 hover:bg-emerald-50 border-emerald-200'
-                          : fee.status === 'UNPAID'
-                            ? 'bg-yellow-50 text-yellow-700 hover:bg-yellow-50 border-yellow-200'
-                            : fee.status === 'OVERDUE'
-                              ? 'bg-red-50 text-red-700 hover:bg-red-50 border-red-200'
-                              : ''
-                      )}
-                    >
-                      {fee.status}
-                    </Badge>
-                  </div>
-                  <div className="text-sm font-medium text-muted-foreground">
-                    {formatCurrencyIN(fee.totalFee)}
-                  </div>
-                </div>
-                <CardDescription className="mt-1.5">
-                  {fee.feeCategory.description}
-                </CardDescription>
-              </CardHeader>
-
-              <CardContent>
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
-                  <div>
-                    <p className="text-sm font-medium text-muted-foreground">
-                      Issue Date
-                    </p>
-                    <p className="text-sm mt-1">
-                      {formatDateIN(fee.createdAt)}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-muted-foreground">
-                      Due Date
-                    </p>
-                    <p className="text-sm mt-1">{formatDateIN(fee.dueDate)}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-muted-foreground">
-                      Category
-                    </p>
-                    <p className="text-sm mt-1 capitalize">
-                      {fee.feeCategory.name}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-muted-foreground">
-                      Payment Status
-                    </p>
-                    <p className="text-sm mt-1">
-                      {fee.status === 'PAID'
-                        ? `Paid ${formatCurrencyIN(fee.paidAmount)}`
-                        : 'Not paid yet'}
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-
-              <CardFooter className="flex justify-end pt-3 pb-4">
-                {fee.status !== 'PAID' ? (
-                  <PayFeeButton feeId={fee.id} />
-                ) : (
-                  <ReceiptDownloadButton
-                    paymentId={fee.payments[0]?.id!}
+      <div className="space-y-4">
+        {fees.map((fee) => (
+          <Card
+            key={fee.id}
+            className="overflow-hidden border-border/50 transition-all hover:shadow-sm"
+          >
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <CardTitle className="text-base capitalize">
+                    Fee : {fee.feeCategory.name}
+                  </CardTitle>
+                  <Badge
                     variant="outline"
-                  />
-                )}
-              </CardFooter>
-            </Card>
-          ))}
-        </div>
+                    className={cn(
+                      'font-normal',
+                      fee.status === 'PAID'
+                        ? 'bg-emerald-50 text-emerald-700 hover:bg-emerald-50 border-emerald-200'
+                        : fee.status === 'UNPAID'
+                          ? 'bg-yellow-50 text-yellow-700 hover:bg-yellow-50 border-yellow-200'
+                          : fee.status === 'OVERDUE'
+                            ? 'bg-red-50 text-red-700 hover:bg-red-50 border-red-200'
+                            : ''
+                    )}
+                  >
+                    {fee.status}
+                  </Badge>
+                </div>
+                <div className="text-sm font-medium text-muted-foreground">
+                  {formatCurrencyIN(fee.totalFee)}
+                </div>
+              </div>
+              <CardDescription className="mt-1.5">
+                {fee.feeCategory.description}
+              </CardDescription>
+            </CardHeader>
+
+            <CardContent>
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">
+                    Issue Date
+                  </p>
+                  <p className="text-sm mt-1">{formatDateIN(fee.createdAt)}</p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">
+                    Due Date
+                  </p>
+                  <p className="text-sm mt-1">{formatDateIN(fee.dueDate)}</p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">
+                    Category
+                  </p>
+                  <p className="text-sm mt-1 capitalize">
+                    {fee.feeCategory.name}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">
+                    Payment Status
+                  </p>
+                  <p className="text-sm mt-1">
+                    {fee.status === 'PAID'
+                      ? `Paid ${formatCurrencyIN(fee.paidAmount)}`
+                      : 'Not paid yet'}
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+
+            <CardFooter className="flex justify-end pt-3 pb-4">
+              {fee.status !== 'PAID' ? (
+                <PayFeeButton feeId={fee.id} />
+              ) : (
+                <ReceiptDownloadButton
+                  paymentId={fee.payments[0]?.id!}
+                  variant="outline"
+                />
+              )}
+            </CardFooter>
+          </Card>
+        ))}
       </div>
     </div>
   );

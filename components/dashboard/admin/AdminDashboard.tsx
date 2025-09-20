@@ -26,7 +26,6 @@ import AdminDashboardCards from '@/app/components/dashboardComponents/AdminDashb
 import AdminRecentActivity from '@/app/components/dashboardComponents/RecentActivity';
 import { UpcomingEvents } from '@/app/components/dashboardComponents/UpcomingEvents';
 import { getCurrentAcademicYear } from '@/lib/academicYear';
-import { redirect } from 'next/navigation';
 
 const AdminDashboard = async () => {
   const data = await getMonthlyFeeData(2025);

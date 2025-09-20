@@ -1,35 +1,11 @@
-import prisma from '@/lib/db';
-import { getOrganizationId } from '@/lib/organization';
 import { Suspense } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import DocumentVerificationPage from '@/components/dashboard/admin/DocumentVerification';
+import getAllStudentDocuments from '@/lib/data/documents/get-all-student-documents';
 
 async function DocumentsData() {
-  const organizationId = await getOrganizationId();
-
-  const documents = await prisma.studentDocument.findMany({
-    where: {
-      isDeleted: false,
-      organizationId,
-    },
-    include: {
-      student: {
-        select: {
-          id: true,
-          firstName: true,
-          lastName: true,
-          rollNumber: true,
-          grade: { select: { grade: true } },
-          section: { select: { name: true } },
-        },
-      },
-    },
-    orderBy: {
-      uploadedAt: 'desc',
-    },
-  });
-
+  const documents = await getAllStudentDocuments();
   return <DocumentVerificationPage documents={documents} />;
 }
 

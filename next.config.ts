@@ -16,6 +16,12 @@ const nextConfig: NextConfig = {
   // compiler: {
   //   removeConsole: process.env.NODE_ENV === 'development',
   // },
+
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '3mb',
+    },
+  },
   headers: async () => {
     return [
       {
@@ -46,6 +52,10 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'utfs.io',
+      },
+      {
+        protocol: 'https',
+        hostname: 'img.clerk.com',
       },
     ],
   },

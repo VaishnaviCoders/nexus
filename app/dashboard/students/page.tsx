@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React from 'react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Separator } from '@/components/ui/separator';
@@ -7,38 +7,34 @@ import StudentFilter from '@/components/dashboard/Student/StudentFilter';
 import { searchParamsCache } from '@/lib/searchParams';
 import { SearchParams } from 'nuqs';
 
-import { getOrganizationId, getOrganizationUserRole } from '@/lib/organization';
+import { getOrganization } from '@/lib/organization';
 
 import FilterStudents from '@/lib/data/student/FilterStudents';
 import { Skeleton } from '@/components/ui/skeleton';
 import { redirect } from 'next/navigation';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardTitle,
-} from '@/components/ui/card';
+import { Card, CardDescription, CardTitle } from '@/components/ui/card';
 
-export const revalidate = 30; // or 'force-cache' if data doesn't change often
+export const dynamic = 'force-dynamic';
 
 type PageProps = {
   searchParams: Promise<SearchParams>;
 };
 
 export default async function Students({ searchParams }: PageProps) {
-  const orgId = await getOrganizationId();
+  const [{ orgId, orgRole }, searchParamsParsed] = await Promise.all([
+    getOrganization(),
+    searchParamsCache.parse(searchParams),
+  ]);
 
-  const { search, sectionId, gradeId } =
-    await searchParamsCache.parse(searchParams);
+  const { search, sectionId, gradeId } = searchParamsParsed;
 
   const students = await FilterStudents({ search, gradeId, sectionId });
 
-  const { orgRole } = await getOrganizationUserRole();
-
   if (orgRole === 'org:student' || orgRole === 'org:parent')
     redirect('/dashboard');
+
   return (
-    <div className="p-4 space-y-3 ">
+    <div className="px-2 space-y-3 ">
       <Card className="py-4 px-2 flex items-center justify-between   ">
         {/* //max-sm:flex-col max-sm:items-start max-sm:space-y-3 */}
         <div>
@@ -63,9 +59,13 @@ export default async function Students({ searchParams }: PageProps) {
 
       <Separator />
 
-      <Suspense fallback={<Skeleton className="container mx-auto h-56" />}>
-        <StudentFilter organizationId={orgId} initialStudents={students} />
-      </Suspense>
+      <StudentFilter
+        organizationId={orgId}
+        initialStudents={students}
+        initialGradeId={gradeId || 'all'}
+        initialSectionId={sectionId || 'all'}
+        initialSearch={search || ''}
+      />
     </div>
   );
 }

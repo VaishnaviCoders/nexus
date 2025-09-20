@@ -31,27 +31,25 @@ export default async function AdminFeeDashboard() {
   const feeRecords = await getFeeRecords();
 
   return (
-    <div className="flex flex-col space-y-8">
+    <div className="space-y-8 px-2">
       {/* Responsive Header */}
-      <div className="flex flex-col gap-4 sm:flex-row px-2 sm:items-center sm:justify-between">
-        <div className="space-y-1">
-          <h1 className="text-lg font-bold tracking-tight sm:text-2xl">
-            Fee Management
-          </h1>
-          <p className="text-sm text-muted-foreground sm:text-base">
+      <Card className="py-4 px-2 flex items-center justify-between   ">
+        {/* //max-sm:flex-col max-sm:items-start max-sm:space-y-3 */}
+        <div>
+          <CardTitle className="text-lg"> Fee Management</CardTitle>
+          <CardDescription className="text-sm">
             Manage and track fee collection across all students
-          </p>
+          </CardDescription>
         </div>
-
-        {/* Responsive Button Container */}
-        <div className="flex sm:flex-row sm:items-center space-x-2">
-          <Button
+        <div className="flex justify-center items-center space-x-3">
+          {/* <Button
             variant="outline"
             className="w-full sm:w-auto cursor-not-allowed"
           >
             <DownloadIcon className="mr-2 h-4 w-4" />
             <span className="sm:inline">Export Data</span>
-          </Button>
+          </Button> */}
+
           <Link
             href="/dashboard/fees/admin/assign"
             className="w-full sm:w-auto"
@@ -62,7 +60,7 @@ export default async function AdminFeeDashboard() {
             </Button>
           </Link>
         </div>
-      </div>
+      </Card>
 
       {/* Summary Cards */}
       <Suspense fallback={<AdminFeesSummaryCardsSkeleton />}>

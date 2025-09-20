@@ -19,15 +19,16 @@ export default async function FilterStudents({
     organizationId: orgId,
   };
 
-  if (search && search.trim() !== '') {
+  const trimmedSearch = search.trim();
+  if (trimmedSearch !== '') {
     where.AND = [
       {
         OR: [
-          { firstName: { contains: search, mode: 'insensitive' } },
-          { lastName: { contains: search, mode: 'insensitive' } },
-          { fullName: { contains: search, mode: 'insensitive' } },
-          { rollNumber: { contains: search, mode: 'insensitive' } },
-          { email: { contains: search, mode: 'insensitive' } },
+          { firstName: { contains: trimmedSearch, mode: 'insensitive' } },
+          { lastName: { contains: trimmedSearch, mode: 'insensitive' } },
+          { fullName: { contains: trimmedSearch, mode: 'insensitive' } },
+          { rollNumber: { contains: trimmedSearch, mode: 'insensitive' } },
+          { email: { contains: trimmedSearch, mode: 'insensitive' } },
         ],
       },
     ];
@@ -68,7 +69,7 @@ export default async function FilterStudents({
         },
       },
       orderBy: [{ firstName: 'asc' }, { lastName: 'asc' }],
-      take: 100,
+      take: 120, // protect against massive payloads
     });
 
     return students;

@@ -140,42 +140,6 @@ export function ExamDetailsPage({
     ? new Date(exam.endDate)
     : new Date(startDate.getTime() + (exam.durationInMinutes || 60) * 60000);
 
-  const getStatusConfig = (status: string) => {
-    const configs = {
-      UPCOMING: {
-        variant: 'secondary' as const,
-        className: 'bg-blue-50 text-blue-700 border-blue-200',
-        text: 'UPCOMING',
-      },
-      LIVE: {
-        variant: 'destructive' as const,
-        className: 'bg-red-50 text-red-700 border-red-200',
-        text: 'LIVE',
-      },
-      COMPLETED: {
-        variant: 'default' as const,
-        className: 'bg-green-50 text-green-700 border-green-200',
-        text: 'COMPLETED',
-      },
-    };
-    return configs[status as keyof typeof configs] || configs.UPCOMING;
-  };
-
-  const getModeConfig = (mode: string) => {
-    return mode === 'ONLINE'
-      ? {
-          className: 'bg-purple-50 text-purple-700 border-purple-200',
-          text: 'EXAM - ONLINE',
-        }
-      : {
-          className: 'bg-gray-50 text-gray-700 border-gray-200',
-          text: 'EXAM - OFFLINE',
-        };
-  };
-
-  const statusConfig = getStatusConfig(exam.status);
-  const modeConfig = getModeConfig(exam.mode);
-
   const handleEnroll = async () => {
     setIsEnrolling(true);
     try {
@@ -269,12 +233,13 @@ export function ExamDetailsPage({
               <span className="font-medium">{exam.subject?.name}</span>
               <span>•</span>
               <span className="font-medium">{exam.subject?.code}</span>
-              <Badge className={statusConfig.className} variant="outline">
-                {statusConfig.text}
+              <Badge variant={exam.status} className="gap-2">
+                <div
+                  className={`${exam.status === 'LIVE' ? 'h-2 w-2 rounded-full bg-green-500 animate-pulse' : ''}`}
+                ></div>
+                {exam.status}
               </Badge>
-              <Badge className={modeConfig.className} variant="outline">
-                {modeConfig.text}
-              </Badge>
+              <Badge variant="outline">{exam.mode}</Badge>
             </div>
           </CardDescription>
         </CardHeader>
@@ -314,7 +279,7 @@ export function ExamDetailsPage({
             </Card>
           </div>
 
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div className="flex items-center gap-4">
               {studentEnrollment ? (
                 <Badge
@@ -815,10 +780,18 @@ export function ExamDetailsPage({
                           </p>
                         </div>
                       </div>
-                      <Button onClick={handleDownloadHallTicket} size="sm">
-                        <Download className="h-4 w-4 mr-2" />
-                        Download
-                      </Button>
+                      <div className="flex gap-2">
+                        <Button onClick={handleDownloadHallTicket} size="sm">
+                          <Download className="h-4 w-4 mr-2" />
+                          Download
+                        </Button>
+                        <Link href={`/dashboard/exams/${exam.id}/hall-ticket`}>
+                          <Button variant="outline" size="sm">
+                            <FileText className="h-4 w-4 mr-2" />
+                            View Full Ticket
+                          </Button>
+                        </Link>
+                      </div>
                     </div>
                   ) : (
                     <div className="text-center py-8">

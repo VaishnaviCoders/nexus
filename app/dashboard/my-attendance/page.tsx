@@ -47,13 +47,13 @@ export default async function page() {
         <div>
           <CardTitle className="text-lg flex gap-3 items-center">
             My Attendance
-            <Badge
+            {/* <Badge
               variant="outline"
               className="bg-blue-50 max-sm:hidden text-blue-700 border-blue-200 dark:bg-blue-950 dark:text-blue-300 dark:border-blue-800"
             >
               <TrendingUp className="w-3 h-3 mr-1" />
               Academic Year 2025-26
-            </Badge>
+            </Badge> */}
           </CardTitle>
           <CardDescription className="text-sm">
             Track your school attendance, reports

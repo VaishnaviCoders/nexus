@@ -1,6 +1,5 @@
 'use client';
 
-import * as React from 'react';
 import {
   Sheet,
   SheetContent,
@@ -8,167 +7,95 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { cn } from '@/lib/utils';
-import { type bulkExamRowFormData } from '@/lib/schemas';
+import { AlertTriangle, CheckCircle, Brain } from 'lucide-react';
 
 type Props = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  manual: string[];
   ai: string[];
 };
 
-export function ConflictCheckSheet({ open, onOpenChange, manual, ai }: Props) {
-  const [filter, setFilter] = React.useState<'MANUAL' | 'AI' | 'ALL'>('ALL');
-
-  // Combine all conflicts
-  const allConflicts = React.useMemo(() => {
-    const manualConflicts = manual.map((msg, idx) => ({
-      id: `manual-${idx}`,
-      type: 'MANUAL' as const,
-      message: msg,
-      severity: 'medium' as const,
-    }));
-
-    const aiConflicts = ai.map((msg, idx) => ({
-      id: `ai-${idx}`,
-      type: 'AI' as const,
-      message: msg,
-      severity: 'high' as const,
-    }));
-
-    return [...manualConflicts, ...aiConflicts];
-  }, [manual, ai]);
-
-  const filtered = React.useMemo(() => {
-    if (filter === 'ALL') return allConflicts;
-    return allConflicts.filter((c) => c.type === filter);
-  }, [allConflicts, filter]);
-
-  const grouped = React.useMemo(() => {
-    const map = new Map<string, typeof allConflicts>();
-    for (const c of filtered) {
-      const key = c.type;
-      const arr = map.get(key) || [];
-      arr.push(c);
-      map.set(key, arr);
-    }
-    return map;
-  }, [filtered]);
-
-  const total = allConflicts.length;
+export function ConflictCheckSheet({ open, onOpenChange, ai }: Props) {
+  const hasIssues = ai.length > 0;
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="right" className="w-full sm:max-w-xl md:max-w-2xl">
+      <SheetContent className="w-[400px] sm:w-[540px]">
         <SheetHeader>
-          <SheetTitle className="text-balance">Conflict Checker</SheetTitle>
-          <SheetDescription className="text-pretty">
-            Review detected conflicts from manual validation and AI analysis.
+          <SheetTitle className="flex items-center gap-2">
+            <Brain className="w-5 h-5" />
+            AI Conflict Analysis
+          </SheetTitle>
+          <SheetDescription>
+            AI-powered analysis of your exam schedule for potential conflicts
+            and issues.
           </SheetDescription>
         </SheetHeader>
 
-        <div className="mt-4 flex flex-col gap-4">
+        <div className="mt-6 space-y-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Badge variant="outline">Total Conflicts: {total}</Badge>
-              {manual.length > 0 && (
-                <Badge variant="secondary">Manual: {manual.length}</Badge>
+            <h3 className="text-lg font-semibold">Analysis Results</h3>
+            <Badge variant={hasIssues ? 'destructive' : 'default'}>
+              {hasIssues ? (
+                <>
+                  <AlertTriangle className="w-3 h-3 mr-1" />
+                  {ai.length} Issue{ai.length > 1 ? 's' : ''}
+                </>
+              ) : (
+                <>
+                  <CheckCircle className="w-3 h-3 mr-1" />
+                  All Clear
+                </>
               )}
-              {ai.length > 0 && (
-                <Badge variant="destructive">AI: {ai.length}</Badge>
-              )}
-            </div>
-            <Tabs value={filter} onValueChange={(v) => setFilter(v as any)}>
-              <TabsList>
-                <TabsTrigger value="ALL">All</TabsTrigger>
-                <TabsTrigger value="MANUAL">Manual</TabsTrigger>
-                <TabsTrigger value="AI">AI</TabsTrigger>
-              </TabsList>
-            </Tabs>
+            </Badge>
           </div>
 
-          <Separator />
-
-          <ScrollArea className="h-[60vh] rounded-md border p-2">
-            {filtered.length === 0 ? (
-              <div className="p-4 text-sm text-muted-foreground text-center">
-                {total === 0
-                  ? 'No conflicts detected!'
-                  : 'No conflicts for the current filter.'}
+          <ScrollArea className="h-[400px] w-full rounded-md border p-4">
+            {hasIssues ? (
+              <div className="space-y-3">
+                <div className="flex items-center gap-2 text-sm font-medium text-destructive">
+                  <AlertTriangle className="w-4 h-4" />
+                  Issues Found
+                </div>
+                <ul className="space-y-2">
+                  {ai.map((issue, index) => (
+                    <li
+                      key={index}
+                      className="flex items-start gap-2 text-sm p-3 bg-destructive/5 rounded-lg border border-destructive/20"
+                    >
+                      <span className="text-destructive mt-1">•</span>
+                      <span>{issue}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
             ) : (
-              <div className="flex flex-col gap-3">
-                {Array.from(grouped.entries()).map(([type, list]) => (
-                  <div key={type} className="rounded-md border p-3">
-                    <div className="mb-2 flex items-center justify-between">
-                      <div className="font-medium">
-                        {type === 'MANUAL'
-                          ? 'Manual Validation'
-                          : 'AI Analysis'}
-                      </div>
-                      <Badge
-                        variant={
-                          type === 'MANUAL' ? 'secondary' : 'destructive'
-                        }
-                      >
-                        {list.length}
-                      </Badge>
-                    </div>
-                    <div className="flex flex-col gap-2">
-                      {list.map((c) => (
-                        <div
-                          key={c.id}
-                          className={cn(
-                            'rounded-md border p-3',
-                            c.type === 'MANUAL'
-                              ? 'bg-amber-50 border-amber-200 text-amber-800'
-                              : 'bg-red-50 border-red-200 text-red-800'
-                          )}
-                        >
-                          <div className="flex items-center justify-between">
-                            <div className="text-sm font-medium">
-                              {c.message}
-                            </div>
-                            <Badge
-                              variant={
-                                c.type === 'MANUAL'
-                                  ? 'secondary'
-                                  : 'destructive'
-                              }
-                              className="capitalize"
-                            >
-                              {c.type}
-                            </Badge>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                ))}
+              <div className="flex flex-col items-center justify-center h-full text-center space-y-3">
+                <CheckCircle className="w-12 h-12 text-success" />
+                <div>
+                  <h4 className="font-semibold text-success">
+                    No Issues Found!
+                  </h4>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Your exam schedule looks good. No conflicts or issues
+                    detected.
+                  </p>
+                </div>
               </div>
             )}
           </ScrollArea>
 
-          <div className="rounded-lg border p-3 bg-muted/50">
-            <div className="text-sm text-muted-foreground">
-              <p className="font-medium mb-2">Conflict Types:</p>
-              <ul className="space-y-1 text-xs">
-                <li>
-                  • <strong>Manual:</strong> Basic validation checks (dates,
-                  subjects, etc.)
-                </li>
-                <li>
-                  • <strong>AI:</strong> Advanced conflict detection using AI
-                  analysis
-                </li>
-              </ul>
-            </div>
+          <div className="text-xs text-muted-foreground bg-muted/50 p-3 rounded-lg">
+            <p className="font-medium mb-1">💡 AI Analysis includes:</p>
+            <ul className="space-y-1">
+              <li>• Time conflicts and overlaps</li>
+              <li>• Venue double-booking</li>
+              <li>• Teacher/supervisor conflicts</li>
+              <li>• Invalid marks and durations</li>
+              <li>• Missing required information</li>
+            </ul>
           </div>
         </div>
       </SheetContent>

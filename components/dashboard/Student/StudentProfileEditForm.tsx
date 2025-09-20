@@ -3,7 +3,7 @@
 import { useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { CalendarIcon, Loader2, Save, User } from 'lucide-react';
+import { CalendarIcon, Loader2, Save, User, AlertCircle } from 'lucide-react';
 import { format } from 'date-fns';
 
 import { Button } from '@/components/ui/button';
@@ -40,6 +40,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { cn } from '@/lib/utils';
 import { StudentProfileFormData, studentProfileSchema } from '@/lib/schemas';
 import { toast } from 'sonner';
@@ -93,61 +94,27 @@ export function StudentProfileEditForm({
     },
   });
 
-  function onSubmit(data: StudentProfileFormData) {
+  const onSubmit = async (data: StudentProfileFormData) => {
     startTransition(async () => {
       try {
-        await editStudentProfileForm(student.id, data);
+        const result = await editStudentProfileForm(student.id, data);
 
-        toast.success('Student profile updated successfully');
+        if (result.success) {
+          toast.success(
+            result.message || 'Student profile updated successfully'
+          );
+        } else {
+          toast.error(result.error || 'Failed to update student profile');
+        }
       } catch (error) {
-        toast.success('Failed to update student profile');
+        console.error('Profile update error:', error);
+        toast.error('Failed to update student profile. Please try again.');
       }
     });
-  }
+  };
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <Card className="border-0 bg-gradient-to-r from-card via-card to-blue-50/20 dark:to-blue-950/20">
-        <CardContent className="flex flex-col lg:flex-row lg:items-center lg:justify-between p-6 gap-4">
-          <div className="flex items-center gap-4">
-            <Avatar className="h-16 w-16">
-              <AvatarImage
-                src={student.profileImage || ''}
-                alt={student.fullName || ''}
-              />
-              <AvatarFallback className="text-lg">
-                {student.firstName[0]}
-                {student.lastName[0]}
-              </AvatarFallback>
-            </Avatar>
-            <div>
-              <CardTitle className="text-xl font-bold">Edit Profile</CardTitle>
-              <CardDescription className="text-base mt-1">
-                Update your personal information and contact details
-              </CardDescription>
-              <div className="flex items-center gap-2 mt-2">
-                <Badge variant="outline" className="text-xs">
-                  Grade {student.grade}-{student.section}
-                </Badge>
-                <Badge variant="outline" className="text-xs">
-                  Roll: {student.rollNumber}
-                </Badge>
-              </div>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <Badge
-              variant="outline"
-              className="bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950 dark:text-blue-300 dark:border-blue-800"
-            >
-              <User className="w-3 h-3 mr-1" />
-              {student.isOwnProfile ? 'Your Profile' : 'Child&apos;s Profile'}
-            </Badge>
-          </div>
-        </CardContent>
-      </Card>
-
       {/* Form */}
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">

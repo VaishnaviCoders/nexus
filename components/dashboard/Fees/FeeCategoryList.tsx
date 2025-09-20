@@ -2,6 +2,7 @@ import { EmptyState } from '@/components/EmptyState';
 import { FeeCategoryItem } from './FeeCategoryItem';
 import { Activity, Pin, User } from 'lucide-react';
 import { getFeeCategories } from '@/lib/data/fee/fee-categories';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 export async function FeeCategoryList() {
   const categories = await getFeeCategories();
@@ -21,11 +22,13 @@ export async function FeeCategoryList() {
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-1 gap-4">
-        {categories.map((category) => (
-          <FeeCategoryItem key={category.id} category={category} />
-        ))}
-      </div>
+      <ScrollArea className="h-[427px]">
+        <div className="grid grid-cols-1 gap-4">
+          {categories.map((category) => (
+            <FeeCategoryItem key={category.id} category={category} />
+          ))}
+        </div>
+      </ScrollArea>
     </div>
   );
 }

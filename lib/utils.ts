@@ -74,6 +74,17 @@ export function formatDateTimeIN(dateValue?: string | Date | null): string {
     timeZone: 'Asia/Kolkata',
   });
 }
+export function formatTimeIN(dateValue?: string | Date | null): string {
+  if (!dateValue) return '-';
+  const date = new Date(dateValue);
+  if (isNaN(date.getTime())) return '-';
+
+  return date.toLocaleTimeString('en-IN', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true,
+  });
+}
 
 export function getRelativeTime(dateValue?: string | Date | null): string {
   if (!dateValue) return '-';
