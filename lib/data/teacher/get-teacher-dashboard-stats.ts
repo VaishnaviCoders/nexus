@@ -4,6 +4,7 @@ import {
   getCurrentAcademicYear,
   getCurrentAcademicYearId,
 } from '@/lib/academicYear';
+import { getCurrentUserByRole } from '@/lib/auth';
 import prisma from '@/lib/db';
 import { auth } from '@clerk/nextjs/server';
 import { cache } from 'react';
@@ -109,7 +110,6 @@ export async function getTeacherDashboardStats() {
     prisma.notice.findMany({
       where: {
         organizationId: teacher.organizationId,
-        isPublished: true,
         targetAudience: {
           has: 'TEACHER',
         },
@@ -254,6 +254,8 @@ export async function getRecentActivities() {
   const today = new Date();
   const weekAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
 
+  const { role } = await getCurrentUserByRole();
+
   // Get recent attendance records marked by this teacher
   const recentAttendance = await prisma.studentAttendance.findMany({
     where: {
@@ -275,6 +277,9 @@ export async function getRecentActivities() {
     where: {
       organizationId: teacher.organizationId,
       createdAt: { gte: weekAgo },
+      targetAudience: {
+        has: role.toUpperCase(),
+      },
     },
     orderBy: { createdAt: 'desc' },
     take: 5,

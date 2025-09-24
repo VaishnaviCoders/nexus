@@ -72,7 +72,6 @@ const main = async () => {
       id: true,
       title: true,
       noticeType: true,
-      isPublished: true,
       targetAudience: true,
     },
   });

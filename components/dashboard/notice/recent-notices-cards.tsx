@@ -13,16 +13,7 @@ import { Bell, Calendar, ExternalLink } from 'lucide-react';
 import { cn, formatDateIN } from '@/lib/utils';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import Link from 'next/link';
-import { NoticeType } from '@/generated/prisma/enums';
-
-interface Notice {
-  id: string;
-  noticeType: NoticeType;
-  title: string;
-  content: string;
-  startDate: Date;
-  publishedBy: string;
-}
+import { Notice } from '@/generated/prisma/client';
 
 interface Props {
   recentNotices: Notice[];

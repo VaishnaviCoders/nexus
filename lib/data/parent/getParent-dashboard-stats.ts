@@ -1,5 +1,6 @@
 'use server';
 
+import { getCurrentUserByRole } from '@/lib/auth';
 import prisma from '@/lib/db';
 import { getOrganizationId } from '@/lib/organization';
 import { getCurrentUserId } from '@/lib/user';
@@ -211,12 +212,16 @@ export async function getFeesSummary() {
 
 export async function getNoticesSummary() {
   const organizationId = await getOrganizationId();
+  const { role } = await getCurrentUserByRole();
 
   // Get recent notices targeted to parents
   const notices = await prisma.notice.findMany({
     where: {
       organizationId,
-      isNoticeApproved: true,
+      status: { in: ['PUBLISHED', 'EXPIRED'] },
+      targetAudience: {
+        has: role.toUpperCase(),
+      },
     },
     orderBy: { createdAt: 'desc' },
     take: 10,
