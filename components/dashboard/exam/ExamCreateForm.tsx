@@ -25,7 +25,6 @@ import {
   SelectValue,
   SelectItem,
 } from '@/components/ui/select';
-import { Checkbox } from '@/components/ui/checkbox';
 import { toast } from 'sonner';
 import {
   Popover,

@@ -26,6 +26,9 @@ Website Pending
 - Who can buy software : School || Collages || Coaching Classes
 - Pricing Model : 12K Per Month || 79 INR Per Student/Month
 
+<!-- https://www.diceui.com/docs/components/file-upload -->
+<!-- https://www.diceui.com/docs/components/kanban -->
+
 Revenue Model
 By Per Students
 By Fees 2%

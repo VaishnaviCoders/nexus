@@ -1,15 +1,14 @@
 'use server';
 import { Resend } from 'resend';
 import { Knock } from '@knocklabs/node';
-import { User } from '@clerk/nextjs/server';
 
 import { render } from '@react-email/render';
-import { Prisma } from '@/generated/prisma/client';
+import { Prisma, User } from '@/generated/prisma/client';
 import NoticeEmailTemplate from '@/components/email-templates/noticeMail';
 
 type NoticeWithOrg = Prisma.NoticeGetPayload<{
   include: {
-    Organization: {
+    organization: {
       select: {
         name: true;
         organizationSlug: true;
@@ -35,9 +34,9 @@ export const sendNoticeEmails = async (
     endDate: notice.endDate ?? new Date(),
     noticeType: notice.noticeType ?? 'announcement',
     organizationImage:
-      notice.Organization.organizationLogo ??
+      notice.organization.organizationLogo ??
       'https://brandfetch.com/clerk.com?view=library&library=default&collection=logos&asset=idOESnvCPd&utm_source=https%253A%252F%252Fbrandfetch.com%252Fclerk.com&utm_medium=copyAction&utm_campaign=brandPageReferral',
-    organizationName: notice.Organization.name ?? 'Unknown Organization',
+    organizationName: notice.organization.name ?? 'Unknown Organization',
     publishedBy: `${user.firstName} ${user.lastName}` || 'System',
     targetAudience: notice.targetAudience ?? [],
     title: notice.title ?? 'Untitled Notice',
@@ -56,7 +55,7 @@ export const sendNoticeEmails = async (
       })),
       data: {
         title: notice.title,
-        email: user.emailAddresses[0].emailAddress,
+        email: user.email,
         name: user.firstName,
       },
     }),

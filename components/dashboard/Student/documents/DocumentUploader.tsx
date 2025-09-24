@@ -110,7 +110,9 @@ export function DocumentUploadForm({ studentId }: DocumentUploadFormProps) {
   const onSubmit = async (data: DocumentUploadFormData) => {
     try {
       setIsUploading(true);
-      const documentUrl = await uploadToCloudinary(data.file);
+      const { url: documentUrl, publicId } = await uploadToCloudinary(
+        data.file
+      );
 
       await uploadStudentDocuments(data, documentUrl, studentId);
 

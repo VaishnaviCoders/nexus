@@ -34,6 +34,8 @@ const isAdmin = createRouteMatcher([
   // '/dashboard/grades(.*)',
   // '/dashboard/holidays(.*)',
   // '/dashboard/documents/verification(.*)',
+
+  // '/dashboard/notices/create'
   // Add any other admin routes here
 ]);
 

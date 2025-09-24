@@ -405,13 +405,14 @@ export const ModelName = {
   StudentDocument: 'StudentDocument',
   Fee: 'Fee',
   FeePayment: 'FeePayment',
-  ScheduledJob: 'ScheduledJob',
   FeeCategory: 'FeeCategory',
   AcademicCalendar: 'AcademicCalendar',
   AnonymousComplaint: 'AnonymousComplaint',
   ComplaintStatusTimeline: 'ComplaintStatusTimeline',
   Notice: 'Notice',
+  NoticeAttachment: 'NoticeAttachment',
   NotificationLog: 'NotificationLog',
+  ScheduledJob: 'ScheduledJob',
   ExamSession: 'ExamSession',
   Exam: 'Exam',
   ExamEnrollment: 'ExamEnrollment',
@@ -433,7 +434,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "academicYear" | "organization" | "user" | "grade" | "section" | "teacher" | "teacherProfile" | "subject" | "teachingAssignment" | "student" | "parent" | "parentStudent" | "studentAttendance" | "studentDocument" | "fee" | "feePayment" | "scheduledJob" | "feeCategory" | "academicCalendar" | "anonymousComplaint" | "complaintStatusTimeline" | "notice" | "notificationLog" | "examSession" | "exam" | "examEnrollment" | "examResult" | "hallTicket" | "reportCard"
+    modelProps: "academicYear" | "organization" | "user" | "grade" | "section" | "teacher" | "teacherProfile" | "subject" | "teachingAssignment" | "student" | "parent" | "parentStudent" | "studentAttendance" | "studentDocument" | "fee" | "feePayment" | "feeCategory" | "academicCalendar" | "anonymousComplaint" | "complaintStatusTimeline" | "notice" | "noticeAttachment" | "notificationLog" | "scheduledJob" | "examSession" | "exam" | "examEnrollment" | "examResult" | "hallTicket" | "reportCard"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1621,80 +1622,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
-    ScheduledJob: {
-      payload: Prisma.$ScheduledJobPayload<ExtArgs>
-      fields: Prisma.ScheduledJobFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.ScheduledJobFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduledJobPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.ScheduledJobFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduledJobPayload>
-        }
-        findFirst: {
-          args: Prisma.ScheduledJobFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduledJobPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.ScheduledJobFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduledJobPayload>
-        }
-        findMany: {
-          args: Prisma.ScheduledJobFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduledJobPayload>[]
-        }
-        create: {
-          args: Prisma.ScheduledJobCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduledJobPayload>
-        }
-        createMany: {
-          args: Prisma.ScheduledJobCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.ScheduledJobCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduledJobPayload>[]
-        }
-        delete: {
-          args: Prisma.ScheduledJobDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduledJobPayload>
-        }
-        update: {
-          args: Prisma.ScheduledJobUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduledJobPayload>
-        }
-        deleteMany: {
-          args: Prisma.ScheduledJobDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.ScheduledJobUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.ScheduledJobUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduledJobPayload>[]
-        }
-        upsert: {
-          args: Prisma.ScheduledJobUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduledJobPayload>
-        }
-        aggregate: {
-          args: Prisma.ScheduledJobAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateScheduledJob>
-        }
-        groupBy: {
-          args: Prisma.ScheduledJobGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.ScheduledJobGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.ScheduledJobCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.ScheduledJobCountAggregateOutputType> | number
-        }
-      }
-    }
     FeeCategory: {
       payload: Prisma.$FeeCategoryPayload<ExtArgs>
       fields: Prisma.FeeCategoryFieldRefs
@@ -2065,6 +1992,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    NoticeAttachment: {
+      payload: Prisma.$NoticeAttachmentPayload<ExtArgs>
+      fields: Prisma.NoticeAttachmentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.NoticeAttachmentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NoticeAttachmentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.NoticeAttachmentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NoticeAttachmentPayload>
+        }
+        findFirst: {
+          args: Prisma.NoticeAttachmentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NoticeAttachmentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.NoticeAttachmentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NoticeAttachmentPayload>
+        }
+        findMany: {
+          args: Prisma.NoticeAttachmentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NoticeAttachmentPayload>[]
+        }
+        create: {
+          args: Prisma.NoticeAttachmentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NoticeAttachmentPayload>
+        }
+        createMany: {
+          args: Prisma.NoticeAttachmentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.NoticeAttachmentCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NoticeAttachmentPayload>[]
+        }
+        delete: {
+          args: Prisma.NoticeAttachmentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NoticeAttachmentPayload>
+        }
+        update: {
+          args: Prisma.NoticeAttachmentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NoticeAttachmentPayload>
+        }
+        deleteMany: {
+          args: Prisma.NoticeAttachmentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.NoticeAttachmentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.NoticeAttachmentUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NoticeAttachmentPayload>[]
+        }
+        upsert: {
+          args: Prisma.NoticeAttachmentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NoticeAttachmentPayload>
+        }
+        aggregate: {
+          args: Prisma.NoticeAttachmentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateNoticeAttachment>
+        }
+        groupBy: {
+          args: Prisma.NoticeAttachmentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.NoticeAttachmentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.NoticeAttachmentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.NoticeAttachmentCountAggregateOutputType> | number
+        }
+      }
+    }
     NotificationLog: {
       payload: Prisma.$NotificationLogPayload<ExtArgs>
       fields: Prisma.NotificationLogFieldRefs
@@ -2136,6 +2137,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.NotificationLogCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.NotificationLogCountAggregateOutputType> | number
+        }
+      }
+    }
+    ScheduledJob: {
+      payload: Prisma.$ScheduledJobPayload<ExtArgs>
+      fields: Prisma.ScheduledJobFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ScheduledJobFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduledJobPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ScheduledJobFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduledJobPayload>
+        }
+        findFirst: {
+          args: Prisma.ScheduledJobFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduledJobPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ScheduledJobFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduledJobPayload>
+        }
+        findMany: {
+          args: Prisma.ScheduledJobFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduledJobPayload>[]
+        }
+        create: {
+          args: Prisma.ScheduledJobCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduledJobPayload>
+        }
+        createMany: {
+          args: Prisma.ScheduledJobCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ScheduledJobCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduledJobPayload>[]
+        }
+        delete: {
+          args: Prisma.ScheduledJobDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduledJobPayload>
+        }
+        update: {
+          args: Prisma.ScheduledJobUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduledJobPayload>
+        }
+        deleteMany: {
+          args: Prisma.ScheduledJobDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ScheduledJobUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ScheduledJobUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduledJobPayload>[]
+        }
+        upsert: {
+          args: Prisma.ScheduledJobUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScheduledJobPayload>
+        }
+        aggregate: {
+          args: Prisma.ScheduledJobAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateScheduledJob>
+        }
+        groupBy: {
+          args: Prisma.ScheduledJobGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ScheduledJobGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ScheduledJobCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ScheduledJobCountAggregateOutputType> | number
         }
       }
     }
@@ -2905,24 +2980,6 @@ export const FeePaymentScalarFieldEnum = {
 export type FeePaymentScalarFieldEnum = (typeof FeePaymentScalarFieldEnum)[keyof typeof FeePaymentScalarFieldEnum]
 
 
-export const ScheduledJobScalarFieldEnum = {
-  id: 'id',
-  data: 'data',
-  type: 'type',
-  scheduledAt: 'scheduledAt',
-  channels: 'channels',
-  status: 'status',
-  result: 'result',
-  error: 'error',
-  createdBy: 'createdBy',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  organizationId: 'organizationId'
-} as const
-
-export type ScheduledJobScalarFieldEnum = (typeof ScheduledJobScalarFieldEnum)[keyof typeof ScheduledJobScalarFieldEnum]
-
-
 export const FeeCategoryScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -2987,29 +3044,46 @@ export type ComplaintStatusTimelineScalarFieldEnum = (typeof ComplaintStatusTime
 
 export const NoticeScalarFieldEnum = {
   id: 'id',
-  noticeType: 'noticeType',
   title: 'title',
-  startDate: 'startDate',
-  endDate: 'endDate',
   content: 'content',
   summary: 'summary',
-  isNoticeApproved: 'isNoticeApproved',
-  isDraft: 'isDraft',
-  isPublished: 'isPublished',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  noticeType: 'noticeType',
+  priority: 'priority',
+  status: 'status',
+  createdBy: 'createdBy',
+  approvedBy: 'approvedBy',
+  approvedAt: 'approvedAt',
+  publishedBy: 'publishedBy',
+  publishedAt: 'publishedAt',
+  isUrgent: 'isUrgent',
   emailNotification: 'emailNotification',
   pushNotification: 'pushNotification',
-  WhatsAppNotification: 'WhatsAppNotification',
+  whatsAppNotification: 'whatsAppNotification',
   smsNotification: 'smsNotification',
   targetAudience: 'targetAudience',
-  attachments: 'attachments',
-  publishedBy: 'publishedBy',
   organizationId: 'organizationId',
+  academicYearId: 'academicYearId',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  academicYearId: 'academicYearId'
+  updatedAt: 'updatedAt'
 } as const
 
 export type NoticeScalarFieldEnum = (typeof NoticeScalarFieldEnum)[keyof typeof NoticeScalarFieldEnum]
+
+
+export const NoticeAttachmentScalarFieldEnum = {
+  id: 'id',
+  noticeId: 'noticeId',
+  fileName: 'fileName',
+  fileUrl: 'fileUrl',
+  fileType: 'fileType',
+  fileSize: 'fileSize',
+  publicId: 'publicId',
+  uploadedAt: 'uploadedAt'
+} as const
+
+export type NoticeAttachmentScalarFieldEnum = (typeof NoticeAttachmentScalarFieldEnum)[keyof typeof NoticeAttachmentScalarFieldEnum]
 
 
 export const NotificationLogScalarFieldEnum = {
@@ -3021,6 +3095,10 @@ export const NotificationLogScalarFieldEnum = {
   channel: 'channel',
   status: 'status',
   notificationType: 'notificationType',
+  noticeId: 'noticeId',
+  errorMessage: 'errorMessage',
+  retryCount: 'retryCount',
+  maxRetries: 'maxRetries',
   units: 'units',
   cost: 'cost',
   sentAt: 'sentAt',
@@ -3029,6 +3107,24 @@ export const NotificationLogScalarFieldEnum = {
 } as const
 
 export type NotificationLogScalarFieldEnum = (typeof NotificationLogScalarFieldEnum)[keyof typeof NotificationLogScalarFieldEnum]
+
+
+export const ScheduledJobScalarFieldEnum = {
+  id: 'id',
+  data: 'data',
+  type: 'type',
+  scheduledAt: 'scheduledAt',
+  channels: 'channels',
+  status: 'status',
+  result: 'result',
+  error: 'error',
+  createdBy: 'createdBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  organizationId: 'organizationId'
+} as const
+
+export type ScheduledJobScalarFieldEnum = (typeof ScheduledJobScalarFieldEnum)[keyof typeof ScheduledJobScalarFieldEnum]
 
 
 export const ExamSessionScalarFieldEnum = {
@@ -3434,48 +3530,6 @@ export type ListEnumPaymentMethodFieldRefInput<$PrismaModel> = FieldRefInputType
 
 
 /**
- * Reference to a field of type 'Json'
- */
-export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
-    
-
-
-/**
- * Reference to a field of type 'QueryMode'
- */
-export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
-    
-
-
-/**
- * Reference to a field of type 'scheduledJobType'
- */
-export type EnumscheduledJobTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'scheduledJobType'>
-    
-
-
-/**
- * Reference to a field of type 'scheduledJobType[]'
- */
-export type ListEnumscheduledJobTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'scheduledJobType[]'>
-    
-
-
-/**
- * Reference to a field of type 'NotificationChannel[]'
- */
-export type ListEnumNotificationChannelFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NotificationChannel[]'>
-    
-
-
-/**
- * Reference to a field of type 'NotificationChannel'
- */
-export type EnumNotificationChannelFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NotificationChannel'>
-    
-
-
-/**
  * Reference to a field of type 'CalendarEventType'
  */
 export type EnumCalendarEventTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CalendarEventType'>
@@ -3518,6 +3572,62 @@ export type ListEnumComplaintStatusFieldRefInput<$PrismaModel> = FieldRefInputTy
 
 
 /**
+ * Reference to a field of type 'NoticeType'
+ */
+export type EnumNoticeTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NoticeType'>
+    
+
+
+/**
+ * Reference to a field of type 'NoticeType[]'
+ */
+export type ListEnumNoticeTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NoticeType[]'>
+    
+
+
+/**
+ * Reference to a field of type 'NoticePriority'
+ */
+export type EnumNoticePriorityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NoticePriority'>
+    
+
+
+/**
+ * Reference to a field of type 'NoticePriority[]'
+ */
+export type ListEnumNoticePriorityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NoticePriority[]'>
+    
+
+
+/**
+ * Reference to a field of type 'NoticeStatus'
+ */
+export type EnumNoticeStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NoticeStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'NoticeStatus[]'
+ */
+export type ListEnumNoticeStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NoticeStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'NotificationChannel'
+ */
+export type EnumNotificationChannelFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NotificationChannel'>
+    
+
+
+/**
+ * Reference to a field of type 'NotificationChannel[]'
+ */
+export type ListEnumNotificationChannelFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NotificationChannel[]'>
+    
+
+
+/**
  * Reference to a field of type 'NotificationStatus'
  */
 export type EnumNotificationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NotificationStatus'>
@@ -3542,6 +3652,34 @@ export type EnumNotificationTypeFieldRefInput<$PrismaModel> = FieldRefInputType<
  * Reference to a field of type 'NotificationType[]'
  */
 export type ListEnumNotificationTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NotificationType[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Json'
+ */
+export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+/**
+ * Reference to a field of type 'QueryMode'
+ */
+export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
+
+
+/**
+ * Reference to a field of type 'scheduledJobType'
+ */
+export type EnumscheduledJobTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'scheduledJobType'>
+    
+
+
+/**
+ * Reference to a field of type 'scheduledJobType[]'
+ */
+export type ListEnumscheduledJobTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'scheduledJobType[]'>
     
 
 
@@ -3717,13 +3855,14 @@ export type GlobalOmitConfig = {
   studentDocument?: Prisma.StudentDocumentOmit
   fee?: Prisma.FeeOmit
   feePayment?: Prisma.FeePaymentOmit
-  scheduledJob?: Prisma.ScheduledJobOmit
   feeCategory?: Prisma.FeeCategoryOmit
   academicCalendar?: Prisma.AcademicCalendarOmit
   anonymousComplaint?: Prisma.AnonymousComplaintOmit
   complaintStatusTimeline?: Prisma.ComplaintStatusTimelineOmit
   notice?: Prisma.NoticeOmit
+  noticeAttachment?: Prisma.NoticeAttachmentOmit
   notificationLog?: Prisma.NotificationLogOmit
+  scheduledJob?: Prisma.ScheduledJobOmit
   examSession?: Prisma.ExamSessionOmit
   exam?: Prisma.ExamOmit
   examEnrollment?: Prisma.ExamEnrollmentOmit

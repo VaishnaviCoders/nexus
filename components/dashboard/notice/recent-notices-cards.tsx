@@ -13,23 +13,11 @@ import { Bell, Calendar, ExternalLink } from 'lucide-react';
 import { cn, formatDateIN } from '@/lib/utils';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import Link from 'next/link';
-
-const getNoticeTypeColor = (type: string) => {
-  switch (type) {
-    case 'EXAM':
-      return 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-300';
-    case 'FEE':
-      return 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300';
-    case 'GENERAL':
-      return 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300';
-    default:
-      return 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-300';
-  }
-};
+import { NoticeType } from '@/generated/prisma/enums';
 
 interface Notice {
   id: string;
-  noticeType: string;
+  noticeType: NoticeType;
   title: string;
   content: string;
   startDate: Date;
@@ -81,9 +69,8 @@ export function RecentNoticesCards({ className, recentNotices }: Props) {
                   <div className="flex items-center gap-2">
                     {/* {notice.isUrgent && <Pin className="w-3 h-3 text-red-500" />} */}
                     <Badge
-                      className={`${getNoticeTypeColor(
-                        notice.noticeType
-                      )} text-xs capitalize`}
+                      className="text-xs capitalize"
+                      variant={notice.noticeType}
                     >
                       {notice.noticeType}
                     </Badge>

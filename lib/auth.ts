@@ -12,12 +12,16 @@ export type RoleResult =
 
 export async function getCurrentUserByRole(): Promise<RoleResult> {
   const userId = await getCurrentUserId();
-  if (!userId) throw new Error('Not authenticated');
-
   const organizationId = await getOrganizationId();
-  if (!organizationId) throw new Error('Organization context missing');
-
   // Check each role in priority order
+
+  // 🔹 Check admin explicitly first
+  const admin = await prisma.user.findFirst({
+    where: { id: userId, role: 'ADMIN' }, // adjust if you store admin differently
+    select: { id: true },
+  });
+  if (admin) return { role: 'ADMIN', userId };
+
   const student = await prisma.student.findFirst({
     where: { userId, organizationId },
     select: { id: true },
@@ -36,6 +40,7 @@ export async function getCurrentUserByRole(): Promise<RoleResult> {
   });
   if (parent) return { role: 'PARENT', parentId: parent.id };
 
-  // Default fallback
-  return { role: 'ADMIN', userId };
+  throw new Error(
+    `Role not found for user ${userId} in organization ${organizationId}`
+  );
 }

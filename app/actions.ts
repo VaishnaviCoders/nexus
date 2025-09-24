@@ -22,33 +22,13 @@ import { parseWithZod } from '@conform-to/zod';
 import FilterStudents from '@/lib/data/student/FilterStudents';
 import { endOfDay, startOfDay, subDays } from 'date-fns';
 import { Role } from '@/generated/prisma/enums';
-import { getCurrentUserId } from '@/lib/user';
+import { getCurrentUser, getCurrentUserId } from '@/lib/user';
 import { DocumentVerificationAction } from '@/types/document';
 import prisma from '@/lib/db';
 
-import { v2 as cloudinary, UploadApiResponse } from 'cloudinary';
-import { performance } from 'perf_hooks';
 import { getOrganizationId } from '@/lib/organization';
 import { redis } from '@/lib/redis';
 import { SupportFormData } from '@/components/websiteComp/SupportPopup';
-
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
-
-//  * NOTICE
-
-export const deleteNotice = async (noticeId: string) => {
-  await prisma.notice.delete({
-    where: {
-      id: noticeId,
-    },
-  });
-
-  revalidatePath('/dashboard/notice');
-};
 
 export const syncUserWithOrg = async () => {
   const { orgId, orgRole, orgSlug } = await auth();
@@ -505,10 +485,8 @@ export async function uploadStudentDocuments(
   documentUrl: string,
   studentId: string
 ) {
-  const user = await currentUser();
+  const user = await getCurrentUser();
   const organizationId = await getOrganizationId();
-
-  if (!user) throw new Error('User Not Found Please Logout And Log In');
 
   const validatedData = documentUploadSchema.parse(data);
 

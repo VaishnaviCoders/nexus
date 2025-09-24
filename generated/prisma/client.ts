@@ -121,11 +121,6 @@ export type Fee = Prisma.FeeModel
  */
 export type FeePayment = Prisma.FeePaymentModel
 /**
- * Model ScheduledJob
- * 
- */
-export type ScheduledJob = Prisma.ScheduledJobModel
-/**
  * Model FeeCategory
  * 
  */
@@ -151,10 +146,20 @@ export type ComplaintStatusTimeline = Prisma.ComplaintStatusTimelineModel
  */
 export type Notice = Prisma.NoticeModel
 /**
+ * Model NoticeAttachment
+ * 
+ */
+export type NoticeAttachment = Prisma.NoticeAttachmentModel
+/**
  * Model NotificationLog
  * 
  */
 export type NotificationLog = Prisma.NotificationLogModel
+/**
+ * Model ScheduledJob
+ * 
+ */
+export type ScheduledJob = Prisma.ScheduledJobModel
 /**
  * Model ExamSession
  * 

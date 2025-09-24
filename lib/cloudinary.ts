@@ -1,9 +1,14 @@
-interface CloudinaryProps {
-  file: File;
-  uploadPreset: string;
+export interface CloudinaryUploadResult {
+  fileName: string;
+  fileSize: number;
+  fileType: string;
+  url: string;
+  publicId: string;
 }
 
-export async function uploadToCloudinary(file: File): Promise<string> {
+export async function uploadToCloudinary(
+  file: File
+): Promise<CloudinaryUploadResult> {
   const formData = new FormData();
   const uploadPreset = 'student_documents';
   formData.append('file', file);
@@ -22,7 +27,20 @@ export async function uploadToCloudinary(file: File): Promise<string> {
   }
 
   const data = await response.json();
-  return data.secure_url;
+
+  if (!data.secure_url || !data.public_id) {
+    throw new Error(
+      'Invalid response from Cloudinary: missing required fields'
+    );
+  }
+
+  return {
+    fileName: file.name,
+    fileSize: file.size,
+    fileType: file.type,
+    url: data.secure_url, // URL to show
+    publicId: data.public_id, // store this in DB
+  };
 }
 
 export function getFileTypeFromUrl(url: string): string {

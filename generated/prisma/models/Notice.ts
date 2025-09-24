@@ -25,140 +25,162 @@ export type AggregateNotice = {
 
 export type NoticeMinAggregateOutputType = {
   id: string | null
-  noticeType: string | null
   title: string | null
-  startDate: Date | null
-  endDate: Date | null
   content: string | null
   summary: string | null
-  isNoticeApproved: boolean | null
-  isDraft: boolean | null
-  isPublished: boolean | null
+  startDate: Date | null
+  endDate: Date | null
+  noticeType: $Enums.NoticeType | null
+  priority: $Enums.NoticePriority | null
+  status: $Enums.NoticeStatus | null
+  createdBy: string | null
+  approvedBy: string | null
+  approvedAt: Date | null
+  publishedBy: string | null
+  publishedAt: Date | null
+  isUrgent: boolean | null
   emailNotification: boolean | null
   pushNotification: boolean | null
-  WhatsAppNotification: boolean | null
+  whatsAppNotification: boolean | null
   smsNotification: boolean | null
-  publishedBy: string | null
   organizationId: string | null
+  academicYearId: string | null
   createdAt: Date | null
   updatedAt: Date | null
-  academicYearId: string | null
 }
 
 export type NoticeMaxAggregateOutputType = {
   id: string | null
-  noticeType: string | null
   title: string | null
-  startDate: Date | null
-  endDate: Date | null
   content: string | null
   summary: string | null
-  isNoticeApproved: boolean | null
-  isDraft: boolean | null
-  isPublished: boolean | null
+  startDate: Date | null
+  endDate: Date | null
+  noticeType: $Enums.NoticeType | null
+  priority: $Enums.NoticePriority | null
+  status: $Enums.NoticeStatus | null
+  createdBy: string | null
+  approvedBy: string | null
+  approvedAt: Date | null
+  publishedBy: string | null
+  publishedAt: Date | null
+  isUrgent: boolean | null
   emailNotification: boolean | null
   pushNotification: boolean | null
-  WhatsAppNotification: boolean | null
+  whatsAppNotification: boolean | null
   smsNotification: boolean | null
-  publishedBy: string | null
   organizationId: string | null
+  academicYearId: string | null
   createdAt: Date | null
   updatedAt: Date | null
-  academicYearId: string | null
 }
 
 export type NoticeCountAggregateOutputType = {
   id: number
-  noticeType: number
   title: number
-  startDate: number
-  endDate: number
   content: number
   summary: number
-  isNoticeApproved: number
-  isDraft: number
-  isPublished: number
+  startDate: number
+  endDate: number
+  noticeType: number
+  priority: number
+  status: number
+  createdBy: number
+  approvedBy: number
+  approvedAt: number
+  publishedBy: number
+  publishedAt: number
+  isUrgent: number
   emailNotification: number
   pushNotification: number
-  WhatsAppNotification: number
+  whatsAppNotification: number
   smsNotification: number
   targetAudience: number
-  attachments: number
-  publishedBy: number
   organizationId: number
+  academicYearId: number
   createdAt: number
   updatedAt: number
-  academicYearId: number
   _all: number
 }
 
 
 export type NoticeMinAggregateInputType = {
   id?: true
-  noticeType?: true
   title?: true
-  startDate?: true
-  endDate?: true
   content?: true
   summary?: true
-  isNoticeApproved?: true
-  isDraft?: true
-  isPublished?: true
+  startDate?: true
+  endDate?: true
+  noticeType?: true
+  priority?: true
+  status?: true
+  createdBy?: true
+  approvedBy?: true
+  approvedAt?: true
+  publishedBy?: true
+  publishedAt?: true
+  isUrgent?: true
   emailNotification?: true
   pushNotification?: true
-  WhatsAppNotification?: true
+  whatsAppNotification?: true
   smsNotification?: true
-  publishedBy?: true
   organizationId?: true
+  academicYearId?: true
   createdAt?: true
   updatedAt?: true
-  academicYearId?: true
 }
 
 export type NoticeMaxAggregateInputType = {
   id?: true
-  noticeType?: true
   title?: true
-  startDate?: true
-  endDate?: true
   content?: true
   summary?: true
-  isNoticeApproved?: true
-  isDraft?: true
-  isPublished?: true
+  startDate?: true
+  endDate?: true
+  noticeType?: true
+  priority?: true
+  status?: true
+  createdBy?: true
+  approvedBy?: true
+  approvedAt?: true
+  publishedBy?: true
+  publishedAt?: true
+  isUrgent?: true
   emailNotification?: true
   pushNotification?: true
-  WhatsAppNotification?: true
+  whatsAppNotification?: true
   smsNotification?: true
-  publishedBy?: true
   organizationId?: true
+  academicYearId?: true
   createdAt?: true
   updatedAt?: true
-  academicYearId?: true
 }
 
 export type NoticeCountAggregateInputType = {
   id?: true
-  noticeType?: true
   title?: true
-  startDate?: true
-  endDate?: true
   content?: true
   summary?: true
-  isNoticeApproved?: true
-  isDraft?: true
-  isPublished?: true
+  startDate?: true
+  endDate?: true
+  noticeType?: true
+  priority?: true
+  status?: true
+  createdBy?: true
+  approvedBy?: true
+  approvedAt?: true
+  publishedBy?: true
+  publishedAt?: true
+  isUrgent?: true
   emailNotification?: true
   pushNotification?: true
-  WhatsAppNotification?: true
+  whatsAppNotification?: true
   smsNotification?: true
   targetAudience?: true
-  attachments?: true
-  publishedBy?: true
   organizationId?: true
+  academicYearId?: true
   createdAt?: true
   updatedAt?: true
-  academicYearId?: true
   _all?: true
 }
 
@@ -236,26 +258,29 @@ export type NoticeGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalA
 
 export type NoticeGroupByOutputType = {
   id: string
-  noticeType: string
   title: string
-  startDate: Date
-  endDate: Date
   content: string
   summary: string | null
-  isNoticeApproved: boolean
-  isDraft: boolean
-  isPublished: boolean
+  startDate: Date
+  endDate: Date
+  noticeType: $Enums.NoticeType
+  priority: $Enums.NoticePriority
+  status: $Enums.NoticeStatus
+  createdBy: string
+  approvedBy: string | null
+  approvedAt: Date | null
+  publishedBy: string | null
+  publishedAt: Date | null
+  isUrgent: boolean
   emailNotification: boolean
   pushNotification: boolean
-  WhatsAppNotification: boolean
+  whatsAppNotification: boolean
   smsNotification: boolean
   targetAudience: string[]
-  attachments: runtime.JsonValue | null
-  publishedBy: string
   organizationId: string
+  academicYearId: string | null
   createdAt: Date
   updatedAt: Date
-  academicYearId: string | null
   _count: NoticeCountAggregateOutputType | null
   _min: NoticeMinAggregateOutputType | null
   _max: NoticeMaxAggregateOutputType | null
@@ -281,53 +306,63 @@ export type NoticeWhereInput = {
   OR?: Prisma.NoticeWhereInput[]
   NOT?: Prisma.NoticeWhereInput | Prisma.NoticeWhereInput[]
   id?: Prisma.StringFilter<"Notice"> | string
-  noticeType?: Prisma.StringFilter<"Notice"> | string
   title?: Prisma.StringFilter<"Notice"> | string
-  startDate?: Prisma.DateTimeFilter<"Notice"> | Date | string
-  endDate?: Prisma.DateTimeFilter<"Notice"> | Date | string
   content?: Prisma.StringFilter<"Notice"> | string
   summary?: Prisma.StringNullableFilter<"Notice"> | string | null
-  isNoticeApproved?: Prisma.BoolFilter<"Notice"> | boolean
-  isDraft?: Prisma.BoolFilter<"Notice"> | boolean
-  isPublished?: Prisma.BoolFilter<"Notice"> | boolean
+  startDate?: Prisma.DateTimeFilter<"Notice"> | Date | string
+  endDate?: Prisma.DateTimeFilter<"Notice"> | Date | string
+  noticeType?: Prisma.EnumNoticeTypeFilter<"Notice"> | $Enums.NoticeType
+  priority?: Prisma.EnumNoticePriorityFilter<"Notice"> | $Enums.NoticePriority
+  status?: Prisma.EnumNoticeStatusFilter<"Notice"> | $Enums.NoticeStatus
+  createdBy?: Prisma.StringFilter<"Notice"> | string
+  approvedBy?: Prisma.StringNullableFilter<"Notice"> | string | null
+  approvedAt?: Prisma.DateTimeNullableFilter<"Notice"> | Date | string | null
+  publishedBy?: Prisma.StringNullableFilter<"Notice"> | string | null
+  publishedAt?: Prisma.DateTimeNullableFilter<"Notice"> | Date | string | null
+  isUrgent?: Prisma.BoolFilter<"Notice"> | boolean
   emailNotification?: Prisma.BoolFilter<"Notice"> | boolean
   pushNotification?: Prisma.BoolFilter<"Notice"> | boolean
-  WhatsAppNotification?: Prisma.BoolFilter<"Notice"> | boolean
+  whatsAppNotification?: Prisma.BoolFilter<"Notice"> | boolean
   smsNotification?: Prisma.BoolFilter<"Notice"> | boolean
   targetAudience?: Prisma.StringNullableListFilter<"Notice">
-  attachments?: Prisma.JsonNullableFilter<"Notice">
-  publishedBy?: Prisma.StringFilter<"Notice"> | string
   organizationId?: Prisma.StringFilter<"Notice"> | string
+  academicYearId?: Prisma.StringNullableFilter<"Notice"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Notice"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Notice"> | Date | string
-  academicYearId?: Prisma.StringNullableFilter<"Notice"> | string | null
-  Organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
+  attachments?: Prisma.NoticeAttachmentListRelationFilter
+  notifications?: Prisma.NotificationLogListRelationFilter
+  organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
   academicYear?: Prisma.XOR<Prisma.AcademicYearNullableScalarRelationFilter, Prisma.AcademicYearWhereInput> | null
 }
 
 export type NoticeOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  noticeType?: Prisma.SortOrder
   title?: Prisma.SortOrder
-  startDate?: Prisma.SortOrder
-  endDate?: Prisma.SortOrder
   content?: Prisma.SortOrder
   summary?: Prisma.SortOrderInput | Prisma.SortOrder
-  isNoticeApproved?: Prisma.SortOrder
-  isDraft?: Prisma.SortOrder
-  isPublished?: Prisma.SortOrder
+  startDate?: Prisma.SortOrder
+  endDate?: Prisma.SortOrder
+  noticeType?: Prisma.SortOrder
+  priority?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  createdBy?: Prisma.SortOrder
+  approvedBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  approvedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  publishedBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  publishedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  isUrgent?: Prisma.SortOrder
   emailNotification?: Prisma.SortOrder
   pushNotification?: Prisma.SortOrder
-  WhatsAppNotification?: Prisma.SortOrder
+  whatsAppNotification?: Prisma.SortOrder
   smsNotification?: Prisma.SortOrder
   targetAudience?: Prisma.SortOrder
-  attachments?: Prisma.SortOrderInput | Prisma.SortOrder
-  publishedBy?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
+  academicYearId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  academicYearId?: Prisma.SortOrderInput | Prisma.SortOrder
-  Organization?: Prisma.OrganizationOrderByWithRelationInput
+  attachments?: Prisma.NoticeAttachmentOrderByRelationAggregateInput
+  notifications?: Prisma.NotificationLogOrderByRelationAggregateInput
+  organization?: Prisma.OrganizationOrderByWithRelationInput
   academicYear?: Prisma.AcademicYearOrderByWithRelationInput
 }
 
@@ -336,52 +371,60 @@ export type NoticeWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.NoticeWhereInput | Prisma.NoticeWhereInput[]
   OR?: Prisma.NoticeWhereInput[]
   NOT?: Prisma.NoticeWhereInput | Prisma.NoticeWhereInput[]
-  noticeType?: Prisma.StringFilter<"Notice"> | string
   title?: Prisma.StringFilter<"Notice"> | string
-  startDate?: Prisma.DateTimeFilter<"Notice"> | Date | string
-  endDate?: Prisma.DateTimeFilter<"Notice"> | Date | string
   content?: Prisma.StringFilter<"Notice"> | string
   summary?: Prisma.StringNullableFilter<"Notice"> | string | null
-  isNoticeApproved?: Prisma.BoolFilter<"Notice"> | boolean
-  isDraft?: Prisma.BoolFilter<"Notice"> | boolean
-  isPublished?: Prisma.BoolFilter<"Notice"> | boolean
+  startDate?: Prisma.DateTimeFilter<"Notice"> | Date | string
+  endDate?: Prisma.DateTimeFilter<"Notice"> | Date | string
+  noticeType?: Prisma.EnumNoticeTypeFilter<"Notice"> | $Enums.NoticeType
+  priority?: Prisma.EnumNoticePriorityFilter<"Notice"> | $Enums.NoticePriority
+  status?: Prisma.EnumNoticeStatusFilter<"Notice"> | $Enums.NoticeStatus
+  createdBy?: Prisma.StringFilter<"Notice"> | string
+  approvedBy?: Prisma.StringNullableFilter<"Notice"> | string | null
+  approvedAt?: Prisma.DateTimeNullableFilter<"Notice"> | Date | string | null
+  publishedBy?: Prisma.StringNullableFilter<"Notice"> | string | null
+  publishedAt?: Prisma.DateTimeNullableFilter<"Notice"> | Date | string | null
+  isUrgent?: Prisma.BoolFilter<"Notice"> | boolean
   emailNotification?: Prisma.BoolFilter<"Notice"> | boolean
   pushNotification?: Prisma.BoolFilter<"Notice"> | boolean
-  WhatsAppNotification?: Prisma.BoolFilter<"Notice"> | boolean
+  whatsAppNotification?: Prisma.BoolFilter<"Notice"> | boolean
   smsNotification?: Prisma.BoolFilter<"Notice"> | boolean
   targetAudience?: Prisma.StringNullableListFilter<"Notice">
-  attachments?: Prisma.JsonNullableFilter<"Notice">
-  publishedBy?: Prisma.StringFilter<"Notice"> | string
   organizationId?: Prisma.StringFilter<"Notice"> | string
+  academicYearId?: Prisma.StringNullableFilter<"Notice"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Notice"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Notice"> | Date | string
-  academicYearId?: Prisma.StringNullableFilter<"Notice"> | string | null
-  Organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
+  attachments?: Prisma.NoticeAttachmentListRelationFilter
+  notifications?: Prisma.NotificationLogListRelationFilter
+  organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
   academicYear?: Prisma.XOR<Prisma.AcademicYearNullableScalarRelationFilter, Prisma.AcademicYearWhereInput> | null
 }, "id">
 
 export type NoticeOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  noticeType?: Prisma.SortOrder
   title?: Prisma.SortOrder
-  startDate?: Prisma.SortOrder
-  endDate?: Prisma.SortOrder
   content?: Prisma.SortOrder
   summary?: Prisma.SortOrderInput | Prisma.SortOrder
-  isNoticeApproved?: Prisma.SortOrder
-  isDraft?: Prisma.SortOrder
-  isPublished?: Prisma.SortOrder
+  startDate?: Prisma.SortOrder
+  endDate?: Prisma.SortOrder
+  noticeType?: Prisma.SortOrder
+  priority?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  createdBy?: Prisma.SortOrder
+  approvedBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  approvedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  publishedBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  publishedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  isUrgent?: Prisma.SortOrder
   emailNotification?: Prisma.SortOrder
   pushNotification?: Prisma.SortOrder
-  WhatsAppNotification?: Prisma.SortOrder
+  whatsAppNotification?: Prisma.SortOrder
   smsNotification?: Prisma.SortOrder
   targetAudience?: Prisma.SortOrder
-  attachments?: Prisma.SortOrderInput | Prisma.SortOrder
-  publishedBy?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
+  academicYearId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  academicYearId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.NoticeCountOrderByAggregateInput
   _max?: Prisma.NoticeMaxOrderByAggregateInput
   _min?: Prisma.NoticeMinOrderByAggregateInput
@@ -392,192 +435,224 @@ export type NoticeScalarWhereWithAggregatesInput = {
   OR?: Prisma.NoticeScalarWhereWithAggregatesInput[]
   NOT?: Prisma.NoticeScalarWhereWithAggregatesInput | Prisma.NoticeScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Notice"> | string
-  noticeType?: Prisma.StringWithAggregatesFilter<"Notice"> | string
   title?: Prisma.StringWithAggregatesFilter<"Notice"> | string
-  startDate?: Prisma.DateTimeWithAggregatesFilter<"Notice"> | Date | string
-  endDate?: Prisma.DateTimeWithAggregatesFilter<"Notice"> | Date | string
   content?: Prisma.StringWithAggregatesFilter<"Notice"> | string
   summary?: Prisma.StringNullableWithAggregatesFilter<"Notice"> | string | null
-  isNoticeApproved?: Prisma.BoolWithAggregatesFilter<"Notice"> | boolean
-  isDraft?: Prisma.BoolWithAggregatesFilter<"Notice"> | boolean
-  isPublished?: Prisma.BoolWithAggregatesFilter<"Notice"> | boolean
+  startDate?: Prisma.DateTimeWithAggregatesFilter<"Notice"> | Date | string
+  endDate?: Prisma.DateTimeWithAggregatesFilter<"Notice"> | Date | string
+  noticeType?: Prisma.EnumNoticeTypeWithAggregatesFilter<"Notice"> | $Enums.NoticeType
+  priority?: Prisma.EnumNoticePriorityWithAggregatesFilter<"Notice"> | $Enums.NoticePriority
+  status?: Prisma.EnumNoticeStatusWithAggregatesFilter<"Notice"> | $Enums.NoticeStatus
+  createdBy?: Prisma.StringWithAggregatesFilter<"Notice"> | string
+  approvedBy?: Prisma.StringNullableWithAggregatesFilter<"Notice"> | string | null
+  approvedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Notice"> | Date | string | null
+  publishedBy?: Prisma.StringNullableWithAggregatesFilter<"Notice"> | string | null
+  publishedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Notice"> | Date | string | null
+  isUrgent?: Prisma.BoolWithAggregatesFilter<"Notice"> | boolean
   emailNotification?: Prisma.BoolWithAggregatesFilter<"Notice"> | boolean
   pushNotification?: Prisma.BoolWithAggregatesFilter<"Notice"> | boolean
-  WhatsAppNotification?: Prisma.BoolWithAggregatesFilter<"Notice"> | boolean
+  whatsAppNotification?: Prisma.BoolWithAggregatesFilter<"Notice"> | boolean
   smsNotification?: Prisma.BoolWithAggregatesFilter<"Notice"> | boolean
   targetAudience?: Prisma.StringNullableListFilter<"Notice">
-  attachments?: Prisma.JsonNullableWithAggregatesFilter<"Notice">
-  publishedBy?: Prisma.StringWithAggregatesFilter<"Notice"> | string
   organizationId?: Prisma.StringWithAggregatesFilter<"Notice"> | string
+  academicYearId?: Prisma.StringNullableWithAggregatesFilter<"Notice"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Notice"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Notice"> | Date | string
-  academicYearId?: Prisma.StringNullableWithAggregatesFilter<"Notice"> | string | null
 }
 
 export type NoticeCreateInput = {
   id?: string
-  noticeType: string
   title: string
-  startDate: Date | string
-  endDate: Date | string
   content: string
   summary?: string | null
-  isNoticeApproved?: boolean
-  isDraft?: boolean
-  isPublished?: boolean
+  startDate: Date | string
+  endDate: Date | string
+  noticeType: $Enums.NoticeType
+  priority?: $Enums.NoticePriority
+  status?: $Enums.NoticeStatus
+  createdBy: string
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  publishedBy?: string | null
+  publishedAt?: Date | string | null
+  isUrgent?: boolean
   emailNotification?: boolean
   pushNotification?: boolean
-  WhatsAppNotification?: boolean
+  whatsAppNotification?: boolean
   smsNotification?: boolean
   targetAudience?: Prisma.NoticeCreatetargetAudienceInput | string[]
-  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  publishedBy: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  Organization: Prisma.OrganizationCreateNestedOneWithoutNoticesInput
+  attachments?: Prisma.NoticeAttachmentCreateNestedManyWithoutNoticeInput
+  notifications?: Prisma.NotificationLogCreateNestedManyWithoutNoticeInput
+  organization: Prisma.OrganizationCreateNestedOneWithoutNoticesInput
   academicYear?: Prisma.AcademicYearCreateNestedOneWithoutNoticesInput
 }
 
 export type NoticeUncheckedCreateInput = {
   id?: string
-  noticeType: string
   title: string
-  startDate: Date | string
-  endDate: Date | string
   content: string
   summary?: string | null
-  isNoticeApproved?: boolean
-  isDraft?: boolean
-  isPublished?: boolean
+  startDate: Date | string
+  endDate: Date | string
+  noticeType: $Enums.NoticeType
+  priority?: $Enums.NoticePriority
+  status?: $Enums.NoticeStatus
+  createdBy: string
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  publishedBy?: string | null
+  publishedAt?: Date | string | null
+  isUrgent?: boolean
   emailNotification?: boolean
   pushNotification?: boolean
-  WhatsAppNotification?: boolean
+  whatsAppNotification?: boolean
   smsNotification?: boolean
   targetAudience?: Prisma.NoticeCreatetargetAudienceInput | string[]
-  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  publishedBy: string
   organizationId: string
+  academicYearId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  academicYearId?: string | null
+  attachments?: Prisma.NoticeAttachmentUncheckedCreateNestedManyWithoutNoticeInput
+  notifications?: Prisma.NotificationLogUncheckedCreateNestedManyWithoutNoticeInput
 }
 
 export type NoticeUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  noticeType?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
-  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isNoticeApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  noticeType?: Prisma.EnumNoticeTypeFieldUpdateOperationsInput | $Enums.NoticeType
+  priority?: Prisma.EnumNoticePriorityFieldUpdateOperationsInput | $Enums.NoticePriority
+  status?: Prisma.EnumNoticeStatusFieldUpdateOperationsInput | $Enums.NoticeStatus
+  createdBy?: Prisma.StringFieldUpdateOperationsInput | string
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  publishedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isUrgent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   emailNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pushNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  WhatsAppNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsAppNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
   smsNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
   targetAudience?: Prisma.NoticeUpdatetargetAudienceInput | string[]
-  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  publishedBy?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  Organization?: Prisma.OrganizationUpdateOneRequiredWithoutNoticesNestedInput
+  attachments?: Prisma.NoticeAttachmentUpdateManyWithoutNoticeNestedInput
+  notifications?: Prisma.NotificationLogUpdateManyWithoutNoticeNestedInput
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutNoticesNestedInput
   academicYear?: Prisma.AcademicYearUpdateOneWithoutNoticesNestedInput
 }
 
 export type NoticeUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  noticeType?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
-  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isNoticeApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  noticeType?: Prisma.EnumNoticeTypeFieldUpdateOperationsInput | $Enums.NoticeType
+  priority?: Prisma.EnumNoticePriorityFieldUpdateOperationsInput | $Enums.NoticePriority
+  status?: Prisma.EnumNoticeStatusFieldUpdateOperationsInput | $Enums.NoticeStatus
+  createdBy?: Prisma.StringFieldUpdateOperationsInput | string
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  publishedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isUrgent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   emailNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pushNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  WhatsAppNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsAppNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
   smsNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
   targetAudience?: Prisma.NoticeUpdatetargetAudienceInput | string[]
-  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  publishedBy?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  academicYearId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  academicYearId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attachments?: Prisma.NoticeAttachmentUncheckedUpdateManyWithoutNoticeNestedInput
+  notifications?: Prisma.NotificationLogUncheckedUpdateManyWithoutNoticeNestedInput
 }
 
 export type NoticeCreateManyInput = {
   id?: string
-  noticeType: string
   title: string
-  startDate: Date | string
-  endDate: Date | string
   content: string
   summary?: string | null
-  isNoticeApproved?: boolean
-  isDraft?: boolean
-  isPublished?: boolean
+  startDate: Date | string
+  endDate: Date | string
+  noticeType: $Enums.NoticeType
+  priority?: $Enums.NoticePriority
+  status?: $Enums.NoticeStatus
+  createdBy: string
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  publishedBy?: string | null
+  publishedAt?: Date | string | null
+  isUrgent?: boolean
   emailNotification?: boolean
   pushNotification?: boolean
-  WhatsAppNotification?: boolean
+  whatsAppNotification?: boolean
   smsNotification?: boolean
   targetAudience?: Prisma.NoticeCreatetargetAudienceInput | string[]
-  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  publishedBy: string
   organizationId: string
+  academicYearId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  academicYearId?: string | null
 }
 
 export type NoticeUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  noticeType?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
-  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isNoticeApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  noticeType?: Prisma.EnumNoticeTypeFieldUpdateOperationsInput | $Enums.NoticeType
+  priority?: Prisma.EnumNoticePriorityFieldUpdateOperationsInput | $Enums.NoticePriority
+  status?: Prisma.EnumNoticeStatusFieldUpdateOperationsInput | $Enums.NoticeStatus
+  createdBy?: Prisma.StringFieldUpdateOperationsInput | string
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  publishedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isUrgent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   emailNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pushNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  WhatsAppNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsAppNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
   smsNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
   targetAudience?: Prisma.NoticeUpdatetargetAudienceInput | string[]
-  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  publishedBy?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type NoticeUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  noticeType?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
-  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isNoticeApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  noticeType?: Prisma.EnumNoticeTypeFieldUpdateOperationsInput | $Enums.NoticeType
+  priority?: Prisma.EnumNoticePriorityFieldUpdateOperationsInput | $Enums.NoticePriority
+  status?: Prisma.EnumNoticeStatusFieldUpdateOperationsInput | $Enums.NoticeStatus
+  createdBy?: Prisma.StringFieldUpdateOperationsInput | string
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  publishedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isUrgent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   emailNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pushNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  WhatsAppNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsAppNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
   smsNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
   targetAudience?: Prisma.NoticeUpdatetargetAudienceInput | string[]
-  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  publishedBy?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  academicYearId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  academicYearId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type NoticeListRelationFilter = {
@@ -592,70 +667,91 @@ export type NoticeOrderByRelationAggregateInput = {
 
 export type NoticeCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  noticeType?: Prisma.SortOrder
   title?: Prisma.SortOrder
-  startDate?: Prisma.SortOrder
-  endDate?: Prisma.SortOrder
   content?: Prisma.SortOrder
   summary?: Prisma.SortOrder
-  isNoticeApproved?: Prisma.SortOrder
-  isDraft?: Prisma.SortOrder
-  isPublished?: Prisma.SortOrder
+  startDate?: Prisma.SortOrder
+  endDate?: Prisma.SortOrder
+  noticeType?: Prisma.SortOrder
+  priority?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  createdBy?: Prisma.SortOrder
+  approvedBy?: Prisma.SortOrder
+  approvedAt?: Prisma.SortOrder
+  publishedBy?: Prisma.SortOrder
+  publishedAt?: Prisma.SortOrder
+  isUrgent?: Prisma.SortOrder
   emailNotification?: Prisma.SortOrder
   pushNotification?: Prisma.SortOrder
-  WhatsAppNotification?: Prisma.SortOrder
+  whatsAppNotification?: Prisma.SortOrder
   smsNotification?: Prisma.SortOrder
   targetAudience?: Prisma.SortOrder
-  attachments?: Prisma.SortOrder
-  publishedBy?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
+  academicYearId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  academicYearId?: Prisma.SortOrder
 }
 
 export type NoticeMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  noticeType?: Prisma.SortOrder
   title?: Prisma.SortOrder
-  startDate?: Prisma.SortOrder
-  endDate?: Prisma.SortOrder
   content?: Prisma.SortOrder
   summary?: Prisma.SortOrder
-  isNoticeApproved?: Prisma.SortOrder
-  isDraft?: Prisma.SortOrder
-  isPublished?: Prisma.SortOrder
+  startDate?: Prisma.SortOrder
+  endDate?: Prisma.SortOrder
+  noticeType?: Prisma.SortOrder
+  priority?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  createdBy?: Prisma.SortOrder
+  approvedBy?: Prisma.SortOrder
+  approvedAt?: Prisma.SortOrder
+  publishedBy?: Prisma.SortOrder
+  publishedAt?: Prisma.SortOrder
+  isUrgent?: Prisma.SortOrder
   emailNotification?: Prisma.SortOrder
   pushNotification?: Prisma.SortOrder
-  WhatsAppNotification?: Prisma.SortOrder
+  whatsAppNotification?: Prisma.SortOrder
   smsNotification?: Prisma.SortOrder
-  publishedBy?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
+  academicYearId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  academicYearId?: Prisma.SortOrder
 }
 
 export type NoticeMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  noticeType?: Prisma.SortOrder
   title?: Prisma.SortOrder
-  startDate?: Prisma.SortOrder
-  endDate?: Prisma.SortOrder
   content?: Prisma.SortOrder
   summary?: Prisma.SortOrder
-  isNoticeApproved?: Prisma.SortOrder
-  isDraft?: Prisma.SortOrder
-  isPublished?: Prisma.SortOrder
+  startDate?: Prisma.SortOrder
+  endDate?: Prisma.SortOrder
+  noticeType?: Prisma.SortOrder
+  priority?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  createdBy?: Prisma.SortOrder
+  approvedBy?: Prisma.SortOrder
+  approvedAt?: Prisma.SortOrder
+  publishedBy?: Prisma.SortOrder
+  publishedAt?: Prisma.SortOrder
+  isUrgent?: Prisma.SortOrder
   emailNotification?: Prisma.SortOrder
   pushNotification?: Prisma.SortOrder
-  WhatsAppNotification?: Prisma.SortOrder
+  whatsAppNotification?: Prisma.SortOrder
   smsNotification?: Prisma.SortOrder
-  publishedBy?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
+  academicYearId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  academicYearId?: Prisma.SortOrder
+}
+
+export type NoticeScalarRelationFilter = {
+  is?: Prisma.NoticeWhereInput
+  isNot?: Prisma.NoticeWhereInput
+}
+
+export type NoticeNullableScalarRelationFilter = {
+  is?: Prisma.NoticeWhereInput | null
+  isNot?: Prisma.NoticeWhereInput | null
 }
 
 export type NoticeCreateNestedManyWithoutAcademicYearInput = {
@@ -746,55 +842,107 @@ export type NoticeCreatetargetAudienceInput = {
   set: string[]
 }
 
+export type EnumNoticeTypeFieldUpdateOperationsInput = {
+  set?: $Enums.NoticeType
+}
+
+export type EnumNoticePriorityFieldUpdateOperationsInput = {
+  set?: $Enums.NoticePriority
+}
+
+export type EnumNoticeStatusFieldUpdateOperationsInput = {
+  set?: $Enums.NoticeStatus
+}
+
 export type NoticeUpdatetargetAudienceInput = {
   set?: string[]
   push?: string | string[]
 }
 
+export type NoticeCreateNestedOneWithoutAttachmentsInput = {
+  create?: Prisma.XOR<Prisma.NoticeCreateWithoutAttachmentsInput, Prisma.NoticeUncheckedCreateWithoutAttachmentsInput>
+  connectOrCreate?: Prisma.NoticeCreateOrConnectWithoutAttachmentsInput
+  connect?: Prisma.NoticeWhereUniqueInput
+}
+
+export type NoticeUpdateOneRequiredWithoutAttachmentsNestedInput = {
+  create?: Prisma.XOR<Prisma.NoticeCreateWithoutAttachmentsInput, Prisma.NoticeUncheckedCreateWithoutAttachmentsInput>
+  connectOrCreate?: Prisma.NoticeCreateOrConnectWithoutAttachmentsInput
+  upsert?: Prisma.NoticeUpsertWithoutAttachmentsInput
+  connect?: Prisma.NoticeWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.NoticeUpdateToOneWithWhereWithoutAttachmentsInput, Prisma.NoticeUpdateWithoutAttachmentsInput>, Prisma.NoticeUncheckedUpdateWithoutAttachmentsInput>
+}
+
+export type NoticeCreateNestedOneWithoutNotificationsInput = {
+  create?: Prisma.XOR<Prisma.NoticeCreateWithoutNotificationsInput, Prisma.NoticeUncheckedCreateWithoutNotificationsInput>
+  connectOrCreate?: Prisma.NoticeCreateOrConnectWithoutNotificationsInput
+  connect?: Prisma.NoticeWhereUniqueInput
+}
+
+export type NoticeUpdateOneWithoutNotificationsNestedInput = {
+  create?: Prisma.XOR<Prisma.NoticeCreateWithoutNotificationsInput, Prisma.NoticeUncheckedCreateWithoutNotificationsInput>
+  connectOrCreate?: Prisma.NoticeCreateOrConnectWithoutNotificationsInput
+  upsert?: Prisma.NoticeUpsertWithoutNotificationsInput
+  disconnect?: Prisma.NoticeWhereInput | boolean
+  delete?: Prisma.NoticeWhereInput | boolean
+  connect?: Prisma.NoticeWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.NoticeUpdateToOneWithWhereWithoutNotificationsInput, Prisma.NoticeUpdateWithoutNotificationsInput>, Prisma.NoticeUncheckedUpdateWithoutNotificationsInput>
+}
+
 export type NoticeCreateWithoutAcademicYearInput = {
   id?: string
-  noticeType: string
   title: string
-  startDate: Date | string
-  endDate: Date | string
   content: string
   summary?: string | null
-  isNoticeApproved?: boolean
-  isDraft?: boolean
-  isPublished?: boolean
+  startDate: Date | string
+  endDate: Date | string
+  noticeType: $Enums.NoticeType
+  priority?: $Enums.NoticePriority
+  status?: $Enums.NoticeStatus
+  createdBy: string
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  publishedBy?: string | null
+  publishedAt?: Date | string | null
+  isUrgent?: boolean
   emailNotification?: boolean
   pushNotification?: boolean
-  WhatsAppNotification?: boolean
+  whatsAppNotification?: boolean
   smsNotification?: boolean
   targetAudience?: Prisma.NoticeCreatetargetAudienceInput | string[]
-  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  publishedBy: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  Organization: Prisma.OrganizationCreateNestedOneWithoutNoticesInput
+  attachments?: Prisma.NoticeAttachmentCreateNestedManyWithoutNoticeInput
+  notifications?: Prisma.NotificationLogCreateNestedManyWithoutNoticeInput
+  organization: Prisma.OrganizationCreateNestedOneWithoutNoticesInput
 }
 
 export type NoticeUncheckedCreateWithoutAcademicYearInput = {
   id?: string
-  noticeType: string
   title: string
-  startDate: Date | string
-  endDate: Date | string
   content: string
   summary?: string | null
-  isNoticeApproved?: boolean
-  isDraft?: boolean
-  isPublished?: boolean
+  startDate: Date | string
+  endDate: Date | string
+  noticeType: $Enums.NoticeType
+  priority?: $Enums.NoticePriority
+  status?: $Enums.NoticeStatus
+  createdBy: string
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  publishedBy?: string | null
+  publishedAt?: Date | string | null
+  isUrgent?: boolean
   emailNotification?: boolean
   pushNotification?: boolean
-  WhatsAppNotification?: boolean
+  whatsAppNotification?: boolean
   smsNotification?: boolean
   targetAudience?: Prisma.NoticeCreatetargetAudienceInput | string[]
-  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  publishedBy: string
   organizationId: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  attachments?: Prisma.NoticeAttachmentUncheckedCreateNestedManyWithoutNoticeInput
+  notifications?: Prisma.NotificationLogUncheckedCreateNestedManyWithoutNoticeInput
 }
 
 export type NoticeCreateOrConnectWithoutAcademicYearInput = {
@@ -828,72 +976,85 @@ export type NoticeScalarWhereInput = {
   OR?: Prisma.NoticeScalarWhereInput[]
   NOT?: Prisma.NoticeScalarWhereInput | Prisma.NoticeScalarWhereInput[]
   id?: Prisma.StringFilter<"Notice"> | string
-  noticeType?: Prisma.StringFilter<"Notice"> | string
   title?: Prisma.StringFilter<"Notice"> | string
-  startDate?: Prisma.DateTimeFilter<"Notice"> | Date | string
-  endDate?: Prisma.DateTimeFilter<"Notice"> | Date | string
   content?: Prisma.StringFilter<"Notice"> | string
   summary?: Prisma.StringNullableFilter<"Notice"> | string | null
-  isNoticeApproved?: Prisma.BoolFilter<"Notice"> | boolean
-  isDraft?: Prisma.BoolFilter<"Notice"> | boolean
-  isPublished?: Prisma.BoolFilter<"Notice"> | boolean
+  startDate?: Prisma.DateTimeFilter<"Notice"> | Date | string
+  endDate?: Prisma.DateTimeFilter<"Notice"> | Date | string
+  noticeType?: Prisma.EnumNoticeTypeFilter<"Notice"> | $Enums.NoticeType
+  priority?: Prisma.EnumNoticePriorityFilter<"Notice"> | $Enums.NoticePriority
+  status?: Prisma.EnumNoticeStatusFilter<"Notice"> | $Enums.NoticeStatus
+  createdBy?: Prisma.StringFilter<"Notice"> | string
+  approvedBy?: Prisma.StringNullableFilter<"Notice"> | string | null
+  approvedAt?: Prisma.DateTimeNullableFilter<"Notice"> | Date | string | null
+  publishedBy?: Prisma.StringNullableFilter<"Notice"> | string | null
+  publishedAt?: Prisma.DateTimeNullableFilter<"Notice"> | Date | string | null
+  isUrgent?: Prisma.BoolFilter<"Notice"> | boolean
   emailNotification?: Prisma.BoolFilter<"Notice"> | boolean
   pushNotification?: Prisma.BoolFilter<"Notice"> | boolean
-  WhatsAppNotification?: Prisma.BoolFilter<"Notice"> | boolean
+  whatsAppNotification?: Prisma.BoolFilter<"Notice"> | boolean
   smsNotification?: Prisma.BoolFilter<"Notice"> | boolean
   targetAudience?: Prisma.StringNullableListFilter<"Notice">
-  attachments?: Prisma.JsonNullableFilter<"Notice">
-  publishedBy?: Prisma.StringFilter<"Notice"> | string
   organizationId?: Prisma.StringFilter<"Notice"> | string
+  academicYearId?: Prisma.StringNullableFilter<"Notice"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Notice"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Notice"> | Date | string
-  academicYearId?: Prisma.StringNullableFilter<"Notice"> | string | null
 }
 
 export type NoticeCreateWithoutOrganizationInput = {
   id?: string
-  noticeType: string
   title: string
-  startDate: Date | string
-  endDate: Date | string
   content: string
   summary?: string | null
-  isNoticeApproved?: boolean
-  isDraft?: boolean
-  isPublished?: boolean
+  startDate: Date | string
+  endDate: Date | string
+  noticeType: $Enums.NoticeType
+  priority?: $Enums.NoticePriority
+  status?: $Enums.NoticeStatus
+  createdBy: string
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  publishedBy?: string | null
+  publishedAt?: Date | string | null
+  isUrgent?: boolean
   emailNotification?: boolean
   pushNotification?: boolean
-  WhatsAppNotification?: boolean
+  whatsAppNotification?: boolean
   smsNotification?: boolean
   targetAudience?: Prisma.NoticeCreatetargetAudienceInput | string[]
-  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  publishedBy: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  attachments?: Prisma.NoticeAttachmentCreateNestedManyWithoutNoticeInput
+  notifications?: Prisma.NotificationLogCreateNestedManyWithoutNoticeInput
   academicYear?: Prisma.AcademicYearCreateNestedOneWithoutNoticesInput
 }
 
 export type NoticeUncheckedCreateWithoutOrganizationInput = {
   id?: string
-  noticeType: string
   title: string
-  startDate: Date | string
-  endDate: Date | string
   content: string
   summary?: string | null
-  isNoticeApproved?: boolean
-  isDraft?: boolean
-  isPublished?: boolean
+  startDate: Date | string
+  endDate: Date | string
+  noticeType: $Enums.NoticeType
+  priority?: $Enums.NoticePriority
+  status?: $Enums.NoticeStatus
+  createdBy: string
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  publishedBy?: string | null
+  publishedAt?: Date | string | null
+  isUrgent?: boolean
   emailNotification?: boolean
   pushNotification?: boolean
-  WhatsAppNotification?: boolean
+  whatsAppNotification?: boolean
   smsNotification?: boolean
   targetAudience?: Prisma.NoticeCreatetargetAudienceInput | string[]
-  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  publishedBy: string
+  academicYearId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  academicYearId?: string | null
+  attachments?: Prisma.NoticeAttachmentUncheckedCreateNestedManyWithoutNoticeInput
+  notifications?: Prisma.NotificationLogUncheckedCreateNestedManyWithoutNoticeInput
 }
 
 export type NoticeCreateOrConnectWithoutOrganizationInput = {
@@ -922,24 +1083,283 @@ export type NoticeUpdateManyWithWhereWithoutOrganizationInput = {
   data: Prisma.XOR<Prisma.NoticeUpdateManyMutationInput, Prisma.NoticeUncheckedUpdateManyWithoutOrganizationInput>
 }
 
-export type NoticeCreateManyAcademicYearInput = {
+export type NoticeCreateWithoutAttachmentsInput = {
   id?: string
-  noticeType: string
   title: string
-  startDate: Date | string
-  endDate: Date | string
   content: string
   summary?: string | null
-  isNoticeApproved?: boolean
-  isDraft?: boolean
-  isPublished?: boolean
+  startDate: Date | string
+  endDate: Date | string
+  noticeType: $Enums.NoticeType
+  priority?: $Enums.NoticePriority
+  status?: $Enums.NoticeStatus
+  createdBy: string
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  publishedBy?: string | null
+  publishedAt?: Date | string | null
+  isUrgent?: boolean
   emailNotification?: boolean
   pushNotification?: boolean
-  WhatsAppNotification?: boolean
+  whatsAppNotification?: boolean
   smsNotification?: boolean
   targetAudience?: Prisma.NoticeCreatetargetAudienceInput | string[]
-  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  publishedBy: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  notifications?: Prisma.NotificationLogCreateNestedManyWithoutNoticeInput
+  organization: Prisma.OrganizationCreateNestedOneWithoutNoticesInput
+  academicYear?: Prisma.AcademicYearCreateNestedOneWithoutNoticesInput
+}
+
+export type NoticeUncheckedCreateWithoutAttachmentsInput = {
+  id?: string
+  title: string
+  content: string
+  summary?: string | null
+  startDate: Date | string
+  endDate: Date | string
+  noticeType: $Enums.NoticeType
+  priority?: $Enums.NoticePriority
+  status?: $Enums.NoticeStatus
+  createdBy: string
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  publishedBy?: string | null
+  publishedAt?: Date | string | null
+  isUrgent?: boolean
+  emailNotification?: boolean
+  pushNotification?: boolean
+  whatsAppNotification?: boolean
+  smsNotification?: boolean
+  targetAudience?: Prisma.NoticeCreatetargetAudienceInput | string[]
+  organizationId: string
+  academicYearId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  notifications?: Prisma.NotificationLogUncheckedCreateNestedManyWithoutNoticeInput
+}
+
+export type NoticeCreateOrConnectWithoutAttachmentsInput = {
+  where: Prisma.NoticeWhereUniqueInput
+  create: Prisma.XOR<Prisma.NoticeCreateWithoutAttachmentsInput, Prisma.NoticeUncheckedCreateWithoutAttachmentsInput>
+}
+
+export type NoticeUpsertWithoutAttachmentsInput = {
+  update: Prisma.XOR<Prisma.NoticeUpdateWithoutAttachmentsInput, Prisma.NoticeUncheckedUpdateWithoutAttachmentsInput>
+  create: Prisma.XOR<Prisma.NoticeCreateWithoutAttachmentsInput, Prisma.NoticeUncheckedCreateWithoutAttachmentsInput>
+  where?: Prisma.NoticeWhereInput
+}
+
+export type NoticeUpdateToOneWithWhereWithoutAttachmentsInput = {
+  where?: Prisma.NoticeWhereInput
+  data: Prisma.XOR<Prisma.NoticeUpdateWithoutAttachmentsInput, Prisma.NoticeUncheckedUpdateWithoutAttachmentsInput>
+}
+
+export type NoticeUpdateWithoutAttachmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  noticeType?: Prisma.EnumNoticeTypeFieldUpdateOperationsInput | $Enums.NoticeType
+  priority?: Prisma.EnumNoticePriorityFieldUpdateOperationsInput | $Enums.NoticePriority
+  status?: Prisma.EnumNoticeStatusFieldUpdateOperationsInput | $Enums.NoticeStatus
+  createdBy?: Prisma.StringFieldUpdateOperationsInput | string
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  publishedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isUrgent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pushNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsAppNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  smsNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  targetAudience?: Prisma.NoticeUpdatetargetAudienceInput | string[]
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  notifications?: Prisma.NotificationLogUpdateManyWithoutNoticeNestedInput
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutNoticesNestedInput
+  academicYear?: Prisma.AcademicYearUpdateOneWithoutNoticesNestedInput
+}
+
+export type NoticeUncheckedUpdateWithoutAttachmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  noticeType?: Prisma.EnumNoticeTypeFieldUpdateOperationsInput | $Enums.NoticeType
+  priority?: Prisma.EnumNoticePriorityFieldUpdateOperationsInput | $Enums.NoticePriority
+  status?: Prisma.EnumNoticeStatusFieldUpdateOperationsInput | $Enums.NoticeStatus
+  createdBy?: Prisma.StringFieldUpdateOperationsInput | string
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  publishedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isUrgent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pushNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsAppNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  smsNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  targetAudience?: Prisma.NoticeUpdatetargetAudienceInput | string[]
+  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  academicYearId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  notifications?: Prisma.NotificationLogUncheckedUpdateManyWithoutNoticeNestedInput
+}
+
+export type NoticeCreateWithoutNotificationsInput = {
+  id?: string
+  title: string
+  content: string
+  summary?: string | null
+  startDate: Date | string
+  endDate: Date | string
+  noticeType: $Enums.NoticeType
+  priority?: $Enums.NoticePriority
+  status?: $Enums.NoticeStatus
+  createdBy: string
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  publishedBy?: string | null
+  publishedAt?: Date | string | null
+  isUrgent?: boolean
+  emailNotification?: boolean
+  pushNotification?: boolean
+  whatsAppNotification?: boolean
+  smsNotification?: boolean
+  targetAudience?: Prisma.NoticeCreatetargetAudienceInput | string[]
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  attachments?: Prisma.NoticeAttachmentCreateNestedManyWithoutNoticeInput
+  organization: Prisma.OrganizationCreateNestedOneWithoutNoticesInput
+  academicYear?: Prisma.AcademicYearCreateNestedOneWithoutNoticesInput
+}
+
+export type NoticeUncheckedCreateWithoutNotificationsInput = {
+  id?: string
+  title: string
+  content: string
+  summary?: string | null
+  startDate: Date | string
+  endDate: Date | string
+  noticeType: $Enums.NoticeType
+  priority?: $Enums.NoticePriority
+  status?: $Enums.NoticeStatus
+  createdBy: string
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  publishedBy?: string | null
+  publishedAt?: Date | string | null
+  isUrgent?: boolean
+  emailNotification?: boolean
+  pushNotification?: boolean
+  whatsAppNotification?: boolean
+  smsNotification?: boolean
+  targetAudience?: Prisma.NoticeCreatetargetAudienceInput | string[]
+  organizationId: string
+  academicYearId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  attachments?: Prisma.NoticeAttachmentUncheckedCreateNestedManyWithoutNoticeInput
+}
+
+export type NoticeCreateOrConnectWithoutNotificationsInput = {
+  where: Prisma.NoticeWhereUniqueInput
+  create: Prisma.XOR<Prisma.NoticeCreateWithoutNotificationsInput, Prisma.NoticeUncheckedCreateWithoutNotificationsInput>
+}
+
+export type NoticeUpsertWithoutNotificationsInput = {
+  update: Prisma.XOR<Prisma.NoticeUpdateWithoutNotificationsInput, Prisma.NoticeUncheckedUpdateWithoutNotificationsInput>
+  create: Prisma.XOR<Prisma.NoticeCreateWithoutNotificationsInput, Prisma.NoticeUncheckedCreateWithoutNotificationsInput>
+  where?: Prisma.NoticeWhereInput
+}
+
+export type NoticeUpdateToOneWithWhereWithoutNotificationsInput = {
+  where?: Prisma.NoticeWhereInput
+  data: Prisma.XOR<Prisma.NoticeUpdateWithoutNotificationsInput, Prisma.NoticeUncheckedUpdateWithoutNotificationsInput>
+}
+
+export type NoticeUpdateWithoutNotificationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  noticeType?: Prisma.EnumNoticeTypeFieldUpdateOperationsInput | $Enums.NoticeType
+  priority?: Prisma.EnumNoticePriorityFieldUpdateOperationsInput | $Enums.NoticePriority
+  status?: Prisma.EnumNoticeStatusFieldUpdateOperationsInput | $Enums.NoticeStatus
+  createdBy?: Prisma.StringFieldUpdateOperationsInput | string
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  publishedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isUrgent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pushNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsAppNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  smsNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  targetAudience?: Prisma.NoticeUpdatetargetAudienceInput | string[]
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  attachments?: Prisma.NoticeAttachmentUpdateManyWithoutNoticeNestedInput
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutNoticesNestedInput
+  academicYear?: Prisma.AcademicYearUpdateOneWithoutNoticesNestedInput
+}
+
+export type NoticeUncheckedUpdateWithoutNotificationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  noticeType?: Prisma.EnumNoticeTypeFieldUpdateOperationsInput | $Enums.NoticeType
+  priority?: Prisma.EnumNoticePriorityFieldUpdateOperationsInput | $Enums.NoticePriority
+  status?: Prisma.EnumNoticeStatusFieldUpdateOperationsInput | $Enums.NoticeStatus
+  createdBy?: Prisma.StringFieldUpdateOperationsInput | string
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  publishedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isUrgent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pushNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsAppNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  smsNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  targetAudience?: Prisma.NoticeUpdatetargetAudienceInput | string[]
+  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  academicYearId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  attachments?: Prisma.NoticeAttachmentUncheckedUpdateManyWithoutNoticeNestedInput
+}
+
+export type NoticeCreateManyAcademicYearInput = {
+  id?: string
+  title: string
+  content: string
+  summary?: string | null
+  startDate: Date | string
+  endDate: Date | string
+  noticeType: $Enums.NoticeType
+  priority?: $Enums.NoticePriority
+  status?: $Enums.NoticeStatus
+  createdBy: string
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  publishedBy?: string | null
+  publishedAt?: Date | string | null
+  isUrgent?: boolean
+  emailNotification?: boolean
+  pushNotification?: boolean
+  whatsAppNotification?: boolean
+  smsNotification?: boolean
+  targetAudience?: Prisma.NoticeCreatetargetAudienceInput | string[]
   organizationId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -947,68 +1367,81 @@ export type NoticeCreateManyAcademicYearInput = {
 
 export type NoticeUpdateWithoutAcademicYearInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  noticeType?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
-  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isNoticeApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  noticeType?: Prisma.EnumNoticeTypeFieldUpdateOperationsInput | $Enums.NoticeType
+  priority?: Prisma.EnumNoticePriorityFieldUpdateOperationsInput | $Enums.NoticePriority
+  status?: Prisma.EnumNoticeStatusFieldUpdateOperationsInput | $Enums.NoticeStatus
+  createdBy?: Prisma.StringFieldUpdateOperationsInput | string
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  publishedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isUrgent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   emailNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pushNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  WhatsAppNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsAppNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
   smsNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
   targetAudience?: Prisma.NoticeUpdatetargetAudienceInput | string[]
-  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  publishedBy?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  Organization?: Prisma.OrganizationUpdateOneRequiredWithoutNoticesNestedInput
+  attachments?: Prisma.NoticeAttachmentUpdateManyWithoutNoticeNestedInput
+  notifications?: Prisma.NotificationLogUpdateManyWithoutNoticeNestedInput
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutNoticesNestedInput
 }
 
 export type NoticeUncheckedUpdateWithoutAcademicYearInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  noticeType?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
-  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isNoticeApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  noticeType?: Prisma.EnumNoticeTypeFieldUpdateOperationsInput | $Enums.NoticeType
+  priority?: Prisma.EnumNoticePriorityFieldUpdateOperationsInput | $Enums.NoticePriority
+  status?: Prisma.EnumNoticeStatusFieldUpdateOperationsInput | $Enums.NoticeStatus
+  createdBy?: Prisma.StringFieldUpdateOperationsInput | string
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  publishedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isUrgent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   emailNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pushNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  WhatsAppNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsAppNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
   smsNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
   targetAudience?: Prisma.NoticeUpdatetargetAudienceInput | string[]
-  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  publishedBy?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  attachments?: Prisma.NoticeAttachmentUncheckedUpdateManyWithoutNoticeNestedInput
+  notifications?: Prisma.NotificationLogUncheckedUpdateManyWithoutNoticeNestedInput
 }
 
 export type NoticeUncheckedUpdateManyWithoutAcademicYearInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  noticeType?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
-  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isNoticeApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  noticeType?: Prisma.EnumNoticeTypeFieldUpdateOperationsInput | $Enums.NoticeType
+  priority?: Prisma.EnumNoticePriorityFieldUpdateOperationsInput | $Enums.NoticePriority
+  status?: Prisma.EnumNoticeStatusFieldUpdateOperationsInput | $Enums.NoticeStatus
+  createdBy?: Prisma.StringFieldUpdateOperationsInput | string
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  publishedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isUrgent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   emailNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pushNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  WhatsAppNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsAppNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
   smsNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
   targetAudience?: Prisma.NoticeUpdatetargetAudienceInput | string[]
-  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  publishedBy?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1016,242 +1449,319 @@ export type NoticeUncheckedUpdateManyWithoutAcademicYearInput = {
 
 export type NoticeCreateManyOrganizationInput = {
   id?: string
-  noticeType: string
   title: string
-  startDate: Date | string
-  endDate: Date | string
   content: string
   summary?: string | null
-  isNoticeApproved?: boolean
-  isDraft?: boolean
-  isPublished?: boolean
+  startDate: Date | string
+  endDate: Date | string
+  noticeType: $Enums.NoticeType
+  priority?: $Enums.NoticePriority
+  status?: $Enums.NoticeStatus
+  createdBy: string
+  approvedBy?: string | null
+  approvedAt?: Date | string | null
+  publishedBy?: string | null
+  publishedAt?: Date | string | null
+  isUrgent?: boolean
   emailNotification?: boolean
   pushNotification?: boolean
-  WhatsAppNotification?: boolean
+  whatsAppNotification?: boolean
   smsNotification?: boolean
   targetAudience?: Prisma.NoticeCreatetargetAudienceInput | string[]
-  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  publishedBy: string
+  academicYearId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  academicYearId?: string | null
 }
 
 export type NoticeUpdateWithoutOrganizationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  noticeType?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
-  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isNoticeApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  noticeType?: Prisma.EnumNoticeTypeFieldUpdateOperationsInput | $Enums.NoticeType
+  priority?: Prisma.EnumNoticePriorityFieldUpdateOperationsInput | $Enums.NoticePriority
+  status?: Prisma.EnumNoticeStatusFieldUpdateOperationsInput | $Enums.NoticeStatus
+  createdBy?: Prisma.StringFieldUpdateOperationsInput | string
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  publishedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isUrgent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   emailNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pushNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  WhatsAppNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsAppNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
   smsNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
   targetAudience?: Prisma.NoticeUpdatetargetAudienceInput | string[]
-  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  publishedBy?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  attachments?: Prisma.NoticeAttachmentUpdateManyWithoutNoticeNestedInput
+  notifications?: Prisma.NotificationLogUpdateManyWithoutNoticeNestedInput
   academicYear?: Prisma.AcademicYearUpdateOneWithoutNoticesNestedInput
 }
 
 export type NoticeUncheckedUpdateWithoutOrganizationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  noticeType?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
-  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isNoticeApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  noticeType?: Prisma.EnumNoticeTypeFieldUpdateOperationsInput | $Enums.NoticeType
+  priority?: Prisma.EnumNoticePriorityFieldUpdateOperationsInput | $Enums.NoticePriority
+  status?: Prisma.EnumNoticeStatusFieldUpdateOperationsInput | $Enums.NoticeStatus
+  createdBy?: Prisma.StringFieldUpdateOperationsInput | string
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  publishedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isUrgent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   emailNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pushNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  WhatsAppNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsAppNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
   smsNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
   targetAudience?: Prisma.NoticeUpdatetargetAudienceInput | string[]
-  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  publishedBy?: Prisma.StringFieldUpdateOperationsInput | string
+  academicYearId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  academicYearId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attachments?: Prisma.NoticeAttachmentUncheckedUpdateManyWithoutNoticeNestedInput
+  notifications?: Prisma.NotificationLogUncheckedUpdateManyWithoutNoticeNestedInput
 }
 
 export type NoticeUncheckedUpdateManyWithoutOrganizationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  noticeType?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
-  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isNoticeApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  noticeType?: Prisma.EnumNoticeTypeFieldUpdateOperationsInput | $Enums.NoticeType
+  priority?: Prisma.EnumNoticePriorityFieldUpdateOperationsInput | $Enums.NoticePriority
+  status?: Prisma.EnumNoticeStatusFieldUpdateOperationsInput | $Enums.NoticeStatus
+  createdBy?: Prisma.StringFieldUpdateOperationsInput | string
+  approvedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  publishedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isUrgent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   emailNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pushNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  WhatsAppNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsAppNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
   smsNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
   targetAudience?: Prisma.NoticeUpdatetargetAudienceInput | string[]
-  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  publishedBy?: Prisma.StringFieldUpdateOperationsInput | string
+  academicYearId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  academicYearId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
+
+/**
+ * Count Type NoticeCountOutputType
+ */
+
+export type NoticeCountOutputType = {
+  attachments: number
+  notifications: number
+}
+
+export type NoticeCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  attachments?: boolean | NoticeCountOutputTypeCountAttachmentsArgs
+  notifications?: boolean | NoticeCountOutputTypeCountNotificationsArgs
+}
+
+/**
+ * NoticeCountOutputType without action
+ */
+export type NoticeCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the NoticeCountOutputType
+   */
+  select?: Prisma.NoticeCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * NoticeCountOutputType without action
+ */
+export type NoticeCountOutputTypeCountAttachmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.NoticeAttachmentWhereInput
+}
+
+/**
+ * NoticeCountOutputType without action
+ */
+export type NoticeCountOutputTypeCountNotificationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.NotificationLogWhereInput
+}
 
 
 export type NoticeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  noticeType?: boolean
   title?: boolean
-  startDate?: boolean
-  endDate?: boolean
   content?: boolean
   summary?: boolean
-  isNoticeApproved?: boolean
-  isDraft?: boolean
-  isPublished?: boolean
+  startDate?: boolean
+  endDate?: boolean
+  noticeType?: boolean
+  priority?: boolean
+  status?: boolean
+  createdBy?: boolean
+  approvedBy?: boolean
+  approvedAt?: boolean
+  publishedBy?: boolean
+  publishedAt?: boolean
+  isUrgent?: boolean
   emailNotification?: boolean
   pushNotification?: boolean
-  WhatsAppNotification?: boolean
+  whatsAppNotification?: boolean
   smsNotification?: boolean
   targetAudience?: boolean
-  attachments?: boolean
-  publishedBy?: boolean
   organizationId?: boolean
+  academicYearId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  academicYearId?: boolean
-  Organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+  attachments?: boolean | Prisma.Notice$attachmentsArgs<ExtArgs>
+  notifications?: boolean | Prisma.Notice$notificationsArgs<ExtArgs>
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   academicYear?: boolean | Prisma.Notice$academicYearArgs<ExtArgs>
+  _count?: boolean | Prisma.NoticeCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["notice"]>
 
 export type NoticeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  noticeType?: boolean
   title?: boolean
-  startDate?: boolean
-  endDate?: boolean
   content?: boolean
   summary?: boolean
-  isNoticeApproved?: boolean
-  isDraft?: boolean
-  isPublished?: boolean
+  startDate?: boolean
+  endDate?: boolean
+  noticeType?: boolean
+  priority?: boolean
+  status?: boolean
+  createdBy?: boolean
+  approvedBy?: boolean
+  approvedAt?: boolean
+  publishedBy?: boolean
+  publishedAt?: boolean
+  isUrgent?: boolean
   emailNotification?: boolean
   pushNotification?: boolean
-  WhatsAppNotification?: boolean
+  whatsAppNotification?: boolean
   smsNotification?: boolean
   targetAudience?: boolean
-  attachments?: boolean
-  publishedBy?: boolean
   organizationId?: boolean
+  academicYearId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  academicYearId?: boolean
-  Organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   academicYear?: boolean | Prisma.Notice$academicYearArgs<ExtArgs>
 }, ExtArgs["result"]["notice"]>
 
 export type NoticeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  noticeType?: boolean
   title?: boolean
-  startDate?: boolean
-  endDate?: boolean
   content?: boolean
   summary?: boolean
-  isNoticeApproved?: boolean
-  isDraft?: boolean
-  isPublished?: boolean
+  startDate?: boolean
+  endDate?: boolean
+  noticeType?: boolean
+  priority?: boolean
+  status?: boolean
+  createdBy?: boolean
+  approvedBy?: boolean
+  approvedAt?: boolean
+  publishedBy?: boolean
+  publishedAt?: boolean
+  isUrgent?: boolean
   emailNotification?: boolean
   pushNotification?: boolean
-  WhatsAppNotification?: boolean
+  whatsAppNotification?: boolean
   smsNotification?: boolean
   targetAudience?: boolean
-  attachments?: boolean
-  publishedBy?: boolean
   organizationId?: boolean
+  academicYearId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  academicYearId?: boolean
-  Organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   academicYear?: boolean | Prisma.Notice$academicYearArgs<ExtArgs>
 }, ExtArgs["result"]["notice"]>
 
 export type NoticeSelectScalar = {
   id?: boolean
-  noticeType?: boolean
   title?: boolean
-  startDate?: boolean
-  endDate?: boolean
   content?: boolean
   summary?: boolean
-  isNoticeApproved?: boolean
-  isDraft?: boolean
-  isPublished?: boolean
+  startDate?: boolean
+  endDate?: boolean
+  noticeType?: boolean
+  priority?: boolean
+  status?: boolean
+  createdBy?: boolean
+  approvedBy?: boolean
+  approvedAt?: boolean
+  publishedBy?: boolean
+  publishedAt?: boolean
+  isUrgent?: boolean
   emailNotification?: boolean
   pushNotification?: boolean
-  WhatsAppNotification?: boolean
+  whatsAppNotification?: boolean
   smsNotification?: boolean
   targetAudience?: boolean
-  attachments?: boolean
-  publishedBy?: boolean
   organizationId?: boolean
+  academicYearId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  academicYearId?: boolean
 }
 
-export type NoticeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "noticeType" | "title" | "startDate" | "endDate" | "content" | "summary" | "isNoticeApproved" | "isDraft" | "isPublished" | "emailNotification" | "pushNotification" | "WhatsAppNotification" | "smsNotification" | "targetAudience" | "attachments" | "publishedBy" | "organizationId" | "createdAt" | "updatedAt" | "academicYearId", ExtArgs["result"]["notice"]>
+export type NoticeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "content" | "summary" | "startDate" | "endDate" | "noticeType" | "priority" | "status" | "createdBy" | "approvedBy" | "approvedAt" | "publishedBy" | "publishedAt" | "isUrgent" | "emailNotification" | "pushNotification" | "whatsAppNotification" | "smsNotification" | "targetAudience" | "organizationId" | "academicYearId" | "createdAt" | "updatedAt", ExtArgs["result"]["notice"]>
 export type NoticeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  Organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+  attachments?: boolean | Prisma.Notice$attachmentsArgs<ExtArgs>
+  notifications?: boolean | Prisma.Notice$notificationsArgs<ExtArgs>
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   academicYear?: boolean | Prisma.Notice$academicYearArgs<ExtArgs>
+  _count?: boolean | Prisma.NoticeCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type NoticeIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  Organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   academicYear?: boolean | Prisma.Notice$academicYearArgs<ExtArgs>
 }
 export type NoticeIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  Organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   academicYear?: boolean | Prisma.Notice$academicYearArgs<ExtArgs>
 }
 
 export type $NoticePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Notice"
   objects: {
-    Organization: Prisma.$OrganizationPayload<ExtArgs>
+    attachments: Prisma.$NoticeAttachmentPayload<ExtArgs>[]
+    notifications: Prisma.$NotificationLogPayload<ExtArgs>[]
+    organization: Prisma.$OrganizationPayload<ExtArgs>
     academicYear: Prisma.$AcademicYearPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    noticeType: string
     title: string
-    startDate: Date
-    endDate: Date
     content: string
     summary: string | null
-    isNoticeApproved: boolean
-    isDraft: boolean
-    isPublished: boolean
+    startDate: Date
+    endDate: Date
+    noticeType: $Enums.NoticeType
+    priority: $Enums.NoticePriority
+    status: $Enums.NoticeStatus
+    createdBy: string
+    approvedBy: string | null
+    approvedAt: Date | null
+    publishedBy: string | null
+    publishedAt: Date | null
+    isUrgent: boolean
     emailNotification: boolean
     pushNotification: boolean
-    WhatsAppNotification: boolean
+    whatsAppNotification: boolean
     smsNotification: boolean
     targetAudience: string[]
-    attachments: runtime.JsonValue | null
-    publishedBy: string
     organizationId: string
+    academicYearId: string | null
     createdAt: Date
     updatedAt: Date
-    academicYearId: string | null
   }, ExtArgs["result"]["notice"]>
   composites: {}
 }
@@ -1646,7 +2156,9 @@ readonly fields: NoticeFieldRefs;
  */
 export interface Prisma__NoticeClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  Organization<T extends Prisma.OrganizationDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrganizationDefaultArgs<ExtArgs>>): Prisma.Prisma__OrganizationClient<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  attachments<T extends Prisma.Notice$attachmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Notice$attachmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NoticeAttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  notifications<T extends Prisma.Notice$notificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Notice$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotificationLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  organization<T extends Prisma.OrganizationDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrganizationDefaultArgs<ExtArgs>>): Prisma.Prisma__OrganizationClient<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   academicYear<T extends Prisma.Notice$academicYearArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Notice$academicYearArgs<ExtArgs>>): Prisma.Prisma__AcademicYearClient<runtime.Types.Result.GetResult<Prisma.$AcademicYearPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1678,26 +2190,29 @@ export interface Prisma__NoticeClient<T, Null = never, ExtArgs extends runtime.T
  */
 export interface NoticeFieldRefs {
   readonly id: Prisma.FieldRef<"Notice", 'String'>
-  readonly noticeType: Prisma.FieldRef<"Notice", 'String'>
   readonly title: Prisma.FieldRef<"Notice", 'String'>
-  readonly startDate: Prisma.FieldRef<"Notice", 'DateTime'>
-  readonly endDate: Prisma.FieldRef<"Notice", 'DateTime'>
   readonly content: Prisma.FieldRef<"Notice", 'String'>
   readonly summary: Prisma.FieldRef<"Notice", 'String'>
-  readonly isNoticeApproved: Prisma.FieldRef<"Notice", 'Boolean'>
-  readonly isDraft: Prisma.FieldRef<"Notice", 'Boolean'>
-  readonly isPublished: Prisma.FieldRef<"Notice", 'Boolean'>
+  readonly startDate: Prisma.FieldRef<"Notice", 'DateTime'>
+  readonly endDate: Prisma.FieldRef<"Notice", 'DateTime'>
+  readonly noticeType: Prisma.FieldRef<"Notice", 'NoticeType'>
+  readonly priority: Prisma.FieldRef<"Notice", 'NoticePriority'>
+  readonly status: Prisma.FieldRef<"Notice", 'NoticeStatus'>
+  readonly createdBy: Prisma.FieldRef<"Notice", 'String'>
+  readonly approvedBy: Prisma.FieldRef<"Notice", 'String'>
+  readonly approvedAt: Prisma.FieldRef<"Notice", 'DateTime'>
+  readonly publishedBy: Prisma.FieldRef<"Notice", 'String'>
+  readonly publishedAt: Prisma.FieldRef<"Notice", 'DateTime'>
+  readonly isUrgent: Prisma.FieldRef<"Notice", 'Boolean'>
   readonly emailNotification: Prisma.FieldRef<"Notice", 'Boolean'>
   readonly pushNotification: Prisma.FieldRef<"Notice", 'Boolean'>
-  readonly WhatsAppNotification: Prisma.FieldRef<"Notice", 'Boolean'>
+  readonly whatsAppNotification: Prisma.FieldRef<"Notice", 'Boolean'>
   readonly smsNotification: Prisma.FieldRef<"Notice", 'Boolean'>
   readonly targetAudience: Prisma.FieldRef<"Notice", 'String[]'>
-  readonly attachments: Prisma.FieldRef<"Notice", 'Json'>
-  readonly publishedBy: Prisma.FieldRef<"Notice", 'String'>
   readonly organizationId: Prisma.FieldRef<"Notice", 'String'>
+  readonly academicYearId: Prisma.FieldRef<"Notice", 'String'>
   readonly createdAt: Prisma.FieldRef<"Notice", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Notice", 'DateTime'>
-  readonly academicYearId: Prisma.FieldRef<"Notice", 'String'>
 }
     
 
@@ -2091,6 +2606,54 @@ export type NoticeDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Intern
    * Limit how many Notices to delete.
    */
   limit?: number
+}
+
+/**
+ * Notice.attachments
+ */
+export type Notice$attachmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the NoticeAttachment
+   */
+  select?: Prisma.NoticeAttachmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the NoticeAttachment
+   */
+  omit?: Prisma.NoticeAttachmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.NoticeAttachmentInclude<ExtArgs> | null
+  where?: Prisma.NoticeAttachmentWhereInput
+  orderBy?: Prisma.NoticeAttachmentOrderByWithRelationInput | Prisma.NoticeAttachmentOrderByWithRelationInput[]
+  cursor?: Prisma.NoticeAttachmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.NoticeAttachmentScalarFieldEnum | Prisma.NoticeAttachmentScalarFieldEnum[]
+}
+
+/**
+ * Notice.notifications
+ */
+export type Notice$notificationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the NotificationLog
+   */
+  select?: Prisma.NotificationLogSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the NotificationLog
+   */
+  omit?: Prisma.NotificationLogOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.NotificationLogInclude<ExtArgs> | null
+  where?: Prisma.NotificationLogWhereInput
+  orderBy?: Prisma.NotificationLogOrderByWithRelationInput | Prisma.NotificationLogOrderByWithRelationInput[]
+  cursor?: Prisma.NotificationLogWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.NotificationLogScalarFieldEnum | Prisma.NotificationLogScalarFieldEnum[]
 }
 
 /**

@@ -56,6 +56,37 @@ const badgeVariants = cva(
         belowAverage:
           'border-transparent bg-purple-100 text-purple-700 hover:bg-purple-200 cursor-pointer',
         poor: 'border-transparent bg-pink-100 text-pink-700 hover:bg-pink-200 cursor-pointer',
+
+        // Notice Priority
+        URGENT: 'bg-red-100 text-red-800 border-red-200',
+        HIGH: 'bg-orange-100 text-orange-800 border-orange-200',
+        MEDIUM: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+        LOW: 'bg-gray-100 text-gray-800 border-gray-200',
+
+        // Notice Status
+        DRAFT: 'bg-gray-100 text-gray-800',
+        PENDING_REVIEW: 'bg-blue-100 text-blue-800',
+        PUBLISHED: 'bg-green-100 text-green-800',
+        EXPIRED: 'bg-red-100 text-red-800',
+        ARCHIVED: 'bg-amber-100 text-amber-800',
+        REJECTED:
+          'border-transparent bg-red-100 text-red-600 hover:bg-red-200 cursor-pointer',
+
+        // Notice Types
+        GENERAL:
+          'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300',
+        TRIP: 'bg-pink-100 text-pink-800 dark:bg-pink-900/20 dark:text-pink-300',
+        EVENT:
+          'bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-300',
+        EXAM: 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-300',
+        HOLIDAY:
+          'bg-teal-100 text-teal-800 dark:bg-teal-900/20 dark:text-teal-300',
+        DEADLINE:
+          'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300',
+        TIMETABLE:
+          'bg-orange-100 text-orange-800 dark:bg-orange-900/20 dark:text-orange-300',
+        RESULT:
+          'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/20 dark:text-indigo-300',
       },
     },
     defaultVariants: {

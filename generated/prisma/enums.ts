@@ -18,20 +18,6 @@ export const PlanType = {
 export type PlanType = (typeof PlanType)[keyof typeof PlanType]
 
 
-export const NoticeType = {
-  GENERAL: 'GENERAL',
-  EVENT: 'EVENT',
-  EXAM: 'EXAM',
-  HOLIDAY: 'HOLIDAY',
-  DEADLINE: 'DEADLINE',
-  TIMETABLE: 'TIMETABLE',
-  RESULT: 'RESULT',
-  SMS: 'SMS'
-} as const
-
-export type NoticeType = (typeof NoticeType)[keyof typeof NoticeType]
-
-
 export const OrganizationType = {
   SCHOOL: 'SCHOOL',
   COLLEGE: 'COLLEGE',
@@ -112,14 +98,6 @@ export const FeeStatus = {
 export type FeeStatus = (typeof FeeStatus)[keyof typeof FeeStatus]
 
 
-export const scheduledJobType = {
-  FEE_REMINDER: 'FEE_REMINDER',
-  NOTICE: 'NOTICE'
-} as const
-
-export type scheduledJobType = (typeof scheduledJobType)[keyof typeof scheduledJobType]
-
-
 export const AttendanceStatus = {
   PRESENT: 'PRESENT',
   ABSENT: 'ABSENT',
@@ -160,6 +138,42 @@ export const ComplaintStatus = {
 export type ComplaintStatus = (typeof ComplaintStatus)[keyof typeof ComplaintStatus]
 
 
+export const NoticeType = {
+  GENERAL: 'GENERAL',
+  TRIP: 'TRIP',
+  EVENT: 'EVENT',
+  EXAM: 'EXAM',
+  HOLIDAY: 'HOLIDAY',
+  DEADLINE: 'DEADLINE',
+  TIMETABLE: 'TIMETABLE',
+  RESULT: 'RESULT'
+} as const
+
+export type NoticeType = (typeof NoticeType)[keyof typeof NoticeType]
+
+
+export const NoticePriority = {
+  LOW: 'LOW',
+  MEDIUM: 'MEDIUM',
+  HIGH: 'HIGH',
+  URGENT: 'URGENT'
+} as const
+
+export type NoticePriority = (typeof NoticePriority)[keyof typeof NoticePriority]
+
+
+export const NoticeStatus = {
+  DRAFT: 'DRAFT',
+  PENDING_REVIEW: 'PENDING_REVIEW',
+  PUBLISHED: 'PUBLISHED',
+  REJECTED: 'REJECTED',
+  EXPIRED: 'EXPIRED',
+  ARCHIVED: 'ARCHIVED'
+} as const
+
+export type NoticeStatus = (typeof NoticeStatus)[keyof typeof NoticeStatus]
+
+
 export const NotificationType = {
   NOTICE: 'NOTICE',
   FEE_REMINDER: 'FEE_REMINDER',
@@ -190,6 +204,15 @@ export const NotificationStatus = {
 } as const
 
 export type NotificationStatus = (typeof NotificationStatus)[keyof typeof NotificationStatus]
+
+
+export const scheduledJobType = {
+  FEE_REMINDER: 'FEE_REMINDER',
+  NOTICE: 'NOTICE',
+  EXAM: 'EXAM'
+} as const
+
+export type scheduledJobType = (typeof scheduledJobType)[keyof typeof scheduledJobType]
 
 
 export const Role = {

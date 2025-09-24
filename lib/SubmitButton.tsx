@@ -20,23 +20,7 @@ export function SubmitButton({ text }: { text: string }) {
     </>
   );
 }
-export function CreateNoticeButton({ isPending }: { isPending: boolean }) {
-  return (
-    <Button type="submit" disabled={isPending}>
-      {isPending ? (
-        <>
-          <Loader2 className="mr-2 w-4 h-4 animate-spin" />
-          Creating Notice...
-        </>
-      ) : (
-        <>
-          <Send className="mr-2 h-4 w-4" />
-          Publish Notice
-        </>
-      )}
-    </Button>
-  );
-}
+
 export function DeleteNoticeButton({ onClick }: { onClick: () => void }) {
   const { pending } = useFormStatus();
   return (

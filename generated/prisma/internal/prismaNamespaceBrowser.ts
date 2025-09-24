@@ -35,13 +35,14 @@ export const ModelName = {
   StudentDocument: 'StudentDocument',
   Fee: 'Fee',
   FeePayment: 'FeePayment',
-  ScheduledJob: 'ScheduledJob',
   FeeCategory: 'FeeCategory',
   AcademicCalendar: 'AcademicCalendar',
   AnonymousComplaint: 'AnonymousComplaint',
   ComplaintStatusTimeline: 'ComplaintStatusTimeline',
   Notice: 'Notice',
+  NoticeAttachment: 'NoticeAttachment',
   NotificationLog: 'NotificationLog',
+  ScheduledJob: 'ScheduledJob',
   ExamSession: 'ExamSession',
   Exam: 'Exam',
   ExamEnrollment: 'ExamEnrollment',
@@ -348,24 +349,6 @@ export const FeePaymentScalarFieldEnum = {
 export type FeePaymentScalarFieldEnum = (typeof FeePaymentScalarFieldEnum)[keyof typeof FeePaymentScalarFieldEnum]
 
 
-export const ScheduledJobScalarFieldEnum = {
-  id: 'id',
-  data: 'data',
-  type: 'type',
-  scheduledAt: 'scheduledAt',
-  channels: 'channels',
-  status: 'status',
-  result: 'result',
-  error: 'error',
-  createdBy: 'createdBy',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  organizationId: 'organizationId'
-} as const
-
-export type ScheduledJobScalarFieldEnum = (typeof ScheduledJobScalarFieldEnum)[keyof typeof ScheduledJobScalarFieldEnum]
-
-
 export const FeeCategoryScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -430,29 +413,46 @@ export type ComplaintStatusTimelineScalarFieldEnum = (typeof ComplaintStatusTime
 
 export const NoticeScalarFieldEnum = {
   id: 'id',
-  noticeType: 'noticeType',
   title: 'title',
-  startDate: 'startDate',
-  endDate: 'endDate',
   content: 'content',
   summary: 'summary',
-  isNoticeApproved: 'isNoticeApproved',
-  isDraft: 'isDraft',
-  isPublished: 'isPublished',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  noticeType: 'noticeType',
+  priority: 'priority',
+  status: 'status',
+  createdBy: 'createdBy',
+  approvedBy: 'approvedBy',
+  approvedAt: 'approvedAt',
+  publishedBy: 'publishedBy',
+  publishedAt: 'publishedAt',
+  isUrgent: 'isUrgent',
   emailNotification: 'emailNotification',
   pushNotification: 'pushNotification',
-  WhatsAppNotification: 'WhatsAppNotification',
+  whatsAppNotification: 'whatsAppNotification',
   smsNotification: 'smsNotification',
   targetAudience: 'targetAudience',
-  attachments: 'attachments',
-  publishedBy: 'publishedBy',
   organizationId: 'organizationId',
+  academicYearId: 'academicYearId',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  academicYearId: 'academicYearId'
+  updatedAt: 'updatedAt'
 } as const
 
 export type NoticeScalarFieldEnum = (typeof NoticeScalarFieldEnum)[keyof typeof NoticeScalarFieldEnum]
+
+
+export const NoticeAttachmentScalarFieldEnum = {
+  id: 'id',
+  noticeId: 'noticeId',
+  fileName: 'fileName',
+  fileUrl: 'fileUrl',
+  fileType: 'fileType',
+  fileSize: 'fileSize',
+  publicId: 'publicId',
+  uploadedAt: 'uploadedAt'
+} as const
+
+export type NoticeAttachmentScalarFieldEnum = (typeof NoticeAttachmentScalarFieldEnum)[keyof typeof NoticeAttachmentScalarFieldEnum]
 
 
 export const NotificationLogScalarFieldEnum = {
@@ -464,6 +464,10 @@ export const NotificationLogScalarFieldEnum = {
   channel: 'channel',
   status: 'status',
   notificationType: 'notificationType',
+  noticeId: 'noticeId',
+  errorMessage: 'errorMessage',
+  retryCount: 'retryCount',
+  maxRetries: 'maxRetries',
   units: 'units',
   cost: 'cost',
   sentAt: 'sentAt',
@@ -472,6 +476,24 @@ export const NotificationLogScalarFieldEnum = {
 } as const
 
 export type NotificationLogScalarFieldEnum = (typeof NotificationLogScalarFieldEnum)[keyof typeof NotificationLogScalarFieldEnum]
+
+
+export const ScheduledJobScalarFieldEnum = {
+  id: 'id',
+  data: 'data',
+  type: 'type',
+  scheduledAt: 'scheduledAt',
+  channels: 'channels',
+  status: 'status',
+  result: 'result',
+  error: 'error',
+  createdBy: 'createdBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  organizationId: 'organizationId'
+} as const
+
+export type ScheduledJobScalarFieldEnum = (typeof ScheduledJobScalarFieldEnum)[keyof typeof ScheduledJobScalarFieldEnum]
 
 
 export const ExamSessionScalarFieldEnum = {

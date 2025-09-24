@@ -933,20 +933,6 @@ export type OrganizationUpdateOneRequiredWithoutFeePaymentNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutFeePaymentInput, Prisma.OrganizationUpdateWithoutFeePaymentInput>, Prisma.OrganizationUncheckedUpdateWithoutFeePaymentInput>
 }
 
-export type OrganizationCreateNestedOneWithoutScheduledJobInput = {
-  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutScheduledJobInput, Prisma.OrganizationUncheckedCreateWithoutScheduledJobInput>
-  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutScheduledJobInput
-  connect?: Prisma.OrganizationWhereUniqueInput
-}
-
-export type OrganizationUpdateOneRequiredWithoutScheduledJobNestedInput = {
-  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutScheduledJobInput, Prisma.OrganizationUncheckedCreateWithoutScheduledJobInput>
-  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutScheduledJobInput
-  upsert?: Prisma.OrganizationUpsertWithoutScheduledJobInput
-  connect?: Prisma.OrganizationWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutScheduledJobInput, Prisma.OrganizationUpdateWithoutScheduledJobInput>, Prisma.OrganizationUncheckedUpdateWithoutScheduledJobInput>
-}
-
 export type OrganizationCreateNestedOneWithoutFeeCategoryInput = {
   create?: Prisma.XOR<Prisma.OrganizationCreateWithoutFeeCategoryInput, Prisma.OrganizationUncheckedCreateWithoutFeeCategoryInput>
   connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutFeeCategoryInput
@@ -1015,6 +1001,20 @@ export type OrganizationUpdateOneRequiredWithoutNotificationLogNestedInput = {
   upsert?: Prisma.OrganizationUpsertWithoutNotificationLogInput
   connect?: Prisma.OrganizationWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutNotificationLogInput, Prisma.OrganizationUpdateWithoutNotificationLogInput>, Prisma.OrganizationUncheckedUpdateWithoutNotificationLogInput>
+}
+
+export type OrganizationCreateNestedOneWithoutScheduledJobInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutScheduledJobInput, Prisma.OrganizationUncheckedCreateWithoutScheduledJobInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutScheduledJobInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+}
+
+export type OrganizationUpdateOneRequiredWithoutScheduledJobNestedInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutScheduledJobInput, Prisma.OrganizationUncheckedCreateWithoutScheduledJobInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutScheduledJobInput
+  upsert?: Prisma.OrganizationUpsertWithoutScheduledJobInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutScheduledJobInput, Prisma.OrganizationUpdateWithoutScheduledJobInput>, Prisma.OrganizationUncheckedUpdateWithoutScheduledJobInput>
 }
 
 export type OrganizationCreateNestedOneWithoutExamInput = {
@@ -2893,174 +2893,6 @@ export type OrganizationUncheckedUpdateWithoutFeePaymentInput = {
   hallTicket?: Prisma.HallTicketUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
-export type OrganizationCreateWithoutScheduledJobInput = {
-  id?: string
-  name?: string | null
-  organizationSlug: string
-  organizationLogo?: string | null
-  contactEmail?: string | null
-  contactPhone?: string | null
-  website?: string | null
-  isActive?: boolean
-  isPaid?: boolean
-  plan?: $Enums.PlanType
-  planStartedAt?: Date | string | null
-  planExpiresAt?: Date | string | null
-  maxStudents?: number | null
-  organizationType?: $Enums.OrganizationType | null
-  createdBy?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  users?: Prisma.UserCreateNestedManyWithoutOrganizationInput
-  notices?: Prisma.NoticeCreateNestedManyWithoutOrganizationInput
-  Student?: Prisma.StudentCreateNestedManyWithoutOrganizationInput
-  StudentDocument?: Prisma.StudentDocumentCreateNestedManyWithoutOrganizationInput
-  Grade?: Prisma.GradeCreateNestedManyWithoutOrganizationInput
-  Section?: Prisma.SectionCreateNestedManyWithoutOrganizationInput
-  Fee?: Prisma.FeeCreateNestedManyWithoutOrganizationInput
-  FeeCategory?: Prisma.FeeCategoryCreateNestedManyWithoutOrganizationInput
-  FeePayment?: Prisma.FeePaymentCreateNestedManyWithoutOrganizationInput
-  AcademicCalendar?: Prisma.AcademicCalendarCreateNestedManyWithoutOrganizationInput
-  AnonymousComplaint?: Prisma.AnonymousComplaintCreateNestedManyWithoutOrganizationInput
-  Teacher?: Prisma.TeacherCreateNestedManyWithoutOrganizationInput
-  Subject?: Prisma.SubjectCreateNestedManyWithoutOrganizationInput
-  TeachingAssignment?: Prisma.TeachingAssignmentCreateNestedManyWithoutOrganizationInput
-  NotificationLog?: Prisma.NotificationLogCreateNestedManyWithoutOrganizationInput
-  AcademicYear?: Prisma.AcademicYearCreateNestedManyWithoutOrganizationInput
-  exam?: Prisma.ExamCreateNestedManyWithoutOrganizationInput
-  hallTicket?: Prisma.HallTicketCreateNestedManyWithoutOrganizationInput
-}
-
-export type OrganizationUncheckedCreateWithoutScheduledJobInput = {
-  id?: string
-  name?: string | null
-  organizationSlug: string
-  organizationLogo?: string | null
-  contactEmail?: string | null
-  contactPhone?: string | null
-  website?: string | null
-  isActive?: boolean
-  isPaid?: boolean
-  plan?: $Enums.PlanType
-  planStartedAt?: Date | string | null
-  planExpiresAt?: Date | string | null
-  maxStudents?: number | null
-  organizationType?: $Enums.OrganizationType | null
-  createdBy?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  users?: Prisma.UserUncheckedCreateNestedManyWithoutOrganizationInput
-  notices?: Prisma.NoticeUncheckedCreateNestedManyWithoutOrganizationInput
-  Student?: Prisma.StudentUncheckedCreateNestedManyWithoutOrganizationInput
-  StudentDocument?: Prisma.StudentDocumentUncheckedCreateNestedManyWithoutOrganizationInput
-  Grade?: Prisma.GradeUncheckedCreateNestedManyWithoutOrganizationInput
-  Section?: Prisma.SectionUncheckedCreateNestedManyWithoutOrganizationInput
-  Fee?: Prisma.FeeUncheckedCreateNestedManyWithoutOrganizationInput
-  FeeCategory?: Prisma.FeeCategoryUncheckedCreateNestedManyWithoutOrganizationInput
-  FeePayment?: Prisma.FeePaymentUncheckedCreateNestedManyWithoutOrganizationInput
-  AcademicCalendar?: Prisma.AcademicCalendarUncheckedCreateNestedManyWithoutOrganizationInput
-  AnonymousComplaint?: Prisma.AnonymousComplaintUncheckedCreateNestedManyWithoutOrganizationInput
-  Teacher?: Prisma.TeacherUncheckedCreateNestedManyWithoutOrganizationInput
-  Subject?: Prisma.SubjectUncheckedCreateNestedManyWithoutOrganizationInput
-  TeachingAssignment?: Prisma.TeachingAssignmentUncheckedCreateNestedManyWithoutOrganizationInput
-  NotificationLog?: Prisma.NotificationLogUncheckedCreateNestedManyWithoutOrganizationInput
-  AcademicYear?: Prisma.AcademicYearUncheckedCreateNestedManyWithoutOrganizationInput
-  exam?: Prisma.ExamUncheckedCreateNestedManyWithoutOrganizationInput
-  hallTicket?: Prisma.HallTicketUncheckedCreateNestedManyWithoutOrganizationInput
-}
-
-export type OrganizationCreateOrConnectWithoutScheduledJobInput = {
-  where: Prisma.OrganizationWhereUniqueInput
-  create: Prisma.XOR<Prisma.OrganizationCreateWithoutScheduledJobInput, Prisma.OrganizationUncheckedCreateWithoutScheduledJobInput>
-}
-
-export type OrganizationUpsertWithoutScheduledJobInput = {
-  update: Prisma.XOR<Prisma.OrganizationUpdateWithoutScheduledJobInput, Prisma.OrganizationUncheckedUpdateWithoutScheduledJobInput>
-  create: Prisma.XOR<Prisma.OrganizationCreateWithoutScheduledJobInput, Prisma.OrganizationUncheckedCreateWithoutScheduledJobInput>
-  where?: Prisma.OrganizationWhereInput
-}
-
-export type OrganizationUpdateToOneWithWhereWithoutScheduledJobInput = {
-  where?: Prisma.OrganizationWhereInput
-  data: Prisma.XOR<Prisma.OrganizationUpdateWithoutScheduledJobInput, Prisma.OrganizationUncheckedUpdateWithoutScheduledJobInput>
-}
-
-export type OrganizationUpdateWithoutScheduledJobInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  organizationSlug?: Prisma.StringFieldUpdateOperationsInput | string
-  organizationLogo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  plan?: Prisma.EnumPlanTypeFieldUpdateOperationsInput | $Enums.PlanType
-  planStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  maxStudents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  organizationType?: Prisma.NullableEnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType | null
-  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  users?: Prisma.UserUpdateManyWithoutOrganizationNestedInput
-  notices?: Prisma.NoticeUpdateManyWithoutOrganizationNestedInput
-  Student?: Prisma.StudentUpdateManyWithoutOrganizationNestedInput
-  StudentDocument?: Prisma.StudentDocumentUpdateManyWithoutOrganizationNestedInput
-  Grade?: Prisma.GradeUpdateManyWithoutOrganizationNestedInput
-  Section?: Prisma.SectionUpdateManyWithoutOrganizationNestedInput
-  Fee?: Prisma.FeeUpdateManyWithoutOrganizationNestedInput
-  FeeCategory?: Prisma.FeeCategoryUpdateManyWithoutOrganizationNestedInput
-  FeePayment?: Prisma.FeePaymentUpdateManyWithoutOrganizationNestedInput
-  AcademicCalendar?: Prisma.AcademicCalendarUpdateManyWithoutOrganizationNestedInput
-  AnonymousComplaint?: Prisma.AnonymousComplaintUpdateManyWithoutOrganizationNestedInput
-  Teacher?: Prisma.TeacherUpdateManyWithoutOrganizationNestedInput
-  Subject?: Prisma.SubjectUpdateManyWithoutOrganizationNestedInput
-  TeachingAssignment?: Prisma.TeachingAssignmentUpdateManyWithoutOrganizationNestedInput
-  NotificationLog?: Prisma.NotificationLogUpdateManyWithoutOrganizationNestedInput
-  AcademicYear?: Prisma.AcademicYearUpdateManyWithoutOrganizationNestedInput
-  exam?: Prisma.ExamUpdateManyWithoutOrganizationNestedInput
-  hallTicket?: Prisma.HallTicketUpdateManyWithoutOrganizationNestedInput
-}
-
-export type OrganizationUncheckedUpdateWithoutScheduledJobInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  organizationSlug?: Prisma.StringFieldUpdateOperationsInput | string
-  organizationLogo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  plan?: Prisma.EnumPlanTypeFieldUpdateOperationsInput | $Enums.PlanType
-  planStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  maxStudents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  organizationType?: Prisma.NullableEnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType | null
-  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  users?: Prisma.UserUncheckedUpdateManyWithoutOrganizationNestedInput
-  notices?: Prisma.NoticeUncheckedUpdateManyWithoutOrganizationNestedInput
-  Student?: Prisma.StudentUncheckedUpdateManyWithoutOrganizationNestedInput
-  StudentDocument?: Prisma.StudentDocumentUncheckedUpdateManyWithoutOrganizationNestedInput
-  Grade?: Prisma.GradeUncheckedUpdateManyWithoutOrganizationNestedInput
-  Section?: Prisma.SectionUncheckedUpdateManyWithoutOrganizationNestedInput
-  Fee?: Prisma.FeeUncheckedUpdateManyWithoutOrganizationNestedInput
-  FeeCategory?: Prisma.FeeCategoryUncheckedUpdateManyWithoutOrganizationNestedInput
-  FeePayment?: Prisma.FeePaymentUncheckedUpdateManyWithoutOrganizationNestedInput
-  AcademicCalendar?: Prisma.AcademicCalendarUncheckedUpdateManyWithoutOrganizationNestedInput
-  AnonymousComplaint?: Prisma.AnonymousComplaintUncheckedUpdateManyWithoutOrganizationNestedInput
-  Teacher?: Prisma.TeacherUncheckedUpdateManyWithoutOrganizationNestedInput
-  Subject?: Prisma.SubjectUncheckedUpdateManyWithoutOrganizationNestedInput
-  TeachingAssignment?: Prisma.TeachingAssignmentUncheckedUpdateManyWithoutOrganizationNestedInput
-  NotificationLog?: Prisma.NotificationLogUncheckedUpdateManyWithoutOrganizationNestedInput
-  AcademicYear?: Prisma.AcademicYearUncheckedUpdateManyWithoutOrganizationNestedInput
-  exam?: Prisma.ExamUncheckedUpdateManyWithoutOrganizationNestedInput
-  hallTicket?: Prisma.HallTicketUncheckedUpdateManyWithoutOrganizationNestedInput
-}
-
 export type OrganizationCreateWithoutFeeCategoryInput = {
   id?: string
   name?: string | null
@@ -3897,6 +3729,174 @@ export type OrganizationUncheckedUpdateWithoutNotificationLogInput = {
   TeachingAssignment?: Prisma.TeachingAssignmentUncheckedUpdateManyWithoutOrganizationNestedInput
   AcademicYear?: Prisma.AcademicYearUncheckedUpdateManyWithoutOrganizationNestedInput
   scheduledJob?: Prisma.ScheduledJobUncheckedUpdateManyWithoutOrganizationNestedInput
+  exam?: Prisma.ExamUncheckedUpdateManyWithoutOrganizationNestedInput
+  hallTicket?: Prisma.HallTicketUncheckedUpdateManyWithoutOrganizationNestedInput
+}
+
+export type OrganizationCreateWithoutScheduledJobInput = {
+  id?: string
+  name?: string | null
+  organizationSlug: string
+  organizationLogo?: string | null
+  contactEmail?: string | null
+  contactPhone?: string | null
+  website?: string | null
+  isActive?: boolean
+  isPaid?: boolean
+  plan?: $Enums.PlanType
+  planStartedAt?: Date | string | null
+  planExpiresAt?: Date | string | null
+  maxStudents?: number | null
+  organizationType?: $Enums.OrganizationType | null
+  createdBy?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserCreateNestedManyWithoutOrganizationInput
+  notices?: Prisma.NoticeCreateNestedManyWithoutOrganizationInput
+  Student?: Prisma.StudentCreateNestedManyWithoutOrganizationInput
+  StudentDocument?: Prisma.StudentDocumentCreateNestedManyWithoutOrganizationInput
+  Grade?: Prisma.GradeCreateNestedManyWithoutOrganizationInput
+  Section?: Prisma.SectionCreateNestedManyWithoutOrganizationInput
+  Fee?: Prisma.FeeCreateNestedManyWithoutOrganizationInput
+  FeeCategory?: Prisma.FeeCategoryCreateNestedManyWithoutOrganizationInput
+  FeePayment?: Prisma.FeePaymentCreateNestedManyWithoutOrganizationInput
+  AcademicCalendar?: Prisma.AcademicCalendarCreateNestedManyWithoutOrganizationInput
+  AnonymousComplaint?: Prisma.AnonymousComplaintCreateNestedManyWithoutOrganizationInput
+  Teacher?: Prisma.TeacherCreateNestedManyWithoutOrganizationInput
+  Subject?: Prisma.SubjectCreateNestedManyWithoutOrganizationInput
+  TeachingAssignment?: Prisma.TeachingAssignmentCreateNestedManyWithoutOrganizationInput
+  NotificationLog?: Prisma.NotificationLogCreateNestedManyWithoutOrganizationInput
+  AcademicYear?: Prisma.AcademicYearCreateNestedManyWithoutOrganizationInput
+  exam?: Prisma.ExamCreateNestedManyWithoutOrganizationInput
+  hallTicket?: Prisma.HallTicketCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationUncheckedCreateWithoutScheduledJobInput = {
+  id?: string
+  name?: string | null
+  organizationSlug: string
+  organizationLogo?: string | null
+  contactEmail?: string | null
+  contactPhone?: string | null
+  website?: string | null
+  isActive?: boolean
+  isPaid?: boolean
+  plan?: $Enums.PlanType
+  planStartedAt?: Date | string | null
+  planExpiresAt?: Date | string | null
+  maxStudents?: number | null
+  organizationType?: $Enums.OrganizationType | null
+  createdBy?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutOrganizationInput
+  notices?: Prisma.NoticeUncheckedCreateNestedManyWithoutOrganizationInput
+  Student?: Prisma.StudentUncheckedCreateNestedManyWithoutOrganizationInput
+  StudentDocument?: Prisma.StudentDocumentUncheckedCreateNestedManyWithoutOrganizationInput
+  Grade?: Prisma.GradeUncheckedCreateNestedManyWithoutOrganizationInput
+  Section?: Prisma.SectionUncheckedCreateNestedManyWithoutOrganizationInput
+  Fee?: Prisma.FeeUncheckedCreateNestedManyWithoutOrganizationInput
+  FeeCategory?: Prisma.FeeCategoryUncheckedCreateNestedManyWithoutOrganizationInput
+  FeePayment?: Prisma.FeePaymentUncheckedCreateNestedManyWithoutOrganizationInput
+  AcademicCalendar?: Prisma.AcademicCalendarUncheckedCreateNestedManyWithoutOrganizationInput
+  AnonymousComplaint?: Prisma.AnonymousComplaintUncheckedCreateNestedManyWithoutOrganizationInput
+  Teacher?: Prisma.TeacherUncheckedCreateNestedManyWithoutOrganizationInput
+  Subject?: Prisma.SubjectUncheckedCreateNestedManyWithoutOrganizationInput
+  TeachingAssignment?: Prisma.TeachingAssignmentUncheckedCreateNestedManyWithoutOrganizationInput
+  NotificationLog?: Prisma.NotificationLogUncheckedCreateNestedManyWithoutOrganizationInput
+  AcademicYear?: Prisma.AcademicYearUncheckedCreateNestedManyWithoutOrganizationInput
+  exam?: Prisma.ExamUncheckedCreateNestedManyWithoutOrganizationInput
+  hallTicket?: Prisma.HallTicketUncheckedCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationCreateOrConnectWithoutScheduledJobInput = {
+  where: Prisma.OrganizationWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutScheduledJobInput, Prisma.OrganizationUncheckedCreateWithoutScheduledJobInput>
+}
+
+export type OrganizationUpsertWithoutScheduledJobInput = {
+  update: Prisma.XOR<Prisma.OrganizationUpdateWithoutScheduledJobInput, Prisma.OrganizationUncheckedUpdateWithoutScheduledJobInput>
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutScheduledJobInput, Prisma.OrganizationUncheckedCreateWithoutScheduledJobInput>
+  where?: Prisma.OrganizationWhereInput
+}
+
+export type OrganizationUpdateToOneWithWhereWithoutScheduledJobInput = {
+  where?: Prisma.OrganizationWhereInput
+  data: Prisma.XOR<Prisma.OrganizationUpdateWithoutScheduledJobInput, Prisma.OrganizationUncheckedUpdateWithoutScheduledJobInput>
+}
+
+export type OrganizationUpdateWithoutScheduledJobInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organizationSlug?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationLogo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  plan?: Prisma.EnumPlanTypeFieldUpdateOperationsInput | $Enums.PlanType
+  planStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  maxStudents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  organizationType?: Prisma.NullableEnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType | null
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUpdateManyWithoutOrganizationNestedInput
+  notices?: Prisma.NoticeUpdateManyWithoutOrganizationNestedInput
+  Student?: Prisma.StudentUpdateManyWithoutOrganizationNestedInput
+  StudentDocument?: Prisma.StudentDocumentUpdateManyWithoutOrganizationNestedInput
+  Grade?: Prisma.GradeUpdateManyWithoutOrganizationNestedInput
+  Section?: Prisma.SectionUpdateManyWithoutOrganizationNestedInput
+  Fee?: Prisma.FeeUpdateManyWithoutOrganizationNestedInput
+  FeeCategory?: Prisma.FeeCategoryUpdateManyWithoutOrganizationNestedInput
+  FeePayment?: Prisma.FeePaymentUpdateManyWithoutOrganizationNestedInput
+  AcademicCalendar?: Prisma.AcademicCalendarUpdateManyWithoutOrganizationNestedInput
+  AnonymousComplaint?: Prisma.AnonymousComplaintUpdateManyWithoutOrganizationNestedInput
+  Teacher?: Prisma.TeacherUpdateManyWithoutOrganizationNestedInput
+  Subject?: Prisma.SubjectUpdateManyWithoutOrganizationNestedInput
+  TeachingAssignment?: Prisma.TeachingAssignmentUpdateManyWithoutOrganizationNestedInput
+  NotificationLog?: Prisma.NotificationLogUpdateManyWithoutOrganizationNestedInput
+  AcademicYear?: Prisma.AcademicYearUpdateManyWithoutOrganizationNestedInput
+  exam?: Prisma.ExamUpdateManyWithoutOrganizationNestedInput
+  hallTicket?: Prisma.HallTicketUpdateManyWithoutOrganizationNestedInput
+}
+
+export type OrganizationUncheckedUpdateWithoutScheduledJobInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organizationSlug?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationLogo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  plan?: Prisma.EnumPlanTypeFieldUpdateOperationsInput | $Enums.PlanType
+  planStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  maxStudents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  organizationType?: Prisma.NullableEnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType | null
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUncheckedUpdateManyWithoutOrganizationNestedInput
+  notices?: Prisma.NoticeUncheckedUpdateManyWithoutOrganizationNestedInput
+  Student?: Prisma.StudentUncheckedUpdateManyWithoutOrganizationNestedInput
+  StudentDocument?: Prisma.StudentDocumentUncheckedUpdateManyWithoutOrganizationNestedInput
+  Grade?: Prisma.GradeUncheckedUpdateManyWithoutOrganizationNestedInput
+  Section?: Prisma.SectionUncheckedUpdateManyWithoutOrganizationNestedInput
+  Fee?: Prisma.FeeUncheckedUpdateManyWithoutOrganizationNestedInput
+  FeeCategory?: Prisma.FeeCategoryUncheckedUpdateManyWithoutOrganizationNestedInput
+  FeePayment?: Prisma.FeePaymentUncheckedUpdateManyWithoutOrganizationNestedInput
+  AcademicCalendar?: Prisma.AcademicCalendarUncheckedUpdateManyWithoutOrganizationNestedInput
+  AnonymousComplaint?: Prisma.AnonymousComplaintUncheckedUpdateManyWithoutOrganizationNestedInput
+  Teacher?: Prisma.TeacherUncheckedUpdateManyWithoutOrganizationNestedInput
+  Subject?: Prisma.SubjectUncheckedUpdateManyWithoutOrganizationNestedInput
+  TeachingAssignment?: Prisma.TeachingAssignmentUncheckedUpdateManyWithoutOrganizationNestedInput
+  NotificationLog?: Prisma.NotificationLogUncheckedUpdateManyWithoutOrganizationNestedInput
+  AcademicYear?: Prisma.AcademicYearUncheckedUpdateManyWithoutOrganizationNestedInput
   exam?: Prisma.ExamUncheckedUpdateManyWithoutOrganizationNestedInput
   hallTicket?: Prisma.HallTicketUncheckedUpdateManyWithoutOrganizationNestedInput
 }

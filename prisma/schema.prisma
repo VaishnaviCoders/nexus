@@ -26,17 +26,6 @@ enum PlanType {
   ENTERPRISE
 }
 
-enum NoticeType {
-  GENERAL // plain circular
-  EVENT // Annual Day, Sports Day
-  EXAM // Mid-term, practical, board
-  HOLIDAY // Diwali break, 
-  DEADLINE // Fee last date, form submission
-  TIMETABLE // revised class schedule
-  RESULT // published marks / report-cards
-  SMS // only SMS blast, no portal tile
-}
-
 enum OrganizationType {
   SCHOOL
   COLLEGE
@@ -541,33 +530,6 @@ enum FeeStatus {
   OVERDUE
 }
 
-model ScheduledJob {
-  id          String                @id @default(cuid())
-  data        Json
-  type        scheduledJobType
-  scheduledAt DateTime
-  channels    NotificationChannel[]
-
-  status String @default("PENDING") // PENDING, PROCESSING, COMPLETED, FAILED
-
-  result Json?
-  error  String?
-
-  createdBy      String?
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
-  organizationId String
-  organization   Organization @relation(fields: [organizationId], references: [id])
-
-  @@index([organizationId, status])
-  @@index([scheduledAt])
-}
-
-enum scheduledJobType {
-  FEE_REMINDER
-  NOTICE
-}
-
 model FeeCategory {
   id             String       @id @default(cuid())
   name           String // e.g., "Yearly Fee", "Exam Fee", "Lab Fee", etc.
@@ -672,38 +634,88 @@ enum ComplaintStatus {
 }
 
 model Notice {
-  id         String @id @default(uuid())
-  noticeType String // change into enums after
+  id String @id @default(cuid())
 
-  title     String
-  startDate DateTime
-  endDate   DateTime
-
+  title   String
   content String
   summary String?
 
-  isNoticeApproved     Boolean @default(false)
-  isDraft              Boolean @default(false)
-  isPublished          Boolean @default(false)
-  // isApproved    Boolean   @default(false)
-  // approvedBy    String?
-  // approvedAt    DateTime?
-  // isUrgent        Boolean @default(false)
+  startDate DateTime
+  endDate   DateTime
+
+  noticeType NoticeType
+  priority   NoticePriority @default(MEDIUM)
+  status     NoticeStatus   @default(DRAFT)
+
+  createdBy   String // Teacher userId
+  approvedBy  String? // Admin userId
+  approvedAt  DateTime?
+  publishedBy String? // Who finally published (could be admin)
+  publishedAt DateTime?
+
+  isUrgent             Boolean @default(false)
   emailNotification    Boolean @default(true)
   pushNotification     Boolean @default(false)
-  WhatsAppNotification Boolean @default(false)
+  whatsAppNotification Boolean @default(false)
   smsNotification      Boolean @default(false)
 
   targetAudience String[] // String[] Array of Target Audience
-  attachments    Json?    @default("[]")
+  attachments    NoticeAttachment[]
+  notifications  NotificationLog[]
 
-  publishedBy    String
-  Organization   Organization  @relation(fields: [organizationId], references: [id])
+  organization   Organization  @relation(fields: [organizationId], references: [id])
   organizationId String
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
   academicYear   AcademicYear? @relation(fields: [academicYearId], references: [id])
   academicYearId String?
+
+  // @@fulltext([title, content]) // For search
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([organizationId, status, noticeType])
+  @@index([noticeType, priority, status])
+  @@index([startDate, endDate])
+}
+
+model NoticeAttachment {
+  id       String @id @default(cuid())
+  noticeId String
+  notice   Notice @relation(fields: [noticeId], references: [id], onDelete: Cascade)
+
+  fileName   String
+  fileUrl    String
+  fileType   String // pdf, image/png, docx, etc.
+  fileSize   Int // in bytes
+  publicId   String
+  uploadedAt DateTime @default(now())
+}
+
+enum NoticeType {
+  GENERAL // plain circular
+  TRIP
+  EVENT // Annual Day, Sports Day
+  EXAM // Mid-term, practical, board
+  HOLIDAY // Diwali break, 
+  DEADLINE // Fee last date, form submission
+  TIMETABLE // revised class schedule
+  RESULT // published marks / report-cards
+}
+
+enum NoticePriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum NoticeStatus {
+  DRAFT
+  PENDING_REVIEW // When publishAt is set
+  PUBLISHED
+  REJECTED
+  EXPIRED
+  ARCHIVED
 }
 
 model NotificationLog {
@@ -712,12 +724,10 @@ model NotificationLog {
   organization   Organization @relation(fields: [organizationId], references: [id])
 
   // WHO received
-  userId String? // optional Clerk/User ID (can be teacher, parent, etc.)
-  user   User?   @relation(fields: [userId], references: [id])
-
-  parentId String? // optional: if linked to a parent directly`
-  parent   Parent? @relation(fields: [parentId], references: [id])
-
+  userId    String? // optional Clerk/User ID (can be teacher, parent, etc.)
+  user      User?    @relation(fields: [userId], references: [id])
+  parentId  String? // optional: if linked to a parent directly`
+  parent    Parent?  @relation(fields: [parentId], references: [id])
   studentId String? // optional: useful for linking fee/attendance alerts
   student   Student? @relation(fields: [studentId], references: [id])
 
@@ -725,8 +735,15 @@ model NotificationLog {
   status           NotificationStatus  @default(SENT)
   notificationType NotificationType
 
-  units Int   @default(1) // optional, 1 per message, or set for bulk
-  cost  Float @default(0)
+  notice   Notice? @relation(fields: [noticeId], references: [id])
+  noticeId String?
+
+  // Delivery details
+  errorMessage String?
+  retryCount   Int     @default(0)
+  maxRetries   Int     @default(3)
+  units        Int     @default(1) // optional, 1 per message, or set for bulk
+  cost         Float   @default(0)
 
   sentAt    DateTime @default(now())
   createdAt DateTime @default(now())
@@ -758,6 +775,34 @@ enum NotificationStatus {
   SENT
   FAILED
   DELIVERED
+}
+
+model ScheduledJob {
+  id          String                @id @default(cuid())
+  data        Json
+  type        scheduledJobType
+  scheduledAt DateTime
+  channels    NotificationChannel[]
+
+  status String @default("PENDING") // PENDING, PROCESSING, COMPLETED, FAILED
+
+  result Json?
+  error  String?
+
+  createdBy      String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  @@index([organizationId, status])
+  @@index([scheduledAt])
+}
+
+enum scheduledJobType {
+  FEE_REMINDER
+  NOTICE
+  EXAM
 }
 
 enum Role {

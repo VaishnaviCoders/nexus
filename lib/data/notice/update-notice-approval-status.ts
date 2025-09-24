@@ -1,29 +1,46 @@
 'use server';
 
 import { getNoticeRecipients } from '@/app/actions';
-// import { getNoticeRecipients, sendNoticeEmails } from '@/app/actions';
 import prisma from '@/lib/db';
-import { currentUser } from '@clerk/nextjs/server';
 import { revalidatePath } from 'next/cache';
 import { sendNoticeEmails } from './sendNoticeEmails';
+import { getCurrentUser } from '@/lib/user';
 
 export const updateNoticeApprovalStatus = async (
   noticeId: string,
   shouldApprove: boolean
 ) => {
-  const user = await currentUser();
-  if (!user) throw new Error('Authentication required');
+  const user = await getCurrentUser();
+
+  const now = new Date();
 
   const updatedNotice = await prisma.notice.update({
     where: {
       id: noticeId,
     },
-    data: {
-      isNoticeApproved: shouldApprove,
-      isPublished: shouldApprove,
-    },
+    data: shouldApprove
+      ? {
+          approvedBy:
+            user.firstName && user.lastName
+              ? `${user.firstName} ${user.lastName}`
+              : 'System',
+          approvedAt: now,
+          publishedBy:
+            user.firstName && user.lastName
+              ? `${user.firstName} ${user.lastName}`
+              : 'System',
+          publishedAt: now,
+          status: 'PUBLISHED',
+        }
+      : {
+          approvedBy: null,
+          approvedAt: null,
+          publishedBy: null,
+          publishedAt: null,
+          status: 'REJECTED',
+        },
     include: {
-      Organization: {
+      organization: {
         select: {
           name: true,
           organizationLogo: true,
@@ -39,9 +56,9 @@ export const updateNoticeApprovalStatus = async (
       updatedNotice.organizationId,
       updatedNotice.targetAudience
     );
-    if (recipients.length > 0) {
-      await sendNoticeEmails(updatedNotice, recipients, user);
-    }
+    // if (recipients.length > 0) {
+    //   await sendNoticeEmails(updatedNotice, recipients, user);
+    // }
   }
 
   revalidatePath('/dashboard/notices');

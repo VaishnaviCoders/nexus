@@ -1,9 +1,12 @@
-import { object, z } from 'zod';
+import { nativeEnum, object, z } from 'zod';
 import {
   DocumentType,
   EvaluationType,
   ExamMode,
   ExamStatus,
+  NoticePriority,
+  NoticeStatus,
+  NoticeType,
   PaymentMethod,
 } from '@/generated/prisma/enums';
 // const ACCEPTED_IMAGE_TYPES = [
@@ -14,41 +17,52 @@ import {
 // ];
 // const MAX_FILE_SIZE = 5000000;
 
-export const CreateNoticeFormSchema = z.object({
-  noticeType: z.string().min(1, { message: 'Notice type is required' }),
-  title: z
-    .string()
-    .min(3, {
-      message: 'Title must be at least 3 characters.',
-    })
-    .max(48, {
-      message: 'Title must be at most 48 characters.',
-    }),
-  startDate: z.date(),
-  // startDate: z
-  // .date()
-  // .min(new Date(), { message: 'Start date must be in the future' }),
-  endDate: z.date(),
-  content: z.string().min(10, {
-    message: 'Content must be at least 10 characters.',
-  }),
-  isDraft: z.boolean().default(false),
-  isPublished: z.boolean().default(false),
-  emailNotification: z.boolean().default(true),
-  pushNotification: z.boolean().default(false),
-  WhatsAppNotification: z.boolean().default(true),
-  targetAudience: z.array(z.string()).min(1, {
-    message: 'Select at least one audience group.',
-  }),
-  attachments: z.array(
-    z.object({
-      name: z.string(),
-      url: z.string(),
-      type: z.string(),
-      size: z.number(),
-    })
-  ),
+const FileSchema = z.object({
+  fileName: z.string(),
+  fileSize: z.number(),
+  fileType: z.string(),
+  url: z.string(),
+  publicId: z.string(),
 });
+
+export const createNoticeSchema = z
+  .object({
+    title: z
+      .string()
+      .min(1, 'Title is required')
+      .max(200, 'Title must be less than 200 characters'),
+    content: z
+      .string()
+      .min(1, 'Content is required')
+      .max(5000, 'Content must be less than 5000 characters'),
+    summary: z
+      .string()
+      .max(500, 'Summary must be less than 500 characters')
+      .optional(),
+    startDate: z.date({
+      required_error: 'Start date is required',
+    }),
+    endDate: z.date({
+      required_error: 'End date is required',
+    }),
+    noticeType: nativeEnum(NoticeType).default('GENERAL'),
+    priority: nativeEnum(NoticePriority).default('MEDIUM'),
+    isUrgent: z.boolean().default(false),
+    emailNotification: z.boolean().default(true),
+    pushNotification: z.boolean().default(false),
+    whatsAppNotification: z.boolean().default(false),
+    smsNotification: z.boolean().default(false),
+    targetAudience: z
+      .array(z.string())
+      .min(1, 'At least one target audience is required'),
+    attachments: z.array(FileSchema).default([]),
+  })
+  .refine((data) => data.endDate >= data.startDate, {
+    message: 'End date must be after start date',
+    path: ['endDate'],
+  });
+
+export type createNoticeFormData = z.infer<typeof createNoticeSchema>;
 
 export const gradeSchema = z.object({
   grade: z.string().min(1, 'Grade name is required'),

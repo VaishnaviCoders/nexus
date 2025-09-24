@@ -11,6 +11,7 @@ import {
   Eye,
   Download,
   Calendar,
+  AlertTriangle,
 } from 'lucide-react';
 import {
   Card,
@@ -37,54 +38,44 @@ import Image from 'next/image';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Role } from '@/generated/prisma/enums';
 import { updateNoticeApprovalStatus } from '@/lib/data/notice/update-notice-approval-status';
+import { Prisma } from '@/generated/prisma/client';
 
-type Attachment = {
-  name: string;
-  url: string;
-  type: string;
-  size: number;
-};
+export type NoticeWithAttachments = Prisma.NoticeGetPayload<{
+  include: { attachments: true };
+}>;
 
-interface Notice {
-  id: string;
-  noticeType: string;
-  title: string;
-  startDate: Date;
-  endDate: Date;
-  content: string;
-  isNoticeApproved: boolean;
-  isDraft: boolean;
-  isPublished: boolean;
-  emailNotification: boolean;
-  pushNotification: boolean;
-  WhatsAppNotification: boolean;
-  targetAudience: string[];
-  attachments: Attachment[];
-  publishedBy: string;
-  organizationId: string;
-  createdAt: Date;
-  updatedAt: Date;
+interface PreviewAttachment {
+  fileName: string;
+  fileUrl: string;
+  fileType: string;
 }
 
 export default function NoticeViewer({
   notice,
   userRole,
 }: {
-  notice: Notice;
+  notice: NoticeWithAttachments;
   userRole: Role;
 }) {
   const [isAttachmentsOpen, setIsAttachmentsOpen] = useState(false);
-  const [previewAttachment, setPreviewAttachment] = useState<Attachment | null>(
-    null
-  );
+  const [previewAttachment, setPreviewAttachment] =
+    useState<PreviewAttachment | null>(null);
   const [isPending, startTransition] = useTransition();
+  const [action, setAction] = useState<'approve' | 'reject' | null>(null);
 
   const handleApprovalAction = async (approve: boolean) => {
+    setAction(approve ? 'approve' : 'reject');
     startTransition(async () => {
-      await updateNoticeApprovalStatus(notice.id, approve);
-      toast.success(
-        approve ? 'Notice has been approved' : 'Notice has been rejected'
-      );
+      try {
+        await updateNoticeApprovalStatus(notice.id, approve);
+        toast.success(
+          approve ? 'Notice has been approved' : 'Notice has been rejected'
+        );
+      } catch (error) {
+        toast.error('An error occurred. Please try again.');
+      } finally {
+        setAction(null);
+      }
     });
   };
 
@@ -97,35 +88,58 @@ export default function NoticeViewer({
       .substring(0, 2);
   };
 
+  const isImageFile = (fileType: string) => fileType.startsWith('image/');
+
+  const handleImagePreview = (attachment: PreviewAttachment) => {
+    setPreviewAttachment({
+      fileName: attachment.fileName,
+      fileUrl: attachment.fileUrl,
+      fileType: attachment.fileType,
+    });
+  };
+
   return (
-    <Card className="w-full shadow-md">
-      <CardHeader className="border-b">
-        <div className="flex flex-col md:flex-row justify-between items-start gap-4">
-          <div>
-            <div className="flex items-center gap-2 mb-2">
-              <Badge variant="outline" className="font-medium">
-                {notice.noticeType.toUpperCase()}
+    <Card className="w-full shadow-sm ">
+      <CardHeader className="border-b bg-gray-50/50">
+        <div className="flex flex-col lg:flex-row justify-between items-start gap-4">
+          <div className="flex-1">
+            {/* Badges */}
+            <div className="flex flex-wrap items-center gap-2 mb-3">
+              <Badge
+                variant={notice.noticeType}
+                className="font-medium text-xs uppercase tracking-wide"
+              >
+                {notice.noticeType}
               </Badge>
-              {notice.isNoticeApproved ? (
-                <Badge className="bg-green-100 text-green-800 hover:bg-green-200">
-                  Approved
-                </Badge>
-              ) : (
-                <Badge
-                  variant="outline"
-                  className="bg-amber-100 text-amber-800 hover:bg-amber-200"
-                >
-                  Pending Approval
+
+              <Badge className="text-xs" variant={notice.priority}>
+                {notice.priority}
+              </Badge>
+
+              {notice.isUrgent && (
+                <Badge variant={notice.priority}>
+                  <AlertTriangle className="h-3 w-3 mr-1" />
+                  URGENT
                 </Badge>
               )}
-              {notice.isPublished ? (
-                <Badge variant="secondary">Published</Badge>
-              ) : (
-                <Badge variant="outline">Draft</Badge>
-              )}
+
+              <Badge
+                className={`text-xs ${notice.approvedBy ? 'bg-green-100 text-green-800' : 'bg-amber-100 text-amber-800'}`}
+              >
+                {notice.approvedBy ? 'Approved' : 'Pending Approval'}
+              </Badge>
+
+              <Badge className="text-xs" variant={notice.status}>
+                {notice.status}
+              </Badge>
             </div>
-            <CardTitle className="text-2xl">{notice.title}</CardTitle>
-            <CardDescription className="mt-2 flex items-center gap-2">
+
+            {/* Title and Description */}
+            <CardTitle className="text-xl lg:text-2xl font-semibold text-gray-900 leading-tight mb-2">
+              {notice.title}
+            </CardTitle>
+
+            <CardDescription className="flex items-center gap-2 text-sm text-gray-600">
               <Calendar className="h-4 w-4" />
               <span>
                 {formatDateIN(notice.startDate)} -{' '}
@@ -134,68 +148,97 @@ export default function NoticeViewer({
             </CardDescription>
           </div>
 
-          {userRole === 'ADMIN' && (
+          {/* Admin Actions */}
+          {userRole === 'ADMIN' && notice.status === 'PENDING_REVIEW' && (
             <div className="flex gap-2">
-              {notice.isNoticeApproved ? (
-                <Button
-                  disabled={isPending}
-                  onClick={() => handleApprovalAction(false)}
-                  variant="outline"
-                  className="border-red-200 bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700"
-                >
-                  <XCircle className="mr-2 h-4 w-4" />
-                  {isPending ? 'Processing...' : 'Reject Notice'}
-                </Button>
-              ) : (
-                <Button
-                  disabled={isPending}
-                  onClick={() => handleApprovalAction(true)}
-                  variant="outline"
-                  className="border-green-200 bg-green-50 text-green-600 hover:bg-green-100 hover:text-green-700"
-                >
-                  <CheckCircle className="mr-2 h-4 w-4" />
-                  {isPending ? 'Processing...' : 'Approve Notice'}
-                </Button>
-              )}
+              <Button
+                disabled={isPending}
+                onClick={() => handleApprovalAction(true)}
+                size="sm"
+                className="bg-green-100 hover:bg-green-200 text-green-600"
+              >
+                <CheckCircle className="mr-2 h-4 w-4" />
+                {isPending && action === 'approve'
+                  ? 'Processing...'
+                  : 'Approve & Publish'}
+              </Button>
+              <Button
+                disabled={isPending}
+                onClick={() => handleApprovalAction(false)}
+                variant="outline"
+                size="sm"
+                className="border-red-200 text-red-600 hover:bg-red-50"
+              >
+                <XCircle className="mr-2 h-4 w-4" />
+                {isPending && action === 'reject' ? 'Processing...' : 'Reject'}
+              </Button>
             </div>
+          )}
+
+          {userRole === 'ADMIN' && notice.status === 'PUBLISHED' && (
+            <Button
+              disabled={isPending}
+              onClick={() => handleApprovalAction(false)}
+              variant="outline"
+              size="sm"
+              className="border-red-200 text-red-600 hover:bg-red-50"
+            >
+              <XCircle className="mr-2 h-4 w-4" />
+              {isPending ? 'Processing...' : 'Revoke Approval'}
+            </Button>
           )}
         </div>
       </CardHeader>
 
-      <CardContent className="pt-6 space-y-6">
+      <CardContent className="p-6 space-y-6">
         {/* Notice Content */}
-        <div className="prose max-w-none">
-          <div className="whitespace-pre-wrap">{notice.content}</div>
+        <div className="prose prose-gray max-w-none">
+          <div className="whitespace-pre-wrap text-gray-700 leading-relaxed">
+            {notice.content}
+          </div>
         </div>
 
-        <Separator />
+        <div className="prose prose-gray max-w-none">
+          <div className="whitespace-pre-wrap text-gray-700 leading-relaxed">
+            {notice.summary}
+          </div>
+        </div>
+
+        <Separator className="my-6" />
 
         {/* Target Audience */}
-        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-          <div className="flex items-center gap-2 min-w-[140px]">
-            <Users className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm font-medium">Target Audience:</span>
+        <div className="space-y-3">
+          <div className="flex items-center gap-2">
+            <Users className="h-4 w-4 text-gray-500" />
+            <span className="text-sm font-medium text-gray-700">
+              Target Audience
+            </span>
           </div>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2 ml-6">
             {notice.targetAudience.map((audience) => (
-              <Badge key={audience} variant="secondary" className="capitalize">
+              <Badge
+                key={audience}
+                variant="secondary"
+                className="capitalize text-xs bg-blue-50 text-blue-700"
+              >
                 {audience}
               </Badge>
             ))}
           </div>
         </div>
-
         {/* Notification Methods */}
-        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-          <div className="flex items-center gap-2 min-w-[140px]">
-            <Bell className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm font-medium">Notifications:</span>
+        <div className="space-y-3">
+          <div className="flex items-center gap-2">
+            <Bell className="h-4 w-4 text-gray-500" />
+            <span className="text-sm font-medium text-gray-700">
+              Notification Methods
+            </span>
           </div>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2 ml-6">
             {notice.emailNotification && (
               <Badge
                 variant="outline"
-                className="bg-blue-50 text-blue-700 hover:bg-blue-100"
+                className="bg-blue-50 text-blue-700 text-xs"
               >
                 Email
               </Badge>
@@ -203,87 +246,109 @@ export default function NoticeViewer({
             {notice.pushNotification && (
               <Badge
                 variant="outline"
-                className="bg-purple-50 text-purple-700 hover:bg-purple-100"
+                className="bg-purple-50 text-purple-700 text-xs"
               >
                 Push
               </Badge>
             )}
-            {notice.WhatsAppNotification && (
+            {notice.whatsAppNotification && (
               <Badge
                 variant="outline"
-                className="bg-green-50 text-green-700 hover:bg-green-100"
+                className="bg-green-50 text-green-700 text-xs"
               >
-                In-App
+                WhatsApp
+              </Badge>
+            )}
+            {notice.smsNotification && (
+              <Badge
+                variant="outline"
+                className="bg-orange-50 text-orange-700 text-xs"
+              >
+                SMS
               </Badge>
             )}
             {!notice.emailNotification &&
               !notice.pushNotification &&
-              !notice.WhatsAppNotification && (
-                <span className="text-sm text-muted-foreground">None</span>
+              !notice.whatsAppNotification &&
+              !notice.smsNotification && (
+                <span className="text-sm text-gray-500">None selected</span>
               )}
           </div>
         </div>
 
         {/* Attachments */}
         {notice.attachments.length > 0 && (
-          <div className="pt-2">
-            <Button
-              variant="outline"
-              onClick={() => setIsAttachmentsOpen(true)}
-              className="flex items-center gap-2"
-            >
-              <Paperclip className="h-4 w-4" />
-              View Attachments ({notice.attachments.length})
-            </Button>
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <Paperclip className="h-4 w-4 text-gray-500" />
+              <span className="text-sm font-medium text-gray-700">
+                Attachments
+              </span>
+            </div>
+            <div className="ml-6">
+              <Button
+                variant="outline"
+                onClick={() => setIsAttachmentsOpen(true)}
+                className="text-sm"
+              >
+                <Paperclip className="h-4 w-4 mr-2" />
+                View All Attachments ({notice.attachments.length})
+              </Button>
+            </div>
 
+            {/* Attachments Dialog */}
             <Dialog
               open={isAttachmentsOpen}
               onOpenChange={setIsAttachmentsOpen}
             >
-              <DialogContent className="sm:max-w-md">
+              <DialogContent className="sm:max-w-lg max-h-[80vh] overflow-y-auto">
                 <DialogHeader>
                   <DialogTitle>Attachments</DialogTitle>
                   <DialogDescription>
                     Files attached to this notice
                   </DialogDescription>
                 </DialogHeader>
-                <div className="grid gap-4 py-4">
-                  {notice.attachments.map((attachment, index) => (
+                <div className="space-y-3 py-4">
+                  {notice.attachments.map((attachment) => (
                     <div
-                      key={index}
-                      className="flex items-center justify-between p-2 rounded-md border"
+                      key={attachment.id}
+                      className="flex items-center justify-between p-3 rounded-lg border bg-gray-50/50"
                     >
-                      <div className="flex items-center gap-3">
-                        <Paperclip className="h-4 w-4 text-muted-foreground" />
-                        <div className="flex flex-col">
-                          <span className="text-sm font-medium truncate max-w-[200px]">
-                            {attachment.name}
-                          </span>
-                          <span className="text-xs text-muted-foreground">
-                            {formatBytes(attachment.size)}
-                          </span>
+                      <div className="flex items-center gap-3 flex-1 min-w-0">
+                        <Paperclip className="h-4 w-4 text-gray-500 flex-shrink-0" />
+                        <div className="min-w-0 flex-1">
+                          <p className="text-sm font-medium truncate">
+                            {attachment.fileName}
+                          </p>
+                          <p className="text-xs text-gray-500">
+                            {formatBytes(attachment.fileSize)}
+                          </p>
                         </div>
                       </div>
-                      <div className="flex gap-2">
-                        {attachment.type.startsWith('image/') && (
+                      <div className="flex gap-1 ml-2">
+                        {isImageFile(attachment.fileType) && (
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => setPreviewAttachment(attachment)}
+                            onClick={() => handleImagePreview(attachment)}
+                            className="h-8 w-8 p-0"
                           >
                             <Eye className="h-4 w-4" />
-                            <span className="sr-only">Preview</span>
                           </Button>
                         )}
-                        <Button variant="ghost" size="sm" asChild>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          asChild
+                          className="h-8 w-8 p-0"
+                        >
                           <a
-                            href={attachment.url}
-                            download={attachment.name}
+                            href={attachment.fileUrl}
+                            download={attachment.fileName}
                             target="_blank"
                             rel="noopener noreferrer"
                           >
                             <Download className="h-4 w-4" />
-                            <span className="sr-only">Download</span>
                           </a>
                         </Button>
                       </div>
@@ -298,25 +363,28 @@ export default function NoticeViewer({
               open={!!previewAttachment}
               onOpenChange={(open) => !open && setPreviewAttachment(null)}
             >
-              <DialogContent className="sm:max-w-[80vw] max-h-[90vh]">
+              <DialogContent className="sm:max-w-4xl max-h-[90vh]">
                 <DialogHeader>
-                  <DialogTitle>{previewAttachment?.name}</DialogTitle>
+                  <DialogTitle className="truncate">
+                    {previewAttachment?.fileName}
+                  </DialogTitle>
                 </DialogHeader>
-                <div className="relative w-full h-[60vh]">
+                <div className="relative w-full h-[60vh] bg-gray-50 rounded-lg overflow-hidden">
                   {previewAttachment && (
                     <Image
-                      src={previewAttachment.url || '/placeholder.svg'}
-                      alt={previewAttachment.name}
+                      src={previewAttachment.fileUrl}
+                      alt={previewAttachment.fileName}
                       fill
                       className="object-contain"
+                      sizes="(max-width: 768px) 100vw, 80vw"
                     />
                   )}
                 </div>
                 <DialogFooter>
-                  <Button variant="secondary" asChild>
+                  <Button variant="outline" asChild>
                     <a
-                      href={previewAttachment?.url || '#'}
-                      download={previewAttachment?.name}
+                      href={previewAttachment?.fileUrl || '#'}
+                      download={previewAttachment?.fileName}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
@@ -331,16 +399,20 @@ export default function NoticeViewer({
         )}
       </CardContent>
 
-      <CardFooter className="border-t pt-4 flex flex-col sm:flex-row justify-between text-sm text-muted-foreground gap-2">
-        <div className="flex items-center gap-2">
-          <Avatar className="h-6 w-6">
-            <AvatarFallback>{getInitials(notice.publishedBy)}</AvatarFallback>
-          </Avatar>
-          <span>Published by: {notice.publishedBy}</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <CalendarRange className="h-4 w-4" />
-          <span>Created: {formatDateIN(notice.createdAt)}</span>
+      <CardFooter className="border-t bg-gray-50/50 px-6 py-4">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 w-full text-sm text-gray-600">
+          <div className="flex items-center gap-2">
+            <Avatar className="h-6 w-6">
+              <AvatarFallback className="text-xs bg-gray-200">
+                {getInitials(notice.publishedBy || notice.createdBy)}
+              </AvatarFallback>
+            </Avatar>
+            <span>Published by: {notice.publishedBy || notice.createdBy}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <CalendarRange className="h-4 w-4" />
+            <span>Created: {formatDateIN(notice.createdAt)}</span>
+          </div>
         </div>
       </CardFooter>
     </Card>

@@ -26,11 +26,15 @@ export type AggregateNotificationLog = {
 }
 
 export type NotificationLogAvgAggregateOutputType = {
+  retryCount: number | null
+  maxRetries: number | null
   units: number | null
   cost: number | null
 }
 
 export type NotificationLogSumAggregateOutputType = {
+  retryCount: number | null
+  maxRetries: number | null
   units: number | null
   cost: number | null
 }
@@ -44,6 +48,10 @@ export type NotificationLogMinAggregateOutputType = {
   channel: $Enums.NotificationChannel | null
   status: $Enums.NotificationStatus | null
   notificationType: $Enums.NotificationType | null
+  noticeId: string | null
+  errorMessage: string | null
+  retryCount: number | null
+  maxRetries: number | null
   units: number | null
   cost: number | null
   sentAt: Date | null
@@ -60,6 +68,10 @@ export type NotificationLogMaxAggregateOutputType = {
   channel: $Enums.NotificationChannel | null
   status: $Enums.NotificationStatus | null
   notificationType: $Enums.NotificationType | null
+  noticeId: string | null
+  errorMessage: string | null
+  retryCount: number | null
+  maxRetries: number | null
   units: number | null
   cost: number | null
   sentAt: Date | null
@@ -76,6 +88,10 @@ export type NotificationLogCountAggregateOutputType = {
   channel: number
   status: number
   notificationType: number
+  noticeId: number
+  errorMessage: number
+  retryCount: number
+  maxRetries: number
   units: number
   cost: number
   sentAt: number
@@ -86,11 +102,15 @@ export type NotificationLogCountAggregateOutputType = {
 
 
 export type NotificationLogAvgAggregateInputType = {
+  retryCount?: true
+  maxRetries?: true
   units?: true
   cost?: true
 }
 
 export type NotificationLogSumAggregateInputType = {
+  retryCount?: true
+  maxRetries?: true
   units?: true
   cost?: true
 }
@@ -104,6 +124,10 @@ export type NotificationLogMinAggregateInputType = {
   channel?: true
   status?: true
   notificationType?: true
+  noticeId?: true
+  errorMessage?: true
+  retryCount?: true
+  maxRetries?: true
   units?: true
   cost?: true
   sentAt?: true
@@ -120,6 +144,10 @@ export type NotificationLogMaxAggregateInputType = {
   channel?: true
   status?: true
   notificationType?: true
+  noticeId?: true
+  errorMessage?: true
+  retryCount?: true
+  maxRetries?: true
   units?: true
   cost?: true
   sentAt?: true
@@ -136,6 +164,10 @@ export type NotificationLogCountAggregateInputType = {
   channel?: true
   status?: true
   notificationType?: true
+  noticeId?: true
+  errorMessage?: true
+  retryCount?: true
+  maxRetries?: true
   units?: true
   cost?: true
   sentAt?: true
@@ -239,6 +271,10 @@ export type NotificationLogGroupByOutputType = {
   channel: $Enums.NotificationChannel
   status: $Enums.NotificationStatus
   notificationType: $Enums.NotificationType
+  noticeId: string | null
+  errorMessage: string | null
+  retryCount: number
+  maxRetries: number
   units: number
   cost: number
   sentAt: Date
@@ -278,6 +314,10 @@ export type NotificationLogWhereInput = {
   channel?: Prisma.EnumNotificationChannelFilter<"NotificationLog"> | $Enums.NotificationChannel
   status?: Prisma.EnumNotificationStatusFilter<"NotificationLog"> | $Enums.NotificationStatus
   notificationType?: Prisma.EnumNotificationTypeFilter<"NotificationLog"> | $Enums.NotificationType
+  noticeId?: Prisma.StringNullableFilter<"NotificationLog"> | string | null
+  errorMessage?: Prisma.StringNullableFilter<"NotificationLog"> | string | null
+  retryCount?: Prisma.IntFilter<"NotificationLog"> | number
+  maxRetries?: Prisma.IntFilter<"NotificationLog"> | number
   units?: Prisma.IntFilter<"NotificationLog"> | number
   cost?: Prisma.FloatFilter<"NotificationLog"> | number
   sentAt?: Prisma.DateTimeFilter<"NotificationLog"> | Date | string
@@ -287,6 +327,7 @@ export type NotificationLogWhereInput = {
   user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   parent?: Prisma.XOR<Prisma.ParentNullableScalarRelationFilter, Prisma.ParentWhereInput> | null
   student?: Prisma.XOR<Prisma.StudentNullableScalarRelationFilter, Prisma.StudentWhereInput> | null
+  notice?: Prisma.XOR<Prisma.NoticeNullableScalarRelationFilter, Prisma.NoticeWhereInput> | null
 }
 
 export type NotificationLogOrderByWithRelationInput = {
@@ -298,6 +339,10 @@ export type NotificationLogOrderByWithRelationInput = {
   channel?: Prisma.SortOrder
   status?: Prisma.SortOrder
   notificationType?: Prisma.SortOrder
+  noticeId?: Prisma.SortOrderInput | Prisma.SortOrder
+  errorMessage?: Prisma.SortOrderInput | Prisma.SortOrder
+  retryCount?: Prisma.SortOrder
+  maxRetries?: Prisma.SortOrder
   units?: Prisma.SortOrder
   cost?: Prisma.SortOrder
   sentAt?: Prisma.SortOrder
@@ -307,6 +352,7 @@ export type NotificationLogOrderByWithRelationInput = {
   user?: Prisma.UserOrderByWithRelationInput
   parent?: Prisma.ParentOrderByWithRelationInput
   student?: Prisma.StudentOrderByWithRelationInput
+  notice?: Prisma.NoticeOrderByWithRelationInput
 }
 
 export type NotificationLogWhereUniqueInput = Prisma.AtLeast<{
@@ -321,6 +367,10 @@ export type NotificationLogWhereUniqueInput = Prisma.AtLeast<{
   channel?: Prisma.EnumNotificationChannelFilter<"NotificationLog"> | $Enums.NotificationChannel
   status?: Prisma.EnumNotificationStatusFilter<"NotificationLog"> | $Enums.NotificationStatus
   notificationType?: Prisma.EnumNotificationTypeFilter<"NotificationLog"> | $Enums.NotificationType
+  noticeId?: Prisma.StringNullableFilter<"NotificationLog"> | string | null
+  errorMessage?: Prisma.StringNullableFilter<"NotificationLog"> | string | null
+  retryCount?: Prisma.IntFilter<"NotificationLog"> | number
+  maxRetries?: Prisma.IntFilter<"NotificationLog"> | number
   units?: Prisma.IntFilter<"NotificationLog"> | number
   cost?: Prisma.FloatFilter<"NotificationLog"> | number
   sentAt?: Prisma.DateTimeFilter<"NotificationLog"> | Date | string
@@ -330,6 +380,7 @@ export type NotificationLogWhereUniqueInput = Prisma.AtLeast<{
   user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   parent?: Prisma.XOR<Prisma.ParentNullableScalarRelationFilter, Prisma.ParentWhereInput> | null
   student?: Prisma.XOR<Prisma.StudentNullableScalarRelationFilter, Prisma.StudentWhereInput> | null
+  notice?: Prisma.XOR<Prisma.NoticeNullableScalarRelationFilter, Prisma.NoticeWhereInput> | null
 }, "id">
 
 export type NotificationLogOrderByWithAggregationInput = {
@@ -341,6 +392,10 @@ export type NotificationLogOrderByWithAggregationInput = {
   channel?: Prisma.SortOrder
   status?: Prisma.SortOrder
   notificationType?: Prisma.SortOrder
+  noticeId?: Prisma.SortOrderInput | Prisma.SortOrder
+  errorMessage?: Prisma.SortOrderInput | Prisma.SortOrder
+  retryCount?: Prisma.SortOrder
+  maxRetries?: Prisma.SortOrder
   units?: Prisma.SortOrder
   cost?: Prisma.SortOrder
   sentAt?: Prisma.SortOrder
@@ -365,6 +420,10 @@ export type NotificationLogScalarWhereWithAggregatesInput = {
   channel?: Prisma.EnumNotificationChannelWithAggregatesFilter<"NotificationLog"> | $Enums.NotificationChannel
   status?: Prisma.EnumNotificationStatusWithAggregatesFilter<"NotificationLog"> | $Enums.NotificationStatus
   notificationType?: Prisma.EnumNotificationTypeWithAggregatesFilter<"NotificationLog"> | $Enums.NotificationType
+  noticeId?: Prisma.StringNullableWithAggregatesFilter<"NotificationLog"> | string | null
+  errorMessage?: Prisma.StringNullableWithAggregatesFilter<"NotificationLog"> | string | null
+  retryCount?: Prisma.IntWithAggregatesFilter<"NotificationLog"> | number
+  maxRetries?: Prisma.IntWithAggregatesFilter<"NotificationLog"> | number
   units?: Prisma.IntWithAggregatesFilter<"NotificationLog"> | number
   cost?: Prisma.FloatWithAggregatesFilter<"NotificationLog"> | number
   sentAt?: Prisma.DateTimeWithAggregatesFilter<"NotificationLog"> | Date | string
@@ -377,6 +436,9 @@ export type NotificationLogCreateInput = {
   channel: $Enums.NotificationChannel
   status?: $Enums.NotificationStatus
   notificationType: $Enums.NotificationType
+  errorMessage?: string | null
+  retryCount?: number
+  maxRetries?: number
   units?: number
   cost?: number
   sentAt?: Date | string
@@ -386,6 +448,7 @@ export type NotificationLogCreateInput = {
   user?: Prisma.UserCreateNestedOneWithoutNotificationLogInput
   parent?: Prisma.ParentCreateNestedOneWithoutNotificationLogInput
   student?: Prisma.StudentCreateNestedOneWithoutNotificationLogInput
+  notice?: Prisma.NoticeCreateNestedOneWithoutNotificationsInput
 }
 
 export type NotificationLogUncheckedCreateInput = {
@@ -397,6 +460,10 @@ export type NotificationLogUncheckedCreateInput = {
   channel: $Enums.NotificationChannel
   status?: $Enums.NotificationStatus
   notificationType: $Enums.NotificationType
+  noticeId?: string | null
+  errorMessage?: string | null
+  retryCount?: number
+  maxRetries?: number
   units?: number
   cost?: number
   sentAt?: Date | string
@@ -409,6 +476,9 @@ export type NotificationLogUpdateInput = {
   channel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
   status?: Prisma.EnumNotificationStatusFieldUpdateOperationsInput | $Enums.NotificationStatus
   notificationType?: Prisma.EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
+  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  retryCount?: Prisma.IntFieldUpdateOperationsInput | number
+  maxRetries?: Prisma.IntFieldUpdateOperationsInput | number
   units?: Prisma.IntFieldUpdateOperationsInput | number
   cost?: Prisma.FloatFieldUpdateOperationsInput | number
   sentAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -418,6 +488,7 @@ export type NotificationLogUpdateInput = {
   user?: Prisma.UserUpdateOneWithoutNotificationLogNestedInput
   parent?: Prisma.ParentUpdateOneWithoutNotificationLogNestedInput
   student?: Prisma.StudentUpdateOneWithoutNotificationLogNestedInput
+  notice?: Prisma.NoticeUpdateOneWithoutNotificationsNestedInput
 }
 
 export type NotificationLogUncheckedUpdateInput = {
@@ -429,6 +500,10 @@ export type NotificationLogUncheckedUpdateInput = {
   channel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
   status?: Prisma.EnumNotificationStatusFieldUpdateOperationsInput | $Enums.NotificationStatus
   notificationType?: Prisma.EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
+  noticeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  retryCount?: Prisma.IntFieldUpdateOperationsInput | number
+  maxRetries?: Prisma.IntFieldUpdateOperationsInput | number
   units?: Prisma.IntFieldUpdateOperationsInput | number
   cost?: Prisma.FloatFieldUpdateOperationsInput | number
   sentAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -445,6 +520,10 @@ export type NotificationLogCreateManyInput = {
   channel: $Enums.NotificationChannel
   status?: $Enums.NotificationStatus
   notificationType: $Enums.NotificationType
+  noticeId?: string | null
+  errorMessage?: string | null
+  retryCount?: number
+  maxRetries?: number
   units?: number
   cost?: number
   sentAt?: Date | string
@@ -457,6 +536,9 @@ export type NotificationLogUpdateManyMutationInput = {
   channel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
   status?: Prisma.EnumNotificationStatusFieldUpdateOperationsInput | $Enums.NotificationStatus
   notificationType?: Prisma.EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
+  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  retryCount?: Prisma.IntFieldUpdateOperationsInput | number
+  maxRetries?: Prisma.IntFieldUpdateOperationsInput | number
   units?: Prisma.IntFieldUpdateOperationsInput | number
   cost?: Prisma.FloatFieldUpdateOperationsInput | number
   sentAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -473,6 +555,10 @@ export type NotificationLogUncheckedUpdateManyInput = {
   channel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
   status?: Prisma.EnumNotificationStatusFieldUpdateOperationsInput | $Enums.NotificationStatus
   notificationType?: Prisma.EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
+  noticeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  retryCount?: Prisma.IntFieldUpdateOperationsInput | number
+  maxRetries?: Prisma.IntFieldUpdateOperationsInput | number
   units?: Prisma.IntFieldUpdateOperationsInput | number
   cost?: Prisma.FloatFieldUpdateOperationsInput | number
   sentAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -499,6 +585,10 @@ export type NotificationLogCountOrderByAggregateInput = {
   channel?: Prisma.SortOrder
   status?: Prisma.SortOrder
   notificationType?: Prisma.SortOrder
+  noticeId?: Prisma.SortOrder
+  errorMessage?: Prisma.SortOrder
+  retryCount?: Prisma.SortOrder
+  maxRetries?: Prisma.SortOrder
   units?: Prisma.SortOrder
   cost?: Prisma.SortOrder
   sentAt?: Prisma.SortOrder
@@ -507,6 +597,8 @@ export type NotificationLogCountOrderByAggregateInput = {
 }
 
 export type NotificationLogAvgOrderByAggregateInput = {
+  retryCount?: Prisma.SortOrder
+  maxRetries?: Prisma.SortOrder
   units?: Prisma.SortOrder
   cost?: Prisma.SortOrder
 }
@@ -520,6 +612,10 @@ export type NotificationLogMaxOrderByAggregateInput = {
   channel?: Prisma.SortOrder
   status?: Prisma.SortOrder
   notificationType?: Prisma.SortOrder
+  noticeId?: Prisma.SortOrder
+  errorMessage?: Prisma.SortOrder
+  retryCount?: Prisma.SortOrder
+  maxRetries?: Prisma.SortOrder
   units?: Prisma.SortOrder
   cost?: Prisma.SortOrder
   sentAt?: Prisma.SortOrder
@@ -536,6 +632,10 @@ export type NotificationLogMinOrderByAggregateInput = {
   channel?: Prisma.SortOrder
   status?: Prisma.SortOrder
   notificationType?: Prisma.SortOrder
+  noticeId?: Prisma.SortOrder
+  errorMessage?: Prisma.SortOrder
+  retryCount?: Prisma.SortOrder
+  maxRetries?: Prisma.SortOrder
   units?: Prisma.SortOrder
   cost?: Prisma.SortOrder
   sentAt?: Prisma.SortOrder
@@ -544,6 +644,8 @@ export type NotificationLogMinOrderByAggregateInput = {
 }
 
 export type NotificationLogSumOrderByAggregateInput = {
+  retryCount?: Prisma.SortOrder
+  maxRetries?: Prisma.SortOrder
   units?: Prisma.SortOrder
   cost?: Prisma.SortOrder
 }
@@ -716,6 +818,48 @@ export type NotificationLogUncheckedUpdateManyWithoutParentNestedInput = {
   deleteMany?: Prisma.NotificationLogScalarWhereInput | Prisma.NotificationLogScalarWhereInput[]
 }
 
+export type NotificationLogCreateNestedManyWithoutNoticeInput = {
+  create?: Prisma.XOR<Prisma.NotificationLogCreateWithoutNoticeInput, Prisma.NotificationLogUncheckedCreateWithoutNoticeInput> | Prisma.NotificationLogCreateWithoutNoticeInput[] | Prisma.NotificationLogUncheckedCreateWithoutNoticeInput[]
+  connectOrCreate?: Prisma.NotificationLogCreateOrConnectWithoutNoticeInput | Prisma.NotificationLogCreateOrConnectWithoutNoticeInput[]
+  createMany?: Prisma.NotificationLogCreateManyNoticeInputEnvelope
+  connect?: Prisma.NotificationLogWhereUniqueInput | Prisma.NotificationLogWhereUniqueInput[]
+}
+
+export type NotificationLogUncheckedCreateNestedManyWithoutNoticeInput = {
+  create?: Prisma.XOR<Prisma.NotificationLogCreateWithoutNoticeInput, Prisma.NotificationLogUncheckedCreateWithoutNoticeInput> | Prisma.NotificationLogCreateWithoutNoticeInput[] | Prisma.NotificationLogUncheckedCreateWithoutNoticeInput[]
+  connectOrCreate?: Prisma.NotificationLogCreateOrConnectWithoutNoticeInput | Prisma.NotificationLogCreateOrConnectWithoutNoticeInput[]
+  createMany?: Prisma.NotificationLogCreateManyNoticeInputEnvelope
+  connect?: Prisma.NotificationLogWhereUniqueInput | Prisma.NotificationLogWhereUniqueInput[]
+}
+
+export type NotificationLogUpdateManyWithoutNoticeNestedInput = {
+  create?: Prisma.XOR<Prisma.NotificationLogCreateWithoutNoticeInput, Prisma.NotificationLogUncheckedCreateWithoutNoticeInput> | Prisma.NotificationLogCreateWithoutNoticeInput[] | Prisma.NotificationLogUncheckedCreateWithoutNoticeInput[]
+  connectOrCreate?: Prisma.NotificationLogCreateOrConnectWithoutNoticeInput | Prisma.NotificationLogCreateOrConnectWithoutNoticeInput[]
+  upsert?: Prisma.NotificationLogUpsertWithWhereUniqueWithoutNoticeInput | Prisma.NotificationLogUpsertWithWhereUniqueWithoutNoticeInput[]
+  createMany?: Prisma.NotificationLogCreateManyNoticeInputEnvelope
+  set?: Prisma.NotificationLogWhereUniqueInput | Prisma.NotificationLogWhereUniqueInput[]
+  disconnect?: Prisma.NotificationLogWhereUniqueInput | Prisma.NotificationLogWhereUniqueInput[]
+  delete?: Prisma.NotificationLogWhereUniqueInput | Prisma.NotificationLogWhereUniqueInput[]
+  connect?: Prisma.NotificationLogWhereUniqueInput | Prisma.NotificationLogWhereUniqueInput[]
+  update?: Prisma.NotificationLogUpdateWithWhereUniqueWithoutNoticeInput | Prisma.NotificationLogUpdateWithWhereUniqueWithoutNoticeInput[]
+  updateMany?: Prisma.NotificationLogUpdateManyWithWhereWithoutNoticeInput | Prisma.NotificationLogUpdateManyWithWhereWithoutNoticeInput[]
+  deleteMany?: Prisma.NotificationLogScalarWhereInput | Prisma.NotificationLogScalarWhereInput[]
+}
+
+export type NotificationLogUncheckedUpdateManyWithoutNoticeNestedInput = {
+  create?: Prisma.XOR<Prisma.NotificationLogCreateWithoutNoticeInput, Prisma.NotificationLogUncheckedCreateWithoutNoticeInput> | Prisma.NotificationLogCreateWithoutNoticeInput[] | Prisma.NotificationLogUncheckedCreateWithoutNoticeInput[]
+  connectOrCreate?: Prisma.NotificationLogCreateOrConnectWithoutNoticeInput | Prisma.NotificationLogCreateOrConnectWithoutNoticeInput[]
+  upsert?: Prisma.NotificationLogUpsertWithWhereUniqueWithoutNoticeInput | Prisma.NotificationLogUpsertWithWhereUniqueWithoutNoticeInput[]
+  createMany?: Prisma.NotificationLogCreateManyNoticeInputEnvelope
+  set?: Prisma.NotificationLogWhereUniqueInput | Prisma.NotificationLogWhereUniqueInput[]
+  disconnect?: Prisma.NotificationLogWhereUniqueInput | Prisma.NotificationLogWhereUniqueInput[]
+  delete?: Prisma.NotificationLogWhereUniqueInput | Prisma.NotificationLogWhereUniqueInput[]
+  connect?: Prisma.NotificationLogWhereUniqueInput | Prisma.NotificationLogWhereUniqueInput[]
+  update?: Prisma.NotificationLogUpdateWithWhereUniqueWithoutNoticeInput | Prisma.NotificationLogUpdateWithWhereUniqueWithoutNoticeInput[]
+  updateMany?: Prisma.NotificationLogUpdateManyWithWhereWithoutNoticeInput | Prisma.NotificationLogUpdateManyWithWhereWithoutNoticeInput[]
+  deleteMany?: Prisma.NotificationLogScalarWhereInput | Prisma.NotificationLogScalarWhereInput[]
+}
+
 export type EnumNotificationChannelFieldUpdateOperationsInput = {
   set?: $Enums.NotificationChannel
 }
@@ -733,6 +877,9 @@ export type NotificationLogCreateWithoutOrganizationInput = {
   channel: $Enums.NotificationChannel
   status?: $Enums.NotificationStatus
   notificationType: $Enums.NotificationType
+  errorMessage?: string | null
+  retryCount?: number
+  maxRetries?: number
   units?: number
   cost?: number
   sentAt?: Date | string
@@ -741,6 +888,7 @@ export type NotificationLogCreateWithoutOrganizationInput = {
   user?: Prisma.UserCreateNestedOneWithoutNotificationLogInput
   parent?: Prisma.ParentCreateNestedOneWithoutNotificationLogInput
   student?: Prisma.StudentCreateNestedOneWithoutNotificationLogInput
+  notice?: Prisma.NoticeCreateNestedOneWithoutNotificationsInput
 }
 
 export type NotificationLogUncheckedCreateWithoutOrganizationInput = {
@@ -751,6 +899,10 @@ export type NotificationLogUncheckedCreateWithoutOrganizationInput = {
   channel: $Enums.NotificationChannel
   status?: $Enums.NotificationStatus
   notificationType: $Enums.NotificationType
+  noticeId?: string | null
+  errorMessage?: string | null
+  retryCount?: number
+  maxRetries?: number
   units?: number
   cost?: number
   sentAt?: Date | string
@@ -796,6 +948,10 @@ export type NotificationLogScalarWhereInput = {
   channel?: Prisma.EnumNotificationChannelFilter<"NotificationLog"> | $Enums.NotificationChannel
   status?: Prisma.EnumNotificationStatusFilter<"NotificationLog"> | $Enums.NotificationStatus
   notificationType?: Prisma.EnumNotificationTypeFilter<"NotificationLog"> | $Enums.NotificationType
+  noticeId?: Prisma.StringNullableFilter<"NotificationLog"> | string | null
+  errorMessage?: Prisma.StringNullableFilter<"NotificationLog"> | string | null
+  retryCount?: Prisma.IntFilter<"NotificationLog"> | number
+  maxRetries?: Prisma.IntFilter<"NotificationLog"> | number
   units?: Prisma.IntFilter<"NotificationLog"> | number
   cost?: Prisma.FloatFilter<"NotificationLog"> | number
   sentAt?: Prisma.DateTimeFilter<"NotificationLog"> | Date | string
@@ -808,6 +964,9 @@ export type NotificationLogCreateWithoutUserInput = {
   channel: $Enums.NotificationChannel
   status?: $Enums.NotificationStatus
   notificationType: $Enums.NotificationType
+  errorMessage?: string | null
+  retryCount?: number
+  maxRetries?: number
   units?: number
   cost?: number
   sentAt?: Date | string
@@ -816,6 +975,7 @@ export type NotificationLogCreateWithoutUserInput = {
   organization: Prisma.OrganizationCreateNestedOneWithoutNotificationLogInput
   parent?: Prisma.ParentCreateNestedOneWithoutNotificationLogInput
   student?: Prisma.StudentCreateNestedOneWithoutNotificationLogInput
+  notice?: Prisma.NoticeCreateNestedOneWithoutNotificationsInput
 }
 
 export type NotificationLogUncheckedCreateWithoutUserInput = {
@@ -826,6 +986,10 @@ export type NotificationLogUncheckedCreateWithoutUserInput = {
   channel: $Enums.NotificationChannel
   status?: $Enums.NotificationStatus
   notificationType: $Enums.NotificationType
+  noticeId?: string | null
+  errorMessage?: string | null
+  retryCount?: number
+  maxRetries?: number
   units?: number
   cost?: number
   sentAt?: Date | string
@@ -864,6 +1028,9 @@ export type NotificationLogCreateWithoutStudentInput = {
   channel: $Enums.NotificationChannel
   status?: $Enums.NotificationStatus
   notificationType: $Enums.NotificationType
+  errorMessage?: string | null
+  retryCount?: number
+  maxRetries?: number
   units?: number
   cost?: number
   sentAt?: Date | string
@@ -872,6 +1039,7 @@ export type NotificationLogCreateWithoutStudentInput = {
   organization: Prisma.OrganizationCreateNestedOneWithoutNotificationLogInput
   user?: Prisma.UserCreateNestedOneWithoutNotificationLogInput
   parent?: Prisma.ParentCreateNestedOneWithoutNotificationLogInput
+  notice?: Prisma.NoticeCreateNestedOneWithoutNotificationsInput
 }
 
 export type NotificationLogUncheckedCreateWithoutStudentInput = {
@@ -882,6 +1050,10 @@ export type NotificationLogUncheckedCreateWithoutStudentInput = {
   channel: $Enums.NotificationChannel
   status?: $Enums.NotificationStatus
   notificationType: $Enums.NotificationType
+  noticeId?: string | null
+  errorMessage?: string | null
+  retryCount?: number
+  maxRetries?: number
   units?: number
   cost?: number
   sentAt?: Date | string
@@ -920,6 +1092,9 @@ export type NotificationLogCreateWithoutParentInput = {
   channel: $Enums.NotificationChannel
   status?: $Enums.NotificationStatus
   notificationType: $Enums.NotificationType
+  errorMessage?: string | null
+  retryCount?: number
+  maxRetries?: number
   units?: number
   cost?: number
   sentAt?: Date | string
@@ -928,6 +1103,7 @@ export type NotificationLogCreateWithoutParentInput = {
   organization: Prisma.OrganizationCreateNestedOneWithoutNotificationLogInput
   user?: Prisma.UserCreateNestedOneWithoutNotificationLogInput
   student?: Prisma.StudentCreateNestedOneWithoutNotificationLogInput
+  notice?: Prisma.NoticeCreateNestedOneWithoutNotificationsInput
 }
 
 export type NotificationLogUncheckedCreateWithoutParentInput = {
@@ -938,6 +1114,10 @@ export type NotificationLogUncheckedCreateWithoutParentInput = {
   channel: $Enums.NotificationChannel
   status?: $Enums.NotificationStatus
   notificationType: $Enums.NotificationType
+  noticeId?: string | null
+  errorMessage?: string | null
+  retryCount?: number
+  maxRetries?: number
   units?: number
   cost?: number
   sentAt?: Date | string
@@ -971,6 +1151,70 @@ export type NotificationLogUpdateManyWithWhereWithoutParentInput = {
   data: Prisma.XOR<Prisma.NotificationLogUpdateManyMutationInput, Prisma.NotificationLogUncheckedUpdateManyWithoutParentInput>
 }
 
+export type NotificationLogCreateWithoutNoticeInput = {
+  id?: string
+  channel: $Enums.NotificationChannel
+  status?: $Enums.NotificationStatus
+  notificationType: $Enums.NotificationType
+  errorMessage?: string | null
+  retryCount?: number
+  maxRetries?: number
+  units?: number
+  cost?: number
+  sentAt?: Date | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  organization: Prisma.OrganizationCreateNestedOneWithoutNotificationLogInput
+  user?: Prisma.UserCreateNestedOneWithoutNotificationLogInput
+  parent?: Prisma.ParentCreateNestedOneWithoutNotificationLogInput
+  student?: Prisma.StudentCreateNestedOneWithoutNotificationLogInput
+}
+
+export type NotificationLogUncheckedCreateWithoutNoticeInput = {
+  id?: string
+  organizationId: string
+  userId?: string | null
+  parentId?: string | null
+  studentId?: string | null
+  channel: $Enums.NotificationChannel
+  status?: $Enums.NotificationStatus
+  notificationType: $Enums.NotificationType
+  errorMessage?: string | null
+  retryCount?: number
+  maxRetries?: number
+  units?: number
+  cost?: number
+  sentAt?: Date | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type NotificationLogCreateOrConnectWithoutNoticeInput = {
+  where: Prisma.NotificationLogWhereUniqueInput
+  create: Prisma.XOR<Prisma.NotificationLogCreateWithoutNoticeInput, Prisma.NotificationLogUncheckedCreateWithoutNoticeInput>
+}
+
+export type NotificationLogCreateManyNoticeInputEnvelope = {
+  data: Prisma.NotificationLogCreateManyNoticeInput | Prisma.NotificationLogCreateManyNoticeInput[]
+  skipDuplicates?: boolean
+}
+
+export type NotificationLogUpsertWithWhereUniqueWithoutNoticeInput = {
+  where: Prisma.NotificationLogWhereUniqueInput
+  update: Prisma.XOR<Prisma.NotificationLogUpdateWithoutNoticeInput, Prisma.NotificationLogUncheckedUpdateWithoutNoticeInput>
+  create: Prisma.XOR<Prisma.NotificationLogCreateWithoutNoticeInput, Prisma.NotificationLogUncheckedCreateWithoutNoticeInput>
+}
+
+export type NotificationLogUpdateWithWhereUniqueWithoutNoticeInput = {
+  where: Prisma.NotificationLogWhereUniqueInput
+  data: Prisma.XOR<Prisma.NotificationLogUpdateWithoutNoticeInput, Prisma.NotificationLogUncheckedUpdateWithoutNoticeInput>
+}
+
+export type NotificationLogUpdateManyWithWhereWithoutNoticeInput = {
+  where: Prisma.NotificationLogScalarWhereInput
+  data: Prisma.XOR<Prisma.NotificationLogUpdateManyMutationInput, Prisma.NotificationLogUncheckedUpdateManyWithoutNoticeInput>
+}
+
 export type NotificationLogCreateManyOrganizationInput = {
   id?: string
   userId?: string | null
@@ -979,6 +1223,10 @@ export type NotificationLogCreateManyOrganizationInput = {
   channel: $Enums.NotificationChannel
   status?: $Enums.NotificationStatus
   notificationType: $Enums.NotificationType
+  noticeId?: string | null
+  errorMessage?: string | null
+  retryCount?: number
+  maxRetries?: number
   units?: number
   cost?: number
   sentAt?: Date | string
@@ -991,6 +1239,9 @@ export type NotificationLogUpdateWithoutOrganizationInput = {
   channel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
   status?: Prisma.EnumNotificationStatusFieldUpdateOperationsInput | $Enums.NotificationStatus
   notificationType?: Prisma.EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
+  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  retryCount?: Prisma.IntFieldUpdateOperationsInput | number
+  maxRetries?: Prisma.IntFieldUpdateOperationsInput | number
   units?: Prisma.IntFieldUpdateOperationsInput | number
   cost?: Prisma.FloatFieldUpdateOperationsInput | number
   sentAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -999,6 +1250,7 @@ export type NotificationLogUpdateWithoutOrganizationInput = {
   user?: Prisma.UserUpdateOneWithoutNotificationLogNestedInput
   parent?: Prisma.ParentUpdateOneWithoutNotificationLogNestedInput
   student?: Prisma.StudentUpdateOneWithoutNotificationLogNestedInput
+  notice?: Prisma.NoticeUpdateOneWithoutNotificationsNestedInput
 }
 
 export type NotificationLogUncheckedUpdateWithoutOrganizationInput = {
@@ -1009,6 +1261,10 @@ export type NotificationLogUncheckedUpdateWithoutOrganizationInput = {
   channel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
   status?: Prisma.EnumNotificationStatusFieldUpdateOperationsInput | $Enums.NotificationStatus
   notificationType?: Prisma.EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
+  noticeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  retryCount?: Prisma.IntFieldUpdateOperationsInput | number
+  maxRetries?: Prisma.IntFieldUpdateOperationsInput | number
   units?: Prisma.IntFieldUpdateOperationsInput | number
   cost?: Prisma.FloatFieldUpdateOperationsInput | number
   sentAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1024,6 +1280,10 @@ export type NotificationLogUncheckedUpdateManyWithoutOrganizationInput = {
   channel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
   status?: Prisma.EnumNotificationStatusFieldUpdateOperationsInput | $Enums.NotificationStatus
   notificationType?: Prisma.EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
+  noticeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  retryCount?: Prisma.IntFieldUpdateOperationsInput | number
+  maxRetries?: Prisma.IntFieldUpdateOperationsInput | number
   units?: Prisma.IntFieldUpdateOperationsInput | number
   cost?: Prisma.FloatFieldUpdateOperationsInput | number
   sentAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1039,6 +1299,10 @@ export type NotificationLogCreateManyUserInput = {
   channel: $Enums.NotificationChannel
   status?: $Enums.NotificationStatus
   notificationType: $Enums.NotificationType
+  noticeId?: string | null
+  errorMessage?: string | null
+  retryCount?: number
+  maxRetries?: number
   units?: number
   cost?: number
   sentAt?: Date | string
@@ -1051,6 +1315,9 @@ export type NotificationLogUpdateWithoutUserInput = {
   channel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
   status?: Prisma.EnumNotificationStatusFieldUpdateOperationsInput | $Enums.NotificationStatus
   notificationType?: Prisma.EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
+  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  retryCount?: Prisma.IntFieldUpdateOperationsInput | number
+  maxRetries?: Prisma.IntFieldUpdateOperationsInput | number
   units?: Prisma.IntFieldUpdateOperationsInput | number
   cost?: Prisma.FloatFieldUpdateOperationsInput | number
   sentAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1059,6 +1326,7 @@ export type NotificationLogUpdateWithoutUserInput = {
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutNotificationLogNestedInput
   parent?: Prisma.ParentUpdateOneWithoutNotificationLogNestedInput
   student?: Prisma.StudentUpdateOneWithoutNotificationLogNestedInput
+  notice?: Prisma.NoticeUpdateOneWithoutNotificationsNestedInput
 }
 
 export type NotificationLogUncheckedUpdateWithoutUserInput = {
@@ -1069,6 +1337,10 @@ export type NotificationLogUncheckedUpdateWithoutUserInput = {
   channel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
   status?: Prisma.EnumNotificationStatusFieldUpdateOperationsInput | $Enums.NotificationStatus
   notificationType?: Prisma.EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
+  noticeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  retryCount?: Prisma.IntFieldUpdateOperationsInput | number
+  maxRetries?: Prisma.IntFieldUpdateOperationsInput | number
   units?: Prisma.IntFieldUpdateOperationsInput | number
   cost?: Prisma.FloatFieldUpdateOperationsInput | number
   sentAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1084,6 +1356,10 @@ export type NotificationLogUncheckedUpdateManyWithoutUserInput = {
   channel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
   status?: Prisma.EnumNotificationStatusFieldUpdateOperationsInput | $Enums.NotificationStatus
   notificationType?: Prisma.EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
+  noticeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  retryCount?: Prisma.IntFieldUpdateOperationsInput | number
+  maxRetries?: Prisma.IntFieldUpdateOperationsInput | number
   units?: Prisma.IntFieldUpdateOperationsInput | number
   cost?: Prisma.FloatFieldUpdateOperationsInput | number
   sentAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1099,6 +1375,10 @@ export type NotificationLogCreateManyStudentInput = {
   channel: $Enums.NotificationChannel
   status?: $Enums.NotificationStatus
   notificationType: $Enums.NotificationType
+  noticeId?: string | null
+  errorMessage?: string | null
+  retryCount?: number
+  maxRetries?: number
   units?: number
   cost?: number
   sentAt?: Date | string
@@ -1111,6 +1391,9 @@ export type NotificationLogUpdateWithoutStudentInput = {
   channel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
   status?: Prisma.EnumNotificationStatusFieldUpdateOperationsInput | $Enums.NotificationStatus
   notificationType?: Prisma.EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
+  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  retryCount?: Prisma.IntFieldUpdateOperationsInput | number
+  maxRetries?: Prisma.IntFieldUpdateOperationsInput | number
   units?: Prisma.IntFieldUpdateOperationsInput | number
   cost?: Prisma.FloatFieldUpdateOperationsInput | number
   sentAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1119,6 +1402,7 @@ export type NotificationLogUpdateWithoutStudentInput = {
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutNotificationLogNestedInput
   user?: Prisma.UserUpdateOneWithoutNotificationLogNestedInput
   parent?: Prisma.ParentUpdateOneWithoutNotificationLogNestedInput
+  notice?: Prisma.NoticeUpdateOneWithoutNotificationsNestedInput
 }
 
 export type NotificationLogUncheckedUpdateWithoutStudentInput = {
@@ -1129,6 +1413,10 @@ export type NotificationLogUncheckedUpdateWithoutStudentInput = {
   channel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
   status?: Prisma.EnumNotificationStatusFieldUpdateOperationsInput | $Enums.NotificationStatus
   notificationType?: Prisma.EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
+  noticeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  retryCount?: Prisma.IntFieldUpdateOperationsInput | number
+  maxRetries?: Prisma.IntFieldUpdateOperationsInput | number
   units?: Prisma.IntFieldUpdateOperationsInput | number
   cost?: Prisma.FloatFieldUpdateOperationsInput | number
   sentAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1144,6 +1432,10 @@ export type NotificationLogUncheckedUpdateManyWithoutStudentInput = {
   channel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
   status?: Prisma.EnumNotificationStatusFieldUpdateOperationsInput | $Enums.NotificationStatus
   notificationType?: Prisma.EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
+  noticeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  retryCount?: Prisma.IntFieldUpdateOperationsInput | number
+  maxRetries?: Prisma.IntFieldUpdateOperationsInput | number
   units?: Prisma.IntFieldUpdateOperationsInput | number
   cost?: Prisma.FloatFieldUpdateOperationsInput | number
   sentAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1159,6 +1451,10 @@ export type NotificationLogCreateManyParentInput = {
   channel: $Enums.NotificationChannel
   status?: $Enums.NotificationStatus
   notificationType: $Enums.NotificationType
+  noticeId?: string | null
+  errorMessage?: string | null
+  retryCount?: number
+  maxRetries?: number
   units?: number
   cost?: number
   sentAt?: Date | string
@@ -1171,6 +1467,9 @@ export type NotificationLogUpdateWithoutParentInput = {
   channel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
   status?: Prisma.EnumNotificationStatusFieldUpdateOperationsInput | $Enums.NotificationStatus
   notificationType?: Prisma.EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
+  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  retryCount?: Prisma.IntFieldUpdateOperationsInput | number
+  maxRetries?: Prisma.IntFieldUpdateOperationsInput | number
   units?: Prisma.IntFieldUpdateOperationsInput | number
   cost?: Prisma.FloatFieldUpdateOperationsInput | number
   sentAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1179,6 +1478,7 @@ export type NotificationLogUpdateWithoutParentInput = {
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutNotificationLogNestedInput
   user?: Prisma.UserUpdateOneWithoutNotificationLogNestedInput
   student?: Prisma.StudentUpdateOneWithoutNotificationLogNestedInput
+  notice?: Prisma.NoticeUpdateOneWithoutNotificationsNestedInput
 }
 
 export type NotificationLogUncheckedUpdateWithoutParentInput = {
@@ -1189,6 +1489,10 @@ export type NotificationLogUncheckedUpdateWithoutParentInput = {
   channel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
   status?: Prisma.EnumNotificationStatusFieldUpdateOperationsInput | $Enums.NotificationStatus
   notificationType?: Prisma.EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
+  noticeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  retryCount?: Prisma.IntFieldUpdateOperationsInput | number
+  maxRetries?: Prisma.IntFieldUpdateOperationsInput | number
   units?: Prisma.IntFieldUpdateOperationsInput | number
   cost?: Prisma.FloatFieldUpdateOperationsInput | number
   sentAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1204,6 +1508,86 @@ export type NotificationLogUncheckedUpdateManyWithoutParentInput = {
   channel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
   status?: Prisma.EnumNotificationStatusFieldUpdateOperationsInput | $Enums.NotificationStatus
   notificationType?: Prisma.EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
+  noticeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  retryCount?: Prisma.IntFieldUpdateOperationsInput | number
+  maxRetries?: Prisma.IntFieldUpdateOperationsInput | number
+  units?: Prisma.IntFieldUpdateOperationsInput | number
+  cost?: Prisma.FloatFieldUpdateOperationsInput | number
+  sentAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type NotificationLogCreateManyNoticeInput = {
+  id?: string
+  organizationId: string
+  userId?: string | null
+  parentId?: string | null
+  studentId?: string | null
+  channel: $Enums.NotificationChannel
+  status?: $Enums.NotificationStatus
+  notificationType: $Enums.NotificationType
+  errorMessage?: string | null
+  retryCount?: number
+  maxRetries?: number
+  units?: number
+  cost?: number
+  sentAt?: Date | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type NotificationLogUpdateWithoutNoticeInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  channel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
+  status?: Prisma.EnumNotificationStatusFieldUpdateOperationsInput | $Enums.NotificationStatus
+  notificationType?: Prisma.EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
+  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  retryCount?: Prisma.IntFieldUpdateOperationsInput | number
+  maxRetries?: Prisma.IntFieldUpdateOperationsInput | number
+  units?: Prisma.IntFieldUpdateOperationsInput | number
+  cost?: Prisma.FloatFieldUpdateOperationsInput | number
+  sentAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutNotificationLogNestedInput
+  user?: Prisma.UserUpdateOneWithoutNotificationLogNestedInput
+  parent?: Prisma.ParentUpdateOneWithoutNotificationLogNestedInput
+  student?: Prisma.StudentUpdateOneWithoutNotificationLogNestedInput
+}
+
+export type NotificationLogUncheckedUpdateWithoutNoticeInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  channel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
+  status?: Prisma.EnumNotificationStatusFieldUpdateOperationsInput | $Enums.NotificationStatus
+  notificationType?: Prisma.EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
+  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  retryCount?: Prisma.IntFieldUpdateOperationsInput | number
+  maxRetries?: Prisma.IntFieldUpdateOperationsInput | number
+  units?: Prisma.IntFieldUpdateOperationsInput | number
+  cost?: Prisma.FloatFieldUpdateOperationsInput | number
+  sentAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type NotificationLogUncheckedUpdateManyWithoutNoticeInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  channel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
+  status?: Prisma.EnumNotificationStatusFieldUpdateOperationsInput | $Enums.NotificationStatus
+  notificationType?: Prisma.EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
+  errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  retryCount?: Prisma.IntFieldUpdateOperationsInput | number
+  maxRetries?: Prisma.IntFieldUpdateOperationsInput | number
   units?: Prisma.IntFieldUpdateOperationsInput | number
   cost?: Prisma.FloatFieldUpdateOperationsInput | number
   sentAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1222,6 +1606,10 @@ export type NotificationLogSelect<ExtArgs extends runtime.Types.Extensions.Inter
   channel?: boolean
   status?: boolean
   notificationType?: boolean
+  noticeId?: boolean
+  errorMessage?: boolean
+  retryCount?: boolean
+  maxRetries?: boolean
   units?: boolean
   cost?: boolean
   sentAt?: boolean
@@ -1231,6 +1619,7 @@ export type NotificationLogSelect<ExtArgs extends runtime.Types.Extensions.Inter
   user?: boolean | Prisma.NotificationLog$userArgs<ExtArgs>
   parent?: boolean | Prisma.NotificationLog$parentArgs<ExtArgs>
   student?: boolean | Prisma.NotificationLog$studentArgs<ExtArgs>
+  notice?: boolean | Prisma.NotificationLog$noticeArgs<ExtArgs>
 }, ExtArgs["result"]["notificationLog"]>
 
 export type NotificationLogSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1242,6 +1631,10 @@ export type NotificationLogSelectCreateManyAndReturn<ExtArgs extends runtime.Typ
   channel?: boolean
   status?: boolean
   notificationType?: boolean
+  noticeId?: boolean
+  errorMessage?: boolean
+  retryCount?: boolean
+  maxRetries?: boolean
   units?: boolean
   cost?: boolean
   sentAt?: boolean
@@ -1251,6 +1644,7 @@ export type NotificationLogSelectCreateManyAndReturn<ExtArgs extends runtime.Typ
   user?: boolean | Prisma.NotificationLog$userArgs<ExtArgs>
   parent?: boolean | Prisma.NotificationLog$parentArgs<ExtArgs>
   student?: boolean | Prisma.NotificationLog$studentArgs<ExtArgs>
+  notice?: boolean | Prisma.NotificationLog$noticeArgs<ExtArgs>
 }, ExtArgs["result"]["notificationLog"]>
 
 export type NotificationLogSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1262,6 +1656,10 @@ export type NotificationLogSelectUpdateManyAndReturn<ExtArgs extends runtime.Typ
   channel?: boolean
   status?: boolean
   notificationType?: boolean
+  noticeId?: boolean
+  errorMessage?: boolean
+  retryCount?: boolean
+  maxRetries?: boolean
   units?: boolean
   cost?: boolean
   sentAt?: boolean
@@ -1271,6 +1669,7 @@ export type NotificationLogSelectUpdateManyAndReturn<ExtArgs extends runtime.Typ
   user?: boolean | Prisma.NotificationLog$userArgs<ExtArgs>
   parent?: boolean | Prisma.NotificationLog$parentArgs<ExtArgs>
   student?: boolean | Prisma.NotificationLog$studentArgs<ExtArgs>
+  notice?: boolean | Prisma.NotificationLog$noticeArgs<ExtArgs>
 }, ExtArgs["result"]["notificationLog"]>
 
 export type NotificationLogSelectScalar = {
@@ -1282,6 +1681,10 @@ export type NotificationLogSelectScalar = {
   channel?: boolean
   status?: boolean
   notificationType?: boolean
+  noticeId?: boolean
+  errorMessage?: boolean
+  retryCount?: boolean
+  maxRetries?: boolean
   units?: boolean
   cost?: boolean
   sentAt?: boolean
@@ -1289,24 +1692,27 @@ export type NotificationLogSelectScalar = {
   updatedAt?: boolean
 }
 
-export type NotificationLogOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "userId" | "parentId" | "studentId" | "channel" | "status" | "notificationType" | "units" | "cost" | "sentAt" | "createdAt" | "updatedAt", ExtArgs["result"]["notificationLog"]>
+export type NotificationLogOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "userId" | "parentId" | "studentId" | "channel" | "status" | "notificationType" | "noticeId" | "errorMessage" | "retryCount" | "maxRetries" | "units" | "cost" | "sentAt" | "createdAt" | "updatedAt", ExtArgs["result"]["notificationLog"]>
 export type NotificationLogInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   user?: boolean | Prisma.NotificationLog$userArgs<ExtArgs>
   parent?: boolean | Prisma.NotificationLog$parentArgs<ExtArgs>
   student?: boolean | Prisma.NotificationLog$studentArgs<ExtArgs>
+  notice?: boolean | Prisma.NotificationLog$noticeArgs<ExtArgs>
 }
 export type NotificationLogIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   user?: boolean | Prisma.NotificationLog$userArgs<ExtArgs>
   parent?: boolean | Prisma.NotificationLog$parentArgs<ExtArgs>
   student?: boolean | Prisma.NotificationLog$studentArgs<ExtArgs>
+  notice?: boolean | Prisma.NotificationLog$noticeArgs<ExtArgs>
 }
 export type NotificationLogIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   user?: boolean | Prisma.NotificationLog$userArgs<ExtArgs>
   parent?: boolean | Prisma.NotificationLog$parentArgs<ExtArgs>
   student?: boolean | Prisma.NotificationLog$studentArgs<ExtArgs>
+  notice?: boolean | Prisma.NotificationLog$noticeArgs<ExtArgs>
 }
 
 export type $NotificationLogPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1316,6 +1722,7 @@ export type $NotificationLogPayload<ExtArgs extends runtime.Types.Extensions.Int
     user: Prisma.$UserPayload<ExtArgs> | null
     parent: Prisma.$ParentPayload<ExtArgs> | null
     student: Prisma.$StudentPayload<ExtArgs> | null
+    notice: Prisma.$NoticePayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1326,6 +1733,10 @@ export type $NotificationLogPayload<ExtArgs extends runtime.Types.Extensions.Int
     channel: $Enums.NotificationChannel
     status: $Enums.NotificationStatus
     notificationType: $Enums.NotificationType
+    noticeId: string | null
+    errorMessage: string | null
+    retryCount: number
+    maxRetries: number
     units: number
     cost: number
     sentAt: Date
@@ -1729,6 +2140,7 @@ export interface Prisma__NotificationLogClient<T, Null = never, ExtArgs extends 
   user<T extends Prisma.NotificationLog$userArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.NotificationLog$userArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   parent<T extends Prisma.NotificationLog$parentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.NotificationLog$parentArgs<ExtArgs>>): Prisma.Prisma__ParentClient<runtime.Types.Result.GetResult<Prisma.$ParentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   student<T extends Prisma.NotificationLog$studentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.NotificationLog$studentArgs<ExtArgs>>): Prisma.Prisma__StudentClient<runtime.Types.Result.GetResult<Prisma.$StudentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  notice<T extends Prisma.NotificationLog$noticeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.NotificationLog$noticeArgs<ExtArgs>>): Prisma.Prisma__NoticeClient<runtime.Types.Result.GetResult<Prisma.$NoticePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1766,6 +2178,10 @@ export interface NotificationLogFieldRefs {
   readonly channel: Prisma.FieldRef<"NotificationLog", 'NotificationChannel'>
   readonly status: Prisma.FieldRef<"NotificationLog", 'NotificationStatus'>
   readonly notificationType: Prisma.FieldRef<"NotificationLog", 'NotificationType'>
+  readonly noticeId: Prisma.FieldRef<"NotificationLog", 'String'>
+  readonly errorMessage: Prisma.FieldRef<"NotificationLog", 'String'>
+  readonly retryCount: Prisma.FieldRef<"NotificationLog", 'Int'>
+  readonly maxRetries: Prisma.FieldRef<"NotificationLog", 'Int'>
   readonly units: Prisma.FieldRef<"NotificationLog", 'Int'>
   readonly cost: Prisma.FieldRef<"NotificationLog", 'Float'>
   readonly sentAt: Prisma.FieldRef<"NotificationLog", 'DateTime'>
@@ -2221,6 +2637,25 @@ export type NotificationLog$studentArgs<ExtArgs extends runtime.Types.Extensions
    */
   include?: Prisma.StudentInclude<ExtArgs> | null
   where?: Prisma.StudentWhereInput
+}
+
+/**
+ * NotificationLog.notice
+ */
+export type NotificationLog$noticeArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Notice
+   */
+  select?: Prisma.NoticeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Notice
+   */
+  omit?: Prisma.NoticeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.NoticeInclude<ExtArgs> | null
+  where?: Prisma.NoticeWhereInput
 }
 
 /**

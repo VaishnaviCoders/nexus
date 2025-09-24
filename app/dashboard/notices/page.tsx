@@ -1,41 +1,60 @@
 import NoticeList from '@/components/dashboard/notice/notice-list';
-
 import prisma from '@/lib/db';
-
 import Link from 'next/link';
 import React, { Suspense } from 'react';
 import Loading from './loading';
-import { getOrganizationId, getOrganizationUserRole } from '@/lib/organization';
+import { getOrganizationId } from '@/lib/organization';
 import { EmptyState } from '@/components/EmptyState';
 import { Activity, Pin, Newspaper } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Role } from '@/generated/prisma/enums';
 import { getCurrentAcademicYearId } from '@/lib/academicYear';
+import { getCurrentUserByRole } from '@/lib/auth';
 
 const page = async () => {
-  const orgRole = await getOrganizationUserRole();
-
+  const { role } = await getCurrentUserByRole();
   const organizationId = await getOrganizationId();
   const academicYearId = await getCurrentAcademicYearId();
 
-  const notices = await prisma.notice.findMany({
-    where: {
-      organizationId,
-      academicYearId,
-    },
-    orderBy: {
-      createdAt: 'desc',
-    },
-  });
+  let notices;
 
-  const roleMap: Record<string, Role> = {
-    'org:admin': 'ADMIN',
-    'org:teacher': 'TEACHER',
-    'org:student': 'STUDENT',
-    'org:parent': 'PARENT',
-  };
-
-  const role = orgRole && roleMap[orgRole] ? roleMap[orgRole] : 'STUDENT';
+  if (role === 'ADMIN') {
+    // Admin should see all notices (draft, pending, published)
+    notices = await prisma.notice.findMany({
+      where: {
+        organizationId,
+        academicYearId,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+  } else if (role === 'TEACHER') {
+    // Teachers may see their own notices + published ones
+    notices = await prisma.notice.findMany({
+      where: {
+        organizationId,
+        academicYearId,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+  } else {
+    // Students & Parents → only published notices
+    notices = await prisma.notice.findMany({
+      where: {
+        organizationId,
+        academicYearId,
+        status: 'PUBLISHED',
+        targetAudience: {
+          has: role.toUpperCase(),
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+  }
 
   return (
     <div className="w-full mx-auto ">
@@ -79,7 +98,7 @@ const page = async () => {
         </>
       ) : (
         <Suspense fallback={<Loading />}>
-          <NoticeList notices={notices} orgRole={role} />
+          <NoticeList notices={notices} userRole={role} />
         </Suspense>
       )}
     </div>
