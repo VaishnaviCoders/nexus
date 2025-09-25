@@ -1,6 +1,7 @@
 import { executeReminders } from '@/lib/data/fee/fee-reminder';
 import prisma from '@/lib/db';
 import { inngest } from '@/lib/inngest/client';
+import { getISTDate } from '@/lib/utils';
 
 export const updateOverdueFeesAutomation = inngest.createFunction(
   { id: 'fee-status-overdue-automation' },
@@ -128,6 +129,48 @@ export const updateExamStatuses = inngest.createFunction(
 
     return {
       message: `Updated Exam statuses → UPCOMING: ${upcoming.count}, LIVE: ${live.count}, COMPLETED: ${completed.count}`,
+    };
+  }
+);
+
+// Notice
+
+export const updateNoticeStatuses = inngest.createFunction(
+  {
+    id: 'notice-status-updater',
+  },
+  {
+    // Cron in UTC equivalent of 11:59 PM IST → 18:29 UTC
+    cron: '29 18 * * *',
+  },
+  async ({ step }) => {
+    const nowIST = getISTDate();
+
+    // 1. Mark PUBLISHED notices as EXPIRED if endDate has passed
+    const expiredNotices = await step.run('mark-expired', async () =>
+      prisma.notice.updateMany({
+        where: {
+          status: 'PUBLISHED',
+          endDate: { lt: nowIST },
+        },
+        data: { status: 'EXPIRED' },
+      })
+    );
+
+    // // 2. Optional: mark DRAFT notices as PUBLISHED if startDate reached
+    // const publishedNotices = await step.run('auto-publish', async () =>
+    //   prisma.notice.updateMany({
+    //     where: {
+    //       status: 'DRAFT',
+    //       startDate: { lte: now },
+    //     },
+    //     data: { status: 'PUBLISHED' },
+    //   })
+    // );
+
+    //  PUBLISHED: ${publishedNotices.count}
+    return {
+      message: `Notice statuses updated → EXPIRED: ${expiredNotices.count}`,
     };
   }
 );

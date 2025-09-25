@@ -17,13 +17,15 @@ import {
 // ];
 // const MAX_FILE_SIZE = 5000000;
 
-const FileSchema = z.object({
+export const FileSchema = z.object({
   fileName: z.string(),
   fileSize: z.number(),
   fileType: z.string(),
   url: z.string(),
   publicId: z.string(),
 });
+
+export type FileSchemaType = z.infer<typeof FileSchema>;
 
 export const createNoticeSchema = z
   .object({

@@ -211,7 +211,7 @@ export default function NoticeViewer({
           <div className="flex items-center gap-2">
             <Users className="h-4 w-4 text-gray-500" />
             <span className="text-sm font-medium text-gray-700">
-              Target Audience
+              Notice For 
             </span>
           </div>
           <div className="flex flex-wrap gap-2 ml-6">

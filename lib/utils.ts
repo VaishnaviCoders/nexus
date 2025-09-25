@@ -51,6 +51,15 @@ export function composeEventHandlers<E>(
  * Formats a date string to 'DD/MM/YYYY' in India timezone.
  * Returns '-' if the date is invalid.
  */
+
+export function getISTDate() {
+  const now = new Date();
+  // Convert local time to IST (UTC +5:30)
+  const istOffset = 5.5 * 60; // in minutes
+  const utc = now.getTime() + now.getTimezoneOffset() * 60000;
+  return new Date(utc + istOffset * 60000);
+}
+
 export function formatDateIN(dateValue?: string | Date | null): string {
   if (!dateValue) return '-';
   const date = new Date(dateValue);

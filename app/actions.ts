@@ -127,8 +127,8 @@ export async function getNoticeRecipients(
   const rolesToInclude = targetAudience.includes('all')
     ? [Role.STUDENT, Role.TEACHER, Role.PARENT, Role.ADMIN]
     : targetAudience
-        .map(mapTargetAudienceToRole)
-        .filter((role): role is Role => role !== null);
+      .map(mapTargetAudienceToRole)
+      .filter((role): role is Role => role !== null);
 
   if (rolesToInclude.length === 0) return [];
 
@@ -428,16 +428,16 @@ export async function CustomDatesStudentAttendance(
   studentId: string,
   startDate: Date,
   endDate: Date
-) {}
+) { }
 
-export async function getSectionIdMonthlyAttendance(sectionId: string) {}
-export async function WeeklySectionAttendance(sectionId: string) {}
-export async function yearlySectionAttendance(sectionId: string) {}
+export async function getSectionIdMonthlyAttendance(sectionId: string) { }
+export async function WeeklySectionAttendance(sectionId: string) { }
+export async function yearlySectionAttendance(sectionId: string) { }
 export async function CustomDatesSectionAttendance(
   sectionId: string,
   startDate: Date,
   endDate: Date
-) {}
+) { }
 
 // Fees
 
@@ -559,23 +559,23 @@ export async function verifyStudentDocument(
     const updateData =
       data.action === 'APPROVE'
         ? {
-            verified: true,
-            verifiedBy: verifiedByOrRejectedBy || 'System',
-            verifiedAt: new Date(),
-            rejected: false,
-            rejectedBy: null,
-            rejectedAt: null,
-            note: data.note ?? null,
-          }
+          verified: true,
+          verifiedBy: verifiedByOrRejectedBy || 'System',
+          verifiedAt: new Date(),
+          rejected: false,
+          rejectedBy: null,
+          rejectedAt: null,
+          note: data.note ?? null,
+        }
         : {
-            verified: false,
-            verifiedBy: null,
-            verifiedAt: null,
-            rejected: true,
-            rejectedBy: verifiedByOrRejectedBy || 'System',
-            rejectedAt: new Date(),
-            rejectReason: data.rejectionReason,
-          };
+          verified: false,
+          verifiedBy: null,
+          verifiedAt: null,
+          rejected: true,
+          rejectedBy: verifiedByOrRejectedBy || 'System',
+          rejectedAt: new Date(),
+          rejectReason: data.rejectionReason,
+        };
 
     await prisma.studentDocument.update({
       where: { id: documentId },
