@@ -202,6 +202,7 @@ export type FeeCategoryOrderByWithRelationInput = {
   organizationId?: Prisma.SortOrder
   fees?: Prisma.FeeOrderByRelationAggregateInput
   Organization?: Prisma.OrganizationOrderByWithRelationInput
+  _relevance?: Prisma.FeeCategoryOrderByRelevanceInput
 }
 
 export type FeeCategoryWhereUniqueInput = Prisma.AtLeast<{
@@ -322,6 +323,12 @@ export type FeeCategoryOrderByRelationAggregateInput = {
 export type FeeCategoryScalarRelationFilter = {
   is?: Prisma.FeeCategoryWhereInput
   isNot?: Prisma.FeeCategoryWhereInput
+}
+
+export type FeeCategoryOrderByRelevanceInput = {
+  fields: Prisma.FeeCategoryOrderByRelevanceFieldEnum | Prisma.FeeCategoryOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type FeeCategoryNameOrganizationIdCompoundUniqueInput = {

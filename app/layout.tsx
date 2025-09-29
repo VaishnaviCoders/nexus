@@ -24,15 +24,22 @@ export const metadata: Metadata = {
         ? `https://${process.env.VERCEL_URL}`
         : `http://localhost:${process.env.PORT || 3000}`
   ),
+  icons: {
+    icon: '/favicon.ico',
+    shortcut: '/favicon-16x16.png',
+    apple: '/apple-touch-icon.png',
+  },
+
   title: 'School CRM',
-  description: 'Entire School Management Software',
+  description:
+    'All-in-one school management platform to streamline students, fees, attendance, and reports. Powerful and easy-to-use for schools, colleges, and coaching institutes.',
   generator: 'Next.js',
   manifest: '/manifest.json',
   keywords:
     'Sameer Kad, School CRM, Full-Stack Developer, School Management Software, Educational CRM, Attendance Tracker, Fee Management, Next.js Developer',
   authors: [{ name: 'Sameer Kad', url: 'https://github.com/DevSammyKad' }],
   creator: 'Sameer Kad',
-  applicationName: 'School CRM',
+  applicationName: 'shiksha.cloud',
   publisher: 'Sameer Kad',
   alternates: {
     canonical: '/',
@@ -56,23 +63,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
+    <ClerkProvider
+      publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
+    >
       <html lang="en" suppressHydrationWarning>
         <body className={GeistSans.className}>
           {/* <CustomGoogleOneTap /> */}
           <GoogleAnalytics gaId="G-Z9HW1EQ694" />
           <GoogleTagManager gtmId="GTM-WNFTTCM4" />
-
           {/* <ThemeProvider attribute="class" defaultTheme="light" enableSystem> */}
-          <NextSSRPlugin
-            /**
-             * The `extractRouterConfig` will extract **only** the route configs
-             * from the router to prevent additional information from being
-             * leaked to the client. The data passed to the client is the same
-             * as if you were to fetch `/api/uploadthing` directly.
-             */
-            routerConfig={extractRouterConfig(ourFileRouter)}
-          />
+          <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
           <NuqsAdapter>{children}</NuqsAdapter>
           <Toaster position="bottom-right" />
           {/* </ThemeProvider> */}

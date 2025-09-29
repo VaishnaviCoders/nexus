@@ -1,3 +1,7 @@
+import {
+  sendEmailExamReminder,
+  sendExamReminder7Days,
+} from '@/lib/data/exam/exam-reminders';
 import { executeReminders } from '@/lib/data/fee/fee-reminder';
 import prisma from '@/lib/db';
 import { inngest } from '@/lib/inngest/client';
@@ -130,6 +134,45 @@ export const updateExamStatuses = inngest.createFunction(
     return {
       message: `Updated Exam statuses → UPCOMING: ${upcoming.count}, LIVE: ${live.count}, COMPLETED: ${completed.count}`,
     };
+  }
+);
+
+export const sendExamReminder = inngest.createFunction(
+  { id: 'exam-reminder' },
+  { event: 'exam/reminder.scheduled' },
+  async ({ event, step }) => {
+    const { emails, jobId, scheduledDateTime } = event.data;
+
+    await step.run('update-job-status', async () => {
+      await prisma.scheduledJob.update({
+        where: { id: jobId },
+        data: {
+          type: 'EXAM',
+          status: 'PROCESSING',
+          updatedAt: new Date(),
+        },
+      });
+    });
+    await step.sleepUntil('wait-for-scheduledDateTime', `${scheduledDateTime}`);
+    // Step 2: Execute the reminder sending logic
+    const result = await step.run('send-exam-reminders', async () => {
+      console.log('📧 Starting to send reminders NOW');
+      return await sendEmailExamReminder(emails);
+    });
+
+    // Step 3: Update job completion status
+    await step.run('complete-job', async () => {
+      await prisma.scheduledJob.update({
+        where: { id: jobId },
+        data: {
+          status: result.success ? 'COMPLETED' : 'FAILED',
+          result: JSON.stringify(result),
+          updatedAt: new Date(),
+        },
+      });
+    });
+
+    return result;
   }
 );
 

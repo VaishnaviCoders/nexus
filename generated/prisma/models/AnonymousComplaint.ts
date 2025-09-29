@@ -263,6 +263,7 @@ export type AnonymousComplaintOrderByWithRelationInput = {
   organization?: Prisma.OrganizationOrderByWithRelationInput
   ComplaintStatusTimeline?: Prisma.ComplaintStatusTimelineOrderByRelationAggregateInput
   academicYear?: Prisma.AcademicYearOrderByWithRelationInput
+  _relevance?: Prisma.AnonymousComplaintOrderByRelevanceInput
 }
 
 export type AnonymousComplaintWhereUniqueInput = Prisma.AtLeast<{
@@ -447,6 +448,12 @@ export type AnonymousComplaintListRelationFilter = {
 
 export type AnonymousComplaintOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type AnonymousComplaintOrderByRelevanceInput = {
+  fields: Prisma.AnonymousComplaintOrderByRelevanceFieldEnum | Prisma.AnonymousComplaintOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type AnonymousComplaintCountOrderByAggregateInput = {

@@ -1,5 +1,6 @@
 import { nativeEnum, object, z } from 'zod';
 import {
+  CalendarEventType,
   DocumentType,
   EvaluationType,
   ExamMode,
@@ -172,7 +173,7 @@ export const singleHolidayFormSchema = z.object({
   name: z.string().min(1, { message: 'Holiday name is required' }),
   startDate: z.date(),
   endDate: z.date(),
-  type: z.enum(['PLANNED', 'SUDDEN', 'INSTITUTION_SPECIFIC']),
+  type: z.nativeEnum(CalendarEventType),
   reason: z.string().min(1, { message: 'Reason is required' }),
   isRecurring: z.boolean().default(false).optional(),
 });

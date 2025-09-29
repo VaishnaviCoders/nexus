@@ -25,22 +25,59 @@ import AdminQuickActions from '@/app/components/dashboardComponents/AdminQuickAc
 import AdminDashboardCards from '@/app/components/dashboardComponents/AdminDashboardCards';
 import AdminRecentActivity from '@/app/components/dashboardComponents/RecentActivity';
 import { UpcomingEvents } from '@/app/components/dashboardComponents/UpcomingEvents';
-import { getCurrentAcademicYear } from '@/lib/academicYear';
+import { getCurrentAcademicYear, getCurrentAcademicYearId } from '@/lib/academicYear';
+import prisma from '@/lib/db';
+import Link from 'next/link';
+import { getOrganizationId } from '@/lib/organization';
 
 const AdminDashboard = async () => {
   const data = await getMonthlyFeeData(2025);
   const academicYear = await getCurrentAcademicYear();
+  const organizationId = await getOrganizationId()
+
+
+  function generateTrackingId(): string {
+    const date = new Date().toISOString().slice(0, 10).replace(/-/g, ''); // YYYYMMDD
+    const random = Math.random().toString(36).substring(2, 6).toUpperCase(); // 4-char random alphanumeric
+    return `CMP-${date}-${random}`;
+  }
+  const academicYearId = await getCurrentAcademicYearId()
+
+  const trackingId = generateTrackingId();
+  await prisma.anonymousComplaint.create({
+    data: {
+      category: "",
+      description: "This is a test complaint",
+      subject: "Test",
+      severity: "LOW",
+      organizationId,
+      currentStatus: 'PENDING',
+      trackingId
+    }
+  })
+
+
+
+
+  const examSession = await prisma.anonymousComplaint.findMany({
+    where: {
+      organizationId: organizationId,
+    },
+
+  })
+
+  console.log(examSession)
 
   if (!academicYear) {
     return (
-      <div className="p-6 flex flex-col items-center justify-center text-center space-y-4">
+      <div className="p-6 flex flex-col items-center justify-center text-center space-y-4 ">
         <h2 className="text-2xl font-semibold">Academic Year Not Set</h2>
         <p className="text-muted-foreground max-w-md">
           Please set the current academic year before using the dashboard
           features.
         </p>
         <Button asChild>
-          <a href="/dashboard/settings">Go to Settings</a>
+          <Link href="/dashboard/settings">Go to Settings</Link>
         </Button>
       </div>
     );
@@ -50,7 +87,6 @@ const AdminDashboard = async () => {
   return (
     <div className="space-y-6 px-2">
       <Card className="py-4 px-2 flex items-center justify-between   ">
-        {/* //max-sm:flex-col max-sm:items-start max-sm:space-y-3 */}
         <div>
           <CardTitle className="text-lg">Admin Dashboard</CardTitle>
           <CardDescription className="text-sm">

@@ -369,6 +369,7 @@ export type OrganizationOrderByWithRelationInput = {
   scheduledJob?: Prisma.ScheduledJobOrderByRelationAggregateInput
   exam?: Prisma.ExamOrderByRelationAggregateInput
   hallTicket?: Prisma.HallTicketOrderByRelationAggregateInput
+  _relevance?: Prisma.OrganizationOrderByRelevanceInput
 }
 
 export type OrganizationWhereUniqueInput = Prisma.AtLeast<{
@@ -680,6 +681,12 @@ export type OrganizationUncheckedUpdateManyInput = {
 export type OrganizationScalarRelationFilter = {
   is?: Prisma.OrganizationWhereInput
   isNot?: Prisma.OrganizationWhereInput
+}
+
+export type OrganizationOrderByRelevanceInput = {
+  fields: Prisma.OrganizationOrderByRelevanceFieldEnum | Prisma.OrganizationOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type OrganizationCountOrderByAggregateInput = {

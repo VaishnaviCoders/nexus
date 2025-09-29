@@ -117,7 +117,7 @@ export default function OrganizationConfig({
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
-        <DialogHeader className="space-y-3">
+        <DialogHeader className="space-y-3 items-center">
           <DialogTitle className="flex items-center gap-2 text-xl">
             <Building2 className="h-5 w-5" />
             Organization Configuration

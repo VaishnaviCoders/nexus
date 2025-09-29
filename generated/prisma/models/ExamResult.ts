@@ -294,6 +294,7 @@ export type ExamResultOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   student?: Prisma.StudentOrderByWithRelationInput
   exam?: Prisma.ExamOrderByWithRelationInput
+  _relevance?: Prisma.ExamResultOrderByRelevanceInput
 }
 
 export type ExamResultWhereUniqueInput = Prisma.AtLeast<{
@@ -466,6 +467,12 @@ export type ExamResultListRelationFilter = {
 
 export type ExamResultOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type ExamResultOrderByRelevanceInput = {
+  fields: Prisma.ExamResultOrderByRelevanceFieldEnum | Prisma.ExamResultOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type ExamResultExamIdStudentIdCompoundUniqueInput = {

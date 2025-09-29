@@ -36,17 +36,9 @@ import {
 import { YearType } from '@/generated/prisma/enums';
 import { AcademicYearForm } from './AcademicYearForm';
 import { deleteAcademicYear, setCurrentAcademicYear } from '@/app/actions';
+import { Separator } from '@/components/ui/separator';
+import { AcademicYear } from '@/generated/prisma/client';
 
-interface AcademicYear {
-  id: string;
-  name: string;
-  startDate: Date;
-  endDate: Date;
-  type: YearType;
-  isCurrent: boolean;
-  description?: string | null;
-  createdAt: Date;
-}
 
 interface AcademicYearConfigProps {
   academicYears: AcademicYear[];
@@ -172,9 +164,8 @@ export function AcademicYearConfig({
           {sortedYears.map((year) => (
             <div
               key={year.id}
-              className={`group flex items-center justify-between rounded-lg border p-4 transition-colors hover:bg-muted/50 ${
-                year.isCurrent ? 'border-primary bg-primary/5' : ''
-              }`}
+              className={`group flex items-center justify-between rounded-lg border p-4 transition-colors hover:bg-muted/50 ${year.isCurrent ? 'border-primary bg-primary/5' : ''
+                }`}
             >
               <div className="flex items-center gap-4">
                 <div>
@@ -196,7 +187,11 @@ export function AcademicYearConfig({
                   <p className="text-sm text-muted-foreground">
                     {format(year.startDate, 'MMM d, yyyy')} -{' '}
                     {format(year.endDate, 'MMM d, yyyy')}
-                    {year.description && ` • ${year.description}`}
+                  </p>
+                  <Separator />
+
+                  <p className="text-sm text-muted-foreground">
+                    {year.description && ` ${year.description}`}
                   </p>
                 </div>
               </div>

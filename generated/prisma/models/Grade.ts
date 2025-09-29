@@ -179,6 +179,7 @@ export type GradeOrderByWithRelationInput = {
   students?: Prisma.StudentOrderByRelationAggregateInput
   section?: Prisma.SectionOrderByRelationAggregateInput
   TeachingAssignment?: Prisma.TeachingAssignmentOrderByRelationAggregateInput
+  _relevance?: Prisma.GradeOrderByRelevanceInput
 }
 
 export type GradeWhereUniqueInput = Prisma.AtLeast<{
@@ -273,6 +274,12 @@ export type GradeListRelationFilter = {
 
 export type GradeOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type GradeOrderByRelevanceInput = {
+  fields: Prisma.GradeOrderByRelevanceFieldEnum | Prisma.GradeOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type GradeCountOrderByAggregateInput = {

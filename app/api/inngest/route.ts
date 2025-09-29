@@ -5,7 +5,7 @@ import {
   updatePaymentStatus,
   scheduledFeeReminder,
   updateExamStatuses,
-  updateNoticeStatuses
+  updateNoticeStatuses,
 } from './functions';
 
 // Create an API that serves zero functions
@@ -18,6 +18,6 @@ export const { GET, POST, PUT } = serve({
     updatePaymentStatus,
     scheduledFeeReminder,
     updateExamStatuses,
-  updateNoticeStatuses
+    updateNoticeStatuses,
   ],
 });

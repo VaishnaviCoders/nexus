@@ -209,6 +209,7 @@ export type ComplaintStatusTimelineOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   complaint?: Prisma.AnonymousComplaintOrderByWithRelationInput
+  _relevance?: Prisma.ComplaintStatusTimelineOrderByRelevanceInput
 }
 
 export type ComplaintStatusTimelineWhereUniqueInput = Prisma.AtLeast<{
@@ -328,6 +329,12 @@ export type ComplaintStatusTimelineListRelationFilter = {
 
 export type ComplaintStatusTimelineOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type ComplaintStatusTimelineOrderByRelevanceInput = {
+  fields: Prisma.ComplaintStatusTimelineOrderByRelevanceFieldEnum | Prisma.ComplaintStatusTimelineOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type ComplaintStatusTimelineCountOrderByAggregateInput = {

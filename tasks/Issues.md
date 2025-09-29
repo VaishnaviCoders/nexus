@@ -93,7 +93,7 @@ In Teacher
 4. Recent Activities : ✅ Fixed
 5. Assignment creation for teachers
 6. Teacher Fees Page : Show only related Fees don't show all fees : ✅ Solved
-7. Teacher Today's Schedule : Make dynamic
+7. Teacher Today's Schedule : Make dynamic ❌ Pending
 
 In Student
 

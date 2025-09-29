@@ -124,7 +124,7 @@ export default function NoticeViewer({
               )}
 
               <Badge
-                className={`text-xs ${notice.approvedBy ? 'bg-green-100 text-green-800' : 'bg-amber-100 text-amber-800'}`}
+                className={`text-xs ${notice.approvedBy ? 'bg-green-100 text-green-800 hover:bg-green-200' : 'bg-amber-100 text-amber-800 hover:bg-amber-200'}`}
               >
                 {notice.approvedBy ? 'Approved' : 'Pending Approval'}
               </Badge>
@@ -211,7 +211,7 @@ export default function NoticeViewer({
           <div className="flex items-center gap-2">
             <Users className="h-4 w-4 text-gray-500" />
             <span className="text-sm font-medium text-gray-700">
-              Notice For 
+              Notice For
             </span>
           </div>
           <div className="flex flex-wrap gap-2 ml-6">

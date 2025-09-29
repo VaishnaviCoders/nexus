@@ -414,17 +414,17 @@ const RecordPaymentCard = ({ selectedRecord }: RecordPaymentCardProps) => {
                 name="payerId"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel htmlFor="payerId">Payer ID (Optional)</FormLabel>
+                    <FormLabel htmlFor="payerId">Payer ID *</FormLabel>
                     <FormControl>
                       <Input
                         id="payerId"
-                        placeholder="Enter payer ID"
+                        placeholder="Enter user ID of the person making payment"
                         {...field}
                         disabled={isPending}
                       />
                     </FormControl>
                     <FormDescription>
-                      if the payer ID is unknown. Ask Who is Paying USER ID
+                      Required: Enter the user ID of the person who made this payment (parent, student, or guardian).
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -531,16 +531,16 @@ function FilterControls({
                 'ml-1 text-xs',
                 tab === 'all' && 'bg-gray-200 text-gray-700 hover:bg-gray-200',
                 tab === 'paid' &&
-                  'bg-emerald-100 text-emerald-700 hover:bg-emerald-100',
+                'bg-emerald-100 text-emerald-700 hover:bg-emerald-100',
                 tab === 'unpaid' &&
-                  'bg-amber-100 text-amber-700 hover:bg-amber-100',
+                'bg-amber-100 text-amber-700 hover:bg-amber-100',
                 tab === 'overdue' && 'bg-red-100 text-red-700 hover:bg-red-100'
               )}
             >
               {tab === 'all'
                 ? feeRecords.length
                 : feeRecords.filter((r) => r.fee.status === tab.toUpperCase())
-                    .length}
+                  .length}
             </Badge>
           </TabsTrigger>
         ))}
@@ -847,11 +847,11 @@ function FeeTableRow({ record }: FeeTableRowProps) {
           className={cn(
             'font-normal',
             record.fee.status === 'PAID' &&
-              'bg-emerald-50 text-emerald-700 border-emerald-200',
+            'bg-emerald-50 text-emerald-700 border-emerald-200',
             record.fee.status === 'UNPAID' &&
-              'bg-amber-50 text-amber-700 border-amber-200',
+            'bg-amber-50 text-amber-700 border-amber-200',
             record.fee.status === 'OVERDUE' &&
-              'bg-red-50 text-red-700 border-red-200'
+            'bg-red-50 text-red-700 border-red-200'
           )}
         >
           {record.fee.status === 'PAID' && (
@@ -1047,12 +1047,12 @@ const FeeDetailsContent = ({
                           <dd
                             className={cn(
                               payment.status === 'COMPLETED' &&
-                                'text-emerald-600',
+                              'text-emerald-600',
                               payment.status === 'PENDING' && 'text-yellow-600',
                               payment.status === 'FAILED' && 'text-red-600',
                               payment.status === 'UNPAID' && 'text-gray-600',
                               payment.status === 'REFUNDED' &&
-                                'text-purple-600',
+                              'text-purple-600',
                               payment.status === 'CANCELLED' && 'text-gray-500'
                             )}
                           >
@@ -1149,7 +1149,7 @@ const FeeDetailsContent = ({
                     <dd
                       className={cn(
                         selectedRecord.fee.status === 'OVERDUE' &&
-                          'text-red-600 font-medium'
+                        'text-red-600 font-medium'
                       )}
                     >
                       {formatDateIN(selectedRecord.fee.dueDate)}
@@ -1163,11 +1163,11 @@ const FeeDetailsContent = ({
                         className={cn(
                           'font-normal',
                           selectedRecord.fee.status === 'PAID' &&
-                            'bg-emerald-50 text-emerald-700 border-emerald-200',
+                          'bg-emerald-50 text-emerald-700 border-emerald-200',
                           selectedRecord.fee.status === 'UNPAID' &&
-                            'bg-amber-50 text-amber-700 border-amber-200',
+                          'bg-amber-50 text-amber-700 border-amber-200',
                           selectedRecord.fee.status === 'OVERDUE' &&
-                            'bg-red-50 text-red-700 border-red-200'
+                          'bg-red-50 text-red-700 border-red-200'
                         )}
                       >
                         {selectedRecord.fee.status === 'PAID' && (
@@ -1271,16 +1271,16 @@ const FeeDetailsContent = ({
                               className={cn(
                                 'font-medium',
                                 payment.status === 'COMPLETED' &&
-                                  'text-emerald-600',
+                                'text-emerald-600',
                                 payment.status === 'PENDING' &&
-                                  'text-yellow-600',
+                                'text-yellow-600',
                                 payment.status === 'UNPAID' &&
-                                  'text-yellow-600',
+                                'text-yellow-600',
                                 payment.status === 'FAILED' && 'text-red-600',
                                 payment.status === 'REFUNDED' &&
-                                  'text-purple-600',
+                                'text-purple-600',
                                 payment.status === 'CANCELLED' &&
-                                  'text-gray-500'
+                                'text-gray-500'
                               )}
                             >
                               {formatCurrencyIN(payment.amountPaid)}
@@ -1362,7 +1362,7 @@ const FeeDetailsContent = ({
                         {Math.round(
                           (selectedRecord.fee.paidAmount /
                             selectedRecord.fee.totalFee) *
-                            100
+                          100
                         )}
                         %
                       </div>

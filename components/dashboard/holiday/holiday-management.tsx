@@ -296,7 +296,7 @@ Summer Break,2025-04-20,2025-06-10,PLANNED,Annual vacation,false`;
   return (
     <div className="space-y-8">
       {/* Academic Year Summary */}
-      <Card className="border-0 shadow-lg bg-gradient-to-br from-blue-50 to-indigo-50 ">
+      <Card className="tbg-gradient-to-br from-blue-50 to-indigo-50 ">
         <CardHeader className="pb-4">
           <CardTitle className="flex items-center gap-3 text-xl">
             <div className="p-2 bg-blue-100 rounded-lg">

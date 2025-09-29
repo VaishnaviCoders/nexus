@@ -43,6 +43,8 @@ const subjects = [
   { value: 'Chemistry', label: 'Chemistry' },
   { value: 'Biology', label: 'Biology' },
   { value: 'English', label: 'English' },
+  { value: 'Marathi', label: 'Marathi' },
+  { value: 'Science', label: 'Science' },
   { value: 'Hindi', label: 'Hindi' },
   { value: 'History', label: 'History' },
   { value: 'Geography', label: 'Geography' },

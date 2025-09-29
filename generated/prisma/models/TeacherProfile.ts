@@ -344,6 +344,7 @@ export type TeacherProfileOrderByWithRelationInput = {
   languagesKnown?: Prisma.SortOrder
   certificateUrls?: Prisma.SortOrder
   teacher?: Prisma.TeacherOrderByWithRelationInput
+  _relevance?: Prisma.TeacherProfileOrderByRelevanceInput
 }
 
 export type TeacherProfileWhereUniqueInput = Prisma.AtLeast<{
@@ -598,6 +599,12 @@ export type StringNullableListFilter<$PrismaModel = never> = {
   hasEvery?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
   hasSome?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
   isEmpty?: boolean
+}
+
+export type TeacherProfileOrderByRelevanceInput = {
+  fields: Prisma.TeacherProfileOrderByRelevanceFieldEnum | Prisma.TeacherProfileOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type TeacherProfileCountOrderByAggregateInput = {

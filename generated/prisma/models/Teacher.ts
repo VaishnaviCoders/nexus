@@ -226,6 +226,7 @@ export type TeacherOrderByWithRelationInput = {
   profile?: Prisma.TeacherProfileOrderByWithRelationInput
   TeachingAssignment?: Prisma.TeachingAssignmentOrderByRelationAggregateInput
   Section?: Prisma.SectionOrderByRelationAggregateInput
+  _relevance?: Prisma.TeacherOrderByRelevanceInput
 }
 
 export type TeacherWhereUniqueInput = Prisma.AtLeast<{
@@ -375,6 +376,12 @@ export type TeacherOrderByRelationAggregateInput = {
 export type TeacherNullableScalarRelationFilter = {
   is?: Prisma.TeacherWhereInput | null
   isNot?: Prisma.TeacherWhereInput | null
+}
+
+export type TeacherOrderByRelevanceInput = {
+  fields: Prisma.TeacherOrderByRelevanceFieldEnum | Prisma.TeacherOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type TeacherCountOrderByAggregateInput = {

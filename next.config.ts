@@ -1,4 +1,5 @@
 import type { NextConfig } from 'next';
+import { hostname } from 'os';
 const withPWA = require('next-pwa')({
   dest: 'public',
   register: true,
@@ -56,6 +57,10 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'res.cloudinary.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'unsplash.com',
       },
     ],
   },

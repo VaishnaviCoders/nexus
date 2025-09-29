@@ -182,10 +182,10 @@ export function formatDateRange(start: Date, end: Date) {
  * Cost mapping for each notification channel (INR per unit).
  */
 const CHANNEL_COST_MAP: Record<NotificationChannel, number> = {
-  EMAIL: 0.05,
-  SMS: 0.3,
-  WHATSAPP: 0.5,
-  PUSH: 0,
+  EMAIL: 0.36, // ~₹0.5 – ₹1 per 100 emails via services like SES, SendGrid
+  SMS: 0.9, // ₹0.15 – ₹0.25 typical bulk SMS rate (domestic transactional)
+  WHATSAPP: 0.75, // ₹0.7 – ₹0.9 per template msg (Meta Business pricing in India)
+  PUSH: 0.2, // Free (Firebase, OneSignal, or in-app push)
 };
 
 /**

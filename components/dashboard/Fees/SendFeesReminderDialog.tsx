@@ -48,11 +48,11 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
-import { FeeReminderTemplates } from '@/components/Templates/FeeReminder';
 import { toast } from 'sonner';
 import { WhatsAppIcon } from '@/public/icons/WhatsAppIcon';
 import { sendFeeReminders } from '@/lib/data/fee/fee-reminder';
 import { reminderFormSchema, ReminderFormValues } from '@/lib/schemas';
+import { FeeReminderTemplates } from '@/components/templates/FeeReminder';
 
 export interface FeeReminderRecipient {
   id: string;

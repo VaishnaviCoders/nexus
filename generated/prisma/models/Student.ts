@@ -350,6 +350,7 @@ export type StudentOrderByWithRelationInput = {
   hallTicket?: Prisma.HallTicketOrderByRelationAggregateInput
   examResult?: Prisma.ExamResultOrderByRelationAggregateInput
   examEnrollment?: Prisma.ExamEnrollmentOrderByRelationAggregateInput
+  _relevance?: Prisma.StudentOrderByRelevanceInput
 }
 
 export type StudentWhereUniqueInput = Prisma.AtLeast<{
@@ -650,6 +651,12 @@ export type StudentOrderByRelationAggregateInput = {
 export type StudentNullableScalarRelationFilter = {
   is?: Prisma.StudentWhereInput | null
   isNot?: Prisma.StudentWhereInput | null
+}
+
+export type StudentOrderByRelevanceInput = {
+  fields: Prisma.StudentOrderByRelevanceFieldEnum | Prisma.StudentOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type StudentOrganizationIdRollNumberCompoundUniqueInput = {

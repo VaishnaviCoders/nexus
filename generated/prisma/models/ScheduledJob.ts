@@ -27,6 +27,8 @@ export type ScheduledJobMinAggregateOutputType = {
   id: string | null
   type: $Enums.scheduledJobType | null
   scheduledAt: Date | null
+  executedAt: Date | null
+  completedAt: Date | null
   status: string | null
   error: string | null
   createdBy: string | null
@@ -39,6 +41,8 @@ export type ScheduledJobMaxAggregateOutputType = {
   id: string | null
   type: $Enums.scheduledJobType | null
   scheduledAt: Date | null
+  executedAt: Date | null
+  completedAt: Date | null
   status: string | null
   error: string | null
   createdBy: string | null
@@ -52,6 +56,8 @@ export type ScheduledJobCountAggregateOutputType = {
   data: number
   type: number
   scheduledAt: number
+  executedAt: number
+  completedAt: number
   channels: number
   status: number
   result: number
@@ -68,6 +74,8 @@ export type ScheduledJobMinAggregateInputType = {
   id?: true
   type?: true
   scheduledAt?: true
+  executedAt?: true
+  completedAt?: true
   status?: true
   error?: true
   createdBy?: true
@@ -80,6 +88,8 @@ export type ScheduledJobMaxAggregateInputType = {
   id?: true
   type?: true
   scheduledAt?: true
+  executedAt?: true
+  completedAt?: true
   status?: true
   error?: true
   createdBy?: true
@@ -93,6 +103,8 @@ export type ScheduledJobCountAggregateInputType = {
   data?: true
   type?: true
   scheduledAt?: true
+  executedAt?: true
+  completedAt?: true
   channels?: true
   status?: true
   result?: true
@@ -181,6 +193,8 @@ export type ScheduledJobGroupByOutputType = {
   data: runtime.JsonValue
   type: $Enums.scheduledJobType
   scheduledAt: Date
+  executedAt: Date | null
+  completedAt: Date | null
   channels: $Enums.NotificationChannel[]
   status: string
   result: runtime.JsonValue | null
@@ -217,6 +231,8 @@ export type ScheduledJobWhereInput = {
   data?: Prisma.JsonFilter<"ScheduledJob">
   type?: Prisma.EnumscheduledJobTypeFilter<"ScheduledJob"> | $Enums.scheduledJobType
   scheduledAt?: Prisma.DateTimeFilter<"ScheduledJob"> | Date | string
+  executedAt?: Prisma.DateTimeNullableFilter<"ScheduledJob"> | Date | string | null
+  completedAt?: Prisma.DateTimeNullableFilter<"ScheduledJob"> | Date | string | null
   channels?: Prisma.EnumNotificationChannelNullableListFilter<"ScheduledJob">
   status?: Prisma.StringFilter<"ScheduledJob"> | string
   result?: Prisma.JsonNullableFilter<"ScheduledJob">
@@ -233,6 +249,8 @@ export type ScheduledJobOrderByWithRelationInput = {
   data?: Prisma.SortOrder
   type?: Prisma.SortOrder
   scheduledAt?: Prisma.SortOrder
+  executedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  completedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   channels?: Prisma.SortOrder
   status?: Prisma.SortOrder
   result?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -242,6 +260,7 @@ export type ScheduledJobOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
   organization?: Prisma.OrganizationOrderByWithRelationInput
+  _relevance?: Prisma.ScheduledJobOrderByRelevanceInput
 }
 
 export type ScheduledJobWhereUniqueInput = Prisma.AtLeast<{
@@ -252,6 +271,8 @@ export type ScheduledJobWhereUniqueInput = Prisma.AtLeast<{
   data?: Prisma.JsonFilter<"ScheduledJob">
   type?: Prisma.EnumscheduledJobTypeFilter<"ScheduledJob"> | $Enums.scheduledJobType
   scheduledAt?: Prisma.DateTimeFilter<"ScheduledJob"> | Date | string
+  executedAt?: Prisma.DateTimeNullableFilter<"ScheduledJob"> | Date | string | null
+  completedAt?: Prisma.DateTimeNullableFilter<"ScheduledJob"> | Date | string | null
   channels?: Prisma.EnumNotificationChannelNullableListFilter<"ScheduledJob">
   status?: Prisma.StringFilter<"ScheduledJob"> | string
   result?: Prisma.JsonNullableFilter<"ScheduledJob">
@@ -268,6 +289,8 @@ export type ScheduledJobOrderByWithAggregationInput = {
   data?: Prisma.SortOrder
   type?: Prisma.SortOrder
   scheduledAt?: Prisma.SortOrder
+  executedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  completedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   channels?: Prisma.SortOrder
   status?: Prisma.SortOrder
   result?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -289,6 +312,8 @@ export type ScheduledJobScalarWhereWithAggregatesInput = {
   data?: Prisma.JsonWithAggregatesFilter<"ScheduledJob">
   type?: Prisma.EnumscheduledJobTypeWithAggregatesFilter<"ScheduledJob"> | $Enums.scheduledJobType
   scheduledAt?: Prisma.DateTimeWithAggregatesFilter<"ScheduledJob"> | Date | string
+  executedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"ScheduledJob"> | Date | string | null
+  completedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"ScheduledJob"> | Date | string | null
   channels?: Prisma.EnumNotificationChannelNullableListFilter<"ScheduledJob">
   status?: Prisma.StringWithAggregatesFilter<"ScheduledJob"> | string
   result?: Prisma.JsonNullableWithAggregatesFilter<"ScheduledJob">
@@ -304,6 +329,8 @@ export type ScheduledJobCreateInput = {
   data: Prisma.JsonNullValueInput | runtime.InputJsonValue
   type: $Enums.scheduledJobType
   scheduledAt: Date | string
+  executedAt?: Date | string | null
+  completedAt?: Date | string | null
   channels?: Prisma.ScheduledJobCreatechannelsInput | $Enums.NotificationChannel[]
   status?: string
   result?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -319,6 +346,8 @@ export type ScheduledJobUncheckedCreateInput = {
   data: Prisma.JsonNullValueInput | runtime.InputJsonValue
   type: $Enums.scheduledJobType
   scheduledAt: Date | string
+  executedAt?: Date | string | null
+  completedAt?: Date | string | null
   channels?: Prisma.ScheduledJobCreatechannelsInput | $Enums.NotificationChannel[]
   status?: string
   result?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -334,6 +363,8 @@ export type ScheduledJobUpdateInput = {
   data?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   type?: Prisma.EnumscheduledJobTypeFieldUpdateOperationsInput | $Enums.scheduledJobType
   scheduledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  executedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   channels?: Prisma.ScheduledJobUpdatechannelsInput | $Enums.NotificationChannel[]
   status?: Prisma.StringFieldUpdateOperationsInput | string
   result?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -349,6 +380,8 @@ export type ScheduledJobUncheckedUpdateInput = {
   data?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   type?: Prisma.EnumscheduledJobTypeFieldUpdateOperationsInput | $Enums.scheduledJobType
   scheduledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  executedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   channels?: Prisma.ScheduledJobUpdatechannelsInput | $Enums.NotificationChannel[]
   status?: Prisma.StringFieldUpdateOperationsInput | string
   result?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -364,6 +397,8 @@ export type ScheduledJobCreateManyInput = {
   data: Prisma.JsonNullValueInput | runtime.InputJsonValue
   type: $Enums.scheduledJobType
   scheduledAt: Date | string
+  executedAt?: Date | string | null
+  completedAt?: Date | string | null
   channels?: Prisma.ScheduledJobCreatechannelsInput | $Enums.NotificationChannel[]
   status?: string
   result?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -379,6 +414,8 @@ export type ScheduledJobUpdateManyMutationInput = {
   data?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   type?: Prisma.EnumscheduledJobTypeFieldUpdateOperationsInput | $Enums.scheduledJobType
   scheduledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  executedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   channels?: Prisma.ScheduledJobUpdatechannelsInput | $Enums.NotificationChannel[]
   status?: Prisma.StringFieldUpdateOperationsInput | string
   result?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -393,6 +430,8 @@ export type ScheduledJobUncheckedUpdateManyInput = {
   data?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   type?: Prisma.EnumscheduledJobTypeFieldUpdateOperationsInput | $Enums.scheduledJobType
   scheduledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  executedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   channels?: Prisma.ScheduledJobUpdatechannelsInput | $Enums.NotificationChannel[]
   status?: Prisma.StringFieldUpdateOperationsInput | string
   result?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -421,11 +460,19 @@ export type EnumNotificationChannelNullableListFilter<$PrismaModel = never> = {
   isEmpty?: boolean
 }
 
+export type ScheduledJobOrderByRelevanceInput = {
+  fields: Prisma.ScheduledJobOrderByRelevanceFieldEnum | Prisma.ScheduledJobOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
+}
+
 export type ScheduledJobCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   data?: Prisma.SortOrder
   type?: Prisma.SortOrder
   scheduledAt?: Prisma.SortOrder
+  executedAt?: Prisma.SortOrder
+  completedAt?: Prisma.SortOrder
   channels?: Prisma.SortOrder
   status?: Prisma.SortOrder
   result?: Prisma.SortOrder
@@ -440,6 +487,8 @@ export type ScheduledJobMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   type?: Prisma.SortOrder
   scheduledAt?: Prisma.SortOrder
+  executedAt?: Prisma.SortOrder
+  completedAt?: Prisma.SortOrder
   status?: Prisma.SortOrder
   error?: Prisma.SortOrder
   createdBy?: Prisma.SortOrder
@@ -452,6 +501,8 @@ export type ScheduledJobMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   type?: Prisma.SortOrder
   scheduledAt?: Prisma.SortOrder
+  executedAt?: Prisma.SortOrder
+  completedAt?: Prisma.SortOrder
   status?: Prisma.SortOrder
   error?: Prisma.SortOrder
   createdBy?: Prisma.SortOrder
@@ -520,6 +571,8 @@ export type ScheduledJobCreateWithoutOrganizationInput = {
   data: Prisma.JsonNullValueInput | runtime.InputJsonValue
   type: $Enums.scheduledJobType
   scheduledAt: Date | string
+  executedAt?: Date | string | null
+  completedAt?: Date | string | null
   channels?: Prisma.ScheduledJobCreatechannelsInput | $Enums.NotificationChannel[]
   status?: string
   result?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -534,6 +587,8 @@ export type ScheduledJobUncheckedCreateWithoutOrganizationInput = {
   data: Prisma.JsonNullValueInput | runtime.InputJsonValue
   type: $Enums.scheduledJobType
   scheduledAt: Date | string
+  executedAt?: Date | string | null
+  completedAt?: Date | string | null
   channels?: Prisma.ScheduledJobCreatechannelsInput | $Enums.NotificationChannel[]
   status?: string
   result?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -577,6 +632,8 @@ export type ScheduledJobScalarWhereInput = {
   data?: Prisma.JsonFilter<"ScheduledJob">
   type?: Prisma.EnumscheduledJobTypeFilter<"ScheduledJob"> | $Enums.scheduledJobType
   scheduledAt?: Prisma.DateTimeFilter<"ScheduledJob"> | Date | string
+  executedAt?: Prisma.DateTimeNullableFilter<"ScheduledJob"> | Date | string | null
+  completedAt?: Prisma.DateTimeNullableFilter<"ScheduledJob"> | Date | string | null
   channels?: Prisma.EnumNotificationChannelNullableListFilter<"ScheduledJob">
   status?: Prisma.StringFilter<"ScheduledJob"> | string
   result?: Prisma.JsonNullableFilter<"ScheduledJob">
@@ -592,6 +649,8 @@ export type ScheduledJobCreateManyOrganizationInput = {
   data: Prisma.JsonNullValueInput | runtime.InputJsonValue
   type: $Enums.scheduledJobType
   scheduledAt: Date | string
+  executedAt?: Date | string | null
+  completedAt?: Date | string | null
   channels?: Prisma.ScheduledJobCreatechannelsInput | $Enums.NotificationChannel[]
   status?: string
   result?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -606,6 +665,8 @@ export type ScheduledJobUpdateWithoutOrganizationInput = {
   data?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   type?: Prisma.EnumscheduledJobTypeFieldUpdateOperationsInput | $Enums.scheduledJobType
   scheduledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  executedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   channels?: Prisma.ScheduledJobUpdatechannelsInput | $Enums.NotificationChannel[]
   status?: Prisma.StringFieldUpdateOperationsInput | string
   result?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -620,6 +681,8 @@ export type ScheduledJobUncheckedUpdateWithoutOrganizationInput = {
   data?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   type?: Prisma.EnumscheduledJobTypeFieldUpdateOperationsInput | $Enums.scheduledJobType
   scheduledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  executedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   channels?: Prisma.ScheduledJobUpdatechannelsInput | $Enums.NotificationChannel[]
   status?: Prisma.StringFieldUpdateOperationsInput | string
   result?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -634,6 +697,8 @@ export type ScheduledJobUncheckedUpdateManyWithoutOrganizationInput = {
   data?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   type?: Prisma.EnumscheduledJobTypeFieldUpdateOperationsInput | $Enums.scheduledJobType
   scheduledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  executedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   channels?: Prisma.ScheduledJobUpdatechannelsInput | $Enums.NotificationChannel[]
   status?: Prisma.StringFieldUpdateOperationsInput | string
   result?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -650,6 +715,8 @@ export type ScheduledJobSelect<ExtArgs extends runtime.Types.Extensions.Internal
   data?: boolean
   type?: boolean
   scheduledAt?: boolean
+  executedAt?: boolean
+  completedAt?: boolean
   channels?: boolean
   status?: boolean
   result?: boolean
@@ -666,6 +733,8 @@ export type ScheduledJobSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   data?: boolean
   type?: boolean
   scheduledAt?: boolean
+  executedAt?: boolean
+  completedAt?: boolean
   channels?: boolean
   status?: boolean
   result?: boolean
@@ -682,6 +751,8 @@ export type ScheduledJobSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   data?: boolean
   type?: boolean
   scheduledAt?: boolean
+  executedAt?: boolean
+  completedAt?: boolean
   channels?: boolean
   status?: boolean
   result?: boolean
@@ -698,6 +769,8 @@ export type ScheduledJobSelectScalar = {
   data?: boolean
   type?: boolean
   scheduledAt?: boolean
+  executedAt?: boolean
+  completedAt?: boolean
   channels?: boolean
   status?: boolean
   result?: boolean
@@ -708,7 +781,7 @@ export type ScheduledJobSelectScalar = {
   organizationId?: boolean
 }
 
-export type ScheduledJobOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "data" | "type" | "scheduledAt" | "channels" | "status" | "result" | "error" | "createdBy" | "createdAt" | "updatedAt" | "organizationId", ExtArgs["result"]["scheduledJob"]>
+export type ScheduledJobOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "data" | "type" | "scheduledAt" | "executedAt" | "completedAt" | "channels" | "status" | "result" | "error" | "createdBy" | "createdAt" | "updatedAt" | "organizationId", ExtArgs["result"]["scheduledJob"]>
 export type ScheduledJobInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
 }
@@ -729,6 +802,8 @@ export type $ScheduledJobPayload<ExtArgs extends runtime.Types.Extensions.Intern
     data: runtime.JsonValue
     type: $Enums.scheduledJobType
     scheduledAt: Date
+    executedAt: Date | null
+    completedAt: Date | null
     channels: $Enums.NotificationChannel[]
     status: string
     result: runtime.JsonValue | null
@@ -1165,6 +1240,8 @@ export interface ScheduledJobFieldRefs {
   readonly data: Prisma.FieldRef<"ScheduledJob", 'Json'>
   readonly type: Prisma.FieldRef<"ScheduledJob", 'scheduledJobType'>
   readonly scheduledAt: Prisma.FieldRef<"ScheduledJob", 'DateTime'>
+  readonly executedAt: Prisma.FieldRef<"ScheduledJob", 'DateTime'>
+  readonly completedAt: Prisma.FieldRef<"ScheduledJob", 'DateTime'>
   readonly channels: Prisma.FieldRef<"ScheduledJob", 'NotificationChannel[]'>
   readonly status: Prisma.FieldRef<"ScheduledJob", 'String'>
   readonly result: Prisma.FieldRef<"ScheduledJob", 'Json'>

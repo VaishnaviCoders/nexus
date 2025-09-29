@@ -9,13 +9,13 @@ import {
 import { Progress } from '@/components/ui/progress';
 import { formatCurrencyINWithSymbol } from '@/lib/utils';
 
-export default function APIVoiceCallQuota() {
+export default function StorageQuota() {
   const used = 2000;
   const total = 5000;
   const remaining = total - used;
   const percent = (used / total) * 100;
   return (
-    <div className="min-h-screen flex items-center justify-center p-6 lg:p-8">
+    <div className="flex items-center justify-center p-6 lg:p-8">
       <Card className="w-full max-w-lg">
         <CardHeader className="border-0 min-h-auto pt-6 pb-4">
           <CardTitle>API Call Quota</CardTitle>

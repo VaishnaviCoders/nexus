@@ -1,17 +1,11 @@
-// generator client {
-//   provider        = "prisma-client-js"
-//   output          = "../generated/prisma"
-//   previewFeatures = ["fullTextSearchPostgres"]
-//   binaryTargets   = ["native", "rhel-openssl-3.0.x"]
-// }
+generator client {
+  provider        = "prisma-client" // (or "prisma-client-js") 
+  output          = "../generated/prisma"
+  engineType      = "client"
+  previewFeatures = ["fullTextSearchPostgres"]
+}
 
 // , "queryCompiler", "driverAdapters"
-
-generator client {
-  provider   = "prisma-client" // (or "prisma-client-js") 
-  output     = "../generated/prisma"
-  engineType = "client"
-}
 
 datasource db {
   provider  = "postgresql"
@@ -49,21 +43,23 @@ model AcademicYear {
   isCurrent Boolean  @default(false)
 
   // Meta Data
-  description String?
-
-  // Relation Targets (Optional but Needed)
-  // fees               Fee[]
-  // feePayments        FeePayment[]
-  // assignments        Assignment[]
-  // submissions        AssignmentSubmission[]
-  // examResults              ExamResult[]
+  description        String?
   complaints         AnonymousComplaint[]
   notices            Notice[]
-  TeachingAssignment TeachingAssignment[]
-  StudentAttendance  StudentAttendance[]
-  AcademicCalendar   AcademicCalendar[]
+  fees               Fee[]
+  teachingAssignment TeachingAssignment[]
+  studentAttendance  StudentAttendance[]
+  academicCalendar   AcademicCalendar[]
   examSession        ExamSession[]
 
+  // FeeCategory
+  // StudentDocument
+  // ScheduledJob
+  // NotificationLog
+  // HallTicket
+  // ReportCard
+  // ExamResult
+  // ExamEnrollment
   createdBy String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -468,8 +464,10 @@ model Fee {
   organizationId String
   payments       FeePayment[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  academicYear   AcademicYear? @relation(fields: [academicYearId], references: [id])
+  academicYearId String?
 
   @@index([studentId])
   @@index([status])
@@ -782,6 +780,8 @@ model ScheduledJob {
   data        Json
   type        scheduledJobType
   scheduledAt DateTime
+  executedAt  DateTime? // when processing started
+  completedAt DateTime? // when finished
   channels    NotificationChannel[]
 
   status String @default("PENDING") // PENDING, PROCESSING, COMPLETED, FAILED

@@ -1,64 +1,65 @@
 import { PrismaClient } from '@/generated/prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
+import { getCurrentAcademicYearId } from './academicYear';
 
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
+
 const prisma = new PrismaClient({ adapter });
 
-// Middleware: auto-inject academicYearId for models which have it
-// Avoid importing getOrganizationId/getCurrentAcademicYearId here to prevent circular deps in Next RSC
-// Instead, query directly when needed
-// prisma.$use(async (params, next) => {
-//   const modelsNeedingYear: Record<string, true> = {
-//     ExamSession: true,
-//     StudentAttendance: true,
-//     AcademicCalendar: true,
-//     TeachingAssignment: true,
-//     Notice: true,
-//     ReportCard: true,
-//   };
+function needsAcademicYear(model: string): boolean {
+  return [
+    'Fee',
+    'FeePayment',
+    'FeeCategory',
+    'StudentDocument',
+    'ScheduledJob',
+    'NotificationLog',
+    'HallTicket',
+    'ReportCard',
+    'ExamResult',
+    // 'ExamEnrollment',
+    'TeachingAssignment',
+    'StudentAttendance',
+    'AcademicCalendar',
+  ].includes(model);
+}
 
-//   const isCreate = params.action === 'create' || params.action === 'createMany';
-//   const needsYear = !!modelsNeedingYear[params.model as string];
+// const prisma = base.$extends({
+//   name: 'withAcademicYear',
+//   query: {
+//     $allModels: {
+//       async findMany({ args, query }) {
+//         const academicYearId = await getCurrentAcademicYearId();
+//         args.where = { ...(args.where ?? {}), academicYearId };
+//         return query(args);
+//       },
 
-//   if (isCreate && needsYear) {
-//     if (params.action === 'create') {
-//       const data = (params.args?.data ?? {}) as Record<string, unknown>;
-//       if (!data.academicYearId) {
-//         const organizationId = (data.organizationId ||
-//           (Array.isArray(data) ? undefined : undefined)) as string | undefined;
-//         if (organizationId) {
-//           const current = await prisma.academicYear.findFirst({
-//             where: { organizationId, isCurrent: true },
-//             select: { id: true },
-//           });
-//           if (current?.id) {
-//             (params.args.data as any).academicYearId = current.id;
-//           }
+//       async create({ model, args, query }) {
+//         const academicYearId = await getCurrentAcademicYearId();
+//         if (
+//           needsAcademicYear(model) &&
+//           args.data &&
+//           !('academicYearId' in args.data)
+//         ) {
+//           args.data.academicYearId = academicYearId;
 //         }
-//       }
-//     } else if (params.action === 'createMany') {
-//       const dataList = Array.isArray(params.args?.data)
-//         ? (params.args.data as Array<Record<string, unknown>>)
-//         : [];
-//       for (const data of dataList) {
-//         if (!data.academicYearId) {
-//           const organizationId = data.organizationId as string | undefined;
-//           if (!organizationId) continue;
-//           const current = await prisma.academicYear.findFirst({
-//             where: { organizationId, isCurrent: true },
-//             select: { id: true },
-//           });
-//           if (current?.id) {
-//             (data as any).academicYearId = current.id;
-//           }
-//         }
-//       }
-//     }
-//   }
+//         return query(args);
+//       },
 
-//   return next(params);
+//       async createMany({ args, query }) {
+//         const academicYearId = await getCurrentAcademicYearId();
+//         if (Array.isArray(args.data)) {
+//           args.data = args.data.map((item) => ({
+//             ...item,
+//             academicYearId,
+//           }));
+//         } else {
+//           args.data = { ...(args.data ?? {}), academicYearId };
+//         }
+//         return query(args);
+//       },
+//     },
+//   },
 // });
-
-// if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
 
 export default prisma;

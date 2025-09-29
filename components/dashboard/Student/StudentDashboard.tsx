@@ -17,6 +17,7 @@ import { CreditCard, Download, Upload, MessageSquare, Zap } from 'lucide-react';
 import { getStudentNotices } from '@/lib/data/notice/get-student-notices';
 import { getCurrentAcademicYear } from '@/lib/academicYear';
 import { getCurrentUserByRole } from '@/lib/auth';
+import { sendExamReminder7Days } from '@/lib/data/exam/exam-reminders';
 
 export async function getFeesStatus(studentId: string) {
   const fees = await prisma.fee.findMany({
@@ -131,6 +132,10 @@ const StudentDashboard = async () => {
   const recentNotices = await getStudentNotices();
 
   const currentUser = await getCurrentUserByRole();
+
+  const data = await sendExamReminder7Days();
+
+  console.log(data);
 
   // ✅ Only allow students here
   if (currentUser.role !== 'STUDENT') {

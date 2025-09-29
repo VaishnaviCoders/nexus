@@ -135,7 +135,7 @@ export function SupportPopup({ userId, organizationId }: SupportPopupProps) {
   };
 
   return (
-    <div className="overflow-y-auto max-h-[85vh] w-full">
+    <div className="overflow-y-auto w-full">
       {' '}
       {isSubmitted ? (
         <div className="px-6 py-12 text-center">

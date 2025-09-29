@@ -249,6 +249,7 @@ export type StudentAttendanceOrderByWithRelationInput = {
   section?: Prisma.SectionOrderByWithRelationInput
   student?: Prisma.StudentOrderByWithRelationInput
   academicYear?: Prisma.AcademicYearOrderByWithRelationInput
+  _relevance?: Prisma.StudentAttendanceOrderByRelevanceInput
 }
 
 export type StudentAttendanceWhereUniqueInput = Prisma.AtLeast<{
@@ -409,6 +410,12 @@ export type StudentAttendanceListRelationFilter = {
 
 export type StudentAttendanceOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type StudentAttendanceOrderByRelevanceInput = {
+  fields: Prisma.StudentAttendanceOrderByRelevanceFieldEnum | Prisma.StudentAttendanceOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type StudentAttendanceStudentIdDateCompoundUniqueInput = {

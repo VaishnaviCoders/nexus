@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import { Eye, Trash2, ChevronDown } from 'lucide-react';
+import { Eye, Trash2,  MoreHorizontalIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import {
@@ -76,7 +76,7 @@ export default function NoticeList({ notices, userRole }: NoticeListProps) {
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="h-8 w-8 p-0" disabled={isPending}>
           <span className="sr-only">Open menu</span>
-          <ChevronDown className="h-4 w-4" />
+          <MoreHorizontalIcon className="h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">

@@ -2,19 +2,18 @@
 import { Resend } from 'resend';
 
 import { Prisma } from '@/generated/prisma/client';
-import NoticeEmailTemplate from '@/components/email-templates/notice';
+import NoticeEmailTemplate from '@/components/templates/email-templates/notice';
 
 type NoticeWithOrgAndAttachments = Prisma.NoticeGetPayload<{
   include: {
-    organization: true,
-    attachments: true
-
+    organization: true;
+    attachments: true;
   };
 }>;
 
 export const sendNoticeEmails = async (
   notice: NoticeWithOrgAndAttachments,
-  recipientEmails: string[],
+  recipientEmails: string[]
 ) => {
   const resend = new Resend(process.env.RESEND_API_KEY!);
   const { data, error } = await resend.emails.send({
@@ -38,8 +37,8 @@ export const sendNoticeEmails = async (
       endDate: notice.endDate,
       isUrgent: notice.isUrgent,
       targetAudience: notice.targetAudience,
-      organizationName: notice.organization.name || "",
-      publishedBy: notice.publishedBy || "System",
+      organizationName: notice.organization.name || '',
+      publishedBy: notice.publishedBy || 'System',
       organizationImage: notice.organization.organizationLogo ?? '',
       createdBy: notice.createdBy || 'System',
       publishedAt: notice.createdAt,
@@ -50,6 +49,5 @@ export const sendNoticeEmails = async (
     console.error('Error sending email:', error);
     return;
   }
-  console.log('Email Notifications sent:', data)
-
+  console.log('Email Notifications sent:', data);
 };

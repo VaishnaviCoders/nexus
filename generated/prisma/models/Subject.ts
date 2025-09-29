@@ -213,6 +213,7 @@ export type SubjectOrderByWithRelationInput = {
   organization?: Prisma.OrganizationOrderByWithRelationInput
   teachingAssignments?: Prisma.TeachingAssignmentOrderByRelationAggregateInput
   exam?: Prisma.ExamOrderByRelationAggregateInput
+  _relevance?: Prisma.SubjectOrderByRelevanceInput
 }
 
 export type SubjectWhereUniqueInput = Prisma.AtLeast<{
@@ -342,6 +343,12 @@ export type SubjectListRelationFilter = {
 
 export type SubjectOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type SubjectOrderByRelevanceInput = {
+  fields: Prisma.SubjectOrderByRelevanceFieldEnum | Prisma.SubjectOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type SubjectCountOrderByAggregateInput = {

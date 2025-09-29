@@ -3,21 +3,33 @@ import type { MetadataRoute } from 'next';
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
     {
-      url: `http://localhost:3000/`,
+      url: 'https://shiksha.cloud/',
       lastModified: new Date(),
-      changeFrequency: 'yearly',
+      changeFrequency: 'monthly',
       priority: 1,
     },
     {
-      url: `http://localhost:3000/`,
+      url: 'https://shiksha.cloud/features',
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.8,
     },
     {
-      url: `http://localhost:3000/`,
+      url: 'https://shiksha.cloud/founder',
       lastModified: new Date(),
-      changeFrequency: 'weekly',
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: 'https://shiksha.cloud/why-us',
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.5,
+    },
+    {
+      url: 'https://shiksha.cloud/why-shiksha',
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
       priority: 0.5,
     },
   ];

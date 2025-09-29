@@ -7,7 +7,6 @@ import { cache } from 'react';
 export async function getCurrentAcademicYear() {
   const organizationId = await getOrganizationId();
 
-  console.log(organizationId);
 
   const academicYear = await prisma.academicYear.findFirst({
     where: {

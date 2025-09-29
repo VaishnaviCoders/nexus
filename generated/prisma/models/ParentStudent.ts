@@ -193,6 +193,7 @@ export type ParentStudentOrderByWithRelationInput = {
   isPrimary?: Prisma.SortOrderInput | Prisma.SortOrder
   student?: Prisma.StudentOrderByWithRelationInput
   parent?: Prisma.ParentOrderByWithRelationInput
+  _relevance?: Prisma.ParentStudentOrderByRelevanceInput
 }
 
 export type ParentStudentWhereUniqueInput = Prisma.AtLeast<{
@@ -292,6 +293,12 @@ export type ParentStudentListRelationFilter = {
 
 export type ParentStudentOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type ParentStudentOrderByRelevanceInput = {
+  fields: Prisma.ParentStudentOrderByRelevanceFieldEnum | Prisma.ParentStudentOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type ParentStudentCountOrderByAggregateInput = {
