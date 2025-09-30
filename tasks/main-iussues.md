@@ -8,3 +8,6 @@
 8. Exam Model have many Issues : Enrolled, Issue HallTicket
 9. Ingest functions
 10. Pagination For Exams, Fees any many more
+11. Admins May Have roles , TEACHER , ADMIN
+12. Teaching : Teacher Daily Schedule ,
+13.

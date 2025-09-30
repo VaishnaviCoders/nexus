@@ -661,10 +661,10 @@ model Notice {
   attachments    NoticeAttachment[]
   notifications  NotificationLog[]
 
-  organization   Organization  @relation(fields: [organizationId], references: [id])
+  organization   Organization @relation(fields: [organizationId], references: [id])
   organizationId String
-  academicYear   AcademicYear? @relation(fields: [academicYearId], references: [id])
-  academicYearId String?
+  academicYear   AcademicYear @relation(fields: [academicYearId], references: [id])
+  academicYearId String
 
   // @@fulltext([title, content]) // For search
 

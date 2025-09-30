@@ -23,6 +23,7 @@ export const createNotice = async (data: createNoticeFormData) => {
     const notice = await prisma.notice.create({
       data: {
         noticeType: validatedData.noticeType,
+
         title: validatedData.title,
         isUrgent: validatedData.isUrgent,
         summary: validatedData.summary,
@@ -37,7 +38,7 @@ export const createNotice = async (data: createNoticeFormData) => {
         priority: validatedData.priority,
         status: 'PENDING_REVIEW',
         organizationId,
-        academicYearId,
+        // academicYearId,
         createdBy:
           user.firstName && user.lastName
             ? `${user.firstName} ${user.lastName}`

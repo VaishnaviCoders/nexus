@@ -13,7 +13,6 @@ export async function getStudentNotices() {
   const notices = await prisma.notice.findMany({
     where: {
       organizationId,
-      academicYearId,
       status: { in: ['PUBLISHED', 'EXPIRED'] },
       targetAudience: {
         has: role.toUpperCase(),

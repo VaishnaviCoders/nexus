@@ -1,4 +1,4 @@
-import { ArrowLeft, Trash2, Users, BookOpen } from 'lucide-react';
+import { ArrowLeft, Trash2, Users, BookOpen, UserCheck } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -7,6 +7,8 @@ import { Separator } from '@/components/ui/separator';
 import { AddSection } from '@/components/dashboard/class-management/AddSection';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
+import { ManageClassTeacher } from '@/components/dashboard/class-management/ManageClassTeacher';
+import { getAvailableTeachers } from '@/lib/data/class-management/ClassTeacherManagement';
 
 async function getGradeWithSections(gradeId: string) {
   const grade = await prisma.grade.findUnique({
@@ -15,6 +17,17 @@ async function getGradeWithSections(gradeId: string) {
       section: {
         include: {
           students: true,
+          classTeacher: {
+            include: {
+              user: {
+                select: {
+                  firstName: true,
+                  lastName: true,
+                  email: true,
+                },
+              },
+            },
+          },
         },
         orderBy: {
           name: 'asc',
@@ -32,6 +45,8 @@ export default async function GradePage({
 }) {
   const { gradeId } = await params;
   const grade = await getGradeWithSections(gradeId);
+  const teachersResponse = await getAvailableTeachers('');
+  const teachers = teachersResponse.success ? teachersResponse.teachers : [];
 
   if (!grade) {
     return (
@@ -106,25 +121,48 @@ export default async function GradePage({
                     </Button>
                   </div>
                 </CardHeader>
-                <CardContent className="pt-2">
+                <CardContent className="pt-2 space-y-3">
                   <div className="space-y-2 text-sm text-slate-600 dark:text-slate-400">
                     <p className="flex items-center gap-2">
                       <Users className="h-4 w-4" />
                       <span>{section.students.length} students</span>
                     </p>
-                    <p className="flex items-center gap-2">
-                      <BookOpen className="h-4 w-4" />
-                      <span>
-                        Class Teacher:{' '}
-                        {section.classTeacherId || 'Not Assigned'}
-                      </span>
-                    </p>
-                    <Badge
-                      variant="outline"
-                      className="mt-2 border-blue-200 dark:border-blue-700 text-blue-600 dark:text-blue-400"
-                    >
-                      Section
-                    </Badge>
+                    <div className="flex items-start gap-2">
+                      <UserCheck className="h-4 w-4 mt-0.5 flex-shrink-0" />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs font-medium text-slate-500 dark:text-slate-500">
+                          Class Teacher:
+                        </p>
+                        {section.classTeacher ? (
+                          <p className="font-medium text-slate-700 dark:text-slate-300 truncate">
+                            {section.classTeacher.user.firstName}{' '}
+                            {section.classTeacher.user.lastName}
+                          </p>
+                        ) : (
+                          <p className="text-slate-500 dark:text-slate-500 italic">
+                            Not Assigned
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between pt-2">
+                      <Badge
+                        variant="outline"
+                        className="border-blue-200 dark:border-blue-700 text-blue-600 dark:text-blue-400"
+                      >
+                        Section
+                      </Badge>
+                    </div>
+                  </div>
+
+                  <div className="pt-2 border-t border-slate-200 dark:border-slate-700">
+                    <ManageClassTeacher
+                      sectionId={section.id}
+                      currentTeacherId={section.classTeacherId}
+                      teachers={teachers}
+                      sectionName={section.name}
+                      gradeName={grade.grade}
+                    />
                   </div>
                 </CardContent>
               </Card>

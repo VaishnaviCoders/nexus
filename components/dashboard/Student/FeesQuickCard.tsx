@@ -49,7 +49,9 @@ interface Props {
 
 export function FeesQuickCard({ className, feesData }: Props) {
   const paymentPercentage =
-    (feesData.paidAmount / feesData.totalAnnualFee) * 100;
+    feesData.totalAnnualFee > 0
+      ? (feesData.paidAmount / feesData.totalAnnualFee) * 100
+      : 0;
   const daysUntilDue = feesData.nextDueDate
     ? Math.ceil(
         (feesData.nextDueDate.getTime() - new Date().getTime()) /

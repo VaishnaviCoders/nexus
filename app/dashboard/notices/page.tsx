@@ -45,7 +45,7 @@ const page = async () => {
       where: {
         organizationId,
         academicYearId,
-        status: 'PUBLISHED',
+        status: { in: ['PUBLISHED', 'EXPIRED'] },
         targetAudience: {
           has: role.toUpperCase(),
         },
