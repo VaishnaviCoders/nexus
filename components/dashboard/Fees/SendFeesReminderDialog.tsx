@@ -52,7 +52,7 @@ import { toast } from 'sonner';
 import { WhatsAppIcon } from '@/public/icons/WhatsAppIcon';
 import { sendFeeReminders } from '@/lib/data/fee/fee-reminder';
 import { reminderFormSchema, ReminderFormValues } from '@/lib/schemas';
-import { FeeReminderTemplates } from '@/components/templates/FeeReminder';
+import { FeeReminderTemplates } from '@/components/templates/fee-reminder';
 
 export interface FeeReminderRecipient {
   id: string;

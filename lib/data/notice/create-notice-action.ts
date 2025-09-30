@@ -38,7 +38,7 @@ export const createNotice = async (data: createNoticeFormData) => {
         priority: validatedData.priority,
         status: 'PENDING_REVIEW',
         organizationId,
-        // academicYearId,
+        academicYearId,
         createdBy:
           user.firstName && user.lastName
             ? `${user.firstName} ${user.lastName}`

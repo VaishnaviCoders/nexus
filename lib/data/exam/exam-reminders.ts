@@ -1,6 +1,5 @@
-import ExamReminderEmail from '@/components/templates/email-templates/exams/ExamReminderEmail';
+import ExamReminderEmail from '@/components/templates/email-templates/exams/exam-reminder-email';
 import prisma from '@/lib/db';
-import { inngest } from '@/lib/inngest/client';
 import { getOrganizationId } from '@/lib/organization';
 import { getISTDate } from '@/lib/utils';
 import { addDays } from 'date-fns';

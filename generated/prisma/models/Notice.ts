@@ -278,7 +278,7 @@ export type NoticeGroupByOutputType = {
   smsNotification: boolean
   targetAudience: string[]
   organizationId: string
-  academicYearId: string | null
+  academicYearId: string
   createdAt: Date
   updatedAt: Date
   _count: NoticeCountAggregateOutputType | null
@@ -326,13 +326,13 @@ export type NoticeWhereInput = {
   smsNotification?: Prisma.BoolFilter<"Notice"> | boolean
   targetAudience?: Prisma.StringNullableListFilter<"Notice">
   organizationId?: Prisma.StringFilter<"Notice"> | string
-  academicYearId?: Prisma.StringNullableFilter<"Notice"> | string | null
+  academicYearId?: Prisma.StringFilter<"Notice"> | string
   createdAt?: Prisma.DateTimeFilter<"Notice"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Notice"> | Date | string
   attachments?: Prisma.NoticeAttachmentListRelationFilter
   notifications?: Prisma.NotificationLogListRelationFilter
   organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
-  academicYear?: Prisma.XOR<Prisma.AcademicYearNullableScalarRelationFilter, Prisma.AcademicYearWhereInput> | null
+  academicYear?: Prisma.XOR<Prisma.AcademicYearScalarRelationFilter, Prisma.AcademicYearWhereInput>
 }
 
 export type NoticeOrderByWithRelationInput = {
@@ -357,7 +357,7 @@ export type NoticeOrderByWithRelationInput = {
   smsNotification?: Prisma.SortOrder
   targetAudience?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
-  academicYearId?: Prisma.SortOrderInput | Prisma.SortOrder
+  academicYearId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   attachments?: Prisma.NoticeAttachmentOrderByRelationAggregateInput
@@ -392,13 +392,13 @@ export type NoticeWhereUniqueInput = Prisma.AtLeast<{
   smsNotification?: Prisma.BoolFilter<"Notice"> | boolean
   targetAudience?: Prisma.StringNullableListFilter<"Notice">
   organizationId?: Prisma.StringFilter<"Notice"> | string
-  academicYearId?: Prisma.StringNullableFilter<"Notice"> | string | null
+  academicYearId?: Prisma.StringFilter<"Notice"> | string
   createdAt?: Prisma.DateTimeFilter<"Notice"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Notice"> | Date | string
   attachments?: Prisma.NoticeAttachmentListRelationFilter
   notifications?: Prisma.NotificationLogListRelationFilter
   organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
-  academicYear?: Prisma.XOR<Prisma.AcademicYearNullableScalarRelationFilter, Prisma.AcademicYearWhereInput> | null
+  academicYear?: Prisma.XOR<Prisma.AcademicYearScalarRelationFilter, Prisma.AcademicYearWhereInput>
 }, "id">
 
 export type NoticeOrderByWithAggregationInput = {
@@ -423,7 +423,7 @@ export type NoticeOrderByWithAggregationInput = {
   smsNotification?: Prisma.SortOrder
   targetAudience?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
-  academicYearId?: Prisma.SortOrderInput | Prisma.SortOrder
+  academicYearId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.NoticeCountOrderByAggregateInput
@@ -456,7 +456,7 @@ export type NoticeScalarWhereWithAggregatesInput = {
   smsNotification?: Prisma.BoolWithAggregatesFilter<"Notice"> | boolean
   targetAudience?: Prisma.StringNullableListFilter<"Notice">
   organizationId?: Prisma.StringWithAggregatesFilter<"Notice"> | string
-  academicYearId?: Prisma.StringNullableWithAggregatesFilter<"Notice"> | string | null
+  academicYearId?: Prisma.StringWithAggregatesFilter<"Notice"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Notice"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Notice"> | Date | string
 }
@@ -487,7 +487,7 @@ export type NoticeCreateInput = {
   attachments?: Prisma.NoticeAttachmentCreateNestedManyWithoutNoticeInput
   notifications?: Prisma.NotificationLogCreateNestedManyWithoutNoticeInput
   organization: Prisma.OrganizationCreateNestedOneWithoutNoticesInput
-  academicYear?: Prisma.AcademicYearCreateNestedOneWithoutNoticesInput
+  academicYear: Prisma.AcademicYearCreateNestedOneWithoutNoticesInput
 }
 
 export type NoticeUncheckedCreateInput = {
@@ -512,7 +512,7 @@ export type NoticeUncheckedCreateInput = {
   smsNotification?: boolean
   targetAudience?: Prisma.NoticeCreatetargetAudienceInput | string[]
   organizationId: string
-  academicYearId?: string | null
+  academicYearId: string
   createdAt?: Date | string
   updatedAt?: Date | string
   attachments?: Prisma.NoticeAttachmentUncheckedCreateNestedManyWithoutNoticeInput
@@ -545,7 +545,7 @@ export type NoticeUpdateInput = {
   attachments?: Prisma.NoticeAttachmentUpdateManyWithoutNoticeNestedInput
   notifications?: Prisma.NotificationLogUpdateManyWithoutNoticeNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutNoticesNestedInput
-  academicYear?: Prisma.AcademicYearUpdateOneWithoutNoticesNestedInput
+  academicYear?: Prisma.AcademicYearUpdateOneRequiredWithoutNoticesNestedInput
 }
 
 export type NoticeUncheckedUpdateInput = {
@@ -570,7 +570,7 @@ export type NoticeUncheckedUpdateInput = {
   smsNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
   targetAudience?: Prisma.NoticeUpdatetargetAudienceInput | string[]
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
-  academicYearId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attachments?: Prisma.NoticeAttachmentUncheckedUpdateManyWithoutNoticeNestedInput
@@ -599,7 +599,7 @@ export type NoticeCreateManyInput = {
   smsNotification?: boolean
   targetAudience?: Prisma.NoticeCreatetargetAudienceInput | string[]
   organizationId: string
-  academicYearId?: string | null
+  academicYearId: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -651,7 +651,7 @@ export type NoticeUncheckedUpdateManyInput = {
   smsNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
   targetAudience?: Prisma.NoticeUpdatetargetAudienceInput | string[]
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
-  academicYearId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1003,7 +1003,7 @@ export type NoticeScalarWhereInput = {
   smsNotification?: Prisma.BoolFilter<"Notice"> | boolean
   targetAudience?: Prisma.StringNullableListFilter<"Notice">
   organizationId?: Prisma.StringFilter<"Notice"> | string
-  academicYearId?: Prisma.StringNullableFilter<"Notice"> | string | null
+  academicYearId?: Prisma.StringFilter<"Notice"> | string
   createdAt?: Prisma.DateTimeFilter<"Notice"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Notice"> | Date | string
 }
@@ -1033,7 +1033,7 @@ export type NoticeCreateWithoutOrganizationInput = {
   updatedAt?: Date | string
   attachments?: Prisma.NoticeAttachmentCreateNestedManyWithoutNoticeInput
   notifications?: Prisma.NotificationLogCreateNestedManyWithoutNoticeInput
-  academicYear?: Prisma.AcademicYearCreateNestedOneWithoutNoticesInput
+  academicYear: Prisma.AcademicYearCreateNestedOneWithoutNoticesInput
 }
 
 export type NoticeUncheckedCreateWithoutOrganizationInput = {
@@ -1057,7 +1057,7 @@ export type NoticeUncheckedCreateWithoutOrganizationInput = {
   whatsAppNotification?: boolean
   smsNotification?: boolean
   targetAudience?: Prisma.NoticeCreatetargetAudienceInput | string[]
-  academicYearId?: string | null
+  academicYearId: string
   createdAt?: Date | string
   updatedAt?: Date | string
   attachments?: Prisma.NoticeAttachmentUncheckedCreateNestedManyWithoutNoticeInput
@@ -1115,7 +1115,7 @@ export type NoticeCreateWithoutAttachmentsInput = {
   updatedAt?: Date | string
   notifications?: Prisma.NotificationLogCreateNestedManyWithoutNoticeInput
   organization: Prisma.OrganizationCreateNestedOneWithoutNoticesInput
-  academicYear?: Prisma.AcademicYearCreateNestedOneWithoutNoticesInput
+  academicYear: Prisma.AcademicYearCreateNestedOneWithoutNoticesInput
 }
 
 export type NoticeUncheckedCreateWithoutAttachmentsInput = {
@@ -1140,7 +1140,7 @@ export type NoticeUncheckedCreateWithoutAttachmentsInput = {
   smsNotification?: boolean
   targetAudience?: Prisma.NoticeCreatetargetAudienceInput | string[]
   organizationId: string
-  academicYearId?: string | null
+  academicYearId: string
   createdAt?: Date | string
   updatedAt?: Date | string
   notifications?: Prisma.NotificationLogUncheckedCreateNestedManyWithoutNoticeInput
@@ -1187,7 +1187,7 @@ export type NoticeUpdateWithoutAttachmentsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notifications?: Prisma.NotificationLogUpdateManyWithoutNoticeNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutNoticesNestedInput
-  academicYear?: Prisma.AcademicYearUpdateOneWithoutNoticesNestedInput
+  academicYear?: Prisma.AcademicYearUpdateOneRequiredWithoutNoticesNestedInput
 }
 
 export type NoticeUncheckedUpdateWithoutAttachmentsInput = {
@@ -1212,7 +1212,7 @@ export type NoticeUncheckedUpdateWithoutAttachmentsInput = {
   smsNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
   targetAudience?: Prisma.NoticeUpdatetargetAudienceInput | string[]
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
-  academicYearId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notifications?: Prisma.NotificationLogUncheckedUpdateManyWithoutNoticeNestedInput
@@ -1243,7 +1243,7 @@ export type NoticeCreateWithoutNotificationsInput = {
   updatedAt?: Date | string
   attachments?: Prisma.NoticeAttachmentCreateNestedManyWithoutNoticeInput
   organization: Prisma.OrganizationCreateNestedOneWithoutNoticesInput
-  academicYear?: Prisma.AcademicYearCreateNestedOneWithoutNoticesInput
+  academicYear: Prisma.AcademicYearCreateNestedOneWithoutNoticesInput
 }
 
 export type NoticeUncheckedCreateWithoutNotificationsInput = {
@@ -1268,7 +1268,7 @@ export type NoticeUncheckedCreateWithoutNotificationsInput = {
   smsNotification?: boolean
   targetAudience?: Prisma.NoticeCreatetargetAudienceInput | string[]
   organizationId: string
-  academicYearId?: string | null
+  academicYearId: string
   createdAt?: Date | string
   updatedAt?: Date | string
   attachments?: Prisma.NoticeAttachmentUncheckedCreateNestedManyWithoutNoticeInput
@@ -1315,7 +1315,7 @@ export type NoticeUpdateWithoutNotificationsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attachments?: Prisma.NoticeAttachmentUpdateManyWithoutNoticeNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutNoticesNestedInput
-  academicYear?: Prisma.AcademicYearUpdateOneWithoutNoticesNestedInput
+  academicYear?: Prisma.AcademicYearUpdateOneRequiredWithoutNoticesNestedInput
 }
 
 export type NoticeUncheckedUpdateWithoutNotificationsInput = {
@@ -1340,7 +1340,7 @@ export type NoticeUncheckedUpdateWithoutNotificationsInput = {
   smsNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
   targetAudience?: Prisma.NoticeUpdatetargetAudienceInput | string[]
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
-  academicYearId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attachments?: Prisma.NoticeAttachmentUncheckedUpdateManyWithoutNoticeNestedInput
@@ -1475,7 +1475,7 @@ export type NoticeCreateManyOrganizationInput = {
   whatsAppNotification?: boolean
   smsNotification?: boolean
   targetAudience?: Prisma.NoticeCreatetargetAudienceInput | string[]
-  academicYearId?: string | null
+  academicYearId: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1505,7 +1505,7 @@ export type NoticeUpdateWithoutOrganizationInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attachments?: Prisma.NoticeAttachmentUpdateManyWithoutNoticeNestedInput
   notifications?: Prisma.NotificationLogUpdateManyWithoutNoticeNestedInput
-  academicYear?: Prisma.AcademicYearUpdateOneWithoutNoticesNestedInput
+  academicYear?: Prisma.AcademicYearUpdateOneRequiredWithoutNoticesNestedInput
 }
 
 export type NoticeUncheckedUpdateWithoutOrganizationInput = {
@@ -1529,7 +1529,7 @@ export type NoticeUncheckedUpdateWithoutOrganizationInput = {
   whatsAppNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
   smsNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
   targetAudience?: Prisma.NoticeUpdatetargetAudienceInput | string[]
-  academicYearId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attachments?: Prisma.NoticeAttachmentUncheckedUpdateManyWithoutNoticeNestedInput
@@ -1557,7 +1557,7 @@ export type NoticeUncheckedUpdateManyWithoutOrganizationInput = {
   whatsAppNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
   smsNotification?: Prisma.BoolFieldUpdateOperationsInput | boolean
   targetAudience?: Prisma.NoticeUpdatetargetAudienceInput | string[]
-  academicYearId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1630,7 +1630,7 @@ export type NoticeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   attachments?: boolean | Prisma.Notice$attachmentsArgs<ExtArgs>
   notifications?: boolean | Prisma.Notice$notificationsArgs<ExtArgs>
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
-  academicYear?: boolean | Prisma.Notice$academicYearArgs<ExtArgs>
+  academicYear?: boolean | Prisma.AcademicYearDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.NoticeCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["notice"]>
 
@@ -1660,7 +1660,7 @@ export type NoticeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   createdAt?: boolean
   updatedAt?: boolean
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
-  academicYear?: boolean | Prisma.Notice$academicYearArgs<ExtArgs>
+  academicYear?: boolean | Prisma.AcademicYearDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["notice"]>
 
 export type NoticeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1689,7 +1689,7 @@ export type NoticeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   createdAt?: boolean
   updatedAt?: boolean
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
-  academicYear?: boolean | Prisma.Notice$academicYearArgs<ExtArgs>
+  academicYear?: boolean | Prisma.AcademicYearDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["notice"]>
 
 export type NoticeSelectScalar = {
@@ -1724,16 +1724,16 @@ export type NoticeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   attachments?: boolean | Prisma.Notice$attachmentsArgs<ExtArgs>
   notifications?: boolean | Prisma.Notice$notificationsArgs<ExtArgs>
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
-  academicYear?: boolean | Prisma.Notice$academicYearArgs<ExtArgs>
+  academicYear?: boolean | Prisma.AcademicYearDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.NoticeCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type NoticeIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
-  academicYear?: boolean | Prisma.Notice$academicYearArgs<ExtArgs>
+  academicYear?: boolean | Prisma.AcademicYearDefaultArgs<ExtArgs>
 }
 export type NoticeIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
-  academicYear?: boolean | Prisma.Notice$academicYearArgs<ExtArgs>
+  academicYear?: boolean | Prisma.AcademicYearDefaultArgs<ExtArgs>
 }
 
 export type $NoticePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1742,7 +1742,7 @@ export type $NoticePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     attachments: Prisma.$NoticeAttachmentPayload<ExtArgs>[]
     notifications: Prisma.$NotificationLogPayload<ExtArgs>[]
     organization: Prisma.$OrganizationPayload<ExtArgs>
-    academicYear: Prisma.$AcademicYearPayload<ExtArgs> | null
+    academicYear: Prisma.$AcademicYearPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1766,7 +1766,7 @@ export type $NoticePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     smsNotification: boolean
     targetAudience: string[]
     organizationId: string
-    academicYearId: string | null
+    academicYearId: string
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["notice"]>
@@ -2166,7 +2166,7 @@ export interface Prisma__NoticeClient<T, Null = never, ExtArgs extends runtime.T
   attachments<T extends Prisma.Notice$attachmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Notice$attachmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NoticeAttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   notifications<T extends Prisma.Notice$notificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Notice$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotificationLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   organization<T extends Prisma.OrganizationDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrganizationDefaultArgs<ExtArgs>>): Prisma.Prisma__OrganizationClient<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  academicYear<T extends Prisma.Notice$academicYearArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Notice$academicYearArgs<ExtArgs>>): Prisma.Prisma__AcademicYearClient<runtime.Types.Result.GetResult<Prisma.$AcademicYearPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  academicYear<T extends Prisma.AcademicYearDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AcademicYearDefaultArgs<ExtArgs>>): Prisma.Prisma__AcademicYearClient<runtime.Types.Result.GetResult<Prisma.$AcademicYearPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2661,25 +2661,6 @@ export type Notice$notificationsArgs<ExtArgs extends runtime.Types.Extensions.In
   take?: number
   skip?: number
   distinct?: Prisma.NotificationLogScalarFieldEnum | Prisma.NotificationLogScalarFieldEnum[]
-}
-
-/**
- * Notice.academicYear
- */
-export type Notice$academicYearArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the AcademicYear
-   */
-  select?: Prisma.AcademicYearSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the AcademicYear
-   */
-  omit?: Prisma.AcademicYearOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.AcademicYearInclude<ExtArgs> | null
-  where?: Prisma.AcademicYearWhereInput
 }
 
 /**
