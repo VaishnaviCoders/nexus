@@ -28,8 +28,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { SectionWiseAttendanceViewModal } from './sectionWise-attendance-modal';
 import Link from 'next/link';
+import { SectionWiseAttendanceViewModal } from './sectionWise-attendance-modal';
 
 interface Students {
   id: string;
