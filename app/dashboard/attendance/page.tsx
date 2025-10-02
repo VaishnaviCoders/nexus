@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { DownloadIcon, PlusIcon } from 'lucide-react';
 import Link from 'next/link';
 import { getOrganizationId } from '@/lib/organization';
+import prisma from '@/lib/db';
 type AttendanceStatus = 'PRESENT' | 'ABSENT' | 'LATE' | 'all';
 
 type PageProps = {
@@ -18,9 +19,8 @@ type PageProps = {
 export default async function AttendancePage({ searchParams }: PageProps) {
   const organizationId = await getOrganizationId();
 
-  const { search, sectionId, status, gradeId } = await searchParamsCache.parse(
-    searchParams
-  );
+  const { search, sectionId, status, gradeId } =
+    await searchParamsCache.parse(searchParams);
 
   const records = await FilterAttendance({
     search,

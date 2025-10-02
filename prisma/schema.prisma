@@ -63,6 +63,7 @@ model AcademicYear {
   createdBy String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  leaves    Leave[]
 
   @@unique([organizationId, name])
   @@index([organizationId, isCurrent])
@@ -112,6 +113,7 @@ model Organization {
   NotificationLog    NotificationLog[]
   AcademicYear       AcademicYear[]
   scheduledJob       ScheduledJob[]
+  leaves             Leave[]
 
   createdBy  String?
   createdAt  DateTime     @default(now())
@@ -146,6 +148,7 @@ model User {
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
   NotificationLog NotificationLog[]
+  leave           Leave[]
 
   @@index([id, clerkId])
   @@index([organizationId])
@@ -197,9 +200,8 @@ model Teacher {
   createdAt          DateTime             @default(now())
   updatedAt          DateTime             @updatedAt
   profile            TeacherProfile?
-  TeachingAssignment TeachingAssignment[]
-  Section            Section[]
-  // leaves             Leave[]
+  teachingAssignment TeachingAssignment[]
+  section            Section[]
   // salaries           Salary[]
 
   @@index([userId, isActive, employmentStatus, organizationId])
@@ -389,9 +391,9 @@ model StudentAttendance {
   sectionId String
   section   Section @relation(fields: [sectionId], references: [id])
 
-  student        Student       @relation(fields: [studentId], references: [id])
-  academicYear   AcademicYear? @relation(fields: [academicYearId], references: [id])
-  academicYearId String?
+  student        Student      @relation(fields: [studentId], references: [id])
+  academicYear   AcademicYear @relation(fields: [academicYearId], references: [id])
+  academicYearId String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -464,10 +466,10 @@ model Fee {
   organizationId String
   payments       FeePayment[]
 
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
-  academicYear   AcademicYear? @relation(fields: [academicYearId], references: [id])
-  academicYearId String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  academicYear   AcademicYear @relation(fields: [academicYearId], references: [id])
+  academicYearId String
 
   @@index([studentId])
   @@index([status])
@@ -1053,28 +1055,63 @@ enum ResultStatus {
 
 // Payout : Corporate Bank Account || IFC CODE  Branch || Verify by consorn bank || 
 
-// model Leave {
-//   id           String     @id @default(cuid())
-//   startDate    DateTime
-//   endDate      DateTime
-//   reason       String
-//   status       LeaveStatus @default(PENDING)
-//   approvedBy   String?
-//   approvedAt   DateTime?
-//   rejectedNote String?
+enum LeaveStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
 
-//   teacher   Teacher? @relation(fields: [teacherId], references: [id])
-//   teacherId String?
-//   student   Student? @relation(fields: [studentId], references: [id])
-//   studentId String?
+enum LeaveType {
+  SICK
+  CASUAL
+  ANNUAL
+  EMERGENCY
+  OTHER
+  VACATION
+  MATERNITY
+  PATERNITY
+  UNPAID
+  STUDY
+}
 
-//   academicYear   AcademicYear @relation(fields: [academicYearId], references: [id])
-//   academicYearId String
+model Leave {
+  id               String   @id @default(cuid())
+  startDate        DateTime
+  endDate          DateTime
+  totalDays        Int
+  reason           String
+  type             String // New
+  emergencyContact String // Phone number during leave
 
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-//   deletedAt DateTime?
+  currentStatus LeaveStatus @default(PENDING)
+  approvedBy    String?
+  approvedAt    DateTime?
+  rejectedNote  String?
+  userId        String // userId (could be parent, teacher, student)
 
-//   @@index([teacherId, startDate])
-//   @@index([studentId, startDate])
-// }
+  appliedBy User @relation(fields: [userId], references: [id])
+
+  statusTimeline LeaveStatusTimeline[] // Every approval/reject event
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  organizationId String
+  academicYear   AcademicYear @relation(fields: [academicYearId], references: [id])
+  academicYearId String
+
+  @@index([userId, currentStatus, organizationId, academicYearId])
+}
+
+model LeaveStatusTimeline {
+  id        String      @id @default(cuid())
+  leaveId   String
+  leave     Leave       @relation(fields: [leaveId], references: [id])
+  status    LeaveStatus @default(PENDING)
+  note      String?
+  changedBy String? // userId of who made the change
+  changedAt DateTime    @default(now())
+
+  @@index([leaveId])
+}

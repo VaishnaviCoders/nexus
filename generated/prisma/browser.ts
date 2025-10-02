@@ -166,3 +166,13 @@ export type HallTicket = Prisma.HallTicketModel
  * 
  */
 export type ReportCard = Prisma.ReportCardModel
+/**
+ * Model Leave
+ * 
+ */
+export type Leave = Prisma.LeaveModel
+/**
+ * Model LeaveStatusTimeline
+ * 
+ */
+export type LeaveStatusTimeline = Prisma.LeaveStatusTimelineModel

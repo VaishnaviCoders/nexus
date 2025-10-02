@@ -1,14 +1,17 @@
 'use server';
 
+import { getCurrentAcademicYearId } from '@/lib/academicYear';
 import prisma from '@/lib/db';
 import { getOrganizationId } from '@/lib/organization';
 
 export const getAdminFeesSummary = async () => {
   const organizationId = await getOrganizationId();
+  const academicYearId = await getCurrentAcademicYearId();
   const [feeStats, overdueStats, studentCounts] = await Promise.all([
     prisma.fee.aggregate({
       where: {
         organizationId,
+        academicYearId,
       },
       _sum: {
         totalFee: true,

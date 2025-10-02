@@ -5,32 +5,19 @@ import prisma from '@/lib/db';
 import { z } from 'zod';
 import { getOrganizationId } from '../../organization';
 import { revalidatePath } from 'next/cache';
+import { getCurrentAcademicYearId } from '@/lib/academicYear';
 
 export async function AssignFeeToStudents(
   data: z.infer<typeof feeAssignmentSchema>
 ) {
-  const orgId = await getOrganizationId();
+  const organizationId = await getOrganizationId();
+  const academicYearId = await getCurrentAcademicYearId();
 
   const studentIdArray = Array.isArray(data.studentIds)
     ? data.studentIds
     : [data.studentIds];
 
   try {
-    // const fees = await prisma.$transaction(
-    //   studentIdArray.map((studentId) =>
-    //     prisma.fee.create({
-    //       data: {
-    //         feeCategoryId: data.feeCategoryId,
-    //         totalFee: data.feeAmount,
-    //         dueDate: data.dueDate,
-    //         status: 'UNPAID',
-    //         organizationId: orgId,
-    //         studentId,
-    //       },
-    //     })
-    //   )
-    // );
-
     const fees = await prisma.fee.createMany({
       data: studentIdArray.map((id) => ({
         studentId: id,
@@ -39,7 +26,8 @@ export async function AssignFeeToStudents(
         pendingAmount: data.feeAmount,
         dueDate: data.dueDate,
         status: 'UNPAID',
-        organizationId: orgId,
+        organizationId,
+        academicYearId,
       })),
     });
 

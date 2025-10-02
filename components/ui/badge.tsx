@@ -31,6 +31,19 @@ const badgeVariants = cva(
           'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
         rejected: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
 
+        // Leave Status
+        PENDING:
+          'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
+        APPROVED:
+          'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
+
+        // Fees
+
+        PAID: 'bg-emerald-50 text-emerald-700 hover:bg-emerald-50 border-emerald-200',
+        UNPAID:
+          'bg-yellow-50 text-yellow-700 hover:bg-yellow-50 border-yellow-200',
+        OVERDUE: 'bg-red-50 text-red-700 hover:bg-red-50 border-red-200',
+
         // For Exams
         LIVE: 'bg-green-700/10 text-green-800 border-green-700/20',
         UPCOMING: 'bg-yellow-600/10 text-yellow-700 border-yellow-600/20',

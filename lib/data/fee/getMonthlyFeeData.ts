@@ -1,10 +1,20 @@
+import { getCurrentAcademicYearId } from '@/lib/academicYear';
 import prisma from '@/lib/db';
+import { getOrganizationId } from '@/lib/organization';
 
 export async function getMonthlyFeeData(year: number) {
-  const result = await prisma.feePayment.groupBy({
+  const [academicYearId, organizationId] = await Promise.all([
+    getCurrentAcademicYearId(),
+    getOrganizationId(),
+  ]);
+  const payments = await prisma.feePayment.groupBy({
     by: ['paymentDate'],
     where: {
+      organizationId,
       status: 'COMPLETED',
+      fee: {
+        academicYearId, // Filter by current academic year
+      },
       paymentDate: {
         gte: new Date(`${year}-01-01T00:00:00.000Z`),
         lte: new Date(`${year}-12-31T23:59:59.999Z`),
@@ -14,29 +24,31 @@ export async function getMonthlyFeeData(year: number) {
       amount: true,
     },
     _count: {
-      id: true,
+      _all: true,
     },
   });
 
   // Aggregate by month in JS
-  const monthlyData: Record<string, { amount: number; count: number }> = {};
+  const monthlyTotals = new Map<number, { amount: number; count: number }>();
 
-  result.forEach((entry) => {
-    const month = new Date(entry.paymentDate).getMonth(); // 0-indexed
-    if (!monthlyData[month]) {
-      monthlyData[month] = { amount: 0, count: 0 };
-    }
-    monthlyData[month].amount += entry._sum.amount ?? 0;
-    monthlyData[month].count += entry._count.id;
+  payments.forEach((payment) => {
+    const month = new Date(payment.paymentDate).getMonth(); // 0-11
+    const existing = monthlyTotals.get(month) || { amount: 0, count: 0 };
+
+    monthlyTotals.set(month, {
+      amount: existing.amount + (payment._sum.amount ?? 0),
+      count: existing.count + payment._count._all,
+    });
   });
 
-  // Normalize output to all 12 months
-  const data = Array.from({ length: 12 }, (_, i) => ({
-    year,
-    month: i + 1, // 1-indexed for consistency
-    amount: monthlyData[i]?.amount ?? 0,
-    count: monthlyData[i]?.count ?? 0,
-  }));
-
-  return data;
+  // Return data for all 12 months (fill missing months with zeros)
+  return Array.from({ length: 12 }, (_, monthIndex) => {
+    const data = monthlyTotals.get(monthIndex);
+    return {
+      year,
+      month: monthIndex + 1, // 1-12 for display
+      amount: data?.amount ?? 0,
+      count: data?.count ?? 0,
+    };
+  });
 }

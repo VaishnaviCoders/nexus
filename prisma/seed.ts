@@ -1,4 +1,5 @@
 import { Exam, PrismaClient } from '../generated/prisma/client';
+import { NoticeType } from '../generated/prisma/enums';
 
 // import { getDefaultAcademicYear } from '../lib/academicYear';
 
@@ -21,14 +22,12 @@ async function generateNotices() {
   for (let i = 0; i < 1230; i++) {
     const { start, end } = randomDates();
     notices.push({
-      noticeType: 'EVENT',
+      noticeType: NoticeType.EVENT,
       title: `Event ${i + 1}`,
       startDate: start,
       endDate: end,
+      summary: 'ssds',
       content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
-      isNoticeApproved: true,
-      isDraft: false,
-      isPublished: true,
       emailNotification: false,
       pushNotification: false,
       WhatsAppNotification: false,
@@ -37,6 +36,7 @@ async function generateNotices() {
       publishedBy: 'SYSTEM SEED',
       academicYearId: 'cmd4i9bq60007vh6spt4lp4er',
       organizationId: 'org_2yikjYDIq5D8AjIyLvq2T6K5jZF',
+      createdBy: 'admin',
     });
   }
   return notices;
@@ -45,26 +45,26 @@ async function generateNotices() {
 const main = async () => {
   console.log('🌱 Seeding notices...');
 
-  // const notices = await generateNotices();
+  const notices = await generateNotices();
 
-  // const result = await prisma.notice.createMany({
-  //   data: notices,
-  //   skipDuplicates: false,
-  // });
-  // console.log(`✅ Created ${result.count} notices successfully!`);
+  const result = await prisma.notice.createMany({
+    data: notices,
+    skipDuplicates: false,
+  });
+  console.log(`✅ Created ${result.count} notices successfully!`);
 
-  // await prisma.scheduledJob.create({
-  //   data: {
-  //     organizationId: 'org_2yikjYDIq5D8AjIyLvq2T6K5jZF',
-  //     type: 'FEE_REMINDER',
-  //     scheduledAt: new Date('2025-07-22T22:00:00Z'),
-  //     channels: ['EMAIL', 'WHATSAPP'], // must be array of enums
-  //     data: {
-  //       studentId: '...',
-  //       feeId: '...',
-  //     },
-  //   },
-  // });
+  await prisma.scheduledJob.create({
+    data: {
+      organizationId: 'org_2yikjYDIq5D8AjIyLvq2T6K5jZF',
+      type: 'FEE_REMINDER',
+      scheduledAt: new Date('2025-07-22T22:00:00Z'),
+      channels: ['EMAIL', 'WHATSAPP'], // must be array of enums
+      data: {
+        studentId: '...',
+        feeId: '...',
+      },
+    },
+  });
 
   const sampleNotices = await prisma.notice.findMany({
     take: 5,

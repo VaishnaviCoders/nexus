@@ -37,6 +37,7 @@ import { cn } from '@/lib/utils';
 import { createExam } from '@/lib/data/exam/create-exam';
 import MultipleSelector from '@/components/ui/multi-select';
 import { ExamFormData, examSchema } from '@/lib/schemas';
+import { EvaluationType, ExamMode } from '@/generated/prisma/enums';
 
 // Types inferred from your server page and schema
 type Subject = { id: string; name: string; code?: string | null };
@@ -47,33 +48,6 @@ type SectionWithGrade = {
   grade: { id: string; name: string };
 };
 type ExamSession = { id: string; title: string };
-const evaluationTypeOptions = [
-  'TEST',
-  'EXAM',
-  'ASSIGNMENT',
-  'PROJECT',
-  'PRACTICAL',
-  'QUIZ',
-  'ORAL',
-  'INTERNAL',
-  'FINAL',
-  'OTHER',
-] as const;
-
-const examModeOptions = [
-  'ONLINE',
-  'OFFLINE',
-  'PRACTICAL',
-  'VIVA',
-  'TAKE_HOME',
-] as const;
-
-const examStatusOptions = [
-  'UPCOMING',
-  'LIVE',
-  'COMPLETED',
-  'CANCELLED',
-] as const;
 
 export function ExamCreateForm(props: {
   subjects: Subject[];
@@ -298,9 +272,9 @@ export function ExamCreateForm(props: {
                     <SelectValue placeholder="Select type" />
                   </SelectTrigger>
                   <SelectContent>
-                    {evaluationTypeOptions.map((v) => (
-                      <SelectItem key={v} value={v}>
-                        {v}
+                    {Object.values(EvaluationType).map((type) => (
+                      <SelectItem key={type} value={type}>
+                        {type}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -320,9 +294,9 @@ export function ExamCreateForm(props: {
                     <SelectValue placeholder="Select type" />
                   </SelectTrigger>
                   <SelectContent>
-                    {examModeOptions.map((v) => (
-                      <SelectItem key={v} value={v}>
-                        {v}
+                    {Object.values(ExamMode).map((mode) => (
+                      <SelectItem key={mode} value={mode}>
+                        {mode}
                       </SelectItem>
                     ))}
                   </SelectContent>

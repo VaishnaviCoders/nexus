@@ -181,24 +181,15 @@ const StudentDashboard = async () => {
             </CardContent>
           </Card>
           <Card className="my-2 flex flex-col">
-            <CardHeader className="pb-3 flex-shrink-0">
-              <div className="flex items-center gap-2">
-                <div className="p-2 bg-slate-100 dark:bg-slate-800 rounded-lg">
-                  <Zap className="w-4 h-4 text-slate-600 dark:text-slate-400" />
-                </div>
-                <div>
-                  <CardTitle className="text-base font-semibold">
-                    Quick Actions
-                  </CardTitle>
-                  <CardDescription className="text-xs">
-                    Frequently used features
-                  </CardDescription>
-                </div>
-              </div>
+            <CardHeader className="pb-4 bg-gradient-to-r from-purple-50 to-teal-50 dark:from-purple-950/20 dark:to-teal-950/20 rounded-t-lg border-b border-purple-200/30 dark:border-purple-800/30">
+              <CardTitle className="text-lg font-semibold">
+                Quick Actions
+              </CardTitle>
+              <CardDescription>Frequently used features</CardDescription>
             </CardHeader>
 
-            <CardContent className="flex-1">
-              <div className="grid grid-cols-2 gap-2">
+            <CardContent className="flex-1 mt-2">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
                 {quickActions.map((action) => (
                   <Button
                     key={action.action}
@@ -231,16 +222,6 @@ const StudentDashboard = async () => {
           <FeesQuickCard feesData={feesData} />
         </div>
       </div>
-
-      {/* Bottom Section - Additional Widgets */}
-      {/* <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-6">
-      <div className="md:col-span-1 xl:col-span-2">
-        <UpcomingEventsCard />
-      </div>
-      <div className="md:col-span-1 xl:col-span-2">
-        <QuickActionsCard />
-      </div>
-    </div> */}
     </div>
   );
 };

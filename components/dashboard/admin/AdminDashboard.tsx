@@ -25,7 +25,10 @@ import AdminQuickActions from '@/app/components/dashboardComponents/AdminQuickAc
 import AdminDashboardCards from '@/app/components/dashboardComponents/AdminDashboardCards';
 import AdminRecentActivity from '@/app/components/dashboardComponents/RecentActivity';
 import { UpcomingEvents } from '@/app/components/dashboardComponents/UpcomingEvents';
-import { getCurrentAcademicYear, getCurrentAcademicYearId } from '@/lib/academicYear';
+import {
+  getCurrentAcademicYear,
+  getCurrentAcademicYearId,
+} from '@/lib/academicYear';
 import prisma from '@/lib/db';
 import Link from 'next/link';
 import { getOrganizationId } from '@/lib/organization';
@@ -33,40 +36,7 @@ import { getOrganizationId } from '@/lib/organization';
 const AdminDashboard = async () => {
   const data = await getMonthlyFeeData(2025);
   const academicYear = await getCurrentAcademicYear();
-  const organizationId = await getOrganizationId()
-
-
-  function generateTrackingId(): string {
-    const date = new Date().toISOString().slice(0, 10).replace(/-/g, ''); // YYYYMMDD
-    const random = Math.random().toString(36).substring(2, 6).toUpperCase(); // 4-char random alphanumeric
-    return `CMP-${date}-${random}`;
-  }
-  const academicYearId = await getCurrentAcademicYearId()
-
-  const trackingId = generateTrackingId();
-  await prisma.anonymousComplaint.create({
-    data: {
-      category: "",
-      description: "This is a test complaint",
-      subject: "Test",
-      severity: "LOW",
-      organizationId,
-      currentStatus: 'PENDING',
-      trackingId
-    }
-  })
-
-
-
-
-  const examSession = await prisma.anonymousComplaint.findMany({
-    where: {
-      organizationId: organizationId,
-    },
-
-  })
-
-  console.log(examSession)
+  const organizationId = await getOrganizationId();
 
   if (!academicYear) {
     return (

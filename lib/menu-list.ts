@@ -17,6 +17,7 @@ import {
   PaperclipIcon,
   ClipboardList,
   Paperclip,
+  HelpCircle,
 } from 'lucide-react';
 
 type Submenu = {
@@ -119,6 +120,11 @@ export const roleMenus: Record<string, Group[]> = {
           //     label: 'Teacher Attendance',
           //   },
           // ],
+        },
+        {
+          href: '/dashboard/leaves/manage',
+          label: 'leaves Management',
+          icon: HelpCircle,
         },
         {
           href: '/dashboard/anonymous-complaints/manage',
@@ -263,6 +269,11 @@ export const roleMenus: Record<string, Group[]> = {
         //   label: 'Teacher Feedback',
         //   icon: MessageSquare,
         // },
+        {
+          href: '/dashboard/leaves',
+          label: 'Leaves',
+          icon: HelpCircle,
+        },
         {
           href: '/dashboard/notices',
           label: 'Notice Board',

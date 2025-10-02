@@ -5,6 +5,7 @@ import {
   EvaluationType,
   ExamMode,
   ExamStatus,
+  LeaveType,
   NoticePriority,
   NoticeStatus,
   NoticeType,
@@ -348,6 +349,38 @@ export const createTeacherSchema = z.object({
 });
 
 export type CreateTeacherFormData = z.infer<typeof createTeacherSchema>;
+
+// Leaves
+
+export const LeaveCreateSchema = z
+  .object({
+    startDate: z.date({ required_error: 'Start date is required' }),
+    endDate: z.date({ required_error: 'End date is required' }),
+    type: z.nativeEnum(LeaveType).default('SICK'),
+    reason: z.string().min(5, 'Reason must be at least 5 characters'),
+    emergencyContact: z
+      .string()
+      .min(5, 'Emergency contact is required')
+      .max(30, 'Emergency contact too long'),
+    academicYearId: z.string().min(1, 'Academic year is required'),
+  })
+  .refine(
+    (v) => {
+      const start = new Date(v.startDate);
+      const end = new Date(v.endDate);
+      return start <= end;
+    },
+    { path: ['endDate'], message: 'End date must be same or after start date' }
+  );
+
+export type LeaveCreateFromData = z.infer<typeof LeaveCreateSchema>;
+
+export const ReviewActionSchema = z.object({
+  leaveId: z.string().min(1),
+  rejectedNote: z.string().optional(),
+});
+
+export type ReviewActionFormData = z.infer<typeof ReviewActionSchema>;
 
 export const academicYearSchema = z.object({
   name: z.string().min(1, 'Name is required').max(100, 'Name is too long'),

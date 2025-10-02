@@ -21,7 +21,7 @@ import { redirect } from 'next/navigation';
 import { parseWithZod } from '@conform-to/zod';
 import FilterStudents from '@/lib/data/student/FilterStudents';
 import { endOfDay, startOfDay, subDays } from 'date-fns';
-import { Role } from '@/generated/prisma/enums';
+import { AttendanceStatus, Role } from '@/generated/prisma/enums';
 import { getCurrentUser, getCurrentUserId } from '@/lib/user';
 import { DocumentVerificationAction } from '@/types/document';
 import prisma from '@/lib/db';
@@ -29,6 +29,7 @@ import prisma from '@/lib/db';
 import { getOrganizationId } from '@/lib/organization';
 import { redis } from '@/lib/redis';
 import { SupportFormData } from '@/components/websiteComp/SupportPopup';
+import { getCurrentAcademicYearId } from '@/lib/academicYear';
 
 export const syncUserWithOrg = async () => {
   const { orgId, orgRole, orgSlug } = await auth();
@@ -127,8 +128,8 @@ export async function getNoticeRecipients(
   const rolesToInclude = targetAudience.includes('all')
     ? [Role.STUDENT, Role.TEACHER, Role.PARENT, Role.ADMIN]
     : targetAudience
-      .map(mapTargetAudienceToRole)
-      .filter((role): role is Role => role !== null);
+        .map(mapTargetAudienceToRole)
+        .filter((role): role is Role => role !== null);
 
   if (rolesToInclude.length === 0) return [];
 
@@ -225,8 +226,6 @@ export async function createSection(prevState: any, formData: FormData) {
 
 // # Student Attendance
 
-type AttendanceStatus = 'PRESENT' | 'ABSENT' | 'LATE';
-
 export async function markAttendance(
   sectionId: string,
   selectedDate: Date,
@@ -236,17 +235,25 @@ export async function markAttendance(
     note?: string;
   }[]
 ) {
-  console.log('Marking attendance:', attendanceData);
-  const [{ orgId }, user] = await Promise.all([auth(), currentUser()]);
-
-  if (!orgId) throw new Error('Organization ID is required');
-  if (!user) throw new Error('User Not Found Please Logout And Log In');
-  if (!attendanceData.length)
+  if (!attendanceData.length) {
     throw new Error('Attendance data cannot be empty');
+  }
 
+  const [academicYearId, organizationId, user] = await Promise.all([
+    getCurrentAcademicYearId(),
+    getOrganizationId(),
+    getCurrentUser(),
+  ]);
+
+  // Verify section exists and get student IDs in one query
   const section = await prisma.section.findUnique({
-    where: { id: sectionId, organizationId: orgId },
-    select: { id: true },
+    where: { id: sectionId, organizationId },
+    select: {
+      id: true,
+      students: {
+        select: { id: true },
+      },
+    },
   });
 
   if (!section) {
@@ -279,7 +286,7 @@ export async function markAttendance(
     create: {
       studentId: record.studentId,
       present: record.status === 'PRESENT' || record.status === 'LATE',
-
+      academicYearId,
       date: attendanceDate,
       status: record.status,
       note: record.note,
@@ -295,8 +302,6 @@ export async function markAttendance(
       prisma.studentAttendance.upsert(updateData)
     )
   );
-
-  // redirect('/dashboard/attendance/analytics');
 }
 
 export async function getPreviousDayAttendance(
@@ -428,16 +433,16 @@ export async function CustomDatesStudentAttendance(
   studentId: string,
   startDate: Date,
   endDate: Date
-) { }
+) {}
 
-export async function getSectionIdMonthlyAttendance(sectionId: string) { }
-export async function WeeklySectionAttendance(sectionId: string) { }
-export async function yearlySectionAttendance(sectionId: string) { }
+export async function getSectionIdMonthlyAttendance(sectionId: string) {}
+export async function WeeklySectionAttendance(sectionId: string) {}
+export async function yearlySectionAttendance(sectionId: string) {}
 export async function CustomDatesSectionAttendance(
   sectionId: string,
   startDate: Date,
   endDate: Date
-) { }
+) {}
 
 // Fees
 
@@ -559,23 +564,23 @@ export async function verifyStudentDocument(
     const updateData =
       data.action === 'APPROVE'
         ? {
-          verified: true,
-          verifiedBy: verifiedByOrRejectedBy || 'System',
-          verifiedAt: new Date(),
-          rejected: false,
-          rejectedBy: null,
-          rejectedAt: null,
-          note: data.note ?? null,
-        }
+            verified: true,
+            verifiedBy: verifiedByOrRejectedBy || 'System',
+            verifiedAt: new Date(),
+            rejected: false,
+            rejectedBy: null,
+            rejectedAt: null,
+            note: data.note ?? null,
+          }
         : {
-          verified: false,
-          verifiedBy: null,
-          verifiedAt: null,
-          rejected: true,
-          rejectedBy: verifiedByOrRejectedBy || 'System',
-          rejectedAt: new Date(),
-          rejectReason: data.rejectionReason,
-        };
+            verified: false,
+            verifiedBy: null,
+            verifiedAt: null,
+            rejected: true,
+            rejectedBy: verifiedByOrRejectedBy || 'System',
+            rejectedAt: new Date(),
+            rejectReason: data.rejectionReason,
+          };
 
     await prisma.studentDocument.update({
       where: { id: documentId },

@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: '/dashboard/',
     },
-    sitemap: `http://localhost:3000/sitemap.xml`,
+    sitemap: 'https://shiksha.cloud/sitemap.xml',
   };
 }

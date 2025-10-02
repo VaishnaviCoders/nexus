@@ -89,9 +89,13 @@ export async function Navbar() {
     // Get auth data
     const { orgId, orgRole, userId } = await auth();
 
+    if (!orgId) throw new Error('No organization ID found');
+    if (!orgRole) throw new Error('No organization role found');
+    if (!userId) throw new Error('No user ID found');
+
     // Add Condition when should Call >
     // await syncClerkOrganizationDB();
-    // await syncUser(userId, orgId, orgRole);
+    await syncUser(userId, orgId, orgRole);
     // If not authenticated, show guest navbar
     if (!userId) {
       return (

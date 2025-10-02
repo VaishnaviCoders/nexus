@@ -48,14 +48,14 @@ async function TeacherStatsContent() {
     },
     {
       title: 'Teaching Subjects',
-      value: stats.teacher.TeachingAssignment.length.toString(),
+      value: stats.teacher.teachingAssignment.length.toString(),
       description: `Subjects you're assigned`,
       icon: BookOpen,
       color: 'purple',
       badge:
-        stats.teacher.TeachingAssignment.length > 0
+        stats.teacher.teachingAssignment.length > 0
           ? {
-              text: `${stats.teacher.TeachingAssignment.length} subjects`,
+              text: `${stats.teacher.teachingAssignment.length} subjects`,
               variant: 'blue',
             }
           : {
@@ -94,7 +94,7 @@ async function TeacherStatsContent() {
         return (
           <Card
             key={index}
-            className="relative overflow-hidden group hover:shadow-md transition-all duration-300  bg-gradient-to-br from-card via-card to-muted/10"
+            className="relative overflow-hidden group  transition-all duration-300  bg-gradient-to-br from-card via-card to-muted/10"
           >
             <div
               className={`absolute inset-0 bg-gradient-to-br from-${stat.color}-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300`}

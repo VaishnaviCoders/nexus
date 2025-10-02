@@ -48,7 +48,9 @@ export const ModelName = {
   ExamEnrollment: 'ExamEnrollment',
   ExamResult: 'ExamResult',
   HallTicket: 'HallTicket',
-  ReportCard: 'ReportCard'
+  ReportCard: 'ReportCard',
+  Leave: 'Leave',
+  LeaveStatusTimeline: 'LeaveStatusTimeline'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -616,6 +618,40 @@ export const ReportCardScalarFieldEnum = {
 export type ReportCardScalarFieldEnum = (typeof ReportCardScalarFieldEnum)[keyof typeof ReportCardScalarFieldEnum]
 
 
+export const LeaveScalarFieldEnum = {
+  id: 'id',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  totalDays: 'totalDays',
+  reason: 'reason',
+  type: 'type',
+  emergencyContact: 'emergencyContact',
+  currentStatus: 'currentStatus',
+  approvedBy: 'approvedBy',
+  approvedAt: 'approvedAt',
+  rejectedNote: 'rejectedNote',
+  userId: 'userId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  organizationId: 'organizationId',
+  academicYearId: 'academicYearId'
+} as const
+
+export type LeaveScalarFieldEnum = (typeof LeaveScalarFieldEnum)[keyof typeof LeaveScalarFieldEnum]
+
+
+export const LeaveStatusTimelineScalarFieldEnum = {
+  id: 'id',
+  leaveId: 'leaveId',
+  status: 'status',
+  note: 'note',
+  changedBy: 'changedBy',
+  changedAt: 'changedAt'
+} as const
+
+export type LeaveStatusTimelineScalarFieldEnum = (typeof LeaveStatusTimelineScalarFieldEnum)[keyof typeof LeaveStatusTimelineScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -1053,4 +1089,29 @@ export const ReportCardOrderByRelevanceFieldEnum = {
 } as const
 
 export type ReportCardOrderByRelevanceFieldEnum = (typeof ReportCardOrderByRelevanceFieldEnum)[keyof typeof ReportCardOrderByRelevanceFieldEnum]
+
+
+export const LeaveOrderByRelevanceFieldEnum = {
+  id: 'id',
+  reason: 'reason',
+  type: 'type',
+  emergencyContact: 'emergencyContact',
+  approvedBy: 'approvedBy',
+  rejectedNote: 'rejectedNote',
+  userId: 'userId',
+  organizationId: 'organizationId',
+  academicYearId: 'academicYearId'
+} as const
+
+export type LeaveOrderByRelevanceFieldEnum = (typeof LeaveOrderByRelevanceFieldEnum)[keyof typeof LeaveOrderByRelevanceFieldEnum]
+
+
+export const LeaveStatusTimelineOrderByRelevanceFieldEnum = {
+  id: 'id',
+  leaveId: 'leaveId',
+  note: 'note',
+  changedBy: 'changedBy'
+} as const
+
+export type LeaveStatusTimelineOrderByRelevanceFieldEnum = (typeof LeaveStatusTimelineOrderByRelevanceFieldEnum)[keyof typeof LeaveStatusTimelineOrderByRelevanceFieldEnum]
 

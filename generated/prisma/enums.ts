@@ -305,3 +305,28 @@ export const ResultStatus = {
 } as const
 
 export type ResultStatus = (typeof ResultStatus)[keyof typeof ResultStatus]
+
+
+export const LeaveStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED'
+} as const
+
+export type LeaveStatus = (typeof LeaveStatus)[keyof typeof LeaveStatus]
+
+
+export const LeaveType = {
+  SICK: 'SICK',
+  CASUAL: 'CASUAL',
+  ANNUAL: 'ANNUAL',
+  EMERGENCY: 'EMERGENCY',
+  OTHER: 'OTHER',
+  VACATION: 'VACATION',
+  MATERNITY: 'MATERNITY',
+  PATERNITY: 'PATERNITY',
+  UNPAID: 'UNPAID',
+  STUDY: 'STUDY'
+} as const
+
+export type LeaveType = (typeof LeaveType)[keyof typeof LeaveType]

@@ -1,14 +1,17 @@
 'use server';
+import { getCurrentAcademicYearId } from '@/lib/academicYear';
 import prisma from '@/lib/db';
 import { getOrganizationId } from '@/lib/organization';
 
 export const getFeeCategoryDistribution = async () => {
-  const orgId = await getOrganizationId();
+  const organizationId = await getOrganizationId();
+  const academicYearId = await getCurrentAcademicYearId();
 
   const result = await prisma.fee.groupBy({
     by: ['feeCategoryId'],
     where: {
-      organizationId: orgId,
+      organizationId,
+      academicYearId,
     },
     _sum: {
       paidAmount: true,
@@ -19,7 +22,7 @@ export const getFeeCategoryDistribution = async () => {
   const categories = await prisma.feeCategory.findMany({
     where: {
       id: { in: result.map((r) => r.feeCategoryId) },
-      organizationId: orgId,
+      organizationId,
     },
     select: {
       id: true,

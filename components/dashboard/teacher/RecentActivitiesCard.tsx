@@ -21,8 +21,6 @@ async function RecentActivitiesContent() {
   try {
     const activities = await getRecentActivities();
 
-    console.log('', activities);
-
     const activityIcons = {
       ATTENDANCE: Calendar,
       NOTICE: Bell,

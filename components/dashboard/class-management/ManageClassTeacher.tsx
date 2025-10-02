@@ -35,12 +35,12 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { manageClassTeacher } from '@/lib/data/class-management/ClassTeacherManagement';
 // import { manageClassTeacher } from '@/app/actions/class-teacher-actions';
 
-const formSchema = z.object({
+const classTeacherSchema = z.object({
   teacherId: z.string().optional(),
   action: z.enum(['assign', 'remove']),
 });
 
-type FormValues = z.infer<typeof formSchema>;
+type classTeacherFormData = z.infer<typeof classTeacherSchema>;
 
 interface Teacher {
   id: string;
@@ -50,7 +50,7 @@ interface Teacher {
     lastName: string;
     email: string;
   };
-  Section: Array<{
+  section: Array<{
     id: string;
     name: string;
     grade: {
@@ -82,8 +82,8 @@ export function ManageClassTeacher({
     error?: string;
   } | null>(null);
 
-  const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<classTeacherFormData>({
+    resolver: zodResolver(classTeacherSchema),
     defaultValues: {
       teacherId: currentTeacherId || undefined,
       action: currentTeacherId ? 'assign' : 'assign',
@@ -92,7 +92,7 @@ export function ManageClassTeacher({
 
   const selectedAction = form.watch('action');
 
-  const onSubmit = (values: FormValues) => {
+  const onSubmit = (values: classTeacherFormData) => {
     startTransition(async () => {
       setResult(null);
 
@@ -207,10 +207,10 @@ export function ManageClassTeacher({
                           </div>
                         ) : (
                           teachers.map((teacher) => {
-                            const isCurrentClassTeacher = teacher.Section.some(
+                            const isCurrentClassTeacher = teacher.section.some(
                               (s) => s.id !== sectionId
                             );
-                            const assignedTo = teacher.Section.find(
+                            const assignedTo = teacher.section.find(
                               (s) => s.id !== sectionId
                             );
 

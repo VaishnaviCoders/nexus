@@ -3,7 +3,7 @@
 import { z } from 'zod';
 import prisma from '@/lib/db';
 import { revalidatePath } from 'next/cache';
-import { auth } from '@clerk/nextjs/server';
+import { getOrganizationId } from '@/lib/organization';
 
 // Validation Schema
 const classTeacherSchema = z.object({
@@ -16,29 +16,10 @@ type ClassTeacherInput = z.infer<typeof classTeacherSchema>;
 
 export async function manageClassTeacher(data: ClassTeacherInput) {
   try {
-    const { userId } = await auth();
-
-    if (!userId) {
-      return { success: false, error: 'Unauthorized' };
-    }
+    const organizationId = await getOrganizationId();
 
     // Validate input
     const validatedData = classTeacherSchema.parse(data);
-
-    // Get user's organization
-    const user = await prisma.user.findUnique({
-      where: { clerkId: userId },
-      select: { organizationId: true, role: true },
-    });
-
-    if (!user?.organizationId) {
-      return { success: false, error: 'Organization not found' };
-    }
-
-    // Check if user has permission (admin or super admin)
-    if (user.role !== 'ADMIN') {
-      return { success: false, error: 'Insufficient permissions' };
-    }
 
     // Verify section belongs to organization
     const section = await prisma.section.findUnique({
@@ -46,9 +27,7 @@ export async function manageClassTeacher(data: ClassTeacherInput) {
       select: { organizationId: true, gradeId: true },
     });
 
-    if (!section || section.organizationId !== user.organizationId) {
-      return { success: false, error: 'Section not found or access denied' };
-    }
+    if (!section) throw new Error('Section Is not found');
 
     if (validatedData.action === 'assign') {
       // Validate teacher exists and belongs to organization
@@ -62,7 +41,7 @@ export async function manageClassTeacher(data: ClassTeacherInput) {
       const teacher = await prisma.teacher.findFirst({
         where: {
           id: validatedData.teacherId,
-          organizationId: user.organizationId,
+          organizationId,
           isActive: true,
           employmentStatus: 'ACTIVE',
         },
@@ -90,7 +69,6 @@ export async function manageClassTeacher(data: ClassTeacherInput) {
           error: `Teacher is already assigned as class teacher to ${existingAssignment.grade.grade} - ${existingAssignment.name}`,
         };
       }
-
       // Assign class teacher
       await prisma.section.update({
         where: { id: validatedData.sectionId },
@@ -121,24 +99,11 @@ export async function manageClassTeacher(data: ClassTeacherInput) {
 // Get available teachers for a section
 export async function getAvailableTeachers(sectionId: string) {
   try {
-    const { userId } = await auth();
-
-    if (!userId) {
-      return { success: false, error: 'Unauthorized', teachers: [] };
-    }
-
-    const user = await prisma.user.findUnique({
-      where: { clerkId: userId },
-      select: { organizationId: true },
-    });
-
-    if (!user?.organizationId) {
-      return { success: false, error: 'Organization not found', teachers: [] };
-    }
+    const organizationId = await getOrganizationId();
 
     const teachers = await prisma.teacher.findMany({
       where: {
-        organizationId: user.organizationId,
+        organizationId,
         isActive: true,
         employmentStatus: 'ACTIVE',
       },
@@ -150,7 +115,7 @@ export async function getAvailableTeachers(sectionId: string) {
             email: true,
           },
         },
-        Section: {
+        section: {
           include: {
             grade: true,
           },

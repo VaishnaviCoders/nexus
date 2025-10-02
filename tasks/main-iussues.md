@@ -10,4 +10,12 @@
 10. Pagination For Exams, Fees any many more
 11. Admins May Have roles , TEACHER , ADMIN
 12. Teaching : Teacher Daily Schedule ,
-13.
+13. Notification Inbox Change UI
+14. Sidebar UI : Search Option
+
+What we giving in Attendance ?
+
+Teacher /Admin can Take Attendance
+Select Grade / Section - Absent Note , Late Note
+
+After Submit Redirect To dashboard/attendance/analytics To se Todays Sections Wise Attendance

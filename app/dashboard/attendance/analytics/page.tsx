@@ -7,12 +7,12 @@ import {
 import { CheckCircle, Clock, BarChart3 } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 
-import { SectionAttendanceTable } from '@/components/dashboard/StudentAttendance/sectionwise-attendance-table';
+import { SectionAttendanceTable } from '@/components/dashboard/StudentAttendance/sectionWise-attendance-table';
 import { getAttendanceCompletionStats } from '@/lib/data/attendance/get-attendance-completion-stats';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 
-export default async function AttendancePage() {
+export default async function AttendanceAnalyticsPage() {
   const today = new Date();
   const attendanceData = await getAttendanceCompletionStats(today);
 

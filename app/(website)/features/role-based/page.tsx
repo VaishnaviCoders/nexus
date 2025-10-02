@@ -124,6 +124,7 @@ const featuresData = {
         feature: 'Performance & Marks',
         description: 'View exam results and academic performance metrics',
       },
+
       {
         feature: 'Certificates',
         description: 'Download and manage academic certificates',
@@ -382,6 +383,11 @@ const featuresData = {
         feature: 'AI Report Generator',
         description: 'Monthly fee and attendance summary via AI model',
         icon: Brain,
+      },
+      {
+        feature: 'Exam Management',
+        description: 'Manage Exams and manage enrolled student',
+        icon: CheckCircle,
       },
     ],
     planned: [
