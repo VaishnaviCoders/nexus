@@ -1,4 +1,5 @@
-import ExamReminderEmail from '@/components/templates/email-templates/exams/exam-reminder-email';
+import NoticeEmailTemplate from '@/components/templates/email-templates/notice';
+// import ExamReminderEmail from '@/components/templates/email-templates/exams/exam-reminder-email';
 import prisma from '@/lib/db';
 import { getOrganizationId } from '@/lib/organization';
 import { getISTDate } from '@/lib/utils';
@@ -101,31 +102,31 @@ export async function sendEmailExamReminder(emails: string[]) {
   console.log('Sending exam reminders...', emails);
 
   const resend = new Resend(process.env.RESEND_API_KEY!);
-  const { data, error } = await resend.emails.send({
-    from: 'no-reply@shiksha.cloud',
-    to: emails,
-    subject: '',
-    react: ExamReminderEmail({
-      examTitle: 'Exam Reminder',
-      firstName: 'Student',
-      lastName: '',
-      subject: 'Mathematics',
-      supervisors: ['John Doe', 'Jane Smith'],
-      organization: {
-        organizationName: 'Shiksha School',
-        organizationEmail: 'info@shiksha.cloud',
-        organizationPhone: '+91-1234567890',
-      },
-      startDate: new Date(),
-      endDate: new Date(),
-      durationInMinutes: 180,
-      venue: 'Main Hall',
-      maxMarks: 100,
-      passingMarks: 35,
-      mode: 'OFFLINE',
-      instructions: 'Please bring your admit card and arrive 30 minutes early.',
-    }),
-  });
+  // const { data, error } = await resend.emails.send({
+  //   from: 'no-reply@shiksha.cloud',
+  //   to: emails,
+  //   subject: '',
+  //   react: ExamReminderEmail({
+  //     examTitle: 'Exam Reminder',
+  //     firstName: 'Student',
+  //     lastName: '',
+  //     subject: 'Mathematics',
+  //     supervisors: ['John Doe', 'Jane Smith'],
+  //     organization: {
+  //       organizationName: 'Shiksha School',
+  //       organizationEmail: 'info@shiksha.cloud',
+  //       organizationPhone: '+91-1234567890',
+  //     },
+  //     startDate: new Date(),
+  //     endDate: new Date(),
+  //     durationInMinutes: 180,
+  //     venue: 'Main Hall',
+  //     maxMarks: 100,
+  //     passingMarks: 35,
+  //     mode: 'OFFLINE',
+  //     instructions: 'Please bring your admit card and arrive 30 minutes early.',
+  //   }),
+  // });
   return { success: true };
 }
 
