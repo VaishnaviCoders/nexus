@@ -359,13 +359,14 @@ export function LeaveForm({
                 <FormItem>
                   <FormLabel>Emergency contact</FormLabel>
                   <FormDescription>
-                    Provide a reachable phone number during your leave.
+                    Provide a reachable 10-digit phone number during your leave.
                   </FormDescription>
 
                   <FormControl>
                     <Input
+                      type="tel"
                       placeholder="Phone number during leave"
-                      inputMode="tel"
+                      inputMode="numeric"
                       disabled={isPending}
                       {...field}
                     />

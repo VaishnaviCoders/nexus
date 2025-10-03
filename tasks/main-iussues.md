@@ -19,3 +19,9 @@ Teacher /Admin can Take Attendance
 Select Grade / Section - Absent Note , Late Note
 
 After Submit Redirect To dashboard/attendance/analytics To se Todays Sections Wise Attendance
+
+Parent/Students Will Notify Push Notification  
+Student Can see daily Attendance In Dashboard and all history in dashboard/my-attendance
+Parents Can seeThere children's daily Attendance In Dashboard
+Admin Can see Which Section wise attendance which section in not recorded attendance today
+Also Have option To track all History with Filters

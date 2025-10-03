@@ -359,9 +359,11 @@ export const LeaveCreateSchema = z
     type: z.nativeEnum(LeaveType).default('SICK'),
     reason: z.string().min(5, 'Reason must be at least 5 characters'),
     emergencyContact: z
-      .string()
-      .min(5, 'Emergency contact is required')
-      .max(30, 'Emergency contact too long'),
+      .string({
+        required_error: 'Emergency contact is required',
+        invalid_type_error: 'Phone must be digits',
+      })
+      .regex(/^\d{10}$/, 'Phone number must be exactly 10 digits'),
     academicYearId: z.string().min(1, 'Academic year is required'),
   })
   .refine(

@@ -496,22 +496,6 @@ export type TeacherUncheckedUpdateOneWithoutUserNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.TeacherUpdateToOneWithWhereWithoutUserInput, Prisma.TeacherUpdateWithoutUserInput>, Prisma.TeacherUncheckedUpdateWithoutUserInput>
 }
 
-export type TeacherCreateNestedOneWithoutSectionInput = {
-  create?: Prisma.XOR<Prisma.TeacherCreateWithoutSectionInput, Prisma.TeacherUncheckedCreateWithoutSectionInput>
-  connectOrCreate?: Prisma.TeacherCreateOrConnectWithoutSectionInput
-  connect?: Prisma.TeacherWhereUniqueInput
-}
-
-export type TeacherUpdateOneWithoutSectionNestedInput = {
-  create?: Prisma.XOR<Prisma.TeacherCreateWithoutSectionInput, Prisma.TeacherUncheckedCreateWithoutSectionInput>
-  connectOrCreate?: Prisma.TeacherCreateOrConnectWithoutSectionInput
-  upsert?: Prisma.TeacherUpsertWithoutSectionInput
-  disconnect?: Prisma.TeacherWhereInput | boolean
-  delete?: Prisma.TeacherWhereInput | boolean
-  connect?: Prisma.TeacherWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.TeacherUpdateToOneWithWhereWithoutSectionInput, Prisma.TeacherUpdateWithoutSectionInput>, Prisma.TeacherUncheckedUpdateWithoutSectionInput>
-}
-
 export type EnumEmploymentStatusFieldUpdateOperationsInput = {
   set?: $Enums.EmploymentStatus
 }
@@ -528,6 +512,22 @@ export type TeacherUpdateOneRequiredWithoutProfileNestedInput = {
   upsert?: Prisma.TeacherUpsertWithoutProfileInput
   connect?: Prisma.TeacherWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.TeacherUpdateToOneWithWhereWithoutProfileInput, Prisma.TeacherUpdateWithoutProfileInput>, Prisma.TeacherUncheckedUpdateWithoutProfileInput>
+}
+
+export type TeacherCreateNestedOneWithoutSectionInput = {
+  create?: Prisma.XOR<Prisma.TeacherCreateWithoutSectionInput, Prisma.TeacherUncheckedCreateWithoutSectionInput>
+  connectOrCreate?: Prisma.TeacherCreateOrConnectWithoutSectionInput
+  connect?: Prisma.TeacherWhereUniqueInput
+}
+
+export type TeacherUpdateOneWithoutSectionNestedInput = {
+  create?: Prisma.XOR<Prisma.TeacherCreateWithoutSectionInput, Prisma.TeacherUncheckedCreateWithoutSectionInput>
+  connectOrCreate?: Prisma.TeacherCreateOrConnectWithoutSectionInput
+  upsert?: Prisma.TeacherUpsertWithoutSectionInput
+  disconnect?: Prisma.TeacherWhereInput | boolean
+  delete?: Prisma.TeacherWhereInput | boolean
+  connect?: Prisma.TeacherWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TeacherUpdateToOneWithWhereWithoutSectionInput, Prisma.TeacherUpdateWithoutSectionInput>, Prisma.TeacherUncheckedUpdateWithoutSectionInput>
 }
 
 export type TeacherCreateNestedOneWithoutTeachingAssignmentInput = {
@@ -678,74 +678,6 @@ export type TeacherUncheckedUpdateWithoutUserInput = {
   section?: Prisma.SectionUncheckedUpdateManyWithoutClassTeacherNestedInput
 }
 
-export type TeacherCreateWithoutSectionInput = {
-  id?: string
-  employeeCode?: string | null
-  employmentStatus?: $Enums.EmploymentStatus
-  isActive?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutTeacherInput
-  organization: Prisma.OrganizationCreateNestedOneWithoutTeacherInput
-  profile?: Prisma.TeacherProfileCreateNestedOneWithoutTeacherInput
-  teachingAssignment?: Prisma.TeachingAssignmentCreateNestedManyWithoutTeacherInput
-}
-
-export type TeacherUncheckedCreateWithoutSectionInput = {
-  id?: string
-  userId: string
-  employeeCode?: string | null
-  employmentStatus?: $Enums.EmploymentStatus
-  isActive?: boolean
-  organizationId: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  profile?: Prisma.TeacherProfileUncheckedCreateNestedOneWithoutTeacherInput
-  teachingAssignment?: Prisma.TeachingAssignmentUncheckedCreateNestedManyWithoutTeacherInput
-}
-
-export type TeacherCreateOrConnectWithoutSectionInput = {
-  where: Prisma.TeacherWhereUniqueInput
-  create: Prisma.XOR<Prisma.TeacherCreateWithoutSectionInput, Prisma.TeacherUncheckedCreateWithoutSectionInput>
-}
-
-export type TeacherUpsertWithoutSectionInput = {
-  update: Prisma.XOR<Prisma.TeacherUpdateWithoutSectionInput, Prisma.TeacherUncheckedUpdateWithoutSectionInput>
-  create: Prisma.XOR<Prisma.TeacherCreateWithoutSectionInput, Prisma.TeacherUncheckedCreateWithoutSectionInput>
-  where?: Prisma.TeacherWhereInput
-}
-
-export type TeacherUpdateToOneWithWhereWithoutSectionInput = {
-  where?: Prisma.TeacherWhereInput
-  data: Prisma.XOR<Prisma.TeacherUpdateWithoutSectionInput, Prisma.TeacherUncheckedUpdateWithoutSectionInput>
-}
-
-export type TeacherUpdateWithoutSectionInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  employmentStatus?: Prisma.EnumEmploymentStatusFieldUpdateOperationsInput | $Enums.EmploymentStatus
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutTeacherNestedInput
-  organization?: Prisma.OrganizationUpdateOneRequiredWithoutTeacherNestedInput
-  profile?: Prisma.TeacherProfileUpdateOneWithoutTeacherNestedInput
-  teachingAssignment?: Prisma.TeachingAssignmentUpdateManyWithoutTeacherNestedInput
-}
-
-export type TeacherUncheckedUpdateWithoutSectionInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
-  employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  employmentStatus?: Prisma.EnumEmploymentStatusFieldUpdateOperationsInput | $Enums.EmploymentStatus
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  profile?: Prisma.TeacherProfileUncheckedUpdateOneWithoutTeacherNestedInput
-  teachingAssignment?: Prisma.TeachingAssignmentUncheckedUpdateManyWithoutTeacherNestedInput
-}
-
 export type TeacherCreateWithoutProfileInput = {
   id?: string
   employeeCode?: string | null
@@ -812,6 +744,74 @@ export type TeacherUncheckedUpdateWithoutProfileInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   teachingAssignment?: Prisma.TeachingAssignmentUncheckedUpdateManyWithoutTeacherNestedInput
   section?: Prisma.SectionUncheckedUpdateManyWithoutClassTeacherNestedInput
+}
+
+export type TeacherCreateWithoutSectionInput = {
+  id?: string
+  employeeCode?: string | null
+  employmentStatus?: $Enums.EmploymentStatus
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutTeacherInput
+  organization: Prisma.OrganizationCreateNestedOneWithoutTeacherInput
+  profile?: Prisma.TeacherProfileCreateNestedOneWithoutTeacherInput
+  teachingAssignment?: Prisma.TeachingAssignmentCreateNestedManyWithoutTeacherInput
+}
+
+export type TeacherUncheckedCreateWithoutSectionInput = {
+  id?: string
+  userId: string
+  employeeCode?: string | null
+  employmentStatus?: $Enums.EmploymentStatus
+  isActive?: boolean
+  organizationId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  profile?: Prisma.TeacherProfileUncheckedCreateNestedOneWithoutTeacherInput
+  teachingAssignment?: Prisma.TeachingAssignmentUncheckedCreateNestedManyWithoutTeacherInput
+}
+
+export type TeacherCreateOrConnectWithoutSectionInput = {
+  where: Prisma.TeacherWhereUniqueInput
+  create: Prisma.XOR<Prisma.TeacherCreateWithoutSectionInput, Prisma.TeacherUncheckedCreateWithoutSectionInput>
+}
+
+export type TeacherUpsertWithoutSectionInput = {
+  update: Prisma.XOR<Prisma.TeacherUpdateWithoutSectionInput, Prisma.TeacherUncheckedUpdateWithoutSectionInput>
+  create: Prisma.XOR<Prisma.TeacherCreateWithoutSectionInput, Prisma.TeacherUncheckedCreateWithoutSectionInput>
+  where?: Prisma.TeacherWhereInput
+}
+
+export type TeacherUpdateToOneWithWhereWithoutSectionInput = {
+  where?: Prisma.TeacherWhereInput
+  data: Prisma.XOR<Prisma.TeacherUpdateWithoutSectionInput, Prisma.TeacherUncheckedUpdateWithoutSectionInput>
+}
+
+export type TeacherUpdateWithoutSectionInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  employmentStatus?: Prisma.EnumEmploymentStatusFieldUpdateOperationsInput | $Enums.EmploymentStatus
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutTeacherNestedInput
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutTeacherNestedInput
+  profile?: Prisma.TeacherProfileUpdateOneWithoutTeacherNestedInput
+  teachingAssignment?: Prisma.TeachingAssignmentUpdateManyWithoutTeacherNestedInput
+}
+
+export type TeacherUncheckedUpdateWithoutSectionInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  employeeCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  employmentStatus?: Prisma.EnumEmploymentStatusFieldUpdateOperationsInput | $Enums.EmploymentStatus
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  profile?: Prisma.TeacherProfileUncheckedUpdateOneWithoutTeacherNestedInput
+  teachingAssignment?: Prisma.TeachingAssignmentUncheckedUpdateManyWithoutTeacherNestedInput
 }
 
 export type TeacherCreateWithoutTeachingAssignmentInput = {

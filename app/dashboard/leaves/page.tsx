@@ -1,22 +1,13 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-// import { LeaveTimeline } from "@/components/leaves/leave-timeline"
+import { Card, CardDescription, CardTitle } from '@/components/ui/card';
 import prisma from '@/lib/db';
 import { LeaveForm } from '@/components/dashboard/leaves/leave-form';
 import { getOrganizationId } from '@/lib/organization';
 import { EmptyState } from '@/components/EmptyState';
 import { CalendarDays, User, Volleyball } from 'lucide-react';
-
 import { getCurrentAcademicYearId } from '@/lib/academicYear';
 import { getCurrentUserId } from '@/lib/user';
-import { formatDateIN } from '@/lib/utils';
-import { OwnLeaves } from '@/components/dashboard/leaves/own-leaves';
+
+import LeaveCard from '@/components/dashboard/leaves/leave-card';
 
 export default async function LeavesPage() {
   const organizationId = await getOrganizationId();
@@ -37,15 +28,21 @@ export default async function LeavesPage() {
           role: true,
           student: {
             select: {
-              grade: {
+              section: {
                 select: {
-                  grade: true,
+                  name: true,
+                  grade: {
+                    select: {
+                      grade: true,
+                    },
+                  },
                 },
               },
             },
           },
         },
       },
+
       statusTimeline: { orderBy: { changedAt: 'asc' } },
     },
     orderBy: { createdAt: 'desc' },
@@ -55,9 +52,9 @@ export default async function LeavesPage() {
     <section aria-labelledby="history-heading" className="grid gap-4 px-2">
       <Card className="py-4 px-2 flex items-center justify-between   ">
         <div>
-          <CardTitle className="text-lg">Admin Dashboard</CardTitle>
+          <CardTitle className="text-lg">Leaves</CardTitle>
           <CardDescription className="text-sm">
-            Dashboard for admin to manage the system
+            Apply for leaves or see own leaves.
           </CardDescription>
         </div>
         <LeaveForm currentAcademicYearId={currentAcademicYearId} />
@@ -71,13 +68,17 @@ export default async function LeavesPage() {
             Please contact the administration office for more information."
             icons={[CalendarDays, User, Volleyball]}
             action={{
-              label: 'Apply for Leave',
-              href: '/dashboard/leaves',
+              label: 'Go Back to Dashboard',
+              href: '/dashboard',
             }}
           />
         </div>
       ) : (
-        <OwnLeaves leaves={leaves} />
+        <div className="grid gird-cols-2 gap-2">
+          {leaves.map((leave) => (
+            <LeaveCard leave={leave} key={leave.id} />
+          ))}
+        </div>
       )}
     </section>
   );

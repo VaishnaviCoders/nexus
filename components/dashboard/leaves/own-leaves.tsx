@@ -53,7 +53,7 @@ export function OwnLeaves({
   const isEmpty = !leaves || leaves.length === 0;
 
   return (
-    <section aria-labelledby="own-leaves-heading" className="grid gap-4">
+    <section aria-labelledby="own-leaves-heading" className="grid  gap-4">
       <Card>
         <CardHeader className="flex flex-row items-start justify-between gap-4">
           <div>
@@ -73,7 +73,7 @@ export function OwnLeaves({
       {isEmpty ? (
         <EmptyState />
       ) : (
-        <div className="grid gap-4">
+        <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
           {leaves.map((lv) => {
             const applicantName =
               `${lv.appliedBy?.firstName ?? ''} ${lv.appliedBy?.lastName ?? ''}`.trim();

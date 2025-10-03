@@ -22,15 +22,15 @@ export const ModelName = {
   AcademicYear: 'AcademicYear',
   Organization: 'Organization',
   User: 'User',
-  Grade: 'Grade',
-  Section: 'Section',
   Teacher: 'Teacher',
   TeacherProfile: 'TeacherProfile',
-  Subject: 'Subject',
-  TeachingAssignment: 'TeachingAssignment',
   Student: 'Student',
   Parent: 'Parent',
   ParentStudent: 'ParentStudent',
+  Grade: 'Grade',
+  Section: 'Section',
+  Subject: 'Subject',
+  TeachingAssignment: 'TeachingAssignment',
   StudentAttendance: 'StudentAttendance',
   StudentDocument: 'StudentDocument',
   Fee: 'Fee',
@@ -126,26 +126,6 @@ export const UserScalarFieldEnum = {
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
-export const GradeScalarFieldEnum = {
-  id: 'id',
-  grade: 'grade',
-  organizationId: 'organizationId'
-} as const
-
-export type GradeScalarFieldEnum = (typeof GradeScalarFieldEnum)[keyof typeof GradeScalarFieldEnum]
-
-
-export const SectionScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  gradeId: 'gradeId',
-  organizationId: 'organizationId',
-  classTeacherId: 'classTeacherId'
-} as const
-
-export type SectionScalarFieldEnum = (typeof SectionScalarFieldEnum)[keyof typeof SectionScalarFieldEnum]
-
-
 export const TeacherScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -184,36 +164,6 @@ export const TeacherProfileScalarFieldEnum = {
 } as const
 
 export type TeacherProfileScalarFieldEnum = (typeof TeacherProfileScalarFieldEnum)[keyof typeof TeacherProfileScalarFieldEnum]
-
-
-export const SubjectScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  code: 'code',
-  description: 'description',
-  organizationId: 'organizationId',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type SubjectScalarFieldEnum = (typeof SubjectScalarFieldEnum)[keyof typeof SubjectScalarFieldEnum]
-
-
-export const TeachingAssignmentScalarFieldEnum = {
-  id: 'id',
-  teacherId: 'teacherId',
-  subjectId: 'subjectId',
-  gradeId: 'gradeId',
-  sectionId: 'sectionId',
-  organizationId: 'organizationId',
-  academicYear: 'academicYear',
-  status: 'status',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  academicYearId: 'academicYearId'
-} as const
-
-export type TeachingAssignmentScalarFieldEnum = (typeof TeachingAssignmentScalarFieldEnum)[keyof typeof TeachingAssignmentScalarFieldEnum]
 
 
 export const StudentScalarFieldEnum = {
@@ -266,6 +216,56 @@ export const ParentStudentScalarFieldEnum = {
 } as const
 
 export type ParentStudentScalarFieldEnum = (typeof ParentStudentScalarFieldEnum)[keyof typeof ParentStudentScalarFieldEnum]
+
+
+export const GradeScalarFieldEnum = {
+  id: 'id',
+  grade: 'grade',
+  organizationId: 'organizationId'
+} as const
+
+export type GradeScalarFieldEnum = (typeof GradeScalarFieldEnum)[keyof typeof GradeScalarFieldEnum]
+
+
+export const SectionScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  gradeId: 'gradeId',
+  organizationId: 'organizationId',
+  classTeacherId: 'classTeacherId'
+} as const
+
+export type SectionScalarFieldEnum = (typeof SectionScalarFieldEnum)[keyof typeof SectionScalarFieldEnum]
+
+
+export const SubjectScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  code: 'code',
+  description: 'description',
+  organizationId: 'organizationId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SubjectScalarFieldEnum = (typeof SubjectScalarFieldEnum)[keyof typeof SubjectScalarFieldEnum]
+
+
+export const TeachingAssignmentScalarFieldEnum = {
+  id: 'id',
+  teacherId: 'teacherId',
+  subjectId: 'subjectId',
+  gradeId: 'gradeId',
+  sectionId: 'sectionId',
+  organizationId: 'organizationId',
+  academicYear: 'academicYear',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  academicYearId: 'academicYearId'
+} as const
+
+export type TeachingAssignmentScalarFieldEnum = (typeof TeachingAssignmentScalarFieldEnum)[keyof typeof TeachingAssignmentScalarFieldEnum]
 
 
 export const StudentAttendanceScalarFieldEnum = {
@@ -730,26 +730,6 @@ export const UserOrderByRelevanceFieldEnum = {
 export type UserOrderByRelevanceFieldEnum = (typeof UserOrderByRelevanceFieldEnum)[keyof typeof UserOrderByRelevanceFieldEnum]
 
 
-export const GradeOrderByRelevanceFieldEnum = {
-  id: 'id',
-  grade: 'grade',
-  organizationId: 'organizationId'
-} as const
-
-export type GradeOrderByRelevanceFieldEnum = (typeof GradeOrderByRelevanceFieldEnum)[keyof typeof GradeOrderByRelevanceFieldEnum]
-
-
-export const SectionOrderByRelevanceFieldEnum = {
-  id: 'id',
-  name: 'name',
-  gradeId: 'gradeId',
-  organizationId: 'organizationId',
-  classTeacherId: 'classTeacherId'
-} as const
-
-export type SectionOrderByRelevanceFieldEnum = (typeof SectionOrderByRelevanceFieldEnum)[keyof typeof SectionOrderByRelevanceFieldEnum]
-
-
 export const TeacherOrderByRelevanceFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -781,31 +761,6 @@ export const TeacherProfileOrderByRelevanceFieldEnum = {
 } as const
 
 export type TeacherProfileOrderByRelevanceFieldEnum = (typeof TeacherProfileOrderByRelevanceFieldEnum)[keyof typeof TeacherProfileOrderByRelevanceFieldEnum]
-
-
-export const SubjectOrderByRelevanceFieldEnum = {
-  id: 'id',
-  name: 'name',
-  code: 'code',
-  description: 'description',
-  organizationId: 'organizationId'
-} as const
-
-export type SubjectOrderByRelevanceFieldEnum = (typeof SubjectOrderByRelevanceFieldEnum)[keyof typeof SubjectOrderByRelevanceFieldEnum]
-
-
-export const TeachingAssignmentOrderByRelevanceFieldEnum = {
-  id: 'id',
-  teacherId: 'teacherId',
-  subjectId: 'subjectId',
-  gradeId: 'gradeId',
-  sectionId: 'sectionId',
-  organizationId: 'organizationId',
-  academicYear: 'academicYear',
-  academicYearId: 'academicYearId'
-} as const
-
-export type TeachingAssignmentOrderByRelevanceFieldEnum = (typeof TeachingAssignmentOrderByRelevanceFieldEnum)[keyof typeof TeachingAssignmentOrderByRelevanceFieldEnum]
 
 
 export const StudentOrderByRelevanceFieldEnum = {
@@ -851,6 +806,51 @@ export const ParentStudentOrderByRelevanceFieldEnum = {
 } as const
 
 export type ParentStudentOrderByRelevanceFieldEnum = (typeof ParentStudentOrderByRelevanceFieldEnum)[keyof typeof ParentStudentOrderByRelevanceFieldEnum]
+
+
+export const GradeOrderByRelevanceFieldEnum = {
+  id: 'id',
+  grade: 'grade',
+  organizationId: 'organizationId'
+} as const
+
+export type GradeOrderByRelevanceFieldEnum = (typeof GradeOrderByRelevanceFieldEnum)[keyof typeof GradeOrderByRelevanceFieldEnum]
+
+
+export const SectionOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  gradeId: 'gradeId',
+  organizationId: 'organizationId',
+  classTeacherId: 'classTeacherId'
+} as const
+
+export type SectionOrderByRelevanceFieldEnum = (typeof SectionOrderByRelevanceFieldEnum)[keyof typeof SectionOrderByRelevanceFieldEnum]
+
+
+export const SubjectOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  code: 'code',
+  description: 'description',
+  organizationId: 'organizationId'
+} as const
+
+export type SubjectOrderByRelevanceFieldEnum = (typeof SubjectOrderByRelevanceFieldEnum)[keyof typeof SubjectOrderByRelevanceFieldEnum]
+
+
+export const TeachingAssignmentOrderByRelevanceFieldEnum = {
+  id: 'id',
+  teacherId: 'teacherId',
+  subjectId: 'subjectId',
+  gradeId: 'gradeId',
+  sectionId: 'sectionId',
+  organizationId: 'organizationId',
+  academicYear: 'academicYear',
+  academicYearId: 'academicYearId'
+} as const
+
+export type TeachingAssignmentOrderByRelevanceFieldEnum = (typeof TeachingAssignmentOrderByRelevanceFieldEnum)[keyof typeof TeachingAssignmentOrderByRelevanceFieldEnum]
 
 
 export const StudentAttendanceOrderByRelevanceFieldEnum = {

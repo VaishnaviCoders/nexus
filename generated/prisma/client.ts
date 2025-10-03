@@ -56,16 +56,6 @@ export type Organization = Prisma.OrganizationModel
  */
 export type User = Prisma.UserModel
 /**
- * Model Grade
- * 
- */
-export type Grade = Prisma.GradeModel
-/**
- * Model Section
- * 
- */
-export type Section = Prisma.SectionModel
-/**
  * Model Teacher
  * 
  */
@@ -75,16 +65,6 @@ export type Teacher = Prisma.TeacherModel
  * 
  */
 export type TeacherProfile = Prisma.TeacherProfileModel
-/**
- * Model Subject
- * 
- */
-export type Subject = Prisma.SubjectModel
-/**
- * Model TeachingAssignment
- * 
- */
-export type TeachingAssignment = Prisma.TeachingAssignmentModel
 /**
  * Model Student
  * 
@@ -100,6 +80,26 @@ export type Parent = Prisma.ParentModel
  * 
  */
 export type ParentStudent = Prisma.ParentStudentModel
+/**
+ * Model Grade
+ * 
+ */
+export type Grade = Prisma.GradeModel
+/**
+ * Model Section
+ * 
+ */
+export type Section = Prisma.SectionModel
+/**
+ * Model Subject
+ * 
+ */
+export type Subject = Prisma.SubjectModel
+/**
+ * Model TeachingAssignment
+ * 
+ */
+export type TeachingAssignment = Prisma.TeachingAssignmentModel
 /**
  * Model StudentAttendance
  * 

@@ -69,6 +69,8 @@ export async function createLeaveAction(formData: LeaveCreateFromData) {
   });
 
   revalidatePath('/dashboard/leaves');
+  revalidatePath('/dashboard/leaves/manage');
+
   return { id: result.id };
 }
 

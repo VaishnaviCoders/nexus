@@ -812,6 +812,24 @@ export type StudentUncheckedUpdateOneWithoutUserNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.StudentUpdateToOneWithWhereWithoutUserInput, Prisma.StudentUpdateWithoutUserInput>, Prisma.StudentUncheckedUpdateWithoutUserInput>
 }
 
+export type EnumGenderFieldUpdateOperationsInput = {
+  set?: $Enums.Gender
+}
+
+export type StudentCreateNestedOneWithoutParentsInput = {
+  create?: Prisma.XOR<Prisma.StudentCreateWithoutParentsInput, Prisma.StudentUncheckedCreateWithoutParentsInput>
+  connectOrCreate?: Prisma.StudentCreateOrConnectWithoutParentsInput
+  connect?: Prisma.StudentWhereUniqueInput
+}
+
+export type StudentUpdateOneRequiredWithoutParentsNestedInput = {
+  create?: Prisma.XOR<Prisma.StudentCreateWithoutParentsInput, Prisma.StudentUncheckedCreateWithoutParentsInput>
+  connectOrCreate?: Prisma.StudentCreateOrConnectWithoutParentsInput
+  upsert?: Prisma.StudentUpsertWithoutParentsInput
+  connect?: Prisma.StudentWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.StudentUpdateToOneWithWhereWithoutParentsInput, Prisma.StudentUpdateWithoutParentsInput>, Prisma.StudentUncheckedUpdateWithoutParentsInput>
+}
+
 export type StudentCreateNestedManyWithoutGradeInput = {
   create?: Prisma.XOR<Prisma.StudentCreateWithoutGradeInput, Prisma.StudentUncheckedCreateWithoutGradeInput> | Prisma.StudentCreateWithoutGradeInput[] | Prisma.StudentUncheckedCreateWithoutGradeInput[]
   connectOrCreate?: Prisma.StudentCreateOrConnectWithoutGradeInput | Prisma.StudentCreateOrConnectWithoutGradeInput[]
@@ -894,24 +912,6 @@ export type StudentUncheckedUpdateManyWithoutSectionNestedInput = {
   update?: Prisma.StudentUpdateWithWhereUniqueWithoutSectionInput | Prisma.StudentUpdateWithWhereUniqueWithoutSectionInput[]
   updateMany?: Prisma.StudentUpdateManyWithWhereWithoutSectionInput | Prisma.StudentUpdateManyWithWhereWithoutSectionInput[]
   deleteMany?: Prisma.StudentScalarWhereInput | Prisma.StudentScalarWhereInput[]
-}
-
-export type EnumGenderFieldUpdateOperationsInput = {
-  set?: $Enums.Gender
-}
-
-export type StudentCreateNestedOneWithoutParentsInput = {
-  create?: Prisma.XOR<Prisma.StudentCreateWithoutParentsInput, Prisma.StudentUncheckedCreateWithoutParentsInput>
-  connectOrCreate?: Prisma.StudentCreateOrConnectWithoutParentsInput
-  connect?: Prisma.StudentWhereUniqueInput
-}
-
-export type StudentUpdateOneRequiredWithoutParentsNestedInput = {
-  create?: Prisma.XOR<Prisma.StudentCreateWithoutParentsInput, Prisma.StudentUncheckedCreateWithoutParentsInput>
-  connectOrCreate?: Prisma.StudentCreateOrConnectWithoutParentsInput
-  upsert?: Prisma.StudentUpsertWithoutParentsInput
-  connect?: Prisma.StudentWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.StudentUpdateToOneWithWhereWithoutParentsInput, Prisma.StudentUpdateWithoutParentsInput>, Prisma.StudentUncheckedUpdateWithoutParentsInput>
 }
 
 export type StudentCreateNestedOneWithoutStudentAttendanceInput = {
@@ -1282,6 +1282,146 @@ export type StudentUncheckedUpdateWithoutUserInput = {
   examEnrollment?: Prisma.ExamEnrollmentUncheckedUpdateManyWithoutStudentNestedInput
 }
 
+export type StudentCreateWithoutParentsInput = {
+  id?: string
+  firstName: string
+  lastName: string
+  middleName?: string | null
+  motherName?: string | null
+  fullName?: string | null
+  dateOfBirth: Date | string
+  profileImage?: string | null
+  rollNumber: string
+  phoneNumber: string
+  whatsAppNumber: string
+  email: string
+  emergencyContact: string
+  gender: $Enums.Gender
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutStudentInput
+  section: Prisma.SectionCreateNestedOneWithoutStudentsInput
+  grade: Prisma.GradeCreateNestedOneWithoutStudentsInput
+  organization: Prisma.OrganizationCreateNestedOneWithoutStudentInput
+  Fee?: Prisma.FeeCreateNestedManyWithoutStudentInput
+  StudentAttendance?: Prisma.StudentAttendanceCreateNestedManyWithoutStudentInput
+  StudentDocument?: Prisma.StudentDocumentCreateNestedManyWithoutStudentInput
+  NotificationLog?: Prisma.NotificationLogCreateNestedManyWithoutStudentInput
+  reportCard?: Prisma.ReportCardCreateNestedManyWithoutStudentInput
+  hallTicket?: Prisma.HallTicketCreateNestedManyWithoutStudentInput
+  examResult?: Prisma.ExamResultCreateNestedManyWithoutStudentInput
+  examEnrollment?: Prisma.ExamEnrollmentCreateNestedManyWithoutStudentInput
+}
+
+export type StudentUncheckedCreateWithoutParentsInput = {
+  id?: string
+  userId: string
+  firstName: string
+  lastName: string
+  middleName?: string | null
+  motherName?: string | null
+  fullName?: string | null
+  dateOfBirth: Date | string
+  profileImage?: string | null
+  rollNumber: string
+  phoneNumber: string
+  whatsAppNumber: string
+  email: string
+  emergencyContact: string
+  gender: $Enums.Gender
+  sectionId: string
+  gradeId: string
+  organizationId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  Fee?: Prisma.FeeUncheckedCreateNestedManyWithoutStudentInput
+  StudentAttendance?: Prisma.StudentAttendanceUncheckedCreateNestedManyWithoutStudentInput
+  StudentDocument?: Prisma.StudentDocumentUncheckedCreateNestedManyWithoutStudentInput
+  NotificationLog?: Prisma.NotificationLogUncheckedCreateNestedManyWithoutStudentInput
+  reportCard?: Prisma.ReportCardUncheckedCreateNestedManyWithoutStudentInput
+  hallTicket?: Prisma.HallTicketUncheckedCreateNestedManyWithoutStudentInput
+  examResult?: Prisma.ExamResultUncheckedCreateNestedManyWithoutStudentInput
+  examEnrollment?: Prisma.ExamEnrollmentUncheckedCreateNestedManyWithoutStudentInput
+}
+
+export type StudentCreateOrConnectWithoutParentsInput = {
+  where: Prisma.StudentWhereUniqueInput
+  create: Prisma.XOR<Prisma.StudentCreateWithoutParentsInput, Prisma.StudentUncheckedCreateWithoutParentsInput>
+}
+
+export type StudentUpsertWithoutParentsInput = {
+  update: Prisma.XOR<Prisma.StudentUpdateWithoutParentsInput, Prisma.StudentUncheckedUpdateWithoutParentsInput>
+  create: Prisma.XOR<Prisma.StudentCreateWithoutParentsInput, Prisma.StudentUncheckedCreateWithoutParentsInput>
+  where?: Prisma.StudentWhereInput
+}
+
+export type StudentUpdateToOneWithWhereWithoutParentsInput = {
+  where?: Prisma.StudentWhereInput
+  data: Prisma.XOR<Prisma.StudentUpdateWithoutParentsInput, Prisma.StudentUncheckedUpdateWithoutParentsInput>
+}
+
+export type StudentUpdateWithoutParentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  motherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  profileImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rollNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  whatsAppNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emergencyContact?: Prisma.StringFieldUpdateOperationsInput | string
+  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutStudentNestedInput
+  section?: Prisma.SectionUpdateOneRequiredWithoutStudentsNestedInput
+  grade?: Prisma.GradeUpdateOneRequiredWithoutStudentsNestedInput
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutStudentNestedInput
+  Fee?: Prisma.FeeUpdateManyWithoutStudentNestedInput
+  StudentAttendance?: Prisma.StudentAttendanceUpdateManyWithoutStudentNestedInput
+  StudentDocument?: Prisma.StudentDocumentUpdateManyWithoutStudentNestedInput
+  NotificationLog?: Prisma.NotificationLogUpdateManyWithoutStudentNestedInput
+  reportCard?: Prisma.ReportCardUpdateManyWithoutStudentNestedInput
+  hallTicket?: Prisma.HallTicketUpdateManyWithoutStudentNestedInput
+  examResult?: Prisma.ExamResultUpdateManyWithoutStudentNestedInput
+  examEnrollment?: Prisma.ExamEnrollmentUpdateManyWithoutStudentNestedInput
+}
+
+export type StudentUncheckedUpdateWithoutParentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  motherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  profileImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rollNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  whatsAppNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emergencyContact?: Prisma.StringFieldUpdateOperationsInput | string
+  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  sectionId?: Prisma.StringFieldUpdateOperationsInput | string
+  gradeId?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  Fee?: Prisma.FeeUncheckedUpdateManyWithoutStudentNestedInput
+  StudentAttendance?: Prisma.StudentAttendanceUncheckedUpdateManyWithoutStudentNestedInput
+  StudentDocument?: Prisma.StudentDocumentUncheckedUpdateManyWithoutStudentNestedInput
+  NotificationLog?: Prisma.NotificationLogUncheckedUpdateManyWithoutStudentNestedInput
+  reportCard?: Prisma.ReportCardUncheckedUpdateManyWithoutStudentNestedInput
+  hallTicket?: Prisma.HallTicketUncheckedUpdateManyWithoutStudentNestedInput
+  examResult?: Prisma.ExamResultUncheckedUpdateManyWithoutStudentNestedInput
+  examEnrollment?: Prisma.ExamEnrollmentUncheckedUpdateManyWithoutStudentNestedInput
+}
+
 export type StudentCreateWithoutGradeInput = {
   id?: string
   firstName: string
@@ -1456,146 +1596,6 @@ export type StudentUpdateWithWhereUniqueWithoutSectionInput = {
 export type StudentUpdateManyWithWhereWithoutSectionInput = {
   where: Prisma.StudentScalarWhereInput
   data: Prisma.XOR<Prisma.StudentUpdateManyMutationInput, Prisma.StudentUncheckedUpdateManyWithoutSectionInput>
-}
-
-export type StudentCreateWithoutParentsInput = {
-  id?: string
-  firstName: string
-  lastName: string
-  middleName?: string | null
-  motherName?: string | null
-  fullName?: string | null
-  dateOfBirth: Date | string
-  profileImage?: string | null
-  rollNumber: string
-  phoneNumber: string
-  whatsAppNumber: string
-  email: string
-  emergencyContact: string
-  gender: $Enums.Gender
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutStudentInput
-  section: Prisma.SectionCreateNestedOneWithoutStudentsInput
-  grade: Prisma.GradeCreateNestedOneWithoutStudentsInput
-  organization: Prisma.OrganizationCreateNestedOneWithoutStudentInput
-  Fee?: Prisma.FeeCreateNestedManyWithoutStudentInput
-  StudentAttendance?: Prisma.StudentAttendanceCreateNestedManyWithoutStudentInput
-  StudentDocument?: Prisma.StudentDocumentCreateNestedManyWithoutStudentInput
-  NotificationLog?: Prisma.NotificationLogCreateNestedManyWithoutStudentInput
-  reportCard?: Prisma.ReportCardCreateNestedManyWithoutStudentInput
-  hallTicket?: Prisma.HallTicketCreateNestedManyWithoutStudentInput
-  examResult?: Prisma.ExamResultCreateNestedManyWithoutStudentInput
-  examEnrollment?: Prisma.ExamEnrollmentCreateNestedManyWithoutStudentInput
-}
-
-export type StudentUncheckedCreateWithoutParentsInput = {
-  id?: string
-  userId: string
-  firstName: string
-  lastName: string
-  middleName?: string | null
-  motherName?: string | null
-  fullName?: string | null
-  dateOfBirth: Date | string
-  profileImage?: string | null
-  rollNumber: string
-  phoneNumber: string
-  whatsAppNumber: string
-  email: string
-  emergencyContact: string
-  gender: $Enums.Gender
-  sectionId: string
-  gradeId: string
-  organizationId: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  Fee?: Prisma.FeeUncheckedCreateNestedManyWithoutStudentInput
-  StudentAttendance?: Prisma.StudentAttendanceUncheckedCreateNestedManyWithoutStudentInput
-  StudentDocument?: Prisma.StudentDocumentUncheckedCreateNestedManyWithoutStudentInput
-  NotificationLog?: Prisma.NotificationLogUncheckedCreateNestedManyWithoutStudentInput
-  reportCard?: Prisma.ReportCardUncheckedCreateNestedManyWithoutStudentInput
-  hallTicket?: Prisma.HallTicketUncheckedCreateNestedManyWithoutStudentInput
-  examResult?: Prisma.ExamResultUncheckedCreateNestedManyWithoutStudentInput
-  examEnrollment?: Prisma.ExamEnrollmentUncheckedCreateNestedManyWithoutStudentInput
-}
-
-export type StudentCreateOrConnectWithoutParentsInput = {
-  where: Prisma.StudentWhereUniqueInput
-  create: Prisma.XOR<Prisma.StudentCreateWithoutParentsInput, Prisma.StudentUncheckedCreateWithoutParentsInput>
-}
-
-export type StudentUpsertWithoutParentsInput = {
-  update: Prisma.XOR<Prisma.StudentUpdateWithoutParentsInput, Prisma.StudentUncheckedUpdateWithoutParentsInput>
-  create: Prisma.XOR<Prisma.StudentCreateWithoutParentsInput, Prisma.StudentUncheckedCreateWithoutParentsInput>
-  where?: Prisma.StudentWhereInput
-}
-
-export type StudentUpdateToOneWithWhereWithoutParentsInput = {
-  where?: Prisma.StudentWhereInput
-  data: Prisma.XOR<Prisma.StudentUpdateWithoutParentsInput, Prisma.StudentUncheckedUpdateWithoutParentsInput>
-}
-
-export type StudentUpdateWithoutParentsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  firstName?: Prisma.StringFieldUpdateOperationsInput | string
-  lastName?: Prisma.StringFieldUpdateOperationsInput | string
-  middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  motherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  dateOfBirth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  profileImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  rollNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  whatsAppNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  emergencyContact?: Prisma.StringFieldUpdateOperationsInput | string
-  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutStudentNestedInput
-  section?: Prisma.SectionUpdateOneRequiredWithoutStudentsNestedInput
-  grade?: Prisma.GradeUpdateOneRequiredWithoutStudentsNestedInput
-  organization?: Prisma.OrganizationUpdateOneRequiredWithoutStudentNestedInput
-  Fee?: Prisma.FeeUpdateManyWithoutStudentNestedInput
-  StudentAttendance?: Prisma.StudentAttendanceUpdateManyWithoutStudentNestedInput
-  StudentDocument?: Prisma.StudentDocumentUpdateManyWithoutStudentNestedInput
-  NotificationLog?: Prisma.NotificationLogUpdateManyWithoutStudentNestedInput
-  reportCard?: Prisma.ReportCardUpdateManyWithoutStudentNestedInput
-  hallTicket?: Prisma.HallTicketUpdateManyWithoutStudentNestedInput
-  examResult?: Prisma.ExamResultUpdateManyWithoutStudentNestedInput
-  examEnrollment?: Prisma.ExamEnrollmentUpdateManyWithoutStudentNestedInput
-}
-
-export type StudentUncheckedUpdateWithoutParentsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
-  firstName?: Prisma.StringFieldUpdateOperationsInput | string
-  lastName?: Prisma.StringFieldUpdateOperationsInput | string
-  middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  motherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  dateOfBirth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  profileImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  rollNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  whatsAppNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  emergencyContact?: Prisma.StringFieldUpdateOperationsInput | string
-  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
-  sectionId?: Prisma.StringFieldUpdateOperationsInput | string
-  gradeId?: Prisma.StringFieldUpdateOperationsInput | string
-  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  Fee?: Prisma.FeeUncheckedUpdateManyWithoutStudentNestedInput
-  StudentAttendance?: Prisma.StudentAttendanceUncheckedUpdateManyWithoutStudentNestedInput
-  StudentDocument?: Prisma.StudentDocumentUncheckedUpdateManyWithoutStudentNestedInput
-  NotificationLog?: Prisma.NotificationLogUncheckedUpdateManyWithoutStudentNestedInput
-  reportCard?: Prisma.ReportCardUncheckedUpdateManyWithoutStudentNestedInput
-  hallTicket?: Prisma.HallTicketUncheckedUpdateManyWithoutStudentNestedInput
-  examResult?: Prisma.ExamResultUncheckedUpdateManyWithoutStudentNestedInput
-  examEnrollment?: Prisma.ExamEnrollmentUncheckedUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentCreateWithoutStudentAttendanceInput = {

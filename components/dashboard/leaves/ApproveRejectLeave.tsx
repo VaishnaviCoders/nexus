@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useTransition } from 'react';
 import {
   Calendar,
   Phone,
@@ -54,6 +54,7 @@ const ApproveRejectLeave = ({ leaves }: ApproveRejectLeaveProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showRejectModal, setShowRejectModal] = useState(false);
   const [rejectNote, setRejectNote] = useState('');
+  const [isPending, startTransition] = useTransition();
 
   const currentLeave = leaves[currentIndex];
 
@@ -66,8 +67,9 @@ const ApproveRejectLeave = ({ leaves }: ApproveRejectLeaveProps) => {
   };
 
   const handleApprove = async () => {
-    console.log('Approved leave:', currentLeave.id);
-    await approveLeaveAction({ leaveId: currentLeave.id });
+    startTransition(async () => {
+      await approveLeaveAction({ leaveId: currentLeave.id });
+    });
   };
 
   const handleReject = () => {
@@ -75,14 +77,15 @@ const ApproveRejectLeave = ({ leaves }: ApproveRejectLeaveProps) => {
   };
 
   const confirmReject = async () => {
-    console.log('Reject leave:', currentLeave.id, 'Note:', rejectNote);
-    await rejectLeaveAction({
-      leaveId: currentLeave.id,
-      rejectedNote: rejectNote,
+    startTransition(async () => {
+      await rejectLeaveAction({
+        leaveId: currentLeave.id,
+        rejectedNote: rejectNote,
+      });
+      // API call to reject leave with note
+      setShowRejectModal(false);
+      setRejectNote('');
     });
-    // API call to reject leave with note
-    setShowRejectModal(false);
-    setRejectNote('');
   };
 
   const handleSkip = () => {
@@ -237,26 +240,29 @@ const ApproveRejectLeave = ({ leaves }: ApproveRejectLeaveProps) => {
 
                 {/* Action Buttons */}
                 <div className="p-2 flex items-center gap-3 ">
-                  <button
+                  <Button
+                    variant={'outline'}
                     onClick={handleSkip}
                     className="px-6 py-3 border-2 border-gray-200 rounded-xl text-gray-700 font-semibold hover:bg-gray-50 transition-colors"
                   >
                     Skip
-                  </button>
-                  <button
+                  </Button>
+                  <Button
+                    variant={'outline'}
                     onClick={handleReject}
-                    className="flex-1 px-6 py-3 border-2 border-red-200 rounded-xl text-red-600 font-semibold hover:bg-red-50 transition-colors flex items-center justify-center gap-2"
+                    className="flex-1 px-6 py-3 border-2 hover:text-red-600 border-red-200 rounded-xl text-red-600 font-semibold hover:bg-red-50 transition-colors flex items-center justify-center gap-2"
                   >
                     <XCircle className="w-5 h-5" />
                     Reject
-                  </button>
-                  <button
+                  </Button>
+                  <Button
+                    variant={'outline'}
                     onClick={handleApprove}
-                    className="flex-1 px-6 py-3 bg-green-100 rounded-xl text-green-500 font-semibold hover:bg-green-200 transition-colors flex items-center justify-center gap-2"
+                    className="flex-1 px-6 py-3 hover:text-green-600 bg-green-100 rounded-xl text-green-500 font-semibold hover:bg-green-200 transition-colors flex items-center justify-center gap-2"
                   >
                     <CheckCircle className="w-5 h-5" />
-                    Approve
-                  </button>
+                    {isPending ? 'Approving' : 'Approve'}
+                  </Button>
                 </div>
               </CardContent>
             </Card>
@@ -279,7 +285,8 @@ const ApproveRejectLeave = ({ leaves }: ApproveRejectLeaveProps) => {
                   className="w-full p-3 border border-gray-300 rounded-lg mb-4 min-h-[100px] focus:outline-none focus:ring-2 focus:ring-red-500"
                 />
                 <div className="flex gap-3">
-                  <button
+                  <Button
+                    variant={'outline'}
                     onClick={() => {
                       setShowRejectModal(false);
                       setRejectNote('');
@@ -287,14 +294,14 @@ const ApproveRejectLeave = ({ leaves }: ApproveRejectLeaveProps) => {
                     className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl text-gray-700 font-semibold hover:bg-gray-50 transition-colors"
                   >
                     Cancel
-                  </button>
-                  <button
+                  </Button>
+                  <Button
                     onClick={confirmReject}
                     disabled={!rejectNote.trim()}
                     className="flex-1 px-4 py-3 bg-red-600 rounded-xl text-white font-semibold hover:bg-red-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
                   >
-                    Confirm Reject
-                  </button>
+                    {isPending ? 'Rejecting' : 'Confirm Reject'}
+                  </Button>
                 </div>
               </div>
             </div>

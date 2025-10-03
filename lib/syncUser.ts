@@ -64,6 +64,14 @@ export const syncUser = async (
   if (!email) throw new Error('User email is missing');
 
   try {
+    const existingUser = await prisma.user.findUnique({
+      where: {
+        id: clerkId,
+        organizationId: orgId,
+      },
+    });
+
+    if (existingUser) return;
     await prisma.user.upsert({
       where: { clerkId },
       update: {

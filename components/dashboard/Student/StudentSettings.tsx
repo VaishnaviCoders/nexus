@@ -19,6 +19,8 @@ import SidebarPreferences from '@/components/dashboard-layout/sidebar-preference
 import prisma from '@/lib/db';
 import { getCurrentUserId } from '@/lib/user';
 import { getCurrentUserByRole } from '@/lib/auth';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 export async function getStudentProfile(studentId?: string) {
   try {
@@ -197,7 +199,8 @@ export default async function StudentSettings() {
             </CardHeader>
             <CardContent>
               <Suspense fallback={<EmergencyContactSkeleton />}>
-                {/* <EmergencyContactForm /> */}
+                <Label>Emergency Contact </Label>
+                <Input value={student.emergencyContact} readOnly disabled />
               </Suspense>
             </CardContent>
           </Card>

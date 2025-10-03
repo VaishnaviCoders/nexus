@@ -276,6 +276,11 @@ export type GradeOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type GradeScalarRelationFilter = {
+  is?: Prisma.GradeWhereInput
+  isNot?: Prisma.GradeWhereInput
+}
+
 export type GradeOrderByRelevanceInput = {
   fields: Prisma.GradeOrderByRelevanceFieldEnum | Prisma.GradeOrderByRelevanceFieldEnum[]
   sort: Prisma.SortOrder
@@ -298,11 +303,6 @@ export type GradeMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   grade?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
-}
-
-export type GradeScalarRelationFilter = {
-  is?: Prisma.GradeWhereInput
-  isNot?: Prisma.GradeWhereInput
 }
 
 export type GradeCreateNestedManyWithoutOrganizationInput = {
@@ -347,6 +347,20 @@ export type GradeUncheckedUpdateManyWithoutOrganizationNestedInput = {
   deleteMany?: Prisma.GradeScalarWhereInput | Prisma.GradeScalarWhereInput[]
 }
 
+export type GradeCreateNestedOneWithoutStudentsInput = {
+  create?: Prisma.XOR<Prisma.GradeCreateWithoutStudentsInput, Prisma.GradeUncheckedCreateWithoutStudentsInput>
+  connectOrCreate?: Prisma.GradeCreateOrConnectWithoutStudentsInput
+  connect?: Prisma.GradeWhereUniqueInput
+}
+
+export type GradeUpdateOneRequiredWithoutStudentsNestedInput = {
+  create?: Prisma.XOR<Prisma.GradeCreateWithoutStudentsInput, Prisma.GradeUncheckedCreateWithoutStudentsInput>
+  connectOrCreate?: Prisma.GradeCreateOrConnectWithoutStudentsInput
+  upsert?: Prisma.GradeUpsertWithoutStudentsInput
+  connect?: Prisma.GradeWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.GradeUpdateToOneWithWhereWithoutStudentsInput, Prisma.GradeUpdateWithoutStudentsInput>, Prisma.GradeUncheckedUpdateWithoutStudentsInput>
+}
+
 export type GradeCreateNestedOneWithoutSectionInput = {
   create?: Prisma.XOR<Prisma.GradeCreateWithoutSectionInput, Prisma.GradeUncheckedCreateWithoutSectionInput>
   connectOrCreate?: Prisma.GradeCreateOrConnectWithoutSectionInput
@@ -373,20 +387,6 @@ export type GradeUpdateOneRequiredWithoutTeachingAssignmentNestedInput = {
   upsert?: Prisma.GradeUpsertWithoutTeachingAssignmentInput
   connect?: Prisma.GradeWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.GradeUpdateToOneWithWhereWithoutTeachingAssignmentInput, Prisma.GradeUpdateWithoutTeachingAssignmentInput>, Prisma.GradeUncheckedUpdateWithoutTeachingAssignmentInput>
-}
-
-export type GradeCreateNestedOneWithoutStudentsInput = {
-  create?: Prisma.XOR<Prisma.GradeCreateWithoutStudentsInput, Prisma.GradeUncheckedCreateWithoutStudentsInput>
-  connectOrCreate?: Prisma.GradeCreateOrConnectWithoutStudentsInput
-  connect?: Prisma.GradeWhereUniqueInput
-}
-
-export type GradeUpdateOneRequiredWithoutStudentsNestedInput = {
-  create?: Prisma.XOR<Prisma.GradeCreateWithoutStudentsInput, Prisma.GradeUncheckedCreateWithoutStudentsInput>
-  connectOrCreate?: Prisma.GradeCreateOrConnectWithoutStudentsInput
-  upsert?: Prisma.GradeUpsertWithoutStudentsInput
-  connect?: Prisma.GradeWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.GradeUpdateToOneWithWhereWithoutStudentsInput, Prisma.GradeUpdateWithoutStudentsInput>, Prisma.GradeUncheckedUpdateWithoutStudentsInput>
 }
 
 export type GradeCreateWithoutOrganizationInput = {
@@ -438,6 +438,54 @@ export type GradeScalarWhereInput = {
   id?: Prisma.StringFilter<"Grade"> | string
   grade?: Prisma.StringFilter<"Grade"> | string
   organizationId?: Prisma.StringFilter<"Grade"> | string
+}
+
+export type GradeCreateWithoutStudentsInput = {
+  id?: string
+  grade: string
+  organization: Prisma.OrganizationCreateNestedOneWithoutGradeInput
+  section?: Prisma.SectionCreateNestedManyWithoutGradeInput
+  TeachingAssignment?: Prisma.TeachingAssignmentCreateNestedManyWithoutGradeInput
+}
+
+export type GradeUncheckedCreateWithoutStudentsInput = {
+  id?: string
+  grade: string
+  organizationId: string
+  section?: Prisma.SectionUncheckedCreateNestedManyWithoutGradeInput
+  TeachingAssignment?: Prisma.TeachingAssignmentUncheckedCreateNestedManyWithoutGradeInput
+}
+
+export type GradeCreateOrConnectWithoutStudentsInput = {
+  where: Prisma.GradeWhereUniqueInput
+  create: Prisma.XOR<Prisma.GradeCreateWithoutStudentsInput, Prisma.GradeUncheckedCreateWithoutStudentsInput>
+}
+
+export type GradeUpsertWithoutStudentsInput = {
+  update: Prisma.XOR<Prisma.GradeUpdateWithoutStudentsInput, Prisma.GradeUncheckedUpdateWithoutStudentsInput>
+  create: Prisma.XOR<Prisma.GradeCreateWithoutStudentsInput, Prisma.GradeUncheckedCreateWithoutStudentsInput>
+  where?: Prisma.GradeWhereInput
+}
+
+export type GradeUpdateToOneWithWhereWithoutStudentsInput = {
+  where?: Prisma.GradeWhereInput
+  data: Prisma.XOR<Prisma.GradeUpdateWithoutStudentsInput, Prisma.GradeUncheckedUpdateWithoutStudentsInput>
+}
+
+export type GradeUpdateWithoutStudentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  grade?: Prisma.StringFieldUpdateOperationsInput | string
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutGradeNestedInput
+  section?: Prisma.SectionUpdateManyWithoutGradeNestedInput
+  TeachingAssignment?: Prisma.TeachingAssignmentUpdateManyWithoutGradeNestedInput
+}
+
+export type GradeUncheckedUpdateWithoutStudentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  grade?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  section?: Prisma.SectionUncheckedUpdateManyWithoutGradeNestedInput
+  TeachingAssignment?: Prisma.TeachingAssignmentUncheckedUpdateManyWithoutGradeNestedInput
 }
 
 export type GradeCreateWithoutSectionInput = {
@@ -534,54 +582,6 @@ export type GradeUncheckedUpdateWithoutTeachingAssignmentInput = {
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
   students?: Prisma.StudentUncheckedUpdateManyWithoutGradeNestedInput
   section?: Prisma.SectionUncheckedUpdateManyWithoutGradeNestedInput
-}
-
-export type GradeCreateWithoutStudentsInput = {
-  id?: string
-  grade: string
-  organization: Prisma.OrganizationCreateNestedOneWithoutGradeInput
-  section?: Prisma.SectionCreateNestedManyWithoutGradeInput
-  TeachingAssignment?: Prisma.TeachingAssignmentCreateNestedManyWithoutGradeInput
-}
-
-export type GradeUncheckedCreateWithoutStudentsInput = {
-  id?: string
-  grade: string
-  organizationId: string
-  section?: Prisma.SectionUncheckedCreateNestedManyWithoutGradeInput
-  TeachingAssignment?: Prisma.TeachingAssignmentUncheckedCreateNestedManyWithoutGradeInput
-}
-
-export type GradeCreateOrConnectWithoutStudentsInput = {
-  where: Prisma.GradeWhereUniqueInput
-  create: Prisma.XOR<Prisma.GradeCreateWithoutStudentsInput, Prisma.GradeUncheckedCreateWithoutStudentsInput>
-}
-
-export type GradeUpsertWithoutStudentsInput = {
-  update: Prisma.XOR<Prisma.GradeUpdateWithoutStudentsInput, Prisma.GradeUncheckedUpdateWithoutStudentsInput>
-  create: Prisma.XOR<Prisma.GradeCreateWithoutStudentsInput, Prisma.GradeUncheckedCreateWithoutStudentsInput>
-  where?: Prisma.GradeWhereInput
-}
-
-export type GradeUpdateToOneWithWhereWithoutStudentsInput = {
-  where?: Prisma.GradeWhereInput
-  data: Prisma.XOR<Prisma.GradeUpdateWithoutStudentsInput, Prisma.GradeUncheckedUpdateWithoutStudentsInput>
-}
-
-export type GradeUpdateWithoutStudentsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  grade?: Prisma.StringFieldUpdateOperationsInput | string
-  organization?: Prisma.OrganizationUpdateOneRequiredWithoutGradeNestedInput
-  section?: Prisma.SectionUpdateManyWithoutGradeNestedInput
-  TeachingAssignment?: Prisma.TeachingAssignmentUpdateManyWithoutGradeNestedInput
-}
-
-export type GradeUncheckedUpdateWithoutStudentsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  grade?: Prisma.StringFieldUpdateOperationsInput | string
-  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
-  section?: Prisma.SectionUncheckedUpdateManyWithoutGradeNestedInput
-  TeachingAssignment?: Prisma.TeachingAssignmentUncheckedUpdateManyWithoutGradeNestedInput
 }
 
 export type GradeCreateManyOrganizationInput = {

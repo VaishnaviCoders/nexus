@@ -507,48 +507,6 @@ export type StudentAttendanceUncheckedUpdateManyWithoutAcademicYearNestedInput =
   deleteMany?: Prisma.StudentAttendanceScalarWhereInput | Prisma.StudentAttendanceScalarWhereInput[]
 }
 
-export type StudentAttendanceCreateNestedManyWithoutSectionInput = {
-  create?: Prisma.XOR<Prisma.StudentAttendanceCreateWithoutSectionInput, Prisma.StudentAttendanceUncheckedCreateWithoutSectionInput> | Prisma.StudentAttendanceCreateWithoutSectionInput[] | Prisma.StudentAttendanceUncheckedCreateWithoutSectionInput[]
-  connectOrCreate?: Prisma.StudentAttendanceCreateOrConnectWithoutSectionInput | Prisma.StudentAttendanceCreateOrConnectWithoutSectionInput[]
-  createMany?: Prisma.StudentAttendanceCreateManySectionInputEnvelope
-  connect?: Prisma.StudentAttendanceWhereUniqueInput | Prisma.StudentAttendanceWhereUniqueInput[]
-}
-
-export type StudentAttendanceUncheckedCreateNestedManyWithoutSectionInput = {
-  create?: Prisma.XOR<Prisma.StudentAttendanceCreateWithoutSectionInput, Prisma.StudentAttendanceUncheckedCreateWithoutSectionInput> | Prisma.StudentAttendanceCreateWithoutSectionInput[] | Prisma.StudentAttendanceUncheckedCreateWithoutSectionInput[]
-  connectOrCreate?: Prisma.StudentAttendanceCreateOrConnectWithoutSectionInput | Prisma.StudentAttendanceCreateOrConnectWithoutSectionInput[]
-  createMany?: Prisma.StudentAttendanceCreateManySectionInputEnvelope
-  connect?: Prisma.StudentAttendanceWhereUniqueInput | Prisma.StudentAttendanceWhereUniqueInput[]
-}
-
-export type StudentAttendanceUpdateManyWithoutSectionNestedInput = {
-  create?: Prisma.XOR<Prisma.StudentAttendanceCreateWithoutSectionInput, Prisma.StudentAttendanceUncheckedCreateWithoutSectionInput> | Prisma.StudentAttendanceCreateWithoutSectionInput[] | Prisma.StudentAttendanceUncheckedCreateWithoutSectionInput[]
-  connectOrCreate?: Prisma.StudentAttendanceCreateOrConnectWithoutSectionInput | Prisma.StudentAttendanceCreateOrConnectWithoutSectionInput[]
-  upsert?: Prisma.StudentAttendanceUpsertWithWhereUniqueWithoutSectionInput | Prisma.StudentAttendanceUpsertWithWhereUniqueWithoutSectionInput[]
-  createMany?: Prisma.StudentAttendanceCreateManySectionInputEnvelope
-  set?: Prisma.StudentAttendanceWhereUniqueInput | Prisma.StudentAttendanceWhereUniqueInput[]
-  disconnect?: Prisma.StudentAttendanceWhereUniqueInput | Prisma.StudentAttendanceWhereUniqueInput[]
-  delete?: Prisma.StudentAttendanceWhereUniqueInput | Prisma.StudentAttendanceWhereUniqueInput[]
-  connect?: Prisma.StudentAttendanceWhereUniqueInput | Prisma.StudentAttendanceWhereUniqueInput[]
-  update?: Prisma.StudentAttendanceUpdateWithWhereUniqueWithoutSectionInput | Prisma.StudentAttendanceUpdateWithWhereUniqueWithoutSectionInput[]
-  updateMany?: Prisma.StudentAttendanceUpdateManyWithWhereWithoutSectionInput | Prisma.StudentAttendanceUpdateManyWithWhereWithoutSectionInput[]
-  deleteMany?: Prisma.StudentAttendanceScalarWhereInput | Prisma.StudentAttendanceScalarWhereInput[]
-}
-
-export type StudentAttendanceUncheckedUpdateManyWithoutSectionNestedInput = {
-  create?: Prisma.XOR<Prisma.StudentAttendanceCreateWithoutSectionInput, Prisma.StudentAttendanceUncheckedCreateWithoutSectionInput> | Prisma.StudentAttendanceCreateWithoutSectionInput[] | Prisma.StudentAttendanceUncheckedCreateWithoutSectionInput[]
-  connectOrCreate?: Prisma.StudentAttendanceCreateOrConnectWithoutSectionInput | Prisma.StudentAttendanceCreateOrConnectWithoutSectionInput[]
-  upsert?: Prisma.StudentAttendanceUpsertWithWhereUniqueWithoutSectionInput | Prisma.StudentAttendanceUpsertWithWhereUniqueWithoutSectionInput[]
-  createMany?: Prisma.StudentAttendanceCreateManySectionInputEnvelope
-  set?: Prisma.StudentAttendanceWhereUniqueInput | Prisma.StudentAttendanceWhereUniqueInput[]
-  disconnect?: Prisma.StudentAttendanceWhereUniqueInput | Prisma.StudentAttendanceWhereUniqueInput[]
-  delete?: Prisma.StudentAttendanceWhereUniqueInput | Prisma.StudentAttendanceWhereUniqueInput[]
-  connect?: Prisma.StudentAttendanceWhereUniqueInput | Prisma.StudentAttendanceWhereUniqueInput[]
-  update?: Prisma.StudentAttendanceUpdateWithWhereUniqueWithoutSectionInput | Prisma.StudentAttendanceUpdateWithWhereUniqueWithoutSectionInput[]
-  updateMany?: Prisma.StudentAttendanceUpdateManyWithWhereWithoutSectionInput | Prisma.StudentAttendanceUpdateManyWithWhereWithoutSectionInput[]
-  deleteMany?: Prisma.StudentAttendanceScalarWhereInput | Prisma.StudentAttendanceScalarWhereInput[]
-}
-
 export type StudentAttendanceCreateNestedManyWithoutStudentInput = {
   create?: Prisma.XOR<Prisma.StudentAttendanceCreateWithoutStudentInput, Prisma.StudentAttendanceUncheckedCreateWithoutStudentInput> | Prisma.StudentAttendanceCreateWithoutStudentInput[] | Prisma.StudentAttendanceUncheckedCreateWithoutStudentInput[]
   connectOrCreate?: Prisma.StudentAttendanceCreateOrConnectWithoutStudentInput | Prisma.StudentAttendanceCreateOrConnectWithoutStudentInput[]
@@ -588,6 +546,48 @@ export type StudentAttendanceUncheckedUpdateManyWithoutStudentNestedInput = {
   connect?: Prisma.StudentAttendanceWhereUniqueInput | Prisma.StudentAttendanceWhereUniqueInput[]
   update?: Prisma.StudentAttendanceUpdateWithWhereUniqueWithoutStudentInput | Prisma.StudentAttendanceUpdateWithWhereUniqueWithoutStudentInput[]
   updateMany?: Prisma.StudentAttendanceUpdateManyWithWhereWithoutStudentInput | Prisma.StudentAttendanceUpdateManyWithWhereWithoutStudentInput[]
+  deleteMany?: Prisma.StudentAttendanceScalarWhereInput | Prisma.StudentAttendanceScalarWhereInput[]
+}
+
+export type StudentAttendanceCreateNestedManyWithoutSectionInput = {
+  create?: Prisma.XOR<Prisma.StudentAttendanceCreateWithoutSectionInput, Prisma.StudentAttendanceUncheckedCreateWithoutSectionInput> | Prisma.StudentAttendanceCreateWithoutSectionInput[] | Prisma.StudentAttendanceUncheckedCreateWithoutSectionInput[]
+  connectOrCreate?: Prisma.StudentAttendanceCreateOrConnectWithoutSectionInput | Prisma.StudentAttendanceCreateOrConnectWithoutSectionInput[]
+  createMany?: Prisma.StudentAttendanceCreateManySectionInputEnvelope
+  connect?: Prisma.StudentAttendanceWhereUniqueInput | Prisma.StudentAttendanceWhereUniqueInput[]
+}
+
+export type StudentAttendanceUncheckedCreateNestedManyWithoutSectionInput = {
+  create?: Prisma.XOR<Prisma.StudentAttendanceCreateWithoutSectionInput, Prisma.StudentAttendanceUncheckedCreateWithoutSectionInput> | Prisma.StudentAttendanceCreateWithoutSectionInput[] | Prisma.StudentAttendanceUncheckedCreateWithoutSectionInput[]
+  connectOrCreate?: Prisma.StudentAttendanceCreateOrConnectWithoutSectionInput | Prisma.StudentAttendanceCreateOrConnectWithoutSectionInput[]
+  createMany?: Prisma.StudentAttendanceCreateManySectionInputEnvelope
+  connect?: Prisma.StudentAttendanceWhereUniqueInput | Prisma.StudentAttendanceWhereUniqueInput[]
+}
+
+export type StudentAttendanceUpdateManyWithoutSectionNestedInput = {
+  create?: Prisma.XOR<Prisma.StudentAttendanceCreateWithoutSectionInput, Prisma.StudentAttendanceUncheckedCreateWithoutSectionInput> | Prisma.StudentAttendanceCreateWithoutSectionInput[] | Prisma.StudentAttendanceUncheckedCreateWithoutSectionInput[]
+  connectOrCreate?: Prisma.StudentAttendanceCreateOrConnectWithoutSectionInput | Prisma.StudentAttendanceCreateOrConnectWithoutSectionInput[]
+  upsert?: Prisma.StudentAttendanceUpsertWithWhereUniqueWithoutSectionInput | Prisma.StudentAttendanceUpsertWithWhereUniqueWithoutSectionInput[]
+  createMany?: Prisma.StudentAttendanceCreateManySectionInputEnvelope
+  set?: Prisma.StudentAttendanceWhereUniqueInput | Prisma.StudentAttendanceWhereUniqueInput[]
+  disconnect?: Prisma.StudentAttendanceWhereUniqueInput | Prisma.StudentAttendanceWhereUniqueInput[]
+  delete?: Prisma.StudentAttendanceWhereUniqueInput | Prisma.StudentAttendanceWhereUniqueInput[]
+  connect?: Prisma.StudentAttendanceWhereUniqueInput | Prisma.StudentAttendanceWhereUniqueInput[]
+  update?: Prisma.StudentAttendanceUpdateWithWhereUniqueWithoutSectionInput | Prisma.StudentAttendanceUpdateWithWhereUniqueWithoutSectionInput[]
+  updateMany?: Prisma.StudentAttendanceUpdateManyWithWhereWithoutSectionInput | Prisma.StudentAttendanceUpdateManyWithWhereWithoutSectionInput[]
+  deleteMany?: Prisma.StudentAttendanceScalarWhereInput | Prisma.StudentAttendanceScalarWhereInput[]
+}
+
+export type StudentAttendanceUncheckedUpdateManyWithoutSectionNestedInput = {
+  create?: Prisma.XOR<Prisma.StudentAttendanceCreateWithoutSectionInput, Prisma.StudentAttendanceUncheckedCreateWithoutSectionInput> | Prisma.StudentAttendanceCreateWithoutSectionInput[] | Prisma.StudentAttendanceUncheckedCreateWithoutSectionInput[]
+  connectOrCreate?: Prisma.StudentAttendanceCreateOrConnectWithoutSectionInput | Prisma.StudentAttendanceCreateOrConnectWithoutSectionInput[]
+  upsert?: Prisma.StudentAttendanceUpsertWithWhereUniqueWithoutSectionInput | Prisma.StudentAttendanceUpsertWithWhereUniqueWithoutSectionInput[]
+  createMany?: Prisma.StudentAttendanceCreateManySectionInputEnvelope
+  set?: Prisma.StudentAttendanceWhereUniqueInput | Prisma.StudentAttendanceWhereUniqueInput[]
+  disconnect?: Prisma.StudentAttendanceWhereUniqueInput | Prisma.StudentAttendanceWhereUniqueInput[]
+  delete?: Prisma.StudentAttendanceWhereUniqueInput | Prisma.StudentAttendanceWhereUniqueInput[]
+  connect?: Prisma.StudentAttendanceWhereUniqueInput | Prisma.StudentAttendanceWhereUniqueInput[]
+  update?: Prisma.StudentAttendanceUpdateWithWhereUniqueWithoutSectionInput | Prisma.StudentAttendanceUpdateWithWhereUniqueWithoutSectionInput[]
+  updateMany?: Prisma.StudentAttendanceUpdateManyWithWhereWithoutSectionInput | Prisma.StudentAttendanceUpdateManyWithWhereWithoutSectionInput[]
   deleteMany?: Prisma.StudentAttendanceScalarWhereInput | Prisma.StudentAttendanceScalarWhereInput[]
 }
 
@@ -664,58 +664,6 @@ export type StudentAttendanceScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"StudentAttendance"> | Date | string
 }
 
-export type StudentAttendanceCreateWithoutSectionInput = {
-  id?: string
-  date: Date | string
-  status: $Enums.AttendanceStatus
-  note?: string | null
-  recordedBy: string
-  present?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  student: Prisma.StudentCreateNestedOneWithoutStudentAttendanceInput
-  academicYear: Prisma.AcademicYearCreateNestedOneWithoutStudentAttendanceInput
-}
-
-export type StudentAttendanceUncheckedCreateWithoutSectionInput = {
-  id?: string
-  date: Date | string
-  status: $Enums.AttendanceStatus
-  note?: string | null
-  recordedBy: string
-  studentId: string
-  present?: boolean
-  academicYearId: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
-}
-
-export type StudentAttendanceCreateOrConnectWithoutSectionInput = {
-  where: Prisma.StudentAttendanceWhereUniqueInput
-  create: Prisma.XOR<Prisma.StudentAttendanceCreateWithoutSectionInput, Prisma.StudentAttendanceUncheckedCreateWithoutSectionInput>
-}
-
-export type StudentAttendanceCreateManySectionInputEnvelope = {
-  data: Prisma.StudentAttendanceCreateManySectionInput | Prisma.StudentAttendanceCreateManySectionInput[]
-  skipDuplicates?: boolean
-}
-
-export type StudentAttendanceUpsertWithWhereUniqueWithoutSectionInput = {
-  where: Prisma.StudentAttendanceWhereUniqueInput
-  update: Prisma.XOR<Prisma.StudentAttendanceUpdateWithoutSectionInput, Prisma.StudentAttendanceUncheckedUpdateWithoutSectionInput>
-  create: Prisma.XOR<Prisma.StudentAttendanceCreateWithoutSectionInput, Prisma.StudentAttendanceUncheckedCreateWithoutSectionInput>
-}
-
-export type StudentAttendanceUpdateWithWhereUniqueWithoutSectionInput = {
-  where: Prisma.StudentAttendanceWhereUniqueInput
-  data: Prisma.XOR<Prisma.StudentAttendanceUpdateWithoutSectionInput, Prisma.StudentAttendanceUncheckedUpdateWithoutSectionInput>
-}
-
-export type StudentAttendanceUpdateManyWithWhereWithoutSectionInput = {
-  where: Prisma.StudentAttendanceScalarWhereInput
-  data: Prisma.XOR<Prisma.StudentAttendanceUpdateManyMutationInput, Prisma.StudentAttendanceUncheckedUpdateManyWithoutSectionInput>
-}
-
 export type StudentAttendanceCreateWithoutStudentInput = {
   id?: string
   date: Date | string
@@ -766,6 +714,58 @@ export type StudentAttendanceUpdateWithWhereUniqueWithoutStudentInput = {
 export type StudentAttendanceUpdateManyWithWhereWithoutStudentInput = {
   where: Prisma.StudentAttendanceScalarWhereInput
   data: Prisma.XOR<Prisma.StudentAttendanceUpdateManyMutationInput, Prisma.StudentAttendanceUncheckedUpdateManyWithoutStudentInput>
+}
+
+export type StudentAttendanceCreateWithoutSectionInput = {
+  id?: string
+  date: Date | string
+  status: $Enums.AttendanceStatus
+  note?: string | null
+  recordedBy: string
+  present?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  student: Prisma.StudentCreateNestedOneWithoutStudentAttendanceInput
+  academicYear: Prisma.AcademicYearCreateNestedOneWithoutStudentAttendanceInput
+}
+
+export type StudentAttendanceUncheckedCreateWithoutSectionInput = {
+  id?: string
+  date: Date | string
+  status: $Enums.AttendanceStatus
+  note?: string | null
+  recordedBy: string
+  studentId: string
+  present?: boolean
+  academicYearId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type StudentAttendanceCreateOrConnectWithoutSectionInput = {
+  where: Prisma.StudentAttendanceWhereUniqueInput
+  create: Prisma.XOR<Prisma.StudentAttendanceCreateWithoutSectionInput, Prisma.StudentAttendanceUncheckedCreateWithoutSectionInput>
+}
+
+export type StudentAttendanceCreateManySectionInputEnvelope = {
+  data: Prisma.StudentAttendanceCreateManySectionInput | Prisma.StudentAttendanceCreateManySectionInput[]
+  skipDuplicates?: boolean
+}
+
+export type StudentAttendanceUpsertWithWhereUniqueWithoutSectionInput = {
+  where: Prisma.StudentAttendanceWhereUniqueInput
+  update: Prisma.XOR<Prisma.StudentAttendanceUpdateWithoutSectionInput, Prisma.StudentAttendanceUncheckedUpdateWithoutSectionInput>
+  create: Prisma.XOR<Prisma.StudentAttendanceCreateWithoutSectionInput, Prisma.StudentAttendanceUncheckedCreateWithoutSectionInput>
+}
+
+export type StudentAttendanceUpdateWithWhereUniqueWithoutSectionInput = {
+  where: Prisma.StudentAttendanceWhereUniqueInput
+  data: Prisma.XOR<Prisma.StudentAttendanceUpdateWithoutSectionInput, Prisma.StudentAttendanceUncheckedUpdateWithoutSectionInput>
+}
+
+export type StudentAttendanceUpdateManyWithWhereWithoutSectionInput = {
+  where: Prisma.StudentAttendanceScalarWhereInput
+  data: Prisma.XOR<Prisma.StudentAttendanceUpdateManyMutationInput, Prisma.StudentAttendanceUncheckedUpdateManyWithoutSectionInput>
 }
 
 export type StudentAttendanceCreateManyAcademicYearInput = {
@@ -820,58 +820,6 @@ export type StudentAttendanceUncheckedUpdateManyWithoutAcademicYearInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type StudentAttendanceCreateManySectionInput = {
-  id?: string
-  date: Date | string
-  status: $Enums.AttendanceStatus
-  note?: string | null
-  recordedBy: string
-  studentId: string
-  present?: boolean
-  academicYearId: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
-}
-
-export type StudentAttendanceUpdateWithoutSectionInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  status?: Prisma.EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
-  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  recordedBy?: Prisma.StringFieldUpdateOperationsInput | string
-  present?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  student?: Prisma.StudentUpdateOneRequiredWithoutStudentAttendanceNestedInput
-  academicYear?: Prisma.AcademicYearUpdateOneRequiredWithoutStudentAttendanceNestedInput
-}
-
-export type StudentAttendanceUncheckedUpdateWithoutSectionInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  status?: Prisma.EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
-  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  recordedBy?: Prisma.StringFieldUpdateOperationsInput | string
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string
-  present?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type StudentAttendanceUncheckedUpdateManyWithoutSectionInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  status?: Prisma.EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
-  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  recordedBy?: Prisma.StringFieldUpdateOperationsInput | string
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string
-  present?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
 export type StudentAttendanceCreateManyStudentInput = {
   id?: string
   date: Date | string
@@ -919,6 +867,58 @@ export type StudentAttendanceUncheckedUpdateManyWithoutStudentInput = {
   recordedBy?: Prisma.StringFieldUpdateOperationsInput | string
   present?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sectionId?: Prisma.StringFieldUpdateOperationsInput | string
+  academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type StudentAttendanceCreateManySectionInput = {
+  id?: string
+  date: Date | string
+  status: $Enums.AttendanceStatus
+  note?: string | null
+  recordedBy: string
+  studentId: string
+  present?: boolean
+  academicYearId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type StudentAttendanceUpdateWithoutSectionInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recordedBy?: Prisma.StringFieldUpdateOperationsInput | string
+  present?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  student?: Prisma.StudentUpdateOneRequiredWithoutStudentAttendanceNestedInput
+  academicYear?: Prisma.AcademicYearUpdateOneRequiredWithoutStudentAttendanceNestedInput
+}
+
+export type StudentAttendanceUncheckedUpdateWithoutSectionInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recordedBy?: Prisma.StringFieldUpdateOperationsInput | string
+  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  present?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type StudentAttendanceUncheckedUpdateManyWithoutSectionInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recordedBy?: Prisma.StringFieldUpdateOperationsInput | string
+  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  present?: Prisma.BoolFieldUpdateOperationsInput | boolean
   academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string

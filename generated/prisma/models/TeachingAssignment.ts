@@ -558,6 +558,48 @@ export type TeachingAssignmentUncheckedUpdateManyWithoutOrganizationNestedInput 
   deleteMany?: Prisma.TeachingAssignmentScalarWhereInput | Prisma.TeachingAssignmentScalarWhereInput[]
 }
 
+export type TeachingAssignmentCreateNestedManyWithoutTeacherInput = {
+  create?: Prisma.XOR<Prisma.TeachingAssignmentCreateWithoutTeacherInput, Prisma.TeachingAssignmentUncheckedCreateWithoutTeacherInput> | Prisma.TeachingAssignmentCreateWithoutTeacherInput[] | Prisma.TeachingAssignmentUncheckedCreateWithoutTeacherInput[]
+  connectOrCreate?: Prisma.TeachingAssignmentCreateOrConnectWithoutTeacherInput | Prisma.TeachingAssignmentCreateOrConnectWithoutTeacherInput[]
+  createMany?: Prisma.TeachingAssignmentCreateManyTeacherInputEnvelope
+  connect?: Prisma.TeachingAssignmentWhereUniqueInput | Prisma.TeachingAssignmentWhereUniqueInput[]
+}
+
+export type TeachingAssignmentUncheckedCreateNestedManyWithoutTeacherInput = {
+  create?: Prisma.XOR<Prisma.TeachingAssignmentCreateWithoutTeacherInput, Prisma.TeachingAssignmentUncheckedCreateWithoutTeacherInput> | Prisma.TeachingAssignmentCreateWithoutTeacherInput[] | Prisma.TeachingAssignmentUncheckedCreateWithoutTeacherInput[]
+  connectOrCreate?: Prisma.TeachingAssignmentCreateOrConnectWithoutTeacherInput | Prisma.TeachingAssignmentCreateOrConnectWithoutTeacherInput[]
+  createMany?: Prisma.TeachingAssignmentCreateManyTeacherInputEnvelope
+  connect?: Prisma.TeachingAssignmentWhereUniqueInput | Prisma.TeachingAssignmentWhereUniqueInput[]
+}
+
+export type TeachingAssignmentUpdateManyWithoutTeacherNestedInput = {
+  create?: Prisma.XOR<Prisma.TeachingAssignmentCreateWithoutTeacherInput, Prisma.TeachingAssignmentUncheckedCreateWithoutTeacherInput> | Prisma.TeachingAssignmentCreateWithoutTeacherInput[] | Prisma.TeachingAssignmentUncheckedCreateWithoutTeacherInput[]
+  connectOrCreate?: Prisma.TeachingAssignmentCreateOrConnectWithoutTeacherInput | Prisma.TeachingAssignmentCreateOrConnectWithoutTeacherInput[]
+  upsert?: Prisma.TeachingAssignmentUpsertWithWhereUniqueWithoutTeacherInput | Prisma.TeachingAssignmentUpsertWithWhereUniqueWithoutTeacherInput[]
+  createMany?: Prisma.TeachingAssignmentCreateManyTeacherInputEnvelope
+  set?: Prisma.TeachingAssignmentWhereUniqueInput | Prisma.TeachingAssignmentWhereUniqueInput[]
+  disconnect?: Prisma.TeachingAssignmentWhereUniqueInput | Prisma.TeachingAssignmentWhereUniqueInput[]
+  delete?: Prisma.TeachingAssignmentWhereUniqueInput | Prisma.TeachingAssignmentWhereUniqueInput[]
+  connect?: Prisma.TeachingAssignmentWhereUniqueInput | Prisma.TeachingAssignmentWhereUniqueInput[]
+  update?: Prisma.TeachingAssignmentUpdateWithWhereUniqueWithoutTeacherInput | Prisma.TeachingAssignmentUpdateWithWhereUniqueWithoutTeacherInput[]
+  updateMany?: Prisma.TeachingAssignmentUpdateManyWithWhereWithoutTeacherInput | Prisma.TeachingAssignmentUpdateManyWithWhereWithoutTeacherInput[]
+  deleteMany?: Prisma.TeachingAssignmentScalarWhereInput | Prisma.TeachingAssignmentScalarWhereInput[]
+}
+
+export type TeachingAssignmentUncheckedUpdateManyWithoutTeacherNestedInput = {
+  create?: Prisma.XOR<Prisma.TeachingAssignmentCreateWithoutTeacherInput, Prisma.TeachingAssignmentUncheckedCreateWithoutTeacherInput> | Prisma.TeachingAssignmentCreateWithoutTeacherInput[] | Prisma.TeachingAssignmentUncheckedCreateWithoutTeacherInput[]
+  connectOrCreate?: Prisma.TeachingAssignmentCreateOrConnectWithoutTeacherInput | Prisma.TeachingAssignmentCreateOrConnectWithoutTeacherInput[]
+  upsert?: Prisma.TeachingAssignmentUpsertWithWhereUniqueWithoutTeacherInput | Prisma.TeachingAssignmentUpsertWithWhereUniqueWithoutTeacherInput[]
+  createMany?: Prisma.TeachingAssignmentCreateManyTeacherInputEnvelope
+  set?: Prisma.TeachingAssignmentWhereUniqueInput | Prisma.TeachingAssignmentWhereUniqueInput[]
+  disconnect?: Prisma.TeachingAssignmentWhereUniqueInput | Prisma.TeachingAssignmentWhereUniqueInput[]
+  delete?: Prisma.TeachingAssignmentWhereUniqueInput | Prisma.TeachingAssignmentWhereUniqueInput[]
+  connect?: Prisma.TeachingAssignmentWhereUniqueInput | Prisma.TeachingAssignmentWhereUniqueInput[]
+  update?: Prisma.TeachingAssignmentUpdateWithWhereUniqueWithoutTeacherInput | Prisma.TeachingAssignmentUpdateWithWhereUniqueWithoutTeacherInput[]
+  updateMany?: Prisma.TeachingAssignmentUpdateManyWithWhereWithoutTeacherInput | Prisma.TeachingAssignmentUpdateManyWithWhereWithoutTeacherInput[]
+  deleteMany?: Prisma.TeachingAssignmentScalarWhereInput | Prisma.TeachingAssignmentScalarWhereInput[]
+}
+
 export type TeachingAssignmentCreateNestedManyWithoutGradeInput = {
   create?: Prisma.XOR<Prisma.TeachingAssignmentCreateWithoutGradeInput, Prisma.TeachingAssignmentUncheckedCreateWithoutGradeInput> | Prisma.TeachingAssignmentCreateWithoutGradeInput[] | Prisma.TeachingAssignmentUncheckedCreateWithoutGradeInput[]
   connectOrCreate?: Prisma.TeachingAssignmentCreateOrConnectWithoutGradeInput | Prisma.TeachingAssignmentCreateOrConnectWithoutGradeInput[]
@@ -639,48 +681,6 @@ export type TeachingAssignmentUncheckedUpdateManyWithoutSectionNestedInput = {
   connect?: Prisma.TeachingAssignmentWhereUniqueInput | Prisma.TeachingAssignmentWhereUniqueInput[]
   update?: Prisma.TeachingAssignmentUpdateWithWhereUniqueWithoutSectionInput | Prisma.TeachingAssignmentUpdateWithWhereUniqueWithoutSectionInput[]
   updateMany?: Prisma.TeachingAssignmentUpdateManyWithWhereWithoutSectionInput | Prisma.TeachingAssignmentUpdateManyWithWhereWithoutSectionInput[]
-  deleteMany?: Prisma.TeachingAssignmentScalarWhereInput | Prisma.TeachingAssignmentScalarWhereInput[]
-}
-
-export type TeachingAssignmentCreateNestedManyWithoutTeacherInput = {
-  create?: Prisma.XOR<Prisma.TeachingAssignmentCreateWithoutTeacherInput, Prisma.TeachingAssignmentUncheckedCreateWithoutTeacherInput> | Prisma.TeachingAssignmentCreateWithoutTeacherInput[] | Prisma.TeachingAssignmentUncheckedCreateWithoutTeacherInput[]
-  connectOrCreate?: Prisma.TeachingAssignmentCreateOrConnectWithoutTeacherInput | Prisma.TeachingAssignmentCreateOrConnectWithoutTeacherInput[]
-  createMany?: Prisma.TeachingAssignmentCreateManyTeacherInputEnvelope
-  connect?: Prisma.TeachingAssignmentWhereUniqueInput | Prisma.TeachingAssignmentWhereUniqueInput[]
-}
-
-export type TeachingAssignmentUncheckedCreateNestedManyWithoutTeacherInput = {
-  create?: Prisma.XOR<Prisma.TeachingAssignmentCreateWithoutTeacherInput, Prisma.TeachingAssignmentUncheckedCreateWithoutTeacherInput> | Prisma.TeachingAssignmentCreateWithoutTeacherInput[] | Prisma.TeachingAssignmentUncheckedCreateWithoutTeacherInput[]
-  connectOrCreate?: Prisma.TeachingAssignmentCreateOrConnectWithoutTeacherInput | Prisma.TeachingAssignmentCreateOrConnectWithoutTeacherInput[]
-  createMany?: Prisma.TeachingAssignmentCreateManyTeacherInputEnvelope
-  connect?: Prisma.TeachingAssignmentWhereUniqueInput | Prisma.TeachingAssignmentWhereUniqueInput[]
-}
-
-export type TeachingAssignmentUpdateManyWithoutTeacherNestedInput = {
-  create?: Prisma.XOR<Prisma.TeachingAssignmentCreateWithoutTeacherInput, Prisma.TeachingAssignmentUncheckedCreateWithoutTeacherInput> | Prisma.TeachingAssignmentCreateWithoutTeacherInput[] | Prisma.TeachingAssignmentUncheckedCreateWithoutTeacherInput[]
-  connectOrCreate?: Prisma.TeachingAssignmentCreateOrConnectWithoutTeacherInput | Prisma.TeachingAssignmentCreateOrConnectWithoutTeacherInput[]
-  upsert?: Prisma.TeachingAssignmentUpsertWithWhereUniqueWithoutTeacherInput | Prisma.TeachingAssignmentUpsertWithWhereUniqueWithoutTeacherInput[]
-  createMany?: Prisma.TeachingAssignmentCreateManyTeacherInputEnvelope
-  set?: Prisma.TeachingAssignmentWhereUniqueInput | Prisma.TeachingAssignmentWhereUniqueInput[]
-  disconnect?: Prisma.TeachingAssignmentWhereUniqueInput | Prisma.TeachingAssignmentWhereUniqueInput[]
-  delete?: Prisma.TeachingAssignmentWhereUniqueInput | Prisma.TeachingAssignmentWhereUniqueInput[]
-  connect?: Prisma.TeachingAssignmentWhereUniqueInput | Prisma.TeachingAssignmentWhereUniqueInput[]
-  update?: Prisma.TeachingAssignmentUpdateWithWhereUniqueWithoutTeacherInput | Prisma.TeachingAssignmentUpdateWithWhereUniqueWithoutTeacherInput[]
-  updateMany?: Prisma.TeachingAssignmentUpdateManyWithWhereWithoutTeacherInput | Prisma.TeachingAssignmentUpdateManyWithWhereWithoutTeacherInput[]
-  deleteMany?: Prisma.TeachingAssignmentScalarWhereInput | Prisma.TeachingAssignmentScalarWhereInput[]
-}
-
-export type TeachingAssignmentUncheckedUpdateManyWithoutTeacherNestedInput = {
-  create?: Prisma.XOR<Prisma.TeachingAssignmentCreateWithoutTeacherInput, Prisma.TeachingAssignmentUncheckedCreateWithoutTeacherInput> | Prisma.TeachingAssignmentCreateWithoutTeacherInput[] | Prisma.TeachingAssignmentUncheckedCreateWithoutTeacherInput[]
-  connectOrCreate?: Prisma.TeachingAssignmentCreateOrConnectWithoutTeacherInput | Prisma.TeachingAssignmentCreateOrConnectWithoutTeacherInput[]
-  upsert?: Prisma.TeachingAssignmentUpsertWithWhereUniqueWithoutTeacherInput | Prisma.TeachingAssignmentUpsertWithWhereUniqueWithoutTeacherInput[]
-  createMany?: Prisma.TeachingAssignmentCreateManyTeacherInputEnvelope
-  set?: Prisma.TeachingAssignmentWhereUniqueInput | Prisma.TeachingAssignmentWhereUniqueInput[]
-  disconnect?: Prisma.TeachingAssignmentWhereUniqueInput | Prisma.TeachingAssignmentWhereUniqueInput[]
-  delete?: Prisma.TeachingAssignmentWhereUniqueInput | Prisma.TeachingAssignmentWhereUniqueInput[]
-  connect?: Prisma.TeachingAssignmentWhereUniqueInput | Prisma.TeachingAssignmentWhereUniqueInput[]
-  update?: Prisma.TeachingAssignmentUpdateWithWhereUniqueWithoutTeacherInput | Prisma.TeachingAssignmentUpdateWithWhereUniqueWithoutTeacherInput[]
-  updateMany?: Prisma.TeachingAssignmentUpdateManyWithWhereWithoutTeacherInput | Prisma.TeachingAssignmentUpdateManyWithWhereWithoutTeacherInput[]
   deleteMany?: Prisma.TeachingAssignmentScalarWhereInput | Prisma.TeachingAssignmentScalarWhereInput[]
 }
 
@@ -851,6 +851,58 @@ export type TeachingAssignmentUpdateManyWithWhereWithoutOrganizationInput = {
   data: Prisma.XOR<Prisma.TeachingAssignmentUpdateManyMutationInput, Prisma.TeachingAssignmentUncheckedUpdateManyWithoutOrganizationInput>
 }
 
+export type TeachingAssignmentCreateWithoutTeacherInput = {
+  id?: string
+  academicYear?: string | null
+  status?: $Enums.AssignmentStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  subject: Prisma.SubjectCreateNestedOneWithoutTeachingAssignmentsInput
+  grade: Prisma.GradeCreateNestedOneWithoutTeachingAssignmentInput
+  section: Prisma.SectionCreateNestedOneWithoutTeachingAssignmentInput
+  organization: Prisma.OrganizationCreateNestedOneWithoutTeachingAssignmentInput
+  AcademicYear?: Prisma.AcademicYearCreateNestedOneWithoutTeachingAssignmentInput
+}
+
+export type TeachingAssignmentUncheckedCreateWithoutTeacherInput = {
+  id?: string
+  subjectId: string
+  gradeId: string
+  sectionId: string
+  organizationId: string
+  academicYear?: string | null
+  status?: $Enums.AssignmentStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  academicYearId?: string | null
+}
+
+export type TeachingAssignmentCreateOrConnectWithoutTeacherInput = {
+  where: Prisma.TeachingAssignmentWhereUniqueInput
+  create: Prisma.XOR<Prisma.TeachingAssignmentCreateWithoutTeacherInput, Prisma.TeachingAssignmentUncheckedCreateWithoutTeacherInput>
+}
+
+export type TeachingAssignmentCreateManyTeacherInputEnvelope = {
+  data: Prisma.TeachingAssignmentCreateManyTeacherInput | Prisma.TeachingAssignmentCreateManyTeacherInput[]
+  skipDuplicates?: boolean
+}
+
+export type TeachingAssignmentUpsertWithWhereUniqueWithoutTeacherInput = {
+  where: Prisma.TeachingAssignmentWhereUniqueInput
+  update: Prisma.XOR<Prisma.TeachingAssignmentUpdateWithoutTeacherInput, Prisma.TeachingAssignmentUncheckedUpdateWithoutTeacherInput>
+  create: Prisma.XOR<Prisma.TeachingAssignmentCreateWithoutTeacherInput, Prisma.TeachingAssignmentUncheckedCreateWithoutTeacherInput>
+}
+
+export type TeachingAssignmentUpdateWithWhereUniqueWithoutTeacherInput = {
+  where: Prisma.TeachingAssignmentWhereUniqueInput
+  data: Prisma.XOR<Prisma.TeachingAssignmentUpdateWithoutTeacherInput, Prisma.TeachingAssignmentUncheckedUpdateWithoutTeacherInput>
+}
+
+export type TeachingAssignmentUpdateManyWithWhereWithoutTeacherInput = {
+  where: Prisma.TeachingAssignmentScalarWhereInput
+  data: Prisma.XOR<Prisma.TeachingAssignmentUpdateManyMutationInput, Prisma.TeachingAssignmentUncheckedUpdateManyWithoutTeacherInput>
+}
+
 export type TeachingAssignmentCreateWithoutGradeInput = {
   id?: string
   academicYear?: string | null
@@ -953,58 +1005,6 @@ export type TeachingAssignmentUpdateWithWhereUniqueWithoutSectionInput = {
 export type TeachingAssignmentUpdateManyWithWhereWithoutSectionInput = {
   where: Prisma.TeachingAssignmentScalarWhereInput
   data: Prisma.XOR<Prisma.TeachingAssignmentUpdateManyMutationInput, Prisma.TeachingAssignmentUncheckedUpdateManyWithoutSectionInput>
-}
-
-export type TeachingAssignmentCreateWithoutTeacherInput = {
-  id?: string
-  academicYear?: string | null
-  status?: $Enums.AssignmentStatus
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  subject: Prisma.SubjectCreateNestedOneWithoutTeachingAssignmentsInput
-  grade: Prisma.GradeCreateNestedOneWithoutTeachingAssignmentInput
-  section: Prisma.SectionCreateNestedOneWithoutTeachingAssignmentInput
-  organization: Prisma.OrganizationCreateNestedOneWithoutTeachingAssignmentInput
-  AcademicYear?: Prisma.AcademicYearCreateNestedOneWithoutTeachingAssignmentInput
-}
-
-export type TeachingAssignmentUncheckedCreateWithoutTeacherInput = {
-  id?: string
-  subjectId: string
-  gradeId: string
-  sectionId: string
-  organizationId: string
-  academicYear?: string | null
-  status?: $Enums.AssignmentStatus
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  academicYearId?: string | null
-}
-
-export type TeachingAssignmentCreateOrConnectWithoutTeacherInput = {
-  where: Prisma.TeachingAssignmentWhereUniqueInput
-  create: Prisma.XOR<Prisma.TeachingAssignmentCreateWithoutTeacherInput, Prisma.TeachingAssignmentUncheckedCreateWithoutTeacherInput>
-}
-
-export type TeachingAssignmentCreateManyTeacherInputEnvelope = {
-  data: Prisma.TeachingAssignmentCreateManyTeacherInput | Prisma.TeachingAssignmentCreateManyTeacherInput[]
-  skipDuplicates?: boolean
-}
-
-export type TeachingAssignmentUpsertWithWhereUniqueWithoutTeacherInput = {
-  where: Prisma.TeachingAssignmentWhereUniqueInput
-  update: Prisma.XOR<Prisma.TeachingAssignmentUpdateWithoutTeacherInput, Prisma.TeachingAssignmentUncheckedUpdateWithoutTeacherInput>
-  create: Prisma.XOR<Prisma.TeachingAssignmentCreateWithoutTeacherInput, Prisma.TeachingAssignmentUncheckedCreateWithoutTeacherInput>
-}
-
-export type TeachingAssignmentUpdateWithWhereUniqueWithoutTeacherInput = {
-  where: Prisma.TeachingAssignmentWhereUniqueInput
-  data: Prisma.XOR<Prisma.TeachingAssignmentUpdateWithoutTeacherInput, Prisma.TeachingAssignmentUncheckedUpdateWithoutTeacherInput>
-}
-
-export type TeachingAssignmentUpdateManyWithWhereWithoutTeacherInput = {
-  where: Prisma.TeachingAssignmentScalarWhereInput
-  data: Prisma.XOR<Prisma.TeachingAssignmentUpdateManyMutationInput, Prisma.TeachingAssignmentUncheckedUpdateManyWithoutTeacherInput>
 }
 
 export type TeachingAssignmentCreateWithoutSubjectInput = {
@@ -1163,6 +1163,58 @@ export type TeachingAssignmentUncheckedUpdateManyWithoutOrganizationInput = {
   academicYearId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
+export type TeachingAssignmentCreateManyTeacherInput = {
+  id?: string
+  subjectId: string
+  gradeId: string
+  sectionId: string
+  organizationId: string
+  academicYear?: string | null
+  status?: $Enums.AssignmentStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  academicYearId?: string | null
+}
+
+export type TeachingAssignmentUpdateWithoutTeacherInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  academicYear?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumAssignmentStatusFieldUpdateOperationsInput | $Enums.AssignmentStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  subject?: Prisma.SubjectUpdateOneRequiredWithoutTeachingAssignmentsNestedInput
+  grade?: Prisma.GradeUpdateOneRequiredWithoutTeachingAssignmentNestedInput
+  section?: Prisma.SectionUpdateOneRequiredWithoutTeachingAssignmentNestedInput
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutTeachingAssignmentNestedInput
+  AcademicYear?: Prisma.AcademicYearUpdateOneWithoutTeachingAssignmentNestedInput
+}
+
+export type TeachingAssignmentUncheckedUpdateWithoutTeacherInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  subjectId?: Prisma.StringFieldUpdateOperationsInput | string
+  gradeId?: Prisma.StringFieldUpdateOperationsInput | string
+  sectionId?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  academicYear?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumAssignmentStatusFieldUpdateOperationsInput | $Enums.AssignmentStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  academicYearId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type TeachingAssignmentUncheckedUpdateManyWithoutTeacherInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  subjectId?: Prisma.StringFieldUpdateOperationsInput | string
+  gradeId?: Prisma.StringFieldUpdateOperationsInput | string
+  sectionId?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  academicYear?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumAssignmentStatusFieldUpdateOperationsInput | $Enums.AssignmentStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  academicYearId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
 export type TeachingAssignmentCreateManyGradeInput = {
   id?: string
   teacherId: string
@@ -1259,58 +1311,6 @@ export type TeachingAssignmentUncheckedUpdateManyWithoutSectionInput = {
   teacherId?: Prisma.StringFieldUpdateOperationsInput | string
   subjectId?: Prisma.StringFieldUpdateOperationsInput | string
   gradeId?: Prisma.StringFieldUpdateOperationsInput | string
-  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
-  academicYear?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumAssignmentStatusFieldUpdateOperationsInput | $Enums.AssignmentStatus
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  academicYearId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-}
-
-export type TeachingAssignmentCreateManyTeacherInput = {
-  id?: string
-  subjectId: string
-  gradeId: string
-  sectionId: string
-  organizationId: string
-  academicYear?: string | null
-  status?: $Enums.AssignmentStatus
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  academicYearId?: string | null
-}
-
-export type TeachingAssignmentUpdateWithoutTeacherInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  academicYear?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumAssignmentStatusFieldUpdateOperationsInput | $Enums.AssignmentStatus
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  subject?: Prisma.SubjectUpdateOneRequiredWithoutTeachingAssignmentsNestedInput
-  grade?: Prisma.GradeUpdateOneRequiredWithoutTeachingAssignmentNestedInput
-  section?: Prisma.SectionUpdateOneRequiredWithoutTeachingAssignmentNestedInput
-  organization?: Prisma.OrganizationUpdateOneRequiredWithoutTeachingAssignmentNestedInput
-  AcademicYear?: Prisma.AcademicYearUpdateOneWithoutTeachingAssignmentNestedInput
-}
-
-export type TeachingAssignmentUncheckedUpdateWithoutTeacherInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  subjectId?: Prisma.StringFieldUpdateOperationsInput | string
-  gradeId?: Prisma.StringFieldUpdateOperationsInput | string
-  sectionId?: Prisma.StringFieldUpdateOperationsInput | string
-  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
-  academicYear?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumAssignmentStatusFieldUpdateOperationsInput | $Enums.AssignmentStatus
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  academicYearId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-}
-
-export type TeachingAssignmentUncheckedUpdateManyWithoutTeacherInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  subjectId?: Prisma.StringFieldUpdateOperationsInput | string
-  gradeId?: Prisma.StringFieldUpdateOperationsInput | string
-  sectionId?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
   academicYear?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumAssignmentStatusFieldUpdateOperationsInput | $Enums.AssignmentStatus

@@ -5,8 +5,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { getCurrentUser } from '@/lib/user';
 import prisma from '@/lib/db';
 import { getOrganizationId } from '@/lib/organization';
 import ApproveRejectLeave from '@/components/dashboard/leaves/ApproveRejectLeave';
@@ -16,7 +14,7 @@ import { redirect } from 'next/navigation';
 export default async function LeavesManagePage() {
   const { role } = await getCurrentUserByRole();
 
-  if (role !== 'TEACHER') {
+  if (role !== 'ADMIN') {
     redirect('/dashboard'); // Better than throwing error
   }
   const organizationId = await getOrganizationId();

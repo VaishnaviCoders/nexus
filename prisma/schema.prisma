@@ -154,36 +154,6 @@ model User {
   @@index([organizationId])
 }
 
-model Grade {
-  id                 String               @id @default(cuid())
-  grade              String
-  organizationId     String
-  organization       Organization         @relation(fields: [organizationId], references: [id])
-  students           Student[]
-  section            Section[]
-  TeachingAssignment TeachingAssignment[]
-
-  @@index([organizationId, grade])
-}
-
-model Section {
-  id             String       @id @default(cuid())
-  name           String // e.g., "A", "B", "C"
-  gradeId        String
-  organizationId String
-  grade          Grade        @relation(fields: [gradeId], references: [id], onDelete: Cascade)
-  organization   Organization @relation(fields: [organizationId], references: [id])
-  classTeacherId String?
-  classTeacher   Teacher?     @relation(fields: [classTeacherId], references: [id])
-
-  students           Student[] // Students in this section
-  StudentAttendance  StudentAttendance[]
-  TeachingAssignment TeachingAssignment[]
-
-  @@unique([name, gradeId])
-  @@index([organizationId, name, gradeId])
-}
-
 model Teacher {
   id     String @id @default(cuid())
   userId String @unique
@@ -240,59 +210,6 @@ model TeacherProfile {
 // model TeacherSalary {}
 // model TeacherLeave {}
 // 
-model Subject {
-  id             String @id @default(cuid())
-  name           String
-  code           String @unique
-  description    String
-  organizationId String
-
-  organization        Organization         @relation(fields: [organizationId], references: [id])
-  teachingAssignments TeachingAssignment[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  exam      Exam[]
-
-  @@index([organizationId, name, code])
-}
-
-model TeachingAssignment {
-  id             String @id @default(cuid())
-  teacherId      String
-  subjectId      String
-  gradeId        String
-  sectionId      String
-  organizationId String
-
-  academicYear String?
-  status       AssignmentStatus @default(PENDING)
-
-  // ✅ Complete relations
-  teacher      Teacher      @relation(fields: [teacherId], references: [id])
-  subject      Subject      @relation(fields: [subjectId], references: [id])
-  grade        Grade        @relation(fields: [gradeId], references: [id])
-  section      Section      @relation(fields: [sectionId], references: [id])
-  organization Organization @relation(fields: [organizationId], references: [id])
-
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
-  AcademicYear   AcademicYear? @relation(fields: [academicYearId], references: [id])
-  academicYearId String?
-
-  // ✅ Proper unique constraint
-  @@unique([teacherId, subjectId, gradeId, sectionId, academicYearId])
-  @@index([teacherId])
-  @@index([subjectId, sectionId])
-  @@index([organizationId])
-}
-
-enum AssignmentStatus {
-  PENDING
-  ASSIGNED
-  COMPLETED
-  INACTIVE
-}
 
 model Student {
   id     String @id @default(cuid())
@@ -375,6 +292,90 @@ model ParentStudent {
 
   @@index([relationship])
   @@index([parentId, studentId])
+}
+
+model Grade {
+  id                 String               @id @default(cuid())
+  grade              String
+  organizationId     String
+  organization       Organization         @relation(fields: [organizationId], references: [id])
+  students           Student[]
+  section            Section[]
+  TeachingAssignment TeachingAssignment[]
+
+  @@index([organizationId, grade])
+}
+
+model Section {
+  id             String       @id @default(cuid())
+  name           String // e.g., "A", "B", "C"
+  gradeId        String
+  organizationId String
+  grade          Grade        @relation(fields: [gradeId], references: [id], onDelete: Cascade)
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  classTeacherId String?
+  classTeacher   Teacher?     @relation(fields: [classTeacherId], references: [id])
+
+  students           Student[] // Students in this section
+  StudentAttendance  StudentAttendance[]
+  TeachingAssignment TeachingAssignment[]
+
+  @@unique([name, gradeId])
+  @@index([organizationId, name, gradeId])
+}
+
+model Subject {
+  id             String @id @default(cuid())
+  name           String
+  code           String @unique
+  description    String
+  organizationId String
+
+  organization        Organization         @relation(fields: [organizationId], references: [id])
+  teachingAssignments TeachingAssignment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  exam      Exam[]
+
+  @@index([organizationId, name, code])
+}
+
+model TeachingAssignment {
+  id             String @id @default(cuid())
+  teacherId      String
+  subjectId      String
+  gradeId        String
+  sectionId      String
+  organizationId String
+
+  academicYear String?
+  status       AssignmentStatus @default(PENDING)
+
+  // ✅ Complete relations
+  teacher      Teacher      @relation(fields: [teacherId], references: [id])
+  subject      Subject      @relation(fields: [subjectId], references: [id])
+  grade        Grade        @relation(fields: [gradeId], references: [id])
+  section      Section      @relation(fields: [sectionId], references: [id])
+  organization Organization @relation(fields: [organizationId], references: [id])
+
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  AcademicYear   AcademicYear? @relation(fields: [academicYearId], references: [id])
+  academicYearId String?
+
+  // ✅ Proper unique constraint
+  @@unique([teacherId, subjectId, gradeId, sectionId, academicYearId])
+  @@index([teacherId])
+  @@index([subjectId, sectionId])
+  @@index([organizationId])
+}
+
+enum AssignmentStatus {
+  PENDING
+  ASSIGNED
+  COMPLETED
+  INACTIVE
 }
 
 model StudentAttendance {
