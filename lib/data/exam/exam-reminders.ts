@@ -1,4 +1,3 @@
-import NoticeEmailTemplate from '@/components/templates/email-templates/notice';
 // import ExamReminderEmail from '@/components/templates/email-templates/exams/exam-reminder-email';
 import prisma from '@/lib/db';
 import { getOrganizationId } from '@/lib/organization';

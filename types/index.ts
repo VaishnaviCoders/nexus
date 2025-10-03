@@ -78,21 +78,6 @@ export interface FeeRecord {
   }[];
 }
 
-export interface FeeReminderRecipient {
-  id: string; // unique for this reminder
-  studentId: string;
-  studentName: string;
-  parentId: string;
-  parentName: string;
-  parentEmail?: string;
-  parentPhone?: string;
-  parentWhatsapp?: string;
-  relation: string;
-  pendingFees: Array<{ category: string; amount: number }>;
-  dueDate: Date;
-  channels: ('email' | 'sms' | 'whatsapp')[];
-}
-
 // Parent Child Attendance Monitor
 
 export type ParentData = {
