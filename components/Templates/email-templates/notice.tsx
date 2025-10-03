@@ -26,7 +26,7 @@ interface NoticeEmailTemplateProps {
   content: string;
   summary: string;
   noticeType: NoticeType;
-  priority: NoticePriority
+  priority: NoticePriority;
   startDate: Date;
   endDate: Date;
   isUrgent: boolean;
@@ -39,9 +39,7 @@ interface NoticeEmailTemplateProps {
   // attachments: FileSchemaType[];
 }
 
-
-
-const NoticeEmailTemplate = (props:NoticeEmailTemplateProps) => {
+const NoticeEmailTemplate = (props: NoticeEmailTemplateProps) => {
   const {
     id,
     title,
@@ -59,29 +57,41 @@ const NoticeEmailTemplate = (props:NoticeEmailTemplateProps) => {
     targetAudience,
   } = props;
 
-  
-
   const getPriorityColor = (priority: NoticePriority) => {
     switch (priority) {
-      case 'URGENT': return 'bg-red-600';
-      case 'HIGH': return 'bg-orange-500';
-      case 'MEDIUM': return 'bg-blue-500';
-      case 'LOW': return 'bg-gray-500';
-      default: return 'bg-blue-500';
+      case 'URGENT':
+        return 'bg-red-600';
+      case 'HIGH':
+        return 'bg-orange-500';
+      case 'MEDIUM':
+        return 'bg-blue-500';
+      case 'LOW':
+        return 'bg-gray-500';
+      default:
+        return 'bg-blue-500';
     }
   };
 
-  const getNoticeTypeLabel = (type:NoticeType) => {
+  const getNoticeTypeLabel = (type: NoticeType) => {
     switch (type) {
-      case 'GENERAL': return 'General Notice';
-      case 'TRIP': return 'Educational Trip';
-      case 'EVENT': return 'Event Announcement';
-      case 'EXAM': return 'Examination Notice';
-      case 'HOLIDAY': return 'Holiday Notice';
-      case 'DEADLINE': return 'Important Deadline';
-      case 'TIMETABLE': return 'Timetable Update';
-      case 'RESULT': return 'Result Declaration';
-      default: return 'Notice';
+      case 'GENERAL':
+        return 'General Notice';
+      case 'TRIP':
+        return 'Educational Trip';
+      case 'EVENT':
+        return 'Event Announcement';
+      case 'EXAM':
+        return 'Examination Notice';
+      case 'HOLIDAY':
+        return 'Holiday Notice';
+      case 'DEADLINE':
+        return 'Important Deadline';
+      case 'TIMETABLE':
+        return 'Timetable Update';
+      case 'RESULT':
+        return 'Result Declaration';
+      default:
+        return 'Notice';
     }
   };
 
@@ -89,7 +99,9 @@ const NoticeEmailTemplate = (props:NoticeEmailTemplateProps) => {
     <Html lang="en" dir="ltr">
       <Tailwind>
         <Head />
-        <Preview>{summary || `${getNoticeTypeLabel(noticeType)}: ${title}`}</Preview>
+        <Preview>
+          {summary || `${getNoticeTypeLabel(noticeType)}: ${title}`}
+        </Preview>
         <Body className="bg-gray-100 font-sans py-[40px]">
           <Container className="bg-white rounded-[8px] shadow-lg max-w-[600px] mx-auto">
             {/* Header */}
@@ -105,7 +117,9 @@ const NoticeEmailTemplate = (props:NoticeEmailTemplateProps) => {
             {/* Priority Badge */}
             {(isUrgent || priority === 'URGENT' || priority === 'HIGH') && (
               <Section className="px-[32px] pt-[24px]">
-                <div className={`inline-block px-[16px] py-[8px] rounded-[20px] text-white text-[12px] font-bold ${getPriorityColor(priority)}`}>
+                <div
+                  className={`inline-block px-[16px] py-[8px] rounded-[20px] text-white text-[12px] font-bold ${getPriorityColor(priority)}`}
+                >
                   {isUrgent ? '🚨 URGENT' : `${priority} PRIORITY`}
                 </div>
               </Section>
@@ -211,14 +225,14 @@ const NoticeEmailTemplate = (props:NoticeEmailTemplateProps) => {
               <Text className="text-[11px] text-gray-500 m-0 mb-[16px]">
                 This is an official communication from {organizationName}
               </Text>
-              
+
               <Text className="text-[10px] text-gray-400 m-0 mb-[4px]">
                 {organizationName}
               </Text>
               <Text className="text-[10px] text-gray-400 m-0 mb-[8px]">
                 Education Campus, Academic District, Pune, Maharashtra 411001
               </Text>
-              
+
               <Link
                 href="#"
                 className="text-[10px] text-blue-600 no-underline hover:underline"
@@ -226,7 +240,8 @@ const NoticeEmailTemplate = (props:NoticeEmailTemplateProps) => {
                 Unsubscribe from notices
               </Link>
               <Text className="text-[10px] text-gray-400 m-0 mt-[8px]">
-                © {new Date().getFullYear()} {organizationName}. All rights reserved.
+                © {new Date().getFullYear()} {organizationName}. All rights
+                reserved.
               </Text>
             </Section>
           </Container>
@@ -235,7 +250,5 @@ const NoticeEmailTemplate = (props:NoticeEmailTemplateProps) => {
     </Html>
   );
 };
-
-
 
 export default NoticeEmailTemplate;

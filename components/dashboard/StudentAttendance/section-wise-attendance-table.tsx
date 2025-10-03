@@ -51,15 +51,15 @@ interface SectionAttendanceDetails {
   students: Students[];
 }
 
-interface SectionAttendanceTableProps {
+interface SectionWiseAttendanceTableProps {
   sections: SectionAttendanceDetails[];
   date: Date;
 }
 
-export function SectionAttendanceTable({
+export function SectionWiseAttendanceTable({
   sections,
   date = new Date(),
-}: SectionAttendanceTableProps) {
+}: SectionWiseAttendanceTableProps) {
   const [sortField, setSortField] =
     useState<keyof SectionAttendanceDetails>('section');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');

@@ -1,16 +1,11 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { CheckCircle, Clock, BarChart3 } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 
-import { SectionAttendanceTable } from '@/components/dashboard/StudentAttendance/sectionWise-attendance-table';
 import { getAttendanceCompletionStats } from '@/lib/data/attendance/get-attendance-completion-stats';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { SectionWiseAttendanceTable } from '@/components/dashboard/StudentAttendance/section-wise-attendance-table';
 
 export default async function AttendanceAnalyticsPage() {
   const today = new Date();
@@ -139,7 +134,7 @@ export default async function AttendanceAnalyticsPage() {
       {/* Section Attendance Table */}
       <Card>
         <CardContent className="p-6">
-          <SectionAttendanceTable
+          <SectionWiseAttendanceTable
             sections={sectionsWithDateObjects}
             date={today}
           />
