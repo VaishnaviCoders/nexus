@@ -17,8 +17,6 @@ import {
   ChevronDown,
   ChevronUp,
   Eye,
-  LinkIcon,
-  Plus,
   TriangleAlert,
 } from 'lucide-react';
 import {
@@ -29,8 +27,8 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import Link from 'next/link';
-import { SectionWiseAttendanceViewModal } from './sectionWise-attendance-modal';
-
+import { SectionWiseAttendanceViewModal } from './section-wise-attendance-modal';
+``;
 interface Students {
   id: string;
   name: string;
