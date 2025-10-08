@@ -32,16 +32,6 @@ export type Organization = Prisma.OrganizationModel
  */
 export type User = Prisma.UserModel
 /**
- * Model Teacher
- * 
- */
-export type Teacher = Prisma.TeacherModel
-/**
- * Model TeacherProfile
- * 
- */
-export type TeacherProfile = Prisma.TeacherProfileModel
-/**
  * Model Student
  * 
  */
@@ -56,6 +46,16 @@ export type Parent = Prisma.ParentModel
  * 
  */
 export type ParentStudent = Prisma.ParentStudentModel
+/**
+ * Model Teacher
+ * 
+ */
+export type Teacher = Prisma.TeacherModel
+/**
+ * Model TeacherProfile
+ * 
+ */
+export type TeacherProfile = Prisma.TeacherProfileModel
 /**
  * Model Grade
  * 

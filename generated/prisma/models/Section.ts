@@ -401,6 +401,20 @@ export type SectionUncheckedUpdateManyWithoutOrganizationNestedInput = {
   deleteMany?: Prisma.SectionScalarWhereInput | Prisma.SectionScalarWhereInput[]
 }
 
+export type SectionCreateNestedOneWithoutStudentsInput = {
+  create?: Prisma.XOR<Prisma.SectionCreateWithoutStudentsInput, Prisma.SectionUncheckedCreateWithoutStudentsInput>
+  connectOrCreate?: Prisma.SectionCreateOrConnectWithoutStudentsInput
+  connect?: Prisma.SectionWhereUniqueInput
+}
+
+export type SectionUpdateOneRequiredWithoutStudentsNestedInput = {
+  create?: Prisma.XOR<Prisma.SectionCreateWithoutStudentsInput, Prisma.SectionUncheckedCreateWithoutStudentsInput>
+  connectOrCreate?: Prisma.SectionCreateOrConnectWithoutStudentsInput
+  upsert?: Prisma.SectionUpsertWithoutStudentsInput
+  connect?: Prisma.SectionWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.SectionUpdateToOneWithWhereWithoutStudentsInput, Prisma.SectionUpdateWithoutStudentsInput>, Prisma.SectionUncheckedUpdateWithoutStudentsInput>
+}
+
 export type SectionCreateNestedManyWithoutClassTeacherInput = {
   create?: Prisma.XOR<Prisma.SectionCreateWithoutClassTeacherInput, Prisma.SectionUncheckedCreateWithoutClassTeacherInput> | Prisma.SectionCreateWithoutClassTeacherInput[] | Prisma.SectionUncheckedCreateWithoutClassTeacherInput[]
   connectOrCreate?: Prisma.SectionCreateOrConnectWithoutClassTeacherInput | Prisma.SectionCreateOrConnectWithoutClassTeacherInput[]
@@ -441,20 +455,6 @@ export type SectionUncheckedUpdateManyWithoutClassTeacherNestedInput = {
   update?: Prisma.SectionUpdateWithWhereUniqueWithoutClassTeacherInput | Prisma.SectionUpdateWithWhereUniqueWithoutClassTeacherInput[]
   updateMany?: Prisma.SectionUpdateManyWithWhereWithoutClassTeacherInput | Prisma.SectionUpdateManyWithWhereWithoutClassTeacherInput[]
   deleteMany?: Prisma.SectionScalarWhereInput | Prisma.SectionScalarWhereInput[]
-}
-
-export type SectionCreateNestedOneWithoutStudentsInput = {
-  create?: Prisma.XOR<Prisma.SectionCreateWithoutStudentsInput, Prisma.SectionUncheckedCreateWithoutStudentsInput>
-  connectOrCreate?: Prisma.SectionCreateOrConnectWithoutStudentsInput
-  connect?: Prisma.SectionWhereUniqueInput
-}
-
-export type SectionUpdateOneRequiredWithoutStudentsNestedInput = {
-  create?: Prisma.XOR<Prisma.SectionCreateWithoutStudentsInput, Prisma.SectionUncheckedCreateWithoutStudentsInput>
-  connectOrCreate?: Prisma.SectionCreateOrConnectWithoutStudentsInput
-  upsert?: Prisma.SectionUpsertWithoutStudentsInput
-  connect?: Prisma.SectionWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.SectionUpdateToOneWithWhereWithoutStudentsInput, Prisma.SectionUpdateWithoutStudentsInput>, Prisma.SectionUncheckedUpdateWithoutStudentsInput>
 }
 
 export type SectionCreateNestedManyWithoutGradeInput = {
@@ -584,52 +584,6 @@ export type SectionScalarWhereInput = {
   classTeacherId?: Prisma.StringNullableFilter<"Section"> | string | null
 }
 
-export type SectionCreateWithoutClassTeacherInput = {
-  id?: string
-  name: string
-  grade: Prisma.GradeCreateNestedOneWithoutSectionInput
-  organization: Prisma.OrganizationCreateNestedOneWithoutSectionInput
-  students?: Prisma.StudentCreateNestedManyWithoutSectionInput
-  StudentAttendance?: Prisma.StudentAttendanceCreateNestedManyWithoutSectionInput
-  TeachingAssignment?: Prisma.TeachingAssignmentCreateNestedManyWithoutSectionInput
-}
-
-export type SectionUncheckedCreateWithoutClassTeacherInput = {
-  id?: string
-  name: string
-  gradeId: string
-  organizationId: string
-  students?: Prisma.StudentUncheckedCreateNestedManyWithoutSectionInput
-  StudentAttendance?: Prisma.StudentAttendanceUncheckedCreateNestedManyWithoutSectionInput
-  TeachingAssignment?: Prisma.TeachingAssignmentUncheckedCreateNestedManyWithoutSectionInput
-}
-
-export type SectionCreateOrConnectWithoutClassTeacherInput = {
-  where: Prisma.SectionWhereUniqueInput
-  create: Prisma.XOR<Prisma.SectionCreateWithoutClassTeacherInput, Prisma.SectionUncheckedCreateWithoutClassTeacherInput>
-}
-
-export type SectionCreateManyClassTeacherInputEnvelope = {
-  data: Prisma.SectionCreateManyClassTeacherInput | Prisma.SectionCreateManyClassTeacherInput[]
-  skipDuplicates?: boolean
-}
-
-export type SectionUpsertWithWhereUniqueWithoutClassTeacherInput = {
-  where: Prisma.SectionWhereUniqueInput
-  update: Prisma.XOR<Prisma.SectionUpdateWithoutClassTeacherInput, Prisma.SectionUncheckedUpdateWithoutClassTeacherInput>
-  create: Prisma.XOR<Prisma.SectionCreateWithoutClassTeacherInput, Prisma.SectionUncheckedCreateWithoutClassTeacherInput>
-}
-
-export type SectionUpdateWithWhereUniqueWithoutClassTeacherInput = {
-  where: Prisma.SectionWhereUniqueInput
-  data: Prisma.XOR<Prisma.SectionUpdateWithoutClassTeacherInput, Prisma.SectionUncheckedUpdateWithoutClassTeacherInput>
-}
-
-export type SectionUpdateManyWithWhereWithoutClassTeacherInput = {
-  where: Prisma.SectionScalarWhereInput
-  data: Prisma.XOR<Prisma.SectionUpdateManyMutationInput, Prisma.SectionUncheckedUpdateManyWithoutClassTeacherInput>
-}
-
 export type SectionCreateWithoutStudentsInput = {
   id?: string
   name: string
@@ -684,6 +638,52 @@ export type SectionUncheckedUpdateWithoutStudentsInput = {
   classTeacherId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   StudentAttendance?: Prisma.StudentAttendanceUncheckedUpdateManyWithoutSectionNestedInput
   TeachingAssignment?: Prisma.TeachingAssignmentUncheckedUpdateManyWithoutSectionNestedInput
+}
+
+export type SectionCreateWithoutClassTeacherInput = {
+  id?: string
+  name: string
+  grade: Prisma.GradeCreateNestedOneWithoutSectionInput
+  organization: Prisma.OrganizationCreateNestedOneWithoutSectionInput
+  students?: Prisma.StudentCreateNestedManyWithoutSectionInput
+  StudentAttendance?: Prisma.StudentAttendanceCreateNestedManyWithoutSectionInput
+  TeachingAssignment?: Prisma.TeachingAssignmentCreateNestedManyWithoutSectionInput
+}
+
+export type SectionUncheckedCreateWithoutClassTeacherInput = {
+  id?: string
+  name: string
+  gradeId: string
+  organizationId: string
+  students?: Prisma.StudentUncheckedCreateNestedManyWithoutSectionInput
+  StudentAttendance?: Prisma.StudentAttendanceUncheckedCreateNestedManyWithoutSectionInput
+  TeachingAssignment?: Prisma.TeachingAssignmentUncheckedCreateNestedManyWithoutSectionInput
+}
+
+export type SectionCreateOrConnectWithoutClassTeacherInput = {
+  where: Prisma.SectionWhereUniqueInput
+  create: Prisma.XOR<Prisma.SectionCreateWithoutClassTeacherInput, Prisma.SectionUncheckedCreateWithoutClassTeacherInput>
+}
+
+export type SectionCreateManyClassTeacherInputEnvelope = {
+  data: Prisma.SectionCreateManyClassTeacherInput | Prisma.SectionCreateManyClassTeacherInput[]
+  skipDuplicates?: boolean
+}
+
+export type SectionUpsertWithWhereUniqueWithoutClassTeacherInput = {
+  where: Prisma.SectionWhereUniqueInput
+  update: Prisma.XOR<Prisma.SectionUpdateWithoutClassTeacherInput, Prisma.SectionUncheckedUpdateWithoutClassTeacherInput>
+  create: Prisma.XOR<Prisma.SectionCreateWithoutClassTeacherInput, Prisma.SectionUncheckedCreateWithoutClassTeacherInput>
+}
+
+export type SectionUpdateWithWhereUniqueWithoutClassTeacherInput = {
+  where: Prisma.SectionWhereUniqueInput
+  data: Prisma.XOR<Prisma.SectionUpdateWithoutClassTeacherInput, Prisma.SectionUncheckedUpdateWithoutClassTeacherInput>
+}
+
+export type SectionUpdateManyWithWhereWithoutClassTeacherInput = {
+  where: Prisma.SectionScalarWhereInput
+  data: Prisma.XOR<Prisma.SectionUpdateManyMutationInput, Prisma.SectionUncheckedUpdateManyWithoutClassTeacherInput>
 }
 
 export type SectionCreateWithoutGradeInput = {

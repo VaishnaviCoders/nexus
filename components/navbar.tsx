@@ -9,27 +9,14 @@ import {
   UserButton,
 } from '@clerk/nextjs';
 import { Suspense } from 'react';
-import { auth, currentUser, clerkClient } from '@clerk/nextjs/server';
+import { auth, currentUser } from '@clerk/nextjs/server';
 import { WelcomeMessage } from './dashboard-layout/WelcomeMessage';
 import NotificationFeed from '@/app/components/dashboardComponents/NotificationFeed';
 import { Bell, Building2, UserCircleIcon } from 'lucide-react';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { Skeleton } from './ui/skeleton';
-import { syncUser } from '@/lib/syncUser';
-import prisma from '@/lib/db';
-
-// Improved loading components
-const LoadingBell = () => (
-  <div className="relative">
-    <Bell className="h-5 w-5 text-muted-foreground animate-pulse" />
-  </div>
-);
-
-const LoadingUserButton = () => <Skeleton className="h-8 w-8 rounded-full" />;
-
-const LoadingOrgSwitcher = () => <Skeleton className="h-8 w-32 rounded-md" />;
-
+import { syncOrganizationUser, syncUser } from '@/lib/syncUser';
 const RoleBadge = ({ role }: { role: string }) => {
   const roleConfig = {
     'org:admin': {
@@ -64,203 +51,132 @@ const RoleBadge = ({ role }: { role: string }) => {
   );
 };
 
-async function syncClerkOrganizationDB() {
-  const { orgId, orgSlug, orgRole, userId } = await auth();
-  const { organizations } = await clerkClient();
-
-  const orgData = await organizations.getOrganization({
-    organizationId: orgId || '',
-  });
-
-  await prisma.organization.create({
-    data: {
-      organizationSlug: orgSlug || '',
-      id: orgId || '',
-      createdBy: userId || '',
-      createdAt: new Date(orgData.createdAt),
-      organizationLogo: orgData.imageUrl,
-      name: orgData.name,
-    },
-  });
-}
-
 export async function Navbar() {
-  try {
-    // Get auth data
-    const { orgId, orgRole, userId } = await auth();
+  const { orgId, orgRole, userId } = await auth();
 
-    if (!orgId) throw new Error('No organization ID found');
-    if (!orgRole) throw new Error('No organization role found');
-    if (!userId) throw new Error('No user ID found');
+  if (!orgId) throw new Error('No organization ID found');
+  if (!orgRole) throw new Error('No organization role found');
+  if (!userId) throw new Error('No user ID found');
 
-    // Add Condition when should Call >
-    // await syncClerkOrganizationDB();
-    await syncUser(userId, orgId, orgRole);
-    // If not authenticated, show guest navbar
-    if (!userId) {
-      return (
-        <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-          <div className="flex h-16 items-center px-4">
-            <div className="flex items-center space-x-4">
-              <SheetMenu />
-              <div className="flex items-center space-x-2">
-                <h1 className="text-lg font-semibold">Dashboard</h1>
-                <Badge variant="outline" className="text-xs">
-                  Guest
-                </Badge>
+  await syncOrganizationUser(orgId, orgRole, userId);
+  // Get user data for authenticated users
+  const user = await currentUser();
+
+  // await syncUser(userId, orgId, orgRole);
+
+  const firstName = user?.firstName ?? 'User';
+  const lastName = user?.lastName ?? '';
+  const fullName = `${firstName} ${lastName}`.trim();
+  const lastVisit = user?.lastSignInAt ? new Date(user.lastSignInAt) : null;
+
+  return (
+    <>
+      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="flex h-16 items-center px-4">
+          {/* Left section */}
+          <div className="flex items-center space-x-4">
+            <SheetMenu />
+
+            <div className="flex items-center space-x-3">
+              <div className="flex flex-col">
+                <h1 className="text-lg font-semibold leading-none">
+                  Dashboard
+                </h1>
+                <div className="flex items-center space-x-2 mt-1">
+                  <span className="text-sm text-muted-foreground">
+                    {fullName}
+                  </span>
+                  {orgRole && <RoleBadge role={orgRole} />}
+                </div>
               </div>
             </div>
+          </div>
 
-            <div className="ml-auto flex items-center space-x-3">
-              <ModeToggle />
+          {/* Center section - Organization switcher */}
+          {!orgId && (
+            <div className="flex items-center justify-center flex-1 max-w-md mx-4">
+              <Suspense fallback={<Skeleton className="h-8 w-32 rounded-md" />}>
+                <div className="flex items-center space-x-2 px-3 py-1.5 rounded-md border bg-muted/50">
+                  <Building2 className="h-4 w-4 text-muted-foreground max-sm:hidden" />
+                  <OrganizationSwitcher
+                    hidePersonal={true}
+                    appearance={{
+                      elements: {
+                        organizationSwitcherTrigger:
+                          'border-0 shadow-none bg-transparent hover:bg-transparent',
+                        organizationSwitcherTriggerIcon:
+                          'text-muted-foreground',
+                      },
+                    }}
+                  />
+                </div>
+              </Suspense>
+            </div>
+          )}
+
+          {/* Right section */}
+          <div className="ml-auto flex items-center space-x-3">
+            {/* <ModeToggle /> */}
+
+            <SignedOut>
               <SignInButton mode="modal">
-                <Button size="sm" className="gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="gap-2 bg-transparent"
+                >
                   <UserCircleIcon className="h-4 w-4" />
                   Sign In
                 </Button>
               </SignInButton>
-            </div>
-          </div>
-          <Separator />
-        </header>
-      );
-    }
+            </SignedOut>
 
-    // Get user data for authenticated users
-    const user = await currentUser();
+            <SignedIn>
+              <div className="flex items-center space-x-2">
+                {/* Notifications */}
+                <Suspense
+                  fallback={
+                    <Bell className="h-5 w-5 text-muted-foreground animate-pulse" />
+                  }
+                >
+                  <NotificationFeed />
+                </Suspense>
 
-    const firstName = user?.firstName ?? 'User';
-    const lastName = user?.lastName ?? '';
-    const fullName = `${firstName} ${lastName}`.trim();
-    const lastVisit = user?.lastSignInAt ? new Date(user.lastSignInAt) : null;
-
-    return (
-      <>
-        <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-          <div className="flex h-16 items-center px-4">
-            {/* Left section */}
-            <div className="flex items-center space-x-4">
-              <SheetMenu />
-
-              <div className="flex items-center space-x-3">
-                <div className="flex flex-col">
-                  <h1 className="text-lg font-semibold leading-none">
-                    Dashboard
-                  </h1>
-                  <div className="flex items-center space-x-2 mt-1">
-                    <span className="text-sm text-muted-foreground">
-                      {fullName}
-                    </span>
-                    {orgRole && <RoleBadge role={orgRole} />}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Center section - Organization switcher */}
-            {!orgId && (
-              <div className="flex items-center justify-center flex-1 max-w-md mx-4">
-                <Suspense fallback={<LoadingOrgSwitcher />}>
-                  <div className="flex items-center space-x-2 px-3 py-1.5 rounded-md border bg-muted/50">
-                    <Building2 className="h-4 w-4 text-muted-foreground max-sm:hidden" />
-                    <OrganizationSwitcher
-                      hidePersonal={true}
-                      appearance={{
-                        elements: {
-                          organizationSwitcherTrigger:
-                            'border-0 shadow-none bg-transparent hover:bg-transparent',
-                          organizationSwitcherTriggerIcon:
-                            'text-muted-foreground',
-                        },
-                      }}
-                    />
-                  </div>
+                {/* User button */}
+                <Suspense
+                  fallback={<Skeleton className="h-8 w-8 rounded-full" />}
+                >
+                  <UserButton
+                    appearance={{
+                      elements: {
+                        avatarBox: 'h-8 w-8',
+                      },
+                    }}
+                  />
                 </Suspense>
               </div>
-            )}
-
-            {/* Right section */}
-            <div className="ml-auto flex items-center space-x-3">
-              {/* <ModeToggle /> */}
-
-              <SignedOut>
-                <SignInButton mode="modal">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="gap-2 bg-transparent"
-                  >
-                    <UserCircleIcon className="h-4 w-4" />
-                    Sign In
-                  </Button>
-                </SignInButton>
-              </SignedOut>
-
-              <SignedIn>
-                <div className="flex items-center space-x-2">
-                  {/* Notifications */}
-                  <Suspense fallback={<LoadingBell />}>
-                    <NotificationFeed />
-                  </Suspense>
-
-                  {/* User button */}
-                  <Suspense fallback={<LoadingUserButton />}>
-                    <UserButton
-                      appearance={{
-                        elements: {
-                          avatarBox: 'h-8 w-8',
-                        },
-                      }}
-                    />
-                  </Suspense>
-                </div>
-              </SignedIn>
-            </div>
-          </div>
-        </header>
-
-        <Separator className="mb-4" />
-
-        {/* Welcome message section */}
-        {userId && (
-          <div className="px-4 mb-6">
-            <Suspense
-              fallback={
-                <div className="space-y-2">
-                  <Skeleton className="h-6 w-64" />
-                  <Skeleton className="h-4 w-48" />
-                </div>
-              }
-            >
-              <WelcomeMessage userName={firstName} lastVisit={lastVisit} />
-            </Suspense>
-          </div>
-        )}
-      </>
-    );
-  } catch (error) {
-    // Error fallback
-    console.error('Navbar error:', error);
-    return (
-      <header className="sticky top-0 z-50 w-full border-b bg-background">
-        <div className="flex h-16 items-center px-4">
-          <div className="flex items-center space-x-4">
-            <SheetMenu />
-            <h1 className="text-lg font-semibold">Dashboard</h1>
-            <Badge variant="destructive" className="text-xs">
-              Error
-            </Badge>
-          </div>
-
-          <div className="ml-auto flex items-center space-x-3">
-            <ModeToggle />
-            <Button variant="outline" size="sm" disabled>
-              Reload
-            </Button>
+            </SignedIn>
           </div>
         </div>
-        <Separator />
       </header>
-    );
-  }
+
+      <Separator className="mb-4" />
+
+      {/* Welcome message section */}
+      {userId && (
+        <div className="px-4 mb-6">
+          <Suspense
+            fallback={
+              <div className="space-y-2">
+                <Skeleton className="h-6 w-64" />
+                <Skeleton className="h-4 w-48" />
+              </div>
+            }
+          >
+            <WelcomeMessage userName={firstName} lastVisit={lastVisit} />
+          </Suspense>
+        </div>
+      )}
+    </>
+  );
 }

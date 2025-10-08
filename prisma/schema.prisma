@@ -143,73 +143,16 @@ model User {
   student Student?
   parent  Parent?
 
-  FeePayment FeePayment[]
+  feePayment FeePayment[]
 
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
-  NotificationLog NotificationLog[]
+  notificationLog NotificationLog[]
   leave           Leave[]
 
   @@index([id, clerkId])
   @@index([organizationId])
 }
-
-model Teacher {
-  id     String @id @default(cuid())
-  userId String @unique
-  user   User   @relation(fields: [userId], references: [id])
-
-  employeeCode String? @unique
-
-  employmentStatus EmploymentStatus @default(ACTIVE)
-  isActive         Boolean          @default(true)
-
-  organizationId String
-  organization   Organization @relation(fields: [organizationId], references: [id])
-
-  createdAt          DateTime             @default(now())
-  updatedAt          DateTime             @updatedAt
-  profile            TeacherProfile?
-  teachingAssignment TeachingAssignment[]
-  section            Section[]
-  // salaries           Salary[]
-
-  @@index([userId, isActive, employmentStatus, organizationId])
-}
-
-model TeacherProfile {
-  id        String  @id @default(cuid())
-  teacherId String  @unique
-  teacher   Teacher @relation(fields: [teacherId], references: [id], onDelete: Cascade)
-
-  contactEmail String
-  contactPhone String
-  address      String
-  city         String?
-  state        String?
-  dateOfBirth  DateTime
-
-  qualification     String
-  experienceInYears Int
-  resumeUrl         String?
-
-  joinedAt            DateTime
-  bio                 String?
-  teachingPhilosophy  String?
-  specializedSubjects String[]
-  preferredGrades     String[]
-  idProofUrl          String
-
-  linkedinPortfolio String?
-  languagesKnown    String[]
-  certificateUrls   String[]
-}
-
-// model TeacherAttendance {}
-// model TeacherFeedback {}
-// model TeacherSalary {}
-// model TeacherLeave {}
-// 
 
 model Student {
   id     String @id @default(cuid())
@@ -293,6 +236,61 @@ model ParentStudent {
   @@index([relationship])
   @@index([parentId, studentId])
 }
+
+model Teacher {
+  id     String @id @default(cuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id])
+
+  employeeCode String? @unique
+
+  employmentStatus EmploymentStatus @default(ACTIVE)
+  isActive         Boolean          @default(true)
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  profile            TeacherProfile?
+  teachingAssignment TeachingAssignment[]
+  section            Section[]
+  // salaries           Salary[]
+// model TeacherAttendance {}
+// model TeacherSalary {}
+  @@index([userId, isActive, employmentStatus, organizationId])
+}
+
+model TeacherProfile {
+  id        String  @id @default(cuid())
+  teacherId String  @unique
+  teacher   Teacher @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+
+  contactEmail String
+  contactPhone String
+  address      String
+  city         String?
+  state        String?
+  dateOfBirth  DateTime
+
+  qualification     String
+  experienceInYears Int
+  resumeUrl         String?
+
+  joinedAt            DateTime
+  bio                 String?
+  teachingPhilosophy  String?
+  specializedSubjects String[]
+  preferredGrades     String[]
+  idProofUrl          String
+
+  linkedinPortfolio String?
+  languagesKnown    String[]
+  certificateUrls   String[]
+}
+
+
+// 
 
 model Grade {
   id                 String               @id @default(cuid())

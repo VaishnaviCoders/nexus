@@ -9,6 +9,7 @@ import {
   ChevronRight,
   ChevronLeft,
   FileText,
+  AlertCircle,
 } from 'lucide-react';
 import { formatDateTimeIN } from '@/lib/utils';
 import { Card, CardContent } from '@/components/ui/card';
@@ -93,14 +94,14 @@ const ApproveRejectLeave = ({ leaves }: ApproveRejectLeaveProps) => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
+    <div className=" bg-gray-50 p-8">
       {leaves.length === 0 ? (
         <div className="flex justify-center items-center min-h-[400px]">
           <EmptyState
             title="No Leave Requests Found"
             description="There are currently no leave requests to display.
   Please check back later."
-            icons={[Calendar, Clock, FileText]}
+            icons={[Calendar, FileText, AlertCircle]}
             action={{
               label: 'Back to Dashboard',
               href: '/dashboard',

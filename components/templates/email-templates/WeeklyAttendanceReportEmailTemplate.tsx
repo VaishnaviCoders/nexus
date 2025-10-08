@@ -1,19 +1,8 @@
 'use client';
 
+import { AttendanceStatus, Gender } from '@/generated/prisma/enums';
 import { formatDateIN } from '@/lib/utils';
 import type React from 'react';
-
-export enum AttendanceStatus {
-  PRESENT = 'PRESENT',
-  ABSENT = 'ABSENT',
-  LATE = 'LATE',
-}
-
-export enum Gender {
-  MALE = 'MALE',
-  FEMALE = 'FEMALE',
-  OTHER = 'OTHER',
-}
 
 export interface Student {
   id: string;

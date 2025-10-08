@@ -93,6 +93,7 @@ export async function POST(req: Request) {
         },
         data: {
           name: evt.data.name,
+          organizationSlug: evt.data.slug,
           organizationLogo: evt.data.image_url,
           isActive: true,
           isPaid: false,

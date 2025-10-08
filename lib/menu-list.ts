@@ -5,7 +5,6 @@ import {
   LucideIcon,
   Calendar,
   Bell,
-  MessageSquare,
   Backpack,
   ScrollText,
   IndianRupee,
@@ -14,10 +13,9 @@ import {
   FileIcon,
   BadgeCheck,
   GraduationCap,
-  PaperclipIcon,
   ClipboardList,
   Paperclip,
-  HelpCircle,
+  FileText,
 } from 'lucide-react';
 
 type Submenu = {
@@ -124,7 +122,7 @@ export const roleMenus: Record<string, Group[]> = {
         {
           href: '/dashboard/leaves/manage',
           label: 'leaves Management',
-          icon: HelpCircle,
+          icon: FileText,
         },
         {
           href: '/dashboard/anonymous-complaints/manage',
@@ -272,7 +270,7 @@ export const roleMenus: Record<string, Group[]> = {
         {
           href: '/dashboard/leaves',
           label: 'Leaves',
-          icon: HelpCircle,
+          icon: FileText,
         },
         {
           href: '/dashboard/notices',

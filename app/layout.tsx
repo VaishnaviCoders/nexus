@@ -16,13 +16,13 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 import { CustomGoogleOneTap } from '@/components/CustomGoogleOneTap';
 import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
 
+const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'localhost:3000';
 export const metadata: Metadata = {
   metadataBase: new URL(
-    process.env.APP_URL
-      ? `${process.env.APP_URL}`
-      : process.env.VERCEL_URL
-        ? `https://${process.env.VERCEL_URL}`
-        : `http://localhost:${process.env.PORT || 3000}`
+    process.env.NEXT_PUBLIC_APP_URL ??
+      (process.env.NEXT_PUBLIC_APP_URL
+        ? `https://${process.env.NEXT_PUBLIC_APP_URL}`
+        : `http://localhost:3000`)
   ),
   icons: {
     icon: '/favicon.ico',
@@ -30,30 +30,51 @@ export const metadata: Metadata = {
     apple: '/apple-touch-icon.png',
   },
 
-  title: 'School CRM',
+  title: {
+    default: 'School CRM | All-in-One School Management Platform',
+    template: '%s | School CRM',
+  },
   description:
     'All-in-one school management platform to streamline students, fees, attendance, and reports. Powerful and easy-to-use for schools, colleges, and coaching institutes.',
   generator: 'Next.js',
   manifest: '/manifest.json',
   keywords:
-    'Sameer Kad, School CRM, Full-Stack Developer, School Management Software, Educational CRM, Attendance Tracker, Fee Management, Next.js Developer',
+    'School CRM, School Management Software, Educational CRM, Student Management System, Attendance Tracker, Fee Management, School Administration Software, Coaching Institute Software',
   authors: [{ name: 'Sameer Kad', url: 'https://github.com/DevSammyKad' }],
   creator: 'Sameer Kad',
   applicationName: 'shiksha.cloud',
   publisher: 'Sameer Kad',
+  robots: {
+    index: true,
+    follow: true,
+  },
   alternates: {
-    canonical: '/',
+    canonical: appUrl,
   },
   openGraph: {
-    url: '/',
-    title: 'School CRM',
-    description: 'Entire School Management Software',
+    url: appUrl,
+    title: 'School CRM | All-in-One School Management Platform',
+    description:
+      'Streamline school operations, manage students, attendance, and fees effortlessly with School CRM.',
     type: 'website',
+    siteName: 'shiksha.cloud',
+    images: [
+      {
+        url: `${appUrl}/og-image.png`,
+        width: 1200,
+        height: 630,
+        alt: 'School CRM Dashboard',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'School CRM',
-    description: 'Entire School Management Software',
+    site: '@shiksha_cloud',
+    creator: '@DevSammyKad',
+    title: 'School CRM | All-in-One School Management Platform',
+    description:
+      'Simplify school operations with an integrated CRM for students, fees, and attendance.',
+    images: [`${appUrl}/og-image.png`],
   },
 };
 

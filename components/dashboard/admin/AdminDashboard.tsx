@@ -34,7 +34,7 @@ import Link from 'next/link';
 import { getOrganizationId } from '@/lib/organization';
 
 const AdminDashboard = async () => {
-  const data = await getMonthlyFeeData(2025);
+  // const data = await getMonthlyFeeData(2025);
   const academicYear = await getCurrentAcademicYear();
   const organizationId = await getOrganizationId();
 
@@ -53,7 +53,7 @@ const AdminDashboard = async () => {
     );
   }
 
-  // const data = mockMonthlyFeeCollectionData;
+  const data = mockMonthlyFeeCollectionData;
   return (
     <div className="space-y-6 px-2">
       <Card className="py-4 px-2 flex items-center justify-between   ">

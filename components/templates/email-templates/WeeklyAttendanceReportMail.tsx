@@ -1,18 +1,7 @@
 'use client';
 
+import { AttendanceStatus, Gender } from '@/generated/prisma/enums';
 import WeeklyAttendanceReportEmailTemplate from './WeeklyAttendanceReportEmailTemplate';
-
-export enum AttendanceStatus {
-  PRESENT = 'PRESENT',
-  ABSENT = 'ABSENT',
-  LATE = 'LATE',
-}
-
-export enum Gender {
-  MALE = 'MALE',
-  FEMALE = 'FEMALE',
-  OTHER = 'OTHER',
-}
 
 export interface Student {
   id: string;

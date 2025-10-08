@@ -3,14 +3,19 @@ import AdminPanelLayout from '@/components/dashboard-layout/dashboard-panel-layo
 import { Navbar } from '@/components/navbar';
 import { RedirectToSignIn } from '@clerk/nextjs';
 import { auth } from '@clerk/nextjs/server';
+import { redirect } from 'next/navigation';
 
-export default async function DemoLayout({
+export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { userId, orgRole } = await auth();
+  const { userId, orgRole, orgId } = await auth();
   if (!userId) return <RedirectToSignIn />;
+
+  if (!orgId || !orgRole) {
+    redirect('/select-organization?returnUrl=/dashboard');
+  }
 
   const roleMap: Record<string, 'ADMIN' | 'TEACHER' | 'STUDENT' | 'PARENT'> = {
     'org:admin': 'ADMIN',

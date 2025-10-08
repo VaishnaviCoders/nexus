@@ -1,7 +1,23 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
+import { NextResponse } from 'next/server';
 
 // Make sure that the `/api/webhooks/(.*)` route is not protected here
 
+const isPublicRoute = createRouteMatcher([
+  '/',
+  '/blog(.*)',
+  '/features(.*)',
+  '/founder',
+  '/why-shiksha',
+  '/why-us',
+  '/support',
+  '/sign-in(.*)',
+  '/sign-up(.*)',
+]);
+
+const isSelectOrgRoute = createRouteMatcher(['/select-organization(.*)']);
+
+const isProtectedRoute = createRouteMatcher(['/dashboard(.*)']);
 /* ───────────────────────── 1. Route groups ────────────────────────── */
 // Each matcher covers one “role island”.
 const isStudent = createRouteMatcher([
@@ -39,9 +55,16 @@ const isAdmin = createRouteMatcher([
   // Add any other admin routes here
 ]);
 
-const isProtectedRoute = createRouteMatcher(['/dashboard(.*)', '/forum(.*)']);
-
 export default clerkMiddleware(async (auth, req) => {
+  const { userId, orgId, orgRole } = await auth();
+
+  // If user is authenticated but has no organization and trying to access protected routes
+  if (userId && !orgId && isProtectedRoute(req)) {
+    const selectOrgUrl = new URL('/select-organization', req.url);
+    selectOrgUrl.searchParams.set('returnUrl', req.url);
+    return NextResponse.redirect(selectOrgUrl);
+  }
+
   if (isProtectedRoute(req)) await auth.protect();
 
   if (isStudent(req)) await auth.protect({ role: 'student' }); // 404 if wrong role

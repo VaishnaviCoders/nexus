@@ -22,11 +22,11 @@ export const ModelName = {
   AcademicYear: 'AcademicYear',
   Organization: 'Organization',
   User: 'User',
-  Teacher: 'Teacher',
-  TeacherProfile: 'TeacherProfile',
   Student: 'Student',
   Parent: 'Parent',
   ParentStudent: 'ParentStudent',
+  Teacher: 'Teacher',
+  TeacherProfile: 'TeacherProfile',
   Grade: 'Grade',
   Section: 'Section',
   Subject: 'Subject',
@@ -126,46 +126,6 @@ export const UserScalarFieldEnum = {
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
-export const TeacherScalarFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  employeeCode: 'employeeCode',
-  employmentStatus: 'employmentStatus',
-  isActive: 'isActive',
-  organizationId: 'organizationId',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type TeacherScalarFieldEnum = (typeof TeacherScalarFieldEnum)[keyof typeof TeacherScalarFieldEnum]
-
-
-export const TeacherProfileScalarFieldEnum = {
-  id: 'id',
-  teacherId: 'teacherId',
-  contactEmail: 'contactEmail',
-  contactPhone: 'contactPhone',
-  address: 'address',
-  city: 'city',
-  state: 'state',
-  dateOfBirth: 'dateOfBirth',
-  qualification: 'qualification',
-  experienceInYears: 'experienceInYears',
-  resumeUrl: 'resumeUrl',
-  joinedAt: 'joinedAt',
-  bio: 'bio',
-  teachingPhilosophy: 'teachingPhilosophy',
-  specializedSubjects: 'specializedSubjects',
-  preferredGrades: 'preferredGrades',
-  idProofUrl: 'idProofUrl',
-  linkedinPortfolio: 'linkedinPortfolio',
-  languagesKnown: 'languagesKnown',
-  certificateUrls: 'certificateUrls'
-} as const
-
-export type TeacherProfileScalarFieldEnum = (typeof TeacherProfileScalarFieldEnum)[keyof typeof TeacherProfileScalarFieldEnum]
-
-
 export const StudentScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -216,6 +176,46 @@ export const ParentStudentScalarFieldEnum = {
 } as const
 
 export type ParentStudentScalarFieldEnum = (typeof ParentStudentScalarFieldEnum)[keyof typeof ParentStudentScalarFieldEnum]
+
+
+export const TeacherScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  employeeCode: 'employeeCode',
+  employmentStatus: 'employmentStatus',
+  isActive: 'isActive',
+  organizationId: 'organizationId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TeacherScalarFieldEnum = (typeof TeacherScalarFieldEnum)[keyof typeof TeacherScalarFieldEnum]
+
+
+export const TeacherProfileScalarFieldEnum = {
+  id: 'id',
+  teacherId: 'teacherId',
+  contactEmail: 'contactEmail',
+  contactPhone: 'contactPhone',
+  address: 'address',
+  city: 'city',
+  state: 'state',
+  dateOfBirth: 'dateOfBirth',
+  qualification: 'qualification',
+  experienceInYears: 'experienceInYears',
+  resumeUrl: 'resumeUrl',
+  joinedAt: 'joinedAt',
+  bio: 'bio',
+  teachingPhilosophy: 'teachingPhilosophy',
+  specializedSubjects: 'specializedSubjects',
+  preferredGrades: 'preferredGrades',
+  idProofUrl: 'idProofUrl',
+  linkedinPortfolio: 'linkedinPortfolio',
+  languagesKnown: 'languagesKnown',
+  certificateUrls: 'certificateUrls'
+} as const
+
+export type TeacherProfileScalarFieldEnum = (typeof TeacherProfileScalarFieldEnum)[keyof typeof TeacherProfileScalarFieldEnum]
 
 
 export const GradeScalarFieldEnum = {
@@ -730,39 +730,6 @@ export const UserOrderByRelevanceFieldEnum = {
 export type UserOrderByRelevanceFieldEnum = (typeof UserOrderByRelevanceFieldEnum)[keyof typeof UserOrderByRelevanceFieldEnum]
 
 
-export const TeacherOrderByRelevanceFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  employeeCode: 'employeeCode',
-  organizationId: 'organizationId'
-} as const
-
-export type TeacherOrderByRelevanceFieldEnum = (typeof TeacherOrderByRelevanceFieldEnum)[keyof typeof TeacherOrderByRelevanceFieldEnum]
-
-
-export const TeacherProfileOrderByRelevanceFieldEnum = {
-  id: 'id',
-  teacherId: 'teacherId',
-  contactEmail: 'contactEmail',
-  contactPhone: 'contactPhone',
-  address: 'address',
-  city: 'city',
-  state: 'state',
-  qualification: 'qualification',
-  resumeUrl: 'resumeUrl',
-  bio: 'bio',
-  teachingPhilosophy: 'teachingPhilosophy',
-  specializedSubjects: 'specializedSubjects',
-  preferredGrades: 'preferredGrades',
-  idProofUrl: 'idProofUrl',
-  linkedinPortfolio: 'linkedinPortfolio',
-  languagesKnown: 'languagesKnown',
-  certificateUrls: 'certificateUrls'
-} as const
-
-export type TeacherProfileOrderByRelevanceFieldEnum = (typeof TeacherProfileOrderByRelevanceFieldEnum)[keyof typeof TeacherProfileOrderByRelevanceFieldEnum]
-
-
 export const StudentOrderByRelevanceFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -806,6 +773,39 @@ export const ParentStudentOrderByRelevanceFieldEnum = {
 } as const
 
 export type ParentStudentOrderByRelevanceFieldEnum = (typeof ParentStudentOrderByRelevanceFieldEnum)[keyof typeof ParentStudentOrderByRelevanceFieldEnum]
+
+
+export const TeacherOrderByRelevanceFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  employeeCode: 'employeeCode',
+  organizationId: 'organizationId'
+} as const
+
+export type TeacherOrderByRelevanceFieldEnum = (typeof TeacherOrderByRelevanceFieldEnum)[keyof typeof TeacherOrderByRelevanceFieldEnum]
+
+
+export const TeacherProfileOrderByRelevanceFieldEnum = {
+  id: 'id',
+  teacherId: 'teacherId',
+  contactEmail: 'contactEmail',
+  contactPhone: 'contactPhone',
+  address: 'address',
+  city: 'city',
+  state: 'state',
+  qualification: 'qualification',
+  resumeUrl: 'resumeUrl',
+  bio: 'bio',
+  teachingPhilosophy: 'teachingPhilosophy',
+  specializedSubjects: 'specializedSubjects',
+  preferredGrades: 'preferredGrades',
+  idProofUrl: 'idProofUrl',
+  linkedinPortfolio: 'linkedinPortfolio',
+  languagesKnown: 'languagesKnown',
+  certificateUrls: 'certificateUrls'
+} as const
+
+export type TeacherProfileOrderByRelevanceFieldEnum = (typeof TeacherProfileOrderByRelevanceFieldEnum)[keyof typeof TeacherProfileOrderByRelevanceFieldEnum]
 
 
 export const GradeOrderByRelevanceFieldEnum = {

@@ -11,6 +11,12 @@ import { Building, Calendar, Clock, Phone, UserCheck } from 'lucide-react';
 import { Leave, Prisma } from '@/generated/prisma/client';
 import { formatDateIN } from '@/lib/utils';
 import Link from 'next/link';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion';
 
 type LeaveWithUser = Prisma.LeaveGetPayload<{
   include: {
@@ -43,7 +49,7 @@ interface LeaveCardProps {
 }
 export default function LeaveCard({ leave }: LeaveCardProps) {
   return (
-    <Card className="overflow-hidden rounded-xl border bg-card shadow-sm max-w-7xl">
+    <Card className="overflow-hidden rounded-xl border bg-card shadow-sm w-full">
       <CardHeader className="p-6">
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-center gap-4">
@@ -62,7 +68,7 @@ export default function LeaveCard({ leave }: LeaveCardProps) {
             <div className="min-w-0">
               <div className="flex items-center gap-2">
                 <h3 className="text-base font-semibold leading-none text-pretty">
-                  Leave Request or
+                  Leave Request For
                 </h3>
                 <Badge variant={'HOLIDAY'}>
                   {leave.totalDays} {''}
@@ -162,36 +168,50 @@ export default function LeaveCard({ leave }: LeaveCardProps) {
               </span>
             </div>
           </div>
-
-          <div className="grid gap-3">
-            <div>
-              <p className="text-sm text-muted-foreground mb-1">Reason</p>
-              <div className="rounded-md border p-3 text-sm leading-relaxed text-pretty">
-                {leave.reason}
-              </div>
-            </div>
-
-            {leave.currentStatus === 'APPROVED' && (
-              <div className="flex items-center justify-between rounded-md border p-3 text-sm">
-                <div className="text-muted-foreground">Approved by</div>
-                <div className="text-right">
-                  <div className="font-medium">{leave.approvedBy || '—'}</div>
-                  <div className="text-xs text-muted-foreground">
-                    {formatDateIN(leave.approvedAt) || '—'}
+          <Accordion type="single" collapsible className="w-full">
+            <AccordionItem value="item-1">
+              <AccordionTrigger className="text-base ">
+                Leave Details
+              </AccordionTrigger>
+              <AccordionContent className="flex flex-col gap-4 text-balance">
+                <div className="grid gap-3">
+                  <div>
+                    <p className="text-sm text-muted-foreground mb-1 mt-2">
+                      Reason
+                    </p>
+                    <div className="rounded-md border p-3 text-sm leading-relaxed text-pretty">
+                      {leave.reason}
+                    </div>
                   </div>
-                </div>
-              </div>
-            )}
 
-            {leave.currentStatus === 'REJECTED' && leave.rejectedNote && (
-              <div className="rounded-md border p-3 text-sm">
-                <div className="mb-1 text-muted-foreground">Rejection note</div>
-                <p className="text-pretty leading-relaxed">
-                  {leave.rejectedNote}
-                </p>
-              </div>
-            )}
-          </div>
+                  {/* {leave.currentStatus === 'APPROVED' && (
+                    <div className="flex items-center justify-between rounded-md border p-3 text-sm">
+                      <div className="text-muted-foreground">Approved by</div>
+                      <div className="text-right">
+                        <div className="font-medium">
+                          {leave.approvedBy || '—'}
+                        </div>
+                        <div className="text-xs text-muted-foreground">
+                          {formatDateIN(leave.approvedAt) || '—'}
+                        </div>
+                      </div>
+                    </div>
+                  )} */}
+
+                  {leave.currentStatus === 'REJECTED' && leave.rejectedNote && (
+                    <div className="rounded-md border p-3 text-sm border-orange-200 bg-red-50 ">
+                      <div className="mb-1 text-muted-foreground">
+                        Rejection note
+                      </div>
+                      <p className="text-pretty leading-relaxed">
+                        {leave.rejectedNote}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
         </div>
       </CardContent>
 
