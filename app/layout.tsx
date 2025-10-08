@@ -16,20 +16,18 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 import { CustomGoogleOneTap } from '@/components/CustomGoogleOneTap';
 import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
 
-const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'localhost:3000';
+const appUrl = new URL(
+  process.env.NEXT_PUBLIC_APP_URL || 'https://www.shiksha.cloud'
+);
 export const metadata: Metadata = {
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_APP_URL ??
-      (process.env.NEXT_PUBLIC_APP_URL
-        ? `https://${process.env.NEXT_PUBLIC_APP_URL}`
-        : `http://localhost:3000`)
+    process.env.NEXT_PUBLIC_APP_URL || 'https://www.shiksha.cloud'
   ),
   icons: {
     icon: '/favicon.ico',
     shortcut: '/favicon-16x16.png',
     apple: '/apple-touch-icon.png',
   },
-
   title: {
     default: 'School CRM | All-in-One School Management Platform',
     template: '%s | School CRM',
@@ -49,7 +47,7 @@ export const metadata: Metadata = {
     follow: true,
   },
   alternates: {
-    canonical: appUrl,
+    canonical: 'https://www.shiksha.cloud',
   },
   openGraph: {
     url: appUrl,
