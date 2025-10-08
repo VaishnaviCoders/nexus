@@ -9,14 +9,13 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { auth, clerkClient, currentUser } from '@clerk/nextjs/server';
+import { auth, clerkClient } from '@clerk/nextjs/server';
 
 export default async function SelectOrganizationPage() {
   const { userId } = await auth();
 
-  if (!userId) {
-    return RedirectToSignIn; // or redirect to sign in
-  }
+  if (!userId) return <RedirectToSignIn />;
+
   const client = await clerkClient();
 
   const organizationMemberships =
