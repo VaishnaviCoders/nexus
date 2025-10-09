@@ -14,6 +14,8 @@ import prisma from '@/lib/db';
 import { getOrganizationId } from '@/lib/organization';
 import { AddTeacherForm } from '@/components/dashboard/teacher/AddTeacherForm';
 import { TeacherManagementStatsCards } from '@/components/dashboard/teacher/TeacherManagementStatsCards';
+import { Suspense } from 'react';
+import { DashboardFourGridsCardSkeleton } from '@/lib/skeletons/DashboardCardSkeleton';
 
 async function getAllTeachers() {
   const organizationId = await getOrganizationId();
@@ -75,7 +77,9 @@ export default async function TeachersPage() {
         </div>
       </Card>
 
-      <TeacherManagementStatsCards teachers={teachers} />
+      <Suspense fallback={<DashboardFourGridsCardSkeleton />}>
+        <TeacherManagementStatsCards teachers={teachers} />
+      </Suspense>
 
       <TeachersTable teachers={teachers} />
     </div>

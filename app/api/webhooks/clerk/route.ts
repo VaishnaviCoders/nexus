@@ -20,6 +20,21 @@ function mapClerkRole(clerkRole: string): Role {
   return roleMap[clerkRole] || 'STUDENT';
 }
 
+// async function handleOrganizationCreated(evt: WebhookEvent) {
+//   if (evt.type !== 'organization.created') return;
+//   await prisma.organization.create({
+//     data: {
+//       id: evt.data.id,
+//       organizationSlug: evt.data.slug,
+//       name: evt.data.name,
+//       organizationLogo: evt.data.image_url,
+//       isActive: true,
+//       isPaid: false,
+//       createdAt: new Date(evt.data.created_at),
+//     },
+//   });
+// }
+
 export async function POST(req: Request) {
   console.log('🔄 Webhook POST request received');
   const CLERK_WEBHOOK_SIGNING_SECRET = process.env.CLERK_WEBHOOK_SIGNING_SECRET;
@@ -82,6 +97,7 @@ export async function POST(req: Request) {
           isActive: true,
           isPaid: false,
           createdAt: new Date(evt.data.created_at),
+          createdBy: evt.data.created_by,
         },
       });
       break;
@@ -207,6 +223,25 @@ export async function POST(req: Request) {
           lastName: evt.data.last_name || '',
           email: evt.data.email_addresses[0].email_address,
           profileImage: evt.data.image_url || '',
+        },
+      });
+      break;
+    case 'user.deleted':
+      await prisma.user.update({
+        where: { id: evt.data.id },
+        data: {
+          isActive: false,
+          updatedAt: new Date(),
+        },
+      });
+      break;
+    case 'organizationMembership.deleted':
+      await prisma.user.update({
+        where: { id: evt.data.public_user_data.user_id },
+        data: {
+          organizationId: null,
+          role: 'STUDENT', // Reset to default role
+          updatedAt: new Date(),
         },
       });
       break;

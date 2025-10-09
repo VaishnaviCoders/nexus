@@ -141,11 +141,14 @@ export async function syncOrganizationUser(
       }
 
       // 4. Sync User - Check if user already exists and is properly linked
-      let user = await tx.user.findFirst({
-        where: {
-          OR: [{ email: clerkUserEmail }, { clerkId: clerkUser.id }],
-        },
+      // First, check if user exists with the same clerkId
+      let user = await tx.user.findUnique({
+        where: { clerkId: clerkUser.id },
       });
+      // console.log(internalRole);
+
+      // console.log(clerkUser);
+      // console.log(user.role);
 
       // If user exists and is already properly linked, skip everything
       if (
@@ -157,35 +160,62 @@ export async function syncOrganizationUser(
         return;
       }
 
-      // Create or update user
-      user = await tx.user.upsert({
-        where: { clerkId: clerkUser.id },
-        create: {
-          firstName: clerkUser.firstName || 'Unknown',
-          lastName: clerkUser.lastName || '',
-          email: clerkUserEmail,
-          clerkId: clerkUser.id,
-          profileImage: clerkUser.imageUrl || '',
-          organizationId: organization.id,
-          role: internalRole,
-        },
-        update: {
-          firstName: clerkUser.firstName || 'Unknown',
-          lastName: clerkUser.lastName || '',
-          email: clerkUserEmail,
-          profileImage: clerkUser.imageUrl || '',
-          organizationId: organization.id,
-          role: internalRole,
-          updatedAt: new Date(),
-        },
-      });
+      if (user) {
+        // User exists with clerkId, update it
+        console.log(`🔄 Updating existing user by clerkId: ${clerkUserEmail}`);
+        user = await tx.user.update({
+          where: { clerkId: clerkUser.id },
+          data: {
+            firstName: clerkUser.firstName || user.firstName,
+            lastName: clerkUser.lastName || user.lastName,
+            email: clerkUserEmail, // This might cause conflict, but we'll handle it
+            profileImage: clerkUser.imageUrl || user.profileImage,
+            organizationId: organization.id,
+            role: internalRole,
+            updatedAt: new Date(),
+          },
+        });
+      } else {
+        // No user with this clerkId, check by email
+        const userByEmail = await tx.user.findUnique({
+          where: { email: clerkUserEmail },
+        });
 
-      if (
-        user.organizationId === organization.id &&
-        user.role === internalRole
-      ) {
-        console.log(`✅ User synced: ${user.email}`);
+        if (userByEmail) {
+          // User exists with same email but different clerkId - update with correct clerkId
+          console.log(
+            `🔄 User exists with email, updating clerkId: ${clerkUserEmail}`
+          );
+          user = await tx.user.update({
+            where: { email: clerkUserEmail },
+            data: {
+              clerkId: clerkUser.id,
+              firstName: clerkUser.firstName || userByEmail.firstName,
+              lastName: clerkUser.lastName || userByEmail.lastName,
+              profileImage: clerkUser.imageUrl || userByEmail.profileImage,
+              organizationId: organization.id,
+              role: internalRole,
+              updatedAt: new Date(),
+            },
+          });
+        } else {
+          // No existing user found, create new one
+          console.log(`🔄 Creating new user: ${clerkUserEmail}`);
+          user = await tx.user.create({
+            data: {
+              firstName: clerkUser.firstName || 'Unknown',
+              lastName: clerkUser.lastName || '',
+              email: clerkUserEmail,
+              clerkId: clerkUser.id,
+              profileImage: clerkUser.imageUrl || '',
+              organizationId: organization.id,
+              role: internalRole,
+            },
+          });
+        }
       }
+
+      console.log(`✅ User synced: ${user.email}`);
 
       // 5. Create role-specific records only for Teacher and Parent
       switch (internalRole) {
@@ -256,84 +286,3 @@ export async function syncOrganizationUser(
 // ✅ Orphaned data cleanup → Removes invalid references
 // ✅ Smart role detection → Auto-detects roles from email patterns
 // ✅ Multiple organization handling → Handles users without active org selection
-
-// Helper function for role-specific record creation
-async function createRoleSpecificRecord(
-  tx: Prisma.TransactionClient,
-  user: User,
-  organizationId: string,
-  role: Role
-): Promise<void> {
-  switch (role) {
-    case 'TEACHER':
-      await tx.teacher.upsert({
-        where: { userId: user.id },
-        update: {
-          organizationId: organizationId,
-          updatedAt: new Date(),
-        },
-        create: {
-          userId: user.id,
-          organizationId: organizationId,
-          // employeeCode can be generated later
-        },
-      });
-      console.log(`✅ Created/Updated teacher record for: ${user.email}`);
-      break;
-
-    case 'STUDENT':
-      // Student requires additional fields, so we create a basic record
-      // Additional student details should be filled in later
-      await tx.student.upsert({
-        where: { userId: user.id },
-        update: {
-          organizationId: organizationId,
-          updatedAt: new Date(),
-        },
-        create: {
-          userId: user.id,
-          organizationId: organizationId,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          email: user.email,
-          // Required fields with placeholder values
-          rollNumber: `TEMP-${Date.now()}`, // Temporary, should be updated
-          phoneNumber: 'TEMP',
-          whatsAppNumber: 'TEMP',
-          emergencyContact: 'TEMP',
-          gender: 'MALE', // Default value
-          dateOfBirth: new Date('2000-01-01'), // Default value
-          // sectionId and gradeId are required but can't be set here
-          // These should be updated in a separate process
-          sectionId: 'temp-section', // This should be handled properly
-          gradeId: 'temp-grade', // This should be handled properly
-        },
-      });
-      console.log(`✅ Created/Updated student record for: ${user.email}`);
-      break;
-
-    case 'PARENT':
-      await tx.parent.upsert({
-        where: { userId: user.id },
-        update: {
-          firstName: user.firstName,
-          lastName: user.lastName,
-          email: user.email,
-          updatedAt: new Date(),
-        },
-        create: {
-          userId: user.id,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          email: user.email,
-          phoneNumber: 'TEMP', // Should be updated later
-          whatsAppNumber: 'TEMP', // Should be updated later
-        },
-      });
-      console.log(`✅ Created/Updated parent record for: ${user.email}`);
-      break;
-
-    default:
-      console.warn(`⚠️ Unknown role: ${role} for user: ${user.email}`);
-  }
-}

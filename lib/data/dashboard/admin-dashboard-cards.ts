@@ -1,22 +1,8 @@
 'use server';
 
 import prisma from '@/lib/db';
+import { getOrganizationId } from '@/lib/organization';
 import { auth } from '@clerk/nextjs/server';
-import { cache } from 'react';
-
-// Cache the organization lookup for better performance
-const getOrganizationId = cache(async () => {
-  const { userId } = await auth();
-  if (!userId) throw new Error('Unauthorized');
-
-  const user = await prisma.user.findUnique({
-    where: { clerkId: userId },
-    select: { organizationId: true },
-  });
-
-  if (!user?.organizationId) throw new Error('Organization not found');
-  return user.organizationId;
-});
 
 export async function getStudentStats() {
   const organizationId = await getOrganizationId();
