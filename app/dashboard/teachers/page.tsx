@@ -10,34 +10,13 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import TeachersTable from '@/components/dashboard/teacher/TeachersTable';
-import prisma from '@/lib/db';
-import { getOrganizationId } from '@/lib/organization';
 import { AddTeacherForm } from '@/components/dashboard/teacher/AddTeacherForm';
 import { TeacherManagementStatsCards } from '@/components/dashboard/teacher/TeacherManagementStatsCards';
 import { Suspense } from 'react';
 import { DashboardFourGridsCardSkeleton } from '@/lib/skeletons/DashboardCardSkeleton';
+import { getAllTeachers } from '@/lib/data/teacher/get-all-teachers';
 
-async function getAllTeachers() {
-  const organizationId = await getOrganizationId();
-  const teachers = await prisma.teacher.findMany({
-    where: {
-      organizationId,
-    },
-    select: {
-      id: true,
-      employeeCode: true,
-      isActive: true,
-      employmentStatus: true,
-      organizationId: true,
-      createdAt: true,
-      updatedAt: true,
-      userId: true,
-      profile: true,
-      user: true,
-    },
-  });
-  return teachers;
-}
+
 export default async function TeachersPage() {
   const teachers = await getAllTeachers();
 

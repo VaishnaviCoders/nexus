@@ -1,5 +1,4 @@
 import type { NextConfig } from 'next';
-import { hostname } from 'os';
 const withPWA = require('next-pwa')({
   dest: 'public',
   register: true,
@@ -23,20 +22,20 @@ const nextConfig: NextConfig = {
       bodySizeLimit: '3mb',
     },
   },
-  headers: async () => {
-    return [
-      {
-        // Cache the manifest file (default: public, max-age=0, must-revalidate)
-        headers: [
-          {
-            key: 'cache-control',
-            value: 'public, max-age=3600',
-          },
-        ],
-        source: '/no/api/manifest',
-      },
-    ];
-  },
+  // headers: async () => {
+  //   return [
+  //     {
+  //       // Cache the manifest file (default: public, max-age=0, must-revalidate)
+  //       headers: [
+  //         {
+  //           key: 'cache-control',
+  //           value: 'public, max-age=3600',
+  //         },
+  //       ],
+  //       source: '/no/api/manifest',
+  //     },
+  //   ];
+  // },
   eslint: {
     ignoreDuringBuilds: true,
   },
