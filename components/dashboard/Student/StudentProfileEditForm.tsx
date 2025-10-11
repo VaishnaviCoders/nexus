@@ -84,7 +84,7 @@ export function StudentProfileEditForm({
       lastName: student.lastName,
       middleName: student.middleName || '',
       motherName: student.motherName || '',
-      dateOfBirth: format(student.dateOfBirth, 'yyyy-MM-dd'),
+      dateOfBirth: student.dateOfBirth,
       gender: student.gender,
       phoneNumber: student.phoneNumber,
       whatsAppNumber: student.whatsAppNumber,
@@ -212,7 +212,7 @@ export function StudentProfileEditForm({
                               )}
                             >
                               {field.value ? (
-                                format(new Date(field.value), 'PPP')
+                                format(field.value, 'PPP') // ✅ field.value is already Date
                               ) : (
                                 <span>Pick a date</span>
                               )}
@@ -227,10 +227,8 @@ export function StudentProfileEditForm({
                               field.value ? new Date(field.value) : undefined
                             }
                             onSelect={(date) =>
-                              field.onChange(
-                                date ? format(date, 'yyyy-MM-dd') : ''
-                              )
-                            }
+                              field.onChange(date || undefined)
+                            } // ✅ Send actual Date object
                             disabled={(date) =>
                               date > new Date() || date < new Date('1900-01-01')
                             }

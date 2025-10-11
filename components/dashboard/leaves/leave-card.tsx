@@ -52,8 +52,9 @@ export default function LeaveCard({ leave }: LeaveCardProps) {
     <Card className="overflow-hidden rounded-xl border bg-card shadow-sm w-full">
       <CardHeader className="p-6">
         <div className="flex items-start justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <Avatar className="size-12">
+          {/* Left side */}
+          <div className="flex items-center gap-4 flex-1 min-w-0">
+            <Avatar className="size-12 shrink-0">
               <AvatarImage
                 sizes="size-12"
                 className="object-cover"
@@ -65,26 +66,31 @@ export default function LeaveCard({ leave }: LeaveCardProps) {
                 {leave.appliedBy.lastName[0]}
               </AvatarFallback>
             </Avatar>
-            <div className="min-w-0">
-              <div className="flex items-center gap-2">
-                <h3 className="text-base font-semibold leading-none text-pretty">
+
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center flex-wrap gap-2 min-w-0">
+                <h3 className="text-base font-semibold leading-none truncate">
                   Leave Request For
                 </h3>
-                <Badge variant={'HOLIDAY'}>
-                  {leave.totalDays} {''}
-                  {leave.totalDays === 1 ? 'Day' : 'Days'}
+                <Badge variant="HOLIDAY" className="whitespace-nowrap shrink-0">
+                  {leave.totalDays} {leave.totalDays === 1 ? 'Day' : 'Days'}
                 </Badge>
-                {/* <Separator orientation="vertical" className="h-4" />
-                <span className="truncate text-sm text-muted-foreground">
-                  ID: {leave.id}
-                </span> */}
               </div>
-              <p className="mt-1 line-clamp-1 text-sm text-muted-foreground">
+
+              <p
+                className="mt-1 line-clamp-1 text-sm text-muted-foreground truncate"
+                title={`${leave.appliedBy.firstName} ${leave.appliedBy.lastName}`}
+              >
                 {leave.appliedBy.firstName} {leave.appliedBy.lastName}
               </p>
             </div>
           </div>
-          <Badge variant={leave.currentStatus} className="shrink-0">
+
+          {/* Right side */}
+          <Badge
+            variant={leave.currentStatus}
+            className="shrink-0 whitespace-nowrap"
+          >
             {leave.currentStatus}
           </Badge>
         </div>

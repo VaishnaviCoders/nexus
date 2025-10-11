@@ -66,12 +66,12 @@ export function DocumentCard({ studentDocument, onDelete }: DocumentCardProps) {
       <Card className="group hover:shadow-md transition-shadow">
         <CardHeader className="pb-3">
           <div className="flex items-start justify-between">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-primary/10 rounded-lg">
+            <div className="flex items-center gap-3 flex-1 min-w-0">
+              <div className="p-2 bg-primary/10 rounded-lg shrink-0">
                 <FileText className="h-5 w-5 text-primary" />
               </div>
               <div className="flex-1 min-w-0">
-                <h3 className="font-semibold text-sm">
+                <h3 className="font-semibold text-sm truncate">
                   {DOCUMENT_TYPE_LABELS[studentDocument.type]}
                 </h3>
                 <p className="text-xs text-muted-foreground truncate">
@@ -79,7 +79,8 @@ export function DocumentCard({ studentDocument, onDelete }: DocumentCardProps) {
                 </p>
               </div>
             </div>
-            <div className="flex items-center gap-2">
+
+            <div className="flex items-center gap-2 shrink-0 ml-2">
               <Badge
                 variant={
                   studentDocument.verified
@@ -88,7 +89,7 @@ export function DocumentCard({ studentDocument, onDelete }: DocumentCardProps) {
                       ? 'rejected'
                       : 'pending'
                 }
-                className="text-xs"
+                className="text-xs whitespace-nowrap"
               >
                 {studentDocument.verified ? (
                   <>
@@ -107,6 +108,7 @@ export function DocumentCard({ studentDocument, onDelete }: DocumentCardProps) {
                   </>
                 )}
               </Badge>
+
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
@@ -136,6 +138,7 @@ export function DocumentCard({ studentDocument, onDelete }: DocumentCardProps) {
             </div>
           </div>
         </CardHeader>
+
         <CardContent className="pt-0">
           <div className="space-y-2">
             <div className="flex justify-between text-xs text-muted-foreground">

@@ -41,7 +41,6 @@ export default function DocumentsPage({
   studentId: string;
   data: StudentDocument[];
 }) {
-  console.log('data', data);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState<string>('all');
   const [filterStatus, setFilterStatus] = useState<string>('all');
@@ -85,7 +84,7 @@ export default function DocumentsPage({
       <Card className="">
         <CardContent className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 sm:p-6 gap-4">
           <div className="flex-1 min-w-0">
-            <CardTitle className="text-lg font-bold flex flex-col sm:flex-row sm:items-center gap-2">
+            <CardTitle className="text-lg font-bold flex items-center gap-2">
               <span>Documents</span>
               {isCloudinaryUploadActive ? (
                 <Badge

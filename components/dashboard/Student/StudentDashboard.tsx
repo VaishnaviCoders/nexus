@@ -13,10 +13,19 @@ import { RecentNoticesCards } from '../notice/recent-notices-cards';
 import { FeesQuickCard } from './FeesQuickCard';
 import { FeeStatus, PaymentMethod } from '@/generated/prisma/enums';
 import { Button } from '@/components/ui/button';
-import { CreditCard, Download, Upload, MessageSquare, Zap } from 'lucide-react';
+import {
+  CreditCard,
+  Download,
+  Upload,
+  MessageSquare,
+  Zap,
+  Icon,
+} from 'lucide-react';
 import { getStudentNotices } from '@/lib/data/notice/get-student-notices';
 import { getCurrentAcademicYear } from '@/lib/academicYear';
 import { getCurrentUserByRole } from '@/lib/auth';
+import Link from 'next/link';
+import { cn } from '@/lib/utils';
 
 export async function getFeesStatus(studentId: string) {
   const fees = await prisma.fee.findMany({
@@ -97,7 +106,7 @@ const quickActions = [
     title: 'Pay Fees',
     description: 'Online payments',
     icon: CreditCard,
-    color: 'bg-green-500 hover:bg-green-600',
+    color: 'bg-green-100 text-green-500 hover:bg-green-200',
     action: 'payment',
     link: '/dashboard/fees/student',
   },
@@ -105,7 +114,7 @@ const quickActions = [
     title: 'Download Receipt',
     description: 'Payment receipts',
     icon: Download,
-    color: 'bg-blue-500 hover:bg-blue-600',
+    color: 'bg-blue-100 text-blue-500 hover:bg-blue-200',
     action: 'download',
     link: '/dashboard/fees/student',
   },
@@ -113,7 +122,7 @@ const quickActions = [
     title: 'Upload Documents',
     description: 'Submit documents',
     icon: Upload,
-    color: 'bg-purple-500 hover:bg-purple-600',
+    color: 'bg-purple-100 text-purple-500 hover:bg-purple-200',
     action: 'upload',
     link: '/dashboard/documents',
   },
@@ -121,7 +130,7 @@ const quickActions = [
     title: 'Submit Complaint',
     description: 'Report issues',
     icon: MessageSquare,
-    color: 'bg-red-500 hover:bg-red-600',
+    color: 'bg-red-100 text-red-500 hover:bg-red-200',
     action: 'complaint',
     link: '/dashboard/anonymous-complaints',
   },
@@ -190,26 +199,35 @@ const StudentDashboard = async () => {
 
             <CardContent className="flex-1 mt-2">
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
-                {quickActions.map((action) => (
-                  <Button
-                    key={action.action}
-                    variant="outline"
-                    className="h-auto p-3 flex flex-col items-center gap-2 hover:shadow-sm transition-all bg-transparent text-center"
-                  >
-                    <div
-                      className={`p-2 rounded-full text-white ${action.color} transition-colors`}
-                    >
-                      <action.icon className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <div className="text-xs font-medium leading-tight">
-                        {action.title}
-                      </div>
-                      <div className="text-xs text-slate-500 leading-tight">
-                        {action.description}
-                      </div>
-                    </div>
-                  </Button>
+                {quickActions.map((action, item) => (
+                  <Link href={action.link} aria-label={action.title} key={item}>
+                    <Card className="transition hover:shadow-md focus-visible:shadow-md focus-visible:outline-none">
+                      <CardHeader className="flex flex-row items-center gap-3">
+                        <div
+                          className={cn(
+                            'inline-flex h-10 w-10 items-center justify-center rounded-md',
+                            action.color
+                          )}
+                          aria-hidden="true"
+                        >
+                          <action.icon className="h-5 w-5" />
+                        </div>
+                        <div>
+                          <CardTitle className="text-base">
+                            {action.title}
+                          </CardTitle>
+                          <CardDescription className="text-sm">
+                            {action.description}
+                          </CardDescription>
+                        </div>
+                      </CardHeader>
+                      {/* <CardContent>
+                        <span className="text-sm text-muted-foreground">
+                          Tap to continue
+                        </span>
+                      </CardContent> */}
+                    </Card>
+                  </Link>
                 ))}
               </div>
             </CardContent>

@@ -367,7 +367,7 @@ export default function CreateAnonymousComplaintForm({
     <div className="">
       <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] -z-10" />
 
-      <main className="flex-1 py-8 ">
+      <main className="flex-1  px-2 ">
         <div className=" ">
           {submitted ? (
             <div className="mx-auto max-w-2xl">
@@ -440,60 +440,62 @@ export default function CreateAnonymousComplaintForm({
           ) : (
             <div className="grid gap-8 lg:grid-cols-3 ">
               {/* Left Column - Information */}
-              <div className="space-y-6">
-                <div>
-                  <h1 className="text-3xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent mb-2">
+              <Card className="space-y-6 bg-transparent border-0">
+                <CardHeader>
+                  <CardTitle className="text-xl font-bold">
                     File Your Complaint
-                  </h1>
-                  <p className="text-slate-600">
+                  </CardTitle>
+                  <CardDescription className="text-slate-600">
                     Report incidents safely and anonymously. Your voice matters
                     and will be heard.
-                  </p>
-                </div>
+                  </CardDescription>
+                </CardHeader>
 
-                <Card className="border-0 bg-gradient-to-br from-red-50 to-pink-50 border-red-200">
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-lg text-red-800 flex items-center gap-2">
-                      <AlertTriangle className="h-5 w-5" />
-                      POSH Complaints
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-red-700">
-                      For sexual harassment complaints, we provide specialized
-                      support and follow POSH guidelines strictly.
-                    </p>
-                  </CardContent>
-                </Card>
+                <CardContent className="p-0 space-y-5 ">
+                  <Card className="border-0 px-2 bg-gradient-to-br from-red-50 to-pink-50 border-red-200">
+                    <CardHeader className="pb-3">
+                      <CardTitle className="text-lg text-red-800 flex items-center gap-2">
+                        <AlertTriangle className="h-5 w-5" />
+                        POSH Complaints
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-sm text-red-700">
+                        For sexual harassment complaints, we provide specialized
+                        support and follow POSH guidelines strictly.
+                      </p>
+                    </CardContent>
+                  </Card>
 
-                <Card className="border-0 bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200">
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-lg text-blue-800">
-                      How it works
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <ul className="space-y-2 text-sm text-blue-700">
-                      <li className="flex items-start gap-2">
-                        <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-2 flex-shrink-0" />
-                        Fill out the form with incident details
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-2 flex-shrink-0" />
-                        Mention people using @ symbol if needed
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-2 flex-shrink-0" />
-                        Upload evidence (optional)
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-2 flex-shrink-0" />
-                        Receive tracking ID for updates
-                      </li>
-                    </ul>
-                  </CardContent>
-                </Card>
-              </div>
+                  <Card className="border-0 bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200">
+                    <CardHeader className="pb-3">
+                      <CardTitle className="text-lg text-blue-800">
+                        How it works
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <ul className="space-y-2 text-sm text-blue-700">
+                        <li className="flex items-start gap-2">
+                          <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-2 flex-shrink-0" />
+                          Fill out the form with incident details
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-2 flex-shrink-0" />
+                          Mention people using @ symbol if needed
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-2 flex-shrink-0" />
+                          Upload evidence (optional)
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-2 flex-shrink-0" />
+                          Receive tracking ID for updates
+                        </li>
+                      </ul>
+                    </CardContent>
+                  </Card>
+                </CardContent>
+              </Card>
 
               {/* Right Column - Form */}
               <div className="lg:col-span-2">

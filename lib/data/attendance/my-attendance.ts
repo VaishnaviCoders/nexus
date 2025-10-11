@@ -26,15 +26,14 @@ export async function getMyAttendance(userId: string) {
   const academicYearId = await getCurrentAcademicYearId();
 
   const attendanceData = await prisma.studentAttendance.findMany({
-    where: { studentId: student.id },
+    where: { studentId: student.id, academicYearId },
     orderBy: { date: 'desc' },
   });
 
   const holidayData = await prisma.academicCalendar.findMany({
-    where: { organizationId },
+    where: { organizationId, academicYearId },
   });
 
-  console.log('Holiday', holidayData);
   const recentAttendance = attendanceData.slice(0, 7);
 
   const now = new Date();

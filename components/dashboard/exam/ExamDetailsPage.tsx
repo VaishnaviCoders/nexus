@@ -224,7 +224,7 @@ export function ExamDetailsPage({
   const hallTicketDownload = () => {};
 
   return (
-    <div className="space-y-4 ">
+    <div className="space-y-4 px-2">
       <Card className="border-b">
         <CardHeader>
           <CardTitle className="text-lg">{exam.title}</CardTitle>
@@ -321,6 +321,7 @@ export function ExamDetailsPage({
               <Button
                 variant="outline"
                 size="sm"
+                className="truncate"
                 onClick={() => onCopy(exam.id)}
               >
                 <Copy className="h-4 w-4 mr-2" />

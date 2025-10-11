@@ -23,6 +23,14 @@ export const metadata: Metadata = {
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_APP_URL || 'https://www.shiksha.cloud'
   ),
+  other: {
+    'mobile-web-app-capable': 'yes',
+    'apple-mobile-web-app-capable': 'yes',
+    'apple-mobile-web-app-status-bar-style': 'black-translucent', // 👈 hides notch area
+    'theme-color': '#000000',
+    viewport:
+      'width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover', // 👈 important for notch fit
+  },
   icons: {
     icon: '/favicon.ico',
     shortcut: '/favicon-16x16.png',

@@ -195,7 +195,15 @@ export const studentProfileSchema = z.object({
   lastName: z.string().min(2, 'Last name must be at least 2 characters'),
   middleName: z.string().optional(),
   motherName: z.string().min(2, "Mother's name must be at least 2 characters"),
-  dateOfBirth: z.string().min(1, 'Date of birth is required'),
+  dateOfBirth: z
+    .date({
+      required_error: 'Date of birth is required',
+      invalid_type_error: 'Invalid date format',
+    })
+    .refine(
+      (date) => date <= new Date(),
+      'Date of birth cannot be in the future'
+    ),
   gender: z.enum(['MALE', 'FEMALE', 'OTHER'], {
     required_error: 'Please select a gender',
   }),

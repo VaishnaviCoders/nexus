@@ -3,10 +3,10 @@ import type { MetadataRoute } from 'next';
 export default function manifest(): MetadataRoute.Manifest {
   return {
     name: 'Nexus',
-    short_name: 'shiksha.cloud',
+    short_name: 'Shiksha.cloud',
     description: 'School Management System',
     start_url: '/dashboard',
-    display: 'standalone',
+    display: 'fullscreen',
     background_color: '#ffffff',
     theme_color: '#000000',
     icons: [
