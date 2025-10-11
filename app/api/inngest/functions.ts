@@ -147,7 +147,6 @@ export const sendExamReminder = inngest.createFunction(
       await prisma.scheduledJob.update({
         where: { id: jobId },
         data: {
-          type: 'EXAM',
           status: 'PROCESSING',
           updatedAt: new Date(),
         },

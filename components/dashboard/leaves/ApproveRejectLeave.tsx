@@ -23,6 +23,7 @@ import {
 import Image from 'next/image';
 import { Textarea } from '@/components/ui/textarea';
 import { EmptyState } from '@/components/EmptyState';
+import { toast } from 'sonner';
 
 type LeaveWithUser = Prisma.LeaveGetPayload<{
   include: {
@@ -69,10 +70,19 @@ const ApproveRejectLeave = ({ leaves }: ApproveRejectLeaveProps) => {
 
   const handleApprove = async () => {
     startTransition(async () => {
-      await approveLeaveAction({ leaveId: currentLeave.id });
+      try {
+        await approveLeaveAction({ leaveId: currentLeave.id });
+        // Navigate to next leave or first if this was the last
+        toast.success('Leave approved successfully');
+
+        handleNext();
+      } catch (error) {
+        console.error('Failed to approve leave:', error);
+        // Consider showing a toast notification here
+        toast.error('Failed to approve leave');
+      }
     });
   };
-
   const handleReject = () => {
     setShowRejectModal(true);
   };
@@ -139,43 +149,49 @@ const ApproveRejectLeave = ({ leaves }: ApproveRejectLeaveProps) => {
                             {currentLeave.totalDays}{' '}
                             {currentLeave.totalDays === 1 ? 'Day' : 'Days'}
                           </Badge>
-                        </div>
-                        <h2 className="text-2xl font-bold text-gray-900 mb-1">
-                          {currentLeave.appliedBy.firstName}{' '}
-                          {currentLeave.appliedBy.lastName}
-                        </h2>
-                        <div className="flex items-center gap-2 text-sm text-gray-600">
-                          <span>{currentLeave.appliedBy.role}</span>
                           <span>
                             {currentLeave.appliedBy.student?.grade.grade}{' '}
-                            {currentLeave.appliedBy.student?.grade.section.map(
-                              (section) => section.name
-                            )}
+                            {currentLeave.appliedBy.student?.grade.section
+                              .map((section) => section.name)
+                              .join(', ')}
                           </span>
+                          <h2 className="text-xl font-medium text-gray-900">
+                            {currentLeave.appliedBy.firstName}{' '}
+                            {currentLeave.appliedBy.lastName}
+                          </h2>
+                          <div className="flex items-center gap-2 text-sm text-gray-600">
+                            <span>{currentLeave.appliedBy.role}</span>
+                            <span>
+                              {currentLeave.appliedBy.student?.grade.grade}{' '}
+                              {currentLeave.appliedBy.student?.grade.section.map(
+                                (section) => section.name
+                              )}
+                            </span>
+                          </div>
                         </div>
                       </div>
-                    </div>
 
-                    {/* Pagination */}
-                    <div className="flex items-center gap-2 rounded-lg ">
-                      <Button
-                        variant="outline"
-                        onClick={handlePrevious}
-                        className="!rounded-full w-10 h-10 text-gray-600 hover:text-gray-900 transition-colors flex items-center justify-center"
-                      >
-                        <ChevronLeft className="w-4 h-4" />
-                      </Button>
+                      {/* Pagination */}
+                      <div className="flex items-center gap-2 rounded-lg ">
+                        <Button
+                          variant="outline"
+                          onClick={handlePrevious}
+                          className="!rounded-full w-10 h-10 text-gray-600 hover:text-gray-900 transition-colors flex items-center justify-center"
+                        >
+                          <ChevronLeft className="w-4 h-4" />
+                        </Button>
 
-                      <span className="text-sm font-medium text-gray-900 min-w-[3rem] text-center">
-                        {currentIndex + 1}/{leaves.length}
-                      </span>
-                      <Button
-                        variant="outline"
-                        onClick={handleNext}
-                        className="!rounded-full w-10 h-10 text-gray-600 hover:text-gray-900 transition-colors flex items-center justify-center"
-                      >
-                        <ChevronRight className="w-4 h-4" />
-                      </Button>
+                        <span className="text-sm font-medium text-gray-900 min-w-[3rem] text-center">
+                          {currentIndex + 1}/{leaves.length}
+                        </span>
+                        <Button
+                          variant="outline"
+                          onClick={handleNext}
+                          className="!rounded-full w-10 h-10 text-gray-600 hover:text-gray-900 transition-colors flex items-center justify-center"
+                        >
+                          <ChevronRight className="w-4 h-4" />
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 </div>

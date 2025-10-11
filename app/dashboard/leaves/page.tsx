@@ -49,7 +49,7 @@ export default async function LeavesPage() {
   });
 
   return (
-    <section aria-labelledby="history-heading" className="grid gap-4 px-2">
+    <section aria-labelledby="Leaves" className="grid gap-4 px-2">
       <Card className="py-4 px-2 flex items-center justify-between   ">
         <div>
           <CardTitle className="text-lg">Leaves</CardTitle>

@@ -93,8 +93,6 @@ export const FilterAttendance = async ({
     },
   });
 
-  console.log('Attebdance', records);
-
   return records.map((record) => ({
     ...record,
     grade: record.student.grade,

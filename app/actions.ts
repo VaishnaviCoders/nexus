@@ -246,7 +246,7 @@ export async function markAttendance(
   ]);
 
   // Verify section exists and get student IDs in one query
-  const section = await prisma.section.findUnique({
+  const section = await prisma.section.findFirst({
     where: { id: sectionId, organizationId },
     select: {
       id: true,
@@ -255,7 +255,6 @@ export async function markAttendance(
       },
     },
   });
-
   if (!section) {
     throw new Error(
       'Invalid sectionId: The referenced Section does not exist.'
