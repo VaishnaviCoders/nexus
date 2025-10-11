@@ -367,344 +367,344 @@ export default function page() {
 // ============================================
 // STATIC DATA EXPORT FOR SEO
 // ============================================
-export const holidayManagementData = {
-  hero: {
-    h1: 'Smart Holiday Management System',
-    subtitle:
-      'Never Miss a School Holiday Again. Declare, Track & Notify in Seconds.',
-    trustBadges: [
-      'Trusted by 500+ Schools',
-      '99.9% Notification Delivery',
-      'Zero Setup Time',
-    ],
-  },
-  stats: [
-    {
-      value: '8',
-      unit: 'Seconds',
-      label: 'Emergency Declaration Time',
-      description: 'From click to full parent notification via WhatsApp',
-    },
-    {
-      value: '98',
-      unit: '%',
-      label: 'WhatsApp Open Rate',
-      description: 'Parents acknowledge within 10 minutes',
-    },
-    {
-      value: '500',
-      unit: '+',
-      label: 'Schools Using',
-      description: 'Educational institutions across India',
-    },
-    {
-      value: '40',
-      unit: 'Hours',
-      label: 'Saved Per Year',
-      description: 'Average time saved on calendar management',
-    },
-  ],
-  features: [
-    {
-      id: 'academic-dashboard',
-      question: 'How Can Schools Track Their Academic Calendar Effectively?',
-      directAnswer:
-        'Schools can use our Academic Year Overview Dashboard to get real-time visibility into total holidays declared, working days remaining, holiday impact analysis, and category-wise breakdowns—all automatically calculated and updated.',
-      title: 'Academic Year Overview Dashboard',
-      subtitle: 'Real-Time Working Day Intelligence',
-      description:
-        'Get complete visibility into your school calendar with live tracking of working days, holidays, and their impact on your academic schedule. No more manual calculations or spreadsheet errors.',
-      benefits: [
-        'Total holidays declared with live count',
-        'Automatic working day calculation',
-        'Holiday impact analysis on schedule',
-        'Category-wise breakdown (National, Religious, Emergency)',
-        'Visual calendar with color-coding',
-        'Term-wise distribution analytics',
-      ],
-      icon: 'Calendar',
-      gradient: 'from-purple-500 to-indigo-600',
-      stats: {
-        timeSaved: '12+ hours monthly',
-        accuracy: '100% calculation accuracy',
-      },
-    },
-    {
-      id: 'emergency-declaration',
-      question: 'How to Declare Emergency School Holiday Instantly?',
-      directAnswer:
-        'Click "Declare Emergency Holiday," add an optional reason, confirm, and the system automatically sends WhatsApp alerts, push notifications, and updates all calendars within 30 seconds.',
-      title: 'Emergency Holiday Declaration',
-      subtitle: 'Handle Unexpected Situations in Seconds',
-      description:
-        'When severe weather, emergencies, or unexpected events occur, declare holidays instantly and notify everyone automatically through multiple channels.',
-      benefits: [
-        'One-click emergency declaration',
-        'WhatsApp alerts sent in 30 seconds',
-        'Push notifications to mobile apps',
-        'Automatic calendar updates',
-        'Real-time working day recalculation',
-        'Complete activity logging',
-      ],
-      useCases: [
-        'Extreme weather conditions',
-        'Public health emergencies',
-        'Infrastructure failures',
-        'Government directives',
-        'Community emergencies',
-      ],
-      icon: 'AlertTriangle',
-      gradient: 'from-red-500 to-orange-600',
-      stats: {
-        notificationSpeed: '30 seconds',
-        acknowledgmentRate: '98% within 10 minutes',
-      },
-    },
-    {
-      id: 'bulk-import',
-      question: 'How to Add Multiple School Holidays Quickly?',
-      directAnswer:
-        "Import your entire academic year's holidays in under 2 minutes using 5 methods: Google Sheets integration, single holiday addition, paste data, template download, or drag-and-drop file upload.",
-      title: 'Bulk Import Holidays',
-      subtitle: '5 Powerful Import Methods',
-      description:
-        'Stop adding holidays one by one. Import 100+ holidays in minutes using your preferred method—no technical knowledge required.',
-      methods: [
-        {
-          name: 'Google Sheets Integration',
-          description:
-            'Connect your existing Google Sheet directly with automatic column mapping and real-time sync',
-        },
-        {
-          name: 'Single Holiday Quick Add',
-          description:
-            'Fast interface for individual entries with smart date picker and conflict detection',
-        },
-        {
-          name: 'Paste Data Directly',
-          description:
-            'Copy from Excel, Word, PDF, or anywhere with intelligent parsing that recognizes dates automatically',
-        },
-        {
-          name: 'Download Template',
-          description:
-            'Use pre-formatted Excel/CSV template with example data and instant validation',
-        },
-        {
-          name: 'Drag & Drop Upload',
-          description:
-            'Drop your Excel/CSV file with automatic column detection and error highlighting',
-        },
-      ],
-      icon: 'Upload',
-      gradient: 'from-green-500 to-emerald-600',
-      stats: {
-        importTime: '90 seconds for 100+ holidays',
-        manualTime: '4 hours saved vs manual entry',
-      },
-    },
-    {
-      id: 'smart-delete',
-      question: 'How to Manage Wrong Holiday Entries?',
-      directAnswer:
-        'Delete single holidays with one click or use bulk cleanup for major changes. All deletions include safety confirmations, automatic backups, and optional parent notifications.',
-      title: 'Smart Delete & Cleanup',
-      subtitle: 'Safe Holiday Management',
-      description:
-        'Made a mistake? Need to adjust your calendar? Delete holidays with built-in safeguards and automatic notifications.',
-      features: [
-        {
-          type: 'Delete Single Holiday',
-          benefits: [
-            'One-click removal with confirmation',
-            'Automatic working day recalculation',
-            'Optional notification to parents',
-            'Undo available within 24 hours',
-          ],
-        },
-        {
-          type: 'Delete All Holidays',
-          benefits: [
-            'Reset entire academic year',
-            'Safety confirmation required',
-            'Automatic backup before deletion',
-            'Admin-only permission',
-          ],
-        },
-      ],
-      safeguards: [
-        'Prevent deletion of past holidays',
-        'Confirmation for bulk actions',
-        'Complete activity log maintained',
-        'Role-based permissions',
-        'Data recovery available',
-      ],
-      icon: 'Trash2',
-      gradient: 'from-gray-500 to-slate-600',
-    },
-    {
-      id: 'parent-experience',
-      question: 'What Makes This the Best School Calendar App for Parents?',
-      directAnswer:
-        'Parents get a beautiful visual calendar with color-coded holidays, multiple view modes, one-click export to personal calendars, and instant notifications via WhatsApp, push, and email.',
-      title: 'Parent Portal Experience',
-      subtitle: 'Beautiful, Simple, Effective',
-      description:
-        'Parents see a clean, easy-to-understand calendar with instant notifications and seamless integration with their personal calendars.',
-      features: [
-        {
-          category: 'Visual Academic Calendar',
-          items: [
-            'Month, Week, Day view modes',
-            'Color-coded holiday categories',
-            'Download to Google/Apple/Outlook Calendar',
-            'Print-friendly format',
-            'Search and filter capabilities',
-          ],
-        },
-        {
-          category: 'Multi-Channel Notifications',
-          items: [
-            'Push notifications on mobile app',
-            'WhatsApp messages with details',
-            'Email summaries',
-            'Priority alerts for emergencies',
-          ],
-        },
-        {
-          category: 'Upcoming Holidays Widget',
-          items: [
-            'Next 5 holidays at a glance',
-            'Days remaining counter',
-            'Holiday type indicators',
-            'Add reminder option',
-          ],
-        },
-      ],
-      testimonial: {
-        quote:
-          'I used to miss school holidays and plan family trips on school days. Now I get WhatsApp alerts instantly. Life-changing!',
-        author: 'Priya Sharma',
-        role: 'Parent of 2 students',
-      },
-      icon: 'Smartphone',
-      gradient: 'from-blue-500 to-cyan-600',
-      stats: {
-        satisfaction: '96% parent satisfaction',
-        missedHolidays: '0% holidays missed',
-      },
-    },
-  ],
-  howItWorks: {
-    title: 'How Does the Holiday Management System Work?',
-    description: 'From declaration to notification in just 30 seconds',
-    steps: [
-      {
-        step: 1,
-        title: 'Admin Declares Holiday',
-        description:
-          'Choose your method: single add, bulk import, Google Sheets, paste data, or upload file',
-        time: '5 seconds',
-      },
-      {
-        step: 2,
-        title: 'System Processes Instantly',
-        description:
-          'Validates dates, checks conflicts, calculates working day impact',
-        time: '3 seconds',
-      },
-      {
-        step: 3,
-        title: 'Everyone Gets Notified',
-        description:
-          'WhatsApp + Push + Email sent automatically to relevant users',
-        time: '20 seconds',
-      },
-      {
-        step: 4,
-        title: 'Calendars Update Automatically',
-        description: 'Student, parent, and teacher calendars sync in real-time',
-        time: '1 second',
-      },
-      {
-        step: 5,
-        title: 'Analytics Update',
-        description:
-          'Working days recalculated, dashboard refreshed, reports updated',
-        time: '1 second',
-      },
-    ],
-    totalTime: '30 seconds',
-  },
-  comparison: {
-    title: 'Why Traditional Holiday Management Fails Schools',
-    description: 'See the difference modern technology makes',
-    items: [
-      {
-        traditional: 'Manual Excel sheets prone to errors',
-        shiksha: 'Automated calculation engine with 100% accuracy',
-      },
-      {
-        traditional: 'Parents miss holiday announcements (70% open rate)',
-        shiksha: 'WhatsApp + Push notifications (98% acknowledgment)',
-      },
-      {
-        traditional: 'Emergency holidays create chaos (2-3 hours)',
-        shiksha: 'One-click emergency declaration (30 seconds)',
-      },
-      {
-        traditional: 'Hours updating calendars manually',
-        shiksha: 'Bulk import from Google Sheets (90 seconds)',
-      },
-      {
-        traditional: 'Lost productivity calculating working days',
-        shiksha: 'Real-time automatic recalculation',
-      },
-      {
-        traditional: 'No parent calendar integration',
-        shiksha: 'One-click export to Google/Apple/Outlook',
-      },
-    ],
-  },
-  socialProof: {
-    title: 'What Schools Say About Our Holiday Management',
-    testimonials: [
-      {
-        school: 'Mumbai International School',
-        quote:
-          "During last month's unexpected storm, we declared an emergency holiday and had 98% parent acknowledgment within 5 minutes.",
-        author: 'Dr. Rajesh Kumar',
-        role: 'Principal',
-        results: {
-          timeSaved: '40+ hours per year',
-          satisfaction: '96% parent satisfaction',
-        },
-        rating: 5,
-      },
-      {
-        school: 'Delhi Public School Branch',
-        quote:
-          'Parents used to miss 30% of holiday announcements via email. With WhatsApp notifications, we now have 98% engagement.',
-        author: 'Anjali Verma',
-        role: 'Admin Head',
-        results: {
-          engagement: '98% acknowledgment rate',
-          complaints: 'Zero missed holiday complaints',
-        },
-        rating: 5,
-      },
-      {
-        school: 'Bangalore Academy',
-        quote:
-          'The bulk import feature saved us during annual planning. We imported 50+ holidays in under 2 minutes.',
-        author: 'Suresh Reddy',
-        role: 'Academic Coordinator',
-        results: {
-          setupTime: '2 minutes vs 4 hours',
-          accuracy: '100% data accuracy',
-        },
-        rating: 5,
-      },
-    ],
-  },
-};
+// export const holidayManagementData = {
+//   hero: {
+//     h1: 'Smart Holiday Management System',
+//     subtitle:
+//       'Never Miss a School Holiday Again. Declare, Track & Notify in Seconds.',
+//     trustBadges: [
+//       'Trusted by 500+ Schools',
+//       '99.9% Notification Delivery',
+//       'Zero Setup Time',
+//     ],
+//   },
+//   stats: [
+//     {
+//       value: '8',
+//       unit: 'Seconds',
+//       label: 'Emergency Declaration Time',
+//       description: 'From click to full parent notification via WhatsApp',
+//     },
+//     {
+//       value: '98',
+//       unit: '%',
+//       label: 'WhatsApp Open Rate',
+//       description: 'Parents acknowledge within 10 minutes',
+//     },
+//     {
+//       value: '500',
+//       unit: '+',
+//       label: 'Schools Using',
+//       description: 'Educational institutions across India',
+//     },
+//     {
+//       value: '40',
+//       unit: 'Hours',
+//       label: 'Saved Per Year',
+//       description: 'Average time saved on calendar management',
+//     },
+//   ],
+//   features: [
+//     {
+//       id: 'academic-dashboard',
+//       question: 'How Can Schools Track Their Academic Calendar Effectively?',
+//       directAnswer:
+//         'Schools can use our Academic Year Overview Dashboard to get real-time visibility into total holidays declared, working days remaining, holiday impact analysis, and category-wise breakdowns—all automatically calculated and updated.',
+//       title: 'Academic Year Overview Dashboard',
+//       subtitle: 'Real-Time Working Day Intelligence',
+//       description:
+//         'Get complete visibility into your school calendar with live tracking of working days, holidays, and their impact on your academic schedule. No more manual calculations or spreadsheet errors.',
+//       benefits: [
+//         'Total holidays declared with live count',
+//         'Automatic working day calculation',
+//         'Holiday impact analysis on schedule',
+//         'Category-wise breakdown (National, Religious, Emergency)',
+//         'Visual calendar with color-coding',
+//         'Term-wise distribution analytics',
+//       ],
+//       icon: 'Calendar',
+//       gradient: 'from-purple-500 to-indigo-600',
+//       stats: {
+//         timeSaved: '12+ hours monthly',
+//         accuracy: '100% calculation accuracy',
+//       },
+//     },
+//     {
+//       id: 'emergency-declaration',
+//       question: 'How to Declare Emergency School Holiday Instantly?',
+//       directAnswer:
+//         'Click "Declare Emergency Holiday," add an optional reason, confirm, and the system automatically sends WhatsApp alerts, push notifications, and updates all calendars within 30 seconds.',
+//       title: 'Emergency Holiday Declaration',
+//       subtitle: 'Handle Unexpected Situations in Seconds',
+//       description:
+//         'When severe weather, emergencies, or unexpected events occur, declare holidays instantly and notify everyone automatically through multiple channels.',
+//       benefits: [
+//         'One-click emergency declaration',
+//         'WhatsApp alerts sent in 30 seconds',
+//         'Push notifications to mobile apps',
+//         'Automatic calendar updates',
+//         'Real-time working day recalculation',
+//         'Complete activity logging',
+//       ],
+//       useCases: [
+//         'Extreme weather conditions',
+//         'Public health emergencies',
+//         'Infrastructure failures',
+//         'Government directives',
+//         'Community emergencies',
+//       ],
+//       icon: 'AlertTriangle',
+//       gradient: 'from-red-500 to-orange-600',
+//       stats: {
+//         notificationSpeed: '30 seconds',
+//         acknowledgmentRate: '98% within 10 minutes',
+//       },
+//     },
+//     {
+//       id: 'bulk-import',
+//       question: 'How to Add Multiple School Holidays Quickly?',
+//       directAnswer:
+//         "Import your entire academic year's holidays in under 2 minutes using 5 methods: Google Sheets integration, single holiday addition, paste data, template download, or drag-and-drop file upload.",
+//       title: 'Bulk Import Holidays',
+//       subtitle: '5 Powerful Import Methods',
+//       description:
+//         'Stop adding holidays one by one. Import 100+ holidays in minutes using your preferred method—no technical knowledge required.',
+//       methods: [
+//         {
+//           name: 'Google Sheets Integration',
+//           description:
+//             'Connect your existing Google Sheet directly with automatic column mapping and real-time sync',
+//         },
+//         {
+//           name: 'Single Holiday Quick Add',
+//           description:
+//             'Fast interface for individual entries with smart date picker and conflict detection',
+//         },
+//         {
+//           name: 'Paste Data Directly',
+//           description:
+//             'Copy from Excel, Word, PDF, or anywhere with intelligent parsing that recognizes dates automatically',
+//         },
+//         {
+//           name: 'Download Template',
+//           description:
+//             'Use pre-formatted Excel/CSV template with example data and instant validation',
+//         },
+//         {
+//           name: 'Drag & Drop Upload',
+//           description:
+//             'Drop your Excel/CSV file with automatic column detection and error highlighting',
+//         },
+//       ],
+//       icon: 'Upload',
+//       gradient: 'from-green-500 to-emerald-600',
+//       stats: {
+//         importTime: '90 seconds for 100+ holidays',
+//         manualTime: '4 hours saved vs manual entry',
+//       },
+//     },
+//     {
+//       id: 'smart-delete',
+//       question: 'How to Manage Wrong Holiday Entries?',
+//       directAnswer:
+//         'Delete single holidays with one click or use bulk cleanup for major changes. All deletions include safety confirmations, automatic backups, and optional parent notifications.',
+//       title: 'Smart Delete & Cleanup',
+//       subtitle: 'Safe Holiday Management',
+//       description:
+//         'Made a mistake? Need to adjust your calendar? Delete holidays with built-in safeguards and automatic notifications.',
+//       features: [
+//         {
+//           type: 'Delete Single Holiday',
+//           benefits: [
+//             'One-click removal with confirmation',
+//             'Automatic working day recalculation',
+//             'Optional notification to parents',
+//             'Undo available within 24 hours',
+//           ],
+//         },
+//         {
+//           type: 'Delete All Holidays',
+//           benefits: [
+//             'Reset entire academic year',
+//             'Safety confirmation required',
+//             'Automatic backup before deletion',
+//             'Admin-only permission',
+//           ],
+//         },
+//       ],
+//       safeguards: [
+//         'Prevent deletion of past holidays',
+//         'Confirmation for bulk actions',
+//         'Complete activity log maintained',
+//         'Role-based permissions',
+//         'Data recovery available',
+//       ],
+//       icon: 'Trash2',
+//       gradient: 'from-gray-500 to-slate-600',
+//     },
+//     {
+//       id: 'parent-experience',
+//       question: 'What Makes This the Best School Calendar App for Parents?',
+//       directAnswer:
+//         'Parents get a beautiful visual calendar with color-coded holidays, multiple view modes, one-click export to personal calendars, and instant notifications via WhatsApp, push, and email.',
+//       title: 'Parent Portal Experience',
+//       subtitle: 'Beautiful, Simple, Effective',
+//       description:
+//         'Parents see a clean, easy-to-understand calendar with instant notifications and seamless integration with their personal calendars.',
+//       features: [
+//         {
+//           category: 'Visual Academic Calendar',
+//           items: [
+//             'Month, Week, Day view modes',
+//             'Color-coded holiday categories',
+//             'Download to Google/Apple/Outlook Calendar',
+//             'Print-friendly format',
+//             'Search and filter capabilities',
+//           ],
+//         },
+//         {
+//           category: 'Multi-Channel Notifications',
+//           items: [
+//             'Push notifications on mobile app',
+//             'WhatsApp messages with details',
+//             'Email summaries',
+//             'Priority alerts for emergencies',
+//           ],
+//         },
+//         {
+//           category: 'Upcoming Holidays Widget',
+//           items: [
+//             'Next 5 holidays at a glance',
+//             'Days remaining counter',
+//             'Holiday type indicators',
+//             'Add reminder option',
+//           ],
+//         },
+//       ],
+//       testimonial: {
+//         quote:
+//           'I used to miss school holidays and plan family trips on school days. Now I get WhatsApp alerts instantly. Life-changing!',
+//         author: 'Priya Sharma',
+//         role: 'Parent of 2 students',
+//       },
+//       icon: 'Smartphone',
+//       gradient: 'from-blue-500 to-cyan-600',
+//       stats: {
+//         satisfaction: '96% parent satisfaction',
+//         missedHolidays: '0% holidays missed',
+//       },
+//     },
+//   ],
+//   howItWorks: {
+//     title: 'How Does the Holiday Management System Work?',
+//     description: 'From declaration to notification in just 30 seconds',
+//     steps: [
+//       {
+//         step: 1,
+//         title: 'Admin Declares Holiday',
+//         description:
+//           'Choose your method: single add, bulk import, Google Sheets, paste data, or upload file',
+//         time: '5 seconds',
+//       },
+//       {
+//         step: 2,
+//         title: 'System Processes Instantly',
+//         description:
+//           'Validates dates, checks conflicts, calculates working day impact',
+//         time: '3 seconds',
+//       },
+//       {
+//         step: 3,
+//         title: 'Everyone Gets Notified',
+//         description:
+//           'WhatsApp + Push + Email sent automatically to relevant users',
+//         time: '20 seconds',
+//       },
+//       {
+//         step: 4,
+//         title: 'Calendars Update Automatically',
+//         description: 'Student, parent, and teacher calendars sync in real-time',
+//         time: '1 second',
+//       },
+//       {
+//         step: 5,
+//         title: 'Analytics Update',
+//         description:
+//           'Working days recalculated, dashboard refreshed, reports updated',
+//         time: '1 second',
+//       },
+//     ],
+//     totalTime: '30 seconds',
+//   },
+//   comparison: {
+//     title: 'Why Traditional Holiday Management Fails Schools',
+//     description: 'See the difference modern technology makes',
+//     items: [
+//       {
+//         traditional: 'Manual Excel sheets prone to errors',
+//         shiksha: 'Automated calculation engine with 100% accuracy',
+//       },
+//       {
+//         traditional: 'Parents miss holiday announcements (70% open rate)',
+//         shiksha: 'WhatsApp + Push notifications (98% acknowledgment)',
+//       },
+//       {
+//         traditional: 'Emergency holidays create chaos (2-3 hours)',
+//         shiksha: 'One-click emergency declaration (30 seconds)',
+//       },
+//       {
+//         traditional: 'Hours updating calendars manually',
+//         shiksha: 'Bulk import from Google Sheets (90 seconds)',
+//       },
+//       {
+//         traditional: 'Lost productivity calculating working days',
+//         shiksha: 'Real-time automatic recalculation',
+//       },
+//       {
+//         traditional: 'No parent calendar integration',
+//         shiksha: 'One-click export to Google/Apple/Outlook',
+//       },
+//     ],
+//   },
+//   socialProof: {
+//     title: 'What Schools Say About Our Holiday Management',
+//     testimonials: [
+//       {
+//         school: 'Mumbai International School',
+//         quote:
+//           "During last month's unexpected storm, we declared an emergency holiday and had 98% parent acknowledgment within 5 minutes.",
+//         author: 'Dr. Rajesh Kumar',
+//         role: 'Principal',
+//         results: {
+//           timeSaved: '40+ hours per year',
+//           satisfaction: '96% parent satisfaction',
+//         },
+//         rating: 5,
+//       },
+//       {
+//         school: 'Delhi Public School Branch',
+//         quote:
+//           'Parents used to miss 30% of holiday announcements via email. With WhatsApp notifications, we now have 98% engagement.',
+//         author: 'Anjali Verma',
+//         role: 'Admin Head',
+//         results: {
+//           engagement: '98% acknowledgment rate',
+//           complaints: 'Zero missed holiday complaints',
+//         },
+//         rating: 5,
+//       },
+//       {
+//         school: 'Bangalore Academy',
+//         quote:
+//           'The bulk import feature saved us during annual planning. We imported 50+ holidays in under 2 minutes.',
+//         author: 'Suresh Reddy',
+//         role: 'Academic Coordinator',
+//         results: {
+//           setupTime: '2 minutes vs 4 hours',
+//           accuracy: '100% data accuracy',
+//         },
+//         rating: 5,
+//       },
+//     ],
+//   },
+// };
