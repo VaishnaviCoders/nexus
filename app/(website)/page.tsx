@@ -58,10 +58,10 @@ export default async function IndexPage() {
           {/* <ModeToggle /> */}
 
           <SignedOut>
-            <SignInButton forceRedirectUrl={'/dashboard'}>
+            <SignInButton signUpForceRedirectUrl={'/dashboard'}>
               <Button
                 variant="outline"
-                className="text-blue-500 hover:text-blue-600 border-blue-500/20 shadow-none"
+                className="bg-white text-blue-500 hover:bg-blue-50 hover:text-blue-600 border-blue-300 shadow-none"
               >
                 <UserCircleIcon />
                 Sign In

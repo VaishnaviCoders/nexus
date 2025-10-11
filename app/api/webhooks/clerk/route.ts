@@ -133,15 +133,16 @@ export async function POST(req: Request) {
     case 'organizationMembership.created': {
       const clerkRole = evt.data.role;
       const mappedRole = mapClerkRole(clerkRole);
+      const clerkUser = evt.data.public_user_data;
 
       await prisma.user.create({
         data: {
-          clerkId: evt.data.public_user_data.user_id,
-          id: evt.data.public_user_data.user_id,
-          firstName: evt.data.public_user_data.first_name || '',
-          lastName: evt.data.public_user_data.last_name || '',
-          email: evt.data.public_user_data.identifier,
-          profileImage: evt.data.public_user_data.image_url || '',
+          id: clerkUser.user_id,
+          clerkId: clerkUser.user_id,
+          firstName: clerkUser.first_name || '',
+          lastName: clerkUser.last_name || '',
+          email: clerkUser.identifier,
+          profileImage: clerkUser.image_url || '',
           organizationId: evt.data.organization.id,
           role: mappedRole,
           createdAt: new Date(evt.data.created_at), // Add membership creation date
@@ -160,23 +161,48 @@ export async function POST(req: Request) {
     case 'organizationMembership.updated': {
       const clerkRole = evt.data.role;
       const mappedRole = mapClerkRole(clerkRole);
+      const clerkUser = evt.data.public_user_data;
 
       await prisma.user.update({
         where: {
-          id: evt.data.public_user_data.user_id,
+          id: clerkUser.user_id,
         },
         data: {
-          clerkId: evt.data.public_user_data.user_id,
+          id: clerkUser.user_id,
+          clerkId: clerkUser.user_id,
           organizationId: evt.data.organization.id,
           role: mappedRole,
-          firstName: evt.data.public_user_data.first_name || '',
-          lastName: evt.data.public_user_data.last_name || '',
-          email: evt.data.public_user_data.identifier,
-          profileImage: evt.data.public_user_data.image_url || '',
+          firstName: clerkUser.first_name || '',
+          lastName: clerkUser.last_name || '',
+          email: clerkUser.identifier,
+          profileImage: clerkUser.image_url || '',
           createdAt: new Date(evt.data.created_at),
           updatedAt: new Date(evt.data.updated_at),
         },
       });
+
+      if (mappedRole === 'TEACHER') {
+        await prisma.teacher.upsert({
+          where: { userId: clerkUser.user_id },
+          update: { isActive: true },
+          create: {
+            userId: clerkUser.user_id,
+            organizationId: evt.data.organization.id,
+            employmentStatus: 'ACTIVE',
+            isActive: true,
+          },
+        });
+
+        // // Mark others inactive instead of deleting
+        // await prisma.parent.updateMany({
+        //   where: { userId: clerkUser.user_id },
+        //   data: { isActive: false },
+        // });
+        // await prisma.student.updateMany({
+        //   where: { userId: clerkUser.user_id },
+        //   data: { : false },
+        // });
+      }
 
       console.log(
         '✅ Membership updated:',
@@ -204,6 +230,7 @@ export async function POST(req: Request) {
       await prisma.user.update({
         where: { email: evt.data.email_addresses[0].email_address }, // Use email as the unique identifier
         data: {
+          id: evt.data.id,
           clerkId: evt.data.id,
           firstName: evt.data.first_name || '',
           lastName: evt.data.last_name || '',

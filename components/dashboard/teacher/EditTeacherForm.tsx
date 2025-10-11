@@ -25,7 +25,6 @@ import {
 } from '@/components/ui/form';
 import { Separator } from '@/components/ui/separator';
 import { type CreateTeacherFormData, createTeacherSchema } from '@/lib/schemas';
-import { createTeacherFormAction } from '@/app/actions';
 import { toast } from 'sonner';
 import MultipleSelector from '@/components/ui/multi-select';
 import {
@@ -36,57 +35,82 @@ import {
 import { CalendarIcon, Mail, Phone } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Calendar } from '@/components/ui/calendar';
+import {
+  TeacherProfile,
+  User,
+  EmploymentStatus,
+} from '@/generated/prisma/client';
 import { grades, subjects, languages, indianStates } from '@/constants/index';
+import { updateTeacherAction } from '@/app/actions';
 import {
   Select,
-  SelectItem,
   SelectContent,
+  SelectItem,
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
 
-export function AddTeacherForm() {
+interface EditTeacherFormProps {
+  teacher: {
+    id: string;
+    employeeCode: string | null;
+    isActive: boolean;
+    employmentStatus: EmploymentStatus;
+    organizationId: string;
+    createdAt: Date;
+    updatedAt: Date;
+    userId: string;
+    profile: TeacherProfile | null;
+    user: User;
+  };
+  onSuccess?: () => void;
+}
+
+export function EditTeacherForm({ teacher, onSuccess }: EditTeacherFormProps) {
   const [isPending, startTransition] = useTransition();
 
   const form = useForm<CreateTeacherFormData>({
     resolver: zodResolver(createTeacherSchema),
     defaultValues: {
-      firstName: '',
-      lastName: '',
-      email: '',
-      employeeCode: '',
-      contactEmail: '',
-      contactPhone: '',
-      address: '',
-      city: '',
-      state: '',
-      dateOfBirth: new Date(),
-      qualification: '',
-      experienceInYears: 0,
-      joinedAt: new Date(),
-      specializedSubjects: [],
-      preferredGrades: [],
-      bio: '',
-      teachingPhilosophy: '',
-      linkedinPortfolio: '',
-      languagesKnown: [],
+      firstName: teacher.user.firstName || '',
+      lastName: teacher.user.lastName || '',
+      email: teacher.user.email || '',
+      employeeCode: teacher.employeeCode || '',
+      contactEmail: teacher.profile?.contactEmail || '',
+      contactPhone: teacher.profile?.contactPhone || '',
+      address: teacher.profile?.address || '',
+      city: teacher.profile?.city || 'Pune',
+      state: teacher.profile?.state || 'Maharashtra',
+      dateOfBirth: teacher.profile?.dateOfBirth
+        ? new Date(teacher.profile.dateOfBirth)
+        : new Date(),
+      qualification: teacher.profile?.qualification || '',
+      experienceInYears: teacher.profile?.experienceInYears || 0,
+      joinedAt: teacher.profile?.joinedAt
+        ? new Date(teacher.profile.joinedAt)
+        : new Date(),
+      specializedSubjects: teacher.profile?.specializedSubjects || [],
+      preferredGrades: teacher.profile?.preferredGrades || [],
+      bio: teacher.profile?.bio || '',
+      teachingPhilosophy: teacher.profile?.teachingPhilosophy || '',
+      linkedinPortfolio: teacher.profile?.linkedinPortfolio || '',
+      languagesKnown: teacher.profile?.languagesKnown || [],
     },
   });
 
   const onSubmit = async (data: CreateTeacherFormData) => {
     startTransition(async () => {
       try {
-        console.log('Frontend Teacher Data', data);
-        await createTeacherFormAction(data);
-        toast.success('Teacher profile has been created successfully.');
+        console.log('Updating Teacher Data', data);
+        await updateTeacherAction(teacher.id, data);
+        toast.success('Teacher profile has been updated successfully.');
         form.reset();
+        onSuccess?.();
       } catch (error) {
-        toast.error('Failed to create teacher profile. Please try again.');
+        toast.error('Failed to update teacher profile. Please try again.');
       }
     });
   };
-
-  console.log('Form errors:', form.formState.errors);
 
   return (
     <div className="space-y-6">
@@ -307,7 +331,10 @@ export function AddTeacherForm() {
                         <FormItem>
                           <FormLabel>City</FormLabel>
                           <FormControl>
-                            <Input placeholder="New York" {...field} />
+                            <Input
+                              placeholder="Pune, Mumbai , Nashik"
+                              {...field}
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -382,7 +409,6 @@ export function AddTeacherForm() {
                               type="number"
                               placeholder="5"
                               min="0"
-                              max="50"
                               {...field}
                               onChange={(e) =>
                                 field.onChange(
@@ -628,10 +654,10 @@ export function AddTeacherForm() {
               onClick={() => form.reset()}
               disabled={isPending}
             >
-              Reset Form
+              Reset Changes
             </Button>
             <Button type="submit" disabled={isPending}>
-              {isPending ? 'Creating Teacher...' : 'Create Teacher'}
+              {isPending ? 'Updating Teacher...' : 'Update Teacher'}
             </Button>
           </div>
         </form>

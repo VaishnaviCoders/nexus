@@ -128,11 +128,11 @@ const prisma = base.$extends({
       },
     },
     studentAttendance: {
-      // async findMany({ args, query }) {
-      //   const academicYearId = await getCurrentAcademicYearId();
-      //   args.where = { ...(args.where ?? {}), academicYearId };
-      //   return query(args);
-      // },
+      async findMany({ args, query }) {
+        const academicYearId = await getCurrentAcademicYearId();
+        args.where = { ...(args.where ?? {}), academicYearId };
+        return query(args);
+      },
       async findFirst({ args, query }) {
         const academicYearId = await getCurrentAcademicYearId();
         args.where = { ...(args.where ?? {}), academicYearId };

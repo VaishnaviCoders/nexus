@@ -121,7 +121,7 @@ export const roleMenus: Record<string, Group[]> = {
         },
         {
           href: '/dashboard/leaves/manage',
-          label: 'leaves Management',
+          label: 'Leaves Management',
           icon: FileText,
         },
         {

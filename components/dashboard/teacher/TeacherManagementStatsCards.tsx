@@ -47,7 +47,7 @@ const StatCard = ({
   <Card
     className={`relative overflow-hidden transition-all duration-200 hover:shadow-sm ${className}`}
   >
-    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
       <CardTitle className="text-sm font-medium">{title}</CardTitle>
       <div className="h-8 w-8 rounded-lg bg-gray-100 flex items-center justify-center">
         <Icon className="h-4 w-4 " />

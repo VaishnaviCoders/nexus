@@ -3,6 +3,8 @@
 import prisma from '@/lib/db';
 import { getCurrentUserId } from './user';
 import { getOrganizationId } from './organization';
+import { syncOrganizationUser } from './syncUser';
+import { auth } from '@clerk/nextjs/server';
 
 export type RoleResult =
   | { role: 'STUDENT'; studentId: string }
@@ -13,6 +15,7 @@ export type RoleResult =
 export async function getCurrentUserByRole(): Promise<RoleResult> {
   const userId = await getCurrentUserId();
   const organizationId = await getOrganizationId();
+  // await syncOrganizationUser(organizationId, orgRole, userId);
 
   // Run queries in parallel
   const [admin, student, teacher, parent] = await Promise.all([
@@ -33,6 +36,8 @@ export async function getCurrentUserByRole(): Promise<RoleResult> {
       select: { id: true },
     }),
   ]);
+
+  console.log('User:', admin, teacher, student, parent);
 
   if (admin) return { role: 'ADMIN', userId };
   if (student) return { role: 'STUDENT', studentId: student.id };

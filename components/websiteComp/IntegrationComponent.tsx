@@ -111,7 +111,7 @@ const Integration = () => {
         </h2>
       </div>
       <div className="flex flex-col items-center text-center max-w-3xl mx-auto lg:absolute lg:bottom-1/4 inset-x-0 z-20 mt-8 lg:mt-0">
-        <Link href="#">
+        <Link href="/features">
           <Button size="lg">
             See all Integrations
             <ArrowRightIcon className="size-4" />

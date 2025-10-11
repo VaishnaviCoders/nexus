@@ -46,12 +46,14 @@ const isTeacher = createRouteMatcher([
 
 const isAdmin = createRouteMatcher([
   '/dashboard/fees/admin(.*)',
-  // '/dashboard/admin(.*)',
+  '/dashboard/admin(.*)',
   // '/dashboard/grades(.*)',
   // '/dashboard/holidays(.*)',
   // '/dashboard/documents/verification(.*)',
 
-  // '/dashboard/notices/create'
+  '/dashboard/notices/create',
+  '/dashboard/teachers',
+
   // Add any other admin routes here
 ]);
 

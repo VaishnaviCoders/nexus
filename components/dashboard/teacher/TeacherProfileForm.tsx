@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import React, { useState, useTransition } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -20,6 +20,8 @@ import {
   BookOpen,
   Award,
   Shield,
+  Eye,
+  Trash2,
 } from 'lucide-react';
 import { format } from 'date-fns';
 
@@ -63,95 +65,18 @@ import { TeacherProfileFormData, teacherProfileSchema } from '@/lib/schemas';
 import { toast } from 'sonner';
 import { updateTeacherProfileAction } from '@/app/actions';
 
-const subjects = [
-  'Mathematics',
-  'Physics',
-  'Chemistry',
-  'Biology',
-  'English',
-  'Hindi',
-  'History',
-  'Geography',
-  'Economics',
-  'Political Science',
-  'Computer Science',
-  'Physical Education',
-  'Art',
-  'Music',
-  'Sanskrit',
-  'French',
-  'German',
-  'Spanish',
-];
-
-const grades = [
-  'Pre-K',
-  'Kindergarten',
-  'Grade 1',
-  'Grade 2',
-  'Grade 3',
-  'Grade 4',
-  'Grade 5',
-  'Grade 6',
-  'Grade 7',
-  'Grade 8',
-  'Grade 9',
-  'Grade 10',
-  'Grade 11',
-  'Grade 12',
-];
-
-const languages = [
-  'English',
-  'Hindi',
-  'Bengali',
-  'Telugu',
-  'Marathi',
-  'Tamil',
-  'Gujarati',
-  'Urdu',
-  'Kannada',
-  'Odia',
-  'Malayalam',
-  'Punjabi',
-  'Assamese',
-  'Maithili',
-  'Sanskrit',
-];
-
-const states = [
-  'Andhra Pradesh',
-  'Arunachal Pradesh',
-  'Assam',
-  'Bihar',
-  'Chhattisgarh',
-  'Goa',
-  'Gujarat',
-  'Haryana',
-  'Himachal Pradesh',
-  'Jharkhand',
-  'Karnataka',
-  'Kerala',
-  'Madhya Pradesh',
-  'Maharashtra',
-  'Manipur',
-  'Meghalaya',
-  'Mizoram',
-  'Nagaland',
-  'Odisha',
-  'Punjab',
-  'Rajasthan',
-  'Sikkim',
-  'Tamil Nadu',
-  'Telangana',
-  'Tripura',
-  'Uttar Pradesh',
-  'Uttarakhand',
-  'West Bengal',
-  'Delhi',
-  'Jammu and Kashmir',
-  'Ladakh',
-];
+import { grades, subjects, languages, indianStates } from '@/constants/index';
+import {
+  FileUpload,
+  FileUploadDropzone,
+  FileUploadItem,
+  FileUploadItemDelete,
+  FileUploadItemMetadata,
+  FileUploadItemPreview,
+  FileUploadList,
+  FileUploadTrigger,
+} from '@/components/ui/file-uploader';
+import { CloudinaryUploadResult, uploadToCloudinary } from '@/lib/cloudinary';
 
 interface TeacherProfileFormProps {
   teacher: TeacherProfileFormData & { id: string };
@@ -159,6 +84,7 @@ interface TeacherProfileFormProps {
 
 export function TeacherProfileForm({ teacher }: TeacherProfileFormProps) {
   const [isPending, startTransition] = useTransition();
+  const [uploadedResume, setUploadedResume] = useState<File[]>([]);
 
   const form = useForm<TeacherProfileFormData>({
     resolver: zodResolver(teacherProfileSchema),
@@ -196,9 +122,20 @@ export function TeacherProfileForm({ teacher }: TeacherProfileFormProps) {
     name: 'certificateUrls',
   });
 
+  const onFileReject = React.useCallback((file: File, message: string) => {
+    toast(message, {
+      description: `"${file.name.length > 20 ? `${file.name.slice(0, 20)}...` : file.name}" has been rejected`,
+    });
+  }, []);
+
   function onSubmit(data: TeacherProfileFormData) {
     startTransition(async () => {
       try {
+        if (uploadedResume.length > 0) {
+          const result = await uploadToCloudinary(uploadedResume[0]);
+          form.setValue('resumeUrl', result.url); // Update the form value
+          data.resumeUrl = result.url; // Also update the data object
+        }
         const result = await updateTeacherProfileAction({
           teacherId: teacher.id,
           data,
@@ -466,7 +403,7 @@ export function TeacherProfileForm({ teacher }: TeacherProfileFormProps) {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {states.map((state) => (
+                          {indianStates.map((state) => (
                             <SelectItem key={state} value={state}>
                               {state}
                             </SelectItem>
@@ -542,32 +479,83 @@ export function TeacherProfileForm({ teacher }: TeacherProfileFormProps) {
                       Resume Upload
                     </FormLabel>
                     <FormControl>
-                      <div className="flex items-center gap-2">
-                        {/* <Input
-                          type="file"
-                          accept=".pdf,.doc,.docx"
-                          onChange={(e) => {
-                            const file = e.target.files?.[0];
-                            if (file) {
-                              handleFileUpload(file, 'resumeUpload');
-                            }
-                          }}
-                          className="hidden"
-                          id="resume-upload"
-                        /> */}
-                        <Button
-                          type="button"
-                          variant="outline"
-                          onClick={() =>
-                            document.getElementById('resume-upload')?.click()
-                          }
-                        >
-                          <Upload className="w-4 h-4 mr-2" />
-                          Upload Resume
-                        </Button>
-                        {field.value && (
-                          <Badge variant="secondary">Resume uploaded</Badge>
+                      <div className="space-y-2">
+                        {/* Show existing resume if available and no new file is being uploaded */}
+                        {field.value && uploadedResume.length === 0 && (
+                          <div className="flex items-center justify-between p-3 border rounded-lg bg-muted/50">
+                            <div className="flex items-center gap-3">
+                              <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/10">
+                                <FileText className="w-5 h-5 text-primary" />
+                              </div>
+                              <div>
+                                <p className="text-sm font-medium">
+                                  Current Resume
+                                </p>
+                                <p className="text-xs text-muted-foreground">
+                                  Previously uploaded
+                                </p>
+                              </div>
+                            </div>
+                            {/* <div className="flex items-center gap-2">
+                              <Button type="button" variant="outline" size="sm">
+                                <Eye className="w-4 h-4 mr-1" />
+                                View
+                              </Button>
+                              <Button type="button" variant="outline" size="sm">
+                                <Trash2 className="w-4 h-4 mr-1" />
+                                Remove
+                              </Button>
+                            </div> */}
+                          </div>
                         )}
+                        <FileUpload
+                          maxFiles={1}
+                          maxSize={5 * 1024 * 1024}
+                          className="w-full "
+                          value={uploadedResume}
+                          onValueChange={setUploadedResume}
+                          onFileReject={onFileReject}
+                        >
+                          <FileUploadDropzone>
+                            <div className="flex flex-col items-center gap-1 text-center">
+                              <div className="flex items-center justify-center rounded-full border p-2.5">
+                                <Upload className="size-6 text-muted-foreground" />
+                              </div>
+                              <p className="font-medium text-sm">
+                                Drag & drop files here
+                              </p>
+                              <p className="text-muted-foreground text-xs">
+                                Or click to browse (max 4 files, up to 5MB each)
+                              </p>
+                            </div>
+                            <FileUploadTrigger asChild>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="mt-2 w-fit"
+                              >
+                                Browse files
+                              </Button>
+                            </FileUploadTrigger>
+                          </FileUploadDropzone>
+                          <FileUploadList>
+                            {uploadedResume.map((file) => (
+                              <FileUploadItem key={file.name} value={file}>
+                                <FileUploadItemPreview />
+                                <FileUploadItemMetadata />
+                                <FileUploadItemDelete asChild>
+                                  <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="size-7"
+                                  >
+                                    <X />
+                                  </Button>
+                                </FileUploadItemDelete>
+                              </FileUploadItem>
+                            ))}
+                          </FileUploadList>
+                        </FileUpload>
                       </div>
                     </FormControl>
                     <FormDescription>
@@ -602,18 +590,20 @@ export function TeacherProfileForm({ teacher }: TeacherProfileFormProps) {
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
                       {subjects.map((subject) => (
                         <FormField
-                          key={subject}
+                          key={subject.value}
                           control={form.control}
                           name="specializedSubjects"
                           render={({ field }) => {
                             return (
                               <FormItem
-                                key={subject}
+                                key={subject.value}
                                 className="flex flex-row items-start space-x-3 space-y-0"
                               >
                                 <FormControl>
                                   <Checkbox
-                                    checked={field.value?.includes(subject)}
+                                    checked={field.value?.includes(
+                                      subject.value
+                                    )}
                                     onCheckedChange={(checked) => {
                                       return checked
                                         ? field.onChange([
@@ -622,14 +612,14 @@ export function TeacherProfileForm({ teacher }: TeacherProfileFormProps) {
                                           ])
                                         : field.onChange(
                                             field.value?.filter(
-                                              (value) => value !== subject
+                                              (value) => value !== subject.value
                                             )
                                           );
                                     }}
                                   />
                                 </FormControl>
                                 <FormLabel className="text-sm font-normal">
-                                  {subject}
+                                  {subject.label}
                                 </FormLabel>
                               </FormItem>
                             );
@@ -655,18 +645,18 @@ export function TeacherProfileForm({ teacher }: TeacherProfileFormProps) {
                     <div className="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-3">
                       {grades.map((grade) => (
                         <FormField
-                          key={grade}
+                          key={grade.value}
                           control={form.control}
                           name="preferredGrades"
                           render={({ field }) => {
                             return (
                               <FormItem
-                                key={grade}
+                                key={grade.value}
                                 className="flex flex-row items-start space-x-3 space-y-0"
                               >
                                 <FormControl>
                                   <Checkbox
-                                    checked={field.value?.includes(grade)}
+                                    checked={field.value?.includes(grade.value)}
                                     onCheckedChange={(checked) => {
                                       return checked
                                         ? field.onChange([
@@ -675,14 +665,14 @@ export function TeacherProfileForm({ teacher }: TeacherProfileFormProps) {
                                           ])
                                         : field.onChange(
                                             field.value?.filter(
-                                              (value) => value !== grade
+                                              (value) => value !== grade.value
                                             )
                                           );
                                     }}
                                   />
                                 </FormControl>
                                 <FormLabel className="text-sm font-normal">
-                                  {grade}
+                                  {grade.label}
                                 </FormLabel>
                               </FormItem>
                             );
@@ -784,34 +774,37 @@ export function TeacherProfileForm({ teacher }: TeacherProfileFormProps) {
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
                       {languages.map((language) => (
                         <FormField
-                          key={language}
+                          key={language.value}
                           control={form.control}
                           name="languagesKnown"
                           render={({ field }) => {
                             return (
                               <FormItem
-                                key={language}
+                                key={language.value}
                                 className="flex flex-row items-start space-x-3 space-y-0"
                               >
                                 <FormControl>
                                   <Checkbox
-                                    checked={field.value?.includes(language)}
+                                    checked={field.value?.includes(
+                                      language.value
+                                    )}
                                     onCheckedChange={(checked) => {
                                       return checked
                                         ? field.onChange([
                                             ...(field.value || []),
-                                            language,
+                                            language.value,
                                           ])
                                         : field.onChange(
                                             field.value?.filter(
-                                              (value) => value !== language
+                                              (value) =>
+                                                value !== language.value
                                             )
                                           );
                                     }}
                                   />
                                 </FormControl>
                                 <FormLabel className="text-sm font-normal">
-                                  {language}
+                                  {language.label}
                                 </FormLabel>
                               </FormItem>
                             );

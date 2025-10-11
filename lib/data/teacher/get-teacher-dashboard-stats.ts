@@ -5,12 +5,12 @@ import { getCurrentUserByRole } from '@/lib/auth';
 import prisma from '@/lib/db';
 import { getOrganizationId } from '@/lib/organization';
 import { getCurrentUserId } from '@/lib/user';
-import { cache } from 'react';
 
-// Cache the teacher lookup for better performance
-const getTeacher = cache(async () => {
+export async function getTeacherDashboardStats() {
+  const academicYearId = await getCurrentAcademicYearId();
+  const organizationId = await getOrganizationId();
+
   const userId = await getCurrentUserId();
-
   const teacher = await prisma.teacher.findUnique({
     where: {
       userId,
@@ -21,20 +21,11 @@ const getTeacher = cache(async () => {
     },
   });
 
-  if (!teacher) throw new Error('We could not find the teacher.');
-  return teacher;
-});
-
-export async function getTeacherDashboardStats() {
-  const academicYearId = await getCurrentAcademicYearId();
-  const organizationId = await getOrganizationId();
-
-  const teacher = await getTeacher();
-
+  if (!teacher) throw new Error('Teacher Not Found');
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  const teachingAssignments = teacher?.teachingAssignment ?? [];
+  const teachingAssignments = teacher.teachingAssignment ?? [];
   const teachingSectionIds = teachingAssignments.map(
     (assignment) => assignment.sectionId
   );
@@ -181,7 +172,6 @@ export async function getTeacherDashboardStats() {
 
 export async function getRecentActivities() {
   const organizationId = await getOrganizationId();
-  const teacher = await getTeacher();
   const today = new Date();
   const weekAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
 

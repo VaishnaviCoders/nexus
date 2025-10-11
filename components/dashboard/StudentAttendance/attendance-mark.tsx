@@ -884,6 +884,7 @@ export default function AttendanceMark({ students }: Props) {
                                   <div className="relative">
                                     <Avatar className="h-12 w-12">
                                       <AvatarImage
+                                        className="object-cover"
                                         src={student.profileImage || undefined}
                                         alt={`${student.firstName} ${student.lastName}`}
                                       />

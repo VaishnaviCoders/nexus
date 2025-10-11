@@ -46,8 +46,9 @@ const StudentsGridList = ({ students }: StudentsGridListProps) => {
                   </CardHeader>
                   <CardContent className="p-4 pt-0">
                     <div className="flex flex-col items-center -mt-6 mb-4">
-                      <Avatar className="h-16 w-16 border-4 border-background">
+                      <Avatar className="h-16 w-16 border-2 border-background">
                         <AvatarImage
+                          className="object-cover"
                           src={student.profileImage || ''}
                           alt={`${student.fullName} || ${student.firstName} ${student.lastName}`}
                         />

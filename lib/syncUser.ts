@@ -156,7 +156,9 @@ export async function syncOrganizationUser(
         user.organizationId === organization.id &&
         user.role === internalRole
       ) {
-        console.log(`✅ User already synced: ${user.email}`);
+        console.log(
+          `✅ User already synced:${userId} ${user.email} ${orgRole}, ${orgId}`
+        );
         return;
       }
 
@@ -189,6 +191,7 @@ export async function syncOrganizationUser(
           user = await tx.user.update({
             where: { email: clerkUserEmail },
             data: {
+              id: clerkUser.id,
               clerkId: clerkUser.id,
               firstName: clerkUser.firstName || userByEmail.firstName,
               lastName: clerkUser.lastName || userByEmail.lastName,
@@ -203,6 +206,7 @@ export async function syncOrganizationUser(
           console.log(`🔄 Creating new user: ${clerkUserEmail}`);
           user = await tx.user.create({
             data: {
+              id: clerkUser.id,
               firstName: clerkUser.firstName || 'Unknown',
               lastName: clerkUser.lastName || '',
               email: clerkUserEmail,

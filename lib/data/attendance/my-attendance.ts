@@ -2,15 +2,11 @@
 
 import { getCurrentAcademicYearId } from '@/lib/academicYear';
 import prisma from '@/lib/db';
+import { getOrganizationId } from '@/lib/organization';
 
 export async function getMyAttendance(userId: string) {
   if (!userId) {
     throw new Error('User ID is required to fetch attendance.');
-  }
-
-  const academicYear = await getCurrentAcademicYearId();
-  if (!academicYear) {
-    throw new Error('No current academic year is set.');
   }
 
   const student = await prisma.student.findUnique({
@@ -26,11 +22,19 @@ export async function getMyAttendance(userId: string) {
     throw new Error('Student not found for this user.');
   }
 
+  const organizationId = await getOrganizationId();
+  const academicYearId = await getCurrentAcademicYearId();
+
   const attendanceData = await prisma.studentAttendance.findMany({
     where: { studentId: student.id },
     orderBy: { date: 'desc' },
   });
 
+  const holidayData = await prisma.academicCalendar.findMany({
+    where: { organizationId },
+  });
+
+  console.log('Holiday', holidayData);
   const recentAttendance = attendanceData.slice(0, 7);
 
   const now = new Date();
@@ -82,6 +86,7 @@ export async function getMyAttendance(userId: string) {
   return {
     student,
     attendanceData,
+    holidayData,
     recentAttendance,
     monthlyStats,
     monthlyPercentage,

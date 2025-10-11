@@ -781,7 +781,70 @@ export async function createTeacherFormAction(data: CreateTeacherFormData) {
     return null;
   }
 }
-
+export async function updateTeacherAction(
+  teacherId: string,
+  data: CreateTeacherFormData
+) {
+  try {
+    await prisma.teacher.update({
+      where: { id: teacherId },
+      data: {
+        employeeCode: data.employeeCode,
+        user: {
+          update: {
+            firstName: data.firstName,
+            lastName: data.lastName,
+            email: data.email,
+          },
+        },
+        profile: {
+          upsert: {
+            create: {
+              idProofUrl: data.idProofUrl || '',
+              contactEmail: data.contactEmail,
+              contactPhone: data.contactPhone,
+              address: data.address,
+              city: data.city,
+              state: data.state,
+              dateOfBirth: data.dateOfBirth,
+              qualification: data.qualification,
+              experienceInYears: data.experienceInYears,
+              joinedAt: data.joinedAt,
+              specializedSubjects: data.specializedSubjects,
+              preferredGrades: data.preferredGrades,
+              bio: data.bio,
+              teachingPhilosophy: data.teachingPhilosophy,
+              linkedinPortfolio: data.linkedinPortfolio,
+              languagesKnown: data.languagesKnown,
+            },
+            update: {
+              contactEmail: data.contactEmail,
+              contactPhone: data.contactPhone,
+              address: data.address,
+              city: data.city,
+              state: data.state,
+              dateOfBirth: data.dateOfBirth,
+              qualification: data.qualification,
+              experienceInYears: data.experienceInYears,
+              joinedAt: data.joinedAt,
+              specializedSubjects: data.specializedSubjects,
+              preferredGrades: data.preferredGrades,
+              bio: data.bio,
+              teachingPhilosophy: data.teachingPhilosophy,
+              linkedinPortfolio: data.linkedinPortfolio,
+              languagesKnown: data.languagesKnown,
+            },
+          },
+        },
+      },
+    });
+    revalidatePath('/dashboard/teachers');
+    return { success: true };
+  } catch (error) {
+    console.error('Error updating teacher:', error);
+    return { success: false, error: 'Failed to update teacher' };
+  }
+}
 export async function toggleTeacherStatus(teacherId: string) {
   // First get the current status
   const teacher = await prisma.teacher.findUnique({

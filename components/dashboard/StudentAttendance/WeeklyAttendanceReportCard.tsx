@@ -25,6 +25,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { WeeklyAttendanceReportData } from '@/types';
+import { Card } from '@/components/ui/card';
 
 const WeeklyAttendanceReportCard: React.FC<{
   data: WeeklyAttendanceReportData;
@@ -196,36 +197,8 @@ const WeeklyAttendanceReportCard: React.FC<{
             are <strong>Monday – Sunday</strong> of the selected week.
           </DialogDescription>
         </DialogHeader>
-        <div className="w-full mx-auto  bg-white rounded-xl shadow-lg overflow-hidden print:shadow-none print:max-w-none">
+        <Card>
           {/* Header with School Branding */}
-          <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white p-2 print:bg-blue-600">
-            <div className="flex items-center justify-between flex-wrap gap-4">
-              <div className="flex items-center space-x-4">
-                {organization.organizationLogo && (
-                  <img
-                    src={organization.organizationLogo}
-                    alt={organization.name || 'organization'}
-                    className="w-16 h-16 rounded-full bg-white p-2 object-contain"
-                  />
-                )}
-                <div>
-                  <h1 className="text-2xl font-bold">{organization.name}</h1>
-                  <p className="text-blue-100 text-sm">
-                    Weekly Attendance Report
-                  </p>
-                </div>
-              </div>
-              <div className="text-right">
-                <div className="flex items-center space-x-2 text-blue-100 text-sm">
-                  <Calendar className="w-4 h-4" />
-                  <p className="text-sm  ">
-                    Week of {formatDateIN(weekRange.startDate)} –{' '}
-                    {formatDateIN(weekRange.endDate)}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
 
           <ScrollArea className="">
             {/* Student Information */}
@@ -468,7 +441,7 @@ const WeeklyAttendanceReportCard: React.FC<{
               </div>
             </div>
           </div>
-        </div>
+        </Card>
       </DialogContent>
     </Dialog>
   );

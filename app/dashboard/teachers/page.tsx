@@ -12,17 +12,28 @@ import {
 import TeachersTable from '@/components/dashboard/teacher/TeachersTable';
 import { AddTeacherForm } from '@/components/dashboard/teacher/AddTeacherForm';
 import { TeacherManagementStatsCards } from '@/components/dashboard/teacher/TeacherManagementStatsCards';
-import { Suspense } from 'react';
-import { DashboardFourGridsCardSkeleton } from '@/lib/skeletons/DashboardCardSkeleton';
 import { getAllTeachers } from '@/lib/data/teacher/get-all-teachers';
+import {
+  TableSkeleton,
+  DashboardFourGridsCardSkeleton,
+} from '@/lib/skeletons/DashboardCardSkeleton';
+import { Suspense } from 'react';
 
+// This component will handle the data fetching for stats cards
+async function TeacherStatsWithData() {
+  const teachers = await getAllTeachers();
+  return <TeacherManagementStatsCards teachers={teachers} />;
+}
+
+// This component will handle the data fetching for the table
+async function TeachersTableWithData() {
+  const teachers = await getAllTeachers();
+  return <TeachersTable teachers={teachers} />;
+}
 
 export default async function TeachersPage() {
-  const teachers = await getAllTeachers();
-
   return (
     <div className="flex-1 space-y-4 px-2">
-      {/* Header */}
       <Card className="py-4 px-2 flex items-center justify-between">
         <div>
           <CardTitle className="text-lg">Teachers</CardTitle>
@@ -31,11 +42,6 @@ export default async function TeachersPage() {
           </CardDescription>
         </div>
         <div className="flex justify-center items-center space-x-3">
-          {/* <Button variant="outline">
-            <Download className="mr-2 h-4 w-4" />
-            Export
-          </Button> */}
-
           <Dialog>
             <DialogTrigger asChild>
               <Button>
@@ -57,10 +63,23 @@ export default async function TeachersPage() {
       </Card>
 
       <Suspense fallback={<DashboardFourGridsCardSkeleton />}>
-        <TeacherManagementStatsCards teachers={teachers} />
+        <TeacherStatsWithData />
       </Suspense>
 
-      <TeachersTable teachers={teachers} />
+      <Suspense
+        fallback={
+          <TableSkeleton
+            columns={7}
+            rows={6}
+            hasAvatar={true}
+            hasActions={true}
+            searchBar={true}
+            filters={2}
+          />
+        }
+      >
+        <TeachersTableWithData />
+      </Suspense>
     </div>
   );
 }

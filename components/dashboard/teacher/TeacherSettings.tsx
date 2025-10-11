@@ -14,14 +14,21 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { Settings, WalletCards } from 'lucide-react';
+import {
+  NotepadTextDashed,
+  PersonStanding,
+  Settings,
+  WalletCards,
+  ShieldPlus,
+} from 'lucide-react';
 import { TeacherProfileForm } from './TeacherProfileForm';
 import prisma from '@/lib/db';
 import { getCurrentUserId } from '@/lib/user';
+import { EmptyState } from '@/components/EmptyState';
 
 export async function getTeacher(userId: string) {
   const teacher = await prisma.teacher.findUnique({
-    where: { userId },
+    where: { userId, isActive: true },
     select: {
       id: true,
       isActive: true,
@@ -97,7 +104,22 @@ const TeacherSettings = async () => {
 
   const teacher = await getTeacher(userId);
 
-  if (!teacher) return <div>No teacher profile found</div>;
+  if (!teacher) {
+    return (
+      <div className="flex justify-center items-center min-h-[400px]">
+        <EmptyState
+          title="No Teacher Found"
+          description=" You are not registered as a teacher or your profile is not created
+          yet."
+          icons={[PersonStanding, ShieldPlus, NotepadTextDashed]}
+          action={{
+            label: 'Go to Support',
+            href: '/support',
+          }}
+        />
+      </div>
+    );
+  }
   return (
     <div className="px-4 space-y-4">
       <Card className="px-4 py-3">

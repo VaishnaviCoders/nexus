@@ -48,6 +48,14 @@ import { TeacherProfile, User } from '@/generated/prisma/client';
 import { EmploymentStatus } from '@/generated/prisma/enums';
 import { getStatusConfig, TeacherDetailsModal } from './TeacherDetailsModal';
 import { toggleTeacherStatus } from '@/app/actions';
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogHeader,
+  DialogDescription,
+} from '@/components/ui/dialog';
+import { EditTeacherForm } from './EditTeacherForm';
 
 interface TeachersProps {
   teachers: {
@@ -78,13 +86,11 @@ export type SelectedTeacher = {
 } | null;
 
 const TeachersTable = ({ teachers }: TeachersProps) => {
-  console.log('teachers', teachers);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [employmentFilter, setEmploymentFilter] = useState('all');
   const [selectedTeacher, setSelectedTeacher] = useState<SelectedTeacher>(null);
 
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [isBulkImportOpen, setIsBulkImportOpen] = useState(false);
@@ -281,12 +287,12 @@ const TeachersTable = ({ teachers }: TeachersProps) => {
                               <Eye className="mr-2 h-4 w-4" />
                               View Details
                             </DropdownMenuItem>
-                            {/* <DropdownMenuItem
-                            onClick={() => handleEditTeacher(teacher)}
-                          >
-                            <Edit className="mr-2 h-4 w-4" />
-                            Edit Teacher
-                          </DropdownMenuItem> */}
+                            <DropdownMenuItem
+                              onClick={() => handleEditTeacher(teacher)}
+                            >
+                              <Edit className="mr-2 h-4 w-4" />
+                              Edit Teacher
+                            </DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem
                               onClick={() => handleToggleStatus(teacher.id)}
@@ -334,6 +340,26 @@ const TeachersTable = ({ teachers }: TeachersProps) => {
         isOpen={isDetailsModalOpen}
         onClose={() => setIsDetailsModalOpen(false)}
       />
+
+      <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Edit Teacher</DialogTitle>
+            <DialogDescription>
+              Update teacher profile information.
+            </DialogDescription>
+          </DialogHeader>
+          {selectedTeacher && (
+            <EditTeacherForm
+              teacher={selectedTeacher}
+              onSuccess={() => {
+                setIsEditModalOpen(false);
+                // Optionally refresh the data here
+              }}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
 
       {/* <BulkImportModal
         isOpen={isBulkImportOpen}

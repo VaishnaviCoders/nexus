@@ -31,6 +31,7 @@ export default async function page() {
   const {
     annualPercentage,
     attendanceData,
+    holidayData,
     currentStreak,
     student,
     monthlyPercentage,
@@ -78,7 +79,10 @@ export default async function page() {
       <div className="grid gap-6 lg:grid-cols-12">
         {/* Left Column - Calendar */}
         <div className="lg:col-span-8 space-y-6">
-          <StudentAttendanceCalendar attendanceRecords={attendanceData} />
+          <StudentAttendanceCalendar
+            attendanceRecords={attendanceData}
+            academicCalendarEvents={holidayData}
+          />
           <Card className="border-0 ">
             <CardContent className="p-6">
               <h3 className="text-lg font-semibold mb-4 text-green-800 dark:text-green-200 flex items-center gap-2">

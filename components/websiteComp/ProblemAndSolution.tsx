@@ -261,9 +261,9 @@ const ProblemCard = memo(
               <IconComponent className="w-5 h-5" />
             </div>
             <div className="flex-1">
-              <h3 className="text-lg font-bold text-slate-900 mb-1">
+              <h1 className="text-lg font-bold text-slate-900 mb-1">
                 {problem.title}
-              </h3>
+              </h1>
               <p className="text-sm text-slate-600 font-medium">
                 {problem.hindiTitle}
               </p>

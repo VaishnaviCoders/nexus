@@ -267,7 +267,7 @@ export const teacherProfileSchema = z.object({
     .max(new Date(), { message: 'Date of birth must be in the past' }),
 
   // Professional Information
-  qualification: z.string().min(5, 'Please enter your qualification details'),
+  qualification: z.string().min(2, 'Please enter your qualification details'),
   experienceInYears: z
     .number()
     .min(0, 'Experience cannot be negative')

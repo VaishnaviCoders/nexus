@@ -1,7 +1,6 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-
 import { useState, useMemo, useCallback, useEffect } from 'react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -29,6 +28,7 @@ import {
   Filter,
   RotateCcw,
   TrendingUp,
+  PartyPopper,
 } from 'lucide-react';
 import {
   format,
@@ -39,6 +39,7 @@ import {
   isToday,
   isFuture,
   getDay,
+  isWithinInterval,
 } from 'date-fns';
 import { Separator } from '@/components/ui/separator';
 
@@ -58,9 +59,24 @@ interface StudentAttendanceRecord {
   updatedAt: Date;
 }
 
+interface AcademicCalendarEvent {
+  id: string;
+  name: string;
+  startDate: Date;
+  endDate: Date;
+  type: 'PLANNED' | 'SUDDEN' | 'INSTITUTION_SPECIFIC';
+  reason?: string | null;
+  isRecurring: boolean;
+}
+
 interface AttendanceCalendarProps {
   attendanceRecords: StudentAttendanceRecord[];
-  onDateClick?: (date: Date, record?: StudentAttendanceRecord) => void;
+  academicCalendarEvents?: AcademicCalendarEvent[];
+  onDateClick?: (
+    date: Date,
+    record?: StudentAttendanceRecord,
+    isHoliday?: boolean
+  ) => void;
   onExportData?: () => void;
   className?: string;
 }
@@ -72,7 +88,15 @@ interface CalendarDay {
   isToday: boolean;
   isFuture: boolean;
   attendance?: StudentAttendanceRecord;
-  status: 'present' | 'absent' | 'late' | 'no-data' | 'future' | 'weekend';
+  holiday?: AcademicCalendarEvent;
+  status:
+    | 'present'
+    | 'absent'
+    | 'late'
+    | 'no-data'
+    | 'future'
+    | 'weekend'
+    | 'holiday';
 }
 
 interface MonthlyStats {
@@ -80,6 +104,7 @@ interface MonthlyStats {
   presentDays: number;
   absentDays: number;
   lateDays: number;
+  holidayDays: number;
   attendanceRate: number;
 }
 
@@ -91,6 +116,7 @@ const STATUS_CONFIG = {
     icon: CheckCircle2,
     label: 'Present',
     badgeVariant: 'present' as const,
+    shortLabel: 'P',
   },
   absent: {
     className: 'bg-red-50 border-red-200 text-red-700 hover:bg-red-100',
@@ -98,6 +124,7 @@ const STATUS_CONFIG = {
     icon: XCircle,
     label: 'Absent',
     badgeVariant: 'absent' as const,
+    shortLabel: 'A',
   },
   late: {
     className:
@@ -107,6 +134,7 @@ const STATUS_CONFIG = {
     icon: Clock,
     label: 'Late',
     badgeVariant: 'late' as const,
+    shortLabel: 'L',
   },
   'no-data': {
     className: 'bg-gray-50 border-gray-200 text-gray-500 hover:bg-gray-100',
@@ -115,6 +143,7 @@ const STATUS_CONFIG = {
     icon: Calendar,
     label: 'No Data',
     badgeVariant: 'outline' as const,
+    shortLabel: '-',
   },
   future: {
     className: 'bg-gray-50 border-gray-200 text-gray-400',
@@ -123,6 +152,7 @@ const STATUS_CONFIG = {
     icon: Calendar,
     label: 'Future',
     badgeVariant: 'outline' as const,
+    shortLabel: 'F',
   },
   weekend: {
     className: 'bg-blue-50 border-blue-200 text-blue-600',
@@ -131,6 +161,17 @@ const STATUS_CONFIG = {
     icon: Calendar,
     label: 'Weekend',
     badgeVariant: 'outline' as const,
+    shortLabel: 'W',
+  },
+  holiday: {
+    className:
+      'bg-purple-50 border-purple-200 text-purple-700 hover:bg-purple-100',
+    darkClassName:
+      'dark:bg-purple-950/50 dark:border-purple-800 dark:text-purple-300',
+    icon: PartyPopper,
+    label: 'Holiday',
+    badgeVariant: 'outline' as const,
+    shortLabel: 'H',
   },
 };
 
@@ -152,6 +193,7 @@ const MONTHS = [
 
 export function StudentAttendanceCalendar({
   attendanceRecords,
+  academicCalendarEvents = [],
   onDateClick,
   onExportData,
   className,
@@ -164,6 +206,19 @@ export function StudentAttendanceCalendar({
   useEffect(() => {
     setCurrentDate(new Date(selectedYear, selectedMonth, 1));
   }, [selectedYear, selectedMonth]);
+
+  // Helper function to check if a date is a holiday
+  const getHolidayForDate = useCallback(
+    (date: Date): AcademicCalendarEvent | undefined => {
+      return academicCalendarEvents.find((event) =>
+        isWithinInterval(date, {
+          start: new Date(event.startDate),
+          end: new Date(event.endDate),
+        })
+      );
+    },
+    [academicCalendarEvents]
+  );
 
   const calendarDays = useMemo(() => {
     const monthStart = startOfMonth(currentDate);
@@ -183,13 +238,16 @@ export function StudentAttendanceCalendar({
       const futureCheck = isFuture(date);
       const isWeekend = getDay(date) === 0 || getDay(date) === 6;
 
+      const holiday = getHolidayForDate(date);
       const attendance = attendanceRecords.find((record) =>
         isSameDay(new Date(record.date), date)
       );
 
       let status: CalendarDay['status'];
 
-      if (!isCurrentMonth) {
+      if (holiday) {
+        status = 'holiday';
+      } else if (!isCurrentMonth) {
         status = 'no-data';
       } else if (futureCheck) {
         status = 'future';
@@ -212,10 +270,11 @@ export function StudentAttendanceCalendar({
         isToday: todayCheck,
         isFuture: futureCheck,
         attendance,
+        holiday,
         status,
       };
     });
-  }, [currentDate, attendanceRecords]);
+  }, [currentDate, attendanceRecords, getHolidayForDate]);
 
   const monthlyStats = useMemo((): MonthlyStats => {
     const currentMonthRecords = attendanceRecords.filter((record) => {
@@ -224,6 +283,40 @@ export function StudentAttendanceCalendar({
         recordDate.getMonth() === selectedMonth &&
         recordDate.getFullYear() === selectedYear
       );
+    });
+
+    // Calculate holidays in current month
+    const currentMonthHolidays = academicCalendarEvents.filter((event) => {
+      const eventStart = new Date(event.startDate);
+      const eventEnd = new Date(event.endDate);
+      return (
+        (eventStart.getMonth() === selectedMonth &&
+          eventStart.getFullYear() === selectedYear) ||
+        (eventEnd.getMonth() === selectedMonth &&
+          eventEnd.getFullYear() === selectedYear) ||
+        (eventStart <= new Date(selectedYear, selectedMonth, 1) &&
+          eventEnd >= new Date(selectedYear, selectedMonth + 1, 0))
+      );
+    });
+
+    // Calculate total holiday days in the month
+    let holidayDays = 0;
+    currentMonthHolidays.forEach((holiday) => {
+      const holidayStart = new Date(holiday.startDate);
+      const holidayEnd = new Date(holiday.endDate);
+      const monthStart = new Date(selectedYear, selectedMonth, 1);
+      const monthEnd = new Date(selectedYear, selectedMonth + 1, 0);
+
+      const overlapStart =
+        holidayStart < monthStart ? monthStart : holidayStart;
+      const overlapEnd = holidayEnd > monthEnd ? monthEnd : holidayEnd;
+
+      const overlapDays =
+        Math.ceil(
+          (overlapEnd.getTime() - overlapStart.getTime()) /
+            (1000 * 60 * 60 * 24)
+        ) + 1;
+      holidayDays += Math.max(0, overlapDays);
     });
 
     const totalSchoolDays = currentMonthRecords.length;
@@ -245,9 +338,10 @@ export function StudentAttendanceCalendar({
       presentDays,
       absentDays,
       lateDays,
+      holidayDays,
       attendanceRate,
     };
-  }, [attendanceRecords, selectedMonth, selectedYear]);
+  }, [attendanceRecords, academicCalendarEvents, selectedMonth, selectedYear]);
 
   const filteredCalendarDays = useMemo(() => {
     if (filterStatus === 'all') return calendarDays;
@@ -287,7 +381,7 @@ export function StudentAttendanceCalendar({
   const handleDateClick = useCallback(
     (day: CalendarDay) => {
       if (onDateClick && day.isCurrentMonth) {
-        onDateClick(day.date, day.attendance);
+        onDateClick(day.date, day.attendance, !!day.holiday);
       }
     },
     [onDateClick]
@@ -307,7 +401,7 @@ export function StudentAttendanceCalendar({
                 Attendance Calendar
               </h1>
               <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                Track your daily attendance and performance
+                Track your daily attendance and holidays
               </p>
             </div>
 
@@ -322,6 +416,7 @@ export function StudentAttendanceCalendar({
                   <SelectItem value="present">Present</SelectItem>
                   <SelectItem value="absent">Absent</SelectItem>
                   <SelectItem value="late">Late</SelectItem>
+                  <SelectItem value="holiday">Holidays</SelectItem>
                 </SelectContent>
               </Select>
 
@@ -393,6 +488,22 @@ export function StudentAttendanceCalendar({
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wide font-medium">
+                    Holidays
+                  </p>
+                  <p className="text-xl sm:text-2xl font-bold text-purple-600 dark:text-purple-400">
+                    {monthlyStats.holidayDays}
+                  </p>
+                </div>
+                <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
+                  <PartyPopper className="h-4 w-4 text-purple-600 dark:text-purple-400" />
+                </div>
+              </div>
+            </div>
+
+            {/* <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-3 sm:p-4 shadow-sm hover:shadow-md transition-shadow">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wide font-medium">
                     Rate
                   </p>
                   <p className="text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-400">
@@ -403,7 +514,7 @@ export function StudentAttendanceCalendar({
                   <TrendingUp className="h-4 w-4 text-blue-600 dark:text-blue-400" />
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
 
@@ -492,9 +603,8 @@ export function StudentAttendanceCalendar({
                 </div>
               ))}
             </div>
-            {/* <Separator className="h-[2px] w-full rounded-lg " /> */}
 
-            <div className="grid grid-cols-7 my-3 space-x-2 space-y-2">
+            <div className="grid grid-cols-7 my-3 space-x-1 space-y-2">
               {filteredCalendarDays.map((day, index) => {
                 const config = getStatusConfig(day.status);
                 const IconComponent = config.icon;
@@ -504,106 +614,192 @@ export function StudentAttendanceCalendar({
                     <HoverCardTrigger asChild>
                       <div
                         className={cn(
-                          'relative h-16 rounded-sm shadow-sm cursor-pointer transition-colors',
+                          'relative h-14 rounded-lg border-2 cursor-pointer transition-all duration-200',
                           config.className,
                           config.darkClassName,
-                          day.isCurrentMonth ? 'opacity-100' : 'opacity-40',
-                          day.isToday && 'ring-2 ring-blue-500 ring-inset',
+                          day.isCurrentMonth ? 'opacity-100' : 'opacity-30',
+                          day.isToday && 'ring-1 ring-blue-500 ring-offset-1',
                           filterStatus !== 'all' &&
                             day.status !== filterStatus &&
-                            'opacity-30'
+                            'opacity-20',
+                          'hover:scale-105 hover:shadow-md'
                         )}
                         onClick={() => handleDateClick(day)}
                       >
-                        <div className="p-2 h-full flex flex-col justify-between">
+                        <div className="p-1.5 h-full flex flex-col">
                           <div className="flex items-center justify-between">
                             <span
                               className={cn(
-                                'text-sm font-medium ',
-                                day.isToday && 'font-semibold'
+                                'text-xs font-medium',
+                                day.isToday &&
+                                  'font-bold text-blue-600 dark:text-blue-400'
                               )}
                             >
                               {day.dayNumber}
                             </span>
                             {day.attendance && (
-                              <IconComponent className="h-3 w-3 opacity-60" />
+                              <span
+                                className={cn(
+                                  'text-[10px] font-bold px-1 rounded',
+                                  day.attendance.present
+                                    ? 'bg-green-500 text-white'
+                                    : day.attendance.status === 'LATE'
+                                      ? 'bg-yellow-500 text-white'
+                                      : 'bg-red-500 text-white'
+                                )}
+                              >
+                                {day.attendance.present
+                                  ? 'P'
+                                  : day.attendance.status === 'LATE'
+                                    ? 'L'
+                                    : 'A'}
+                              </span>
                             )}
+                          </div>
+
+                          <div className="flex-1 flex items-center justify-center">
+                            <IconComponent className="h-3 w-3 opacity-70" />
                           </div>
 
                           {day.isToday && (
                             <div className="flex justify-center">
-                              <div className="w-1.5 h-1.5 bg-blue-500 rounded-full" />
+                              <div className="w-1 h-1 bg-blue-500 rounded-full" />
                             </div>
                           )}
                         </div>
                       </div>
                     </HoverCardTrigger>
 
-                    <HoverCardContent className="w-72 p-4" side="top">
-                      <div className="space-y-3">
+                    <HoverCardContent
+                      className="w-64 p-3"
+                      side="top"
+                      align="center"
+                    >
+                      <div className="space-y-2">
+                        {/* Header */}
                         <div className="flex items-center justify-between">
-                          <h4 className="font-medium text-sm">
-                            {format(day.date, 'EEEE, MMMM d, yyyy')}
-                          </h4>
+                          <div>
+                            <h4 className="font-semibold text-sm">
+                              {format(day.date, 'MMM d, yyyy')}
+                            </h4>
+                            <p className="text-xs text-gray-500 dark:text-gray-400">
+                              {format(day.date, 'EEEE')}
+                            </p>
+                          </div>
                           <Badge
                             variant={config.badgeVariant}
                             className="text-xs"
                           >
-                            <IconComponent className="h-3 w-3 mr-1" />
-                            {config.label}
+                            {config.shortLabel}
                           </Badge>
                         </div>
 
-                        {day.attendance ? (
-                          <div className="space-y-2">
-                            <div className="grid grid-cols-2 gap-3 text-sm">
-                              <div>
-                                <span className="text-gray-600 dark:text-gray-400 text-xs">
-                                  Status
-                                </span>
-                                <p className="font-medium">
-                                  {day.attendance.status}
+                        {/* Holiday Info - Compact */}
+                        {day.holiday && (
+                          <div className="bg-purple-50 dark:bg-purple-900/20 rounded-lg p-2">
+                            <div className="flex items-start gap-2">
+                              <PartyPopper className="h-3 w-3 text-purple-600 dark:text-purple-400 mt-0.5 flex-shrink-0" />
+                              <div className="flex-1 min-w-0">
+                                <p className="text-xs font-medium text-purple-700 dark:text-purple-300 truncate">
+                                  {day.holiday.name}
                                 </p>
+                                <div className="flex items-center gap-2 mt-1">
+                                  <p className="text-[10px] text-purple-600 dark:text-purple-400">
+                                    {format(
+                                      new Date(day.holiday.startDate),
+                                      'MMM d'
+                                    )}{' '}
+                                    -{' '}
+                                    {format(
+                                      new Date(day.holiday.endDate),
+                                      'MMM d'
+                                    )}
+                                  </p>
+                                  {day.holiday.isRecurring && (
+                                    <span className="text-[8px] bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 px-1 rounded">
+                                      Annual
+                                    </span>
+                                  )}
+                                </div>
                               </div>
-                              <div>
-                                <span className="text-gray-600 dark:text-gray-400 text-xs">
-                                  Present
-                                </span>
-                                <p className="font-medium">
-                                  {day.attendance.present ? 'Yes' : 'No'}
-                                </p>
-                              </div>
-                            </div>
-
-                            {day.attendance.note && (
-                              <div>
-                                <span className="text-gray-600 dark:text-gray-400 text-xs">
-                                  Note
-                                </span>
-                                <p className="text-sm mt-1 p-2 bg-gray-50 dark:bg-gray-800 rounded text-gray-700 dark:text-gray-300">
-                                  {day.attendance.note}
-                                </p>
-                              </div>
-                            )}
-
-                            <div className="text-xs text-gray-500 dark:text-gray-400 space-y-1 pt-2 border-t border-gray-200 dark:border-gray-700">
-                              <p>Recorded by: {day.attendance.recordedBy}</p>
-                              <p>
-                                Updated:{' '}
-                                {format(
-                                  new Date(day.attendance.updatedAt),
-                                  "MMM d, yyyy 'at' h:mm a"
-                                )}
-                              </p>
                             </div>
                           </div>
-                        ) : (
-                          <div className="text-sm text-gray-500 dark:text-gray-400">
-                            {day.isFuture
-                              ? 'Future date - attendance not recorded yet'
-                              : day.status === 'weekend'
-                                ? 'Weekend - no school'
-                                : 'No attendance data available'}
+                        )}
+
+                        {/* Attendance Info - Compact */}
+                        {day.attendance && (
+                          <div
+                            className={cn(
+                              'rounded-lg p-2',
+                              day.attendance.present
+                                ? 'bg-green-50 dark:bg-green-900/20'
+                                : day.attendance.status === 'LATE'
+                                  ? 'bg-yellow-50 dark:bg-yellow-900/20'
+                                  : 'bg-red-50 dark:bg-red-900/20'
+                            )}
+                          >
+                            <div className="flex items-center justify-between text-xs">
+                              <span className="font-medium">
+                                {day.attendance.present
+                                  ? 'Present'
+                                  : day.attendance.status === 'LATE'
+                                    ? 'Late'
+                                    : 'Absent'}
+                              </span>
+                              <span className="text-gray-500 dark:text-gray-400">
+                                {format(
+                                  new Date(day.attendance.updatedAt),
+                                  'h:mm a'
+                                )}
+                              </span>
+                            </div>
+                            {day.attendance.note && (
+                              <p className="text-xs text-gray-600 dark:text-gray-300 mt-1 line-clamp-2">
+                                {day.attendance.note}
+                              </p>
+                            )}
+                            <div className="text-[10px] text-gray-500 dark:text-gray-400 mt-1">
+                              By: {day.attendance.recordedBy}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* No Data States */}
+                        {!day.attendance && !day.holiday && (
+                          <div className="text-center py-2">
+                            <Calendar className="h-4 w-4 text-gray-400 mx-auto mb-1" />
+                            <p className="text-xs text-gray-500 dark:text-gray-400">
+                              {day.isFuture
+                                ? 'Future date'
+                                : day.status === 'weekend'
+                                  ? 'Weekend - No school'
+                                  : 'No attendance data'}
+                            </p>
+                          </div>
+                        )}
+
+                        {/* Additional Holiday Details */}
+                        {day.holiday?.reason && (
+                          <div className="text-xs text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-800 rounded p-2">
+                            <span className="font-medium text-gray-700 dark:text-gray-200">
+                              Reason:{' '}
+                            </span>
+                            {day.holiday.reason}
+                          </div>
+                        )}
+
+                        {/* Holiday Type Badge */}
+                        {day.holiday && (
+                          <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
+                            <span className="capitalize">
+                              {day.holiday.type.toLowerCase().replace('_', ' ')}
+                            </span>
+                            <span>
+                              {format(
+                                new Date(day.holiday.startDate),
+                                'MMM d, yyyy'
+                              )}
+                            </span>
                           </div>
                         )}
                       </div>

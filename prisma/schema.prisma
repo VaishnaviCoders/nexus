@@ -51,6 +51,7 @@ model AcademicYear {
   studentAttendance  StudentAttendance[]
   academicCalendar   AcademicCalendar[]
   examSession        ExamSession[]
+  leaves             Leave[]
 
   // FeeCategory
   // StudentDocument
@@ -63,7 +64,6 @@ model AcademicYear {
   createdBy String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  leaves    Leave[]
 
   @@unique([organizationId, name])
   @@index([organizationId, isCurrent])
@@ -255,9 +255,10 @@ model Teacher {
   profile            TeacherProfile?
   teachingAssignment TeachingAssignment[]
   section            Section[]
+
   // salaries           Salary[]
-// model TeacherAttendance {}
-// model TeacherSalary {}
+  // model TeacherAttendance {}
+  // model TeacherSalary {}
   @@index([userId, isActive, employmentStatus, organizationId])
 }
 
@@ -288,7 +289,6 @@ model TeacherProfile {
   languagesKnown    String[]
   certificateUrls   String[]
 }
-
 
 // 
 

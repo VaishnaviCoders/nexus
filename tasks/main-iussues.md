@@ -25,3 +25,28 @@ Student Can see daily Attendance In Dashboard and all history in dashboard/my-at
 Parents Can seeThere children's daily Attendance In Dashboard
 Admin Can see Which Section wise attendance which section in not recorded attendance today
 Also Have option To track all History with Filters
+
+What we are providing in holiday management
+Route: ${domainName}/dashboard/holidays
+
+Admin/Teachers Can see
+clear Dahboard of Academic Year Overview
+Real-time calculation of working days and holiday impact
+
+Feature in this Emergency Holiday Declaration
+Instantly declare emergency holidays for unexpected situations
+
+Bulk Import Holidays
+Import multiple holidays using various convenient methods
+Google Sheets
+Single Holiday
+Paste Data
+Template
+Instant Upload
+
+Delete Holiday
+Delete All At Once
+
+Student/Parents Can see Academic Calendar
+when Holiday declare then we get Push notification and for emergry holiday get on also whatsapp
+also option to see upcomming holidays
