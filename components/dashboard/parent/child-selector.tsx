@@ -18,10 +18,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 import { ParentData } from '@/types';
-import { AvatarImage } from '@radix-ui/react-avatar';
 
 type Child = ParentData['students'][0]['student'];
 
