@@ -258,7 +258,6 @@ export const TeachingAssignmentScalarFieldEnum = {
   gradeId: 'gradeId',
   sectionId: 'sectionId',
   organizationId: 'organizationId',
-  academicYear: 'academicYear',
   status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
@@ -846,7 +845,6 @@ export const TeachingAssignmentOrderByRelevanceFieldEnum = {
   gradeId: 'gradeId',
   sectionId: 'sectionId',
   organizationId: 'organizationId',
-  academicYear: 'academicYear',
   academicYearId: 'academicYearId'
 } as const
 

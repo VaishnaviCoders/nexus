@@ -56,7 +56,6 @@ import { toast } from 'sonner';
 interface TeachingAssignment {
   id: string;
   status: AssignmentStatus;
-  academicYear: string | null;
   createdAt: Date;
   updatedAt: Date;
   teacher: {
@@ -82,7 +81,7 @@ interface TeachingAssignment {
     id: string;
     name: string;
   };
-  AcademicYear: {
+  academicYear: {
     id: string;
     name: string;
   } | null;
@@ -341,7 +340,7 @@ const TeachingAssignmentsTable = ({
                       </div>
                     </TableCell>
                     <TableCell className="whitespace-nowrap">
-                      {assignment.AcademicYear?.name || 'Not specified'}
+                      {assignment.academicYear?.name || 'Not specified'}
                     </TableCell>
                     <TableCell>
                       <Badge className={statusConfig[assignment.status].color}>

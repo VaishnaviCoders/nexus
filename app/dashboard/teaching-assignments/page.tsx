@@ -31,7 +31,7 @@ async function getAllTeachingAssignments() {
       subject: true,
       grade: true,
       section: true,
-      AcademicYear: true,
+      academicYear: true,
     },
     orderBy: {
       createdAt: 'desc',

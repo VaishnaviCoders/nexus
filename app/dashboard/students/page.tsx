@@ -1,7 +1,6 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { Separator } from '@/components/ui/separator';
 
 import StudentFilter from '@/components/dashboard/Student/StudentFilter';
 import { searchParamsCache } from '@/lib/searchParams';
@@ -10,7 +9,6 @@ import { SearchParams } from 'nuqs';
 import { getOrganization } from '@/lib/organization';
 
 import FilterStudents from '@/lib/data/student/FilterStudents';
-import { Skeleton } from '@/components/ui/skeleton';
 import { redirect } from 'next/navigation';
 import { Card, CardDescription, CardTitle } from '@/components/ui/card';
 
@@ -56,8 +54,6 @@ export default async function Students({ searchParams }: PageProps) {
           </Link>
         </div>
       </Card>
-
-      <Separator />
 
       <StudentFilter
         organizationId={orgId}

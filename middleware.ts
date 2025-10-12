@@ -46,7 +46,7 @@ const isTeacher = createRouteMatcher([
 
 const isAdmin = createRouteMatcher([
   '/dashboard/fees/admin(.*)',
-  '/dashboard/admin(.*)',
+  // '/dashboard/admin(.*)',
   // '/dashboard/grades(.*)',
   // '/dashboard/holidays(.*)',
   // '/dashboard/documents/verification(.*)',

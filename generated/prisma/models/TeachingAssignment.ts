@@ -30,7 +30,6 @@ export type TeachingAssignmentMinAggregateOutputType = {
   gradeId: string | null
   sectionId: string | null
   organizationId: string | null
-  academicYear: string | null
   status: $Enums.AssignmentStatus | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -44,7 +43,6 @@ export type TeachingAssignmentMaxAggregateOutputType = {
   gradeId: string | null
   sectionId: string | null
   organizationId: string | null
-  academicYear: string | null
   status: $Enums.AssignmentStatus | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -58,7 +56,6 @@ export type TeachingAssignmentCountAggregateOutputType = {
   gradeId: number
   sectionId: number
   organizationId: number
-  academicYear: number
   status: number
   createdAt: number
   updatedAt: number
@@ -74,7 +71,6 @@ export type TeachingAssignmentMinAggregateInputType = {
   gradeId?: true
   sectionId?: true
   organizationId?: true
-  academicYear?: true
   status?: true
   createdAt?: true
   updatedAt?: true
@@ -88,7 +84,6 @@ export type TeachingAssignmentMaxAggregateInputType = {
   gradeId?: true
   sectionId?: true
   organizationId?: true
-  academicYear?: true
   status?: true
   createdAt?: true
   updatedAt?: true
@@ -102,7 +97,6 @@ export type TeachingAssignmentCountAggregateInputType = {
   gradeId?: true
   sectionId?: true
   organizationId?: true
-  academicYear?: true
   status?: true
   createdAt?: true
   updatedAt?: true
@@ -189,7 +183,6 @@ export type TeachingAssignmentGroupByOutputType = {
   gradeId: string
   sectionId: string
   organizationId: string
-  academicYear: string | null
   status: $Enums.AssignmentStatus
   createdAt: Date
   updatedAt: Date
@@ -224,7 +217,6 @@ export type TeachingAssignmentWhereInput = {
   gradeId?: Prisma.StringFilter<"TeachingAssignment"> | string
   sectionId?: Prisma.StringFilter<"TeachingAssignment"> | string
   organizationId?: Prisma.StringFilter<"TeachingAssignment"> | string
-  academicYear?: Prisma.StringNullableFilter<"TeachingAssignment"> | string | null
   status?: Prisma.EnumAssignmentStatusFilter<"TeachingAssignment"> | $Enums.AssignmentStatus
   createdAt?: Prisma.DateTimeFilter<"TeachingAssignment"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"TeachingAssignment"> | Date | string
@@ -234,7 +226,7 @@ export type TeachingAssignmentWhereInput = {
   grade?: Prisma.XOR<Prisma.GradeScalarRelationFilter, Prisma.GradeWhereInput>
   section?: Prisma.XOR<Prisma.SectionScalarRelationFilter, Prisma.SectionWhereInput>
   organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
-  AcademicYear?: Prisma.XOR<Prisma.AcademicYearNullableScalarRelationFilter, Prisma.AcademicYearWhereInput> | null
+  academicYear?: Prisma.XOR<Prisma.AcademicYearNullableScalarRelationFilter, Prisma.AcademicYearWhereInput> | null
 }
 
 export type TeachingAssignmentOrderByWithRelationInput = {
@@ -244,7 +236,6 @@ export type TeachingAssignmentOrderByWithRelationInput = {
   gradeId?: Prisma.SortOrder
   sectionId?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
-  academicYear?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -254,7 +245,7 @@ export type TeachingAssignmentOrderByWithRelationInput = {
   grade?: Prisma.GradeOrderByWithRelationInput
   section?: Prisma.SectionOrderByWithRelationInput
   organization?: Prisma.OrganizationOrderByWithRelationInput
-  AcademicYear?: Prisma.AcademicYearOrderByWithRelationInput
+  academicYear?: Prisma.AcademicYearOrderByWithRelationInput
   _relevance?: Prisma.TeachingAssignmentOrderByRelevanceInput
 }
 
@@ -269,7 +260,6 @@ export type TeachingAssignmentWhereUniqueInput = Prisma.AtLeast<{
   gradeId?: Prisma.StringFilter<"TeachingAssignment"> | string
   sectionId?: Prisma.StringFilter<"TeachingAssignment"> | string
   organizationId?: Prisma.StringFilter<"TeachingAssignment"> | string
-  academicYear?: Prisma.StringNullableFilter<"TeachingAssignment"> | string | null
   status?: Prisma.EnumAssignmentStatusFilter<"TeachingAssignment"> | $Enums.AssignmentStatus
   createdAt?: Prisma.DateTimeFilter<"TeachingAssignment"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"TeachingAssignment"> | Date | string
@@ -279,7 +269,7 @@ export type TeachingAssignmentWhereUniqueInput = Prisma.AtLeast<{
   grade?: Prisma.XOR<Prisma.GradeScalarRelationFilter, Prisma.GradeWhereInput>
   section?: Prisma.XOR<Prisma.SectionScalarRelationFilter, Prisma.SectionWhereInput>
   organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
-  AcademicYear?: Prisma.XOR<Prisma.AcademicYearNullableScalarRelationFilter, Prisma.AcademicYearWhereInput> | null
+  academicYear?: Prisma.XOR<Prisma.AcademicYearNullableScalarRelationFilter, Prisma.AcademicYearWhereInput> | null
 }, "id" | "teacherId_subjectId_gradeId_sectionId_academicYearId">
 
 export type TeachingAssignmentOrderByWithAggregationInput = {
@@ -289,7 +279,6 @@ export type TeachingAssignmentOrderByWithAggregationInput = {
   gradeId?: Prisma.SortOrder
   sectionId?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
-  academicYear?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -309,7 +298,6 @@ export type TeachingAssignmentScalarWhereWithAggregatesInput = {
   gradeId?: Prisma.StringWithAggregatesFilter<"TeachingAssignment"> | string
   sectionId?: Prisma.StringWithAggregatesFilter<"TeachingAssignment"> | string
   organizationId?: Prisma.StringWithAggregatesFilter<"TeachingAssignment"> | string
-  academicYear?: Prisma.StringNullableWithAggregatesFilter<"TeachingAssignment"> | string | null
   status?: Prisma.EnumAssignmentStatusWithAggregatesFilter<"TeachingAssignment"> | $Enums.AssignmentStatus
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"TeachingAssignment"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"TeachingAssignment"> | Date | string
@@ -318,7 +306,6 @@ export type TeachingAssignmentScalarWhereWithAggregatesInput = {
 
 export type TeachingAssignmentCreateInput = {
   id?: string
-  academicYear?: string | null
   status?: $Enums.AssignmentStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -327,7 +314,7 @@ export type TeachingAssignmentCreateInput = {
   grade: Prisma.GradeCreateNestedOneWithoutTeachingAssignmentInput
   section: Prisma.SectionCreateNestedOneWithoutTeachingAssignmentInput
   organization: Prisma.OrganizationCreateNestedOneWithoutTeachingAssignmentInput
-  AcademicYear?: Prisma.AcademicYearCreateNestedOneWithoutTeachingAssignmentInput
+  academicYear?: Prisma.AcademicYearCreateNestedOneWithoutTeachingAssignmentInput
 }
 
 export type TeachingAssignmentUncheckedCreateInput = {
@@ -337,7 +324,6 @@ export type TeachingAssignmentUncheckedCreateInput = {
   gradeId: string
   sectionId: string
   organizationId: string
-  academicYear?: string | null
   status?: $Enums.AssignmentStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -346,7 +332,6 @@ export type TeachingAssignmentUncheckedCreateInput = {
 
 export type TeachingAssignmentUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  academicYear?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumAssignmentStatusFieldUpdateOperationsInput | $Enums.AssignmentStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -355,7 +340,7 @@ export type TeachingAssignmentUpdateInput = {
   grade?: Prisma.GradeUpdateOneRequiredWithoutTeachingAssignmentNestedInput
   section?: Prisma.SectionUpdateOneRequiredWithoutTeachingAssignmentNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutTeachingAssignmentNestedInput
-  AcademicYear?: Prisma.AcademicYearUpdateOneWithoutTeachingAssignmentNestedInput
+  academicYear?: Prisma.AcademicYearUpdateOneWithoutTeachingAssignmentNestedInput
 }
 
 export type TeachingAssignmentUncheckedUpdateInput = {
@@ -365,7 +350,6 @@ export type TeachingAssignmentUncheckedUpdateInput = {
   gradeId?: Prisma.StringFieldUpdateOperationsInput | string
   sectionId?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
-  academicYear?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumAssignmentStatusFieldUpdateOperationsInput | $Enums.AssignmentStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -379,7 +363,6 @@ export type TeachingAssignmentCreateManyInput = {
   gradeId: string
   sectionId: string
   organizationId: string
-  academicYear?: string | null
   status?: $Enums.AssignmentStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -388,7 +371,6 @@ export type TeachingAssignmentCreateManyInput = {
 
 export type TeachingAssignmentUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  academicYear?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumAssignmentStatusFieldUpdateOperationsInput | $Enums.AssignmentStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -401,7 +383,6 @@ export type TeachingAssignmentUncheckedUpdateManyInput = {
   gradeId?: Prisma.StringFieldUpdateOperationsInput | string
   sectionId?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
-  academicYear?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumAssignmentStatusFieldUpdateOperationsInput | $Enums.AssignmentStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -439,7 +420,6 @@ export type TeachingAssignmentCountOrderByAggregateInput = {
   gradeId?: Prisma.SortOrder
   sectionId?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
-  academicYear?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -453,7 +433,6 @@ export type TeachingAssignmentMaxOrderByAggregateInput = {
   gradeId?: Prisma.SortOrder
   sectionId?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
-  academicYear?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -467,7 +446,6 @@ export type TeachingAssignmentMinOrderByAggregateInput = {
   gradeId?: Prisma.SortOrder
   sectionId?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
-  academicYear?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -732,7 +710,6 @@ export type EnumAssignmentStatusFieldUpdateOperationsInput = {
 
 export type TeachingAssignmentCreateWithoutAcademicYearInput = {
   id?: string
-  academicYear?: string | null
   status?: $Enums.AssignmentStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -750,7 +727,6 @@ export type TeachingAssignmentUncheckedCreateWithoutAcademicYearInput = {
   gradeId: string
   sectionId: string
   organizationId: string
-  academicYear?: string | null
   status?: $Enums.AssignmentStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -792,7 +768,6 @@ export type TeachingAssignmentScalarWhereInput = {
   gradeId?: Prisma.StringFilter<"TeachingAssignment"> | string
   sectionId?: Prisma.StringFilter<"TeachingAssignment"> | string
   organizationId?: Prisma.StringFilter<"TeachingAssignment"> | string
-  academicYear?: Prisma.StringNullableFilter<"TeachingAssignment"> | string | null
   status?: Prisma.EnumAssignmentStatusFilter<"TeachingAssignment"> | $Enums.AssignmentStatus
   createdAt?: Prisma.DateTimeFilter<"TeachingAssignment"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"TeachingAssignment"> | Date | string
@@ -801,7 +776,6 @@ export type TeachingAssignmentScalarWhereInput = {
 
 export type TeachingAssignmentCreateWithoutOrganizationInput = {
   id?: string
-  academicYear?: string | null
   status?: $Enums.AssignmentStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -809,7 +783,7 @@ export type TeachingAssignmentCreateWithoutOrganizationInput = {
   subject: Prisma.SubjectCreateNestedOneWithoutTeachingAssignmentsInput
   grade: Prisma.GradeCreateNestedOneWithoutTeachingAssignmentInput
   section: Prisma.SectionCreateNestedOneWithoutTeachingAssignmentInput
-  AcademicYear?: Prisma.AcademicYearCreateNestedOneWithoutTeachingAssignmentInput
+  academicYear?: Prisma.AcademicYearCreateNestedOneWithoutTeachingAssignmentInput
 }
 
 export type TeachingAssignmentUncheckedCreateWithoutOrganizationInput = {
@@ -818,7 +792,6 @@ export type TeachingAssignmentUncheckedCreateWithoutOrganizationInput = {
   subjectId: string
   gradeId: string
   sectionId: string
-  academicYear?: string | null
   status?: $Enums.AssignmentStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -853,7 +826,6 @@ export type TeachingAssignmentUpdateManyWithWhereWithoutOrganizationInput = {
 
 export type TeachingAssignmentCreateWithoutTeacherInput = {
   id?: string
-  academicYear?: string | null
   status?: $Enums.AssignmentStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -861,7 +833,7 @@ export type TeachingAssignmentCreateWithoutTeacherInput = {
   grade: Prisma.GradeCreateNestedOneWithoutTeachingAssignmentInput
   section: Prisma.SectionCreateNestedOneWithoutTeachingAssignmentInput
   organization: Prisma.OrganizationCreateNestedOneWithoutTeachingAssignmentInput
-  AcademicYear?: Prisma.AcademicYearCreateNestedOneWithoutTeachingAssignmentInput
+  academicYear?: Prisma.AcademicYearCreateNestedOneWithoutTeachingAssignmentInput
 }
 
 export type TeachingAssignmentUncheckedCreateWithoutTeacherInput = {
@@ -870,7 +842,6 @@ export type TeachingAssignmentUncheckedCreateWithoutTeacherInput = {
   gradeId: string
   sectionId: string
   organizationId: string
-  academicYear?: string | null
   status?: $Enums.AssignmentStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -905,7 +876,6 @@ export type TeachingAssignmentUpdateManyWithWhereWithoutTeacherInput = {
 
 export type TeachingAssignmentCreateWithoutGradeInput = {
   id?: string
-  academicYear?: string | null
   status?: $Enums.AssignmentStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -913,7 +883,7 @@ export type TeachingAssignmentCreateWithoutGradeInput = {
   subject: Prisma.SubjectCreateNestedOneWithoutTeachingAssignmentsInput
   section: Prisma.SectionCreateNestedOneWithoutTeachingAssignmentInput
   organization: Prisma.OrganizationCreateNestedOneWithoutTeachingAssignmentInput
-  AcademicYear?: Prisma.AcademicYearCreateNestedOneWithoutTeachingAssignmentInput
+  academicYear?: Prisma.AcademicYearCreateNestedOneWithoutTeachingAssignmentInput
 }
 
 export type TeachingAssignmentUncheckedCreateWithoutGradeInput = {
@@ -922,7 +892,6 @@ export type TeachingAssignmentUncheckedCreateWithoutGradeInput = {
   subjectId: string
   sectionId: string
   organizationId: string
-  academicYear?: string | null
   status?: $Enums.AssignmentStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -957,7 +926,6 @@ export type TeachingAssignmentUpdateManyWithWhereWithoutGradeInput = {
 
 export type TeachingAssignmentCreateWithoutSectionInput = {
   id?: string
-  academicYear?: string | null
   status?: $Enums.AssignmentStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -965,7 +933,7 @@ export type TeachingAssignmentCreateWithoutSectionInput = {
   subject: Prisma.SubjectCreateNestedOneWithoutTeachingAssignmentsInput
   grade: Prisma.GradeCreateNestedOneWithoutTeachingAssignmentInput
   organization: Prisma.OrganizationCreateNestedOneWithoutTeachingAssignmentInput
-  AcademicYear?: Prisma.AcademicYearCreateNestedOneWithoutTeachingAssignmentInput
+  academicYear?: Prisma.AcademicYearCreateNestedOneWithoutTeachingAssignmentInput
 }
 
 export type TeachingAssignmentUncheckedCreateWithoutSectionInput = {
@@ -974,7 +942,6 @@ export type TeachingAssignmentUncheckedCreateWithoutSectionInput = {
   subjectId: string
   gradeId: string
   organizationId: string
-  academicYear?: string | null
   status?: $Enums.AssignmentStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1009,7 +976,6 @@ export type TeachingAssignmentUpdateManyWithWhereWithoutSectionInput = {
 
 export type TeachingAssignmentCreateWithoutSubjectInput = {
   id?: string
-  academicYear?: string | null
   status?: $Enums.AssignmentStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1017,7 +983,7 @@ export type TeachingAssignmentCreateWithoutSubjectInput = {
   grade: Prisma.GradeCreateNestedOneWithoutTeachingAssignmentInput
   section: Prisma.SectionCreateNestedOneWithoutTeachingAssignmentInput
   organization: Prisma.OrganizationCreateNestedOneWithoutTeachingAssignmentInput
-  AcademicYear?: Prisma.AcademicYearCreateNestedOneWithoutTeachingAssignmentInput
+  academicYear?: Prisma.AcademicYearCreateNestedOneWithoutTeachingAssignmentInput
 }
 
 export type TeachingAssignmentUncheckedCreateWithoutSubjectInput = {
@@ -1026,7 +992,6 @@ export type TeachingAssignmentUncheckedCreateWithoutSubjectInput = {
   gradeId: string
   sectionId: string
   organizationId: string
-  academicYear?: string | null
   status?: $Enums.AssignmentStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1066,7 +1031,6 @@ export type TeachingAssignmentCreateManyAcademicYearInput = {
   gradeId: string
   sectionId: string
   organizationId: string
-  academicYear?: string | null
   status?: $Enums.AssignmentStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1074,7 +1038,6 @@ export type TeachingAssignmentCreateManyAcademicYearInput = {
 
 export type TeachingAssignmentUpdateWithoutAcademicYearInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  academicYear?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumAssignmentStatusFieldUpdateOperationsInput | $Enums.AssignmentStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1092,7 +1055,6 @@ export type TeachingAssignmentUncheckedUpdateWithoutAcademicYearInput = {
   gradeId?: Prisma.StringFieldUpdateOperationsInput | string
   sectionId?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
-  academicYear?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumAssignmentStatusFieldUpdateOperationsInput | $Enums.AssignmentStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1105,7 +1067,6 @@ export type TeachingAssignmentUncheckedUpdateManyWithoutAcademicYearInput = {
   gradeId?: Prisma.StringFieldUpdateOperationsInput | string
   sectionId?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
-  academicYear?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumAssignmentStatusFieldUpdateOperationsInput | $Enums.AssignmentStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1117,7 +1078,6 @@ export type TeachingAssignmentCreateManyOrganizationInput = {
   subjectId: string
   gradeId: string
   sectionId: string
-  academicYear?: string | null
   status?: $Enums.AssignmentStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1126,7 +1086,6 @@ export type TeachingAssignmentCreateManyOrganizationInput = {
 
 export type TeachingAssignmentUpdateWithoutOrganizationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  academicYear?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumAssignmentStatusFieldUpdateOperationsInput | $Enums.AssignmentStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1134,7 +1093,7 @@ export type TeachingAssignmentUpdateWithoutOrganizationInput = {
   subject?: Prisma.SubjectUpdateOneRequiredWithoutTeachingAssignmentsNestedInput
   grade?: Prisma.GradeUpdateOneRequiredWithoutTeachingAssignmentNestedInput
   section?: Prisma.SectionUpdateOneRequiredWithoutTeachingAssignmentNestedInput
-  AcademicYear?: Prisma.AcademicYearUpdateOneWithoutTeachingAssignmentNestedInput
+  academicYear?: Prisma.AcademicYearUpdateOneWithoutTeachingAssignmentNestedInput
 }
 
 export type TeachingAssignmentUncheckedUpdateWithoutOrganizationInput = {
@@ -1143,7 +1102,6 @@ export type TeachingAssignmentUncheckedUpdateWithoutOrganizationInput = {
   subjectId?: Prisma.StringFieldUpdateOperationsInput | string
   gradeId?: Prisma.StringFieldUpdateOperationsInput | string
   sectionId?: Prisma.StringFieldUpdateOperationsInput | string
-  academicYear?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumAssignmentStatusFieldUpdateOperationsInput | $Enums.AssignmentStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1156,7 +1114,6 @@ export type TeachingAssignmentUncheckedUpdateManyWithoutOrganizationInput = {
   subjectId?: Prisma.StringFieldUpdateOperationsInput | string
   gradeId?: Prisma.StringFieldUpdateOperationsInput | string
   sectionId?: Prisma.StringFieldUpdateOperationsInput | string
-  academicYear?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumAssignmentStatusFieldUpdateOperationsInput | $Enums.AssignmentStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1169,7 +1126,6 @@ export type TeachingAssignmentCreateManyTeacherInput = {
   gradeId: string
   sectionId: string
   organizationId: string
-  academicYear?: string | null
   status?: $Enums.AssignmentStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1178,7 +1134,6 @@ export type TeachingAssignmentCreateManyTeacherInput = {
 
 export type TeachingAssignmentUpdateWithoutTeacherInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  academicYear?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumAssignmentStatusFieldUpdateOperationsInput | $Enums.AssignmentStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1186,7 +1141,7 @@ export type TeachingAssignmentUpdateWithoutTeacherInput = {
   grade?: Prisma.GradeUpdateOneRequiredWithoutTeachingAssignmentNestedInput
   section?: Prisma.SectionUpdateOneRequiredWithoutTeachingAssignmentNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutTeachingAssignmentNestedInput
-  AcademicYear?: Prisma.AcademicYearUpdateOneWithoutTeachingAssignmentNestedInput
+  academicYear?: Prisma.AcademicYearUpdateOneWithoutTeachingAssignmentNestedInput
 }
 
 export type TeachingAssignmentUncheckedUpdateWithoutTeacherInput = {
@@ -1195,7 +1150,6 @@ export type TeachingAssignmentUncheckedUpdateWithoutTeacherInput = {
   gradeId?: Prisma.StringFieldUpdateOperationsInput | string
   sectionId?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
-  academicYear?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumAssignmentStatusFieldUpdateOperationsInput | $Enums.AssignmentStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1208,7 +1162,6 @@ export type TeachingAssignmentUncheckedUpdateManyWithoutTeacherInput = {
   gradeId?: Prisma.StringFieldUpdateOperationsInput | string
   sectionId?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
-  academicYear?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumAssignmentStatusFieldUpdateOperationsInput | $Enums.AssignmentStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1221,7 +1174,6 @@ export type TeachingAssignmentCreateManyGradeInput = {
   subjectId: string
   sectionId: string
   organizationId: string
-  academicYear?: string | null
   status?: $Enums.AssignmentStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1230,7 +1182,6 @@ export type TeachingAssignmentCreateManyGradeInput = {
 
 export type TeachingAssignmentUpdateWithoutGradeInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  academicYear?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumAssignmentStatusFieldUpdateOperationsInput | $Enums.AssignmentStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1238,7 +1189,7 @@ export type TeachingAssignmentUpdateWithoutGradeInput = {
   subject?: Prisma.SubjectUpdateOneRequiredWithoutTeachingAssignmentsNestedInput
   section?: Prisma.SectionUpdateOneRequiredWithoutTeachingAssignmentNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutTeachingAssignmentNestedInput
-  AcademicYear?: Prisma.AcademicYearUpdateOneWithoutTeachingAssignmentNestedInput
+  academicYear?: Prisma.AcademicYearUpdateOneWithoutTeachingAssignmentNestedInput
 }
 
 export type TeachingAssignmentUncheckedUpdateWithoutGradeInput = {
@@ -1247,7 +1198,6 @@ export type TeachingAssignmentUncheckedUpdateWithoutGradeInput = {
   subjectId?: Prisma.StringFieldUpdateOperationsInput | string
   sectionId?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
-  academicYear?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumAssignmentStatusFieldUpdateOperationsInput | $Enums.AssignmentStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1260,7 +1210,6 @@ export type TeachingAssignmentUncheckedUpdateManyWithoutGradeInput = {
   subjectId?: Prisma.StringFieldUpdateOperationsInput | string
   sectionId?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
-  academicYear?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumAssignmentStatusFieldUpdateOperationsInput | $Enums.AssignmentStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1273,7 +1222,6 @@ export type TeachingAssignmentCreateManySectionInput = {
   subjectId: string
   gradeId: string
   organizationId: string
-  academicYear?: string | null
   status?: $Enums.AssignmentStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1282,7 +1230,6 @@ export type TeachingAssignmentCreateManySectionInput = {
 
 export type TeachingAssignmentUpdateWithoutSectionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  academicYear?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumAssignmentStatusFieldUpdateOperationsInput | $Enums.AssignmentStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1290,7 +1237,7 @@ export type TeachingAssignmentUpdateWithoutSectionInput = {
   subject?: Prisma.SubjectUpdateOneRequiredWithoutTeachingAssignmentsNestedInput
   grade?: Prisma.GradeUpdateOneRequiredWithoutTeachingAssignmentNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutTeachingAssignmentNestedInput
-  AcademicYear?: Prisma.AcademicYearUpdateOneWithoutTeachingAssignmentNestedInput
+  academicYear?: Prisma.AcademicYearUpdateOneWithoutTeachingAssignmentNestedInput
 }
 
 export type TeachingAssignmentUncheckedUpdateWithoutSectionInput = {
@@ -1299,7 +1246,6 @@ export type TeachingAssignmentUncheckedUpdateWithoutSectionInput = {
   subjectId?: Prisma.StringFieldUpdateOperationsInput | string
   gradeId?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
-  academicYear?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumAssignmentStatusFieldUpdateOperationsInput | $Enums.AssignmentStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1312,7 +1258,6 @@ export type TeachingAssignmentUncheckedUpdateManyWithoutSectionInput = {
   subjectId?: Prisma.StringFieldUpdateOperationsInput | string
   gradeId?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
-  academicYear?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumAssignmentStatusFieldUpdateOperationsInput | $Enums.AssignmentStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1325,7 +1270,6 @@ export type TeachingAssignmentCreateManySubjectInput = {
   gradeId: string
   sectionId: string
   organizationId: string
-  academicYear?: string | null
   status?: $Enums.AssignmentStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1334,7 +1278,6 @@ export type TeachingAssignmentCreateManySubjectInput = {
 
 export type TeachingAssignmentUpdateWithoutSubjectInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  academicYear?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumAssignmentStatusFieldUpdateOperationsInput | $Enums.AssignmentStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1342,7 +1285,7 @@ export type TeachingAssignmentUpdateWithoutSubjectInput = {
   grade?: Prisma.GradeUpdateOneRequiredWithoutTeachingAssignmentNestedInput
   section?: Prisma.SectionUpdateOneRequiredWithoutTeachingAssignmentNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutTeachingAssignmentNestedInput
-  AcademicYear?: Prisma.AcademicYearUpdateOneWithoutTeachingAssignmentNestedInput
+  academicYear?: Prisma.AcademicYearUpdateOneWithoutTeachingAssignmentNestedInput
 }
 
 export type TeachingAssignmentUncheckedUpdateWithoutSubjectInput = {
@@ -1351,7 +1294,6 @@ export type TeachingAssignmentUncheckedUpdateWithoutSubjectInput = {
   gradeId?: Prisma.StringFieldUpdateOperationsInput | string
   sectionId?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
-  academicYear?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumAssignmentStatusFieldUpdateOperationsInput | $Enums.AssignmentStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1364,7 +1306,6 @@ export type TeachingAssignmentUncheckedUpdateManyWithoutSubjectInput = {
   gradeId?: Prisma.StringFieldUpdateOperationsInput | string
   sectionId?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
-  academicYear?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumAssignmentStatusFieldUpdateOperationsInput | $Enums.AssignmentStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1380,7 +1321,6 @@ export type TeachingAssignmentSelect<ExtArgs extends runtime.Types.Extensions.In
   gradeId?: boolean
   sectionId?: boolean
   organizationId?: boolean
-  academicYear?: boolean
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1390,7 +1330,7 @@ export type TeachingAssignmentSelect<ExtArgs extends runtime.Types.Extensions.In
   grade?: boolean | Prisma.GradeDefaultArgs<ExtArgs>
   section?: boolean | Prisma.SectionDefaultArgs<ExtArgs>
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
-  AcademicYear?: boolean | Prisma.TeachingAssignment$AcademicYearArgs<ExtArgs>
+  academicYear?: boolean | Prisma.TeachingAssignment$academicYearArgs<ExtArgs>
 }, ExtArgs["result"]["teachingAssignment"]>
 
 export type TeachingAssignmentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1400,7 +1340,6 @@ export type TeachingAssignmentSelectCreateManyAndReturn<ExtArgs extends runtime.
   gradeId?: boolean
   sectionId?: boolean
   organizationId?: boolean
-  academicYear?: boolean
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1410,7 +1349,7 @@ export type TeachingAssignmentSelectCreateManyAndReturn<ExtArgs extends runtime.
   grade?: boolean | Prisma.GradeDefaultArgs<ExtArgs>
   section?: boolean | Prisma.SectionDefaultArgs<ExtArgs>
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
-  AcademicYear?: boolean | Prisma.TeachingAssignment$AcademicYearArgs<ExtArgs>
+  academicYear?: boolean | Prisma.TeachingAssignment$academicYearArgs<ExtArgs>
 }, ExtArgs["result"]["teachingAssignment"]>
 
 export type TeachingAssignmentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1420,7 +1359,6 @@ export type TeachingAssignmentSelectUpdateManyAndReturn<ExtArgs extends runtime.
   gradeId?: boolean
   sectionId?: boolean
   organizationId?: boolean
-  academicYear?: boolean
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1430,7 +1368,7 @@ export type TeachingAssignmentSelectUpdateManyAndReturn<ExtArgs extends runtime.
   grade?: boolean | Prisma.GradeDefaultArgs<ExtArgs>
   section?: boolean | Prisma.SectionDefaultArgs<ExtArgs>
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
-  AcademicYear?: boolean | Prisma.TeachingAssignment$AcademicYearArgs<ExtArgs>
+  academicYear?: boolean | Prisma.TeachingAssignment$academicYearArgs<ExtArgs>
 }, ExtArgs["result"]["teachingAssignment"]>
 
 export type TeachingAssignmentSelectScalar = {
@@ -1440,21 +1378,20 @@ export type TeachingAssignmentSelectScalar = {
   gradeId?: boolean
   sectionId?: boolean
   organizationId?: boolean
-  academicYear?: boolean
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   academicYearId?: boolean
 }
 
-export type TeachingAssignmentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "teacherId" | "subjectId" | "gradeId" | "sectionId" | "organizationId" | "academicYear" | "status" | "createdAt" | "updatedAt" | "academicYearId", ExtArgs["result"]["teachingAssignment"]>
+export type TeachingAssignmentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "teacherId" | "subjectId" | "gradeId" | "sectionId" | "organizationId" | "status" | "createdAt" | "updatedAt" | "academicYearId", ExtArgs["result"]["teachingAssignment"]>
 export type TeachingAssignmentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   teacher?: boolean | Prisma.TeacherDefaultArgs<ExtArgs>
   subject?: boolean | Prisma.SubjectDefaultArgs<ExtArgs>
   grade?: boolean | Prisma.GradeDefaultArgs<ExtArgs>
   section?: boolean | Prisma.SectionDefaultArgs<ExtArgs>
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
-  AcademicYear?: boolean | Prisma.TeachingAssignment$AcademicYearArgs<ExtArgs>
+  academicYear?: boolean | Prisma.TeachingAssignment$academicYearArgs<ExtArgs>
 }
 export type TeachingAssignmentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   teacher?: boolean | Prisma.TeacherDefaultArgs<ExtArgs>
@@ -1462,7 +1399,7 @@ export type TeachingAssignmentIncludeCreateManyAndReturn<ExtArgs extends runtime
   grade?: boolean | Prisma.GradeDefaultArgs<ExtArgs>
   section?: boolean | Prisma.SectionDefaultArgs<ExtArgs>
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
-  AcademicYear?: boolean | Prisma.TeachingAssignment$AcademicYearArgs<ExtArgs>
+  academicYear?: boolean | Prisma.TeachingAssignment$academicYearArgs<ExtArgs>
 }
 export type TeachingAssignmentIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   teacher?: boolean | Prisma.TeacherDefaultArgs<ExtArgs>
@@ -1470,7 +1407,7 @@ export type TeachingAssignmentIncludeUpdateManyAndReturn<ExtArgs extends runtime
   grade?: boolean | Prisma.GradeDefaultArgs<ExtArgs>
   section?: boolean | Prisma.SectionDefaultArgs<ExtArgs>
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
-  AcademicYear?: boolean | Prisma.TeachingAssignment$AcademicYearArgs<ExtArgs>
+  academicYear?: boolean | Prisma.TeachingAssignment$academicYearArgs<ExtArgs>
 }
 
 export type $TeachingAssignmentPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1481,7 +1418,7 @@ export type $TeachingAssignmentPayload<ExtArgs extends runtime.Types.Extensions.
     grade: Prisma.$GradePayload<ExtArgs>
     section: Prisma.$SectionPayload<ExtArgs>
     organization: Prisma.$OrganizationPayload<ExtArgs>
-    AcademicYear: Prisma.$AcademicYearPayload<ExtArgs> | null
+    academicYear: Prisma.$AcademicYearPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1490,7 +1427,6 @@ export type $TeachingAssignmentPayload<ExtArgs extends runtime.Types.Extensions.
     gradeId: string
     sectionId: string
     organizationId: string
-    academicYear: string | null
     status: $Enums.AssignmentStatus
     createdAt: Date
     updatedAt: Date
@@ -1894,7 +1830,7 @@ export interface Prisma__TeachingAssignmentClient<T, Null = never, ExtArgs exten
   grade<T extends Prisma.GradeDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.GradeDefaultArgs<ExtArgs>>): Prisma.Prisma__GradeClient<runtime.Types.Result.GetResult<Prisma.$GradePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   section<T extends Prisma.SectionDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SectionDefaultArgs<ExtArgs>>): Prisma.Prisma__SectionClient<runtime.Types.Result.GetResult<Prisma.$SectionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   organization<T extends Prisma.OrganizationDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrganizationDefaultArgs<ExtArgs>>): Prisma.Prisma__OrganizationClient<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  AcademicYear<T extends Prisma.TeachingAssignment$AcademicYearArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TeachingAssignment$AcademicYearArgs<ExtArgs>>): Prisma.Prisma__AcademicYearClient<runtime.Types.Result.GetResult<Prisma.$AcademicYearPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  academicYear<T extends Prisma.TeachingAssignment$academicYearArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TeachingAssignment$academicYearArgs<ExtArgs>>): Prisma.Prisma__AcademicYearClient<runtime.Types.Result.GetResult<Prisma.$AcademicYearPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1930,7 +1866,6 @@ export interface TeachingAssignmentFieldRefs {
   readonly gradeId: Prisma.FieldRef<"TeachingAssignment", 'String'>
   readonly sectionId: Prisma.FieldRef<"TeachingAssignment", 'String'>
   readonly organizationId: Prisma.FieldRef<"TeachingAssignment", 'String'>
-  readonly academicYear: Prisma.FieldRef<"TeachingAssignment", 'String'>
   readonly status: Prisma.FieldRef<"TeachingAssignment", 'AssignmentStatus'>
   readonly createdAt: Prisma.FieldRef<"TeachingAssignment", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"TeachingAssignment", 'DateTime'>
@@ -2331,9 +2266,9 @@ export type TeachingAssignmentDeleteManyArgs<ExtArgs extends runtime.Types.Exten
 }
 
 /**
- * TeachingAssignment.AcademicYear
+ * TeachingAssignment.academicYear
  */
-export type TeachingAssignment$AcademicYearArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type TeachingAssignment$academicYearArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
    * Select specific fields to fetch from the AcademicYear
    */

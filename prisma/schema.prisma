@@ -347,8 +347,7 @@ model TeachingAssignment {
   sectionId      String
   organizationId String
 
-  academicYear String?
-  status       AssignmentStatus @default(PENDING)
+  status AssignmentStatus @default(PENDING)
 
   // ✅ Complete relations
   teacher      Teacher      @relation(fields: [teacherId], references: [id])
@@ -357,9 +356,10 @@ model TeachingAssignment {
   section      Section      @relation(fields: [sectionId], references: [id])
   organization Organization @relation(fields: [organizationId], references: [id])
 
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
-  AcademicYear   AcademicYear? @relation(fields: [academicYearId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  academicYear   AcademicYear? @relation(fields: [academicYearId], references: [id])
   academicYearId String?
 
   // ✅ Proper unique constraint
@@ -368,6 +368,135 @@ model TeachingAssignment {
   @@index([subjectId, sectionId])
   @@index([organizationId])
 }
+
+// // Define time periods/slots for the school
+// model TimePeriod {
+//   id             String       @id @default(cuid())
+
+//   name           String       // "Period 1", "Morning Assembly", "Lunch Break"
+//   startTime      String       // "09:00" (24-hour format)
+//   endTime        String       // "09:45"
+//   dayOfWeek      DayOfWeek    // MONDAY, TUESDAY, etc.
+//   periodOrder    Int          // 1, 2, 3... for sorting periods in a day
+//   periodType     PeriodType   @default(ACADEMIC)
+//   isActive       Boolean      @default(true)
+//   timetableEntries Timetable[]
+//   academicYearId String
+//   academicYear   AcademicYear @relation(fields: [academicYearId], references: [id])
+//   organizationId String
+//   organization   Organization @relation(fields: [organizationId], references: [id])
+
+//   createdAt      DateTime     @default(now())
+//   updatedAt      DateTime     @updatedAt
+
+//   @@unique([organizationId, academicYearId, dayOfWeek, startTime, endTime])
+//   @@index([organizationId, academicYearId, dayOfWeek, periodOrder])
+// }
+
+// // Main timetable model - connects teaching assignments with specific time periods
+// model Timetable {
+//   id                   String             @id @default(cuid())
+//   timePeriodId         String
+//   timePeriod           TimePeriod         @relation(fields: [timePeriodId], references: [id])
+//   roomNumber           String?            // Classroom/venue
+//   effectiveDate        DateTime           // When this schedule starts
+//   endDate              DateTime?          // When it ends (null = ongoing)
+//   status               TimetableStatus    @default(ACTIVE)
+//   notes                String?            // Special instructions
+//   isRecurring          Boolean            @default(true)
+//   organizationId       String
+//   organization         Organization       @relation(fields: [organizationId], references: [id])
+//   teachingAssignmentId String
+//   teachingAssignment   TeachingAssignment @relation(fields: [teachingAssignmentId], references: [id]) 
+//   academicYearId       String
+//   academicYear         AcademicYear       @relation(fields: [academicYearId], references: [id])
+
+//   createdBy            String             // Who created this entry
+//   createdAt            DateTime           @default(now())
+//   updatedAt            DateTime           @updatedAt
+
+//   // Prevent double-booking same room at same time
+//   @@unique([organizationId, timePeriodId, roomNumber, effectiveDate])
+
+//   // Prevent teacher double-booking
+//   @@unique([teachingAssignmentId, timePeriodId, effectiveDate])
+
+//   @@index([organizationId, academicYearId, status])
+//   @@index([teachingAssignmentId])
+//   @@index([timePeriodId])
+// }
+
+// // For handling special schedule changes/substitutions
+// model TimetableException {
+//   id               String          @id @default(cuid())
+//   organizationId   String
+//   organization     Organization    @relation(fields: [organizationId], references: [id])
+
+//   // Reference to the original timetable entry
+//   originalTimetableId String?
+//   originalTimetable   Timetable?      @relation(fields: [originalTimetableId], references: [id])
+
+//   // Exception details
+//   exceptionDate    DateTime        // Specific date of the exception
+//   exceptionType    ExceptionType   // CANCELLED, SUBSTITUTED, RESCHEDULED, ROOM_CHANGE
+
+//   // Substitute details (if applicable)
+//   substituteTeacherId    String?
+//   substituteTeacher      Teacher?         @relation(fields: [substituteTeacherId], references: [id])
+
+//   newTimePeriodId        String?
+//   newTimePeriod          TimePeriod?      @relation(fields: [newTimePeriodId], references: [id])
+
+//   newRoomNumber          String?
+
+//   // Reason and approval
+//   reason                 String
+//   approvedBy            String?
+//   approvedAt            DateTime?
+
+//   // Notification status
+//   notificationSent      Boolean          @default(false)
+
+//   createdBy             String
+//   createdAt             DateTime         @default(now())
+//   updatedAt             DateTime         @updatedAt
+
+//   @@index([organizationId, exceptionDate])
+//   @@index([originalTimetableId])
+// }
+// enum DayOfWeek {
+//   MONDAY
+//   TUESDAY
+//   WEDNESDAY
+//   THURSDAY
+//   FRIDAY
+//   SATURDAY
+//   SUNDAY
+// }
+
+// enum PeriodType {
+//   ACADEMIC       // Regular classes
+//   BREAK         // Recess, lunch break
+//   ASSEMBLY      // Morning assembly
+//   SPORTS        // Physical education
+//   EXTRA_CURRICULAR // Clubs, activities
+//   EXAM          // Examination periods
+// }
+
+// enum TimetableStatus {
+//   ACTIVE
+//   INACTIVE
+//   SUSPENDED
+//   COMPLETED
+// }
+
+// enum ExceptionType {
+//   CANCELLED
+//   SUBSTITUTED
+//   RESCHEDULED
+//   ROOM_CHANGE
+//   TEACHER_ABSENT
+// }
 
 enum AssignmentStatus {
   PENDING

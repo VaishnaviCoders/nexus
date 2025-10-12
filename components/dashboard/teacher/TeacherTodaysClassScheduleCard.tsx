@@ -2,13 +2,50 @@ import { Suspense } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Clock, MapPin, BookOpen } from 'lucide-react';
-import { stat } from 'fs';
-import { ScrollArea } from '@radix-ui/react-scroll-area';
-// import { getTodaySchedule } from '@/lib/actions/teacher-dashboard-stats';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import prisma from '@/lib/db';
+import { getCurrentUserId } from '@/lib/user';
+
+// async function todayScheduleList() {
+//   // const schedule = await getTodaySchedule();
+//   const userId = await getCurrentUserId();
+
+//   // 1️⃣ Find the teacher record for current user
+//   const teacher = await prisma.teacher.findUnique({
+//     where: { userId },
+//     select: { id: true },
+//   });
+
+//   if (!teacher) throw new Error('Teacher not found.');
+
+//   // 2️⃣ Fetch all teaching assignments for this teacher
+//   const schedule = await prisma.teachingAssignment.findMany({
+//     where: {
+//       teacherId: teacher.id,
+//       status: 'ASSIGNED', // optional, only active assignments
+//     },
+//     include: {
+//       subject: true,
+//       grade: true,
+//       section: true,
+//     },
+//     orderBy: {
+//       createdAt: 'asc',
+//     },
+//   });
+//   return schedule.map((a) => ({
+//     subject: a.subject.,
+//     grade: a.grade.grade,
+//     section: a.section.name,
+//     time: a.time ,
+//     room: a.room,
+//     status: a.status,
+//     id: a.id,
+//   }));
+// }
 
 async function TodayScheduleContent() {
-  // const schedule = await getTodaySchedule();
-
+  // const schedule = await todayScheduleList();
   const schedule = [
     {
       class_item: 1,

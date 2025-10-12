@@ -43,9 +43,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogDescription,
 } from '@/components/ui/dialog';
 import { SupportPopup } from './SupportPopup';
-import { DialogDescription } from '@radix-ui/react-dialog';
 
 // Import the features data
 const featuresData = {

@@ -2,6 +2,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardHeader,
   CardTitle,
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -22,43 +23,39 @@ import { TeacherTodaysClassScheduleCard } from './TeacherTodaysClassScheduleCard
 export default async function TeacherDashboard() {
   return (
     <div className="bg-gradient-to-br from-background via-background to-muted/10">
-      <div className="px-3 space-y-3">
+      <div className="px-2 space-y-3">
         {/* Header */}
+        <Card className="p-4 md:p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 md:gap-6 bg-gradient-to-r from-card via-card to-primary/5">
+          <div className="w-full md:w-auto">
+            <CardTitle>Teacher Dashboard</CardTitle>
+            <CardDescription>
+              Manage your classes, students, and teaching activities
+            </CardDescription>
+          </div>
 
-        <Card className="bg-gradient-to-r from-card via-card to-primary/5">
-          <CardContent className="flex flex-col lg:flex-row lg:items-center lg:justify-between p-6 gap-4">
-            <div>
-              <CardTitle className="text-lg flex items-center gap-2">
-                Teacher Dashboard{' '}
-                <Badge
+          <div className="flex w-full md:w-auto flex-wrap items-stretch sm:items-center gap-2 sm:gap-3">
+            <div className="w-full sm:w-auto">
+              <Link
+                href="/dashboard/attendance/mark"
+                className="w-full sm:w-auto"
+              >
+                <Button
                   variant="outline"
-                  className="bg-green-50 text-green-700 border-green-200 dark:bg-green-950 dark:text-green-300 dark:border-green-800"
+                  size="sm"
+                  className="w-full sm:w-auto"
                 >
-                  <CalendarIcon className="w-3 h-3 mr-1" />
-                  Academic Year 2025-26
-                </Badge>
-              </CardTitle>
-              <CardDescription className="text-base mt-1">
-                Manage your classes, students, and teaching activities
-              </CardDescription>
+                  <Calendar className="w-4 h-4 mr-2" />
+                  Take Attendance
+                </Button>
+              </Link>
             </div>
-            <div className="flex items-center gap-3">
-              <div className="flex gap-2">
-                <Link href="/dashboard/attendance/mark">
-                  <Button variant="outline" size="sm" className="">
-                    <Calendar className="w-4 h-4 mr-2" />
-                    Take Attendance
-                  </Button>
-                </Link>
-                <Link href="/dashboard/students">
-                  <Button size="sm">
-                    <Users className="w-4 h-4 mr-2" />
-                    My Students
-                  </Button>
-                </Link>
-              </div>
-            </div>
-          </CardContent>
+            <Link href="/dashboard/students" className="w-full sm:w-auto">
+              <Button size="sm" className="w-full sm:w-auto">
+                <Users className="w-4 h-4 mr-2" />
+                My Students
+              </Button>
+            </Link>
+          </div>
         </Card>
 
         {/* Stats Cards */}
@@ -89,7 +86,7 @@ export default async function TeacherDashboard() {
         </div>
 
         {/* Teaching Tips */}
-        <Card className="border-0 bg-gradient-to-br from-card via-card to-green-50/20 dark:to-green-950/20">
+        {/* <Card className="border-0 bg-gradient-to-br from-card via-card to-green-50/20 dark:to-green-950/20">
           <CardContent className="p-6">
             <h3 className="text-lg font-semibold mb-4 text-green-800 dark:text-green-200 flex items-center gap-2">
               <BookOpen className="w-5 h-5" />
@@ -116,7 +113,7 @@ export default async function TeacherDashboard() {
               </div>
             </div>
           </CardContent>
-        </Card>
+        </Card> */}
       </div>
     </div>
   );

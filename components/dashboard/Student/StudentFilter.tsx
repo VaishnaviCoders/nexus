@@ -203,7 +203,7 @@ export default function StudentFilter({
 
   return (
     <>
-      <Card className="border-2 border-blue-200/50 dark:border-blue-800/50 shadow-lg bg-gradient-to-br from-white to-blue-50/30 dark:from-gray-900 dark:to-blue-950/10 mb-6">
+      <Card className="border-2 border-blue-200/50 dark:border-blue-800/50 shadow-sm bg-gradient-to-br from-white to-blue-50/30 dark:from-gray-900 dark:to-blue-950/10 mb-6">
         <CardHeader className="pb-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/20 dark:to-purple-950/20 rounded-t-lg border-b border-blue-200/30 dark:border-blue-800/30">
           <div className="flex items-center justify-between">
             <div>
