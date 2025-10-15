@@ -1,6 +1,7 @@
 'use server';
 
 import {
+  EmailFeeTemplateProps,
   ReminderResult,
   SendReminderData,
 } from '@/components/dashboard/Fees/SendFeesReminderDialog';
@@ -15,6 +16,8 @@ import { getCurrentUser } from '@/lib/user';
 import { calculateNotificationCost } from '@/lib/utils';
 import { Resend } from 'resend';
 import { z } from 'zod';
+import { FriendlyReminderTemplate } from '@/components/templates/email-templates/fees/friendly-reminder';
+import { OverdueNoticeTemplate } from '@/components/templates/email-templates/fees/overdue-notice';
 
 const reminderDataSchema = z.object({
   recipients: z.array(
@@ -35,6 +38,8 @@ const reminderDataSchema = z.object({
       dueDate: z.date(),
       avatar: z.string().optional(),
       organizationName: z.string().optional(),
+      organizationEmail: z.string().optional(),
+      organizationPhone: z.string().optional(),
     })
   ),
   channels: z.array(z.enum(['email', 'sms', 'whatsapp'])),
@@ -42,6 +47,12 @@ const reminderDataSchema = z.object({
   message: z.string().min(1),
   scheduleDate: z.date().nullable().optional(),
   scheduleTime: z.string().nullable().optional(),
+  templateType: z.enum([
+    'FEE_ASSIGNMENT',
+    'FRIENDLY_REMINDER',
+    'PAYMENT_DUE_TODAY',
+    'OVERDUE_NOTICE',
+  ]),
 });
 
 const toPrismaChannel = (channel: string): NotificationChannel => {
@@ -57,13 +68,71 @@ const toPrismaChannel = (channel: string): NotificationChannel => {
   }
 };
 
+// Template selector function
+const getEmailTemplate = (templateType: string, props: any) => {
+  switch (templateType) {
+    case 'FRIENDLY_REMINDER':
+      return FriendlyReminderTemplate(props);
+    case 'OVERDUE_NOTICE':
+      return OverdueNoticeTemplate(props);
+    case 'FEE_ASSIGNMENT':
+      // Create fee assignment template or use friendly reminder as fallback
+      return FriendlyReminderTemplate({ ...props, isAssignment: true });
+    case 'PAYMENT_DUE_TODAY':
+      // Create payment due today template or use friendly reminder as fallback
+      return FriendlyReminderTemplate({ ...props, isUrgent: true });
+    default:
+      return FriendlyReminderTemplate(props);
+  }
+};
+
+// Enhanced email sending with proper template support
+const sendEmail = async (
+  recipientEmail: string,
+  subject: string,
+  templateType: string,
+  templateProps: EmailFeeTemplateProps
+) => {
+  const resend = new Resend(process.env.RESEND_API_KEY!);
+
+  const htmlContent = getEmailTemplate(templateType, templateProps);
+
+  const resendResponse = await resend.emails.send({
+    from: 'no-reply@shiksha.cloud',
+    to: recipientEmail,
+    subject: subject,
+    html: htmlContent,
+  });
+
+  console.log('Email sent:', {
+    to: recipientEmail,
+    subject,
+    templateType,
+    responseId: resendResponse.data?.id,
+  });
+
+  return resendResponse;
+};
+
+const sendSMS = async (recipientPhone: string, message: string) => {
+  // Implement SMS sending logic
+  console.log('Sending SMS to:', recipientPhone, message);
+  // Add your SMS provider integration here
+  return { success: true };
+};
+
+const sendWhatsApp = async (recipientPhone: string, message: string) => {
+  // Implement WhatsApp sending logic
+  console.log('Sending WhatsApp to:', recipientPhone, message);
+  // Add your WhatsApp provider integration here
+  return { success: true };
+};
+
 export async function sendFeeReminders(
   data: SendReminderData
 ): Promise<ReminderResult> {
   const organizationId = await getOrganizationId();
-
   const user = await getCurrentUser();
-
   const createdBy = `${user.firstName ?? ''} ${user.lastName ?? ''}`.trim();
 
   try {
@@ -75,45 +144,18 @@ export async function sendFeeReminders(
         organizationId,
         createdBy
       );
-
       return scheduleResult;
     }
 
-    return await executeReminders(validated, organizationId);
+    return await executeReminders(validated, organizationId, createdBy);
   } catch (error) {
     console.error('Failed to send reminders:', error);
-
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error',
     };
   }
 }
-
-const sendEmail = async (
-  recipientEmail: string,
-  subject: string,
-  message: string
-) => {
-  const resend = new Resend(process.env.RESEND_API_KEY);
-  const resendResponse = await resend.emails.send({
-    from: 'no-reply@shiksha.cloud',
-    to: recipientEmail,
-    subject: subject,
-    react: message,
-  });
-  console.log('Notifications sent:', { resendResponse });
-};
-
-const sendSMS = async (recipientPhone: string, message: string) => {
-  // Implement SMS sending
-  console.log('Sending SMS to:', recipientPhone, message);
-};
-
-const sendWhatsApp = async (recipientPhone: string, message: string) => {
-  // Implement WhatsApp sending
-  console.log('Sending WhatsApp to:', recipientPhone, message);
-};
 
 async function scheduleReminder(
   data: SendReminderData,
@@ -128,16 +170,14 @@ async function scheduleReminder(
       };
     }
 
-    const dateOnly = data.scheduleDate?.toISOString().split('T')[0]; // "YYYY-MM-DD"
-    const timeOnly = data.scheduleTime ?? '00:00';
-
+    const dateOnly = data.scheduleDate.toISOString().split('T')[0];
+    const timeOnly = data.scheduleTime;
     const isoString = `${dateOnly}T${timeOnly}:00+05:30`;
     const scheduledDateTime = new Date(isoString);
 
     const currentTime = new Date();
-
-    // Add minimum buffer (e.g., 2 minutes)
     const minFutureTime = new Date(currentTime.getTime() + 2 * 60 * 1000);
+
     if (scheduledDateTime <= minFutureTime) {
       return {
         success: false,
@@ -145,7 +185,6 @@ async function scheduleReminder(
       };
     }
 
-    // Create a scheduled job record
     const scheduledJob = await prisma.scheduledJob.create({
       data: {
         organizationId,
@@ -187,58 +226,124 @@ async function scheduleReminder(
 
 export async function executeReminders(
   validated: SendReminderData,
-  organizationId: string
+  organizationId: string,
+  createdBy?: string
 ) {
   let totalSent = 0;
   let totalFailed = 0;
+  const errors: string[] = [];
 
-  // Step 2: Loop through recipients and send reminders
   for (const recipient of validated.recipients) {
     for (const channel of validated.channels) {
       const prismaChannel = toPrismaChannel(channel);
-      const cost = calculateNotificationCost(prismaChannel, 1); // 1 unit per recipient per channel
+      const cost = calculateNotificationCost(prismaChannel, 1);
 
-      const personalizedMessage = validated.message
-        .replace('{STUDENT_NAME}', recipient.studentName)
-        .replace(
-          '{ORGANIZATION_NAME}',
-          recipient.organizationName || 'School Administration'
-        )
-        .replace(
-          '{AMOUNT}',
-          recipient.amountDue.toLocaleString('en-IN', {
+      try {
+        // Prepare template props for email
+        const templateProps = {
+          PARENT_NAME: recipient.parentName,
+          STUDENT_NAME: recipient.studentName,
+          GRADE: recipient.grade,
+          SECTION: recipient.section,
+          AMOUNT: recipient.amountDue.toLocaleString('en-IN', {
             style: 'currency',
             currency: 'INR',
             maximumFractionDigits: 0,
-          })
-        );
+          }),
+          DUE_DATE: recipient.dueDate.toLocaleDateString('en-IN'),
+          ORGANIZATION_NAME:
+            recipient.organizationName || 'School Administration',
+          ORGANIZATION_CONTACT_EMAIL:
+            recipient.organizationEmail || 'support@shiksha.cloud',
+          ORGANIZATION_CONTACT_PHONE:
+            recipient.organizationPhone || 'Shiksha-Cloud : 8459324821',
+          ORGANIZATION_CONTACT_INFO: [
+            recipient.organizationName,
+            recipient.organizationEmail &&
+              `Email: ${recipient.organizationEmail}`,
+            recipient.organizationPhone &&
+              `Phone: ${recipient.organizationPhone}`,
+          ]
+            .filter(Boolean)
+            .join('\n'),
+          PORTAL_LINK: 'https://www.shiksha.cloud/dashboard/',
+          // REMOVE THIS: message: validated.message,
+        };
 
-      // Call external APIs here based on the channel
+        // Personalize subject
+        const personalizedSubject = validated.subject
+          .replace(/{STUDENT_NAME}/g, recipient.studentName)
+          .replace(/{PARENT_NAME}/g, recipient.parentName)
+          .replace(/{GRADE}/g, recipient.grade)
+          .replace(/{SECTION}/g, recipient.section)
+          .replace(/{DUE_DATE}/g, recipient.dueDate.toLocaleDateString('en-IN'))
+          .replace(
+            /{AMOUNT}/g,
+            recipient.amountDue.toLocaleString('en-IN', {
+              style: 'currency',
+              currency: 'INR',
+              maximumFractionDigits: 0,
+            })
+          );
 
-      let status: 'SENT' | 'FAILED' = 'SENT';
-      try {
+        // Personalize message for SMS/WhatsApp
+        const personalizedMessage = validated.message
+          .replace(/{PARENT_NAME}/g, recipient.parentName)
+          .replace(/{STUDENT_NAME}/g, recipient.studentName)
+          .replace(/{GRADE}/g, recipient.grade)
+          .replace(/{SECTION}/g, recipient.section)
+          .replace(/{DUE_DATE}/g, recipient.dueDate.toLocaleDateString('en-IN'))
+          .replace(
+            /{AMOUNT}/g,
+            recipient.amountDue.toLocaleString('en-IN', {
+              style: 'currency',
+              currency: 'INR',
+              maximumFractionDigits: 0,
+            })
+          )
+          .replace(/{PORTAL_LINK}/g, 'https://www.shiksha.cloud/dashboard/')
+          .replace(
+            /{ORGANIZATION_NAME}/g,
+            recipient.organizationName || 'School Administration'
+          )
+          .replace(
+            /{ORGANIZATION_CONTACT_EMAIL}/g,
+            recipient.organizationEmail || 'support@shiksha.cloud'
+          )
+          .replace(
+            /{ORGANIZATION_CONTACT_PHONE}/g,
+            recipient.organizationPhone || 'Shiksha-Cloud : 8459324821'
+          );
+
+        // Send via appropriate channel
         if (channel === 'email') {
           await sendEmail(
             recipient.parentEmail,
-            // 'vaishnaviraykar768@gmail.com',
-            validated.subject,
-            personalizedMessage
+            personalizedSubject,
+            validated.templateType,
+            templateProps
           );
         } else if (channel === 'sms') {
           await sendSMS(recipient.parentPhone, personalizedMessage);
         } else if (channel === 'whatsapp') {
-          await sendWhatsApp(recipient.parentPhone, personalizedMessage);
+          await sendWhatsApp(
+            recipient.parentWhatsAppNumber ||
+              recipient.studentWhatsappNumber ||
+              '',
+            personalizedMessage
+          );
         }
 
+        // Log successful notification
         await prisma.notificationLog.create({
           data: {
-            organizationId, // Pass this into recipient if needed
-            userId: recipient.parentUserId ?? null, // You can add parent.userId if you track it
+            organizationId,
+            userId: recipient.parentUserId ?? null,
             studentId: recipient.studentId,
             parentId: recipient.parentId,
             channel: prismaChannel,
             notificationType: 'FEE_REMINDER',
-            status,
+            status: 'SENT',
             units: 1,
             cost: cost,
             sentAt: new Date(),
@@ -251,8 +356,29 @@ export async function executeReminders(
           `❌ Failed to send ${channel} to ${recipient.parentName}:`,
           error
         );
-        status = 'FAILED';
+
+        // Log failed notification
+        await prisma.notificationLog.create({
+          data: {
+            organizationId,
+            userId: recipient.parentUserId ?? null,
+            studentId: recipient.studentId,
+            parentId: recipient.parentId,
+            channel: prismaChannel,
+            notificationType: 'FEE_REMINDER',
+            status: 'FAILED',
+            errorMessage:
+              error instanceof Error ? error.message : 'Unknown error',
+            units: 1,
+            cost: cost,
+            sentAt: new Date(),
+          },
+        });
+
         totalFailed++;
+        errors.push(
+          `Failed to send ${channel} to ${recipient.parentName}: ${error instanceof Error ? error.message : 'Unknown error'}`
+        );
       }
     }
   }
@@ -260,6 +386,13 @@ export async function executeReminders(
   return {
     success: totalFailed === 0,
     sentCount: totalSent,
-    error: totalFailed ? `Failed to send ${totalFailed} reminders` : undefined,
+    error:
+      totalFailed > 0
+        ? `Failed to send ${totalFailed} reminders. ${errors.join('; ')}`
+        : undefined,
+    message:
+      totalFailed === 0
+        ? `Successfully sent ${totalSent} reminders`
+        : undefined,
   };
 }

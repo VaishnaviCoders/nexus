@@ -82,10 +82,10 @@ const AdminDashboard = async () => {
 
       <AdminDashboardCards />
 
-      <div className="grid gap-4  sm:gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <div className="grid gap-4 sm:gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 ">
         {/* Left Column - Charts */}
-        <div className="md:col-span-2 lg:col-span-2 xl:col-span-3 space-y-4 sm:space-y-6">
-          <div className="grid gap-4 sm:gap-6 grid-cols-1 my-4">
+        <div className="md:col-span-2 lg:col-span-2 xl:col-span-3 space-y-4 sm:space-y-6 ">
+          <div className="grid gap-4 sm:gap-6 grid-cols-1">
             <Suspense fallback={<ActivitySkeleton />}>
               <MonthlyFeeCollection data={data} />
             </Suspense>
@@ -96,7 +96,7 @@ const AdminDashboard = async () => {
         </div>
 
         {/* Right Column - Sidebar Info */}
-        <div className="space-y-4 sm:space-y-6">
+        <div className="space-y-4 sm:space-y-6 bg-yellow-500">
           <Suspense fallback={<EventsSkeleton />}>
             <UpcomingEvents />
           </Suspense>

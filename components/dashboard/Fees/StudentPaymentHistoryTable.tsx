@@ -486,7 +486,7 @@ function FilterControls({
         const parentEmail = primaryParent?.email ?? record.student.email;
         const parentPhone =
           primaryParent?.phoneNumber ?? record.student.phoneNumber;
-        const parentWhatsApp =
+        const parentWhatsAppNumber =
           primaryParent?.whatsAppNumber ?? record.student.phoneNumber;
 
         const status = record.fee.status as 'UNPAID' | 'OVERDUE';
@@ -495,6 +495,8 @@ function FilterControls({
           id: record.fee.id,
           studentId: record.student.id,
           studentName: `${record.student.firstName} ${record.student.lastName}`,
+          studentPhoneNumber: record.student.phoneNumber,
+          studentWhatsappNumber: record.student.phoneNumber,
           grade: record.grade.grade,
           section: record.section.name,
           parentName,
@@ -502,10 +504,13 @@ function FilterControls({
           parentPhone,
           parentId,
           parentUserId,
-          parentWhatsApp,
+          parentWhatsAppNumber,
           status,
           amountDue: record.fee.pendingAmount ?? record.fee.totalFee,
           dueDate: record.fee.dueDate,
+          organizationName: record.fee.organizationName,
+          organizationEmail: record.fee.organizationEmail,
+          organizationPhone: record.fee.organizationPhone,
         };
       });
   }, [feeRecords]);
@@ -624,7 +629,7 @@ function FilterControls({
               <Send /> Send Reminders
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto mx-auto">
             <DialogHeader>
               <DialogTitle>Send Fee Reminders</DialogTitle>
               <DialogDescription>

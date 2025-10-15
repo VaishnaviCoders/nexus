@@ -26,9 +26,11 @@ import { DashboardCardSkeleton } from '@/lib/skeletons/DashboardCardSkeleton';
 import { getFeeCategoryDistribution } from '@/lib/data/fee/get-fee-category-distribution';
 
 export default async function AdminFeeDashboard() {
-  const feeCategories = await getFeeCategoryDistribution();
-  const data = await getMonthlyFeeData(2025);
-  const feeRecords = await getFeeRecords();
+  const [feeCategories, data, feeRecords] = await Promise.all([
+    getFeeCategoryDistribution(),
+    getMonthlyFeeData(2025),
+    getFeeRecords(),
+  ]);
 
   return (
     <div className="space-y-8 px-2">
@@ -53,6 +55,7 @@ export default async function AdminFeeDashboard() {
           <Link
             href="/dashboard/fees/admin/assign"
             className="w-full sm:w-auto"
+            prefetch
           >
             <Button className="w-full sm:w-auto">
               <PlusIcon className="mr-2 h-4 w-4" />

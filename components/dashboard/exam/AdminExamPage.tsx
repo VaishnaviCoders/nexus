@@ -183,7 +183,10 @@ export function AdminExamsPage({
             Export CSV
           </Button>
           <Button asChild>
-            <Link href={'/dashboard/exams/create'}> Create</Link>
+            <Link href={'/dashboard/exams/create'} prefetch>
+              {' '}
+              Create
+            </Link>
           </Button>
         </div>
       </Card>

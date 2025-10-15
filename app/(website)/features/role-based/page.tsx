@@ -543,11 +543,11 @@ export default function FeaturesOverview() {
             </p>
 
             <div className="flex flex-wrap justify-center gap-4">
-              <Badge className="bg-green-100 text-green-700 border-green-200 border px-4 py-2">
+              <Badge className="bg-green-100 text-green-700 hover:bg-green-200 border-green-200 border px-4 py-2">
                 <CheckCircle className="w-4 h-4 mr-2" />
                 {completedFeatures} Completed
               </Badge>
-              <Badge className="bg-yellow-100 text-yellow-700 border-yellow-200 border px-4 py-2">
+              <Badge className="bg-yellow-100 text-yellow-700 hover:bg-yellow-200 border-yellow-200 border px-4 py-2">
                 <Clock className="w-4 h-4 mr-2" />
                 {Object.values(featuresData).reduce(
                   (total, role) => total + role.pending.length,
@@ -555,7 +555,7 @@ export default function FeaturesOverview() {
                 )}{' '}
                 In Progress
               </Badge>
-              <Badge className="bg-blue-100 text-blue-700 border-blue-200 border px-4 py-2">
+              <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-200 border-blue-200 border px-4 py-2">
                 <Calendar className="w-4 h-4 mr-2" />
                 {Object.values(featuresData).reduce(
                   (total, role) => total + role.planned.length,

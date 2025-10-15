@@ -332,7 +332,7 @@ export function ComplaintManagementDashboard({
           </div>
           <div className="grid gap-6 lg:grid-cols-2">
             {/* Recent Critical Complaints */}
-            <Card className=" backdrop-blur-sm">
+            <Card className="backdrop-blur-sm">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <AlertTriangle className="h-5 w-5 text-red-600" />
@@ -531,10 +531,10 @@ export function ComplaintManagementDashboard({
                   </CardDescription>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Button variant="outline" size="sm">
+                  {/* <Button variant="outline" size="sm">
                     <Download className="h-4 w-4 mr-2" />
                     Export
-                  </Button>
+                  </Button> */}
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="outline" size="sm">

@@ -275,6 +275,7 @@ const SubMenu = memo(
                   )}
                 >
                   <Link
+                    prefetch
                     href={submenu.href}
                     onClick={handleSubmenuClick}
                     className="flex items-center gap-2 w-full"

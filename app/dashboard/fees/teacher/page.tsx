@@ -25,21 +25,40 @@ export default async function TeacherFeesManagementDashboard() {
 
   const teacherId = currentUser.teacherId;
   const feeRecords = await getAssignedStudentsFees(teacherId);
+
+  console.log('data', feeRecords);
+
   return (
-    <main className="flex flex-1 flex-col gap-4">
-      <Card className="py-4 px-2 flex items-center justify-between">
-        <div>
-          <CardTitle className="text-lg">Teacher Dashboard</CardTitle>
-          <CardDescription className="text-sm">
-            Dashboard for admin to manage the system
-          </CardDescription>
+    <main className="px-2 space-y-3">
+      <Card className="p-4 md:p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 md:gap-6 bg-gradient-to-r from-card via-card to-primary/5">
+        <div className="w-full md:w-auto">
+          <CardTitle>Teacher Fees Dashboard</CardTitle>
+          <CardDescription>Manage your assign student fees</CardDescription>
         </div>
-        <Link href="/dashboard/fees/admin/assign" className="w-full sm:w-auto">
-          <Button className="w-full sm:w-auto">
-            <PlusIcon className="mr-2 h-4 w-4" />
-            <span className="sm:inline">Assign Fees</span>
-          </Button>
-        </Link>
+
+        <div className="flex w-full md:w-auto flex-wrap items-stretch sm:items-center gap-2 sm:gap-3">
+          <div className="w-full sm:w-auto">
+            <Link
+              href="/dashboard/fees/admin/assign"
+              className="w-full sm:w-auto"
+            >
+              <Button size="sm" className="w-full sm:w-auto">
+                <PlusIcon className="mr-2 h-4 w-4" />
+                Assign Fees
+              </Button>
+            </Link>
+          </div>
+          <Link
+            href="/dashboard/attendance/mark"
+            passHref
+            className="w-full sm:w-auto"
+          >
+            <Button size="sm" className="w-full sm:w-auto">
+              {/* <Users className="w-4 h-4 mr-2" /> */}
+              Take Attendance
+            </Button>
+          </Link>
+        </div>
       </Card>
 
       <Suspense fallback={<FeeStatsCardSkeleton />}>

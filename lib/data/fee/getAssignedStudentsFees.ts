@@ -33,6 +33,14 @@ export async function getAssignedStudentsFees(
       },
     },
     include: {
+      organization: {
+        select: {
+          organizationLogo: true,
+          contactEmail: true,
+          contactPhone: true,
+          name: true,
+        },
+      },
       student: {
         select: {
           id: true,
@@ -120,6 +128,9 @@ export async function getAssignedStudentsFees(
       studentId: fee.studentId,
       feeCategoryId: fee.feeCategoryId,
       organizationId: fee.organizationId,
+      organizationName: fee.organization.name ?? undefined,
+      organizationEmail: fee.organization.contactEmail ?? undefined,
+      organizationPhone: fee.organization.contactPhone ?? undefined,
       createdAt: fee.createdAt,
       updatedAt: fee.updatedAt,
     },

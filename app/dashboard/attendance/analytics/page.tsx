@@ -1,5 +1,10 @@
-import { Card, CardContent } from '@/components/ui/card';
-import { CheckCircle, Clock, BarChart3 } from 'lucide-react';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardTitle,
+} from '@/components/ui/card';
+import { CheckCircle, Clock, BarChart3, Users, Calendar } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 
 import { getAttendanceCompletionStats } from '@/lib/data/attendance/get-attendance-completion-stats';
@@ -44,31 +49,37 @@ export default async function AttendanceAnalyticsPage() {
   }));
 
   return (
-    <div className="space-y-6 px-2">
-      <div className="flex flex-col gap-4 sm:flex-row px-4 sm:items-center sm:justify-between">
-        <div className="space-y-1">
-          <h1 className="text-lg font-bold tracking-tight sm:text-2xl">
-            Section Attendance
-          </h1>
-          <p className="text-sm text-muted-foreground sm:text-base">
-            Today&apos;s attendance overview
-          </p>
+    <div className="space-y-3 px-2">
+      <Card className="p-4 md:p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 md:gap-6 bg-gradient-to-r from-card via-card to-primary/5">
+        <div className="w-full md:w-auto">
+          <CardTitle> Section Attendance </CardTitle>
+          <CardDescription>Today&apos;s attendance overview</CardDescription>
         </div>
-
-        {/* Responsive Button Container */}
-        <div className="flex sm:flex-row sm:items-center space-x-2">
-          <Link href="/dashboard/attendance" passHref>
-            <Button variant="outline" size="sm">
-              View History
-            </Button>
-          </Link>
-          <Link href="/dashboard/attendance/mark" passHref>
-            <Button size="sm" variant={'default'}>
+        <div className="flex w-full md:w-auto flex-wrap items-stretch sm:items-center gap-2 sm:gap-3">
+          <div className="w-full sm:w-auto">
+            <Link
+              href="/dashboard/attendance"
+              passHref
+              className="w-full sm:w-auto"
+            >
+              <Button variant="outline" size="sm" className="w-full sm:w-auto">
+                <Calendar className="w-4 h-4 mr-2" />
+                View History
+              </Button>
+            </Link>
+          </div>
+          <Link
+            href="/dashboard/attendance/mark"
+            passHref
+            className="w-full sm:w-auto"
+          >
+            <Button size="sm" className="w-full sm:w-auto">
+              <Users className="w-4 h-4 mr-2" />
               Take Attendance
             </Button>
           </Link>
         </div>
-      </div>
+      </Card>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>

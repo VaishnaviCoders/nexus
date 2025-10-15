@@ -281,7 +281,7 @@ export type FeeWhereInput = {
   academicYearId?: Prisma.StringFilter<"Fee"> | string
   student?: Prisma.XOR<Prisma.StudentScalarRelationFilter, Prisma.StudentWhereInput>
   feeCategory?: Prisma.XOR<Prisma.FeeCategoryScalarRelationFilter, Prisma.FeeCategoryWhereInput>
-  Organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
+  organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
   payments?: Prisma.FeePaymentListRelationFilter
   academicYear?: Prisma.XOR<Prisma.AcademicYearScalarRelationFilter, Prisma.AcademicYearWhereInput>
 }
@@ -301,7 +301,7 @@ export type FeeOrderByWithRelationInput = {
   academicYearId?: Prisma.SortOrder
   student?: Prisma.StudentOrderByWithRelationInput
   feeCategory?: Prisma.FeeCategoryOrderByWithRelationInput
-  Organization?: Prisma.OrganizationOrderByWithRelationInput
+  organization?: Prisma.OrganizationOrderByWithRelationInput
   payments?: Prisma.FeePaymentOrderByRelationAggregateInput
   academicYear?: Prisma.AcademicYearOrderByWithRelationInput
   _relevance?: Prisma.FeeOrderByRelevanceInput
@@ -325,7 +325,7 @@ export type FeeWhereUniqueInput = Prisma.AtLeast<{
   academicYearId?: Prisma.StringFilter<"Fee"> | string
   student?: Prisma.XOR<Prisma.StudentScalarRelationFilter, Prisma.StudentWhereInput>
   feeCategory?: Prisma.XOR<Prisma.FeeCategoryScalarRelationFilter, Prisma.FeeCategoryWhereInput>
-  Organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
+  organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
   payments?: Prisma.FeePaymentListRelationFilter
   academicYear?: Prisma.XOR<Prisma.AcademicYearScalarRelationFilter, Prisma.AcademicYearWhereInput>
 }, "id">
@@ -379,7 +379,7 @@ export type FeeCreateInput = {
   updatedAt?: Date | string
   student: Prisma.StudentCreateNestedOneWithoutFeeInput
   feeCategory: Prisma.FeeCategoryCreateNestedOneWithoutFeesInput
-  Organization: Prisma.OrganizationCreateNestedOneWithoutFeeInput
+  organization: Prisma.OrganizationCreateNestedOneWithoutFeeInput
   payments?: Prisma.FeePaymentCreateNestedManyWithoutFeeInput
   academicYear: Prisma.AcademicYearCreateNestedOneWithoutFeesInput
 }
@@ -411,7 +411,7 @@ export type FeeUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   student?: Prisma.StudentUpdateOneRequiredWithoutFeeNestedInput
   feeCategory?: Prisma.FeeCategoryUpdateOneRequiredWithoutFeesNestedInput
-  Organization?: Prisma.OrganizationUpdateOneRequiredWithoutFeeNestedInput
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutFeeNestedInput
   payments?: Prisma.FeePaymentUpdateManyWithoutFeeNestedInput
   academicYear?: Prisma.AcademicYearUpdateOneRequiredWithoutFeesNestedInput
 }
@@ -764,7 +764,7 @@ export type FeeCreateWithoutAcademicYearInput = {
   updatedAt?: Date | string
   student: Prisma.StudentCreateNestedOneWithoutFeeInput
   feeCategory: Prisma.FeeCategoryCreateNestedOneWithoutFeesInput
-  Organization: Prisma.OrganizationCreateNestedOneWithoutFeeInput
+  organization: Prisma.OrganizationCreateNestedOneWithoutFeeInput
   payments?: Prisma.FeePaymentCreateNestedManyWithoutFeeInput
 }
 
@@ -893,7 +893,7 @@ export type FeeCreateWithoutStudentInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   feeCategory: Prisma.FeeCategoryCreateNestedOneWithoutFeesInput
-  Organization: Prisma.OrganizationCreateNestedOneWithoutFeeInput
+  organization: Prisma.OrganizationCreateNestedOneWithoutFeeInput
   payments?: Prisma.FeePaymentCreateNestedManyWithoutFeeInput
   academicYear: Prisma.AcademicYearCreateNestedOneWithoutFeesInput
 }
@@ -950,7 +950,7 @@ export type FeeCreateWithoutPaymentsInput = {
   updatedAt?: Date | string
   student: Prisma.StudentCreateNestedOneWithoutFeeInput
   feeCategory: Prisma.FeeCategoryCreateNestedOneWithoutFeesInput
-  Organization: Prisma.OrganizationCreateNestedOneWithoutFeeInput
+  organization: Prisma.OrganizationCreateNestedOneWithoutFeeInput
   academicYear: Prisma.AcademicYearCreateNestedOneWithoutFeesInput
 }
 
@@ -996,7 +996,7 @@ export type FeeUpdateWithoutPaymentsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   student?: Prisma.StudentUpdateOneRequiredWithoutFeeNestedInput
   feeCategory?: Prisma.FeeCategoryUpdateOneRequiredWithoutFeesNestedInput
-  Organization?: Prisma.OrganizationUpdateOneRequiredWithoutFeeNestedInput
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutFeeNestedInput
   academicYear?: Prisma.AcademicYearUpdateOneRequiredWithoutFeesNestedInput
 }
 
@@ -1025,7 +1025,7 @@ export type FeeCreateWithoutFeeCategoryInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   student: Prisma.StudentCreateNestedOneWithoutFeeInput
-  Organization: Prisma.OrganizationCreateNestedOneWithoutFeeInput
+  organization: Prisma.OrganizationCreateNestedOneWithoutFeeInput
   payments?: Prisma.FeePaymentCreateNestedManyWithoutFeeInput
   academicYear: Prisma.AcademicYearCreateNestedOneWithoutFeesInput
 }
@@ -1096,7 +1096,7 @@ export type FeeUpdateWithoutAcademicYearInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   student?: Prisma.StudentUpdateOneRequiredWithoutFeeNestedInput
   feeCategory?: Prisma.FeeCategoryUpdateOneRequiredWithoutFeesNestedInput
-  Organization?: Prisma.OrganizationUpdateOneRequiredWithoutFeeNestedInput
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutFeeNestedInput
   payments?: Prisma.FeePaymentUpdateManyWithoutFeeNestedInput
 }
 
@@ -1211,7 +1211,7 @@ export type FeeUpdateWithoutStudentInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   feeCategory?: Prisma.FeeCategoryUpdateOneRequiredWithoutFeesNestedInput
-  Organization?: Prisma.OrganizationUpdateOneRequiredWithoutFeeNestedInput
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutFeeNestedInput
   payments?: Prisma.FeePaymentUpdateManyWithoutFeeNestedInput
   academicYear?: Prisma.AcademicYearUpdateOneRequiredWithoutFeesNestedInput
 }
@@ -1269,7 +1269,7 @@ export type FeeUpdateWithoutFeeCategoryInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   student?: Prisma.StudentUpdateOneRequiredWithoutFeeNestedInput
-  Organization?: Prisma.OrganizationUpdateOneRequiredWithoutFeeNestedInput
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutFeeNestedInput
   payments?: Prisma.FeePaymentUpdateManyWithoutFeeNestedInput
   academicYear?: Prisma.AcademicYearUpdateOneRequiredWithoutFeesNestedInput
 }
@@ -1349,7 +1349,7 @@ export type FeeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = ru
   academicYearId?: boolean
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
   feeCategory?: boolean | Prisma.FeeCategoryDefaultArgs<ExtArgs>
-  Organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   payments?: boolean | Prisma.Fee$paymentsArgs<ExtArgs>
   academicYear?: boolean | Prisma.AcademicYearDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.FeeCountOutputTypeDefaultArgs<ExtArgs>
@@ -1370,7 +1370,7 @@ export type FeeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extension
   academicYearId?: boolean
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
   feeCategory?: boolean | Prisma.FeeCategoryDefaultArgs<ExtArgs>
-  Organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   academicYear?: boolean | Prisma.AcademicYearDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["fee"]>
 
@@ -1389,7 +1389,7 @@ export type FeeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extension
   academicYearId?: boolean
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
   feeCategory?: boolean | Prisma.FeeCategoryDefaultArgs<ExtArgs>
-  Organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   academicYear?: boolean | Prisma.AcademicYearDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["fee"]>
 
@@ -1412,7 +1412,7 @@ export type FeeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
 export type FeeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
   feeCategory?: boolean | Prisma.FeeCategoryDefaultArgs<ExtArgs>
-  Organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   payments?: boolean | Prisma.Fee$paymentsArgs<ExtArgs>
   academicYear?: boolean | Prisma.AcademicYearDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.FeeCountOutputTypeDefaultArgs<ExtArgs>
@@ -1420,13 +1420,13 @@ export type FeeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
 export type FeeIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
   feeCategory?: boolean | Prisma.FeeCategoryDefaultArgs<ExtArgs>
-  Organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   academicYear?: boolean | Prisma.AcademicYearDefaultArgs<ExtArgs>
 }
 export type FeeIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
   feeCategory?: boolean | Prisma.FeeCategoryDefaultArgs<ExtArgs>
-  Organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   academicYear?: boolean | Prisma.AcademicYearDefaultArgs<ExtArgs>
 }
 
@@ -1435,7 +1435,7 @@ export type $FeePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   objects: {
     student: Prisma.$StudentPayload<ExtArgs>
     feeCategory: Prisma.$FeeCategoryPayload<ExtArgs>
-    Organization: Prisma.$OrganizationPayload<ExtArgs>
+    organization: Prisma.$OrganizationPayload<ExtArgs>
     payments: Prisma.$FeePaymentPayload<ExtArgs>[]
     academicYear: Prisma.$AcademicYearPayload<ExtArgs>
   }
@@ -1848,7 +1848,7 @@ export interface Prisma__FeeClient<T, Null = never, ExtArgs extends runtime.Type
   readonly [Symbol.toStringTag]: "PrismaPromise"
   student<T extends Prisma.StudentDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StudentDefaultArgs<ExtArgs>>): Prisma.Prisma__StudentClient<runtime.Types.Result.GetResult<Prisma.$StudentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   feeCategory<T extends Prisma.FeeCategoryDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FeeCategoryDefaultArgs<ExtArgs>>): Prisma.Prisma__FeeCategoryClient<runtime.Types.Result.GetResult<Prisma.$FeeCategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  Organization<T extends Prisma.OrganizationDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrganizationDefaultArgs<ExtArgs>>): Prisma.Prisma__OrganizationClient<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  organization<T extends Prisma.OrganizationDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrganizationDefaultArgs<ExtArgs>>): Prisma.Prisma__OrganizationClient<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   payments<T extends Prisma.Fee$paymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Fee$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FeePaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   academicYear<T extends Prisma.AcademicYearDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AcademicYearDefaultArgs<ExtArgs>>): Prisma.Prisma__AcademicYearClient<runtime.Types.Result.GetResult<Prisma.$AcademicYearPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**

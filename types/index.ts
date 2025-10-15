@@ -22,6 +22,9 @@ export interface FeeRecord {
     studentId: string;
     feeCategoryId: string;
     organizationId: string;
+    organizationName?: string;
+    organizationEmail?: string;
+    organizationPhone?: string;
     createdAt: Date;
     updatedAt: Date;
   };

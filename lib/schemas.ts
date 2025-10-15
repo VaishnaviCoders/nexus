@@ -419,7 +419,12 @@ export const reminderFormSchema = z.object({
     .array(z.enum(['email', 'sms', 'whatsapp']))
     .min(1, 'Select at least one channel'),
   templateId: z.string().min(1, 'Please select a template'),
-
+  templateType: z.enum([
+    'FEE_ASSIGNMENT',
+    'FRIENDLY_REMINDER',
+    'PAYMENT_DUE_TODAY',
+    'OVERDUE_NOTICE',
+  ]),
   scheduleDate: z.date().optional(),
   scheduleTime: z.string().optional(),
   sendNow: z.boolean().default(true),

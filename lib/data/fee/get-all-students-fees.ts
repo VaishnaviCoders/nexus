@@ -7,6 +7,14 @@ export async function getFeeRecords(count: number = 50): Promise<FeeRecord[]> {
     const fees = await prisma.fee.findMany({
       take: count,
       include: {
+        organization: {
+          select: {
+            organizationLogo: true,
+            contactEmail: true,
+            contactPhone: true,
+            name: true,
+          },
+        },
         student: {
           select: {
             id: true,
@@ -95,6 +103,9 @@ export async function getFeeRecords(count: number = 50): Promise<FeeRecord[]> {
         studentId: fee.studentId,
         feeCategoryId: fee.feeCategoryId,
         organizationId: fee.organizationId,
+        organizationName: fee.organization.name ?? undefined,
+        organizationEmail: fee.organization.contactEmail ?? undefined,
+        organizationPhone: fee.organization.contactPhone ?? undefined,
         createdAt: fee.createdAt,
         updatedAt: fee.updatedAt,
       },

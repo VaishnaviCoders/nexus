@@ -96,18 +96,18 @@ async function TodayScheduleContent() {
           Today's Schedule (Mock)
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4  overflow-y-auto">
+      <CardContent className="space-y-4 overflow-y-auto">
         {schedule.length === 0 ? (
           <div className="text-center py-8 text-muted-foreground">
             <Clock className="w-12 h-12 mx-auto mb-4 opacity-50" />
             <p className="text-sm">No classes scheduled for today</p>
           </div>
         ) : (
-          <ScrollArea className="h-80 space-y-4 ">
+          <ScrollArea className="h-80 space-y-4">
             {schedule.map((class_item) => (
               <div
                 key={class_item.id}
-                className={`p-4 rounded-lg border transition-all duration-200 ${
+                className={`p-4 rounded-lg border transition-all duration-200 mb-2  ${
                   class_item.status === 'ONGOING'
                     ? 'bg-blue-50 border-blue-200 dark:bg-blue-950/20 dark:border-blue-800 shadow-md'
                     : 'bg-background/50 hover:bg-background/80'

@@ -12,6 +12,7 @@
 12. Teaching : Teacher Daily Schedule ,
 13. Notification Inbox Change UI
 14. Sidebar UI : Search Option
+15. Fix Dialog box : Fee Reminder, Fee Details
 
 What we giving in Attendance ?
 

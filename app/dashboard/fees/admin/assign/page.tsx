@@ -98,7 +98,7 @@ type PageProps = {
 
 export default async function AssignFees({ searchParams }: PageProps) {
   const orgId = await getOrganizationId();
-
+  console.log('✅ Create page loaded / prefetched');
   const feeCategories = await prisma.feeCategory.findMany({
     where: {
       organizationId: orgId,
