@@ -67,6 +67,18 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+
+  // ✅ Add SEO-friendly redirects + headers
+  async redirects() {
+    return [
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'shiksha.cloud' }], // if no www
+        destination: 'https://www.shiksha.cloud/:path*',
+        permanent: true, // 301 redirect
+      },
+    ];
+  },
 };
 
 // Export with PWA settings

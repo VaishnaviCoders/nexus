@@ -14,7 +14,6 @@ import { PlusIcon } from 'lucide-react';
 import { getAssignedStudentsFees } from '@/lib/data/fee/getAssignedStudentsFees';
 import { getCurrentUserByRole } from '@/lib/auth';
 import { redirect } from 'next/navigation';
-import prisma from '@/lib/db';
 
 export default async function TeacherFeesManagementDashboard() {
   const currentUser = await getCurrentUserByRole();
@@ -25,8 +24,6 @@ export default async function TeacherFeesManagementDashboard() {
 
   const teacherId = currentUser.teacherId;
   const feeRecords = await getAssignedStudentsFees(teacherId);
-
-  console.log('data', feeRecords);
 
   return (
     <main className="px-2 space-y-3">

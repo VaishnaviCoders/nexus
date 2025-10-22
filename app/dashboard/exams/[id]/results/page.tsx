@@ -1,4 +1,5 @@
 import ExamResultsEntry from '@/components/dashboard/exam/ExamResultsEntry';
+import { EmptyState } from '@/components/EmptyState';
 import {
   Card,
   CardDescription,
@@ -7,6 +8,7 @@ import {
 } from '@/components/ui/card';
 import prisma from '@/lib/db';
 import { getOrganizationId } from '@/lib/organization';
+import { CalendarDays, TestTubes, User2 } from 'lucide-react';
 
 export default async function ExamResultPage({
   params,
@@ -26,15 +28,16 @@ export default async function ExamResultPage({
 
   if (!exam) {
     return (
-      <div className="flex items-center justify-center h-[50vh]">
-        <Card className="w-full max-w-md">
-          <CardHeader>
-            <CardTitle>Exam Not Found</CardTitle>
-            <CardDescription>
-              The requested exam could not be found.
-            </CardDescription>
-          </CardHeader>
-        </Card>
+      <div className="flex justify-center items-center min-h-[400px]">
+        <EmptyState
+          title="Exam Not Found"
+          description="We couldn't find an exam matching your request. It may have been deleted or the link is incorrect."
+          icons={[CalendarDays, User2, TestTubes]}
+          action={{
+            label: 'Go Back to Exams',
+            href: '/dashboard/exams',
+          }}
+        />
       </div>
     );
   }

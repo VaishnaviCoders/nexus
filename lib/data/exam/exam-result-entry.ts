@@ -29,7 +29,7 @@ export default async function ExamResultEntry(data: studentExamResultFormData) {
           remarks: result.remarks,
           isPassed: result.isPassed,
           isAbsent: result.isAbsent,
-          isResultsPublished: false,
+          isResultsPublished: true,
         },
         create: {
           studentId: result.studentId,
@@ -40,7 +40,7 @@ export default async function ExamResultEntry(data: studentExamResultFormData) {
           remarks: result.remarks,
           isPassed: result.isPassed,
           isAbsent: result.isAbsent,
-          isResultsPublished: false,
+          isResultsPublished: true,
         },
       })
     );

@@ -34,6 +34,7 @@ export default async function ExamsPage() {
           examSession: true,
           hallTickets: { where: { studentId: currentUser.studentId } },
           examResult: { where: { studentId: currentUser.studentId } },
+          examEnrollment: { where: { studentId: currentUser.studentId } },
         },
         orderBy: { startDate: 'desc' },
       });
@@ -71,6 +72,7 @@ export default async function ExamsPage() {
           examSession: true,
           hallTickets: true,
           examResult: { where: { studentId: { in: childIds } } },
+          examEnrollment: { where: { studentId: { in: childIds } } },
         },
         orderBy: { startDate: 'desc' },
       });
@@ -90,6 +92,7 @@ export default async function ExamsPage() {
           examSession: true,
           hallTickets: true,
           examResult: true,
+          examEnrollment: true,
         },
         orderBy: { startDate: 'desc' },
       });
@@ -108,6 +111,7 @@ export default async function ExamsPage() {
           examSession: true,
           hallTickets: true,
           examResult: true,
+          examEnrollment: true,
         },
         orderBy: { startDate: 'desc' },
       });

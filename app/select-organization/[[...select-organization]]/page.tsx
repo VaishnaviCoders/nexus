@@ -23,6 +23,7 @@ export default async function SelectOrganizationPage() {
       userId,
     });
 
+  console.log(organizationMemberships.data);
   const hasOrganizations = organizationMemberships.data.length > 0;
 
   const title = hasOrganizations

@@ -50,7 +50,9 @@ export const ModelName = {
   HallTicket: 'HallTicket',
   ReportCard: 'ReportCard',
   Leave: 'Leave',
-  LeaveStatusTimeline: 'LeaveStatusTimeline'
+  LeaveStatusTimeline: 'LeaveStatusTimeline',
+  Lead: 'Lead',
+  LeadActivity: 'LeadActivity'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -651,6 +653,55 @@ export const LeaveStatusTimelineScalarFieldEnum = {
 export type LeaveStatusTimelineScalarFieldEnum = (typeof LeaveStatusTimelineScalarFieldEnum)[keyof typeof LeaveStatusTimelineScalarFieldEnum]
 
 
+export const LeadScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  studentName: 'studentName',
+  parentName: 'parentName',
+  phone: 'phone',
+  email: 'email',
+  whatsappNumber: 'whatsappNumber',
+  enquiryForGrade: 'enquiryForGrade',
+  currentSchool: 'currentSchool',
+  address: 'address',
+  city: 'city',
+  source: 'source',
+  status: 'status',
+  priority: 'priority',
+  assignedToId: 'assignedToId',
+  assignedAt: 'assignedAt',
+  nextFollowUpAt: 'nextFollowUpAt',
+  lastContactedAt: 'lastContactedAt',
+  convertedAt: 'convertedAt',
+  convertedToStudentId: 'convertedToStudentId',
+  notes: 'notes',
+  requirements: 'requirements',
+  budgetRange: 'budgetRange',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type LeadScalarFieldEnum = (typeof LeadScalarFieldEnum)[keyof typeof LeadScalarFieldEnum]
+
+
+export const LeadActivityScalarFieldEnum = {
+  id: 'id',
+  leadId: 'leadId',
+  type: 'type',
+  title: 'title',
+  description: 'description',
+  outcome: 'outcome',
+  performedById: 'performedById',
+  performedAt: 'performedAt',
+  followUpDate: 'followUpDate',
+  followUpNote: 'followUpNote',
+  createdAt: 'createdAt'
+} as const
+
+export type LeadActivityScalarFieldEnum = (typeof LeadActivityScalarFieldEnum)[keyof typeof LeadActivityScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -1112,4 +1163,41 @@ export const LeaveStatusTimelineOrderByRelevanceFieldEnum = {
 } as const
 
 export type LeaveStatusTimelineOrderByRelevanceFieldEnum = (typeof LeaveStatusTimelineOrderByRelevanceFieldEnum)[keyof typeof LeaveStatusTimelineOrderByRelevanceFieldEnum]
+
+
+export const LeadOrderByRelevanceFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  studentName: 'studentName',
+  parentName: 'parentName',
+  phone: 'phone',
+  email: 'email',
+  whatsappNumber: 'whatsappNumber',
+  enquiryForGrade: 'enquiryForGrade',
+  currentSchool: 'currentSchool',
+  address: 'address',
+  city: 'city',
+  source: 'source',
+  assignedToId: 'assignedToId',
+  convertedToStudentId: 'convertedToStudentId',
+  notes: 'notes',
+  requirements: 'requirements',
+  budgetRange: 'budgetRange',
+  createdById: 'createdById'
+} as const
+
+export type LeadOrderByRelevanceFieldEnum = (typeof LeadOrderByRelevanceFieldEnum)[keyof typeof LeadOrderByRelevanceFieldEnum]
+
+
+export const LeadActivityOrderByRelevanceFieldEnum = {
+  id: 'id',
+  leadId: 'leadId',
+  title: 'title',
+  description: 'description',
+  outcome: 'outcome',
+  performedById: 'performedById',
+  followUpNote: 'followUpNote'
+} as const
+
+export type LeadActivityOrderByRelevanceFieldEnum = (typeof LeadActivityOrderByRelevanceFieldEnum)[keyof typeof LeadActivityOrderByRelevanceFieldEnum]
 

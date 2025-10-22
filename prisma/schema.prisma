@@ -97,6 +97,7 @@ model Organization {
   organizationType OrganizationType?
 
   users              User[]
+  // members OrganizationMembership[]
   notices            Notice[]
   Student            Student[]
   StudentDocument    StudentDocument[]
@@ -125,6 +126,62 @@ model Organization {
   @@index([organizationSlug])
 }
 
+// model OrganizationMembership {
+//   id             String   @id @default(cuid())
+//   userId         String
+//   organizationId String
+//   role           MembershipRole
+
+//   // Membership status
+//   status         MembershipStatus @default(ACTIVE)
+//   permissions    String[] // Custom permissions
+
+//   // Invitation system (like Clerk)
+//   invitedByEmail String?    // Email of inviter
+//   invitedFromIp  String?
+//   invitationId   String?    @unique // For invitation links
+
+//   // Timestamps
+//   createdAt      DateTime   @default(now())
+//   updatedAt      DateTime   @updatedAt
+//   acceptedAt     DateTime?  // When user accepted invitation
+//   revokedAt      DateTime?  // When membership was revoked
+
+//   // Relations
+//   user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+//   organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+//   // Link to specific profile types
+//   teacher    Teacher?
+//   student    Student?
+//   parent     Parent?
+
+//   @@unique([userId, organizationId])
+//   @@index([organizationId, role])
+//   @@index([userId, status])
+//   @@index([invitationId])
+//   @@map("organization_memberships")
+// }
+
+// // Enhanced role system
+// enum MembershipRole {
+//   OWNER       // Full control, can delete org
+//   ADMIN       // Manage members, settings
+//   TEACHER     // Teaching staff
+//   STUDENT     // Student access
+//   PARENT      // Parent access  
+//   MEMBER      // Basic member
+//   GUEST       // Limited access
+// }
+
+// enum MembershipStatus {
+//   INVITED     // Invitation sent, not accepted
+//   ACTIVE      // Active member
+//   INACTIVE    // Member inactive
+//   REVOKED     // Access revoked
+//   DECLINED    // Invitation declined
+// }
+
 model User {
   id           String  @id @default(cuid())
   firstName    String
@@ -138,6 +195,8 @@ model User {
 
   organization   Organization? @relation(fields: [organizationId], references: [id])
   organizationId String?
+  // / Memberships - user can belong to multiple organizations
+  // memberships OrganizationMembership[]
 
   teacher Teacher?
   student Student?
@@ -197,6 +256,10 @@ model Student {
   updatedAt      DateTime         @updatedAt
   examEnrollment ExamEnrollment[]
 
+  //  // Link through membership
+  // membershipId String @unique
+  // membership   OrganizationMembership @relation(fields: [membershipId], references: [id], onDelete: Cascade)
+
   @@unique([organizationId, rollNumber])
   @@index([email]) // User lookup
   @@index([phoneNumber])
@@ -217,6 +280,9 @@ model Parent {
   whatsAppNumber String
 
   students ParentStudent[] // change to children
+  //  // Link through membership
+  // membershipId String @unique
+  // membership   OrganizationMembership @relation(fields: [membershipId], references: [id], onDelete: Cascade)
 
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
@@ -255,6 +321,9 @@ model Teacher {
   profile            TeacherProfile?
   teachingAssignment TeachingAssignment[]
   section            Section[]
+  // Link through membership instead of direct user
+  // membershipId String @unique
+  // membership   OrganizationMembership @relation(fields: [membershipId], references: [id], onDelete: Cascade)
 
   // salaries           Salary[]
   // model TeacherAttendance {}
@@ -1242,4 +1311,119 @@ model LeaveStatusTimeline {
   changedAt DateTime    @default(now())
 
   @@index([leaveId])
+}
+
+model Lead {
+  id             String @id @default(cuid())
+  organizationId String
+  // organization    Organization  @relation(fields: [organizationId], references: [id])
+  // academicYearId  String?
+  // academicYear    AcademicYear? @relation(fields: [academicYearId], references: [id])
+
+  // Basic Info
+  studentName    String
+  parentName     String?
+  phone          String
+  email          String?
+  whatsappNumber String?
+
+  // Enquiry Details
+  enquiryForGrade String
+  currentSchool   String?
+  address         String?
+  city            String?
+
+  // Lead Management
+  source   String? // "Website", "Walk-in", "Referral", etc.
+  status   LeadStatus   @default(NEW)
+  priority LeadPriority @default(MEDIUM)
+
+  // Assignment
+  assignedToId String?
+  // assignedTo      User?         @relation("LeadAssignedTo", fields: [assignedToId], references: [id])
+  assignedAt   DateTime?
+
+  // Follow-up
+  nextFollowUpAt  DateTime?
+  lastContactedAt DateTime?
+
+  // Conversion
+  convertedAt          DateTime?
+  convertedToStudentId String? // Links to Student.id when admitted
+
+  // Additional Info
+  notes        String?
+  requirements String[] // ["Transportation", "Hostel", "Scholarship"]
+  budgetRange  String? // "50k-1L", "1L-2L", etc.
+
+  // Relations
+  activities LeadActivity[]
+
+  createdById String?
+  // createdBy       User?         @relation("LeadCreatedBy", fields: [createdById], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([organizationId, phone])
+  @@index([organizationId, status])
+  @@index([assignedToId, nextFollowUpAt])
+  @@index([source, createdAt])
+}
+
+model LeadActivity {
+  id     String @id @default(cuid())
+  leadId String
+  lead   Lead   @relation(fields: [leadId], references: [id])
+
+  // Activity Details
+  type        ActivityType
+  title       String // "Called parent", "Sent brochure", "School visit"
+  description String?
+  outcome     String? // "Interested", "Not reachable", "Will visit next week"
+
+  // When & Who
+  performedById String?
+  // performedBy   User?      @relation(fields: [performedById], references: [id])
+  performedAt   DateTime @default(now())
+
+  // Next Action
+  followUpDate DateTime?
+  followUpNote String?
+
+  createdAt DateTime @default(now())
+
+  @@index([leadId, performedAt])
+  @@index([performedById])
+}
+
+// Simple Enums
+enum LeadStatus {
+  NEW
+  CONTACTED
+  INTERESTED
+  VISIT_SCHEDULED
+  VISITED
+  CONVERTED
+  NOT_INTERESTED
+  UNRESPONSIVE
+  INVALID
+}
+
+enum LeadPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum ActivityType {
+  CALL
+  EMAIL
+  SMS
+  WHATSAPP
+  MEETING
+  VISIT
+  FOLLOW_UP
+  DOCUMENT_SENT
+  OTHER
 }

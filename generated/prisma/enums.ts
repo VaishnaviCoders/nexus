@@ -330,3 +330,43 @@ export const LeaveType = {
 } as const
 
 export type LeaveType = (typeof LeaveType)[keyof typeof LeaveType]
+
+
+export const LeadStatus = {
+  NEW: 'NEW',
+  CONTACTED: 'CONTACTED',
+  INTERESTED: 'INTERESTED',
+  VISIT_SCHEDULED: 'VISIT_SCHEDULED',
+  VISITED: 'VISITED',
+  CONVERTED: 'CONVERTED',
+  NOT_INTERESTED: 'NOT_INTERESTED',
+  UNRESPONSIVE: 'UNRESPONSIVE',
+  INVALID: 'INVALID'
+} as const
+
+export type LeadStatus = (typeof LeadStatus)[keyof typeof LeadStatus]
+
+
+export const LeadPriority = {
+  LOW: 'LOW',
+  MEDIUM: 'MEDIUM',
+  HIGH: 'HIGH',
+  URGENT: 'URGENT'
+} as const
+
+export type LeadPriority = (typeof LeadPriority)[keyof typeof LeadPriority]
+
+
+export const ActivityType = {
+  CALL: 'CALL',
+  EMAIL: 'EMAIL',
+  SMS: 'SMS',
+  WHATSAPP: 'WHATSAPP',
+  MEETING: 'MEETING',
+  VISIT: 'VISIT',
+  FOLLOW_UP: 'FOLLOW_UP',
+  DOCUMENT_SENT: 'DOCUMENT_SENT',
+  OTHER: 'OTHER'
+} as const
+
+export type ActivityType = (typeof ActivityType)[keyof typeof ActivityType]

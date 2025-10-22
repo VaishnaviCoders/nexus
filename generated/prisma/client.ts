@@ -200,3 +200,13 @@ export type Leave = Prisma.LeaveModel
  * 
  */
 export type LeaveStatusTimeline = Prisma.LeaveStatusTimelineModel
+/**
+ * Model Lead
+ * 
+ */
+export type Lead = Prisma.LeadModel
+/**
+ * Model LeadActivity
+ * 
+ */
+export type LeadActivity = Prisma.LeadActivityModel

@@ -31,6 +31,8 @@ import { cn } from '@/lib/utils';
 import { BookA, Filter, Paperclip, School } from 'lucide-react';
 import Link from 'next/link';
 import type { ExamMode, ExamStatus } from '@/generated/prisma/enums';
+import { toast } from 'sonner';
+import { enrollCurrentStudentToExam } from '@/lib/data/exam/enroll-current-student-to-exam';
 
 import { ExamCard } from './ExamCard';
 import { formatDateRange } from '@/lib/utils';
@@ -40,8 +42,10 @@ import {
   ExamSession,
   ExamResult,
   HallTicket,
+  ExamEnrollment,
 } from '@/generated/prisma/client';
 import { EmptyState } from '@/components/EmptyState';
+import { useRouter } from 'next/navigation';
 
 export type ExamWithRelations = {
   id: string;
@@ -72,8 +76,10 @@ export type ExamWithRelations = {
   examSession: ExamSession;
   hallTickets?: HallTicket[];
   examResult?: ExamResult[];
+  examEnrollment?: ExamEnrollment[];
   isResultsPublished: boolean;
 };
+
 
 type Filters = {
   q: string;
@@ -144,6 +150,7 @@ export function StudentExamsPage({ exams }: { exams: ExamWithRelations[] }) {
     session: 'ALL',
     view: 'cards',
   });
+  const router = useRouter();
 
   const subjects = useMemo(
     () => Array.from(new Set(exams.map((e) => e.subject.name))),
@@ -218,6 +225,35 @@ export function StudentExamsPage({ exams }: { exams: ExamWithRelations[] }) {
 
   const ToggleFilters = () => {
     setIsFiltersVisible((prev) => !prev);
+  };
+
+  // Add state for handling enrollment
+  const [isEnrolling, setIsEnrolling] = useState<Record<string, boolean>>({});
+
+  // Function to handle enrollment
+  const handleEnroll = async (examId: string) => {
+    setIsEnrolling(prev => ({ ...prev, [examId]: true }));
+    try {
+      // Call the server action directly
+      const result = await enrollCurrentStudentToExam(examId);
+
+      if (result && 'success' in result) {
+        toast.success('Successfully enrolled in exam!');
+        // Refresh the page to show updated enrollment status
+        window.location.reload();
+      } else {
+        toast.error(result?.error || 'Failed to enroll in exam');
+      }
+    } catch (error) {
+      console.error('Enrollment failed:', error);
+      toast.error('Failed to enroll. Please try again.');
+    } finally {
+      setIsEnrolling(prev => {
+        const newState = { ...prev };
+        delete newState[examId];
+        return newState;
+      });
+    }
   };
 
   return (
@@ -416,7 +452,14 @@ export function StudentExamsPage({ exams }: { exams: ExamWithRelations[] }) {
           {filtered.map((e) => (
             <Link href={`/dashboard/exams/${e.id}`} key={e.id}>
               <Suspense fallback={<ExamCardSkeleton />}>
-                <ExamCard key={e.id} exam={e} />
+                <ExamCard
+                  key={e.id}
+                  exam={e}
+                  onEnroll={handleEnroll}
+                  // Add placeholder functions for now - these would be implemented based on your needs
+                  onGenerateHallTicket={(examId) => console.log('Generate hall ticket for exam:', examId)}
+                  onViewResult={(examId) => console.log('View result for exam:', examId)}
+                />
               </Suspense>
             </Link>
           ))}
@@ -452,9 +495,16 @@ export function StudentExamsPage({ exams }: { exams: ExamWithRelations[] }) {
               </TableHeader>
               <TableBody>
                 {filtered.map((e) => (
-                  <TableRow key={e.id}>
+                  <TableRow key={e.id}
+                    className="cursor-pointer hover:bg-muted transition-colors"
+                    onClick={() => router.push(`/dashboard/exams/${e.id}`)} >
                     <TableCell className="font-medium whitespace-nowrap">
-                      {e.title}
+                      <Link
+                        href={`/dashboard/exams/${e.id}`}
+                        className="text-foreground hover:underline hover:text-primary"
+                      >
+                        {e.title}
+                      </Link>
                     </TableCell>
                     <TableCell>{e.subject.name}</TableCell>
                     <TableCell className="whitespace-nowrap">
