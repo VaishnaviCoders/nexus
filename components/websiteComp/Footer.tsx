@@ -1,42 +1,59 @@
 import Link from 'next/link';
-import React from 'react';
 
-const Footer = () => {
+const APP_URL = 'https://www.shiksha.cloud/';
+
+const links = [
+  {
+    title: 'Features',
+    href: `${APP_URL}/features`,
+  },
+  {
+    title: 'Solution',
+    href: `${APP_URL}/features`,
+  },
+  {
+    title: 'Blogs',
+    href: `${APP_URL}/blog`,
+  },
+  {
+    title: 'Pricing',
+    href: '#',
+  },
+  {
+    title: 'Support',
+    href: `${APP_URL}/support`,
+  },
+  {
+    title: 'Founder',
+    href: `${APP_URL}/founder`,
+  },
+];
+
+export default function Footer() {
   return (
-    <footer className=" rounded-lg shadow my-4 ">
-      <div className="w-full mx-auto max-w-screen-xl max-sm:w-full p-4 md:flex md:items-center md:justify-between">
-        <span className="text-sm text-gray-500 sm:text-center dark:text-gray-400">
-          © 2024{' '}
-          <Link href="/" className="hover:underline">
-            NextCrm
-          </Link>
-          . All Rights Reserved.
-        </span>
-        <ul className="flex flex-wrap items-center mt-3 text-sm font-medium text-gray-500 dark:text-gray-400 sm:mt-0">
-          <li>
-            <Link href="#" className="hover:underline me-4 md:me-6">
-              About
-            </Link>
-          </li>
-          <li>
-            <Link href="#" className="hover:underline me-4 md:me-6">
-              Privacy Policy
-            </Link>
-          </li>
-          <li>
-            <Link href="#" className="hover:underline me-4 md:me-6">
-              Licensing
-            </Link>
-          </li>
-          <li>
-            <Link href="#" className="hover:underline">
-              Contact
-            </Link>
-          </li>
-        </ul>
+    <footer className="border-b bg-white py-12 dark:bg-transparent">
+      <div className="mx-auto max-w-5xl px-6">
+        <div className="flex flex-wrap justify-between gap-6">
+          <span className="text-muted-foreground order-last block text-center text-sm md:order-first">
+            © {new Date().getFullYear()}{' '}
+            <Link href={APP_URL} className="hover:text-primary underline">
+              Shiksha.cloud
+            </Link>{' '}
+            All rights reserved
+          </span>
+          <div className="order-first flex flex-wrap justify-center gap-6 text-sm md:order-last">
+            {links.map((link, index) => (
+              <Link
+                key={index}
+                href={link.href}
+                className="text-muted-foreground hover:text-primary block duration-150"
+              >
+                <span>{link.title}</span>
+              </Link>
+            ))}
+          </div>
+        </div>
       </div>
     </footer>
   );
-};
-
-export default Footer;
+}

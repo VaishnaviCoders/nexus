@@ -1,3 +1,4 @@
+import Footer from '@/components/websiteComp/Footer';
 import PrincipalConvincer from '@/components/websiteComp/principal-convincer';
 import { SecurityTrust } from '@/components/websiteComp/security-trust';
 import React from 'react';
@@ -26,6 +27,8 @@ const page = () => {
           </button>
         </div>
       </div>
+
+      <Footer />
     </div>
   );
 };

@@ -377,8 +377,8 @@ export default function SupportPageContent({
   userId,
   organizationId,
 }: {
-  userId: string;
-  organizationId: string;
+  userId: string | null;
+  organizationId: string | null;
 }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeUserType, setActiveUserType] = useState('general');
@@ -570,7 +570,10 @@ export default function SupportPageContent({
                             Get in touch with our support team
                           </DialogDescription>
                         </DialogHeader>
-                        <SupportPopup />
+                        <SupportPopup
+                          userId={userId}
+                          organizationId={organizationId}
+                        />
                       </DialogContent>
                     </Dialog>
                   </div>
@@ -724,7 +727,10 @@ export default function SupportPageContent({
                             Get in touch with our support team
                           </DialogDescription>
                         </DialogHeader>
-                        <SupportPopup />
+                        <SupportPopup
+                          userId={userId}
+                          organizationId={organizationId}
+                        />
                       </DialogContent>
                     </Dialog>
                   </div>
@@ -857,7 +863,7 @@ export default function SupportPageContent({
                     Get in touch with our support team
                   </DialogDescription>
                 </DialogHeader>
-                <SupportPopup />
+                <SupportPopup userId={userId} organizationId={organizationId} />
               </DialogContent>
             </Dialog>
 

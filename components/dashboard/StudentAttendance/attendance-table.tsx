@@ -248,21 +248,22 @@ export function AttendanceTable({ records }: AttendanceRecordsProps) {
                         <MoreHorizontal />
                       </Button>
                     </DropdownMenuTrigger>
+
                     <DropdownMenuContent align="end">
+                      {/* Delete */}
                       <DropdownMenuItem
-                        className="text-destructive focus:text-destructive"
+                        className="text-destructive focus:text-destructive cursor-pointer"
                         onClick={() => handleDelete(row.id)}
                       >
                         <Trash2 className="h-4 w-4 mr-2" />
                         Delete
                       </DropdownMenuItem>
-                      <DropdownMenuItem
-                        className=""
-                        onClick={() => handleDelete(row.id)}
-                      >
+
+                      {/* View Student */}
+                      <DropdownMenuItem asChild>
                         <Link
                           href={`/dashboard/students/${row.studentId}`}
-                          className="p-0 flex items-center gap-2"
+                          className="p-0 flex items-center gap-2 cursor-pointer"
                         >
                           <User className="h-4 w-4 mr-2" />
                           View Student

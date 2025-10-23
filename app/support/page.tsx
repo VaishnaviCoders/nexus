@@ -1,17 +1,20 @@
-import SupportPage from '@/components/websiteComp/SupportPage';
 import React from 'react';
+import SupportPage from '@/components/websiteComp/SupportPage';
 
 import { getOrganizationId } from '@/lib/organization';
 import { getCurrentUserId } from '@/lib/user';
+import Footer from '@/components/websiteComp/Footer';
 
-const page = async () => {
-  const userId = await getCurrentUserId();
-  const organizationId = await getOrganizationId();
+const Page = async () => {
+  const userId = await getCurrentUserId().catch(() => null);
+  const organizationId = await getOrganizationId().catch(() => null);
+
   return (
     <div>
       <SupportPage userId={userId} organizationId={organizationId} />
+      <Footer />
     </div>
   );
 };
 
-export default page;
+export default Page;

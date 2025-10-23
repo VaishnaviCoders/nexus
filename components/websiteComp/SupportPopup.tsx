@@ -70,8 +70,8 @@ const suggestedQuestions = [
 ];
 
 interface SupportPopupProps {
-  userId?: string;
-  organizationId?: string;
+  userId: string | null;
+  organizationId: string | null;
 }
 
 export function SupportPopup({ userId, organizationId }: SupportPopupProps) {

@@ -25,6 +25,16 @@ const nextConfig: NextConfig = {
   headers: async () => {
     return [
       {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'www.shiksha.cloud' }],
+        headers: [{ key: 'X-Robots-Tag', value: 'index, follow' }],
+      },
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'schoolnexus.vercel.app' }],
+        headers: [{ key: 'X-Robots-Tag', value: 'noindex' }],
+      },
+      {
         // Cache the manifest file (default: public, max-age=0, must-revalidate)
         headers: [
           {
@@ -66,18 +76,6 @@ const nextConfig: NextConfig = {
         hostname: 'img.clerk.com',
       },
     ],
-  },
-
-  // ✅ Add SEO-friendly redirects + headers
-  async redirects() {
-    return [
-      {
-        source: '/:path*',
-        has: [{ type: 'host', value: 'shiksha.cloud' }], // if no www
-        destination: 'https://www.shiksha.cloud/:path*',
-        permanent: true, // 301 redirect
-      },
-    ];
   },
 };
 
