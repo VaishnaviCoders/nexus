@@ -1,34 +1,76 @@
 import type { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
+  const baseUrl = 'https://shiksha.cloud';
+  const currentDate = new Date();
+
   return [
+    // Homepage
     {
-      url: 'https://shiksha.cloud/',
-      lastModified: new Date(),
+      url: `${baseUrl}/`,
+      lastModified: currentDate,
       changeFrequency: 'monthly',
       priority: 1,
     },
+
+    // Location-based pages
     {
-      url: 'https://shiksha.cloud/features',
-      lastModified: new Date(),
+      url: `${baseUrl}/location/school-management-software`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.9,
+    },
+
+    // Blog
+    {
+      url: `${baseUrl}/blog`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    },
+
+    // Features pages
+    {
+      url: `${baseUrl}/features`,
+      lastModified: currentDate,
       changeFrequency: 'monthly',
       priority: 0.9,
     },
     {
-      url: 'https://shiksha.cloud/founder',
-      lastModified: new Date(),
+      url: `${baseUrl}/features/anonymous-complaint-system`,
+      lastModified: currentDate,
       changeFrequency: 'monthly',
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/features/holidays`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/features/role-based`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
+
+    // Other main pages
+    {
+      url: `${baseUrl}/founder`,
+      lastModified: currentDate,
+      changeFrequency: 'yearly',
       priority: 0.8,
     },
     {
-      url: 'https://shiksha.cloud/why-us',
-      lastModified: new Date(),
+      url: `${baseUrl}/why-shiksha`,
+      lastModified: currentDate,
       changeFrequency: 'monthly',
       priority: 0.5,
     },
     {
-      url: 'https://shiksha.cloud/why-shiksha',
-      lastModified: new Date(),
+      url: `${baseUrl}/why-us`,
+      lastModified: currentDate,
       changeFrequency: 'monthly',
       priority: 0.5,
     },

@@ -1,6 +1,6 @@
 'use server';
 
-import { DownloadIcon, PlusIcon } from 'lucide-react';
+import { PlusIcon } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -24,6 +24,10 @@ import { getFeeRecords } from '@/lib/data/fee/get-all-students-fees';
 import { DashboardCardSkeleton } from '@/lib/skeletons/DashboardCardSkeleton';
 // import PaymentReceivedAlert from '@/components/ui/payment-received-alert';
 import { getFeeCategoryDistribution } from '@/lib/data/fee/get-fee-category-distribution';
+
+export const dynamic = 'force-dynamic';
+
+export const revalidate = 0;
 
 export default async function AdminFeeDashboard() {
   const [feeCategories, data, feeRecords] = await Promise.all([
