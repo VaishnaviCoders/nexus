@@ -37,20 +37,20 @@ export const metadata: Metadata = {
   ],
 
   alternates: {
-    canonical: `${appUrl}/features`,
+    canonical: `${appUrl}features`,
   },
 
   openGraph: {
     title: 'Shiksha.cloud Features – School Management Software & ERP Modules',
     description:
       'Discover how Shiksha.cloud simplifies school operations — student data, attendance, fees, parent communication, analytics, and more — all in one modern ERP platform.',
-    url: `${appUrl}/features`,
+    url: `${appUrl}features`,
     siteName: 'Shiksha.cloud',
     locale: 'en_IN',
     type: 'website',
     images: [
       {
-        url: `${appUrl}/api/og?title=School%20Management%20Features&subtitle=All-in-One%20ERP%20Platform%20by%20Shiksha.cloud`,
+        url: `${appUrl}api/og?title=School%20Management%20Features&subtitle=All-in-One%20ERP%20Platform%20by%20Shiksha.cloud`,
         width: 1200,
         height: 630,
         alt: 'Shiksha.cloud School Management Software Features',
@@ -65,7 +65,7 @@ export const metadata: Metadata = {
     description:
       'All-in-one school ERP: student data, attendance, fee management, communication, and analytics — powered by Shiksha.cloud.',
     images: [
-      `${appUrl}/api/og?title=Shiksha.cloud%20Features&subtitle=Smart%20School%20Management%20Modules`,
+      `${appUrl}api/og?title=Shiksha.cloud%20Features&subtitle=Smart%20School%20Management%20Modules`,
     ],
   },
 
@@ -80,7 +80,7 @@ export const metadata: Metadata = {
       '@context': 'https://schema.org',
       '@type': 'WebPage',
       name: 'Shiksha.cloud Features',
-      url: `${appUrl}/features`,
+      url: `${appUrl}features`,
       description:
         'Shiksha.cloud offers cloud-based school management software with modules for student information, attendance, fee collection, parent communication, analytics, and academic planning.',
       inLanguage: 'en-IN',
@@ -88,7 +88,7 @@ export const metadata: Metadata = {
         '@type': 'Organization',
         name: 'Shiksha.cloud',
         url: 'https://www.shiksha.cloud',
-        logo: `${appUrl}/logo.png`,
+        logo: `${appUrl}logo.png`,
       },
       mainEntity: {
         '@type': 'ItemList',
@@ -97,31 +97,31 @@ export const metadata: Metadata = {
             '@type': 'ListItem',
             position: 1,
             name: 'Student Management System',
-            url: `${appUrl}/features#student-management`,
+            url: `${appUrl}features#student-management`,
           },
           {
             '@type': 'ListItem',
             position: 2,
             name: 'Attendance Tracking',
-            url: `${appUrl}/features#attendance`,
+            url: `${appUrl}features#attendance`,
           },
           {
             '@type': 'ListItem',
             position: 3,
             name: 'Fee Management',
-            url: `${appUrl}/features#fee-management`,
+            url: `${appUrl}features#fee-management`,
           },
           {
             '@type': 'ListItem',
             position: 4,
             name: 'Parent Communication Portal',
-            url: `${appUrl}/features#communication`,
+            url: `${appUrl}features#communication`,
           },
           {
             '@type': 'ListItem',
             position: 5,
             name: 'Analytics & Reports',
-            url: `${appUrl}/features#analytics`,
+            url: `${appUrl}features#analytics`,
           },
         ],
       },
