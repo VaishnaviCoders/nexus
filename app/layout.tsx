@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { GeistSans } from 'geist/font/sans';
 
 import './globals.css';
@@ -16,20 +16,29 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 import { CustomGoogleOneTap } from '@/components/CustomGoogleOneTap';
 import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
 
+// Define viewport separately for better TypeScript support
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  // REMOVED: maximum-scale: 1 - this was causing the accessibility issue
+  viewportFit: 'cover', // for notch support
+  userScalable: true, // explicitly allow zooming
+};
 const appUrl = new URL(
   process.env.NEXT_PUBLIC_APP_URL || 'https://www.shiksha.cloud'
 );
 export const metadata: Metadata = {
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_APP_URL || 'https://www.shiksha.cloud'
-  ),
+  metadataBase: appUrl,
+  alternates: {
+    canonical: appUrl.toString(),
+  },
   other: {
     'mobile-web-app-capable': 'yes',
     'apple-mobile-web-app-capable': 'yes',
     'apple-mobile-web-app-status-bar-style': 'black-translucent', // 👈 hides notch area
     'theme-color': '#000000',
-    viewport:
-      'width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover', // 👈 important for notch fit
+    // viewport:
+    //   'width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover', // 👈 important for notch fit
   },
   icons: {
     icon: '/favicon.ico',
@@ -53,9 +62,6 @@ export const metadata: Metadata = {
   robots: {
     index: true,
     follow: true,
-  },
-  alternates: {
-    canonical: 'https://www.shiksha.cloud',
   },
   openGraph: {
     url: appUrl,
@@ -84,6 +90,15 @@ export const metadata: Metadata = {
   },
 };
 
+function DeferredAnalytics() {
+  return (
+    <>
+      <GoogleAnalytics gaId="G-Z9HW1EQ694" />
+      <GoogleTagManager gtmId="GTM-WNFTTCM4" />
+    </>
+  );
+}
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -94,10 +109,16 @@ export default function RootLayout({
       publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
     >
       <html lang="en" suppressHydrationWarning>
+        <head>
+          {/* Preconnect to critical third-party domains */}
+          <link rel="preconnect" href="https://clerk.accounts.dev" />
+          <link rel="preconnect" href="https://uploadthing.com" />
+          <link rel="dns-prefetch" href="https://clerk.accounts.dev" />
+          <link rel="dns-prefetch" href="https://uploadthing.com" />
+        </head>
         <body className={GeistSans.className}>
           {/* <CustomGoogleOneTap /> */}
-          <GoogleAnalytics gaId="G-Z9HW1EQ694" />
-          <GoogleTagManager gtmId="GTM-WNFTTCM4" />
+          <DeferredAnalytics />
           {/* <ThemeProvider attribute="class" defaultTheme="light" enableSystem> */}
           <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
           <NuqsAdapter>{children}</NuqsAdapter>

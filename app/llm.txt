@@ -1,0 +1,145 @@
+# Shiksha Cloud - School Management System
+
+## Core Identity
+Comprehensive cloud-based school management platform for Indian educational institutions
+Connects students, parents, teachers, and administrators on unified platform
+Built specifically for Indian education system requirements
+
+## Technical Stack
+Frontend: Next.js 15 with App Router, TypeScript
+Backend: Next.js API Routes, Server Actions
+Database: PostgreSQL with Prisma ORM
+Auth: Clerk (secure, passwordless, multi-factor)
+Storage: Supabase
+UI: ShadCN UI components, Tailwind CSS
+Payments: PhonePe integration
+PWA: Progressive Web App capabilities
+
+## Key Value Propositions
+- Save 70%+ administrative time
+- Complete fee management with online payments
+- Real-time parent communication
+- Digital attendance & academic tracking
+- Data-driven decision making
+- Made for Indian schools
+
+## Core Features by User Role
+
+### Administrators
+- School/organization setup & configuration
+- Grade & section management
+- Fee structure setup & tracking
+- Bulk student/teacher imports
+- Analytics dashboard & reporting
+- Document verification system
+- Holiday & calendar management
+- Notice publishing system
+- Complaint resolution management
+
+### Teachers
+- Digital attendance marking
+- Class & section management
+- Student progress tracking
+- Notice reception
+- Profile management
+- Document uploads
+
+### Students
+- Online fee payments & receipts
+- Attendance history
+- Academic profile
+- Document submission
+- Notice access
+- Anonymous complaints
+
+### Parents
+- Multiple child linking
+- Fee payment & history
+- Real-time attendance tracking
+- Notices & announcements
+- Progress monitoring
+
+## Security & Architecture
+- Multi-tenant architecture with data isolation
+- End-to-end encryption
+- GDPR compliant data practices
+- Role-based access control (RBAC)
+- 99.9% uptime guarantee
+- Automated daily backups
+- Secure server actions (no exposed APIs)
+
+## Technical Implementation Notes for Next.js
+
+### Project Structure
+/app
+  /(auth)          - Authentication pages
+  /admin           - Admin dashboard & features
+  /teacher         - Teacher portal
+  /student         - Student dashboard
+  /parent          - Parent portal
+  /api             - API routes
+/lib
+  /auth            - Clerk configuration
+  /db              - Prisma client & database
+  /validations     - Zod schemas
+  /utils           - Utility functions
+/components        - Reusable UI components
+  /ui              - ShadCN components
+
+### Key Dependencies
+- @clerk/nextjs for authentication
+- @prisma/client for database
+- zod for validation
+- resend for emails
+- lucide-react for icons
+- date-fns for date handling
+
+### Database Schema Highlights
+- Organizations (multi-tenant)
+- Users (students, parents, teachers, admins)
+- Grades, Sections, Subjects
+- Attendance records
+- Fee structures & payments
+- Notices & notifications
+- Documents & verifications
+
+## Upcoming Features
+- AI report generator
+- Exam management system
+- Assignment submission
+- PhonePe payment dashboard
+- Lead management CRM
+- Certificate generator
+- Alexa voice integration
+- Leave management system
+
+## Unique Selling Points
+- Affordable pricing starting from free
+- No per-user fees (depending on plan)
+- Quick setup (<24 hours)
+- Unlimited users on premium plans
+- Mobile-responsive PWA
+- Multi-branch support
+
+## Target Institutions
+- K-12 schools
+- Coaching centers
+- Colleges & universities
+- Vocational institutes
+- Multi-branch organizations
+- International schools
+
+## Performance Characteristics
+- Server-side rendering with Next.js
+- Optimized database queries with Prisma
+- Real-time data synchronization
+- Mobile-first responsive design
+- Fast page loads with App Router
+
+## Integration Points
+- PhonePe payment gateway
+- WhatsApp/SMS/Email notifications
+- Google Sheets for bulk imports
+- Potential future Alexa integration
+
+This system eliminates manual paperwork, automates daily operations, and provides complete transparency for all educational stakeholders.
