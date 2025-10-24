@@ -1,13 +1,14 @@
 import type { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://shiksha.cloud';
+  const appUrl = new URL('https://www.shiksha.cloud');
+
   const currentDate = new Date();
 
   return [
     // Homepage
     {
-      url: `${baseUrl}/`,
+      url: `${appUrl}/`,
       lastModified: currentDate,
       changeFrequency: 'monthly',
       priority: 1,
@@ -15,7 +16,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
     // Location-based pages
     {
-      url: `${baseUrl}/location/school-management-software`,
+      url: `${appUrl}/location/school-management-software`,
       lastModified: currentDate,
       changeFrequency: 'monthly',
       priority: 0.9,
@@ -23,7 +24,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
     // Blog
     {
-      url: `${baseUrl}/blog`,
+      url: `${appUrl}/blog`,
       lastModified: currentDate,
       changeFrequency: 'weekly',
       priority: 0.8,
@@ -31,25 +32,25 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
     // Features pages
     {
-      url: `${baseUrl}/features`,
+      url: `${appUrl}/features`,
       lastModified: currentDate,
       changeFrequency: 'monthly',
       priority: 0.9,
     },
     {
-      url: `${baseUrl}/features/anonymous-complaint-system`,
+      url: `${appUrl}/features/anonymous-complaint-system`,
       lastModified: currentDate,
       changeFrequency: 'monthly',
       priority: 0.7,
     },
     {
-      url: `${baseUrl}/features/holidays`,
+      url: `${appUrl}/features/holidays`,
       lastModified: currentDate,
       changeFrequency: 'monthly',
       priority: 0.7,
     },
     {
-      url: `${baseUrl}/features/role-based`,
+      url: `${appUrl}/features/role-based`,
       lastModified: currentDate,
       changeFrequency: 'monthly',
       priority: 0.7,
@@ -57,25 +58,25 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
     // Other main pages
     {
-      url: `${baseUrl}/founder`,
+      url: `${appUrl}/founder`,
       lastModified: currentDate,
       changeFrequency: 'yearly',
       priority: 0.8,
     },
     {
-      url: `${baseUrl}/why-shiksha`,
+      url: `${appUrl}/why-shiksha`,
       lastModified: currentDate,
       changeFrequency: 'monthly',
       priority: 0.5,
     },
     {
-      url: `${baseUrl}/why-us`,
+      url: `${appUrl}/why-us`,
       lastModified: currentDate,
       changeFrequency: 'monthly',
       priority: 0.5,
     },
     {
-      url: `${baseUrl}/support`,
+      url: `${appUrl}/support`,
       lastModified: currentDate,
       changeFrequency: 'monthly',
       priority: 0.5,

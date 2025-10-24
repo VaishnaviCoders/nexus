@@ -1,9 +1,7 @@
 import FeaturesList from '@/components/websiteComp/FeaturesList';
 import { Metadata } from 'next';
 
-const appUrl =
-  process.env.NEXT_PUBLIC_APP_URL?.replace(/\/+$/, '') ||
-  'https://www.shiksha.cloud';
+const appUrl = new URL('https://www.shiksha.cloud');
 
 export const metadata: Metadata = {
   title:

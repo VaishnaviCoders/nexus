@@ -16,6 +16,10 @@ import { Metadata } from 'next';
 // import MagicBentoGrid from '../components/websiteComp/magic-bento';
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://www.shiksha.cloud'),
+  alternates: {
+    canonical: '/',
+  },
   title: 'Shiksha.cloud – Modern School Management CRM',
   description:
     'All-in-one platform to manage students, fees, attendance, and reports. Built for schools, colleges, and coaching institutes.',
@@ -26,6 +30,11 @@ export const metadata: Metadata = {
     'attendance tracker',
     'Shiksha cloud CRM',
   ],
+  robots: {
+    index: true,
+    follow: true,
+  },
+
   openGraph: {
     title: 'Shiksha.cloud',
     description: 'Streamline your school operations with Shiksha.cloud',

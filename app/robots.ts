@@ -1,3 +1,4 @@
+// app/robots.ts - FIXED
 import type { MetadataRoute } from 'next';
 
 export default function robots(): MetadataRoute.Robots {
@@ -5,10 +6,10 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: '*',
-        allow: ['/'],
-        disallow: [],
+        allow: '/',
       },
     ],
-    sitemap: 'https://shiksha.cloud/sitemap.xml',
+    sitemap: 'https://www.shiksha.cloud/sitemap.xml',
+    // Remove the 'host' property - it's not standard for robots.txt
   };
 }

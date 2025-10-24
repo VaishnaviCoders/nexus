@@ -24,9 +24,7 @@ export const viewport: Viewport = {
   viewportFit: 'cover', // for notch support
   userScalable: true, // explicitly allow zooming
 };
-const appUrl = new URL(
-  process.env.NEXT_PUBLIC_APP_URL || 'https://www.shiksha.cloud'
-);
+const appUrl = new URL('https://www.shiksha.cloud');
 export const metadata: Metadata = {
   metadataBase: appUrl,
   alternates: {
