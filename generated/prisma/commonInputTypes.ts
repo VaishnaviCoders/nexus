@@ -850,6 +850,13 @@ export type EnumLeaveStatusWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumLeaveStatusFilter<$PrismaModel>
 }
 
+export type EnumLeadSourceFilter<$PrismaModel = never> = {
+  equals?: $Enums.LeadSource | Prisma.EnumLeadSourceFieldRefInput<$PrismaModel>
+  in?: $Enums.LeadSource[] | Prisma.ListEnumLeadSourceFieldRefInput<$PrismaModel>
+  notIn?: $Enums.LeadSource[] | Prisma.ListEnumLeadSourceFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumLeadSourceFilter<$PrismaModel> | $Enums.LeadSource
+}
+
 export type EnumLeadStatusFilter<$PrismaModel = never> = {
   equals?: $Enums.LeadStatus | Prisma.EnumLeadStatusFieldRefInput<$PrismaModel>
   in?: $Enums.LeadStatus[] | Prisma.ListEnumLeadStatusFieldRefInput<$PrismaModel>
@@ -862,6 +869,16 @@ export type EnumLeadPriorityFilter<$PrismaModel = never> = {
   in?: $Enums.LeadPriority[] | Prisma.ListEnumLeadPriorityFieldRefInput<$PrismaModel>
   notIn?: $Enums.LeadPriority[] | Prisma.ListEnumLeadPriorityFieldRefInput<$PrismaModel>
   not?: Prisma.NestedEnumLeadPriorityFilter<$PrismaModel> | $Enums.LeadPriority
+}
+
+export type EnumLeadSourceWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.LeadSource | Prisma.EnumLeadSourceFieldRefInput<$PrismaModel>
+  in?: $Enums.LeadSource[] | Prisma.ListEnumLeadSourceFieldRefInput<$PrismaModel>
+  notIn?: $Enums.LeadSource[] | Prisma.ListEnumLeadSourceFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumLeadSourceWithAggregatesFilter<$PrismaModel> | $Enums.LeadSource
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumLeadSourceFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumLeadSourceFilter<$PrismaModel>
 }
 
 export type EnumLeadStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -884,21 +901,21 @@ export type EnumLeadPriorityWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumLeadPriorityFilter<$PrismaModel>
 }
 
-export type EnumActivityTypeFilter<$PrismaModel = never> = {
-  equals?: $Enums.ActivityType | Prisma.EnumActivityTypeFieldRefInput<$PrismaModel>
-  in?: $Enums.ActivityType[] | Prisma.ListEnumActivityTypeFieldRefInput<$PrismaModel>
-  notIn?: $Enums.ActivityType[] | Prisma.ListEnumActivityTypeFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumActivityTypeFilter<$PrismaModel> | $Enums.ActivityType
+export type EnumLeadActivityTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.LeadActivityType | Prisma.EnumLeadActivityTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.LeadActivityType[] | Prisma.ListEnumLeadActivityTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.LeadActivityType[] | Prisma.ListEnumLeadActivityTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumLeadActivityTypeFilter<$PrismaModel> | $Enums.LeadActivityType
 }
 
-export type EnumActivityTypeWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.ActivityType | Prisma.EnumActivityTypeFieldRefInput<$PrismaModel>
-  in?: $Enums.ActivityType[] | Prisma.ListEnumActivityTypeFieldRefInput<$PrismaModel>
-  notIn?: $Enums.ActivityType[] | Prisma.ListEnumActivityTypeFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumActivityTypeWithAggregatesFilter<$PrismaModel> | $Enums.ActivityType
+export type EnumLeadActivityTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.LeadActivityType | Prisma.EnumLeadActivityTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.LeadActivityType[] | Prisma.ListEnumLeadActivityTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.LeadActivityType[] | Prisma.ListEnumLeadActivityTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumLeadActivityTypeWithAggregatesFilter<$PrismaModel> | $Enums.LeadActivityType
   _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumActivityTypeFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumActivityTypeFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumLeadActivityTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumLeadActivityTypeFilter<$PrismaModel>
 }
 
 export type NestedStringFilter<$PrismaModel = never> = {
@@ -1675,6 +1692,13 @@ export type NestedEnumLeaveStatusWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumLeaveStatusFilter<$PrismaModel>
 }
 
+export type NestedEnumLeadSourceFilter<$PrismaModel = never> = {
+  equals?: $Enums.LeadSource | Prisma.EnumLeadSourceFieldRefInput<$PrismaModel>
+  in?: $Enums.LeadSource[] | Prisma.ListEnumLeadSourceFieldRefInput<$PrismaModel>
+  notIn?: $Enums.LeadSource[] | Prisma.ListEnumLeadSourceFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumLeadSourceFilter<$PrismaModel> | $Enums.LeadSource
+}
+
 export type NestedEnumLeadStatusFilter<$PrismaModel = never> = {
   equals?: $Enums.LeadStatus | Prisma.EnumLeadStatusFieldRefInput<$PrismaModel>
   in?: $Enums.LeadStatus[] | Prisma.ListEnumLeadStatusFieldRefInput<$PrismaModel>
@@ -1687,6 +1711,16 @@ export type NestedEnumLeadPriorityFilter<$PrismaModel = never> = {
   in?: $Enums.LeadPriority[] | Prisma.ListEnumLeadPriorityFieldRefInput<$PrismaModel>
   notIn?: $Enums.LeadPriority[] | Prisma.ListEnumLeadPriorityFieldRefInput<$PrismaModel>
   not?: Prisma.NestedEnumLeadPriorityFilter<$PrismaModel> | $Enums.LeadPriority
+}
+
+export type NestedEnumLeadSourceWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.LeadSource | Prisma.EnumLeadSourceFieldRefInput<$PrismaModel>
+  in?: $Enums.LeadSource[] | Prisma.ListEnumLeadSourceFieldRefInput<$PrismaModel>
+  notIn?: $Enums.LeadSource[] | Prisma.ListEnumLeadSourceFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumLeadSourceWithAggregatesFilter<$PrismaModel> | $Enums.LeadSource
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumLeadSourceFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumLeadSourceFilter<$PrismaModel>
 }
 
 export type NestedEnumLeadStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -1709,21 +1743,21 @@ export type NestedEnumLeadPriorityWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumLeadPriorityFilter<$PrismaModel>
 }
 
-export type NestedEnumActivityTypeFilter<$PrismaModel = never> = {
-  equals?: $Enums.ActivityType | Prisma.EnumActivityTypeFieldRefInput<$PrismaModel>
-  in?: $Enums.ActivityType[] | Prisma.ListEnumActivityTypeFieldRefInput<$PrismaModel>
-  notIn?: $Enums.ActivityType[] | Prisma.ListEnumActivityTypeFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumActivityTypeFilter<$PrismaModel> | $Enums.ActivityType
+export type NestedEnumLeadActivityTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.LeadActivityType | Prisma.EnumLeadActivityTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.LeadActivityType[] | Prisma.ListEnumLeadActivityTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.LeadActivityType[] | Prisma.ListEnumLeadActivityTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumLeadActivityTypeFilter<$PrismaModel> | $Enums.LeadActivityType
 }
 
-export type NestedEnumActivityTypeWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.ActivityType | Prisma.EnumActivityTypeFieldRefInput<$PrismaModel>
-  in?: $Enums.ActivityType[] | Prisma.ListEnumActivityTypeFieldRefInput<$PrismaModel>
-  notIn?: $Enums.ActivityType[] | Prisma.ListEnumActivityTypeFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumActivityTypeWithAggregatesFilter<$PrismaModel> | $Enums.ActivityType
+export type NestedEnumLeadActivityTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.LeadActivityType | Prisma.EnumLeadActivityTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.LeadActivityType[] | Prisma.ListEnumLeadActivityTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.LeadActivityType[] | Prisma.ListEnumLeadActivityTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumLeadActivityTypeWithAggregatesFilter<$PrismaModel> | $Enums.LeadActivityType
   _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumActivityTypeFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumActivityTypeFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumLeadActivityTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumLeadActivityTypeFilter<$PrismaModel>
 }
 
 

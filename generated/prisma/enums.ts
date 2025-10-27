@@ -335,13 +335,18 @@ export type LeaveType = (typeof LeaveType)[keyof typeof LeaveType]
 export const LeadStatus = {
   NEW: 'NEW',
   CONTACTED: 'CONTACTED',
+  QUALIFIED: 'QUALIFIED',
   INTERESTED: 'INTERESTED',
   VISIT_SCHEDULED: 'VISIT_SCHEDULED',
   VISITED: 'VISITED',
+  PROPOSAL_SENT: 'PROPOSAL_SENT',
+  NEGOTIATION: 'NEGOTIATION',
   CONVERTED: 'CONVERTED',
   NOT_INTERESTED: 'NOT_INTERESTED',
   UNRESPONSIVE: 'UNRESPONSIVE',
-  INVALID: 'INVALID'
+  INVALID: 'INVALID',
+  LOST: 'LOST',
+  ON_HOLD: 'ON_HOLD'
 } as const
 
 export type LeadStatus = (typeof LeadStatus)[keyof typeof LeadStatus]
@@ -351,22 +356,68 @@ export const LeadPriority = {
   LOW: 'LOW',
   MEDIUM: 'MEDIUM',
   HIGH: 'HIGH',
-  URGENT: 'URGENT'
+  URGENT: 'URGENT',
+  VIP: 'VIP'
 } as const
 
 export type LeadPriority = (typeof LeadPriority)[keyof typeof LeadPriority]
 
 
-export const ActivityType = {
+export const LeadSource = {
+  WEBSITE: 'WEBSITE',
+  GOOGLE_ADS: 'GOOGLE_ADS',
+  FACEBOOK_ADS: 'FACEBOOK_ADS',
+  INSTAGRAM_ADS: 'INSTAGRAM_ADS',
+  LINKEDIN_ADS: 'LINKEDIN_ADS',
+  EMAIL_MARKETING: 'EMAIL_MARKETING',
+  SEO_ORGANIC: 'SEO_ORGANIC',
+  SOCIAL_MEDIA: 'SOCIAL_MEDIA',
+  WALK_IN: 'WALK_IN',
+  PHONE_CALL: 'PHONE_CALL',
+  REFERRAL_PROGRAM: 'REFERRAL_PROGRAM',
+  EDUCATION_FAIR: 'EDUCATION_FAIR',
+  PRINT_MEDIA: 'PRINT_MEDIA',
+  RADIO: 'RADIO',
+  OUTDOOR_ADVERTISING: 'OUTDOOR_ADVERTISING',
+  AGENT_PARTNER: 'AGENT_PARTNER',
+  ALUMNI_REFERRAL: 'ALUMNI_REFERRAL',
+  WEBINAR: 'WEBINAR',
+  WORKSHOP: 'WORKSHOP',
+  WORD_OF_MOUTH: 'WORD_OF_MOUTH'
+} as const
+
+export type LeadSource = (typeof LeadSource)[keyof typeof LeadSource]
+
+
+export const LeadActivityType = {
   CALL: 'CALL',
   EMAIL: 'EMAIL',
   SMS: 'SMS',
   WHATSAPP: 'WHATSAPP',
   MEETING: 'MEETING',
   VISIT: 'VISIT',
+  SCHOOL_TOUR: 'SCHOOL_TOUR',
+  DEMO_CLASS: 'DEMO_CLASS',
   FOLLOW_UP: 'FOLLOW_UP',
   DOCUMENT_SENT: 'DOCUMENT_SENT',
+  DOCUMENT_RECEIVED: 'DOCUMENT_RECEIVED',
+  APPLICATION_SUBMITTED: 'APPLICATION_SUBMITTED',
+  FEE_DISCUSSED: 'FEE_DISCUSSED',
+  COUNSELING: 'COUNSELING',
+  PARENT_MEETING: 'PARENT_MEETING',
+  STUDENT_INTERACTION: 'STUDENT_INTERACTION',
   OTHER: 'OTHER'
 } as const
 
-export type ActivityType = (typeof ActivityType)[keyof typeof ActivityType]
+export type LeadActivityType = (typeof LeadActivityType)[keyof typeof LeadActivityType]
+
+
+export const LeadCommunicationPreference = {
+  EMAIL: 'EMAIL',
+  SMS: 'SMS',
+  WHATSAPP: 'WHATSAPP',
+  PHONE_CALL: 'PHONE_CALL',
+  NO_CONTACT: 'NO_CONTACT'
+} as const
+
+export type LeadCommunicationPreference = (typeof LeadCommunicationPreference)[keyof typeof LeadCommunicationPreference]

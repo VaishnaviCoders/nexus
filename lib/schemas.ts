@@ -1,10 +1,14 @@
-import { nativeEnum, object, z } from 'zod';
+import { nativeEnum, z } from 'zod';
 import {
   CalendarEventType,
   DocumentType,
   EvaluationType,
   ExamMode,
   ExamStatus,
+  LeadCommunicationPreference,
+  LeadPriority,
+  LeadSource,
+  LeadStatus,
   LeaveType,
   NoticePriority,
   NoticeStatus,
@@ -578,3 +582,32 @@ export const studentExamResultSchema = z.object({
 });
 
 export type studentExamResultFormData = z.infer<typeof studentExamResultSchema>;
+
+// Leads
+
+export const createLeadSchema = z.object({
+  studentName: z.string().min(1, 'Student name is required'),
+  phone: z.string().min(10, 'Phone number must be at least 10 digits'),
+  enquiryFor: z.string().min(1, 'Enquiry field is required'),
+  parentName: z.string().optional(),
+  email: z.string().email('Invalid email address').optional().or(z.literal('')),
+  whatsappNumber: z.string().optional(),
+  currentSchool: z.string().optional(),
+  address: z.string().optional(),
+  city: z.string().optional(),
+  state: z.string().optional(),
+  pincode: z.string().optional(),
+  source: z.nativeEnum(LeadSource).default(LeadSource.WEBSITE),
+  status: z.nativeEnum(LeadStatus).default(LeadStatus.NEW),
+  priority: z.nativeEnum(LeadPriority).default(LeadPriority.MEDIUM),
+  notes: z.string().optional(),
+  requirements: z.array(z.string()).default([]),
+  budgetRange: z.string().optional(),
+  communicationPreference: z
+    .array(z.nativeEnum(LeadCommunicationPreference))
+    .default([]),
+  organizationId: z.string().min(1, 'Organization ID is required'),
+  academicYearId: z.string().optional(),
+});
+
+export type CreateLeadFormData = z.infer<typeof createLeadSchema>;

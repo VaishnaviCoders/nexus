@@ -64,6 +64,7 @@ model AcademicYear {
   createdBy String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  leads     Lead[]
 
   @@unique([organizationId, name])
   @@index([organizationId, isCurrent])
@@ -121,6 +122,7 @@ model Organization {
   updatedAt  DateTime     @updatedAt
   exam       Exam[]
   hallTicket HallTicket[]
+  leads      Lead[]
 
   @@index([id])
   @@index([organizationSlug])
@@ -208,6 +210,9 @@ model User {
   updatedAt       DateTime          @updatedAt
   notificationLog NotificationLog[]
   leave           Leave[]
+  leadActivity    LeadActivity[]
+  assignedLeads   Lead[]            @relation("LeadAssignedTo")
+  createdLeads    Lead[]            @relation("LeadCreatedBy")
 
   @@index([id, clerkId])
   @@index([organizationId])
@@ -1314,57 +1319,71 @@ model LeaveStatusTimeline {
 }
 
 model Lead {
-  id             String @id @default(cuid())
+  id             String       @id @default(cuid())
   organizationId String
-  // organization    Organization  @relation(fields: [organizationId], references: [id])
-  // academicYearId  String?
-  // academicYear    AcademicYear? @relation(fields: [academicYearId], references: [id])
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  academicYearId String
+  academicYear   AcademicYear @relation(fields: [academicYearId], references: [id])
 
-  // Basic Info
+  // ===== Basic Information =====
   studentName    String
   parentName     String?
   phone          String
   email          String?
   whatsappNumber String?
 
-  // Enquiry Details
-  enquiryForGrade String
-  currentSchool   String?
-  address         String?
-  city            String?
+  // ===== Enquiry Details =====
+  enquiryFor    String
+  currentSchool String?
+  address       String?
+  city          String?
+  state         String?
+  pincode       String?
 
-  // Lead Management
-  source   String? // "Website", "Walk-in", "Referral", etc.
+  // ===== Lead Management =====
+  source   LeadSource   @default(WEBSITE)
   status   LeadStatus   @default(NEW)
   priority LeadPriority @default(MEDIUM)
 
-  // Assignment
+  // Lead scoring for prioritization (0-100)
+  score Int @default(0)
+
+  // ===== Assignment & Ownership =====
   assignedToId String?
-  // assignedTo      User?         @relation("LeadAssignedTo", fields: [assignedToId], references: [id])
+  assignedTo   User?     @relation("LeadAssignedTo", fields: [assignedToId], references: [id], onDelete: SetNull)
   assignedAt   DateTime?
 
-  // Follow-up
+  // ===== Follow-up Tracking =====
   nextFollowUpAt  DateTime?
   lastContactedAt DateTime?
+  followUpCount   Int       @default(0)
 
-  // Conversion
+  // ===== Conversion Tracking =====
   convertedAt          DateTime?
-  convertedToStudentId String? // Links to Student.id when admitted
+  convertedToStudentId String?
+  // Uncomment when Student model is ready
+  // convertedToStudent   Student? @relation(fields: [convertedToStudentId], references: [id])
 
   // Additional Info
   notes        String?
   requirements String[] // ["Transportation", "Hostel", "Scholarship"]
   budgetRange  String? // "50k-1L", "1L-2L", etc.
 
+  // Reason for closure (required for NOT_INTERESTED, INVALID)
+  closureReason String?
+
   // Relations
-  activities LeadActivity[]
+  activities              LeadActivity[]
+  communicationPreference LeadCommunicationPreference[]
 
+  // ===== Audit Fields =====
   createdById String?
-  // createdBy       User?         @relation("LeadCreatedBy", fields: [createdById], references: [id])
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdBy   User?   @relation("LeadCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
 
-  @@unique([organizationId, phone])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([organizationId, phone, enquiryFor])
   @@index([organizationId, status])
   @@index([assignedToId, nextFollowUpAt])
   @@index([source, createdAt])
@@ -1376,14 +1395,14 @@ model LeadActivity {
   lead   Lead   @relation(fields: [leadId], references: [id])
 
   // Activity Details
-  type        ActivityType
+  type        LeadActivityType
   title       String // "Called parent", "Sent brochure", "School visit"
   description String?
   outcome     String? // "Interested", "Not reachable", "Will visit next week"
 
   // When & Who
   performedById String?
-  // performedBy   User?      @relation(fields: [performedById], references: [id])
+  performedBy   User?    @relation(fields: [performedById], references: [id])
   performedAt   DateTime @default(now())
 
   // Next Action
@@ -1396,17 +1415,21 @@ model LeadActivity {
   @@index([performedById])
 }
 
-// Simple Enums
 enum LeadStatus {
   NEW
   CONTACTED
+  QUALIFIED
   INTERESTED
   VISIT_SCHEDULED
   VISITED
+  PROPOSAL_SENT
+  NEGOTIATION
   CONVERTED
   NOT_INTERESTED
   UNRESPONSIVE
   INVALID
+  LOST
+  ON_HOLD
 }
 
 enum LeadPriority {
@@ -1414,16 +1437,56 @@ enum LeadPriority {
   MEDIUM
   HIGH
   URGENT
+  VIP
 }
 
-enum ActivityType {
+enum LeadSource {
+  WEBSITE
+  GOOGLE_ADS
+  FACEBOOK_ADS
+  INSTAGRAM_ADS
+  LINKEDIN_ADS
+  EMAIL_MARKETING
+  SEO_ORGANIC
+  SOCIAL_MEDIA
+  WALK_IN
+  PHONE_CALL
+  REFERRAL_PROGRAM
+  EDUCATION_FAIR
+  PRINT_MEDIA
+  RADIO
+  OUTDOOR_ADVERTISING
+  AGENT_PARTNER
+  ALUMNI_REFERRAL
+  WEBINAR
+  WORKSHOP
+  WORD_OF_MOUTH
+}
+
+enum LeadActivityType {
   CALL
   EMAIL
   SMS
   WHATSAPP
   MEETING
   VISIT
+  SCHOOL_TOUR
+  DEMO_CLASS
   FOLLOW_UP
   DOCUMENT_SENT
+  DOCUMENT_RECEIVED
+  APPLICATION_SUBMITTED
+  FEE_DISCUSSED
+  COUNSELING
+  PARENT_MEETING
+  STUDENT_INTERACTION
   OTHER
+}
+
+enum LeadCommunicationPreference {
+  EMAIL
+  SMS
+  WHATSAPP
+  PHONE_CALL
+  NO_CONTACT
 }

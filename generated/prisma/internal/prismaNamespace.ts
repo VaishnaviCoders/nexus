@@ -3583,6 +3583,7 @@ export type LeaveStatusTimelineScalarFieldEnum = (typeof LeaveStatusTimelineScal
 export const LeadScalarFieldEnum = {
   id: 'id',
   organizationId: 'organizationId',
+  academicYearId: 'academicYearId',
   studentName: 'studentName',
   parentName: 'parentName',
   phone: 'phone',
@@ -3592,18 +3593,24 @@ export const LeadScalarFieldEnum = {
   currentSchool: 'currentSchool',
   address: 'address',
   city: 'city',
+  state: 'state',
+  pincode: 'pincode',
   source: 'source',
   status: 'status',
   priority: 'priority',
+  score: 'score',
   assignedToId: 'assignedToId',
   assignedAt: 'assignedAt',
   nextFollowUpAt: 'nextFollowUpAt',
   lastContactedAt: 'lastContactedAt',
+  followUpCount: 'followUpCount',
   convertedAt: 'convertedAt',
   convertedToStudentId: 'convertedToStudentId',
   notes: 'notes',
   requirements: 'requirements',
   budgetRange: 'budgetRange',
+  closureReason: 'closureReason',
+  communicationPreference: 'communicationPreference',
   createdById: 'createdById',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -4095,6 +4102,7 @@ export type LeaveStatusTimelineOrderByRelevanceFieldEnum = (typeof LeaveStatusTi
 export const LeadOrderByRelevanceFieldEnum = {
   id: 'id',
   organizationId: 'organizationId',
+  academicYearId: 'academicYearId',
   studentName: 'studentName',
   parentName: 'parentName',
   phone: 'phone',
@@ -4104,12 +4112,14 @@ export const LeadOrderByRelevanceFieldEnum = {
   currentSchool: 'currentSchool',
   address: 'address',
   city: 'city',
-  source: 'source',
+  state: 'state',
+  pincode: 'pincode',
   assignedToId: 'assignedToId',
   convertedToStudentId: 'convertedToStudentId',
   notes: 'notes',
   requirements: 'requirements',
   budgetRange: 'budgetRange',
+  closureReason: 'closureReason',
   createdById: 'createdById'
 } as const
 
@@ -4605,6 +4615,20 @@ export type ListEnumLeaveStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$
 
 
 /**
+ * Reference to a field of type 'LeadSource'
+ */
+export type EnumLeadSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LeadSource'>
+    
+
+
+/**
+ * Reference to a field of type 'LeadSource[]'
+ */
+export type ListEnumLeadSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LeadSource[]'>
+    
+
+
+/**
  * Reference to a field of type 'LeadStatus'
  */
 export type EnumLeadStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LeadStatus'>
@@ -4633,16 +4657,30 @@ export type ListEnumLeadPriorityFieldRefInput<$PrismaModel> = FieldRefInputType<
 
 
 /**
- * Reference to a field of type 'ActivityType'
+ * Reference to a field of type 'LeadCommunicationPreference[]'
  */
-export type EnumActivityTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ActivityType'>
+export type ListEnumLeadCommunicationPreferenceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LeadCommunicationPreference[]'>
     
 
 
 /**
- * Reference to a field of type 'ActivityType[]'
+ * Reference to a field of type 'LeadCommunicationPreference'
  */
-export type ListEnumActivityTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ActivityType[]'>
+export type EnumLeadCommunicationPreferenceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LeadCommunicationPreference'>
+    
+
+
+/**
+ * Reference to a field of type 'LeadActivityType'
+ */
+export type EnumLeadActivityTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LeadActivityType'>
+    
+
+
+/**
+ * Reference to a field of type 'LeadActivityType[]'
+ */
+export type ListEnumLeadActivityTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LeadActivityType[]'>
     
 
 /**
