@@ -1,0 +1,604 @@
+'use client';
+
+import { useState, useTransition } from 'react';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Textarea } from '@/components/ui/textarea';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Label } from '@/components/ui/label';
+import {
+  Phone,
+  Mail,
+  MessageCircle,
+  User,
+  Edit2,
+  Trash2,
+  Clock,
+  CheckCircle,
+  AlertCircle,
+  TrendingUp,
+  MapPin,
+  School,
+  Calendar,
+  DollarSign,
+  MessageSquare,
+  Loader2,
+} from 'lucide-react';
+import { Prisma } from '@/generated/prisma/client';
+import { LeadPriority, LeadStatus } from '@/generated/prisma/enums';
+import { formatDateIN } from '@/lib/utils';
+import { LeadActivityTimeline } from './lead-activity-timeline';
+import { AssignLeadDialog } from './assign-lead-dialog';
+import { convertLead } from '@/lib/data/leads/convert-lead';
+import { deleteLead } from '@/lib/data/leads/delete-lead';
+import { toast } from 'sonner';
+
+type LeadWithActivities = Prisma.LeadGetPayload<{
+  include: {
+    createdBy: {
+      select: {
+        firstName: true;
+        lastName: true;
+        profileImage: true;
+      };
+    };
+    assignedTo: {
+      select: {
+        id: true;
+        firstName: true;
+        lastName: true;
+        profileImage: true;
+      };
+    };
+    activities: {
+      include: {
+        performedBy: {
+          select: {
+            firstName: true;
+            lastName: true;
+            profileImage: true;
+          };
+        };
+      };
+    };
+  };
+}>;
+
+interface LeadDetailProps {
+  lead: LeadWithActivities;
+}
+
+export default function LeadDetails({ lead }: LeadDetailProps) {
+  const [notes, setNotes] = useState(lead.notes);
+  const [notesChanged, setNotesChanged] = useState(false);
+  const [isConverting, startConvertTransition] = useTransition();
+  const [isDeleting, startDeleteTransition] = useTransition();
+
+  const handleNotesChange = (value: string) => {
+    setNotes(value);
+    setNotesChanged(true);
+  };
+
+  const handleConvertLead = async (leadId: string) => {
+    startConvertTransition(async () => {
+      try {
+        const result = await convertLead(leadId);
+
+        if (result.success) {
+          toast.success('Lead converted to student successfully.');
+        } else {
+          toast.error(
+            result.message || 'Failed to convert lead. Please try again.'
+          );
+        }
+      } catch (error) {
+        toast.error('Failed to convert lead. Please try again.');
+      }
+    });
+  };
+
+  const handleDeleteLead = async (leadId: string) => {
+    startDeleteTransition(async () => {
+      try {
+        const result = await deleteLead(leadId);
+
+        if (result.success) {
+          toast.success('Lead deleted successfully.');
+          // Optionally redirect or refresh the page
+          window.location.href = '/dashboard/leads';
+        } else {
+          toast.error(
+            result.message || 'Failed to delete lead. Please try again.'
+          );
+        }
+      } catch (error) {
+        toast.error('Failed to delete lead. Please try again.');
+      }
+    });
+  };
+
+  const isOverdue = lead.nextFollowUpAt && new Date() > lead.nextFollowUpAt;
+
+  return (
+    <div className="space-y-6 px-2">
+      {/* Header Section - Modern Design */}
+      <div className="bg-white rounded-2xl shadow-sm border p-6">
+        <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
+          <div className="flex items-start gap-4 flex-1">
+            <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-3">
+              <User className="w-8 h-8 text-white" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-3 mb-3 flex-wrap">
+                <h1 className="text-xl font-bold text-gray-900 truncate">
+                  {lead.studentName}
+                </h1>
+                <div className="flex gap-2 flex-wrap">
+                  <Badge variant={lead.status}>{lead.status}</Badge>
+                  <Badge variant={lead.priority}>{lead.priority}</Badge>
+                </div>
+              </div>
+              <p className="text-gray-600 mb-4">Parent: {lead.parentName}</p>
+
+              {/* Contact Info Row */}
+              <div className="flex flex-wrap gap-4 text-sm">
+                <div className="flex items-center gap-2 text-gray-600">
+                  <Phone className="w-4 h-4" />
+                  <span>{lead.phone}</span>
+                </div>
+                <div className="flex items-center gap-2 text-gray-600">
+                  <Mail className="w-4 h-4" />
+                  <span>{lead.email}</span>
+                </div>
+                <div className="flex items-center gap-2 text-gray-600">
+                  <MessageCircle className="w-4 h-4" />
+                  <span>{lead.whatsappNumber}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex gap-2 flex-wrap lg:flex-nowrap">
+            <Button variant="outline" size="sm" className="gap-2">
+              <Edit2 className="w-4 h-4" />
+              Edit
+            </Button>
+            {lead.status === 'CONVERTED' ? (
+              <>
+                <Button
+                  size="sm"
+                  disabled
+                  className="gap-2 bg-green-100 hover:bg-green-200 text-green-500"
+                >
+                  <CheckCircle className="w-4 h-4" />
+                  Converted
+                </Button>
+              </>
+            ) : (
+              <Button
+                size="sm"
+                className="gap-2 bg-green-100 hover:bg-green-200 text-green-500"
+                onClick={() => handleConvertLead(lead.id)}
+                disabled={isConverting}
+              >
+                {isConverting ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <CheckCircle className="w-4 h-4" />
+                )}
+                {isConverting ? 'Converting...' : 'Convert To Student'}
+              </Button>
+            )}
+            <Button
+              variant="destructive"
+              size="sm"
+              className="gap-2"
+              onClick={() => handleDeleteLead(lead.id)}
+              disabled={isDeleting}
+            >
+              {isDeleting ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <Trash2 className="w-4 h-4" />
+              )}
+              {isDeleting ? 'Deleting...' : 'Delete'}
+            </Button>
+          </div>
+        </div>
+
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
+          {/* Lead Score Card */}
+          <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200 shadow-sm hover:shadow-md transition-shadow">
+            <CardContent className="p-5">
+              <div className="flex items-center justify-between">
+                <div className="flex-1">
+                  <p className="text-sm font-semibold text-blue-700 mb-2 uppercase tracking-wide">
+                    Lead Score
+                  </p>
+                  <p className="text-2xl font-bold text-blue-900 mb-3">
+                    {lead.score}/100
+                  </p>
+                  <div className="w-full bg-blue-200 rounded-full h-2.5">
+                    <div
+                      className="bg-gradient-to-r from-blue-500 to-blue-600 h-2.5 rounded-full transition-all duration-1000 ease-out"
+                      style={{ width: `${lead.score}%` }}
+                    />
+                  </div>
+                </div>
+                <div className="bg-blue-500 rounded-xl p-3 ml-4">
+                  <TrendingUp className="w-6 h-6 text-white" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Follow-ups Card */}
+          <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-green-200 shadow-sm hover:shadow-md transition-shadow">
+            <CardContent className="p-5">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-semibold text-green-700 mb-2 uppercase tracking-wide">
+                    Follow-ups
+                  </p>
+                  <p className="text-2xl font-bold text-green-900">
+                    {lead.followUpCount}
+                  </p>
+                  <p className="text-xs text-green-600 mt-1 font-medium">
+                    Total interactions
+                  </p>
+                </div>
+                <div className="bg-green-500 rounded-xl p-3 ml-4">
+                  <MessageSquare className="w-6 h-6 text-white" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Last Contact Card */}
+          <Card className="bg-gradient-to-br from-purple-50 to-violet-50 border-purple-200 shadow-sm hover:shadow-md transition-shadow">
+            <CardContent className="p-5">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-semibold text-purple-700 mb-2 uppercase tracking-wide">
+                    Last Contact
+                  </p>
+                  <p className="text-lg font-bold text-purple-900 leading-tight">
+                    {formatDateIN(lead.lastContactedAt)}
+                  </p>
+                  <p className="text-xs text-purple-600 mt-1 font-medium">
+                    Recent activity
+                  </p>
+                </div>
+                <div className="bg-purple-500 rounded-xl p-3 ml-4">
+                  <Clock className="w-6 h-6 text-white" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Next Follow-up Card */}
+          <Card
+            className={`bg-gradient-to-br ${
+              isOverdue
+                ? 'from-red-50 to-orange-50 border-red-200'
+                : 'from-orange-50 to-amber-50 border-orange-200'
+            } shadow-sm hover:shadow-md transition-shadow`}
+          >
+            <CardContent className="p-5">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="flex items-center gap-2 mb-2">
+                    <p className="text-sm font-semibold text-orange-700 uppercase tracking-wide">
+                      Next Follow-up
+                    </p>
+                    {isOverdue && (
+                      <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full font-bold animate-pulse">
+                        URGENT
+                      </span>
+                    )}
+                  </div>
+                  <p
+                    className={`text-lg font-bold leading-tight ${
+                      isOverdue ? 'text-red-900' : 'text-orange-900'
+                    }`}
+                  >
+                    {formatDateIN(lead.nextFollowUpAt)}
+                  </p>
+                  <p
+                    className={`text-xs mt-1 font-medium ${
+                      isOverdue ? 'text-red-600' : 'text-orange-600'
+                    }`}
+                  >
+                    {isOverdue ? 'Action required' : 'Scheduled'}
+                  </p>
+                </div>
+                <div
+                  className={`rounded-xl p-3 ml-4 ${
+                    isOverdue ? 'bg-red-500' : 'bg-orange-500'
+                  }`}
+                >
+                  {isOverdue ? (
+                    <AlertCircle className="w-6 h-6 text-white" />
+                  ) : (
+                    <Calendar className="w-6 h-6 text-white" />
+                  )}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+
+      {/* Main Content - 3 Column Layout */}
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 my-2">
+        {/* Left Column - Details */}
+        <div className="xl:col-span-5 space-y-6 ">
+          {/* Enquiry Details */}
+          <Card className="shadow-sm">
+            <CardHeader className="pb-4">
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <School className="w-5 h-5 text-blue-600" />
+                Enquiry Details
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <Label className="text-sm text-gray-500">Enquiry For</Label>
+                  <p className="font-medium">{lead.enquiryFor}</p>
+                </div>
+                <div className="space-y-1">
+                  <Label className="text-sm text-gray-500">
+                    Current School
+                  </Label>
+                  <p className="font-medium">{lead.currentSchool}</p>
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <Label className="text-sm text-gray-500">Requirements</Label>
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {lead.requirements.map((req) => (
+                    <Badge
+                      key={req}
+                      variant="secondary"
+                      className="bg-blue-50 text-blue-700"
+                    >
+                      {req}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <Label className="text-sm text-gray-500">Budget Range</Label>
+                <div className="flex items-center gap-2">
+                  <DollarSign className="w-4 h-4 text-green-600" />
+                  <p className="font-medium">{lead.budgetRange}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Address Information */}
+          <Card className="shadow-sm">
+            <CardHeader className="pb-4">
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <MapPin className="w-5 h-5 text-orange-600" />
+                Address Information
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                <div className="space-y-1">
+                  <Label className="text-sm text-gray-500">Address</Label>
+                  <p className="font-medium">{lead.address}</p>
+                </div>
+                <div className="grid grid-cols-3 gap-4">
+                  <div className="space-y-1">
+                    <Label className="text-sm text-gray-500">City</Label>
+                    <p className="font-medium">{lead.city}</p>
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-sm text-gray-500">State</Label>
+                    <p className="font-medium">{lead.state}</p>
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-sm text-gray-500">Pincode</Label>
+                    <p className="font-medium">{lead.pincode}</p>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Notes */}
+          <Card className="border-0 shadow-sm">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-lg">Notes</CardTitle>
+              <CardDescription>Private notes about this lead</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                <Textarea
+                  value={notes || ''}
+                  onChange={(e) => handleNotesChange(e.target.value)}
+                  placeholder="Add your notes here..."
+                  rows={4}
+                  className="resize-none"
+                />
+                {notesChanged && (
+                  <div className="flex items-center gap-2 text-xs text-gray-500">
+                    <Clock className="w-3 h-3" />
+                    Unsaved changes
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Middle Column - Activities */}
+        <div className="xl:col-span-4">
+          <Card className="">
+            <CardContent className="p-4">
+              <LeadActivityTimeline
+                activities={lead.activities}
+                leadId={lead.id}
+              />
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Right Column - Management */}
+        <div className="xl:col-span-3 space-y-6 ">
+          {/* Quick Info */}
+          <Card className="shadow-sm">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-lg">Quick Info</CardTitle>
+              <CardDescription>Lead metadata and assignment</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-1">
+                <Label className="text-sm text-gray-500">Source</Label>
+                <Badge variant="outline" className="mt-1">
+                  {lead.source}
+                </Badge>
+              </div>
+
+              <Separator />
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <Label className="text-sm text-gray-500">Created</Label>
+                  <p className="text-sm font-medium">
+                    {formatDateIN(lead.createdAt)}
+                  </p>
+                </div>
+                <div className="space-y-1">
+                  <Label className="text-sm text-gray-500">Follow-ups</Label>
+                  <p className="text-sm font-medium">{lead.followUpCount}</p>
+                </div>
+              </div>
+
+              <Card className="shadow-sm">
+                <CardHeader className="pb-4">
+                  <CardTitle className="text-lg">Assignment</CardTitle>
+                  <CardDescription>
+                    Assign this lead to a team member
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-3">
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium">
+                        Currently Assigned To
+                      </Label>
+                      {lead.assignedTo ? (
+                        <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                          <Avatar className="w-10 h-10">
+                            <AvatarImage
+                              src={lead.assignedTo.profileImage || ''}
+                            />
+                            <AvatarFallback className="bg-blue-100 text-blue-800">
+                              {lead.assignedTo.firstName.charAt(0)}
+                              {lead.assignedTo.lastName.charAt(0)}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div className="flex-1 min-w-0">
+                            <p className="font-medium text-sm truncate">
+                              {lead.assignedTo.firstName}{' '}
+                              {lead.assignedTo.lastName}
+                            </p>
+                            <p className="text-xs text-gray-500">
+                              Assigned {formatDateIN(lead.assignedAt)}
+                            </p>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="text-center py-6 text-gray-500 border-2 border-dashed rounded-lg">
+                          <User className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                          <p className="text-sm">Not assigned to anyone</p>
+                        </div>
+                      )}
+                    </div>
+
+                    <AssignLeadDialog
+                      leadId={lead.id}
+                      currentAssignedTo={lead.assignedTo}
+                      onAssignmentChange={() => {
+                        // You can add a callback to refresh the lead data
+                        // or show a success message
+                      }}
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+            </CardContent>
+          </Card>
+
+          {/* Lead Management */}
+          <Card className="shadow-sm">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-lg">Lead Management</CardTitle>
+              <CardDescription>Update status and priority</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label className="text-sm font-medium">Status</Label>
+                <Select defaultValue={lead.status}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {Object.values(LeadStatus).map((status) => (
+                      <SelectItem value={status} key={status}>
+                        {status}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-sm font-medium">Priority</Label>
+                <Select defaultValue={lead.priority}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {Object.values(LeadPriority).map((priority) => (
+                      <SelectItem value={priority} key={priority}>
+                        {priority}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <Button className="w-full bg-blue-600 hover:bg-blue-700">
+                Save Changes
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    </div>
+  );
+}

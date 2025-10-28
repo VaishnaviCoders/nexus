@@ -1,0 +1,433 @@
+[
+  {
+    "id": "TC001",
+    "title": "Create Lead with Valid Data",
+    "description": "Verify that a new lead can be created successfully using all required and optional fields in the Create Lead form and persists correctly in the database.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the Create Lead page at /dashboard/leads/create"
+      },
+      {
+        "type": "action",
+        "description": "Fill in all required fields: student name, parent name, contact info, enquiry details"
+      },
+      {
+        "type": "action",
+        "description": "Fill in optional fields such as notes"
+      },
+      {
+        "type": "action",
+        "description": "Submit the Create Lead form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the new lead is added to the leads table and displayed with correct details"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify data persistence by checking the database for the new lead with correct field values"
+      }
+    ]
+  },
+  {
+    "id": "TC002",
+    "title": "Create Lead with Missing Required Fields",
+    "description": "Verify that the Create Lead form blocks submission and displays validation errors when required fields are missing.",
+    "category": "error handling",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the Create Lead page"
+      },
+      {
+        "type": "action",
+        "description": "Attempt to submit the form without filling any required fields"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify validation errors are displayed for each required field"
+      },
+      {
+        "type": "assertion",
+        "description": "Form submission is blocked and no new lead is created"
+      }
+    ]
+  },
+  {
+    "id": "TC003",
+    "title": "View Leads Table Data and UI Elements",
+    "description": "Verify the leads table displays up-to-date and accurate key lead information, supports sorting and filtering, and all UI elements like links and phone numbers are interactive as expected.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /dashboard/leads"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the table lists all leads with correct details such as student name, parent contact, status"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the leads table supports sorting by columns such as name and status"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify filtering options filter leads correctly"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify phone numbers and other links are clickable and trigger expected actions"
+      }
+    ]
+  },
+  {
+    "id": "TC004",
+    "title": "View Lead Details and Activity Timeline",
+    "description": "Verify the Lead Details page loads comprehensive lead information, including activity timeline, assignment details, and follow-up reminders.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "From the leads table, select a lead to view its details"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify all lead information fields (student, parent, contact, enquiry details, notes) are displayed correctly"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the activity timeline lists all activities in reverse chronological order with correct detail and timestamps"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify assignment information such as assigned counsellors and follow-up reminders are displayed"
+      }
+    ]
+  },
+  {
+    "id": "TC005",
+    "title": "Add Lead Activity via Popover/Modal",
+    "description": "Verify that new lead activities can be created successfully through the activity creation popover/modal with all relevant data and proper timeline update.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to a lead details page"
+      },
+      {
+        "type": "action",
+        "description": "Open the Add Lead Activity popover/modal"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the activity details (type: call, message, meeting, email), outcome, notes, and follow-up date"
+      },
+      {
+        "type": "action",
+        "description": "Submit the activity form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the new activity is saved and appears at the top of the activity timeline"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify related lead statistics are updated accordingly"
+      }
+    ]
+  },
+  {
+    "id": "TC006",
+    "title": "Assign Lead to Counsellor and Notification",
+    "description": "Verify lead assignment works correctly: updating the database, UI reflects the assigned counsellor, and notification is triggered to the assigned user.",
+    "category": "functional",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to a lead details page"
+      },
+      {
+        "type": "action",
+        "description": "Open the Assign Lead dialog"
+      },
+      {
+        "type": "action",
+        "description": "Select a counsellor and confirm assignment"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the lead's assigned counsellor field updates in the database"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the UI reflects the new assignment immediately"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a notification is sent to the assigned counsellor"
+      }
+    ]
+  },
+  {
+    "id": "TC007",
+    "title": "Unassign Lead from Counsellor",
+    "description": "Verify that unassigning a lead removes the assignment correctly and sends appropriate notifications.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to a lead details page with an assigned counsellor"
+      },
+      {
+        "type": "action",
+        "description": "Open the Assign Lead dialog and choose to unassign"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the lead's assigned counsellor field is cleared in the database"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify UI updates to reflect unassigned state immediately"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify notification is sent if applicable for unassignment"
+      }
+    ]
+  },
+  {
+    "id": "TC008",
+    "title": "Single Lead Deletion with Confirmation and Role-based Permission",
+    "description": "Verify that single lead delete action requires confirmation, respects user roles for permission, and correctly removes the lead.",
+    "category": "error handling",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Attempt to delete a single lead from the leads table or lead details page"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a confirmation prompt is displayed and requires user action"
+      },
+      {
+        "type": "action",
+        "description": "Confirm the delete action"
+      },
+      {
+        "type": "assertion",
+        "description": "If user has permission, verify lead is deleted (soft or permanent as per policy)"
+      },
+      {
+        "type": "assertion",
+        "description": "If user lacks permission, verify deletion is blocked and appropriate error message is shown"
+      }
+    ]
+  },
+  {
+    "id": "TC009",
+    "title": "Bulk Delete Leads with Confirmation and Role-based Permission",
+    "description": "Verify bulk delete operation on multiple selected leads requires confirmation, respects role-based permissions, and updates the leads table accordingly.",
+    "category": "error handling",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Select multiple leads from the leads table"
+      },
+      {
+        "type": "action",
+        "description": "Trigger the bulk delete action"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a confirmation dialog is shown listing selected leads count"
+      },
+      {
+        "type": "action",
+        "description": "Confirm delete action"
+      },
+      {
+        "type": "assertion",
+        "description": "If user has permission, verify all selected leads are deleted and removed from the table"
+      },
+      {
+        "type": "assertion",
+        "description": "If user lacks permission for any leads, verify those leads are not deleted and user is informed appropriately"
+      }
+    ]
+  },
+  {
+    "id": "TC010",
+    "title": "Lead Assignment Notification Trigger",
+    "description": "Verify that assigning or unassigning leads triggers the notification system, and notifications are received by the correct users promptly.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Assign a lead to a counsellor"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a notification is triggered and received by the assigned counsellor"
+      },
+      {
+        "type": "action",
+        "description": "Unassign the lead"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a notification is sent or logged for the unassignment event"
+      }
+    ]
+  },
+  {
+    "id": "TC011",
+    "title": "UI Responsiveness and Element Integrity on Supported Devices",
+    "description": "Verify that all lead management UI components render correctly, with no broken or missing elements, and are fully functional across supported desktop and mobile devices.",
+    "category": "ui",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Open the leads dashboard, create lead form, and lead details page on multiple viewport sizes (desktop, tablet, mobile)"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify all UI components load without visual breakage or missing elements"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify responsiveness: tables adapt, forms are usable, modals display correctly"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify interactive elements such as buttons, dialogs, links function correctly on all devices"
+      }
+    ]
+  },
+  {
+    "id": "TC012",
+    "title": "Lead Activity Data Validation and Error Handling",
+    "description": "Verify that invalid or incomplete input in lead activity creation is handled gracefully with validation errors preventing submission.",
+    "category": "error handling",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Open add lead activity popover/modal"
+      },
+      {
+        "type": "action",
+        "description": "Enter invalid or incomplete data such as missing activity type or invalid date formats"
+      },
+      {
+        "type": "action",
+        "description": "Attempt to submit the activity form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify form validation errors are shown clearly for each invalid field"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the activity is not saved or added to the timeline"
+      }
+    ]
+  },
+  {
+    "id": "TC013",
+    "title": "Leads Table Sorting Stability on Edge Data",
+    "description": "Verify leads table sorting behaves correctly with edge cases including null, identical, or special character data in sortable columns.",
+    "category": "functional",
+    "priority": "Low",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Load leads table containing edge cases such as missing names, identical timestamps, special characters in names"
+      },
+      {
+        "type": "action",
+        "description": "Sort leads table by each sortable column (name, status, date)"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify sorting order is correct, stable, and no errors occur"
+      }
+    ]
+  },
+  {
+    "id": "TC014",
+    "title": "Database Consistency After Lead Conversion",
+    "description": "Verify that converting a lead into an enrolled student updates all related data correctly, maintaining communication history and removing or updating lead status as per business logic.",
+    "category": "functional",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Convert a lead into an enrolled student using the conversion feature"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the lead status is updated or lead is removed as expected"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify communication and activity history is preserved and correctly linked"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify database records for enrolled students include all relevant data from the lead"
+      }
+    ]
+  },
+  {
+    "id": "TC015",
+    "title": "Access Control Enforcement on Lead Management Actions",
+    "description": "Verify role-based access control prevents unauthorized users from performing restricted operations such as delete, assign, or convert leads.",
+    "category": "security",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Login as a user with limited permissions"
+      },
+      {
+        "type": "action",
+        "description": "Attempt to delete a lead"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify deletion is blocked and appropriate error or notification shown"
+      },
+      {
+        "type": "action",
+        "description": "Attempt to assign or unassign leads"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify assignment actions are blocked for unauthorized users"
+      },
+      {
+        "type": "action",
+        "description": "Attempt to convert a lead"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify conversion is blocked for unauthorized users"
+      }
+    ]
+  }
+]

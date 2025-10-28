@@ -3583,28 +3583,35 @@ export type LeaveStatusTimelineScalarFieldEnum = (typeof LeaveStatusTimelineScal
 export const LeadScalarFieldEnum = {
   id: 'id',
   organizationId: 'organizationId',
+  academicYearId: 'academicYearId',
   studentName: 'studentName',
   parentName: 'parentName',
   phone: 'phone',
   email: 'email',
   whatsappNumber: 'whatsappNumber',
-  enquiryForGrade: 'enquiryForGrade',
+  enquiryFor: 'enquiryFor',
   currentSchool: 'currentSchool',
   address: 'address',
   city: 'city',
+  state: 'state',
+  pincode: 'pincode',
   source: 'source',
   status: 'status',
   priority: 'priority',
-  assignedToId: 'assignedToId',
+  score: 'score',
+  assignedToUserId: 'assignedToUserId',
   assignedAt: 'assignedAt',
   nextFollowUpAt: 'nextFollowUpAt',
   lastContactedAt: 'lastContactedAt',
+  followUpCount: 'followUpCount',
   convertedAt: 'convertedAt',
   convertedToStudentId: 'convertedToStudentId',
   notes: 'notes',
   requirements: 'requirements',
   budgetRange: 'budgetRange',
-  createdById: 'createdById',
+  closureReason: 'closureReason',
+  communicationPreference: 'communicationPreference',
+  createdByUserId: 'createdByUserId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -3619,6 +3626,7 @@ export const LeadActivityScalarFieldEnum = {
   title: 'title',
   description: 'description',
   outcome: 'outcome',
+  sentiment: 'sentiment',
   performedById: 'performedById',
   performedAt: 'performedAt',
   followUpDate: 'followUpDate',
@@ -4095,22 +4103,25 @@ export type LeaveStatusTimelineOrderByRelevanceFieldEnum = (typeof LeaveStatusTi
 export const LeadOrderByRelevanceFieldEnum = {
   id: 'id',
   organizationId: 'organizationId',
+  academicYearId: 'academicYearId',
   studentName: 'studentName',
   parentName: 'parentName',
   phone: 'phone',
   email: 'email',
   whatsappNumber: 'whatsappNumber',
-  enquiryForGrade: 'enquiryForGrade',
+  enquiryFor: 'enquiryFor',
   currentSchool: 'currentSchool',
   address: 'address',
   city: 'city',
-  source: 'source',
-  assignedToId: 'assignedToId',
+  state: 'state',
+  pincode: 'pincode',
+  assignedToUserId: 'assignedToUserId',
   convertedToStudentId: 'convertedToStudentId',
   notes: 'notes',
   requirements: 'requirements',
   budgetRange: 'budgetRange',
-  createdById: 'createdById'
+  closureReason: 'closureReason',
+  createdByUserId: 'createdByUserId'
 } as const
 
 export type LeadOrderByRelevanceFieldEnum = (typeof LeadOrderByRelevanceFieldEnum)[keyof typeof LeadOrderByRelevanceFieldEnum]
@@ -4605,6 +4616,20 @@ export type ListEnumLeaveStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$
 
 
 /**
+ * Reference to a field of type 'LeadSource'
+ */
+export type EnumLeadSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LeadSource'>
+    
+
+
+/**
+ * Reference to a field of type 'LeadSource[]'
+ */
+export type ListEnumLeadSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LeadSource[]'>
+    
+
+
+/**
  * Reference to a field of type 'LeadStatus'
  */
 export type EnumLeadStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LeadStatus'>
@@ -4633,16 +4658,44 @@ export type ListEnumLeadPriorityFieldRefInput<$PrismaModel> = FieldRefInputType<
 
 
 /**
- * Reference to a field of type 'ActivityType'
+ * Reference to a field of type 'LeadCommunicationPreference[]'
  */
-export type EnumActivityTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ActivityType'>
+export type ListEnumLeadCommunicationPreferenceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LeadCommunicationPreference[]'>
     
 
 
 /**
- * Reference to a field of type 'ActivityType[]'
+ * Reference to a field of type 'LeadCommunicationPreference'
  */
-export type ListEnumActivityTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ActivityType[]'>
+export type EnumLeadCommunicationPreferenceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LeadCommunicationPreference'>
+    
+
+
+/**
+ * Reference to a field of type 'LeadActivityType'
+ */
+export type EnumLeadActivityTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LeadActivityType'>
+    
+
+
+/**
+ * Reference to a field of type 'LeadActivityType[]'
+ */
+export type ListEnumLeadActivityTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LeadActivityType[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Sentiment'
+ */
+export type EnumSentimentFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Sentiment'>
+    
+
+
+/**
+ * Reference to a field of type 'Sentiment[]'
+ */
+export type ListEnumSentimentFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Sentiment[]'>
     
 
 /**

@@ -100,6 +100,68 @@ const badgeVariants = cva(
           'bg-orange-100 text-orange-800 dark:bg-orange-900/20 dark:text-orange-300',
         RESULT:
           'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/20 dark:text-indigo-300',
+
+        // Lead Status
+        NEW: 'bg-blue-100 text-blue-800 border-blue-200',
+        CONTACTED: 'bg-purple-100 text-purple-800 border-purple-200',
+        QUALIFIED: 'bg-indigo-100 text-indigo-800 border-indigo-200',
+        INTERESTED: 'bg-cyan-100 text-cyan-800 border-cyan-200',
+        VISIT_SCHEDULED: 'bg-orange-100 text-orange-800 border-orange-200',
+        VISITED: 'bg-amber-100 text-amber-800 border-amber-200',
+        PROPOSAL_SENT: 'bg-teal-100 text-teal-800 border-teal-200',
+        NEGOTIATION: 'bg-violet-100 text-violet-800 border-violet-200',
+        CONVERTED: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+        NOT_INTERESTED: 'bg-red-100 text-red-800 border-red-200',
+        UNRESPONSIVE: 'bg-gray-100 text-gray-800 border-gray-200',
+        INVALID: 'bg-slate-100 text-slate-800 border-slate-200',
+        LOST: 'bg-rose-100 text-rose-800 border-rose-200',
+        ON_HOLD: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+
+        // Lead Priority
+
+        VIP: 'bg-purple-100 text-purple-800 border-purple-200',
+
+        // Lead Source
+        WEBSITE: 'bg-blue-100 text-blue-800 border-blue-200',
+        GOOGLE_ADS: 'bg-red-100 text-red-800 border-red-200',
+        FACEBOOK_ADS: 'bg-indigo-100 text-indigo-800 border-indigo-200',
+        INSTAGRAM_ADS: 'bg-pink-100 text-pink-800 border-pink-200',
+        LINKEDIN_ADS: 'bg-sky-100 text-sky-800 border-sky-200',
+        EMAIL_MARKETING: 'bg-teal-100 text-teal-800 border-teal-200',
+        SEO_ORGANIC: 'bg-green-100 text-green-800 border-green-200',
+        SOCIAL_MEDIA: 'bg-purple-100 text-purple-800 border-purple-200',
+        WALK_IN: 'bg-amber-100 text-amber-800 border-amber-200',
+        PHONE_CALL: 'bg-cyan-100 text-cyan-800 border-cyan-200',
+        REFERRAL_PROGRAM: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+        EDUCATION_FAIR: 'bg-orange-100 text-orange-800 border-orange-200',
+        PRINT_MEDIA: 'bg-stone-100 text-stone-800 border-stone-200',
+        RADIO: 'bg-rose-100 text-rose-800 border-rose-200',
+        OUTDOOR_ADVERTISING: 'bg-lime-100 text-lime-800 border-lime-200',
+        AGENT_PARTNER: 'bg-violet-100 text-violet-800 border-violet-200',
+        ALUMNI_REFERRAL: 'bg-fuchsia-100 text-fuchsia-800 border-fuchsia-200',
+        WEBINAR: 'bg-cyan-100 text-cyan-800 border-cyan-200',
+        WORKSHOP: 'bg-amber-100 text-amber-800 border-amber-200',
+        WORD_OF_MOUTH: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+
+        // Lead Activity Type
+        CALL: 'bg-green-100 text-green-800 border-green-200',
+        EMAIL: 'bg-blue-100 text-blue-800 border-blue-200',
+        SMS: 'bg-purple-100 text-purple-800 border-purple-200',
+        WHATSAPP: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+        MEETING: 'bg-orange-100 text-orange-800 border-orange-200',
+        VISIT: 'bg-amber-100 text-amber-800 border-amber-200',
+        SCHOOL_TOUR: 'bg-cyan-100 text-cyan-800 border-cyan-200',
+        DEMO_CLASS: 'bg-indigo-100 text-indigo-800 border-indigo-200',
+        FOLLOW_UP: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+        DOCUMENT_SENT: 'bg-teal-100 text-teal-800 border-teal-200',
+        DOCUMENT_RECEIVED: 'bg-violet-100 text-violet-800 border-violet-200',
+        APPLICATION_SUBMITTED:
+          'bg-emerald-100 text-emerald-800 border-emerald-200',
+        FEE_DISCUSSED: 'bg-lime-100 text-lime-800 border-lime-200',
+        COUNSELING: 'bg-sky-100 text-sky-800 border-sky-200',
+        PARENT_MEETING: 'bg-rose-100 text-rose-800 border-rose-200',
+        STUDENT_INTERACTION: 'bg-pink-100 text-pink-800 border-pink-200',
+        OTHER: 'bg-gray-100 text-gray-800 border-gray-200',
       },
     },
     defaultVariants: {
