@@ -1,7 +1,11 @@
 import { Exam, PrismaClient } from '../generated/prisma/client';
 import { NoticeType } from '../generated/prisma/enums';
+// import { faker } from '@faker-js/faker';
 
-// import { getDefaultAcademicYear } from '../lib/academicYear';
+// Sample IDs for relations (adjust as needed)
+const organizationIds = ['org_2yikjYDIq5D8AjIyLvq2T6K5jZF', 'org2', 'org3'];
+const academicYearIds = ['cmd4i9bq60007vh6spt4lp4er', 'ay2026'];
+const userIds = ['user1', 'user2', 'user3'];
 
 const prisma = new PrismaClient();
 
@@ -42,10 +46,144 @@ async function generateNotices() {
   return notices;
 }
 
+async function seedLeads() {
+  const closedStatuses = ['NOT_INTERESTED', 'INVALID', 'UNRESPONSIVE', 'LOST'];
+  for (let i = 0; i < 100; i++) {
+    // const status = getRandomEnum(leadStatuses);
+    // const convertedToStudentId =
+    //   status === 'CONVERTED' ? `student_${faker.string.uuid()}` : null;
+    // const closureReason = closedStatuses.includes(status)
+    //   ? faker.lorem.sentence()
+    //   : null;
+    // await prisma.lead.create({
+    //   data: {
+    //     organizationId: faker.helpers.arrayElement(organizationIds),
+    //     academicYearId: faker.helpers.arrayElement(academicYearIds),
+    //     studentName: faker.person.fullName(),
+    //     parentName: faker.person.fullName(),
+    //     phone: faker.phone.number('98########'),
+    //     email: faker.internet.email(),
+    //     whatsappNumber: faker.phone.number('98########'),
+    //     enquiryFor: faker.word.words({ count: { min: 1, max: 3 } }),
+    //     currentSchool: faker.company.name(),
+    //     address: faker.location.streetAddress(),
+    //     city: faker.location.city(),
+    //     state: faker.location.state(),
+    //     pincode: faker.location.zipCode('41####'),
+    //     source: getRandomEnum(leadSources),
+    //     status,
+    //     priority: getRandomEnum(leadPriorities),
+    //     score: faker.number.int({ min: 0, max: 100 }),
+    //     assignedToUserId: faker.datatype.boolean()
+    //       ? faker.helpers.arrayElement(userIds)
+    //       : null,
+    //     assignedAt: faker.date.recent({ days: 10 }),
+    //     nextFollowUpAt: faker.datatype.boolean()
+    //       ? faker.date.soon({ days: 10 })
+    //       : null,
+    //     lastContactedAt: faker.datatype.boolean()
+    //       ? faker.date.recent({ days: 5 })
+    //       : null,
+    //     followUpCount: faker.number.int({ min: 0, max: 6 }),
+    //     convertedAt:
+    //       status === 'CONVERTED' ? faker.date.recent({ days: 15 }) : null,
+    //     convertedToStudentId,
+    //     notes: faker.lorem.sentence(),
+    //     requirements: randomArr(requirementsOptions),
+    //     budgetRange: faker.helpers.maybe(
+    //       () => faker.helpers.arrayElement(budgets),
+    //       { probability: 0.4 }
+    //     ),
+    //     closureReason,
+    //     createdByUserId: faker.helpers.maybe(
+    //       () => faker.helpers.arrayElement(userIds),
+    //       { probability: 0.8 }
+    //     ),
+    //     createdAt: faker.date.past({ years: 1 }),
+    //     // updatedAt: left to default (auto)
+    //   },
+    // });
+  }
+}
+
+// ENUMS
+const leadSources = [
+  'WEBSITE',
+  'GOOGLE_ADS',
+  'FACEBOOK_ADS',
+  'INSTAGRAM_ADS',
+  'LINKEDIN_ADS',
+  'EMAIL_MARKETING',
+  'SEO_ORGANIC',
+  'SOCIAL_MEDIA',
+  'WALK_IN',
+  'PHONE_CALL',
+  'REFERRAL_PROGRAM',
+  'EDUCATION_FAIR',
+  'PRINT_MEDIA',
+  'RADIO',
+  'OUTDOOR_ADVERTISING',
+  'AGENT_PARTNER',
+  'ALUMNI_REFERRAL',
+  'WEBINAR',
+  'WORKSHOP',
+  'WORD_OF_MOUTH',
+] as const;
+
+const leadStatuses = [
+  'NEW',
+  'CONTACTED',
+  'QUALIFIED',
+  'INTERESTED',
+  'VISIT_SCHEDULED',
+  'VISITED',
+  'PROPOSAL_SENT',
+  'NEGOTIATION',
+  'CONVERTED',
+  'NOT_INTERESTED',
+  'UNRESPONSIVE',
+  'INVALID',
+  'LOST',
+  'ON_HOLD',
+] as const;
+
+const leadPriorities = ['LOW', 'MEDIUM', 'HIGH', 'URGENT', 'VIP'] as const;
+
+const requirementsOptions = [
+  'Transportation',
+  'Hostel',
+  'Scholarship',
+  'Sports Facility',
+  'Day Care',
+  'After School',
+];
+
+const budgets = ['50k-1L', '1L-2L', '2L-3L', '3L+'];
+
+const communicationPreferences = [
+  'EMAIL',
+  'SMS',
+  'WHATSAPP',
+  'PHONE_CALL',
+] as const;
+
+function getRandomEnum<T>(arr: readonly T[]): T {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function randomArr<T>(arr: T[]) {
+  // return faker.helpers.arrayElements(arr, faker.number.int({ min: 1, max: 3 }));
+}
+
 const main = async () => {
   console.log('🌱 Seeding notices...');
 
   const notices = await generateNotices();
+
+  // Now seed Leads
+  console.log('🌱 Seeding leads...');
+  await seedLeads();
+  console.log('✅ 100 Leads created!');
 
   const result = await prisma.notice.createMany({
     data: notices,

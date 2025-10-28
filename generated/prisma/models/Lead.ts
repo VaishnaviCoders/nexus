@@ -44,7 +44,7 @@ export type LeadMinAggregateOutputType = {
   phone: string | null
   email: string | null
   whatsappNumber: string | null
-  enquiryForGrade: string | null
+  enquiryFor: string | null
   currentSchool: string | null
   address: string | null
   city: string | null
@@ -54,7 +54,7 @@ export type LeadMinAggregateOutputType = {
   status: $Enums.LeadStatus | null
   priority: $Enums.LeadPriority | null
   score: number | null
-  assignedToId: string | null
+  assignedToUserId: string | null
   assignedAt: Date | null
   nextFollowUpAt: Date | null
   lastContactedAt: Date | null
@@ -64,7 +64,7 @@ export type LeadMinAggregateOutputType = {
   notes: string | null
   budgetRange: string | null
   closureReason: string | null
-  createdById: string | null
+  createdByUserId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -78,7 +78,7 @@ export type LeadMaxAggregateOutputType = {
   phone: string | null
   email: string | null
   whatsappNumber: string | null
-  enquiryForGrade: string | null
+  enquiryFor: string | null
   currentSchool: string | null
   address: string | null
   city: string | null
@@ -88,7 +88,7 @@ export type LeadMaxAggregateOutputType = {
   status: $Enums.LeadStatus | null
   priority: $Enums.LeadPriority | null
   score: number | null
-  assignedToId: string | null
+  assignedToUserId: string | null
   assignedAt: Date | null
   nextFollowUpAt: Date | null
   lastContactedAt: Date | null
@@ -98,7 +98,7 @@ export type LeadMaxAggregateOutputType = {
   notes: string | null
   budgetRange: string | null
   closureReason: string | null
-  createdById: string | null
+  createdByUserId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -112,7 +112,7 @@ export type LeadCountAggregateOutputType = {
   phone: number
   email: number
   whatsappNumber: number
-  enquiryForGrade: number
+  enquiryFor: number
   currentSchool: number
   address: number
   city: number
@@ -122,7 +122,7 @@ export type LeadCountAggregateOutputType = {
   status: number
   priority: number
   score: number
-  assignedToId: number
+  assignedToUserId: number
   assignedAt: number
   nextFollowUpAt: number
   lastContactedAt: number
@@ -134,7 +134,7 @@ export type LeadCountAggregateOutputType = {
   budgetRange: number
   closureReason: number
   communicationPreference: number
-  createdById: number
+  createdByUserId: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -160,7 +160,7 @@ export type LeadMinAggregateInputType = {
   phone?: true
   email?: true
   whatsappNumber?: true
-  enquiryForGrade?: true
+  enquiryFor?: true
   currentSchool?: true
   address?: true
   city?: true
@@ -170,7 +170,7 @@ export type LeadMinAggregateInputType = {
   status?: true
   priority?: true
   score?: true
-  assignedToId?: true
+  assignedToUserId?: true
   assignedAt?: true
   nextFollowUpAt?: true
   lastContactedAt?: true
@@ -180,7 +180,7 @@ export type LeadMinAggregateInputType = {
   notes?: true
   budgetRange?: true
   closureReason?: true
-  createdById?: true
+  createdByUserId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -194,7 +194,7 @@ export type LeadMaxAggregateInputType = {
   phone?: true
   email?: true
   whatsappNumber?: true
-  enquiryForGrade?: true
+  enquiryFor?: true
   currentSchool?: true
   address?: true
   city?: true
@@ -204,7 +204,7 @@ export type LeadMaxAggregateInputType = {
   status?: true
   priority?: true
   score?: true
-  assignedToId?: true
+  assignedToUserId?: true
   assignedAt?: true
   nextFollowUpAt?: true
   lastContactedAt?: true
@@ -214,7 +214,7 @@ export type LeadMaxAggregateInputType = {
   notes?: true
   budgetRange?: true
   closureReason?: true
-  createdById?: true
+  createdByUserId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -228,7 +228,7 @@ export type LeadCountAggregateInputType = {
   phone?: true
   email?: true
   whatsappNumber?: true
-  enquiryForGrade?: true
+  enquiryFor?: true
   currentSchool?: true
   address?: true
   city?: true
@@ -238,7 +238,7 @@ export type LeadCountAggregateInputType = {
   status?: true
   priority?: true
   score?: true
-  assignedToId?: true
+  assignedToUserId?: true
   assignedAt?: true
   nextFollowUpAt?: true
   lastContactedAt?: true
@@ -250,7 +250,7 @@ export type LeadCountAggregateInputType = {
   budgetRange?: true
   closureReason?: true
   communicationPreference?: true
-  createdById?: true
+  createdByUserId?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -345,13 +345,13 @@ export type LeadGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
 export type LeadGroupByOutputType = {
   id: string
   organizationId: string
-  academicYearId: string | null
+  academicYearId: string
   studentName: string
   parentName: string | null
   phone: string
   email: string | null
   whatsappNumber: string | null
-  enquiryForGrade: string
+  enquiryFor: string
   currentSchool: string | null
   address: string | null
   city: string | null
@@ -361,7 +361,7 @@ export type LeadGroupByOutputType = {
   status: $Enums.LeadStatus
   priority: $Enums.LeadPriority
   score: number
-  assignedToId: string | null
+  assignedToUserId: string | null
   assignedAt: Date | null
   nextFollowUpAt: Date | null
   lastContactedAt: Date | null
@@ -373,7 +373,7 @@ export type LeadGroupByOutputType = {
   budgetRange: string | null
   closureReason: string | null
   communicationPreference: $Enums.LeadCommunicationPreference[]
-  createdById: string | null
+  createdByUserId: string | null
   createdAt: Date
   updatedAt: Date
   _count: LeadCountAggregateOutputType | null
@@ -404,13 +404,13 @@ export type LeadWhereInput = {
   NOT?: Prisma.LeadWhereInput | Prisma.LeadWhereInput[]
   id?: Prisma.StringFilter<"Lead"> | string
   organizationId?: Prisma.StringFilter<"Lead"> | string
-  academicYearId?: Prisma.StringNullableFilter<"Lead"> | string | null
+  academicYearId?: Prisma.StringFilter<"Lead"> | string
   studentName?: Prisma.StringFilter<"Lead"> | string
   parentName?: Prisma.StringNullableFilter<"Lead"> | string | null
   phone?: Prisma.StringFilter<"Lead"> | string
   email?: Prisma.StringNullableFilter<"Lead"> | string | null
   whatsappNumber?: Prisma.StringNullableFilter<"Lead"> | string | null
-  enquiryForGrade?: Prisma.StringFilter<"Lead"> | string
+  enquiryFor?: Prisma.StringFilter<"Lead"> | string
   currentSchool?: Prisma.StringNullableFilter<"Lead"> | string | null
   address?: Prisma.StringNullableFilter<"Lead"> | string | null
   city?: Prisma.StringNullableFilter<"Lead"> | string | null
@@ -420,7 +420,7 @@ export type LeadWhereInput = {
   status?: Prisma.EnumLeadStatusFilter<"Lead"> | $Enums.LeadStatus
   priority?: Prisma.EnumLeadPriorityFilter<"Lead"> | $Enums.LeadPriority
   score?: Prisma.IntFilter<"Lead"> | number
-  assignedToId?: Prisma.StringNullableFilter<"Lead"> | string | null
+  assignedToUserId?: Prisma.StringNullableFilter<"Lead"> | string | null
   assignedAt?: Prisma.DateTimeNullableFilter<"Lead"> | Date | string | null
   nextFollowUpAt?: Prisma.DateTimeNullableFilter<"Lead"> | Date | string | null
   lastContactedAt?: Prisma.DateTimeNullableFilter<"Lead"> | Date | string | null
@@ -432,12 +432,13 @@ export type LeadWhereInput = {
   budgetRange?: Prisma.StringNullableFilter<"Lead"> | string | null
   closureReason?: Prisma.StringNullableFilter<"Lead"> | string | null
   communicationPreference?: Prisma.EnumLeadCommunicationPreferenceNullableListFilter<"Lead">
-  createdById?: Prisma.StringNullableFilter<"Lead"> | string | null
+  createdByUserId?: Prisma.StringNullableFilter<"Lead"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Lead"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Lead"> | Date | string
   organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
-  academicYear?: Prisma.XOR<Prisma.AcademicYearNullableScalarRelationFilter, Prisma.AcademicYearWhereInput> | null
+  academicYear?: Prisma.XOR<Prisma.AcademicYearScalarRelationFilter, Prisma.AcademicYearWhereInput>
   assignedTo?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  convertedToStudent?: Prisma.XOR<Prisma.StudentNullableScalarRelationFilter, Prisma.StudentWhereInput> | null
   activities?: Prisma.LeadActivityListRelationFilter
   createdBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }
@@ -445,13 +446,13 @@ export type LeadWhereInput = {
 export type LeadOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
-  academicYearId?: Prisma.SortOrderInput | Prisma.SortOrder
+  academicYearId?: Prisma.SortOrder
   studentName?: Prisma.SortOrder
   parentName?: Prisma.SortOrderInput | Prisma.SortOrder
   phone?: Prisma.SortOrder
   email?: Prisma.SortOrderInput | Prisma.SortOrder
   whatsappNumber?: Prisma.SortOrderInput | Prisma.SortOrder
-  enquiryForGrade?: Prisma.SortOrder
+  enquiryFor?: Prisma.SortOrder
   currentSchool?: Prisma.SortOrderInput | Prisma.SortOrder
   address?: Prisma.SortOrderInput | Prisma.SortOrder
   city?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -461,7 +462,7 @@ export type LeadOrderByWithRelationInput = {
   status?: Prisma.SortOrder
   priority?: Prisma.SortOrder
   score?: Prisma.SortOrder
-  assignedToId?: Prisma.SortOrderInput | Prisma.SortOrder
+  assignedToUserId?: Prisma.SortOrderInput | Prisma.SortOrder
   assignedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   nextFollowUpAt?: Prisma.SortOrderInput | Prisma.SortOrder
   lastContactedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -473,12 +474,13 @@ export type LeadOrderByWithRelationInput = {
   budgetRange?: Prisma.SortOrderInput | Prisma.SortOrder
   closureReason?: Prisma.SortOrderInput | Prisma.SortOrder
   communicationPreference?: Prisma.SortOrder
-  createdById?: Prisma.SortOrderInput | Prisma.SortOrder
+  createdByUserId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   organization?: Prisma.OrganizationOrderByWithRelationInput
   academicYear?: Prisma.AcademicYearOrderByWithRelationInput
   assignedTo?: Prisma.UserOrderByWithRelationInput
+  convertedToStudent?: Prisma.StudentOrderByWithRelationInput
   activities?: Prisma.LeadActivityOrderByRelationAggregateInput
   createdBy?: Prisma.UserOrderByWithRelationInput
   _relevance?: Prisma.LeadOrderByRelevanceInput
@@ -486,18 +488,18 @@ export type LeadOrderByWithRelationInput = {
 
 export type LeadWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  organizationId_phone_enquiryForGrade?: Prisma.LeadOrganizationIdPhoneEnquiryForGradeCompoundUniqueInput
+  convertedToStudentId?: string
   AND?: Prisma.LeadWhereInput | Prisma.LeadWhereInput[]
   OR?: Prisma.LeadWhereInput[]
   NOT?: Prisma.LeadWhereInput | Prisma.LeadWhereInput[]
   organizationId?: Prisma.StringFilter<"Lead"> | string
-  academicYearId?: Prisma.StringNullableFilter<"Lead"> | string | null
+  academicYearId?: Prisma.StringFilter<"Lead"> | string
   studentName?: Prisma.StringFilter<"Lead"> | string
   parentName?: Prisma.StringNullableFilter<"Lead"> | string | null
   phone?: Prisma.StringFilter<"Lead"> | string
   email?: Prisma.StringNullableFilter<"Lead"> | string | null
   whatsappNumber?: Prisma.StringNullableFilter<"Lead"> | string | null
-  enquiryForGrade?: Prisma.StringFilter<"Lead"> | string
+  enquiryFor?: Prisma.StringFilter<"Lead"> | string
   currentSchool?: Prisma.StringNullableFilter<"Lead"> | string | null
   address?: Prisma.StringNullableFilter<"Lead"> | string | null
   city?: Prisma.StringNullableFilter<"Lead"> | string | null
@@ -507,38 +509,38 @@ export type LeadWhereUniqueInput = Prisma.AtLeast<{
   status?: Prisma.EnumLeadStatusFilter<"Lead"> | $Enums.LeadStatus
   priority?: Prisma.EnumLeadPriorityFilter<"Lead"> | $Enums.LeadPriority
   score?: Prisma.IntFilter<"Lead"> | number
-  assignedToId?: Prisma.StringNullableFilter<"Lead"> | string | null
+  assignedToUserId?: Prisma.StringNullableFilter<"Lead"> | string | null
   assignedAt?: Prisma.DateTimeNullableFilter<"Lead"> | Date | string | null
   nextFollowUpAt?: Prisma.DateTimeNullableFilter<"Lead"> | Date | string | null
   lastContactedAt?: Prisma.DateTimeNullableFilter<"Lead"> | Date | string | null
   followUpCount?: Prisma.IntFilter<"Lead"> | number
   convertedAt?: Prisma.DateTimeNullableFilter<"Lead"> | Date | string | null
-  convertedToStudentId?: Prisma.StringNullableFilter<"Lead"> | string | null
   notes?: Prisma.StringNullableFilter<"Lead"> | string | null
   requirements?: Prisma.StringNullableListFilter<"Lead">
   budgetRange?: Prisma.StringNullableFilter<"Lead"> | string | null
   closureReason?: Prisma.StringNullableFilter<"Lead"> | string | null
   communicationPreference?: Prisma.EnumLeadCommunicationPreferenceNullableListFilter<"Lead">
-  createdById?: Prisma.StringNullableFilter<"Lead"> | string | null
+  createdByUserId?: Prisma.StringNullableFilter<"Lead"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Lead"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Lead"> | Date | string
   organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
-  academicYear?: Prisma.XOR<Prisma.AcademicYearNullableScalarRelationFilter, Prisma.AcademicYearWhereInput> | null
+  academicYear?: Prisma.XOR<Prisma.AcademicYearScalarRelationFilter, Prisma.AcademicYearWhereInput>
   assignedTo?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  convertedToStudent?: Prisma.XOR<Prisma.StudentNullableScalarRelationFilter, Prisma.StudentWhereInput> | null
   activities?: Prisma.LeadActivityListRelationFilter
   createdBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
-}, "id" | "organizationId_phone_enquiryForGrade">
+}, "id" | "convertedToStudentId">
 
 export type LeadOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
-  academicYearId?: Prisma.SortOrderInput | Prisma.SortOrder
+  academicYearId?: Prisma.SortOrder
   studentName?: Prisma.SortOrder
   parentName?: Prisma.SortOrderInput | Prisma.SortOrder
   phone?: Prisma.SortOrder
   email?: Prisma.SortOrderInput | Prisma.SortOrder
   whatsappNumber?: Prisma.SortOrderInput | Prisma.SortOrder
-  enquiryForGrade?: Prisma.SortOrder
+  enquiryFor?: Prisma.SortOrder
   currentSchool?: Prisma.SortOrderInput | Prisma.SortOrder
   address?: Prisma.SortOrderInput | Prisma.SortOrder
   city?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -548,7 +550,7 @@ export type LeadOrderByWithAggregationInput = {
   status?: Prisma.SortOrder
   priority?: Prisma.SortOrder
   score?: Prisma.SortOrder
-  assignedToId?: Prisma.SortOrderInput | Prisma.SortOrder
+  assignedToUserId?: Prisma.SortOrderInput | Prisma.SortOrder
   assignedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   nextFollowUpAt?: Prisma.SortOrderInput | Prisma.SortOrder
   lastContactedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -560,7 +562,7 @@ export type LeadOrderByWithAggregationInput = {
   budgetRange?: Prisma.SortOrderInput | Prisma.SortOrder
   closureReason?: Prisma.SortOrderInput | Prisma.SortOrder
   communicationPreference?: Prisma.SortOrder
-  createdById?: Prisma.SortOrderInput | Prisma.SortOrder
+  createdByUserId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.LeadCountOrderByAggregateInput
@@ -576,13 +578,13 @@ export type LeadScalarWhereWithAggregatesInput = {
   NOT?: Prisma.LeadScalarWhereWithAggregatesInput | Prisma.LeadScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Lead"> | string
   organizationId?: Prisma.StringWithAggregatesFilter<"Lead"> | string
-  academicYearId?: Prisma.StringNullableWithAggregatesFilter<"Lead"> | string | null
+  academicYearId?: Prisma.StringWithAggregatesFilter<"Lead"> | string
   studentName?: Prisma.StringWithAggregatesFilter<"Lead"> | string
   parentName?: Prisma.StringNullableWithAggregatesFilter<"Lead"> | string | null
   phone?: Prisma.StringWithAggregatesFilter<"Lead"> | string
   email?: Prisma.StringNullableWithAggregatesFilter<"Lead"> | string | null
   whatsappNumber?: Prisma.StringNullableWithAggregatesFilter<"Lead"> | string | null
-  enquiryForGrade?: Prisma.StringWithAggregatesFilter<"Lead"> | string
+  enquiryFor?: Prisma.StringWithAggregatesFilter<"Lead"> | string
   currentSchool?: Prisma.StringNullableWithAggregatesFilter<"Lead"> | string | null
   address?: Prisma.StringNullableWithAggregatesFilter<"Lead"> | string | null
   city?: Prisma.StringNullableWithAggregatesFilter<"Lead"> | string | null
@@ -592,7 +594,7 @@ export type LeadScalarWhereWithAggregatesInput = {
   status?: Prisma.EnumLeadStatusWithAggregatesFilter<"Lead"> | $Enums.LeadStatus
   priority?: Prisma.EnumLeadPriorityWithAggregatesFilter<"Lead"> | $Enums.LeadPriority
   score?: Prisma.IntWithAggregatesFilter<"Lead"> | number
-  assignedToId?: Prisma.StringNullableWithAggregatesFilter<"Lead"> | string | null
+  assignedToUserId?: Prisma.StringNullableWithAggregatesFilter<"Lead"> | string | null
   assignedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Lead"> | Date | string | null
   nextFollowUpAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Lead"> | Date | string | null
   lastContactedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Lead"> | Date | string | null
@@ -604,7 +606,7 @@ export type LeadScalarWhereWithAggregatesInput = {
   budgetRange?: Prisma.StringNullableWithAggregatesFilter<"Lead"> | string | null
   closureReason?: Prisma.StringNullableWithAggregatesFilter<"Lead"> | string | null
   communicationPreference?: Prisma.EnumLeadCommunicationPreferenceNullableListFilter<"Lead">
-  createdById?: Prisma.StringNullableWithAggregatesFilter<"Lead"> | string | null
+  createdByUserId?: Prisma.StringNullableWithAggregatesFilter<"Lead"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Lead"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Lead"> | Date | string
 }
@@ -616,7 +618,7 @@ export type LeadCreateInput = {
   phone: string
   email?: string | null
   whatsappNumber?: string | null
-  enquiryForGrade: string
+  enquiryFor?: string
   currentSchool?: string | null
   address?: string | null
   city?: string | null
@@ -631,7 +633,6 @@ export type LeadCreateInput = {
   lastContactedAt?: Date | string | null
   followUpCount?: number
   convertedAt?: Date | string | null
-  convertedToStudentId?: string | null
   notes?: string | null
   requirements?: Prisma.LeadCreaterequirementsInput | string[]
   budgetRange?: string | null
@@ -640,8 +641,9 @@ export type LeadCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   organization: Prisma.OrganizationCreateNestedOneWithoutLeadsInput
-  academicYear?: Prisma.AcademicYearCreateNestedOneWithoutLeadsInput
+  academicYear: Prisma.AcademicYearCreateNestedOneWithoutLeadsInput
   assignedTo?: Prisma.UserCreateNestedOneWithoutAssignedLeadsInput
+  convertedToStudent?: Prisma.StudentCreateNestedOneWithoutConvertedFromLeadInput
   activities?: Prisma.LeadActivityCreateNestedManyWithoutLeadInput
   createdBy?: Prisma.UserCreateNestedOneWithoutCreatedLeadsInput
 }
@@ -649,13 +651,13 @@ export type LeadCreateInput = {
 export type LeadUncheckedCreateInput = {
   id?: string
   organizationId: string
-  academicYearId?: string | null
+  academicYearId: string
   studentName: string
   parentName?: string | null
   phone: string
   email?: string | null
   whatsappNumber?: string | null
-  enquiryForGrade: string
+  enquiryFor?: string
   currentSchool?: string | null
   address?: string | null
   city?: string | null
@@ -665,7 +667,7 @@ export type LeadUncheckedCreateInput = {
   status?: $Enums.LeadStatus
   priority?: $Enums.LeadPriority
   score?: number
-  assignedToId?: string | null
+  assignedToUserId?: string | null
   assignedAt?: Date | string | null
   nextFollowUpAt?: Date | string | null
   lastContactedAt?: Date | string | null
@@ -677,7 +679,7 @@ export type LeadUncheckedCreateInput = {
   budgetRange?: string | null
   closureReason?: string | null
   communicationPreference?: Prisma.LeadCreatecommunicationPreferenceInput | $Enums.LeadCommunicationPreference[]
-  createdById?: string | null
+  createdByUserId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   activities?: Prisma.LeadActivityUncheckedCreateNestedManyWithoutLeadInput
@@ -690,7 +692,7 @@ export type LeadUpdateInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  enquiryForGrade?: Prisma.StringFieldUpdateOperationsInput | string
+  enquiryFor?: Prisma.StringFieldUpdateOperationsInput | string
   currentSchool?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -705,7 +707,6 @@ export type LeadUpdateInput = {
   lastContactedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   followUpCount?: Prisma.IntFieldUpdateOperationsInput | number
   convertedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  convertedToStudentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   requirements?: Prisma.LeadUpdaterequirementsInput | string[]
   budgetRange?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -714,8 +715,9 @@ export type LeadUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutLeadsNestedInput
-  academicYear?: Prisma.AcademicYearUpdateOneWithoutLeadsNestedInput
+  academicYear?: Prisma.AcademicYearUpdateOneRequiredWithoutLeadsNestedInput
   assignedTo?: Prisma.UserUpdateOneWithoutAssignedLeadsNestedInput
+  convertedToStudent?: Prisma.StudentUpdateOneWithoutConvertedFromLeadNestedInput
   activities?: Prisma.LeadActivityUpdateManyWithoutLeadNestedInput
   createdBy?: Prisma.UserUpdateOneWithoutCreatedLeadsNestedInput
 }
@@ -723,13 +725,13 @@ export type LeadUpdateInput = {
 export type LeadUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
-  academicYearId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
   studentName?: Prisma.StringFieldUpdateOperationsInput | string
   parentName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  enquiryForGrade?: Prisma.StringFieldUpdateOperationsInput | string
+  enquiryFor?: Prisma.StringFieldUpdateOperationsInput | string
   currentSchool?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -739,7 +741,7 @@ export type LeadUncheckedUpdateInput = {
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
   priority?: Prisma.EnumLeadPriorityFieldUpdateOperationsInput | $Enums.LeadPriority
   score?: Prisma.IntFieldUpdateOperationsInput | number
-  assignedToId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedToUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nextFollowUpAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastContactedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -751,7 +753,7 @@ export type LeadUncheckedUpdateInput = {
   budgetRange?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   closureReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   communicationPreference?: Prisma.LeadUpdatecommunicationPreferenceInput | $Enums.LeadCommunicationPreference[]
-  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   activities?: Prisma.LeadActivityUncheckedUpdateManyWithoutLeadNestedInput
@@ -760,13 +762,13 @@ export type LeadUncheckedUpdateInput = {
 export type LeadCreateManyInput = {
   id?: string
   organizationId: string
-  academicYearId?: string | null
+  academicYearId: string
   studentName: string
   parentName?: string | null
   phone: string
   email?: string | null
   whatsappNumber?: string | null
-  enquiryForGrade: string
+  enquiryFor?: string
   currentSchool?: string | null
   address?: string | null
   city?: string | null
@@ -776,7 +778,7 @@ export type LeadCreateManyInput = {
   status?: $Enums.LeadStatus
   priority?: $Enums.LeadPriority
   score?: number
-  assignedToId?: string | null
+  assignedToUserId?: string | null
   assignedAt?: Date | string | null
   nextFollowUpAt?: Date | string | null
   lastContactedAt?: Date | string | null
@@ -788,7 +790,7 @@ export type LeadCreateManyInput = {
   budgetRange?: string | null
   closureReason?: string | null
   communicationPreference?: Prisma.LeadCreatecommunicationPreferenceInput | $Enums.LeadCommunicationPreference[]
-  createdById?: string | null
+  createdByUserId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -800,7 +802,7 @@ export type LeadUpdateManyMutationInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  enquiryForGrade?: Prisma.StringFieldUpdateOperationsInput | string
+  enquiryFor?: Prisma.StringFieldUpdateOperationsInput | string
   currentSchool?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -815,7 +817,6 @@ export type LeadUpdateManyMutationInput = {
   lastContactedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   followUpCount?: Prisma.IntFieldUpdateOperationsInput | number
   convertedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  convertedToStudentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   requirements?: Prisma.LeadUpdaterequirementsInput | string[]
   budgetRange?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -828,13 +829,13 @@ export type LeadUpdateManyMutationInput = {
 export type LeadUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
-  academicYearId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
   studentName?: Prisma.StringFieldUpdateOperationsInput | string
   parentName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  enquiryForGrade?: Prisma.StringFieldUpdateOperationsInput | string
+  enquiryFor?: Prisma.StringFieldUpdateOperationsInput | string
   currentSchool?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -844,7 +845,7 @@ export type LeadUncheckedUpdateManyInput = {
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
   priority?: Prisma.EnumLeadPriorityFieldUpdateOperationsInput | $Enums.LeadPriority
   score?: Prisma.IntFieldUpdateOperationsInput | number
-  assignedToId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedToUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nextFollowUpAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastContactedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -856,7 +857,7 @@ export type LeadUncheckedUpdateManyInput = {
   budgetRange?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   closureReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   communicationPreference?: Prisma.LeadUpdatecommunicationPreferenceInput | $Enums.LeadCommunicationPreference[]
-  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -869,6 +870,11 @@ export type LeadListRelationFilter = {
 
 export type LeadOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type LeadNullableScalarRelationFilter = {
+  is?: Prisma.LeadWhereInput | null
+  isNot?: Prisma.LeadWhereInput | null
 }
 
 export type EnumLeadCommunicationPreferenceNullableListFilter<$PrismaModel = never> = {
@@ -885,12 +891,6 @@ export type LeadOrderByRelevanceInput = {
   search: string
 }
 
-export type LeadOrganizationIdPhoneEnquiryForGradeCompoundUniqueInput = {
-  organizationId: string
-  phone: string
-  enquiryForGrade: string
-}
-
 export type LeadCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
@@ -900,7 +900,7 @@ export type LeadCountOrderByAggregateInput = {
   phone?: Prisma.SortOrder
   email?: Prisma.SortOrder
   whatsappNumber?: Prisma.SortOrder
-  enquiryForGrade?: Prisma.SortOrder
+  enquiryFor?: Prisma.SortOrder
   currentSchool?: Prisma.SortOrder
   address?: Prisma.SortOrder
   city?: Prisma.SortOrder
@@ -910,7 +910,7 @@ export type LeadCountOrderByAggregateInput = {
   status?: Prisma.SortOrder
   priority?: Prisma.SortOrder
   score?: Prisma.SortOrder
-  assignedToId?: Prisma.SortOrder
+  assignedToUserId?: Prisma.SortOrder
   assignedAt?: Prisma.SortOrder
   nextFollowUpAt?: Prisma.SortOrder
   lastContactedAt?: Prisma.SortOrder
@@ -922,7 +922,7 @@ export type LeadCountOrderByAggregateInput = {
   budgetRange?: Prisma.SortOrder
   closureReason?: Prisma.SortOrder
   communicationPreference?: Prisma.SortOrder
-  createdById?: Prisma.SortOrder
+  createdByUserId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -941,7 +941,7 @@ export type LeadMaxOrderByAggregateInput = {
   phone?: Prisma.SortOrder
   email?: Prisma.SortOrder
   whatsappNumber?: Prisma.SortOrder
-  enquiryForGrade?: Prisma.SortOrder
+  enquiryFor?: Prisma.SortOrder
   currentSchool?: Prisma.SortOrder
   address?: Prisma.SortOrder
   city?: Prisma.SortOrder
@@ -951,7 +951,7 @@ export type LeadMaxOrderByAggregateInput = {
   status?: Prisma.SortOrder
   priority?: Prisma.SortOrder
   score?: Prisma.SortOrder
-  assignedToId?: Prisma.SortOrder
+  assignedToUserId?: Prisma.SortOrder
   assignedAt?: Prisma.SortOrder
   nextFollowUpAt?: Prisma.SortOrder
   lastContactedAt?: Prisma.SortOrder
@@ -961,7 +961,7 @@ export type LeadMaxOrderByAggregateInput = {
   notes?: Prisma.SortOrder
   budgetRange?: Prisma.SortOrder
   closureReason?: Prisma.SortOrder
-  createdById?: Prisma.SortOrder
+  createdByUserId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -975,7 +975,7 @@ export type LeadMinOrderByAggregateInput = {
   phone?: Prisma.SortOrder
   email?: Prisma.SortOrder
   whatsappNumber?: Prisma.SortOrder
-  enquiryForGrade?: Prisma.SortOrder
+  enquiryFor?: Prisma.SortOrder
   currentSchool?: Prisma.SortOrder
   address?: Prisma.SortOrder
   city?: Prisma.SortOrder
@@ -985,7 +985,7 @@ export type LeadMinOrderByAggregateInput = {
   status?: Prisma.SortOrder
   priority?: Prisma.SortOrder
   score?: Prisma.SortOrder
-  assignedToId?: Prisma.SortOrder
+  assignedToUserId?: Prisma.SortOrder
   assignedAt?: Prisma.SortOrder
   nextFollowUpAt?: Prisma.SortOrder
   lastContactedAt?: Prisma.SortOrder
@@ -995,7 +995,7 @@ export type LeadMinOrderByAggregateInput = {
   notes?: Prisma.SortOrder
   budgetRange?: Prisma.SortOrder
   closureReason?: Prisma.SortOrder
-  createdById?: Prisma.SortOrder
+  createdByUserId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -1178,6 +1178,38 @@ export type LeadUncheckedUpdateManyWithoutCreatedByNestedInput = {
   deleteMany?: Prisma.LeadScalarWhereInput | Prisma.LeadScalarWhereInput[]
 }
 
+export type LeadCreateNestedOneWithoutConvertedToStudentInput = {
+  create?: Prisma.XOR<Prisma.LeadCreateWithoutConvertedToStudentInput, Prisma.LeadUncheckedCreateWithoutConvertedToStudentInput>
+  connectOrCreate?: Prisma.LeadCreateOrConnectWithoutConvertedToStudentInput
+  connect?: Prisma.LeadWhereUniqueInput
+}
+
+export type LeadUncheckedCreateNestedOneWithoutConvertedToStudentInput = {
+  create?: Prisma.XOR<Prisma.LeadCreateWithoutConvertedToStudentInput, Prisma.LeadUncheckedCreateWithoutConvertedToStudentInput>
+  connectOrCreate?: Prisma.LeadCreateOrConnectWithoutConvertedToStudentInput
+  connect?: Prisma.LeadWhereUniqueInput
+}
+
+export type LeadUpdateOneWithoutConvertedToStudentNestedInput = {
+  create?: Prisma.XOR<Prisma.LeadCreateWithoutConvertedToStudentInput, Prisma.LeadUncheckedCreateWithoutConvertedToStudentInput>
+  connectOrCreate?: Prisma.LeadCreateOrConnectWithoutConvertedToStudentInput
+  upsert?: Prisma.LeadUpsertWithoutConvertedToStudentInput
+  disconnect?: Prisma.LeadWhereInput | boolean
+  delete?: Prisma.LeadWhereInput | boolean
+  connect?: Prisma.LeadWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.LeadUpdateToOneWithWhereWithoutConvertedToStudentInput, Prisma.LeadUpdateWithoutConvertedToStudentInput>, Prisma.LeadUncheckedUpdateWithoutConvertedToStudentInput>
+}
+
+export type LeadUncheckedUpdateOneWithoutConvertedToStudentNestedInput = {
+  create?: Prisma.XOR<Prisma.LeadCreateWithoutConvertedToStudentInput, Prisma.LeadUncheckedCreateWithoutConvertedToStudentInput>
+  connectOrCreate?: Prisma.LeadCreateOrConnectWithoutConvertedToStudentInput
+  upsert?: Prisma.LeadUpsertWithoutConvertedToStudentInput
+  disconnect?: Prisma.LeadWhereInput | boolean
+  delete?: Prisma.LeadWhereInput | boolean
+  connect?: Prisma.LeadWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.LeadUpdateToOneWithWhereWithoutConvertedToStudentInput, Prisma.LeadUpdateWithoutConvertedToStudentInput>, Prisma.LeadUncheckedUpdateWithoutConvertedToStudentInput>
+}
+
 export type LeadCreaterequirementsInput = {
   set: string[]
 }
@@ -1229,7 +1261,7 @@ export type LeadCreateWithoutAcademicYearInput = {
   phone: string
   email?: string | null
   whatsappNumber?: string | null
-  enquiryForGrade: string
+  enquiryFor?: string
   currentSchool?: string | null
   address?: string | null
   city?: string | null
@@ -1244,7 +1276,6 @@ export type LeadCreateWithoutAcademicYearInput = {
   lastContactedAt?: Date | string | null
   followUpCount?: number
   convertedAt?: Date | string | null
-  convertedToStudentId?: string | null
   notes?: string | null
   requirements?: Prisma.LeadCreaterequirementsInput | string[]
   budgetRange?: string | null
@@ -1254,6 +1285,7 @@ export type LeadCreateWithoutAcademicYearInput = {
   updatedAt?: Date | string
   organization: Prisma.OrganizationCreateNestedOneWithoutLeadsInput
   assignedTo?: Prisma.UserCreateNestedOneWithoutAssignedLeadsInput
+  convertedToStudent?: Prisma.StudentCreateNestedOneWithoutConvertedFromLeadInput
   activities?: Prisma.LeadActivityCreateNestedManyWithoutLeadInput
   createdBy?: Prisma.UserCreateNestedOneWithoutCreatedLeadsInput
 }
@@ -1266,7 +1298,7 @@ export type LeadUncheckedCreateWithoutAcademicYearInput = {
   phone: string
   email?: string | null
   whatsappNumber?: string | null
-  enquiryForGrade: string
+  enquiryFor?: string
   currentSchool?: string | null
   address?: string | null
   city?: string | null
@@ -1276,7 +1308,7 @@ export type LeadUncheckedCreateWithoutAcademicYearInput = {
   status?: $Enums.LeadStatus
   priority?: $Enums.LeadPriority
   score?: number
-  assignedToId?: string | null
+  assignedToUserId?: string | null
   assignedAt?: Date | string | null
   nextFollowUpAt?: Date | string | null
   lastContactedAt?: Date | string | null
@@ -1288,7 +1320,7 @@ export type LeadUncheckedCreateWithoutAcademicYearInput = {
   budgetRange?: string | null
   closureReason?: string | null
   communicationPreference?: Prisma.LeadCreatecommunicationPreferenceInput | $Enums.LeadCommunicationPreference[]
-  createdById?: string | null
+  createdByUserId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   activities?: Prisma.LeadActivityUncheckedCreateNestedManyWithoutLeadInput
@@ -1326,13 +1358,13 @@ export type LeadScalarWhereInput = {
   NOT?: Prisma.LeadScalarWhereInput | Prisma.LeadScalarWhereInput[]
   id?: Prisma.StringFilter<"Lead"> | string
   organizationId?: Prisma.StringFilter<"Lead"> | string
-  academicYearId?: Prisma.StringNullableFilter<"Lead"> | string | null
+  academicYearId?: Prisma.StringFilter<"Lead"> | string
   studentName?: Prisma.StringFilter<"Lead"> | string
   parentName?: Prisma.StringNullableFilter<"Lead"> | string | null
   phone?: Prisma.StringFilter<"Lead"> | string
   email?: Prisma.StringNullableFilter<"Lead"> | string | null
   whatsappNumber?: Prisma.StringNullableFilter<"Lead"> | string | null
-  enquiryForGrade?: Prisma.StringFilter<"Lead"> | string
+  enquiryFor?: Prisma.StringFilter<"Lead"> | string
   currentSchool?: Prisma.StringNullableFilter<"Lead"> | string | null
   address?: Prisma.StringNullableFilter<"Lead"> | string | null
   city?: Prisma.StringNullableFilter<"Lead"> | string | null
@@ -1342,7 +1374,7 @@ export type LeadScalarWhereInput = {
   status?: Prisma.EnumLeadStatusFilter<"Lead"> | $Enums.LeadStatus
   priority?: Prisma.EnumLeadPriorityFilter<"Lead"> | $Enums.LeadPriority
   score?: Prisma.IntFilter<"Lead"> | number
-  assignedToId?: Prisma.StringNullableFilter<"Lead"> | string | null
+  assignedToUserId?: Prisma.StringNullableFilter<"Lead"> | string | null
   assignedAt?: Prisma.DateTimeNullableFilter<"Lead"> | Date | string | null
   nextFollowUpAt?: Prisma.DateTimeNullableFilter<"Lead"> | Date | string | null
   lastContactedAt?: Prisma.DateTimeNullableFilter<"Lead"> | Date | string | null
@@ -1354,7 +1386,7 @@ export type LeadScalarWhereInput = {
   budgetRange?: Prisma.StringNullableFilter<"Lead"> | string | null
   closureReason?: Prisma.StringNullableFilter<"Lead"> | string | null
   communicationPreference?: Prisma.EnumLeadCommunicationPreferenceNullableListFilter<"Lead">
-  createdById?: Prisma.StringNullableFilter<"Lead"> | string | null
+  createdByUserId?: Prisma.StringNullableFilter<"Lead"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Lead"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Lead"> | Date | string
 }
@@ -1366,7 +1398,7 @@ export type LeadCreateWithoutOrganizationInput = {
   phone: string
   email?: string | null
   whatsappNumber?: string | null
-  enquiryForGrade: string
+  enquiryFor?: string
   currentSchool?: string | null
   address?: string | null
   city?: string | null
@@ -1381,7 +1413,6 @@ export type LeadCreateWithoutOrganizationInput = {
   lastContactedAt?: Date | string | null
   followUpCount?: number
   convertedAt?: Date | string | null
-  convertedToStudentId?: string | null
   notes?: string | null
   requirements?: Prisma.LeadCreaterequirementsInput | string[]
   budgetRange?: string | null
@@ -1389,21 +1420,22 @@ export type LeadCreateWithoutOrganizationInput = {
   communicationPreference?: Prisma.LeadCreatecommunicationPreferenceInput | $Enums.LeadCommunicationPreference[]
   createdAt?: Date | string
   updatedAt?: Date | string
-  academicYear?: Prisma.AcademicYearCreateNestedOneWithoutLeadsInput
+  academicYear: Prisma.AcademicYearCreateNestedOneWithoutLeadsInput
   assignedTo?: Prisma.UserCreateNestedOneWithoutAssignedLeadsInput
+  convertedToStudent?: Prisma.StudentCreateNestedOneWithoutConvertedFromLeadInput
   activities?: Prisma.LeadActivityCreateNestedManyWithoutLeadInput
   createdBy?: Prisma.UserCreateNestedOneWithoutCreatedLeadsInput
 }
 
 export type LeadUncheckedCreateWithoutOrganizationInput = {
   id?: string
-  academicYearId?: string | null
+  academicYearId: string
   studentName: string
   parentName?: string | null
   phone: string
   email?: string | null
   whatsappNumber?: string | null
-  enquiryForGrade: string
+  enquiryFor?: string
   currentSchool?: string | null
   address?: string | null
   city?: string | null
@@ -1413,7 +1445,7 @@ export type LeadUncheckedCreateWithoutOrganizationInput = {
   status?: $Enums.LeadStatus
   priority?: $Enums.LeadPriority
   score?: number
-  assignedToId?: string | null
+  assignedToUserId?: string | null
   assignedAt?: Date | string | null
   nextFollowUpAt?: Date | string | null
   lastContactedAt?: Date | string | null
@@ -1425,7 +1457,7 @@ export type LeadUncheckedCreateWithoutOrganizationInput = {
   budgetRange?: string | null
   closureReason?: string | null
   communicationPreference?: Prisma.LeadCreatecommunicationPreferenceInput | $Enums.LeadCommunicationPreference[]
-  createdById?: string | null
+  createdByUserId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   activities?: Prisma.LeadActivityUncheckedCreateNestedManyWithoutLeadInput
@@ -1464,7 +1496,7 @@ export type LeadCreateWithoutAssignedToInput = {
   phone: string
   email?: string | null
   whatsappNumber?: string | null
-  enquiryForGrade: string
+  enquiryFor?: string
   currentSchool?: string | null
   address?: string | null
   city?: string | null
@@ -1479,7 +1511,6 @@ export type LeadCreateWithoutAssignedToInput = {
   lastContactedAt?: Date | string | null
   followUpCount?: number
   convertedAt?: Date | string | null
-  convertedToStudentId?: string | null
   notes?: string | null
   requirements?: Prisma.LeadCreaterequirementsInput | string[]
   budgetRange?: string | null
@@ -1488,7 +1519,8 @@ export type LeadCreateWithoutAssignedToInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   organization: Prisma.OrganizationCreateNestedOneWithoutLeadsInput
-  academicYear?: Prisma.AcademicYearCreateNestedOneWithoutLeadsInput
+  academicYear: Prisma.AcademicYearCreateNestedOneWithoutLeadsInput
+  convertedToStudent?: Prisma.StudentCreateNestedOneWithoutConvertedFromLeadInput
   activities?: Prisma.LeadActivityCreateNestedManyWithoutLeadInput
   createdBy?: Prisma.UserCreateNestedOneWithoutCreatedLeadsInput
 }
@@ -1496,13 +1528,13 @@ export type LeadCreateWithoutAssignedToInput = {
 export type LeadUncheckedCreateWithoutAssignedToInput = {
   id?: string
   organizationId: string
-  academicYearId?: string | null
+  academicYearId: string
   studentName: string
   parentName?: string | null
   phone: string
   email?: string | null
   whatsappNumber?: string | null
-  enquiryForGrade: string
+  enquiryFor?: string
   currentSchool?: string | null
   address?: string | null
   city?: string | null
@@ -1523,7 +1555,7 @@ export type LeadUncheckedCreateWithoutAssignedToInput = {
   budgetRange?: string | null
   closureReason?: string | null
   communicationPreference?: Prisma.LeadCreatecommunicationPreferenceInput | $Enums.LeadCommunicationPreference[]
-  createdById?: string | null
+  createdByUserId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   activities?: Prisma.LeadActivityUncheckedCreateNestedManyWithoutLeadInput
@@ -1546,7 +1578,7 @@ export type LeadCreateWithoutCreatedByInput = {
   phone: string
   email?: string | null
   whatsappNumber?: string | null
-  enquiryForGrade: string
+  enquiryFor?: string
   currentSchool?: string | null
   address?: string | null
   city?: string | null
@@ -1561,7 +1593,6 @@ export type LeadCreateWithoutCreatedByInput = {
   lastContactedAt?: Date | string | null
   followUpCount?: number
   convertedAt?: Date | string | null
-  convertedToStudentId?: string | null
   notes?: string | null
   requirements?: Prisma.LeadCreaterequirementsInput | string[]
   budgetRange?: string | null
@@ -1570,21 +1601,22 @@ export type LeadCreateWithoutCreatedByInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   organization: Prisma.OrganizationCreateNestedOneWithoutLeadsInput
-  academicYear?: Prisma.AcademicYearCreateNestedOneWithoutLeadsInput
+  academicYear: Prisma.AcademicYearCreateNestedOneWithoutLeadsInput
   assignedTo?: Prisma.UserCreateNestedOneWithoutAssignedLeadsInput
+  convertedToStudent?: Prisma.StudentCreateNestedOneWithoutConvertedFromLeadInput
   activities?: Prisma.LeadActivityCreateNestedManyWithoutLeadInput
 }
 
 export type LeadUncheckedCreateWithoutCreatedByInput = {
   id?: string
   organizationId: string
-  academicYearId?: string | null
+  academicYearId: string
   studentName: string
   parentName?: string | null
   phone: string
   email?: string | null
   whatsappNumber?: string | null
-  enquiryForGrade: string
+  enquiryFor?: string
   currentSchool?: string | null
   address?: string | null
   city?: string | null
@@ -1594,7 +1626,7 @@ export type LeadUncheckedCreateWithoutCreatedByInput = {
   status?: $Enums.LeadStatus
   priority?: $Enums.LeadPriority
   score?: number
-  assignedToId?: string | null
+  assignedToUserId?: string | null
   assignedAt?: Date | string | null
   nextFollowUpAt?: Date | string | null
   lastContactedAt?: Date | string | null
@@ -1653,14 +1685,14 @@ export type LeadUpdateManyWithWhereWithoutCreatedByInput = {
   data: Prisma.XOR<Prisma.LeadUpdateManyMutationInput, Prisma.LeadUncheckedUpdateManyWithoutCreatedByInput>
 }
 
-export type LeadCreateWithoutActivitiesInput = {
+export type LeadCreateWithoutConvertedToStudentInput = {
   id?: string
   studentName: string
   parentName?: string | null
   phone: string
   email?: string | null
   whatsappNumber?: string | null
-  enquiryForGrade: string
+  enquiryFor?: string
   currentSchool?: string | null
   address?: string | null
   city?: string | null
@@ -1675,7 +1707,6 @@ export type LeadCreateWithoutActivitiesInput = {
   lastContactedAt?: Date | string | null
   followUpCount?: number
   convertedAt?: Date | string | null
-  convertedToStudentId?: string | null
   notes?: string | null
   requirements?: Prisma.LeadCreaterequirementsInput | string[]
   budgetRange?: string | null
@@ -1684,21 +1715,22 @@ export type LeadCreateWithoutActivitiesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   organization: Prisma.OrganizationCreateNestedOneWithoutLeadsInput
-  academicYear?: Prisma.AcademicYearCreateNestedOneWithoutLeadsInput
+  academicYear: Prisma.AcademicYearCreateNestedOneWithoutLeadsInput
   assignedTo?: Prisma.UserCreateNestedOneWithoutAssignedLeadsInput
+  activities?: Prisma.LeadActivityCreateNestedManyWithoutLeadInput
   createdBy?: Prisma.UserCreateNestedOneWithoutCreatedLeadsInput
 }
 
-export type LeadUncheckedCreateWithoutActivitiesInput = {
+export type LeadUncheckedCreateWithoutConvertedToStudentInput = {
   id?: string
   organizationId: string
-  academicYearId?: string | null
+  academicYearId: string
   studentName: string
   parentName?: string | null
   phone: string
   email?: string | null
   whatsappNumber?: string | null
-  enquiryForGrade: string
+  enquiryFor?: string
   currentSchool?: string | null
   address?: string | null
   city?: string | null
@@ -1708,7 +1740,167 @@ export type LeadUncheckedCreateWithoutActivitiesInput = {
   status?: $Enums.LeadStatus
   priority?: $Enums.LeadPriority
   score?: number
-  assignedToId?: string | null
+  assignedToUserId?: string | null
+  assignedAt?: Date | string | null
+  nextFollowUpAt?: Date | string | null
+  lastContactedAt?: Date | string | null
+  followUpCount?: number
+  convertedAt?: Date | string | null
+  notes?: string | null
+  requirements?: Prisma.LeadCreaterequirementsInput | string[]
+  budgetRange?: string | null
+  closureReason?: string | null
+  communicationPreference?: Prisma.LeadCreatecommunicationPreferenceInput | $Enums.LeadCommunicationPreference[]
+  createdByUserId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  activities?: Prisma.LeadActivityUncheckedCreateNestedManyWithoutLeadInput
+}
+
+export type LeadCreateOrConnectWithoutConvertedToStudentInput = {
+  where: Prisma.LeadWhereUniqueInput
+  create: Prisma.XOR<Prisma.LeadCreateWithoutConvertedToStudentInput, Prisma.LeadUncheckedCreateWithoutConvertedToStudentInput>
+}
+
+export type LeadUpsertWithoutConvertedToStudentInput = {
+  update: Prisma.XOR<Prisma.LeadUpdateWithoutConvertedToStudentInput, Prisma.LeadUncheckedUpdateWithoutConvertedToStudentInput>
+  create: Prisma.XOR<Prisma.LeadCreateWithoutConvertedToStudentInput, Prisma.LeadUncheckedCreateWithoutConvertedToStudentInput>
+  where?: Prisma.LeadWhereInput
+}
+
+export type LeadUpdateToOneWithWhereWithoutConvertedToStudentInput = {
+  where?: Prisma.LeadWhereInput
+  data: Prisma.XOR<Prisma.LeadUpdateWithoutConvertedToStudentInput, Prisma.LeadUncheckedUpdateWithoutConvertedToStudentInput>
+}
+
+export type LeadUpdateWithoutConvertedToStudentInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  studentName?: Prisma.StringFieldUpdateOperationsInput | string
+  parentName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  enquiryFor?: Prisma.StringFieldUpdateOperationsInput | string
+  currentSchool?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pincode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.EnumLeadSourceFieldUpdateOperationsInput | $Enums.LeadSource
+  status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
+  priority?: Prisma.EnumLeadPriorityFieldUpdateOperationsInput | $Enums.LeadPriority
+  score?: Prisma.IntFieldUpdateOperationsInput | number
+  assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nextFollowUpAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastContactedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  followUpCount?: Prisma.IntFieldUpdateOperationsInput | number
+  convertedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requirements?: Prisma.LeadUpdaterequirementsInput | string[]
+  budgetRange?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  closureReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  communicationPreference?: Prisma.LeadUpdatecommunicationPreferenceInput | $Enums.LeadCommunicationPreference[]
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutLeadsNestedInput
+  academicYear?: Prisma.AcademicYearUpdateOneRequiredWithoutLeadsNestedInput
+  assignedTo?: Prisma.UserUpdateOneWithoutAssignedLeadsNestedInput
+  activities?: Prisma.LeadActivityUpdateManyWithoutLeadNestedInput
+  createdBy?: Prisma.UserUpdateOneWithoutCreatedLeadsNestedInput
+}
+
+export type LeadUncheckedUpdateWithoutConvertedToStudentInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
+  studentName?: Prisma.StringFieldUpdateOperationsInput | string
+  parentName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  enquiryFor?: Prisma.StringFieldUpdateOperationsInput | string
+  currentSchool?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pincode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.EnumLeadSourceFieldUpdateOperationsInput | $Enums.LeadSource
+  status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
+  priority?: Prisma.EnumLeadPriorityFieldUpdateOperationsInput | $Enums.LeadPriority
+  score?: Prisma.IntFieldUpdateOperationsInput | number
+  assignedToUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nextFollowUpAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastContactedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  followUpCount?: Prisma.IntFieldUpdateOperationsInput | number
+  convertedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requirements?: Prisma.LeadUpdaterequirementsInput | string[]
+  budgetRange?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  closureReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  communicationPreference?: Prisma.LeadUpdatecommunicationPreferenceInput | $Enums.LeadCommunicationPreference[]
+  createdByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  activities?: Prisma.LeadActivityUncheckedUpdateManyWithoutLeadNestedInput
+}
+
+export type LeadCreateWithoutActivitiesInput = {
+  id?: string
+  studentName: string
+  parentName?: string | null
+  phone: string
+  email?: string | null
+  whatsappNumber?: string | null
+  enquiryFor?: string
+  currentSchool?: string | null
+  address?: string | null
+  city?: string | null
+  state?: string | null
+  pincode?: string | null
+  source?: $Enums.LeadSource
+  status?: $Enums.LeadStatus
+  priority?: $Enums.LeadPriority
+  score?: number
+  assignedAt?: Date | string | null
+  nextFollowUpAt?: Date | string | null
+  lastContactedAt?: Date | string | null
+  followUpCount?: number
+  convertedAt?: Date | string | null
+  notes?: string | null
+  requirements?: Prisma.LeadCreaterequirementsInput | string[]
+  budgetRange?: string | null
+  closureReason?: string | null
+  communicationPreference?: Prisma.LeadCreatecommunicationPreferenceInput | $Enums.LeadCommunicationPreference[]
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  organization: Prisma.OrganizationCreateNestedOneWithoutLeadsInput
+  academicYear: Prisma.AcademicYearCreateNestedOneWithoutLeadsInput
+  assignedTo?: Prisma.UserCreateNestedOneWithoutAssignedLeadsInput
+  convertedToStudent?: Prisma.StudentCreateNestedOneWithoutConvertedFromLeadInput
+  createdBy?: Prisma.UserCreateNestedOneWithoutCreatedLeadsInput
+}
+
+export type LeadUncheckedCreateWithoutActivitiesInput = {
+  id?: string
+  organizationId: string
+  academicYearId: string
+  studentName: string
+  parentName?: string | null
+  phone: string
+  email?: string | null
+  whatsappNumber?: string | null
+  enquiryFor?: string
+  currentSchool?: string | null
+  address?: string | null
+  city?: string | null
+  state?: string | null
+  pincode?: string | null
+  source?: $Enums.LeadSource
+  status?: $Enums.LeadStatus
+  priority?: $Enums.LeadPriority
+  score?: number
+  assignedToUserId?: string | null
   assignedAt?: Date | string | null
   nextFollowUpAt?: Date | string | null
   lastContactedAt?: Date | string | null
@@ -1720,7 +1912,7 @@ export type LeadUncheckedCreateWithoutActivitiesInput = {
   budgetRange?: string | null
   closureReason?: string | null
   communicationPreference?: Prisma.LeadCreatecommunicationPreferenceInput | $Enums.LeadCommunicationPreference[]
-  createdById?: string | null
+  createdByUserId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1748,7 +1940,7 @@ export type LeadUpdateWithoutActivitiesInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  enquiryForGrade?: Prisma.StringFieldUpdateOperationsInput | string
+  enquiryFor?: Prisma.StringFieldUpdateOperationsInput | string
   currentSchool?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1763,7 +1955,6 @@ export type LeadUpdateWithoutActivitiesInput = {
   lastContactedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   followUpCount?: Prisma.IntFieldUpdateOperationsInput | number
   convertedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  convertedToStudentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   requirements?: Prisma.LeadUpdaterequirementsInput | string[]
   budgetRange?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1772,21 +1963,22 @@ export type LeadUpdateWithoutActivitiesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutLeadsNestedInput
-  academicYear?: Prisma.AcademicYearUpdateOneWithoutLeadsNestedInput
+  academicYear?: Prisma.AcademicYearUpdateOneRequiredWithoutLeadsNestedInput
   assignedTo?: Prisma.UserUpdateOneWithoutAssignedLeadsNestedInput
+  convertedToStudent?: Prisma.StudentUpdateOneWithoutConvertedFromLeadNestedInput
   createdBy?: Prisma.UserUpdateOneWithoutCreatedLeadsNestedInput
 }
 
 export type LeadUncheckedUpdateWithoutActivitiesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
-  academicYearId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
   studentName?: Prisma.StringFieldUpdateOperationsInput | string
   parentName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  enquiryForGrade?: Prisma.StringFieldUpdateOperationsInput | string
+  enquiryFor?: Prisma.StringFieldUpdateOperationsInput | string
   currentSchool?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1796,7 +1988,7 @@ export type LeadUncheckedUpdateWithoutActivitiesInput = {
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
   priority?: Prisma.EnumLeadPriorityFieldUpdateOperationsInput | $Enums.LeadPriority
   score?: Prisma.IntFieldUpdateOperationsInput | number
-  assignedToId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedToUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nextFollowUpAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastContactedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1808,7 +2000,7 @@ export type LeadUncheckedUpdateWithoutActivitiesInput = {
   budgetRange?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   closureReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   communicationPreference?: Prisma.LeadUpdatecommunicationPreferenceInput | $Enums.LeadCommunicationPreference[]
-  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1821,7 +2013,7 @@ export type LeadCreateManyAcademicYearInput = {
   phone: string
   email?: string | null
   whatsappNumber?: string | null
-  enquiryForGrade: string
+  enquiryFor?: string
   currentSchool?: string | null
   address?: string | null
   city?: string | null
@@ -1831,7 +2023,7 @@ export type LeadCreateManyAcademicYearInput = {
   status?: $Enums.LeadStatus
   priority?: $Enums.LeadPriority
   score?: number
-  assignedToId?: string | null
+  assignedToUserId?: string | null
   assignedAt?: Date | string | null
   nextFollowUpAt?: Date | string | null
   lastContactedAt?: Date | string | null
@@ -1843,7 +2035,7 @@ export type LeadCreateManyAcademicYearInput = {
   budgetRange?: string | null
   closureReason?: string | null
   communicationPreference?: Prisma.LeadCreatecommunicationPreferenceInput | $Enums.LeadCommunicationPreference[]
-  createdById?: string | null
+  createdByUserId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1855,7 +2047,7 @@ export type LeadUpdateWithoutAcademicYearInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  enquiryForGrade?: Prisma.StringFieldUpdateOperationsInput | string
+  enquiryFor?: Prisma.StringFieldUpdateOperationsInput | string
   currentSchool?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1870,7 +2062,6 @@ export type LeadUpdateWithoutAcademicYearInput = {
   lastContactedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   followUpCount?: Prisma.IntFieldUpdateOperationsInput | number
   convertedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  convertedToStudentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   requirements?: Prisma.LeadUpdaterequirementsInput | string[]
   budgetRange?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1880,6 +2071,7 @@ export type LeadUpdateWithoutAcademicYearInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutLeadsNestedInput
   assignedTo?: Prisma.UserUpdateOneWithoutAssignedLeadsNestedInput
+  convertedToStudent?: Prisma.StudentUpdateOneWithoutConvertedFromLeadNestedInput
   activities?: Prisma.LeadActivityUpdateManyWithoutLeadNestedInput
   createdBy?: Prisma.UserUpdateOneWithoutCreatedLeadsNestedInput
 }
@@ -1892,7 +2084,7 @@ export type LeadUncheckedUpdateWithoutAcademicYearInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  enquiryForGrade?: Prisma.StringFieldUpdateOperationsInput | string
+  enquiryFor?: Prisma.StringFieldUpdateOperationsInput | string
   currentSchool?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1902,7 +2094,7 @@ export type LeadUncheckedUpdateWithoutAcademicYearInput = {
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
   priority?: Prisma.EnumLeadPriorityFieldUpdateOperationsInput | $Enums.LeadPriority
   score?: Prisma.IntFieldUpdateOperationsInput | number
-  assignedToId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedToUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nextFollowUpAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastContactedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1914,7 +2106,7 @@ export type LeadUncheckedUpdateWithoutAcademicYearInput = {
   budgetRange?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   closureReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   communicationPreference?: Prisma.LeadUpdatecommunicationPreferenceInput | $Enums.LeadCommunicationPreference[]
-  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   activities?: Prisma.LeadActivityUncheckedUpdateManyWithoutLeadNestedInput
@@ -1928,7 +2120,7 @@ export type LeadUncheckedUpdateManyWithoutAcademicYearInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  enquiryForGrade?: Prisma.StringFieldUpdateOperationsInput | string
+  enquiryFor?: Prisma.StringFieldUpdateOperationsInput | string
   currentSchool?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1938,7 +2130,7 @@ export type LeadUncheckedUpdateManyWithoutAcademicYearInput = {
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
   priority?: Prisma.EnumLeadPriorityFieldUpdateOperationsInput | $Enums.LeadPriority
   score?: Prisma.IntFieldUpdateOperationsInput | number
-  assignedToId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedToUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nextFollowUpAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastContactedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1950,20 +2142,20 @@ export type LeadUncheckedUpdateManyWithoutAcademicYearInput = {
   budgetRange?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   closureReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   communicationPreference?: Prisma.LeadUpdatecommunicationPreferenceInput | $Enums.LeadCommunicationPreference[]
-  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type LeadCreateManyOrganizationInput = {
   id?: string
-  academicYearId?: string | null
+  academicYearId: string
   studentName: string
   parentName?: string | null
   phone: string
   email?: string | null
   whatsappNumber?: string | null
-  enquiryForGrade: string
+  enquiryFor?: string
   currentSchool?: string | null
   address?: string | null
   city?: string | null
@@ -1973,7 +2165,7 @@ export type LeadCreateManyOrganizationInput = {
   status?: $Enums.LeadStatus
   priority?: $Enums.LeadPriority
   score?: number
-  assignedToId?: string | null
+  assignedToUserId?: string | null
   assignedAt?: Date | string | null
   nextFollowUpAt?: Date | string | null
   lastContactedAt?: Date | string | null
@@ -1985,7 +2177,7 @@ export type LeadCreateManyOrganizationInput = {
   budgetRange?: string | null
   closureReason?: string | null
   communicationPreference?: Prisma.LeadCreatecommunicationPreferenceInput | $Enums.LeadCommunicationPreference[]
-  createdById?: string | null
+  createdByUserId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1997,7 +2189,7 @@ export type LeadUpdateWithoutOrganizationInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  enquiryForGrade?: Prisma.StringFieldUpdateOperationsInput | string
+  enquiryFor?: Prisma.StringFieldUpdateOperationsInput | string
   currentSchool?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2012,7 +2204,6 @@ export type LeadUpdateWithoutOrganizationInput = {
   lastContactedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   followUpCount?: Prisma.IntFieldUpdateOperationsInput | number
   convertedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  convertedToStudentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   requirements?: Prisma.LeadUpdaterequirementsInput | string[]
   budgetRange?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2020,21 +2211,22 @@ export type LeadUpdateWithoutOrganizationInput = {
   communicationPreference?: Prisma.LeadUpdatecommunicationPreferenceInput | $Enums.LeadCommunicationPreference[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  academicYear?: Prisma.AcademicYearUpdateOneWithoutLeadsNestedInput
+  academicYear?: Prisma.AcademicYearUpdateOneRequiredWithoutLeadsNestedInput
   assignedTo?: Prisma.UserUpdateOneWithoutAssignedLeadsNestedInput
+  convertedToStudent?: Prisma.StudentUpdateOneWithoutConvertedFromLeadNestedInput
   activities?: Prisma.LeadActivityUpdateManyWithoutLeadNestedInput
   createdBy?: Prisma.UserUpdateOneWithoutCreatedLeadsNestedInput
 }
 
 export type LeadUncheckedUpdateWithoutOrganizationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  academicYearId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
   studentName?: Prisma.StringFieldUpdateOperationsInput | string
   parentName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  enquiryForGrade?: Prisma.StringFieldUpdateOperationsInput | string
+  enquiryFor?: Prisma.StringFieldUpdateOperationsInput | string
   currentSchool?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2044,7 +2236,7 @@ export type LeadUncheckedUpdateWithoutOrganizationInput = {
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
   priority?: Prisma.EnumLeadPriorityFieldUpdateOperationsInput | $Enums.LeadPriority
   score?: Prisma.IntFieldUpdateOperationsInput | number
-  assignedToId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedToUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nextFollowUpAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastContactedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2056,7 +2248,7 @@ export type LeadUncheckedUpdateWithoutOrganizationInput = {
   budgetRange?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   closureReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   communicationPreference?: Prisma.LeadUpdatecommunicationPreferenceInput | $Enums.LeadCommunicationPreference[]
-  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   activities?: Prisma.LeadActivityUncheckedUpdateManyWithoutLeadNestedInput
@@ -2064,13 +2256,13 @@ export type LeadUncheckedUpdateWithoutOrganizationInput = {
 
 export type LeadUncheckedUpdateManyWithoutOrganizationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  academicYearId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
   studentName?: Prisma.StringFieldUpdateOperationsInput | string
   parentName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  enquiryForGrade?: Prisma.StringFieldUpdateOperationsInput | string
+  enquiryFor?: Prisma.StringFieldUpdateOperationsInput | string
   currentSchool?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2080,7 +2272,7 @@ export type LeadUncheckedUpdateManyWithoutOrganizationInput = {
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
   priority?: Prisma.EnumLeadPriorityFieldUpdateOperationsInput | $Enums.LeadPriority
   score?: Prisma.IntFieldUpdateOperationsInput | number
-  assignedToId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedToUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nextFollowUpAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastContactedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2092,7 +2284,7 @@ export type LeadUncheckedUpdateManyWithoutOrganizationInput = {
   budgetRange?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   closureReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   communicationPreference?: Prisma.LeadUpdatecommunicationPreferenceInput | $Enums.LeadCommunicationPreference[]
-  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -2100,13 +2292,13 @@ export type LeadUncheckedUpdateManyWithoutOrganizationInput = {
 export type LeadCreateManyAssignedToInput = {
   id?: string
   organizationId: string
-  academicYearId?: string | null
+  academicYearId: string
   studentName: string
   parentName?: string | null
   phone: string
   email?: string | null
   whatsappNumber?: string | null
-  enquiryForGrade: string
+  enquiryFor?: string
   currentSchool?: string | null
   address?: string | null
   city?: string | null
@@ -2127,7 +2319,7 @@ export type LeadCreateManyAssignedToInput = {
   budgetRange?: string | null
   closureReason?: string | null
   communicationPreference?: Prisma.LeadCreatecommunicationPreferenceInput | $Enums.LeadCommunicationPreference[]
-  createdById?: string | null
+  createdByUserId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -2135,13 +2327,13 @@ export type LeadCreateManyAssignedToInput = {
 export type LeadCreateManyCreatedByInput = {
   id?: string
   organizationId: string
-  academicYearId?: string | null
+  academicYearId: string
   studentName: string
   parentName?: string | null
   phone: string
   email?: string | null
   whatsappNumber?: string | null
-  enquiryForGrade: string
+  enquiryFor?: string
   currentSchool?: string | null
   address?: string | null
   city?: string | null
@@ -2151,7 +2343,7 @@ export type LeadCreateManyCreatedByInput = {
   status?: $Enums.LeadStatus
   priority?: $Enums.LeadPriority
   score?: number
-  assignedToId?: string | null
+  assignedToUserId?: string | null
   assignedAt?: Date | string | null
   nextFollowUpAt?: Date | string | null
   lastContactedAt?: Date | string | null
@@ -2174,7 +2366,7 @@ export type LeadUpdateWithoutAssignedToInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  enquiryForGrade?: Prisma.StringFieldUpdateOperationsInput | string
+  enquiryFor?: Prisma.StringFieldUpdateOperationsInput | string
   currentSchool?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2189,7 +2381,6 @@ export type LeadUpdateWithoutAssignedToInput = {
   lastContactedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   followUpCount?: Prisma.IntFieldUpdateOperationsInput | number
   convertedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  convertedToStudentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   requirements?: Prisma.LeadUpdaterequirementsInput | string[]
   budgetRange?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2198,7 +2389,8 @@ export type LeadUpdateWithoutAssignedToInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutLeadsNestedInput
-  academicYear?: Prisma.AcademicYearUpdateOneWithoutLeadsNestedInput
+  academicYear?: Prisma.AcademicYearUpdateOneRequiredWithoutLeadsNestedInput
+  convertedToStudent?: Prisma.StudentUpdateOneWithoutConvertedFromLeadNestedInput
   activities?: Prisma.LeadActivityUpdateManyWithoutLeadNestedInput
   createdBy?: Prisma.UserUpdateOneWithoutCreatedLeadsNestedInput
 }
@@ -2206,13 +2398,13 @@ export type LeadUpdateWithoutAssignedToInput = {
 export type LeadUncheckedUpdateWithoutAssignedToInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
-  academicYearId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
   studentName?: Prisma.StringFieldUpdateOperationsInput | string
   parentName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  enquiryForGrade?: Prisma.StringFieldUpdateOperationsInput | string
+  enquiryFor?: Prisma.StringFieldUpdateOperationsInput | string
   currentSchool?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2233,7 +2425,7 @@ export type LeadUncheckedUpdateWithoutAssignedToInput = {
   budgetRange?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   closureReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   communicationPreference?: Prisma.LeadUpdatecommunicationPreferenceInput | $Enums.LeadCommunicationPreference[]
-  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   activities?: Prisma.LeadActivityUncheckedUpdateManyWithoutLeadNestedInput
@@ -2242,13 +2434,13 @@ export type LeadUncheckedUpdateWithoutAssignedToInput = {
 export type LeadUncheckedUpdateManyWithoutAssignedToInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
-  academicYearId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
   studentName?: Prisma.StringFieldUpdateOperationsInput | string
   parentName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  enquiryForGrade?: Prisma.StringFieldUpdateOperationsInput | string
+  enquiryFor?: Prisma.StringFieldUpdateOperationsInput | string
   currentSchool?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2269,7 +2461,7 @@ export type LeadUncheckedUpdateManyWithoutAssignedToInput = {
   budgetRange?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   closureReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   communicationPreference?: Prisma.LeadUpdatecommunicationPreferenceInput | $Enums.LeadCommunicationPreference[]
-  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -2281,7 +2473,7 @@ export type LeadUpdateWithoutCreatedByInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  enquiryForGrade?: Prisma.StringFieldUpdateOperationsInput | string
+  enquiryFor?: Prisma.StringFieldUpdateOperationsInput | string
   currentSchool?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2296,7 +2488,6 @@ export type LeadUpdateWithoutCreatedByInput = {
   lastContactedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   followUpCount?: Prisma.IntFieldUpdateOperationsInput | number
   convertedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  convertedToStudentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   requirements?: Prisma.LeadUpdaterequirementsInput | string[]
   budgetRange?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2305,21 +2496,22 @@ export type LeadUpdateWithoutCreatedByInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutLeadsNestedInput
-  academicYear?: Prisma.AcademicYearUpdateOneWithoutLeadsNestedInput
+  academicYear?: Prisma.AcademicYearUpdateOneRequiredWithoutLeadsNestedInput
   assignedTo?: Prisma.UserUpdateOneWithoutAssignedLeadsNestedInput
+  convertedToStudent?: Prisma.StudentUpdateOneWithoutConvertedFromLeadNestedInput
   activities?: Prisma.LeadActivityUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadUncheckedUpdateWithoutCreatedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
-  academicYearId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
   studentName?: Prisma.StringFieldUpdateOperationsInput | string
   parentName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  enquiryForGrade?: Prisma.StringFieldUpdateOperationsInput | string
+  enquiryFor?: Prisma.StringFieldUpdateOperationsInput | string
   currentSchool?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2329,7 +2521,7 @@ export type LeadUncheckedUpdateWithoutCreatedByInput = {
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
   priority?: Prisma.EnumLeadPriorityFieldUpdateOperationsInput | $Enums.LeadPriority
   score?: Prisma.IntFieldUpdateOperationsInput | number
-  assignedToId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedToUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nextFollowUpAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastContactedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2349,13 +2541,13 @@ export type LeadUncheckedUpdateWithoutCreatedByInput = {
 export type LeadUncheckedUpdateManyWithoutCreatedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
-  academicYearId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  academicYearId?: Prisma.StringFieldUpdateOperationsInput | string
   studentName?: Prisma.StringFieldUpdateOperationsInput | string
   parentName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  enquiryForGrade?: Prisma.StringFieldUpdateOperationsInput | string
+  enquiryFor?: Prisma.StringFieldUpdateOperationsInput | string
   currentSchool?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2365,7 +2557,7 @@ export type LeadUncheckedUpdateManyWithoutCreatedByInput = {
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
   priority?: Prisma.EnumLeadPriorityFieldUpdateOperationsInput | $Enums.LeadPriority
   score?: Prisma.IntFieldUpdateOperationsInput | number
-  assignedToId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedToUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nextFollowUpAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastContactedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2421,7 +2613,7 @@ export type LeadSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   phone?: boolean
   email?: boolean
   whatsappNumber?: boolean
-  enquiryForGrade?: boolean
+  enquiryFor?: boolean
   currentSchool?: boolean
   address?: boolean
   city?: boolean
@@ -2431,7 +2623,7 @@ export type LeadSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   status?: boolean
   priority?: boolean
   score?: boolean
-  assignedToId?: boolean
+  assignedToUserId?: boolean
   assignedAt?: boolean
   nextFollowUpAt?: boolean
   lastContactedAt?: boolean
@@ -2443,12 +2635,13 @@ export type LeadSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   budgetRange?: boolean
   closureReason?: boolean
   communicationPreference?: boolean
-  createdById?: boolean
+  createdByUserId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
-  academicYear?: boolean | Prisma.Lead$academicYearArgs<ExtArgs>
+  academicYear?: boolean | Prisma.AcademicYearDefaultArgs<ExtArgs>
   assignedTo?: boolean | Prisma.Lead$assignedToArgs<ExtArgs>
+  convertedToStudent?: boolean | Prisma.Lead$convertedToStudentArgs<ExtArgs>
   activities?: boolean | Prisma.Lead$activitiesArgs<ExtArgs>
   createdBy?: boolean | Prisma.Lead$createdByArgs<ExtArgs>
   _count?: boolean | Prisma.LeadCountOutputTypeDefaultArgs<ExtArgs>
@@ -2463,7 +2656,7 @@ export type LeadSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   phone?: boolean
   email?: boolean
   whatsappNumber?: boolean
-  enquiryForGrade?: boolean
+  enquiryFor?: boolean
   currentSchool?: boolean
   address?: boolean
   city?: boolean
@@ -2473,7 +2666,7 @@ export type LeadSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   status?: boolean
   priority?: boolean
   score?: boolean
-  assignedToId?: boolean
+  assignedToUserId?: boolean
   assignedAt?: boolean
   nextFollowUpAt?: boolean
   lastContactedAt?: boolean
@@ -2485,12 +2678,13 @@ export type LeadSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   budgetRange?: boolean
   closureReason?: boolean
   communicationPreference?: boolean
-  createdById?: boolean
+  createdByUserId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
-  academicYear?: boolean | Prisma.Lead$academicYearArgs<ExtArgs>
+  academicYear?: boolean | Prisma.AcademicYearDefaultArgs<ExtArgs>
   assignedTo?: boolean | Prisma.Lead$assignedToArgs<ExtArgs>
+  convertedToStudent?: boolean | Prisma.Lead$convertedToStudentArgs<ExtArgs>
   createdBy?: boolean | Prisma.Lead$createdByArgs<ExtArgs>
 }, ExtArgs["result"]["lead"]>
 
@@ -2503,7 +2697,7 @@ export type LeadSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   phone?: boolean
   email?: boolean
   whatsappNumber?: boolean
-  enquiryForGrade?: boolean
+  enquiryFor?: boolean
   currentSchool?: boolean
   address?: boolean
   city?: boolean
@@ -2513,7 +2707,7 @@ export type LeadSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   status?: boolean
   priority?: boolean
   score?: boolean
-  assignedToId?: boolean
+  assignedToUserId?: boolean
   assignedAt?: boolean
   nextFollowUpAt?: boolean
   lastContactedAt?: boolean
@@ -2525,12 +2719,13 @@ export type LeadSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   budgetRange?: boolean
   closureReason?: boolean
   communicationPreference?: boolean
-  createdById?: boolean
+  createdByUserId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
-  academicYear?: boolean | Prisma.Lead$academicYearArgs<ExtArgs>
+  academicYear?: boolean | Prisma.AcademicYearDefaultArgs<ExtArgs>
   assignedTo?: boolean | Prisma.Lead$assignedToArgs<ExtArgs>
+  convertedToStudent?: boolean | Prisma.Lead$convertedToStudentArgs<ExtArgs>
   createdBy?: boolean | Prisma.Lead$createdByArgs<ExtArgs>
 }, ExtArgs["result"]["lead"]>
 
@@ -2543,7 +2738,7 @@ export type LeadSelectScalar = {
   phone?: boolean
   email?: boolean
   whatsappNumber?: boolean
-  enquiryForGrade?: boolean
+  enquiryFor?: boolean
   currentSchool?: boolean
   address?: boolean
   city?: boolean
@@ -2553,7 +2748,7 @@ export type LeadSelectScalar = {
   status?: boolean
   priority?: boolean
   score?: boolean
-  assignedToId?: boolean
+  assignedToUserId?: boolean
   assignedAt?: boolean
   nextFollowUpAt?: boolean
   lastContactedAt?: boolean
@@ -2565,30 +2760,33 @@ export type LeadSelectScalar = {
   budgetRange?: boolean
   closureReason?: boolean
   communicationPreference?: boolean
-  createdById?: boolean
+  createdByUserId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type LeadOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "academicYearId" | "studentName" | "parentName" | "phone" | "email" | "whatsappNumber" | "enquiryForGrade" | "currentSchool" | "address" | "city" | "state" | "pincode" | "source" | "status" | "priority" | "score" | "assignedToId" | "assignedAt" | "nextFollowUpAt" | "lastContactedAt" | "followUpCount" | "convertedAt" | "convertedToStudentId" | "notes" | "requirements" | "budgetRange" | "closureReason" | "communicationPreference" | "createdById" | "createdAt" | "updatedAt", ExtArgs["result"]["lead"]>
+export type LeadOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "academicYearId" | "studentName" | "parentName" | "phone" | "email" | "whatsappNumber" | "enquiryFor" | "currentSchool" | "address" | "city" | "state" | "pincode" | "source" | "status" | "priority" | "score" | "assignedToUserId" | "assignedAt" | "nextFollowUpAt" | "lastContactedAt" | "followUpCount" | "convertedAt" | "convertedToStudentId" | "notes" | "requirements" | "budgetRange" | "closureReason" | "communicationPreference" | "createdByUserId" | "createdAt" | "updatedAt", ExtArgs["result"]["lead"]>
 export type LeadInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
-  academicYear?: boolean | Prisma.Lead$academicYearArgs<ExtArgs>
+  academicYear?: boolean | Prisma.AcademicYearDefaultArgs<ExtArgs>
   assignedTo?: boolean | Prisma.Lead$assignedToArgs<ExtArgs>
+  convertedToStudent?: boolean | Prisma.Lead$convertedToStudentArgs<ExtArgs>
   activities?: boolean | Prisma.Lead$activitiesArgs<ExtArgs>
   createdBy?: boolean | Prisma.Lead$createdByArgs<ExtArgs>
   _count?: boolean | Prisma.LeadCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type LeadIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
-  academicYear?: boolean | Prisma.Lead$academicYearArgs<ExtArgs>
+  academicYear?: boolean | Prisma.AcademicYearDefaultArgs<ExtArgs>
   assignedTo?: boolean | Prisma.Lead$assignedToArgs<ExtArgs>
+  convertedToStudent?: boolean | Prisma.Lead$convertedToStudentArgs<ExtArgs>
   createdBy?: boolean | Prisma.Lead$createdByArgs<ExtArgs>
 }
 export type LeadIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
-  academicYear?: boolean | Prisma.Lead$academicYearArgs<ExtArgs>
+  academicYear?: boolean | Prisma.AcademicYearDefaultArgs<ExtArgs>
   assignedTo?: boolean | Prisma.Lead$assignedToArgs<ExtArgs>
+  convertedToStudent?: boolean | Prisma.Lead$convertedToStudentArgs<ExtArgs>
   createdBy?: boolean | Prisma.Lead$createdByArgs<ExtArgs>
 }
 
@@ -2596,21 +2794,22 @@ export type $LeadPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   name: "Lead"
   objects: {
     organization: Prisma.$OrganizationPayload<ExtArgs>
-    academicYear: Prisma.$AcademicYearPayload<ExtArgs> | null
+    academicYear: Prisma.$AcademicYearPayload<ExtArgs>
     assignedTo: Prisma.$UserPayload<ExtArgs> | null
+    convertedToStudent: Prisma.$StudentPayload<ExtArgs> | null
     activities: Prisma.$LeadActivityPayload<ExtArgs>[]
     createdBy: Prisma.$UserPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     organizationId: string
-    academicYearId: string | null
+    academicYearId: string
     studentName: string
     parentName: string | null
     phone: string
     email: string | null
     whatsappNumber: string | null
-    enquiryForGrade: string
+    enquiryFor: string
     currentSchool: string | null
     address: string | null
     city: string | null
@@ -2620,7 +2819,7 @@ export type $LeadPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     status: $Enums.LeadStatus
     priority: $Enums.LeadPriority
     score: number
-    assignedToId: string | null
+    assignedToUserId: string | null
     assignedAt: Date | null
     nextFollowUpAt: Date | null
     lastContactedAt: Date | null
@@ -2632,7 +2831,7 @@ export type $LeadPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     budgetRange: string | null
     closureReason: string | null
     communicationPreference: $Enums.LeadCommunicationPreference[]
-    createdById: string | null
+    createdByUserId: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["lead"]>
@@ -3030,8 +3229,9 @@ readonly fields: LeadFieldRefs;
 export interface Prisma__LeadClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   organization<T extends Prisma.OrganizationDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrganizationDefaultArgs<ExtArgs>>): Prisma.Prisma__OrganizationClient<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  academicYear<T extends Prisma.Lead$academicYearArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lead$academicYearArgs<ExtArgs>>): Prisma.Prisma__AcademicYearClient<runtime.Types.Result.GetResult<Prisma.$AcademicYearPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  academicYear<T extends Prisma.AcademicYearDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AcademicYearDefaultArgs<ExtArgs>>): Prisma.Prisma__AcademicYearClient<runtime.Types.Result.GetResult<Prisma.$AcademicYearPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   assignedTo<T extends Prisma.Lead$assignedToArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lead$assignedToArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  convertedToStudent<T extends Prisma.Lead$convertedToStudentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lead$convertedToStudentArgs<ExtArgs>>): Prisma.Prisma__StudentClient<runtime.Types.Result.GetResult<Prisma.$StudentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   activities<T extends Prisma.Lead$activitiesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lead$activitiesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeadActivityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   createdBy<T extends Prisma.Lead$createdByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lead$createdByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
@@ -3071,7 +3271,7 @@ export interface LeadFieldRefs {
   readonly phone: Prisma.FieldRef<"Lead", 'String'>
   readonly email: Prisma.FieldRef<"Lead", 'String'>
   readonly whatsappNumber: Prisma.FieldRef<"Lead", 'String'>
-  readonly enquiryForGrade: Prisma.FieldRef<"Lead", 'String'>
+  readonly enquiryFor: Prisma.FieldRef<"Lead", 'String'>
   readonly currentSchool: Prisma.FieldRef<"Lead", 'String'>
   readonly address: Prisma.FieldRef<"Lead", 'String'>
   readonly city: Prisma.FieldRef<"Lead", 'String'>
@@ -3081,7 +3281,7 @@ export interface LeadFieldRefs {
   readonly status: Prisma.FieldRef<"Lead", 'LeadStatus'>
   readonly priority: Prisma.FieldRef<"Lead", 'LeadPriority'>
   readonly score: Prisma.FieldRef<"Lead", 'Int'>
-  readonly assignedToId: Prisma.FieldRef<"Lead", 'String'>
+  readonly assignedToUserId: Prisma.FieldRef<"Lead", 'String'>
   readonly assignedAt: Prisma.FieldRef<"Lead", 'DateTime'>
   readonly nextFollowUpAt: Prisma.FieldRef<"Lead", 'DateTime'>
   readonly lastContactedAt: Prisma.FieldRef<"Lead", 'DateTime'>
@@ -3093,7 +3293,7 @@ export interface LeadFieldRefs {
   readonly budgetRange: Prisma.FieldRef<"Lead", 'String'>
   readonly closureReason: Prisma.FieldRef<"Lead", 'String'>
   readonly communicationPreference: Prisma.FieldRef<"Lead", 'LeadCommunicationPreference[]'>
-  readonly createdById: Prisma.FieldRef<"Lead", 'String'>
+  readonly createdByUserId: Prisma.FieldRef<"Lead", 'String'>
   readonly createdAt: Prisma.FieldRef<"Lead", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Lead", 'DateTime'>
 }
@@ -3492,25 +3692,6 @@ export type LeadDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
 }
 
 /**
- * Lead.academicYear
- */
-export type Lead$academicYearArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the AcademicYear
-   */
-  select?: Prisma.AcademicYearSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the AcademicYear
-   */
-  omit?: Prisma.AcademicYearOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.AcademicYearInclude<ExtArgs> | null
-  where?: Prisma.AcademicYearWhereInput
-}
-
-/**
  * Lead.assignedTo
  */
 export type Lead$assignedToArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3527,6 +3708,25 @@ export type Lead$assignedToArgs<ExtArgs extends runtime.Types.Extensions.Interna
    */
   include?: Prisma.UserInclude<ExtArgs> | null
   where?: Prisma.UserWhereInput
+}
+
+/**
+ * Lead.convertedToStudent
+ */
+export type Lead$convertedToStudentArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Student
+   */
+  select?: Prisma.StudentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Student
+   */
+  omit?: Prisma.StudentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StudentInclude<ExtArgs> | null
+  where?: Prisma.StudentWhereInput
 }
 
 /**

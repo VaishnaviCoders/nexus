@@ -30,6 +30,7 @@ export type LeadActivityMinAggregateOutputType = {
   title: string | null
   description: string | null
   outcome: string | null
+  sentiment: $Enums.Sentiment | null
   performedById: string | null
   performedAt: Date | null
   followUpDate: Date | null
@@ -44,6 +45,7 @@ export type LeadActivityMaxAggregateOutputType = {
   title: string | null
   description: string | null
   outcome: string | null
+  sentiment: $Enums.Sentiment | null
   performedById: string | null
   performedAt: Date | null
   followUpDate: Date | null
@@ -58,6 +60,7 @@ export type LeadActivityCountAggregateOutputType = {
   title: number
   description: number
   outcome: number
+  sentiment: number
   performedById: number
   performedAt: number
   followUpDate: number
@@ -74,6 +77,7 @@ export type LeadActivityMinAggregateInputType = {
   title?: true
   description?: true
   outcome?: true
+  sentiment?: true
   performedById?: true
   performedAt?: true
   followUpDate?: true
@@ -88,6 +92,7 @@ export type LeadActivityMaxAggregateInputType = {
   title?: true
   description?: true
   outcome?: true
+  sentiment?: true
   performedById?: true
   performedAt?: true
   followUpDate?: true
@@ -102,6 +107,7 @@ export type LeadActivityCountAggregateInputType = {
   title?: true
   description?: true
   outcome?: true
+  sentiment?: true
   performedById?: true
   performedAt?: true
   followUpDate?: true
@@ -189,6 +195,7 @@ export type LeadActivityGroupByOutputType = {
   title: string
   description: string | null
   outcome: string | null
+  sentiment: $Enums.Sentiment | null
   performedById: string | null
   performedAt: Date
   followUpDate: Date | null
@@ -224,6 +231,7 @@ export type LeadActivityWhereInput = {
   title?: Prisma.StringFilter<"LeadActivity"> | string
   description?: Prisma.StringNullableFilter<"LeadActivity"> | string | null
   outcome?: Prisma.StringNullableFilter<"LeadActivity"> | string | null
+  sentiment?: Prisma.EnumSentimentNullableFilter<"LeadActivity"> | $Enums.Sentiment | null
   performedById?: Prisma.StringNullableFilter<"LeadActivity"> | string | null
   performedAt?: Prisma.DateTimeFilter<"LeadActivity"> | Date | string
   followUpDate?: Prisma.DateTimeNullableFilter<"LeadActivity"> | Date | string | null
@@ -240,6 +248,7 @@ export type LeadActivityOrderByWithRelationInput = {
   title?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   outcome?: Prisma.SortOrderInput | Prisma.SortOrder
+  sentiment?: Prisma.SortOrderInput | Prisma.SortOrder
   performedById?: Prisma.SortOrderInput | Prisma.SortOrder
   performedAt?: Prisma.SortOrder
   followUpDate?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -260,6 +269,7 @@ export type LeadActivityWhereUniqueInput = Prisma.AtLeast<{
   title?: Prisma.StringFilter<"LeadActivity"> | string
   description?: Prisma.StringNullableFilter<"LeadActivity"> | string | null
   outcome?: Prisma.StringNullableFilter<"LeadActivity"> | string | null
+  sentiment?: Prisma.EnumSentimentNullableFilter<"LeadActivity"> | $Enums.Sentiment | null
   performedById?: Prisma.StringNullableFilter<"LeadActivity"> | string | null
   performedAt?: Prisma.DateTimeFilter<"LeadActivity"> | Date | string
   followUpDate?: Prisma.DateTimeNullableFilter<"LeadActivity"> | Date | string | null
@@ -276,6 +286,7 @@ export type LeadActivityOrderByWithAggregationInput = {
   title?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   outcome?: Prisma.SortOrderInput | Prisma.SortOrder
+  sentiment?: Prisma.SortOrderInput | Prisma.SortOrder
   performedById?: Prisma.SortOrderInput | Prisma.SortOrder
   performedAt?: Prisma.SortOrder
   followUpDate?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -296,6 +307,7 @@ export type LeadActivityScalarWhereWithAggregatesInput = {
   title?: Prisma.StringWithAggregatesFilter<"LeadActivity"> | string
   description?: Prisma.StringNullableWithAggregatesFilter<"LeadActivity"> | string | null
   outcome?: Prisma.StringNullableWithAggregatesFilter<"LeadActivity"> | string | null
+  sentiment?: Prisma.EnumSentimentNullableWithAggregatesFilter<"LeadActivity"> | $Enums.Sentiment | null
   performedById?: Prisma.StringNullableWithAggregatesFilter<"LeadActivity"> | string | null
   performedAt?: Prisma.DateTimeWithAggregatesFilter<"LeadActivity"> | Date | string
   followUpDate?: Prisma.DateTimeNullableWithAggregatesFilter<"LeadActivity"> | Date | string | null
@@ -309,6 +321,7 @@ export type LeadActivityCreateInput = {
   title: string
   description?: string | null
   outcome?: string | null
+  sentiment?: $Enums.Sentiment | null
   performedAt?: Date | string
   followUpDate?: Date | string | null
   followUpNote?: string | null
@@ -324,6 +337,7 @@ export type LeadActivityUncheckedCreateInput = {
   title: string
   description?: string | null
   outcome?: string | null
+  sentiment?: $Enums.Sentiment | null
   performedById?: string | null
   performedAt?: Date | string
   followUpDate?: Date | string | null
@@ -337,6 +351,7 @@ export type LeadActivityUpdateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   outcome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sentiment?: Prisma.NullableEnumSentimentFieldUpdateOperationsInput | $Enums.Sentiment | null
   performedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   followUpDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   followUpNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -352,6 +367,7 @@ export type LeadActivityUncheckedUpdateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   outcome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sentiment?: Prisma.NullableEnumSentimentFieldUpdateOperationsInput | $Enums.Sentiment | null
   performedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   performedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   followUpDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -366,6 +382,7 @@ export type LeadActivityCreateManyInput = {
   title: string
   description?: string | null
   outcome?: string | null
+  sentiment?: $Enums.Sentiment | null
   performedById?: string | null
   performedAt?: Date | string
   followUpDate?: Date | string | null
@@ -379,6 +396,7 @@ export type LeadActivityUpdateManyMutationInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   outcome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sentiment?: Prisma.NullableEnumSentimentFieldUpdateOperationsInput | $Enums.Sentiment | null
   performedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   followUpDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   followUpNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -392,6 +410,7 @@ export type LeadActivityUncheckedUpdateManyInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   outcome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sentiment?: Prisma.NullableEnumSentimentFieldUpdateOperationsInput | $Enums.Sentiment | null
   performedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   performedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   followUpDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -422,6 +441,7 @@ export type LeadActivityCountOrderByAggregateInput = {
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   outcome?: Prisma.SortOrder
+  sentiment?: Prisma.SortOrder
   performedById?: Prisma.SortOrder
   performedAt?: Prisma.SortOrder
   followUpDate?: Prisma.SortOrder
@@ -436,6 +456,7 @@ export type LeadActivityMaxOrderByAggregateInput = {
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   outcome?: Prisma.SortOrder
+  sentiment?: Prisma.SortOrder
   performedById?: Prisma.SortOrder
   performedAt?: Prisma.SortOrder
   followUpDate?: Prisma.SortOrder
@@ -450,6 +471,7 @@ export type LeadActivityMinOrderByAggregateInput = {
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   outcome?: Prisma.SortOrder
+  sentiment?: Prisma.SortOrder
   performedById?: Prisma.SortOrder
   performedAt?: Prisma.SortOrder
   followUpDate?: Prisma.SortOrder
@@ -545,12 +567,17 @@ export type EnumLeadActivityTypeFieldUpdateOperationsInput = {
   set?: $Enums.LeadActivityType
 }
 
+export type NullableEnumSentimentFieldUpdateOperationsInput = {
+  set?: $Enums.Sentiment | null
+}
+
 export type LeadActivityCreateWithoutPerformedByInput = {
   id?: string
   type: $Enums.LeadActivityType
   title: string
   description?: string | null
   outcome?: string | null
+  sentiment?: $Enums.Sentiment | null
   performedAt?: Date | string
   followUpDate?: Date | string | null
   followUpNote?: string | null
@@ -565,6 +592,7 @@ export type LeadActivityUncheckedCreateWithoutPerformedByInput = {
   title: string
   description?: string | null
   outcome?: string | null
+  sentiment?: $Enums.Sentiment | null
   performedAt?: Date | string
   followUpDate?: Date | string | null
   followUpNote?: string | null
@@ -607,6 +635,7 @@ export type LeadActivityScalarWhereInput = {
   title?: Prisma.StringFilter<"LeadActivity"> | string
   description?: Prisma.StringNullableFilter<"LeadActivity"> | string | null
   outcome?: Prisma.StringNullableFilter<"LeadActivity"> | string | null
+  sentiment?: Prisma.EnumSentimentNullableFilter<"LeadActivity"> | $Enums.Sentiment | null
   performedById?: Prisma.StringNullableFilter<"LeadActivity"> | string | null
   performedAt?: Prisma.DateTimeFilter<"LeadActivity"> | Date | string
   followUpDate?: Prisma.DateTimeNullableFilter<"LeadActivity"> | Date | string | null
@@ -620,6 +649,7 @@ export type LeadActivityCreateWithoutLeadInput = {
   title: string
   description?: string | null
   outcome?: string | null
+  sentiment?: $Enums.Sentiment | null
   performedAt?: Date | string
   followUpDate?: Date | string | null
   followUpNote?: string | null
@@ -633,6 +663,7 @@ export type LeadActivityUncheckedCreateWithoutLeadInput = {
   title: string
   description?: string | null
   outcome?: string | null
+  sentiment?: $Enums.Sentiment | null
   performedById?: string | null
   performedAt?: Date | string
   followUpDate?: Date | string | null
@@ -673,6 +704,7 @@ export type LeadActivityCreateManyPerformedByInput = {
   title: string
   description?: string | null
   outcome?: string | null
+  sentiment?: $Enums.Sentiment | null
   performedAt?: Date | string
   followUpDate?: Date | string | null
   followUpNote?: string | null
@@ -685,6 +717,7 @@ export type LeadActivityUpdateWithoutPerformedByInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   outcome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sentiment?: Prisma.NullableEnumSentimentFieldUpdateOperationsInput | $Enums.Sentiment | null
   performedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   followUpDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   followUpNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -699,6 +732,7 @@ export type LeadActivityUncheckedUpdateWithoutPerformedByInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   outcome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sentiment?: Prisma.NullableEnumSentimentFieldUpdateOperationsInput | $Enums.Sentiment | null
   performedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   followUpDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   followUpNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -712,6 +746,7 @@ export type LeadActivityUncheckedUpdateManyWithoutPerformedByInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   outcome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sentiment?: Prisma.NullableEnumSentimentFieldUpdateOperationsInput | $Enums.Sentiment | null
   performedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   followUpDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   followUpNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -724,6 +759,7 @@ export type LeadActivityCreateManyLeadInput = {
   title: string
   description?: string | null
   outcome?: string | null
+  sentiment?: $Enums.Sentiment | null
   performedById?: string | null
   performedAt?: Date | string
   followUpDate?: Date | string | null
@@ -737,6 +773,7 @@ export type LeadActivityUpdateWithoutLeadInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   outcome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sentiment?: Prisma.NullableEnumSentimentFieldUpdateOperationsInput | $Enums.Sentiment | null
   performedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   followUpDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   followUpNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -750,6 +787,7 @@ export type LeadActivityUncheckedUpdateWithoutLeadInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   outcome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sentiment?: Prisma.NullableEnumSentimentFieldUpdateOperationsInput | $Enums.Sentiment | null
   performedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   performedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   followUpDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -763,6 +801,7 @@ export type LeadActivityUncheckedUpdateManyWithoutLeadInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   outcome?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sentiment?: Prisma.NullableEnumSentimentFieldUpdateOperationsInput | $Enums.Sentiment | null
   performedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   performedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   followUpDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -779,6 +818,7 @@ export type LeadActivitySelect<ExtArgs extends runtime.Types.Extensions.Internal
   title?: boolean
   description?: boolean
   outcome?: boolean
+  sentiment?: boolean
   performedById?: boolean
   performedAt?: boolean
   followUpDate?: boolean
@@ -795,6 +835,7 @@ export type LeadActivitySelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   title?: boolean
   description?: boolean
   outcome?: boolean
+  sentiment?: boolean
   performedById?: boolean
   performedAt?: boolean
   followUpDate?: boolean
@@ -811,6 +852,7 @@ export type LeadActivitySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   title?: boolean
   description?: boolean
   outcome?: boolean
+  sentiment?: boolean
   performedById?: boolean
   performedAt?: boolean
   followUpDate?: boolean
@@ -827,6 +869,7 @@ export type LeadActivitySelectScalar = {
   title?: boolean
   description?: boolean
   outcome?: boolean
+  sentiment?: boolean
   performedById?: boolean
   performedAt?: boolean
   followUpDate?: boolean
@@ -834,7 +877,7 @@ export type LeadActivitySelectScalar = {
   createdAt?: boolean
 }
 
-export type LeadActivityOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "leadId" | "type" | "title" | "description" | "outcome" | "performedById" | "performedAt" | "followUpDate" | "followUpNote" | "createdAt", ExtArgs["result"]["leadActivity"]>
+export type LeadActivityOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "leadId" | "type" | "title" | "description" | "outcome" | "sentiment" | "performedById" | "performedAt" | "followUpDate" | "followUpNote" | "createdAt", ExtArgs["result"]["leadActivity"]>
 export type LeadActivityInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   lead?: boolean | Prisma.LeadDefaultArgs<ExtArgs>
   performedBy?: boolean | Prisma.LeadActivity$performedByArgs<ExtArgs>
@@ -861,6 +904,7 @@ export type $LeadActivityPayload<ExtArgs extends runtime.Types.Extensions.Intern
     title: string
     description: string | null
     outcome: string | null
+    sentiment: $Enums.Sentiment | null
     performedById: string | null
     performedAt: Date
     followUpDate: Date | null
@@ -1297,6 +1341,7 @@ export interface LeadActivityFieldRefs {
   readonly title: Prisma.FieldRef<"LeadActivity", 'String'>
   readonly description: Prisma.FieldRef<"LeadActivity", 'String'>
   readonly outcome: Prisma.FieldRef<"LeadActivity", 'String'>
+  readonly sentiment: Prisma.FieldRef<"LeadActivity", 'Sentiment'>
   readonly performedById: Prisma.FieldRef<"LeadActivity", 'String'>
   readonly performedAt: Prisma.FieldRef<"LeadActivity", 'DateTime'>
   readonly followUpDate: Prisma.FieldRef<"LeadActivity", 'DateTime'>

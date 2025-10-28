@@ -720,12 +720,10 @@ export type AcademicYearCreateNestedOneWithoutLeadsInput = {
   connect?: Prisma.AcademicYearWhereUniqueInput
 }
 
-export type AcademicYearUpdateOneWithoutLeadsNestedInput = {
+export type AcademicYearUpdateOneRequiredWithoutLeadsNestedInput = {
   create?: Prisma.XOR<Prisma.AcademicYearCreateWithoutLeadsInput, Prisma.AcademicYearUncheckedCreateWithoutLeadsInput>
   connectOrCreate?: Prisma.AcademicYearCreateOrConnectWithoutLeadsInput
   upsert?: Prisma.AcademicYearUpsertWithoutLeadsInput
-  disconnect?: Prisma.AcademicYearWhereInput | boolean
-  delete?: Prisma.AcademicYearWhereInput | boolean
   connect?: Prisma.AcademicYearWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.AcademicYearUpdateToOneWithWhereWithoutLeadsInput, Prisma.AcademicYearUpdateWithoutLeadsInput>, Prisma.AcademicYearUncheckedUpdateWithoutLeadsInput>
 }

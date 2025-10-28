@@ -1,5 +1,6 @@
 'use server';
 
+import { getCurrentAcademicYearId } from '@/lib/academicYear';
 import prisma from '@/lib/db';
 import { getOrganizationId } from '@/lib/organization';
 
@@ -23,6 +24,7 @@ export type LeadStatsData = {
 export async function getLeadStats(): Promise<LeadStatsData> {
   try {
     const organizationId = await getOrganizationId();
+    const academicYearId = await getCurrentAcademicYearId();
 
     // Get all stats in parallel for better performance
     const [
@@ -36,13 +38,14 @@ export async function getLeadStats(): Promise<LeadStatsData> {
     ] = await Promise.all([
       // Total Leads
       prisma.lead.count({
-        where: { organizationId },
+        where: { organizationId, academicYearId },
       }),
 
       // New Leads (last 7 days)
       prisma.lead.count({
         where: {
           organizationId,
+          academicYearId,
           createdAt: {
             gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), // Last 7 days
           },
@@ -53,6 +56,7 @@ export async function getLeadStats(): Promise<LeadStatsData> {
       prisma.lead.count({
         where: {
           organizationId,
+          academicYearId,
           status: 'CONVERTED',
         },
       }),
@@ -61,6 +65,7 @@ export async function getLeadStats(): Promise<LeadStatsData> {
       prisma.lead.count({
         where: {
           organizationId,
+          academicYearId,
           priority: {
             in: ['HIGH', 'URGENT', 'VIP'],
           },
@@ -70,7 +75,7 @@ export async function getLeadStats(): Promise<LeadStatsData> {
       // Leads by Status - FIXED ORDERING
       prisma.lead.groupBy({
         by: ['status'],
-        where: { organizationId },
+        where: { organizationId, academicYearId },
         _count: {
           _all: true,
         },
@@ -87,7 +92,7 @@ export async function getLeadStats(): Promise<LeadStatsData> {
       // Leads by Source (Top 5) - FIXED ORDERING
       prisma.lead.groupBy({
         by: ['source'],
-        where: { organizationId },
+        where: { organizationId, academicYearId },
         _count: {
           _all: true,
         },
@@ -362,10 +367,12 @@ export async function getLeadStatsSimple(): Promise<LeadStatsData> {
 // Additional server actions for specific stats (unchanged)
 export async function getLeadsCountByStatus(status: string): Promise<number> {
   const organizationId = await getOrganizationId();
+  const academicYearId = await getCurrentAcademicYearId();
 
   return prisma.lead.count({
     where: {
       organizationId,
+      academicYearId,
       status: status as any,
     },
   });
@@ -373,10 +380,12 @@ export async function getLeadsCountByStatus(status: string): Promise<number> {
 
 export async function getLeadsRequiringFollowUp(): Promise<number> {
   const organizationId = await getOrganizationId();
+  const academicYearId = await getCurrentAcademicYearId();
 
   return prisma.lead.count({
     where: {
       organizationId,
+      academicYearId,
       OR: [
         {
           nextFollowUpAt: {
@@ -398,14 +407,16 @@ export async function getLeadsRequiringFollowUp(): Promise<number> {
 
 export async function getConversionRate(): Promise<number> {
   const organizationId = await getOrganizationId();
+  const academicYearId = await getCurrentAcademicYearId();
 
   const [totalLeads, convertedLeads] = await Promise.all([
     prisma.lead.count({
-      where: { organizationId },
+      where: { organizationId, academicYearId },
     }),
     prisma.lead.count({
       where: {
         organizationId,
+        academicYearId,
         status: 'CONVERTED',
       },
     }),
@@ -416,6 +427,7 @@ export async function getConversionRate(): Promise<number> {
 
 export async function getLeadGrowthThisMonth(): Promise<number> {
   const organizationId = await getOrganizationId();
+  const academicYearId = await getCurrentAcademicYearId();
 
   const now = new Date();
   const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
@@ -426,6 +438,7 @@ export async function getLeadGrowthThisMonth(): Promise<number> {
     prisma.lead.count({
       where: {
         organizationId,
+        academicYearId,
         createdAt: {
           gte: startOfMonth,
         },
@@ -434,6 +447,7 @@ export async function getLeadGrowthThisMonth(): Promise<number> {
     prisma.lead.count({
       where: {
         organizationId,
+        academicYearId,
         createdAt: {
           gte: startOfLastMonth,
           lte: endOfLastMonth,

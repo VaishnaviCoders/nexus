@@ -5,6 +5,7 @@ import {
   EvaluationType,
   ExamMode,
   ExamStatus,
+  LeadActivityType,
   LeadCommunicationPreference,
   LeadPriority,
   LeadSource,
@@ -607,7 +608,33 @@ export const createLeadSchema = z.object({
     .array(z.nativeEnum(LeadCommunicationPreference))
     .default([]),
   organizationId: z.string().min(1, 'Organization ID is required'),
-  academicYearId: z.string().optional(),
+  academicYearId: z.string(),
 });
 
-export type CreateLeadFormData = z.infer<typeof createLeadSchema>;
+export type createLeadFormData = z.infer<typeof createLeadSchema>;
+
+export const createLeadActivitySchema = z.object({
+  leadId: z.string().min(1, 'Lead ID is required'),
+  type: z.nativeEnum(LeadActivityType, {
+    required_error: 'Activity type is required',
+  }),
+  title: z.string().min(1, 'Title is required').max(255, 'Title is too long'),
+  description: z.string().optional(),
+  outcome: z.string().optional(),
+  performedAt: z.date({
+    required_error: 'Activity date is required',
+  }),
+  followUpDate: z.date().optional().nullable(),
+  followUpNote: z.string().optional(),
+});
+
+export type createLeadActivityFormData = z.infer<
+  typeof createLeadActivitySchema
+>;
+
+export const assignLeadSchema = z.object({
+  leadId: z.string().min(1, 'Lead ID is required'),
+  assignedToUserId: z.string().min(1, 'Please select a user to assign'),
+});
+
+export type AssignLeadFormData = z.infer<typeof assignLeadSchema>;

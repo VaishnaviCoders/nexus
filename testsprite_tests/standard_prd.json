@@ -1,0 +1,122 @@
+{
+  "meta": {
+    "project": "Lead Management Module",
+    "date": "2025-10-20",
+    "prepared_by": "CRM Team"
+  },
+  "product_overview": "The Lead Management module allows school admins and counsellors to efficiently manage prospective student enquiries, including creating, viewing, updating, deleting, assigning leads, and tracking activities and communications.",
+  "core_goals": [
+    "Enable staff to create and manage leads from a centralized dashboard.",
+    "Provide a comprehensive view of all leads and their statuses for effective tracking.",
+    "Support lead assignment to counsellors and track all engagement activities.",
+    "Facilitate conversion of leads into enrolled students and maintain full communication history."
+  ],
+  "key_features": [
+    "Create Lead form with fields for student, parent, contact info, enquiry details, and notes, accessible from the dashboard.",
+    "Leads Table displaying key lead information with actionable features like view details, delete, assign/unassign, and bulk delete.",
+    "Lead Details Page showing comprehensive lead info, activity timeline, assignment details, and follow-up reminders.",
+    "Lead Activity creation popover/modal allowing users to log calls, messages, meetings, emails with outcomes and follow-up dates.",
+    "Activity Timeline listing all interactions in reverse chronological order with detailed context.",
+    "Lead Assign/Unassign functionality with notifications to assigned users.",
+    "Single and bulk delete actions with confirmation prompts and role-based permissions."
+  ],
+  "user_flow_summary": [
+    "User navigates to /dashboard/leads to view the leads table with sorting and filtering options.",
+    "User clicks 'Create Lead' to open a form at /dashboard/leads/create, completes required and optional fields, and submits to add a new lead.",
+    "User clicks on a lead entry to view detailed info and activity timeline at /dashboard/leads/[id].",
+    "From the details page, user can add activities via a popover/modal and assign/unassign the lead to counsellors.",
+    "User can perform single or bulk deletes from the leads table or lead details page, with confirmation dialogs.",
+    "Lead assignments trigger notifications to assigned counsellors to ensure timely follow-up."
+  ],
+  "validation_criteria": [
+    "New leads can be successfully created and persisted in the database with all required information.",
+    "Leads table displays up-to-date, accurate data with proper links and clickable phone numbers.",
+    "Lead details page loads all relevant information including activity timeline and assignment data.",
+    "Lead activity entries are saved correctly and reflected in the timeline, updating related lead stats.",
+    "Assignment changes update database fields and trigger notifications appropriately.",
+    "Delete operations confirm user intent and respect role-based permissions, with soft or permanent deletes.",
+    "UI components respond correctly across supported devices with no broken or missing elements."
+  ],
+  "code_summary": {
+    "tech_stack": [
+      "TypeScript",
+      "Next.js",
+      "React",
+      "Tailwind CSS",
+      "Prisma",
+      "Clerk",
+      "Inngest",
+      "Redis",
+      "Cloudinary"
+    ],
+    "features": [
+      {
+        "name": "Lead Management Pages",
+        "description": "Dashboard pages for listing, creating, and viewing leads.",
+        "files": [
+          "app/dashboard/leads/page.tsx",
+          "app/dashboard/leads/create/page.tsx",
+          "app/dashboard/leads/[id]/page.tsx"
+        ]
+      },
+      {
+        "name": "Lead Management Components",
+        "description": "UI components for lead tables, stats, forms, details and dialogs.",
+        "files": [
+          "components/dashboard/leads/leads-table.tsx",
+          "components/dashboard/leads/lead-stats-cards.tsx",
+          "components/dashboard/leads/create-lead-form.tsx",
+          "components/dashboard/leads/lead-details.tsx",
+          "components/dashboard/leads/lead-activity-timeline.tsx",
+          "components/dashboard/leads/add-lead-activity-dialog.tsx",
+          "components/dashboard/leads/assign-lead-dialog.tsx"
+        ]
+      },
+      {
+        "name": "Lead Data Actions",
+        "description": "Server actions and helpers for CRUD, assignment, conversion and stats.",
+        "files": [
+          "lib/data/leads/get-leads.ts",
+          "lib/data/leads/get-dashboard-card-stats.ts",
+          "lib/data/leads/create-leads.ts",
+          "lib/data/leads/delete-lead.ts",
+          "lib/data/leads/delete-leads.ts",
+          "lib/data/leads/assign-lead.ts",
+          "lib/data/leads/convert-lead.ts",
+          "lib/data/leads/create-lead-activity.ts"
+        ]
+      },
+      {
+        "name": "Authentication & Middleware",
+        "description": "Auth utilities and middleware protecting dashboard routes via Clerk.",
+        "files": [
+          "lib/auth.ts",
+          "middleware.ts",
+          "app/layout.tsx",
+          "app/dashboard/layout.tsx"
+        ]
+      },
+      {
+        "name": "Database & ORM",
+        "description": "Prisma schema, migrations and generated client for data access.",
+        "files": [
+          "prisma/schema.prisma",
+          "prisma/migrations",
+          "generated/prisma/models/Lead.ts",
+          "generated/prisma/models/LeadActivity.ts",
+          "lib/db.ts"
+        ]
+      },
+      {
+        "name": "UI Library & Layout",
+        "description": "Shared UI components, dashboard layout and Tailwind configuration.",
+        "files": [
+          "components/ui",
+          "components/dashboard-layout",
+          "app/globals.css",
+          "tailwind.config.ts"
+        ]
+      }
+    ]
+  }
+}

@@ -11,14 +11,15 @@ export async function getLeads() {
   const leads = await prisma.lead.findMany({
     where: {
       organizationId,
-      // academicYearId,
+      academicYearId,
     },
     include: {
-      // Include related data you might need in the table
       assignedTo: {
         select: {
           id: true,
           firstName: true,
+          lastName: true,
+          profileImage: true,
           email: true,
         },
       },

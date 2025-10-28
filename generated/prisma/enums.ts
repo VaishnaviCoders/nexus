@@ -412,6 +412,15 @@ export const LeadActivityType = {
 export type LeadActivityType = (typeof LeadActivityType)[keyof typeof LeadActivityType]
 
 
+export const Sentiment = {
+  POSITIVE: 'POSITIVE',
+  NEUTRAL: 'NEUTRAL',
+  NEGATIVE: 'NEGATIVE'
+} as const
+
+export type Sentiment = (typeof Sentiment)[keyof typeof Sentiment]
+
+
 export const LeadCommunicationPreference = {
   EMAIL: 'EMAIL',
   SMS: 'SMS',

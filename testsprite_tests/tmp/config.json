@@ -1,0 +1,18 @@
+{
+  "status": "commited",
+  "type": "frontend",
+  "scope": "codebase",
+  "localEndpoint": "http://localhost:3000/dashboard/leads",
+  "loginUser": "sameerkad2001@gmail.com",
+  "loginPassword": "shikshastudent",
+  "executionArgs": {
+    "projectName": "nexus",
+    "projectPath": "D:\\nexus",
+    "testIds": [],
+    "additionalInstruction": "Focus tests on lead management: list, create, details, assign, activity, delete, convert flows at /dashboard/leads*. Assume logged-in session. Prefer role/label selectors and existing data-testids where present.",
+    "envs": {
+      "API_KEY": "sk-user-BO8xsj7PJTzhnO8v3p8gw3RE_-Y7jqbmYUfvYBFHLK199zF8_JFh2bBdCsvR5atDhMuKHJUGDCAHctGjuhN7QRarDOxxv559s1zQ5kKEf2aePCNQdlFcyUNBF1SF75K-BDg"
+    }
+  },
+  "proxy": "http://bb11220c-1f41-4da4-a2ed-1c2677a59ca6:7TFABuGKJtFlCz76W2o6qKl3SDuzB3Fe@tun.testsprite.com:8080"
+}

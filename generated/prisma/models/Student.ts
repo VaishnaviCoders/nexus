@@ -314,6 +314,7 @@ export type StudentWhereInput = {
   hallTicket?: Prisma.HallTicketListRelationFilter
   examResult?: Prisma.ExamResultListRelationFilter
   examEnrollment?: Prisma.ExamEnrollmentListRelationFilter
+  convertedFromLead?: Prisma.XOR<Prisma.LeadNullableScalarRelationFilter, Prisma.LeadWhereInput> | null
 }
 
 export type StudentOrderByWithRelationInput = {
@@ -350,6 +351,7 @@ export type StudentOrderByWithRelationInput = {
   hallTicket?: Prisma.HallTicketOrderByRelationAggregateInput
   examResult?: Prisma.ExamResultOrderByRelationAggregateInput
   examEnrollment?: Prisma.ExamEnrollmentOrderByRelationAggregateInput
+  convertedFromLead?: Prisma.LeadOrderByWithRelationInput
   _relevance?: Prisma.StudentOrderByRelevanceInput
 }
 
@@ -391,6 +393,7 @@ export type StudentWhereUniqueInput = Prisma.AtLeast<{
   hallTicket?: Prisma.HallTicketListRelationFilter
   examResult?: Prisma.ExamResultListRelationFilter
   examEnrollment?: Prisma.ExamEnrollmentListRelationFilter
+  convertedFromLead?: Prisma.XOR<Prisma.LeadNullableScalarRelationFilter, Prisma.LeadWhereInput> | null
 }, "id" | "userId" | "rollNumber" | "organizationId_rollNumber">
 
 export type StudentOrderByWithAggregationInput = {
@@ -475,6 +478,7 @@ export type StudentCreateInput = {
   hallTicket?: Prisma.HallTicketCreateNestedManyWithoutStudentInput
   examResult?: Prisma.ExamResultCreateNestedManyWithoutStudentInput
   examEnrollment?: Prisma.ExamEnrollmentCreateNestedManyWithoutStudentInput
+  convertedFromLead?: Prisma.LeadCreateNestedOneWithoutConvertedToStudentInput
 }
 
 export type StudentUncheckedCreateInput = {
@@ -507,6 +511,7 @@ export type StudentUncheckedCreateInput = {
   hallTicket?: Prisma.HallTicketUncheckedCreateNestedManyWithoutStudentInput
   examResult?: Prisma.ExamResultUncheckedCreateNestedManyWithoutStudentInput
   examEnrollment?: Prisma.ExamEnrollmentUncheckedCreateNestedManyWithoutStudentInput
+  convertedFromLead?: Prisma.LeadUncheckedCreateNestedOneWithoutConvertedToStudentInput
 }
 
 export type StudentUpdateInput = {
@@ -539,6 +544,7 @@ export type StudentUpdateInput = {
   hallTicket?: Prisma.HallTicketUpdateManyWithoutStudentNestedInput
   examResult?: Prisma.ExamResultUpdateManyWithoutStudentNestedInput
   examEnrollment?: Prisma.ExamEnrollmentUpdateManyWithoutStudentNestedInput
+  convertedFromLead?: Prisma.LeadUpdateOneWithoutConvertedToStudentNestedInput
 }
 
 export type StudentUncheckedUpdateInput = {
@@ -571,6 +577,7 @@ export type StudentUncheckedUpdateInput = {
   hallTicket?: Prisma.HallTicketUncheckedUpdateManyWithoutStudentNestedInput
   examResult?: Prisma.ExamResultUncheckedUpdateManyWithoutStudentNestedInput
   examEnrollment?: Prisma.ExamEnrollmentUncheckedUpdateManyWithoutStudentNestedInput
+  convertedFromLead?: Prisma.LeadUncheckedUpdateOneWithoutConvertedToStudentNestedInput
 }
 
 export type StudentCreateManyInput = {
@@ -1028,6 +1035,22 @@ export type StudentUpdateOneRequiredWithoutReportCardNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.StudentUpdateToOneWithWhereWithoutReportCardInput, Prisma.StudentUpdateWithoutReportCardInput>, Prisma.StudentUncheckedUpdateWithoutReportCardInput>
 }
 
+export type StudentCreateNestedOneWithoutConvertedFromLeadInput = {
+  create?: Prisma.XOR<Prisma.StudentCreateWithoutConvertedFromLeadInput, Prisma.StudentUncheckedCreateWithoutConvertedFromLeadInput>
+  connectOrCreate?: Prisma.StudentCreateOrConnectWithoutConvertedFromLeadInput
+  connect?: Prisma.StudentWhereUniqueInput
+}
+
+export type StudentUpdateOneWithoutConvertedFromLeadNestedInput = {
+  create?: Prisma.XOR<Prisma.StudentCreateWithoutConvertedFromLeadInput, Prisma.StudentUncheckedCreateWithoutConvertedFromLeadInput>
+  connectOrCreate?: Prisma.StudentCreateOrConnectWithoutConvertedFromLeadInput
+  upsert?: Prisma.StudentUpsertWithoutConvertedFromLeadInput
+  disconnect?: Prisma.StudentWhereInput | boolean
+  delete?: Prisma.StudentWhereInput | boolean
+  connect?: Prisma.StudentWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.StudentUpdateToOneWithWhereWithoutConvertedFromLeadInput, Prisma.StudentUpdateWithoutConvertedFromLeadInput>, Prisma.StudentUncheckedUpdateWithoutConvertedFromLeadInput>
+}
+
 export type StudentCreateWithoutOrganizationInput = {
   id?: string
   firstName: string
@@ -1057,6 +1080,7 @@ export type StudentCreateWithoutOrganizationInput = {
   hallTicket?: Prisma.HallTicketCreateNestedManyWithoutStudentInput
   examResult?: Prisma.ExamResultCreateNestedManyWithoutStudentInput
   examEnrollment?: Prisma.ExamEnrollmentCreateNestedManyWithoutStudentInput
+  convertedFromLead?: Prisma.LeadCreateNestedOneWithoutConvertedToStudentInput
 }
 
 export type StudentUncheckedCreateWithoutOrganizationInput = {
@@ -1088,6 +1112,7 @@ export type StudentUncheckedCreateWithoutOrganizationInput = {
   hallTicket?: Prisma.HallTicketUncheckedCreateNestedManyWithoutStudentInput
   examResult?: Prisma.ExamResultUncheckedCreateNestedManyWithoutStudentInput
   examEnrollment?: Prisma.ExamEnrollmentUncheckedCreateNestedManyWithoutStudentInput
+  convertedFromLead?: Prisma.LeadUncheckedCreateNestedOneWithoutConvertedToStudentInput
 }
 
 export type StudentCreateOrConnectWithoutOrganizationInput = {
@@ -1171,6 +1196,7 @@ export type StudentCreateWithoutUserInput = {
   hallTicket?: Prisma.HallTicketCreateNestedManyWithoutStudentInput
   examResult?: Prisma.ExamResultCreateNestedManyWithoutStudentInput
   examEnrollment?: Prisma.ExamEnrollmentCreateNestedManyWithoutStudentInput
+  convertedFromLead?: Prisma.LeadCreateNestedOneWithoutConvertedToStudentInput
 }
 
 export type StudentUncheckedCreateWithoutUserInput = {
@@ -1202,6 +1228,7 @@ export type StudentUncheckedCreateWithoutUserInput = {
   hallTicket?: Prisma.HallTicketUncheckedCreateNestedManyWithoutStudentInput
   examResult?: Prisma.ExamResultUncheckedCreateNestedManyWithoutStudentInput
   examEnrollment?: Prisma.ExamEnrollmentUncheckedCreateNestedManyWithoutStudentInput
+  convertedFromLead?: Prisma.LeadUncheckedCreateNestedOneWithoutConvertedToStudentInput
 }
 
 export type StudentCreateOrConnectWithoutUserInput = {
@@ -1249,6 +1276,7 @@ export type StudentUpdateWithoutUserInput = {
   hallTicket?: Prisma.HallTicketUpdateManyWithoutStudentNestedInput
   examResult?: Prisma.ExamResultUpdateManyWithoutStudentNestedInput
   examEnrollment?: Prisma.ExamEnrollmentUpdateManyWithoutStudentNestedInput
+  convertedFromLead?: Prisma.LeadUpdateOneWithoutConvertedToStudentNestedInput
 }
 
 export type StudentUncheckedUpdateWithoutUserInput = {
@@ -1280,6 +1308,7 @@ export type StudentUncheckedUpdateWithoutUserInput = {
   hallTicket?: Prisma.HallTicketUncheckedUpdateManyWithoutStudentNestedInput
   examResult?: Prisma.ExamResultUncheckedUpdateManyWithoutStudentNestedInput
   examEnrollment?: Prisma.ExamEnrollmentUncheckedUpdateManyWithoutStudentNestedInput
+  convertedFromLead?: Prisma.LeadUncheckedUpdateOneWithoutConvertedToStudentNestedInput
 }
 
 export type StudentCreateWithoutParentsInput = {
@@ -1311,6 +1340,7 @@ export type StudentCreateWithoutParentsInput = {
   hallTicket?: Prisma.HallTicketCreateNestedManyWithoutStudentInput
   examResult?: Prisma.ExamResultCreateNestedManyWithoutStudentInput
   examEnrollment?: Prisma.ExamEnrollmentCreateNestedManyWithoutStudentInput
+  convertedFromLead?: Prisma.LeadCreateNestedOneWithoutConvertedToStudentInput
 }
 
 export type StudentUncheckedCreateWithoutParentsInput = {
@@ -1342,6 +1372,7 @@ export type StudentUncheckedCreateWithoutParentsInput = {
   hallTicket?: Prisma.HallTicketUncheckedCreateNestedManyWithoutStudentInput
   examResult?: Prisma.ExamResultUncheckedCreateNestedManyWithoutStudentInput
   examEnrollment?: Prisma.ExamEnrollmentUncheckedCreateNestedManyWithoutStudentInput
+  convertedFromLead?: Prisma.LeadUncheckedCreateNestedOneWithoutConvertedToStudentInput
 }
 
 export type StudentCreateOrConnectWithoutParentsInput = {
@@ -1389,6 +1420,7 @@ export type StudentUpdateWithoutParentsInput = {
   hallTicket?: Prisma.HallTicketUpdateManyWithoutStudentNestedInput
   examResult?: Prisma.ExamResultUpdateManyWithoutStudentNestedInput
   examEnrollment?: Prisma.ExamEnrollmentUpdateManyWithoutStudentNestedInput
+  convertedFromLead?: Prisma.LeadUpdateOneWithoutConvertedToStudentNestedInput
 }
 
 export type StudentUncheckedUpdateWithoutParentsInput = {
@@ -1420,6 +1452,7 @@ export type StudentUncheckedUpdateWithoutParentsInput = {
   hallTicket?: Prisma.HallTicketUncheckedUpdateManyWithoutStudentNestedInput
   examResult?: Prisma.ExamResultUncheckedUpdateManyWithoutStudentNestedInput
   examEnrollment?: Prisma.ExamEnrollmentUncheckedUpdateManyWithoutStudentNestedInput
+  convertedFromLead?: Prisma.LeadUncheckedUpdateOneWithoutConvertedToStudentNestedInput
 }
 
 export type StudentCreateWithoutGradeInput = {
@@ -1451,6 +1484,7 @@ export type StudentCreateWithoutGradeInput = {
   hallTicket?: Prisma.HallTicketCreateNestedManyWithoutStudentInput
   examResult?: Prisma.ExamResultCreateNestedManyWithoutStudentInput
   examEnrollment?: Prisma.ExamEnrollmentCreateNestedManyWithoutStudentInput
+  convertedFromLead?: Prisma.LeadCreateNestedOneWithoutConvertedToStudentInput
 }
 
 export type StudentUncheckedCreateWithoutGradeInput = {
@@ -1482,6 +1516,7 @@ export type StudentUncheckedCreateWithoutGradeInput = {
   hallTicket?: Prisma.HallTicketUncheckedCreateNestedManyWithoutStudentInput
   examResult?: Prisma.ExamResultUncheckedCreateNestedManyWithoutStudentInput
   examEnrollment?: Prisma.ExamEnrollmentUncheckedCreateNestedManyWithoutStudentInput
+  convertedFromLead?: Prisma.LeadUncheckedCreateNestedOneWithoutConvertedToStudentInput
 }
 
 export type StudentCreateOrConnectWithoutGradeInput = {
@@ -1539,6 +1574,7 @@ export type StudentCreateWithoutSectionInput = {
   hallTicket?: Prisma.HallTicketCreateNestedManyWithoutStudentInput
   examResult?: Prisma.ExamResultCreateNestedManyWithoutStudentInput
   examEnrollment?: Prisma.ExamEnrollmentCreateNestedManyWithoutStudentInput
+  convertedFromLead?: Prisma.LeadCreateNestedOneWithoutConvertedToStudentInput
 }
 
 export type StudentUncheckedCreateWithoutSectionInput = {
@@ -1570,6 +1606,7 @@ export type StudentUncheckedCreateWithoutSectionInput = {
   hallTicket?: Prisma.HallTicketUncheckedCreateNestedManyWithoutStudentInput
   examResult?: Prisma.ExamResultUncheckedCreateNestedManyWithoutStudentInput
   examEnrollment?: Prisma.ExamEnrollmentUncheckedCreateNestedManyWithoutStudentInput
+  convertedFromLead?: Prisma.LeadUncheckedCreateNestedOneWithoutConvertedToStudentInput
 }
 
 export type StudentCreateOrConnectWithoutSectionInput = {
@@ -1627,6 +1664,7 @@ export type StudentCreateWithoutStudentAttendanceInput = {
   hallTicket?: Prisma.HallTicketCreateNestedManyWithoutStudentInput
   examResult?: Prisma.ExamResultCreateNestedManyWithoutStudentInput
   examEnrollment?: Prisma.ExamEnrollmentCreateNestedManyWithoutStudentInput
+  convertedFromLead?: Prisma.LeadCreateNestedOneWithoutConvertedToStudentInput
 }
 
 export type StudentUncheckedCreateWithoutStudentAttendanceInput = {
@@ -1658,6 +1696,7 @@ export type StudentUncheckedCreateWithoutStudentAttendanceInput = {
   hallTicket?: Prisma.HallTicketUncheckedCreateNestedManyWithoutStudentInput
   examResult?: Prisma.ExamResultUncheckedCreateNestedManyWithoutStudentInput
   examEnrollment?: Prisma.ExamEnrollmentUncheckedCreateNestedManyWithoutStudentInput
+  convertedFromLead?: Prisma.LeadUncheckedCreateNestedOneWithoutConvertedToStudentInput
 }
 
 export type StudentCreateOrConnectWithoutStudentAttendanceInput = {
@@ -1705,6 +1744,7 @@ export type StudentUpdateWithoutStudentAttendanceInput = {
   hallTicket?: Prisma.HallTicketUpdateManyWithoutStudentNestedInput
   examResult?: Prisma.ExamResultUpdateManyWithoutStudentNestedInput
   examEnrollment?: Prisma.ExamEnrollmentUpdateManyWithoutStudentNestedInput
+  convertedFromLead?: Prisma.LeadUpdateOneWithoutConvertedToStudentNestedInput
 }
 
 export type StudentUncheckedUpdateWithoutStudentAttendanceInput = {
@@ -1736,6 +1776,7 @@ export type StudentUncheckedUpdateWithoutStudentAttendanceInput = {
   hallTicket?: Prisma.HallTicketUncheckedUpdateManyWithoutStudentNestedInput
   examResult?: Prisma.ExamResultUncheckedUpdateManyWithoutStudentNestedInput
   examEnrollment?: Prisma.ExamEnrollmentUncheckedUpdateManyWithoutStudentNestedInput
+  convertedFromLead?: Prisma.LeadUncheckedUpdateOneWithoutConvertedToStudentNestedInput
 }
 
 export type StudentCreateWithoutStudentDocumentInput = {
@@ -1767,6 +1808,7 @@ export type StudentCreateWithoutStudentDocumentInput = {
   hallTicket?: Prisma.HallTicketCreateNestedManyWithoutStudentInput
   examResult?: Prisma.ExamResultCreateNestedManyWithoutStudentInput
   examEnrollment?: Prisma.ExamEnrollmentCreateNestedManyWithoutStudentInput
+  convertedFromLead?: Prisma.LeadCreateNestedOneWithoutConvertedToStudentInput
 }
 
 export type StudentUncheckedCreateWithoutStudentDocumentInput = {
@@ -1798,6 +1840,7 @@ export type StudentUncheckedCreateWithoutStudentDocumentInput = {
   hallTicket?: Prisma.HallTicketUncheckedCreateNestedManyWithoutStudentInput
   examResult?: Prisma.ExamResultUncheckedCreateNestedManyWithoutStudentInput
   examEnrollment?: Prisma.ExamEnrollmentUncheckedCreateNestedManyWithoutStudentInput
+  convertedFromLead?: Prisma.LeadUncheckedCreateNestedOneWithoutConvertedToStudentInput
 }
 
 export type StudentCreateOrConnectWithoutStudentDocumentInput = {
@@ -1845,6 +1888,7 @@ export type StudentUpdateWithoutStudentDocumentInput = {
   hallTicket?: Prisma.HallTicketUpdateManyWithoutStudentNestedInput
   examResult?: Prisma.ExamResultUpdateManyWithoutStudentNestedInput
   examEnrollment?: Prisma.ExamEnrollmentUpdateManyWithoutStudentNestedInput
+  convertedFromLead?: Prisma.LeadUpdateOneWithoutConvertedToStudentNestedInput
 }
 
 export type StudentUncheckedUpdateWithoutStudentDocumentInput = {
@@ -1876,6 +1920,7 @@ export type StudentUncheckedUpdateWithoutStudentDocumentInput = {
   hallTicket?: Prisma.HallTicketUncheckedUpdateManyWithoutStudentNestedInput
   examResult?: Prisma.ExamResultUncheckedUpdateManyWithoutStudentNestedInput
   examEnrollment?: Prisma.ExamEnrollmentUncheckedUpdateManyWithoutStudentNestedInput
+  convertedFromLead?: Prisma.LeadUncheckedUpdateOneWithoutConvertedToStudentNestedInput
 }
 
 export type StudentCreateWithoutFeeInput = {
@@ -1907,6 +1952,7 @@ export type StudentCreateWithoutFeeInput = {
   hallTicket?: Prisma.HallTicketCreateNestedManyWithoutStudentInput
   examResult?: Prisma.ExamResultCreateNestedManyWithoutStudentInput
   examEnrollment?: Prisma.ExamEnrollmentCreateNestedManyWithoutStudentInput
+  convertedFromLead?: Prisma.LeadCreateNestedOneWithoutConvertedToStudentInput
 }
 
 export type StudentUncheckedCreateWithoutFeeInput = {
@@ -1938,6 +1984,7 @@ export type StudentUncheckedCreateWithoutFeeInput = {
   hallTicket?: Prisma.HallTicketUncheckedCreateNestedManyWithoutStudentInput
   examResult?: Prisma.ExamResultUncheckedCreateNestedManyWithoutStudentInput
   examEnrollment?: Prisma.ExamEnrollmentUncheckedCreateNestedManyWithoutStudentInput
+  convertedFromLead?: Prisma.LeadUncheckedCreateNestedOneWithoutConvertedToStudentInput
 }
 
 export type StudentCreateOrConnectWithoutFeeInput = {
@@ -1985,6 +2032,7 @@ export type StudentUpdateWithoutFeeInput = {
   hallTicket?: Prisma.HallTicketUpdateManyWithoutStudentNestedInput
   examResult?: Prisma.ExamResultUpdateManyWithoutStudentNestedInput
   examEnrollment?: Prisma.ExamEnrollmentUpdateManyWithoutStudentNestedInput
+  convertedFromLead?: Prisma.LeadUpdateOneWithoutConvertedToStudentNestedInput
 }
 
 export type StudentUncheckedUpdateWithoutFeeInput = {
@@ -2016,6 +2064,7 @@ export type StudentUncheckedUpdateWithoutFeeInput = {
   hallTicket?: Prisma.HallTicketUncheckedUpdateManyWithoutStudentNestedInput
   examResult?: Prisma.ExamResultUncheckedUpdateManyWithoutStudentNestedInput
   examEnrollment?: Prisma.ExamEnrollmentUncheckedUpdateManyWithoutStudentNestedInput
+  convertedFromLead?: Prisma.LeadUncheckedUpdateOneWithoutConvertedToStudentNestedInput
 }
 
 export type StudentCreateWithoutNotificationLogInput = {
@@ -2047,6 +2096,7 @@ export type StudentCreateWithoutNotificationLogInput = {
   hallTicket?: Prisma.HallTicketCreateNestedManyWithoutStudentInput
   examResult?: Prisma.ExamResultCreateNestedManyWithoutStudentInput
   examEnrollment?: Prisma.ExamEnrollmentCreateNestedManyWithoutStudentInput
+  convertedFromLead?: Prisma.LeadCreateNestedOneWithoutConvertedToStudentInput
 }
 
 export type StudentUncheckedCreateWithoutNotificationLogInput = {
@@ -2078,6 +2128,7 @@ export type StudentUncheckedCreateWithoutNotificationLogInput = {
   hallTicket?: Prisma.HallTicketUncheckedCreateNestedManyWithoutStudentInput
   examResult?: Prisma.ExamResultUncheckedCreateNestedManyWithoutStudentInput
   examEnrollment?: Prisma.ExamEnrollmentUncheckedCreateNestedManyWithoutStudentInput
+  convertedFromLead?: Prisma.LeadUncheckedCreateNestedOneWithoutConvertedToStudentInput
 }
 
 export type StudentCreateOrConnectWithoutNotificationLogInput = {
@@ -2125,6 +2176,7 @@ export type StudentUpdateWithoutNotificationLogInput = {
   hallTicket?: Prisma.HallTicketUpdateManyWithoutStudentNestedInput
   examResult?: Prisma.ExamResultUpdateManyWithoutStudentNestedInput
   examEnrollment?: Prisma.ExamEnrollmentUpdateManyWithoutStudentNestedInput
+  convertedFromLead?: Prisma.LeadUpdateOneWithoutConvertedToStudentNestedInput
 }
 
 export type StudentUncheckedUpdateWithoutNotificationLogInput = {
@@ -2156,6 +2208,7 @@ export type StudentUncheckedUpdateWithoutNotificationLogInput = {
   hallTicket?: Prisma.HallTicketUncheckedUpdateManyWithoutStudentNestedInput
   examResult?: Prisma.ExamResultUncheckedUpdateManyWithoutStudentNestedInput
   examEnrollment?: Prisma.ExamEnrollmentUncheckedUpdateManyWithoutStudentNestedInput
+  convertedFromLead?: Prisma.LeadUncheckedUpdateOneWithoutConvertedToStudentNestedInput
 }
 
 export type StudentCreateWithoutExamEnrollmentInput = {
@@ -2187,6 +2240,7 @@ export type StudentCreateWithoutExamEnrollmentInput = {
   reportCard?: Prisma.ReportCardCreateNestedManyWithoutStudentInput
   hallTicket?: Prisma.HallTicketCreateNestedManyWithoutStudentInput
   examResult?: Prisma.ExamResultCreateNestedManyWithoutStudentInput
+  convertedFromLead?: Prisma.LeadCreateNestedOneWithoutConvertedToStudentInput
 }
 
 export type StudentUncheckedCreateWithoutExamEnrollmentInput = {
@@ -2218,6 +2272,7 @@ export type StudentUncheckedCreateWithoutExamEnrollmentInput = {
   reportCard?: Prisma.ReportCardUncheckedCreateNestedManyWithoutStudentInput
   hallTicket?: Prisma.HallTicketUncheckedCreateNestedManyWithoutStudentInput
   examResult?: Prisma.ExamResultUncheckedCreateNestedManyWithoutStudentInput
+  convertedFromLead?: Prisma.LeadUncheckedCreateNestedOneWithoutConvertedToStudentInput
 }
 
 export type StudentCreateOrConnectWithoutExamEnrollmentInput = {
@@ -2265,6 +2320,7 @@ export type StudentUpdateWithoutExamEnrollmentInput = {
   reportCard?: Prisma.ReportCardUpdateManyWithoutStudentNestedInput
   hallTicket?: Prisma.HallTicketUpdateManyWithoutStudentNestedInput
   examResult?: Prisma.ExamResultUpdateManyWithoutStudentNestedInput
+  convertedFromLead?: Prisma.LeadUpdateOneWithoutConvertedToStudentNestedInput
 }
 
 export type StudentUncheckedUpdateWithoutExamEnrollmentInput = {
@@ -2296,6 +2352,7 @@ export type StudentUncheckedUpdateWithoutExamEnrollmentInput = {
   reportCard?: Prisma.ReportCardUncheckedUpdateManyWithoutStudentNestedInput
   hallTicket?: Prisma.HallTicketUncheckedUpdateManyWithoutStudentNestedInput
   examResult?: Prisma.ExamResultUncheckedUpdateManyWithoutStudentNestedInput
+  convertedFromLead?: Prisma.LeadUncheckedUpdateOneWithoutConvertedToStudentNestedInput
 }
 
 export type StudentCreateWithoutExamResultInput = {
@@ -2327,6 +2384,7 @@ export type StudentCreateWithoutExamResultInput = {
   reportCard?: Prisma.ReportCardCreateNestedManyWithoutStudentInput
   hallTicket?: Prisma.HallTicketCreateNestedManyWithoutStudentInput
   examEnrollment?: Prisma.ExamEnrollmentCreateNestedManyWithoutStudentInput
+  convertedFromLead?: Prisma.LeadCreateNestedOneWithoutConvertedToStudentInput
 }
 
 export type StudentUncheckedCreateWithoutExamResultInput = {
@@ -2358,6 +2416,7 @@ export type StudentUncheckedCreateWithoutExamResultInput = {
   reportCard?: Prisma.ReportCardUncheckedCreateNestedManyWithoutStudentInput
   hallTicket?: Prisma.HallTicketUncheckedCreateNestedManyWithoutStudentInput
   examEnrollment?: Prisma.ExamEnrollmentUncheckedCreateNestedManyWithoutStudentInput
+  convertedFromLead?: Prisma.LeadUncheckedCreateNestedOneWithoutConvertedToStudentInput
 }
 
 export type StudentCreateOrConnectWithoutExamResultInput = {
@@ -2405,6 +2464,7 @@ export type StudentUpdateWithoutExamResultInput = {
   reportCard?: Prisma.ReportCardUpdateManyWithoutStudentNestedInput
   hallTicket?: Prisma.HallTicketUpdateManyWithoutStudentNestedInput
   examEnrollment?: Prisma.ExamEnrollmentUpdateManyWithoutStudentNestedInput
+  convertedFromLead?: Prisma.LeadUpdateOneWithoutConvertedToStudentNestedInput
 }
 
 export type StudentUncheckedUpdateWithoutExamResultInput = {
@@ -2436,6 +2496,7 @@ export type StudentUncheckedUpdateWithoutExamResultInput = {
   reportCard?: Prisma.ReportCardUncheckedUpdateManyWithoutStudentNestedInput
   hallTicket?: Prisma.HallTicketUncheckedUpdateManyWithoutStudentNestedInput
   examEnrollment?: Prisma.ExamEnrollmentUncheckedUpdateManyWithoutStudentNestedInput
+  convertedFromLead?: Prisma.LeadUncheckedUpdateOneWithoutConvertedToStudentNestedInput
 }
 
 export type StudentCreateWithoutHallTicketInput = {
@@ -2467,6 +2528,7 @@ export type StudentCreateWithoutHallTicketInput = {
   reportCard?: Prisma.ReportCardCreateNestedManyWithoutStudentInput
   examResult?: Prisma.ExamResultCreateNestedManyWithoutStudentInput
   examEnrollment?: Prisma.ExamEnrollmentCreateNestedManyWithoutStudentInput
+  convertedFromLead?: Prisma.LeadCreateNestedOneWithoutConvertedToStudentInput
 }
 
 export type StudentUncheckedCreateWithoutHallTicketInput = {
@@ -2498,6 +2560,7 @@ export type StudentUncheckedCreateWithoutHallTicketInput = {
   reportCard?: Prisma.ReportCardUncheckedCreateNestedManyWithoutStudentInput
   examResult?: Prisma.ExamResultUncheckedCreateNestedManyWithoutStudentInput
   examEnrollment?: Prisma.ExamEnrollmentUncheckedCreateNestedManyWithoutStudentInput
+  convertedFromLead?: Prisma.LeadUncheckedCreateNestedOneWithoutConvertedToStudentInput
 }
 
 export type StudentCreateOrConnectWithoutHallTicketInput = {
@@ -2545,6 +2608,7 @@ export type StudentUpdateWithoutHallTicketInput = {
   reportCard?: Prisma.ReportCardUpdateManyWithoutStudentNestedInput
   examResult?: Prisma.ExamResultUpdateManyWithoutStudentNestedInput
   examEnrollment?: Prisma.ExamEnrollmentUpdateManyWithoutStudentNestedInput
+  convertedFromLead?: Prisma.LeadUpdateOneWithoutConvertedToStudentNestedInput
 }
 
 export type StudentUncheckedUpdateWithoutHallTicketInput = {
@@ -2576,6 +2640,7 @@ export type StudentUncheckedUpdateWithoutHallTicketInput = {
   reportCard?: Prisma.ReportCardUncheckedUpdateManyWithoutStudentNestedInput
   examResult?: Prisma.ExamResultUncheckedUpdateManyWithoutStudentNestedInput
   examEnrollment?: Prisma.ExamEnrollmentUncheckedUpdateManyWithoutStudentNestedInput
+  convertedFromLead?: Prisma.LeadUncheckedUpdateOneWithoutConvertedToStudentNestedInput
 }
 
 export type StudentCreateWithoutReportCardInput = {
@@ -2607,6 +2672,7 @@ export type StudentCreateWithoutReportCardInput = {
   hallTicket?: Prisma.HallTicketCreateNestedManyWithoutStudentInput
   examResult?: Prisma.ExamResultCreateNestedManyWithoutStudentInput
   examEnrollment?: Prisma.ExamEnrollmentCreateNestedManyWithoutStudentInput
+  convertedFromLead?: Prisma.LeadCreateNestedOneWithoutConvertedToStudentInput
 }
 
 export type StudentUncheckedCreateWithoutReportCardInput = {
@@ -2638,6 +2704,7 @@ export type StudentUncheckedCreateWithoutReportCardInput = {
   hallTicket?: Prisma.HallTicketUncheckedCreateNestedManyWithoutStudentInput
   examResult?: Prisma.ExamResultUncheckedCreateNestedManyWithoutStudentInput
   examEnrollment?: Prisma.ExamEnrollmentUncheckedCreateNestedManyWithoutStudentInput
+  convertedFromLead?: Prisma.LeadUncheckedCreateNestedOneWithoutConvertedToStudentInput
 }
 
 export type StudentCreateOrConnectWithoutReportCardInput = {
@@ -2685,6 +2752,7 @@ export type StudentUpdateWithoutReportCardInput = {
   hallTicket?: Prisma.HallTicketUpdateManyWithoutStudentNestedInput
   examResult?: Prisma.ExamResultUpdateManyWithoutStudentNestedInput
   examEnrollment?: Prisma.ExamEnrollmentUpdateManyWithoutStudentNestedInput
+  convertedFromLead?: Prisma.LeadUpdateOneWithoutConvertedToStudentNestedInput
 }
 
 export type StudentUncheckedUpdateWithoutReportCardInput = {
@@ -2713,6 +2781,151 @@ export type StudentUncheckedUpdateWithoutReportCardInput = {
   StudentAttendance?: Prisma.StudentAttendanceUncheckedUpdateManyWithoutStudentNestedInput
   StudentDocument?: Prisma.StudentDocumentUncheckedUpdateManyWithoutStudentNestedInput
   NotificationLog?: Prisma.NotificationLogUncheckedUpdateManyWithoutStudentNestedInput
+  hallTicket?: Prisma.HallTicketUncheckedUpdateManyWithoutStudentNestedInput
+  examResult?: Prisma.ExamResultUncheckedUpdateManyWithoutStudentNestedInput
+  examEnrollment?: Prisma.ExamEnrollmentUncheckedUpdateManyWithoutStudentNestedInput
+  convertedFromLead?: Prisma.LeadUncheckedUpdateOneWithoutConvertedToStudentNestedInput
+}
+
+export type StudentCreateWithoutConvertedFromLeadInput = {
+  id?: string
+  firstName: string
+  lastName: string
+  middleName?: string | null
+  motherName?: string | null
+  fullName?: string | null
+  dateOfBirth: Date | string
+  profileImage?: string | null
+  rollNumber: string
+  phoneNumber: string
+  whatsAppNumber: string
+  email: string
+  emergencyContact: string
+  gender: $Enums.Gender
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutStudentInput
+  section: Prisma.SectionCreateNestedOneWithoutStudentsInput
+  grade: Prisma.GradeCreateNestedOneWithoutStudentsInput
+  organization: Prisma.OrganizationCreateNestedOneWithoutStudentInput
+  Fee?: Prisma.FeeCreateNestedManyWithoutStudentInput
+  parents?: Prisma.ParentStudentCreateNestedManyWithoutStudentInput
+  StudentAttendance?: Prisma.StudentAttendanceCreateNestedManyWithoutStudentInput
+  StudentDocument?: Prisma.StudentDocumentCreateNestedManyWithoutStudentInput
+  NotificationLog?: Prisma.NotificationLogCreateNestedManyWithoutStudentInput
+  reportCard?: Prisma.ReportCardCreateNestedManyWithoutStudentInput
+  hallTicket?: Prisma.HallTicketCreateNestedManyWithoutStudentInput
+  examResult?: Prisma.ExamResultCreateNestedManyWithoutStudentInput
+  examEnrollment?: Prisma.ExamEnrollmentCreateNestedManyWithoutStudentInput
+}
+
+export type StudentUncheckedCreateWithoutConvertedFromLeadInput = {
+  id?: string
+  userId: string
+  firstName: string
+  lastName: string
+  middleName?: string | null
+  motherName?: string | null
+  fullName?: string | null
+  dateOfBirth: Date | string
+  profileImage?: string | null
+  rollNumber: string
+  phoneNumber: string
+  whatsAppNumber: string
+  email: string
+  emergencyContact: string
+  gender: $Enums.Gender
+  sectionId: string
+  gradeId: string
+  organizationId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  Fee?: Prisma.FeeUncheckedCreateNestedManyWithoutStudentInput
+  parents?: Prisma.ParentStudentUncheckedCreateNestedManyWithoutStudentInput
+  StudentAttendance?: Prisma.StudentAttendanceUncheckedCreateNestedManyWithoutStudentInput
+  StudentDocument?: Prisma.StudentDocumentUncheckedCreateNestedManyWithoutStudentInput
+  NotificationLog?: Prisma.NotificationLogUncheckedCreateNestedManyWithoutStudentInput
+  reportCard?: Prisma.ReportCardUncheckedCreateNestedManyWithoutStudentInput
+  hallTicket?: Prisma.HallTicketUncheckedCreateNestedManyWithoutStudentInput
+  examResult?: Prisma.ExamResultUncheckedCreateNestedManyWithoutStudentInput
+  examEnrollment?: Prisma.ExamEnrollmentUncheckedCreateNestedManyWithoutStudentInput
+}
+
+export type StudentCreateOrConnectWithoutConvertedFromLeadInput = {
+  where: Prisma.StudentWhereUniqueInput
+  create: Prisma.XOR<Prisma.StudentCreateWithoutConvertedFromLeadInput, Prisma.StudentUncheckedCreateWithoutConvertedFromLeadInput>
+}
+
+export type StudentUpsertWithoutConvertedFromLeadInput = {
+  update: Prisma.XOR<Prisma.StudentUpdateWithoutConvertedFromLeadInput, Prisma.StudentUncheckedUpdateWithoutConvertedFromLeadInput>
+  create: Prisma.XOR<Prisma.StudentCreateWithoutConvertedFromLeadInput, Prisma.StudentUncheckedCreateWithoutConvertedFromLeadInput>
+  where?: Prisma.StudentWhereInput
+}
+
+export type StudentUpdateToOneWithWhereWithoutConvertedFromLeadInput = {
+  where?: Prisma.StudentWhereInput
+  data: Prisma.XOR<Prisma.StudentUpdateWithoutConvertedFromLeadInput, Prisma.StudentUncheckedUpdateWithoutConvertedFromLeadInput>
+}
+
+export type StudentUpdateWithoutConvertedFromLeadInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  motherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  profileImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rollNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  whatsAppNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emergencyContact?: Prisma.StringFieldUpdateOperationsInput | string
+  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutStudentNestedInput
+  section?: Prisma.SectionUpdateOneRequiredWithoutStudentsNestedInput
+  grade?: Prisma.GradeUpdateOneRequiredWithoutStudentsNestedInput
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutStudentNestedInput
+  Fee?: Prisma.FeeUpdateManyWithoutStudentNestedInput
+  parents?: Prisma.ParentStudentUpdateManyWithoutStudentNestedInput
+  StudentAttendance?: Prisma.StudentAttendanceUpdateManyWithoutStudentNestedInput
+  StudentDocument?: Prisma.StudentDocumentUpdateManyWithoutStudentNestedInput
+  NotificationLog?: Prisma.NotificationLogUpdateManyWithoutStudentNestedInput
+  reportCard?: Prisma.ReportCardUpdateManyWithoutStudentNestedInput
+  hallTicket?: Prisma.HallTicketUpdateManyWithoutStudentNestedInput
+  examResult?: Prisma.ExamResultUpdateManyWithoutStudentNestedInput
+  examEnrollment?: Prisma.ExamEnrollmentUpdateManyWithoutStudentNestedInput
+}
+
+export type StudentUncheckedUpdateWithoutConvertedFromLeadInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  motherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fullName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  profileImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rollNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  phoneNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  whatsAppNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emergencyContact?: Prisma.StringFieldUpdateOperationsInput | string
+  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  sectionId?: Prisma.StringFieldUpdateOperationsInput | string
+  gradeId?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  Fee?: Prisma.FeeUncheckedUpdateManyWithoutStudentNestedInput
+  parents?: Prisma.ParentStudentUncheckedUpdateManyWithoutStudentNestedInput
+  StudentAttendance?: Prisma.StudentAttendanceUncheckedUpdateManyWithoutStudentNestedInput
+  StudentDocument?: Prisma.StudentDocumentUncheckedUpdateManyWithoutStudentNestedInput
+  NotificationLog?: Prisma.NotificationLogUncheckedUpdateManyWithoutStudentNestedInput
+  reportCard?: Prisma.ReportCardUncheckedUpdateManyWithoutStudentNestedInput
   hallTicket?: Prisma.HallTicketUncheckedUpdateManyWithoutStudentNestedInput
   examResult?: Prisma.ExamResultUncheckedUpdateManyWithoutStudentNestedInput
   examEnrollment?: Prisma.ExamEnrollmentUncheckedUpdateManyWithoutStudentNestedInput
@@ -2769,6 +2982,7 @@ export type StudentUpdateWithoutOrganizationInput = {
   hallTicket?: Prisma.HallTicketUpdateManyWithoutStudentNestedInput
   examResult?: Prisma.ExamResultUpdateManyWithoutStudentNestedInput
   examEnrollment?: Prisma.ExamEnrollmentUpdateManyWithoutStudentNestedInput
+  convertedFromLead?: Prisma.LeadUpdateOneWithoutConvertedToStudentNestedInput
 }
 
 export type StudentUncheckedUpdateWithoutOrganizationInput = {
@@ -2800,6 +3014,7 @@ export type StudentUncheckedUpdateWithoutOrganizationInput = {
   hallTicket?: Prisma.HallTicketUncheckedUpdateManyWithoutStudentNestedInput
   examResult?: Prisma.ExamResultUncheckedUpdateManyWithoutStudentNestedInput
   examEnrollment?: Prisma.ExamEnrollmentUncheckedUpdateManyWithoutStudentNestedInput
+  convertedFromLead?: Prisma.LeadUncheckedUpdateOneWithoutConvertedToStudentNestedInput
 }
 
 export type StudentUncheckedUpdateManyWithoutOrganizationInput = {
@@ -2875,6 +3090,7 @@ export type StudentUpdateWithoutGradeInput = {
   hallTicket?: Prisma.HallTicketUpdateManyWithoutStudentNestedInput
   examResult?: Prisma.ExamResultUpdateManyWithoutStudentNestedInput
   examEnrollment?: Prisma.ExamEnrollmentUpdateManyWithoutStudentNestedInput
+  convertedFromLead?: Prisma.LeadUpdateOneWithoutConvertedToStudentNestedInput
 }
 
 export type StudentUncheckedUpdateWithoutGradeInput = {
@@ -2906,6 +3122,7 @@ export type StudentUncheckedUpdateWithoutGradeInput = {
   hallTicket?: Prisma.HallTicketUncheckedUpdateManyWithoutStudentNestedInput
   examResult?: Prisma.ExamResultUncheckedUpdateManyWithoutStudentNestedInput
   examEnrollment?: Prisma.ExamEnrollmentUncheckedUpdateManyWithoutStudentNestedInput
+  convertedFromLead?: Prisma.LeadUncheckedUpdateOneWithoutConvertedToStudentNestedInput
 }
 
 export type StudentUncheckedUpdateManyWithoutGradeInput = {
@@ -2981,6 +3198,7 @@ export type StudentUpdateWithoutSectionInput = {
   hallTicket?: Prisma.HallTicketUpdateManyWithoutStudentNestedInput
   examResult?: Prisma.ExamResultUpdateManyWithoutStudentNestedInput
   examEnrollment?: Prisma.ExamEnrollmentUpdateManyWithoutStudentNestedInput
+  convertedFromLead?: Prisma.LeadUpdateOneWithoutConvertedToStudentNestedInput
 }
 
 export type StudentUncheckedUpdateWithoutSectionInput = {
@@ -3012,6 +3230,7 @@ export type StudentUncheckedUpdateWithoutSectionInput = {
   hallTicket?: Prisma.HallTicketUncheckedUpdateManyWithoutStudentNestedInput
   examResult?: Prisma.ExamResultUncheckedUpdateManyWithoutStudentNestedInput
   examEnrollment?: Prisma.ExamEnrollmentUncheckedUpdateManyWithoutStudentNestedInput
+  convertedFromLead?: Prisma.LeadUncheckedUpdateOneWithoutConvertedToStudentNestedInput
 }
 
 export type StudentUncheckedUpdateManyWithoutSectionInput = {
@@ -3173,6 +3392,7 @@ export type StudentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   hallTicket?: boolean | Prisma.Student$hallTicketArgs<ExtArgs>
   examResult?: boolean | Prisma.Student$examResultArgs<ExtArgs>
   examEnrollment?: boolean | Prisma.Student$examEnrollmentArgs<ExtArgs>
+  convertedFromLead?: boolean | Prisma.Student$convertedFromLeadArgs<ExtArgs>
   _count?: boolean | Prisma.StudentCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["student"]>
 
@@ -3268,6 +3488,7 @@ export type StudentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   hallTicket?: boolean | Prisma.Student$hallTicketArgs<ExtArgs>
   examResult?: boolean | Prisma.Student$examResultArgs<ExtArgs>
   examEnrollment?: boolean | Prisma.Student$examEnrollmentArgs<ExtArgs>
+  convertedFromLead?: boolean | Prisma.Student$convertedFromLeadArgs<ExtArgs>
   _count?: boolean | Prisma.StudentCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type StudentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3299,6 +3520,7 @@ export type $StudentPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     hallTicket: Prisma.$HallTicketPayload<ExtArgs>[]
     examResult: Prisma.$ExamResultPayload<ExtArgs>[]
     examEnrollment: Prisma.$ExamEnrollmentPayload<ExtArgs>[]
+    convertedFromLead: Prisma.$LeadPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -3728,6 +3950,7 @@ export interface Prisma__StudentClient<T, Null = never, ExtArgs extends runtime.
   hallTicket<T extends Prisma.Student$hallTicketArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Student$hallTicketArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$HallTicketPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   examResult<T extends Prisma.Student$examResultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Student$examResultArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExamResultPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   examEnrollment<T extends Prisma.Student$examEnrollmentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Student$examEnrollmentArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExamEnrollmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  convertedFromLead<T extends Prisma.Student$convertedFromLeadArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Student$convertedFromLeadArgs<ExtArgs>>): Prisma.Prisma__LeadClient<runtime.Types.Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4386,6 +4609,25 @@ export type Student$examEnrollmentArgs<ExtArgs extends runtime.Types.Extensions.
   take?: number
   skip?: number
   distinct?: Prisma.ExamEnrollmentScalarFieldEnum | Prisma.ExamEnrollmentScalarFieldEnum[]
+}
+
+/**
+ * Student.convertedFromLead
+ */
+export type Student$convertedFromLeadArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Lead
+   */
+  select?: Prisma.LeadSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Lead
+   */
+  omit?: Prisma.LeadOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LeadInclude<ExtArgs> | null
+  where?: Prisma.LeadWhereInput
 }
 
 /**

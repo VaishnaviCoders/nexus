@@ -257,9 +257,11 @@ model Student {
   hallTicket      HallTicket[]
   examResult      ExamResult[]
 
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
-  examEnrollment ExamEnrollment[]
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  examEnrollment    ExamEnrollment[]
+  // ===== Conversion back to Lead =====
+  convertedFromLead Lead?            @relation("LeadToStudent")
 
   //  // Link through membership
   // membershipId String @unique
@@ -1333,7 +1335,7 @@ model Lead {
   whatsappNumber String?
 
   // ===== Enquiry Details =====
-  enquiryFor    String
+  enquiryFor    String  @default("")
   currentSchool String?
   address       String?
   city          String?
@@ -1349,9 +1351,9 @@ model Lead {
   score Int @default(0)
 
   // ===== Assignment & Ownership =====
-  assignedToId String?
-  assignedTo   User?     @relation("LeadAssignedTo", fields: [assignedToId], references: [id], onDelete: SetNull)
-  assignedAt   DateTime?
+  assignedToUserId String?
+  assignedTo       User?     @relation("LeadAssignedTo", fields: [assignedToUserId], references: [id], onDelete: SetNull)
+  assignedAt       DateTime?
 
   // ===== Follow-up Tracking =====
   nextFollowUpAt  DateTime?
@@ -1360,14 +1362,13 @@ model Lead {
 
   // ===== Conversion Tracking =====
   convertedAt          DateTime?
-  convertedToStudentId String?
   // Uncomment when Student model is ready
-  // convertedToStudent   Student? @relation(fields: [convertedToStudentId], references: [id])
-
+  convertedToStudentId String?   @unique
+  convertedToStudent   Student?  @relation("LeadToStudent", fields: [convertedToStudentId], references: [id])
   // Additional Info
-  notes        String?
-  requirements String[] // ["Transportation", "Hostel", "Scholarship"]
-  budgetRange  String? // "50k-1L", "1L-2L", etc.
+  notes                String?
+  requirements         String[] // ["Transportation", "Hostel", "Scholarship"]
+  budgetRange          String? // "50k-1L", "1L-2L", etc.
 
   // Reason for closure (required for NOT_INTERESTED, INVALID)
   closureReason String?
@@ -1377,15 +1378,14 @@ model Lead {
   communicationPreference LeadCommunicationPreference[]
 
   // ===== Audit Fields =====
-  createdById String?
-  createdBy   User?   @relation("LeadCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  createdByUserId String?
+  createdBy       User?   @relation("LeadCreatedBy", fields: [createdByUserId], references: [id], onDelete: SetNull)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@unique([organizationId, phone, enquiryFor])
-  @@index([organizationId, status])
-  @@index([assignedToId, nextFollowUpAt])
+  @@index([organizationId, status, phone])
+  @@index([createdByUserId, nextFollowUpAt])
   @@index([source, createdAt])
 }
 
@@ -1395,15 +1395,15 @@ model LeadActivity {
   lead   Lead   @relation(fields: [leadId], references: [id])
 
   // Activity Details
-  type        LeadActivityType
-  title       String // "Called parent", "Sent brochure", "School visit"
-  description String?
-  outcome     String? // "Interested", "Not reachable", "Will visit next week"
-
+  type          LeadActivityType
+  title         String // "Called parent", "Sent brochure", "School visit"
+  description   String?
+  outcome       String? // "Interested", "Not reachable", "Will visit next week"
+  sentiment     Sentiment?
   // When & Who
   performedById String?
-  performedBy   User?    @relation(fields: [performedById], references: [id])
-  performedAt   DateTime @default(now())
+  performedBy   User?            @relation(fields: [performedById], references: [id])
+  performedAt   DateTime         @default(now())
 
   // Next Action
   followUpDate DateTime?
@@ -1481,6 +1481,12 @@ enum LeadActivityType {
   PARENT_MEETING
   STUDENT_INTERACTION
   OTHER
+}
+
+enum Sentiment {
+  POSITIVE
+  NEUTRAL
+  NEGATIVE
 }
 
 enum LeadCommunicationPreference {

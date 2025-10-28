@@ -908,6 +908,13 @@ export type EnumLeadActivityTypeFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumLeadActivityTypeFilter<$PrismaModel> | $Enums.LeadActivityType
 }
 
+export type EnumSentimentNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.Sentiment | Prisma.EnumSentimentFieldRefInput<$PrismaModel> | null
+  in?: $Enums.Sentiment[] | Prisma.ListEnumSentimentFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.Sentiment[] | Prisma.ListEnumSentimentFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumSentimentNullableFilter<$PrismaModel> | $Enums.Sentiment | null
+}
+
 export type EnumLeadActivityTypeWithAggregatesFilter<$PrismaModel = never> = {
   equals?: $Enums.LeadActivityType | Prisma.EnumLeadActivityTypeFieldRefInput<$PrismaModel>
   in?: $Enums.LeadActivityType[] | Prisma.ListEnumLeadActivityTypeFieldRefInput<$PrismaModel>
@@ -916,6 +923,16 @@ export type EnumLeadActivityTypeWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumLeadActivityTypeFilter<$PrismaModel>
   _max?: Prisma.NestedEnumLeadActivityTypeFilter<$PrismaModel>
+}
+
+export type EnumSentimentNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.Sentiment | Prisma.EnumSentimentFieldRefInput<$PrismaModel> | null
+  in?: $Enums.Sentiment[] | Prisma.ListEnumSentimentFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.Sentiment[] | Prisma.ListEnumSentimentFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumSentimentNullableWithAggregatesFilter<$PrismaModel> | $Enums.Sentiment | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumSentimentNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumSentimentNullableFilter<$PrismaModel>
 }
 
 export type NestedStringFilter<$PrismaModel = never> = {
@@ -1750,6 +1767,13 @@ export type NestedEnumLeadActivityTypeFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumLeadActivityTypeFilter<$PrismaModel> | $Enums.LeadActivityType
 }
 
+export type NestedEnumSentimentNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.Sentiment | Prisma.EnumSentimentFieldRefInput<$PrismaModel> | null
+  in?: $Enums.Sentiment[] | Prisma.ListEnumSentimentFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.Sentiment[] | Prisma.ListEnumSentimentFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumSentimentNullableFilter<$PrismaModel> | $Enums.Sentiment | null
+}
+
 export type NestedEnumLeadActivityTypeWithAggregatesFilter<$PrismaModel = never> = {
   equals?: $Enums.LeadActivityType | Prisma.EnumLeadActivityTypeFieldRefInput<$PrismaModel>
   in?: $Enums.LeadActivityType[] | Prisma.ListEnumLeadActivityTypeFieldRefInput<$PrismaModel>
@@ -1758,6 +1782,16 @@ export type NestedEnumLeadActivityTypeWithAggregatesFilter<$PrismaModel = never>
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumLeadActivityTypeFilter<$PrismaModel>
   _max?: Prisma.NestedEnumLeadActivityTypeFilter<$PrismaModel>
+}
+
+export type NestedEnumSentimentNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.Sentiment | Prisma.EnumSentimentFieldRefInput<$PrismaModel> | null
+  in?: $Enums.Sentiment[] | Prisma.ListEnumSentimentFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.Sentiment[] | Prisma.ListEnumSentimentFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumSentimentNullableWithAggregatesFilter<$PrismaModel> | $Enums.Sentiment | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumSentimentNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumSentimentNullableFilter<$PrismaModel>
 }
 
 

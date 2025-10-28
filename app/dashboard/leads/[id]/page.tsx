@@ -1,0 +1,67 @@
+import prisma from '@/lib/db';
+import { AlertCircle } from 'lucide-react';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import LeadDetails from '@/components/dashboard/leads/lead-details';
+import { LeadActivityTimeline } from '@/components/dashboard/leads/lead-activity-timeline';
+
+export default async function LeadPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+
+  const lead = await prisma.lead.findUnique({
+    where: { id },
+    include: {
+      activities: {
+        include: {
+          performedBy: {
+            select: {
+              firstName: true,
+              lastName: true,
+              profileImage: true,
+            },
+          },
+        },
+        orderBy: {
+          performedAt: 'desc',
+        },
+      },
+      createdBy: {
+        select: {
+          firstName: true,
+          lastName: true,
+          profileImage: true,
+        },
+      },
+      assignedTo: {
+        select: {
+          firstName: true,
+          lastName: true,
+          profileImage: true,
+        },
+      },
+    },
+  });
+
+  if (!lead) {
+    return (
+      <div className="container mx-auto p-6">
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Lead not found</AlertTitle>
+          <AlertDescription>
+            The lead you're looking for doesn't exist or has been removed.
+          </AlertDescription>
+        </Alert>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <LeadDetails lead={lead} />
+    </>
+  );
+}

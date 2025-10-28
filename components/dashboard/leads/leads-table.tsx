@@ -23,6 +23,8 @@ import {
   ChevronLastIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
+  ChevronsLeft,
+  ChevronsRight,
   ChevronUpIcon,
   CircleAlertIcon,
   CircleXIcon,
@@ -32,6 +34,7 @@ import {
   ListFilterIcon,
   PlusIcon,
   TrashIcon,
+  User,
 } from 'lucide-react';
 
 import { cn, formatDateIN } from '@/lib/utils';
@@ -91,18 +94,43 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Lead } from '@/generated/prisma/client';
+import { Lead, Prisma } from '@/generated/prisma/client';
 import Link from 'next/link';
+import { deleteLeads } from '@/lib/data/leads/delete-leads';
+import { toast } from 'sonner';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+
+type LeaveWithAssignTo = Prisma.LeadGetPayload<{
+  include: {
+    assignedTo: {
+      select: {
+        id: true;
+        firstName: true;
+        lastName: true;
+        email: true;
+        profileImage: true;
+      };
+    };
+  };
+}>;
+
+interface LeadTableProps {
+  leads: LeaveWithAssignTo[];
+}
 
 // Custom filter function for multi-column searching
-const multiColumnFilterFn: FilterFn<Lead> = (row, columnId, filterValue) => {
+const multiColumnFilterFn: FilterFn<LeaveWithAssignTo> = (
+  row,
+  columnId,
+  filterValue
+) => {
   const searchableRowContent =
     `${row.original.studentName} ${row.original.parentName || ''} ${row.original.email || ''} ${row.original.phone}`.toLowerCase();
   const searchTerm = (filterValue ?? '').toLowerCase();
   return searchableRowContent.includes(searchTerm);
 };
 
-const statusFilterFn: FilterFn<Lead> = (
+const statusFilterFn: FilterFn<LeaveWithAssignTo> = (
   row,
   columnId,
   filterValue: string[]
@@ -112,7 +140,7 @@ const statusFilterFn: FilterFn<Lead> = (
   return filterValue.includes(status);
 };
 
-const columns: ColumnDef<Lead>[] = [
+const columns: ColumnDef<LeaveWithAssignTo>[] = [
   {
     id: 'select',
     header: ({ table }) => (
@@ -132,7 +160,7 @@ const columns: ColumnDef<Lead>[] = [
         aria-label="Select row"
       />
     ),
-    size: 28,
+    size: 50,
     enableSorting: false,
     enableHiding: false,
   },
@@ -140,42 +168,52 @@ const columns: ColumnDef<Lead>[] = [
     header: 'Student Name',
     accessorKey: 'studentName',
     cell: ({ row }) => (
-      <div className="font-medium">{row.getValue('studentName')}</div>
+      <div className="flex flex-col">
+        <div className="font-medium text-sm leading-5">
+          {row.getValue('studentName')}
+        </div>
+        <div className="text-xs text-muted-foreground leading-4 mt-0.5">
+          Lead Score: {row.original.score || '-'}
+        </div>
+      </div>
     ),
     size: 180,
     filterFn: multiColumnFilterFn,
     enableHiding: false,
   },
   {
-    header: 'Parent Name',
-    accessorKey: 'parentName', // New column
+    header: 'Contact',
+    accessorKey: 'phone',
     cell: ({ row }) => (
-      <div className="whitespace-nowrap">
-        {row.getValue('parentName') || '-'}
-      </div>
-    ),
-    size: 150,
-  },
-  {
-    header: 'Phone',
-    accessorKey: 'phone', // New column
-    size: 140,
-  },
-  {
-    header: 'Email',
-    accessorKey: 'email',
-    size: 220,
-  },
-  {
-    header: 'City',
-    accessorKey: 'city',
-    cell: ({ row }) => (
-      <div>
-        <span className="text-sm leading-none">{row.original.city}</span>{' '}
-        {/* {row.getValue('address')} */}
+      <div className="flex flex-col">
+        <div className="text-sm leading-5">{row.original.phone}</div>
+        <div className="text-xs text-muted-foreground leading-4 truncate">
+          {row.original.email || '-'}
+        </div>
       </div>
     ),
     size: 180,
+  },
+  {
+    header: 'Location',
+    accessorKey: 'city',
+    cell: ({ row }) => (
+      <div className="flex flex-col">
+        <div className="text-sm leading-5">{row.original.city || '-'}</div>
+        <div className="text-xs text-muted-foreground leading-4">
+          {row.original.state || '-'}
+        </div>
+      </div>
+    ),
+    size: 140,
+  },
+  {
+    header: 'Enquiry For',
+    accessorKey: 'enquiryFor',
+    cell: ({ row }) => (
+      <div className="text-sm leading-5">{row.original.enquiryFor || '-'}</div>
+    ),
+    size: 150,
   },
   {
     header: 'Status',
@@ -185,7 +223,7 @@ const columns: ColumnDef<Lead>[] = [
       return (
         <Badge
           variant={status as any}
-          className="capitalize whitespace-nowrap text-xs font-medium px-2 py-1"
+          className="capitalize whitespace-nowrap text-xs px-2 py-1"
         >
           {status.toLowerCase().replace(/_/g, ' ')}
         </Badge>
@@ -196,38 +234,97 @@ const columns: ColumnDef<Lead>[] = [
   },
   {
     header: 'Priority',
-    accessorKey: 'priority', // New column
+    accessorKey: 'priority',
     cell: ({ row }) => {
       const priority = row.getValue('priority') as string;
       return (
-        <Badge
-          variant={
-            priority === 'HIGH' || priority === 'URGENT'
-              ? 'destructive'
-              : priority === 'MEDIUM'
-                ? 'default'
-                : 'secondary'
-          }
-          className="capitalize"
-        >
-          {priority.toLowerCase()}
+        <Badge variant={priority as any} className="capitalize text-xs">
+          {priority}
         </Badge>
       );
     },
     size: 100,
   },
   {
-    header: 'Created',
-    accessorKey: 'createdAt', // New column
+    header: 'Source',
+    accessorKey: 'source',
     cell: ({ row }) => {
-      const createdAt = row.getValue('createdAt') as Date;
+      const source = row.original.source as string;
       return (
-        <div className="text-sm text-muted-foreground">
+        <div className="text-sm leading-5 capitalize">
+          {source.toLowerCase().replace(/_/g, ' ')}
+        </div>
+      );
+    },
+    size: 120,
+  },
+  {
+    header: 'Budget',
+    accessorKey: 'budgetRange',
+    cell: ({ row }) => (
+      <div className="text-sm leading-5 font-medium">
+        {row.original.budgetRange || '-'}
+      </div>
+    ),
+    size: 100,
+  },
+  {
+    header: 'Created Date',
+    accessorKey: 'createdAt',
+    cell: ({ row }) => {
+      const createdAt = row.original.createdAt as Date;
+      return (
+        <div className="text-sm leading-5 text-muted-foreground">
           {formatDateIN(createdAt)}
         </div>
       );
     },
     size: 120,
+  },
+  {
+    header: 'Assign To',
+    accessorKey: 'assignedTo',
+    cell: ({ row }) => {
+      const assignTo = row.original.assignedTo;
+
+      // Handle case where assignedTo is null or undefined
+      if (!assignTo) {
+        return (
+          <div className="flex items-center gap-2 text-muted-foreground">
+            <Avatar className="h-6 w-6">
+              <AvatarFallback className="bg-gray-100 text-gray-400">
+                <User className="h-3 w-3" />
+              </AvatarFallback>
+            </Avatar>
+            <div className="text-xs">Unassigned</div>
+          </div>
+        );
+      }
+
+      return (
+        <div className="flex items-center gap-2 min-w-0">
+          <Avatar className="h-6 w-6 flex-shrink-0">
+            <AvatarImage
+              src={assignTo?.profileImage}
+              alt={`${assignTo?.firstName} ${assignTo?.lastName}`}
+            />
+            <AvatarFallback className="text-xs bg-blue-100 text-blue-700">
+              {assignTo?.firstName?.[0]}
+              {assignTo?.lastName?.[0]}
+            </AvatarFallback>
+          </Avatar>
+          <div className="flex flex-col min-w-0 flex-1">
+            <span className="text-sm font-medium text-foreground truncate">
+              {assignTo.firstName} {assignTo.lastName}
+            </span>
+            <span className="text-xs text-muted-foreground truncate">
+              {assignTo.email}
+            </span>
+          </div>
+        </div>
+      );
+    },
+    size: 160, // Increased size for better readability
   },
   {
     id: 'actions',
@@ -237,10 +334,6 @@ const columns: ColumnDef<Lead>[] = [
     enableHiding: false,
   },
 ];
-
-interface LeadTableProps {
-  leads: Lead[]; // You can create a proper type later
-}
 
 export default function LeadTable({ leads }: LeadTableProps) {
   const id = useId();
@@ -259,14 +352,27 @@ export default function LeadTable({ leads }: LeadTableProps) {
     },
   ]);
 
-  const handleDeleteRows = () => {
+  const handleDeleteRows = async () => {
     const selectedRows = table.getSelectedRowModel().rows;
-    // Handle actual deletion here
-    console.log(
-      'Deleting rows:',
-      selectedRows.map((row) => row.original.id)
-    );
-    table.resetRowSelection();
+    const selectedIds = selectedRows.map((row) => row.original.id);
+
+    if (selectedIds.length === 0) {
+      toast.error('Please select at least one lead to delete');
+      return;
+    }
+
+    try {
+      const result = await deleteLeads(selectedIds);
+
+      if (result.success) {
+        toast.success(result.message);
+        table.resetRowSelection();
+      } else {
+        toast.error(result.message);
+      }
+    } catch (error) {
+      toast.error('Failed to delete leads. Please try again.');
+    }
   };
 
   const table = useReactTable({
@@ -588,21 +694,35 @@ export default function LeadTable({ leads }: LeadTableProps) {
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
-                  className="hover:bg-muted cursor-pointer"
                   key={row.id}
+                  className="hover:bg-muted/50 cursor-pointer"
                   data-state={row.getIsSelected() && 'selected'}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className="last:py-0">
-                      <Link
-                        href={`/dashboard/leads/${row.original.id}`}
-                        className="block h-full w-full"
-                      >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </Link>
+                    <TableCell key={cell.id} className="py-3 align-middle">
+                      {/* Check if this is the selection cell - don't wrap in Link */}
+                      {cell.column.id === 'select' ? (
+                        <div
+                          className="flex justify-center"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </div>
+                      ) : (
+                        // Wrap other cells in Link for navigation
+                        <Link
+                          href={`/dashboard/leads/${row.original.id}`}
+                          className="block h-full w-full"
+                        >
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </Link>
+                      )}
                     </TableCell>
                   ))}
                 </TableRow>
@@ -611,9 +731,9 @@ export default function LeadTable({ leads }: LeadTableProps) {
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
-                  className="h-24 text-center"
+                  className="h-24 text-center text-muted-foreground"
                 >
-                  No results.
+                  No leads found.
                 </TableCell>
               </TableRow>
             )}
@@ -688,7 +808,7 @@ export default function LeadTable({ leads }: LeadTableProps) {
                   disabled={!table.getCanPreviousPage()}
                   aria-label="Go to first page"
                 >
-                  <ChevronFirstIcon size={16} aria-hidden="true" />
+                  <ChevronsLeft size={16} aria-hidden="true" />
                 </Button>
               </PaginationItem>
               {/* Previous page button */}
@@ -727,7 +847,7 @@ export default function LeadTable({ leads }: LeadTableProps) {
                   disabled={!table.getCanNextPage()}
                   aria-label="Go to last page"
                 >
-                  <ChevronLastIcon size={16} aria-hidden="true" />
+                  <ChevronsRight size={16} aria-hidden="true" />
                 </Button>
               </PaginationItem>
             </PaginationContent>
@@ -738,7 +858,7 @@ export default function LeadTable({ leads }: LeadTableProps) {
   );
 }
 
-function RowActions({ row }: { row: Row<Lead> }) {
+function RowActions({ row }: { row: Row<LeaveWithAssignTo> }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

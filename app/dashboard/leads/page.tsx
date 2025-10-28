@@ -3,7 +3,7 @@ import LeadTable from '@/components/dashboard/leads/leads-table';
 import { getLeads } from '@/lib/data/leads/get-leads';
 
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { StatsCards } from '@/components/dashboard/leads/lead-stats-cards';
+import { LeadDashboardStatsCards } from '@/components/dashboard/leads/lead-stats-cards';
 
 function StatsCardsSkeleton() {
   return (
@@ -30,7 +30,7 @@ export default async function LeadsPage() {
   return (
     <div className="space-y-6">
       <Suspense fallback={<StatsCardsSkeleton />}>
-        <StatsCards />
+        <LeadDashboardStatsCards />
       </Suspense>
       <LeadTable leads={leads} />
     </div>
