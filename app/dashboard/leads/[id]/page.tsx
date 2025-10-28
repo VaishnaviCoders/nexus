@@ -37,9 +37,11 @@ export default async function LeadPage({
       },
       assignedTo: {
         select: {
+          id: true,
           firstName: true,
           lastName: true,
           profileImage: true,
+          email: true,
         },
       },
     },
