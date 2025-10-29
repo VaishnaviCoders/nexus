@@ -2,7 +2,6 @@ import prisma from '@/lib/db';
 import { AlertCircle } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import LeadDetails from '@/components/dashboard/leads/lead-details';
-import { LeadActivityTimeline } from '@/components/dashboard/leads/lead-activity-timeline';
 
 export default async function LeadPage({
   params,
