@@ -16,6 +16,7 @@ import {
   ClipboardList,
   Paperclip,
   FileText,
+  UserPlus,
 } from 'lucide-react';
 
 type Submenu = {
@@ -52,11 +53,6 @@ export const roleMenus: Record<string, Group[]> = {
     {
       groupLabel: 'Management',
       menus: [
-        // {
-        //   href: '/dashboard/leads',
-        //   label: 'Lead Management',
-        //   icon: UserPlus,
-        // },
         {
           href: '/dashboard/grades',
           label: 'Class Management',
@@ -70,7 +66,11 @@ export const roleMenus: Record<string, Group[]> = {
             },
           ],
         },
-
+        {
+          href: '/dashboard/leads',
+          label: 'Lead Management',
+          icon: UserPlus,
+        },
         {
           href: '/dashboard/teachers',
           label: 'Teacher Management',
@@ -172,11 +172,11 @@ export const roleMenus: Record<string, Group[]> = {
           label: 'Fees Management',
           icon: IndianRupee,
         },
-        // {
-        //   href: '/dashboard/leads',
-        //   label: 'Lead Management',
-        //   icon: UserPlus,
-        // },
+        {
+          href: '/dashboard/leads',
+          label: 'Lead Management',
+          icon: UserPlus,
+        },
         {
           href: '/dashboard/students',
           label: 'Students Management',

@@ -1,3 +1,42 @@
+About Shiksha.cloud
+
+Managing a school shouldn’t feel complicated — and that’s exactly why we built Shiksha.cloud.
+
+A powerful, all-in-one School Management System designed for schools, colleges, and coaching classes, helping them track, automate, and store everything that matters — from academics to administration.
+
+With role-based access for Admin, Teacher, Student, and Parent, every user experiences a personalized dashboard built around their needs.
+
+Why Institutions Choose Shiksha.cloud
+
+47+ real, working features — not just checkboxes.
+
+Every feature solves 10–24 real-world scenarios faced by educators daily.
+
+Smart automation to reduce manual work and errors.
+
+Fast, secure, and cloud-based — accessible anytime, anywhere.
+
+Customizable to fit your institution’s structure and workflow.
+
+Powerful Features Include:
+
+💰 Fees Management: Automate collections, track dues, send reminders.
+
+🧾 Attendance Tracking: Mark, monitor, and analyze attendance patterns.
+
+🧑‍🏫 Teacher Tools: Assignments, grading, and progress tracking made easy.
+
+👨‍👩‍👧 Parent Access: Real-time updates on performance and communication.
+
+🎓 Student Dashboard: One place for classes, homework, results, and more.
+
+And that’s just the beginning — Shiksha.cloud continues to evolve with educators’ feedback to meet real classroom needs.
+
+In short:
+
+Shiksha.cloud isn’t just a system — it’s a smarter way to run your institution.
+Built by developers who understand education.
+
 # What is Shiksha Cloud?
 
 Shiksha Cloud is a comprehensive, cloud-based school management system designed to digitally transform educational institutions by connecting students, parents, teachers, and administrators on a single unified platform. Built with modern web technologies including Next.js, Prisma ORM, and Supabase, it eliminates manual paperwork and automates critical daily operations such as attendance tracking, fee collection, communication, and academic management.
@@ -61,6 +100,8 @@ Teacher
 
 Personal Profile Page
 
+Lead Management
+ 
 Manage Classes
 
 Take Attendance

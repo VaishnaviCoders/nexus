@@ -96,7 +96,7 @@ const AdminDashboard = async () => {
         </div>
 
         {/* Right Column - Sidebar Info */}
-        <div className="space-y-4 sm:space-y-6 bg-yellow-500">
+        <div className="space-y-4 sm:space-y-6 ">
           <Suspense fallback={<EventsSkeleton />}>
             <UpcomingEvents />
           </Suspense>
