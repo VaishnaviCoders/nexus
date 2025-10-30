@@ -30,12 +30,6 @@ const nextConfig: NextConfig = {
         destination: 'https://www.shiksha.cloud/:path*',
         permanent: true,
       },
-      {
-        source: '/:path*',
-        has: [{ type: 'host', value: '(www\\.)?shiksha\\.cloud' }],
-        destination: 'https://www.shiksha.cloud/:path*',
-        permanent: true,
-      },
     ];
   },
   headers: async () => {
