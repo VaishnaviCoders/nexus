@@ -22,16 +22,6 @@ const nextConfig: NextConfig = {
       bodySizeLimit: '3mb',
     },
   },
-  async redirects() {
-    return [
-      {
-        source: '/:path*',
-        has: [{ type: 'host', value: 'www.shiksha.cloud' }],
-        destination: 'https://www.shiksha.cloud/:path*',
-        permanent: true,
-      },
-    ];
-  },
   headers: async () => {
     return [
       {
