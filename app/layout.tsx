@@ -107,6 +107,8 @@ export default function RootLayout({
       publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
     >
       <html lang="en" suppressHydrationWarning>
+        <link rel="canonical" href="https://www.shiksha.cloud/" />
+        <meta name="robots" content="index, follow" />
         <head>
           {/* Preconnect to critical third-party domains */}
           <link rel="preconnect" href="https://clerk.accounts.dev" />

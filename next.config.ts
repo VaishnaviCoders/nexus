@@ -22,35 +22,51 @@ const nextConfig: NextConfig = {
       bodySizeLimit: '3mb',
     },
   },
-  // headers: async () => {
-  //   return [
-  //     {
-  //       source: '/:path*',
-  //       has: [{ type: 'host', value: 'www.shiksha.cloud' }],
-  //       headers: [{ key: 'X-Robots-Tag', value: 'index, follow' }],
-  //     },
-  //     {
-  //       source: '/:path*',
-  //       has: [{ type: 'host', value: 'schoolnexus.vercel.app' }],
-  //       headers: [{ key: 'X-Robots-Tag', value: 'noindex' }],
-  //     },
-  //     {
-  //       source: '/:path*',
-  //       has: [{ type: 'host', value: 'shiksha.cloud' }], // ← ADD THIS FOR NON-WWW
-  //       headers: [{ key: 'X-Robots-Tag', value: 'index, follow' }],
-  //     },
-  //     {
-  //       source: '/no/api/manifest',
-  //       headers: [
-  //         {
-  //           key: 'cache-control',
-  //           value: 'public, max-age=3600',
-  //         },
-  //         { key: 'X-Robots-Tag', value: 'index, follow' }, // ← ADD THIS
-  //       ],
-  //     },
-  //   ];
-  // },
+  async redirects() {
+    return [
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'www.shiksha.cloud' }],
+        destination: 'https://www.shiksha.cloud/:path*',
+        permanent: true,
+      },
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: '(www\\.)?shiksha\\.cloud' }],
+        destination: 'https://www.shiksha.cloud/:path*',
+        permanent: true,
+      },
+    ];
+  },
+  headers: async () => {
+    return [
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'www.shiksha.cloud' }],
+        headers: [{ key: 'X-Robots-Tag', value: 'index, follow' }],
+      },
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'schoolnexus.vercel.app' }],
+        headers: [{ key: 'X-Robots-Tag', value: 'noindex' }],
+      },
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'shiksha.cloud' }], // ← ADD THIS FOR NON-WWW
+        headers: [{ key: 'X-Robots-Tag', value: 'index, follow' }],
+      },
+      {
+        source: '/no/api/manifest',
+        headers: [
+          {
+            key: 'cache-control',
+            value: 'public, max-age=3600',
+          },
+          { key: 'X-Robots-Tag', value: 'index, follow' }, // ← ADD THIS
+        ],
+      },
+    ];
+  },
   eslint: {
     ignoreDuringBuilds: true,
   },
