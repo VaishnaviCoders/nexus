@@ -47,6 +47,7 @@ import { AssignLeadDialog } from './assign-lead-dialog';
 import { convertLead } from '@/lib/data/leads/convert-lead';
 import { deleteLead } from '@/lib/data/leads/delete-lead';
 import { toast } from 'sonner';
+import Link from 'next/link';
 
 type LeadWithActivities = Prisma.LeadGetPayload<{
   include: {
@@ -174,9 +175,12 @@ export default function LeadDetails({ lead }: LeadDetailProps) {
           </div>
 
           <div className="flex gap-2 flex-wrap lg:flex-nowrap">
-            <Button variant="outline" size="sm" className="gap-2">
-              <Edit2 className="w-4 h-4" />
-              Edit
+            <Button variant="outline" size="sm" className="gap-2" asChild>
+              <Link href={`/dashboard/leads/${lead.id}/edit`} prefetch={true}>
+                {' '}
+                <Edit2 className="w-4 h-4" />
+                Edit
+              </Link>
             </Button>
             {lead.status === 'CONVERTED' ? (
               <>

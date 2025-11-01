@@ -34,56 +34,54 @@ import {
   FileText,
 } from 'lucide-react';
 import { toast } from 'sonner';
-import { type createLeadFormData, createLeadSchema } from '@/lib/schemas';
+import { type editLeadFormData, editLeadSchema } from '@/lib/schemas';
 import {
   LeadCommunicationPreference,
   LeadPriority,
   LeadSource,
+  LeadStatus,
 } from '@/generated/prisma/enums';
+import { editLead } from '@/lib/data/leads/edit-lead';
 import { useRouter } from 'next/navigation';
-import { createLead } from '@/lib/data/leads/create-lead';
+import { Lead } from '@/generated/prisma/client';
 
-export function CreateLeadForm({
-  organizationId,
-  academicYearId,
-}: {
-  organizationId: string;
-  academicYearId: string;
-}) {
+export function EditLeadForm(lead: Lead) {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
-  const form = useForm<createLeadFormData>({
-    resolver: zodResolver(createLeadSchema),
+  const form = useForm<editLeadFormData>({
+    resolver: zodResolver(editLeadSchema),
     defaultValues: {
-      studentName: '',
-      phone: '',
-      enquiryFor: '',
-      parentName: '',
-      email: '',
-      whatsappNumber: '',
-      currentSchool: '',
-      address: '',
-      city: '',
-      state: '',
-      pincode: '',
-      source: LeadSource.WEBSITE,
-      priority: LeadPriority.MEDIUM,
-      notes: '',
-      requirements: [],
-      budgetRange: '',
-      communicationPreference: [],
-      organizationId: organizationId,
-      academicYearId: academicYearId,
+      id: lead.id,
+      studentName: lead.studentName || '',
+      phone: lead.phone || '',
+      enquiryFor: lead.enquiryFor || '',
+      parentName: lead.parentName || '',
+      email: lead.email || '',
+      whatsappNumber: lead.whatsappNumber || '',
+      currentSchool: lead.currentSchool || '',
+      address: lead.address || '',
+      city: lead.city || '',
+      state: lead.state || '',
+      pincode: lead.pincode || '',
+      source: lead.source || LeadSource.WEBSITE,
+      status: lead.status || LeadStatus.NEW,
+      priority: lead.priority || LeadPriority.MEDIUM,
+      notes: lead.notes || '',
+      requirements: lead.requirements || [],
+      budgetRange: lead.budgetRange || '',
+      communicationPreference: lead.communicationPreference || [],
+      organizationId: lead.organizationId,
+      academicYearId: lead.academicYearId,
     },
   });
 
   console.log('Frontend Form errors:', form.formState.errors);
 
-  const onSubmit = async (data: createLeadFormData) => {
+  const onSubmit = async (data: editLeadFormData) => {
     startTransition(async () => {
       try {
-        const result = await createLead(data);
+        const result = await editLead(data);
 
         if (result.success) {
           toast.success('Lead created successfully.');
@@ -105,6 +103,11 @@ export function CreateLeadForm({
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-10">
+            <FormField
+              control={form.control}
+              name="id"
+              render={({ field }) => <Input type="hidden" {...field} />}
+            />
             {/* Basic Information Section */}
             <div className="space-y-6">
               <div className="flex items-center gap-3 pb-4 border-b-2 border-slate-200">

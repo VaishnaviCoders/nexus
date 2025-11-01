@@ -13,6 +13,7 @@ const isPublicRoute = createRouteMatcher([
   '/support',
   '/sign-in(.*)',
   '/sign-up(.*)',
+  '/api/webhooks/(.*)',
 ]);
 
 const isSelectOrgRoute = createRouteMatcher(['/select-organization(.*)']);
@@ -60,6 +61,9 @@ const isAdmin = createRouteMatcher([
 export default clerkMiddleware(async (auth, req) => {
   const { userId, orgId, orgRole } = await auth();
 
+  if (isPublicRoute(req)) {
+    return NextResponse.next();
+  }
   // If user is authenticated but has no organization and trying to access protected routes
   if (userId && !orgId && isProtectedRoute(req)) {
     const selectOrgUrl = new URL('/select-organization', req.url);

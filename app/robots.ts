@@ -7,9 +7,9 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: '*',
         allow: '/',
+        disallow: ['/api/', '/_next/', '/static/'],
       },
     ],
     sitemap: 'https://www.shiksha.cloud/sitemap.xml',
-    // Remove the 'host' property - it's not standard for robots.txt
   };
 }

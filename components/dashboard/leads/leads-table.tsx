@@ -95,10 +95,19 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Lead, Prisma } from '@/generated/prisma/client';
+import { LeadStatus } from '@/generated/prisma/enums';
 import Link from 'next/link';
 import { deleteLeads } from '@/lib/data/leads/delete-leads';
 import { toast } from 'sonner';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { updateLeadStatus as updateLeadStatusAction } from '@/lib/data/leads/update-lead-status';
+
+// Extend TanStack Table meta to include our helpers
+declare module '@tanstack/react-table' {
+  interface TableMeta<TData> {
+    updateLeadStatus: (id: string, status: LeadStatus) => Promise<void>;
+  }
+}
 
 type LeaveWithAssignTo = Prisma.LeadGetPayload<{
   include: {
@@ -218,20 +227,63 @@ const columns: ColumnDef<LeaveWithAssignTo>[] = [
   {
     header: 'Status',
     accessorKey: 'status',
-    cell: ({ row }) => {
+    cell: ({ row, table }) => {
       const status = row.getValue('status') as string;
+      const meta = table.options.meta;
+
       return (
-        <Badge
-          variant={status as any}
-          className="capitalize whitespace-nowrap text-xs px-2 py-1"
-        >
-          {status.toLowerCase().replace(/_/g, ' ')}
-        </Badge>
+        <div onClick={(e) => e.stopPropagation()}>
+          <Select
+            value={status}
+            onValueChange={async (newStatus) => {
+              if (meta?.updateLeadStatus) {
+                await meta.updateLeadStatus(
+                  row.original.id,
+                  newStatus as LeadStatus
+                );
+              }
+            }}
+          >
+            <SelectTrigger
+              className="h-8 w-full border-0 bg-transparent shadow-none hover:bg-muted/50 focus:ring-0 focus:ring-offset-0 transition-colors px-2"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <SelectValue>
+                <Badge
+                  variant={status as any}
+                  className="capitalize whitespace-nowrap text-xs px-2.5 py-0.5 font-medium"
+                >
+                  {status.toLowerCase().replace(/_/g, ' ')}
+                </Badge>
+              </SelectValue>
+            </SelectTrigger>
+            <SelectContent
+              className="min-w-[140px]"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {Object.values(LeadStatus).map((statusOption) => (
+                <SelectItem
+                  key={statusOption}
+                  value={statusOption}
+                  className="cursor-pointer"
+                >
+                  <Badge
+                    variant={statusOption}
+                    className="capitalize text-xs px-2.5 py-0.5 font-medium"
+                  >
+                    {statusOption.toLowerCase().replace(/_/g, ' ')}
+                  </Badge>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
       );
     },
-    size: 120,
+    size: 180,
     filterFn: statusFilterFn,
   },
+
   {
     header: 'Priority',
     accessorKey: 'priority',
@@ -388,6 +440,16 @@ export default function LeadTable({ leads }: LeadTableProps) {
     onColumnVisibilityChange: setColumnVisibility,
     getFilteredRowModel: getFilteredRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
+    meta: {
+      updateLeadStatus: async (leadId: string, status: LeadStatus) => {
+        const res = await updateLeadStatusAction(leadId, status);
+        if (res.success) {
+          toast.success(res.message);
+        } else {
+          toast.error(res.message);
+        }
+      },
+    },
     state: {
       sorting,
       pagination,

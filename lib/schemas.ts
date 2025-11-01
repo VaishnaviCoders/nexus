@@ -613,6 +613,12 @@ export const createLeadSchema = z.object({
 
 export type createLeadFormData = z.infer<typeof createLeadSchema>;
 
+export const editLeadSchema = createLeadSchema.extend({
+  id: z.string().min(1, 'Lead ID is required'),
+});
+
+export type editLeadFormData = z.infer<typeof editLeadSchema>;
+
 export const createLeadActivitySchema = z.object({
   leadId: z.string().min(1, 'Lead ID is required'),
   type: z.nativeEnum(LeadActivityType, {
