@@ -104,17 +104,24 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider
-    // publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}`
+      publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
     >
-      <html lang="en" suppressHydrationWarning>
+      <html lang="en" suppressHydrationWarning data-clerk-suppress>
         <link rel="canonical" href="https://www.shiksha.cloud/" />
         <meta name="robots" content="index, follow" />
         <head>
-          {/* Preconnect to critical third-party domains */}
-          {/* <link rel="preconnect" href="https://clerk.accounts.dev" /> */}
           <link rel="preconnect" href="https://uploadthing.com" />
-          {/* <link rel="dns-prefetch" href="https://clerk.accounts.dev" /> */}
           <link rel="dns-prefetch" href="https://uploadthing.com" />
+          <link
+            rel="alternate"
+            href="https://www.shiksha.cloud/"
+            hrefLang="x-default"
+          />
+          <link
+            rel="alternate"
+            href="https://www.shiksha.cloud/"
+            hrefLang="en"
+          />
 
           <link
             rel="alternate"
