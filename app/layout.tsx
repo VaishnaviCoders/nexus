@@ -104,7 +104,7 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider
-    // publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
+    // publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}`
     >
       <html lang="en" suppressHydrationWarning>
         <link rel="canonical" href="https://www.shiksha.cloud/" />

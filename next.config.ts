@@ -12,11 +12,6 @@ const nextConfig: NextConfig = {
   turbopack: {
     resolveExtensions: ['.mdx', '.tsx', '.ts', '.jsx', '.js', '.mjs', '.json'],
   },
-
-  // compiler: {
-  //   removeConsole: process.env.NODE_ENV === 'development',
-  // },
-
   experimental: {
     serverActions: {
       bodySizeLimit: '3mb',
@@ -26,28 +21,17 @@ const nextConfig: NextConfig = {
     return [
       {
         source: '/:path*',
-        has: [{ type: 'host', value: 'www.shiksha.cloud' }],
-        headers: [{ key: 'X-Robots-Tag', value: 'index, follow' }],
-      },
-      {
-        source: '/:path*',
-        has: [{ type: 'host', value: 'schoolnexus.vercel.app' }],
-        headers: [{ key: 'X-Robots-Tag', value: 'noindex' }],
-      },
-      {
-        source: '/:path*',
-        has: [{ type: 'host', value: 'shiksha.cloud' }], // ← ADD THIS FOR NON-WWW
-        headers: [{ key: 'X-Robots-Tag', value: 'index, follow' }],
-      },
-      {
-        source: '/no/api/manifest',
         headers: [
           {
-            key: 'cache-control',
-            value: 'public, max-age=3600',
+            key: 'X-Robots-Tag',
+            value:
+              'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1',
           },
-          { key: 'X-Robots-Tag', value: 'index, follow' }, // ← ADD THIS
         ],
+      },
+      {
+        source: '/api/:path*',
+        headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }],
       },
     ];
   },
