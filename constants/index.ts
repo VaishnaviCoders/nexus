@@ -14,6 +14,739 @@ import {
   ZapIcon,
 } from 'lucide-react';
 
+export const indianEducationProblems = [
+  {
+    id: 1,
+    title: 'Student Document Verification Chaos',
+    subtitle: 'छात्रों के डॉक्यूमेंट वेरिफिकेशन में उलझन',
+    description:
+      'Aadhaar cards, birth certificates, transfer certificates - everything scattered. Manual verification takes weeks, documents get lost.',
+    features: [
+      'Digital document upload system',
+      'Real-time verification status tracking',
+      'Admin approval/rejection workflow',
+      'Secure document storage & access',
+    ],
+  },
+  {
+    id: 2,
+    title: 'Anonymous Complaints Management',
+    subtitle: 'शिकायतों और फीडबैक का सही चैनल नहीं',
+    description:
+      'Students/parents fear speaking up. Serious issues like bullying, harassment go unreported. No proper resolution mechanism.',
+    features: [
+      'Secure anonymous complaint box',
+      'Confidential issue reporting',
+      'Admin investigation workflow',
+      'Resolution tracking without revealing identity',
+    ],
+  },
+  {
+    id: 3,
+    title: 'Manual Attendance Headache',
+    subtitle: 'हाथ से अटेंडेंस लिखने की मुसीबत',
+    description:
+      "Paper registers, manual calculations, no real-time data. Parents don't know when their child is absent.",
+    features: [
+      'One-click digital attendance',
+      'AI-powered attendance suggestions',
+      'Real-time parent alerts via SMS/WhatsApp',
+      'Automated attendance reports & analytics',
+    ],
+  },
+  {
+    id: 4,
+    title: 'Fee Collection Nightmare',
+    subtitle: 'फीस कलेक्शन का सबसे बड़ा तनाव',
+    description:
+      'Chasing parents for payments, manual receipt writing, payment tracking chaos, no transparency.',
+    features: [
+      'Online payments via UPI/Cards/Net Banking',
+      'Automated fee reminders & receipts',
+      'Real-time collection dashboard',
+      'Complete payment history & audit trail',
+    ],
+  },
+  {
+    id: 5,
+    title: 'Admission & Lead Management Stress',
+    subtitle: 'एडमिशन सीजन में लीड मैनेजमेंट की टेंशन',
+    description:
+      'Leads from Google/FB/WhatsApp get lost. No proper follow-up system. Manual admission process takes hours.',
+    features: [
+      'Centralized lead management dashboard',
+      'Automated follow-up reminders',
+      'Digital admission forms & document upload',
+      'Bulk student onboarding system',
+    ],
+  },
+  {
+    id: 6,
+    title: 'Exam Management Complexity',
+    subtitle: 'एग्जाम मैनेजमेंट में लगता है पूरा समय',
+    description:
+      'Creating exams, hall tickets, result entry, report cards - everything manual and time-consuming.',
+    features: [
+      'Bulk exam creation & management',
+      'QR code hall tickets with PWA scanning',
+      'Digital result entry system',
+      'Auto-generated report cards with notifications',
+    ],
+  },
+];
+
+export const institutes = [
+  {
+    id: 1,
+    name: 'St. Xavier’s High School',
+    image: '/avatars/avatar1.jpg',
+    paragraph:
+      'Managing attendance and fee tracking is now a breeze with Shiksha Cloud.',
+  },
+  {
+    id: 2,
+    name: 'Bright Future Public School',
+    image: '/avatars/avatar2.jpg',
+    paragraph:
+      'We’ve replaced paper registers with digital dashboards—parents love the updates.',
+  },
+  {
+    id: 3,
+    name: 'City Pride Junior College',
+    image: '/avatars/avatar3.jpg',
+    paragraph:
+      'Shiksha Cloud helped us centralize student data and simplify parent communication.',
+  },
+  {
+    id: 4,
+    name: 'Little Scholars Academy',
+    image: '/avatars/avatar4.jpg',
+    paragraph:
+      'Our teachers spend more time teaching and less time on admin work now.',
+  },
+  {
+    id: 5,
+    name: 'EduBridge Coaching Center',
+    image: '/avatars/avatar5.jpg',
+    paragraph:
+      'Admissions, leads, and follow-ups—all managed in one place effortlessly.',
+  },
+  {
+    id: 6,
+    name: 'Sunrise International School',
+    image: '/avatars/avatar6.jpg',
+    paragraph: 'Parents get real-time alerts about attendance and performance.',
+  },
+  {
+    id: 7,
+    name: 'Wisdom Valley High',
+    image: '/avatars/avatar7.jpg',
+    paragraph:
+      'We run all our branches on Shiksha Cloud—smooth, fast, and reliable.',
+  },
+  {
+    id: 8,
+    name: 'Bloomfield Montessori',
+    image: '/avatars/avatar8.jpg',
+    paragraph:
+      'Our staff onboarding is faster than ever with digital document tracking.',
+  },
+  {
+    id: 9,
+    name: 'National Convent School',
+    image: '/avatars/avatar9.jpg',
+    paragraph:
+      'From fee reminders to report cards, everything is automated now.',
+  },
+  {
+    id: 10,
+    name: 'Elite Coaching Classes',
+    image: '/avatars/avatar10.jpg',
+    paragraph:
+      'CRM integration helped us increase enrollments by 30% this season.',
+  },
+  {
+    id: 11,
+    name: 'Greenwood Academy',
+    image: '/avatars/avatar11.jpg',
+    paragraph:
+      'Shiksha Cloud simplified our attendance and fee reconciliation process.',
+  },
+  {
+    id: 12,
+    name: 'Blue Horizon Public School',
+    image: '/avatars/avatar12.jpg',
+    paragraph:
+      'The parent dashboard keeps families updated without extra effort.',
+  },
+  {
+    id: 13,
+    name: 'Achievers Science Hub',
+    image: '/avatars/avatar13.jpg',
+    paragraph: 'We manage leads from Google Ads seamlessly through the CRM.',
+  },
+  {
+    id: 14,
+    name: 'Silver Oak High School',
+    image: '/avatars/avatar14.jpg',
+    paragraph:
+      'Switching from Excel to Shiksha Cloud was the best decision for us.',
+  },
+  {
+    id: 15,
+    name: 'Future Minds Academy',
+    image: '/avatars/avatar15.jpg',
+    paragraph: 'Our teachers now mark attendance digitally in seconds.',
+  },
+  {
+    id: 16,
+    name: 'Harmony Public School',
+    image: '/avatars/avatar16.jpg',
+    paragraph: 'Shiksha Cloud made data management transparent and organized.',
+  },
+  {
+    id: 17,
+    name: 'Apex Junior College',
+    image: '/avatars/avatar17.jpg',
+    paragraph:
+      'The online payment system is smooth and reliable for all parents.',
+  },
+  {
+    id: 18,
+    name: 'Galaxy English Medium School',
+    image: '/avatars/avatar18.jpg',
+    paragraph: 'Managing grades and sections has never been this easy.',
+  },
+  {
+    id: 19,
+    name: 'Scholars Den Coaching',
+    image: '/avatars/avatar19.jpg',
+    paragraph:
+      'We track every inquiry to admission using built-in lead management.',
+  },
+  {
+    id: 20,
+    name: 'Smart Vision School',
+    image: '/avatars/avatar20.jpg',
+    paragraph:
+      'Our admins love the analytics dashboard—it’s clear and powerful.',
+  },
+  {
+    id: 21,
+    name: 'Nirmal Jyoti High School',
+    image: '/avatars/avatar21.jpg',
+    paragraph: 'All student documents are now digital and securely stored.',
+  },
+  {
+    id: 22,
+    name: 'Kumar Science Academy',
+    image: '/avatars/avatar22.jpg',
+    paragraph: 'Shiksha Cloud gave us complete visibility across all batches.',
+  },
+  {
+    id: 23,
+    name: 'Oxford International School',
+    image: '/avatars/avatar23.jpg',
+    paragraph:
+      'Parents appreciate getting instant alerts on attendance and grades.',
+  },
+  {
+    id: 24,
+    name: 'EduPoint Tutorials',
+    image: '/avatars/avatar24.jpg',
+    paragraph: 'Fee reminders go automatically—no more manual follow-ups.',
+  },
+  {
+    id: 25,
+    name: 'Heritage Convent',
+    image: '/avatars/avatar25.jpg',
+    paragraph: 'Our teachers collaborate better now with centralized access.',
+  },
+  {
+    id: 26,
+    name: 'Bright Scholars Academy',
+    image: '/avatars/avatar26.jpg',
+    paragraph:
+      'Digital notices save us hours of manual communication each week.',
+  },
+  {
+    id: 27,
+    name: 'Zenith Commerce Classes',
+    image: '/avatars/avatar27.jpg',
+    paragraph: 'CRM tracking helped us convert more leads into admissions.',
+  },
+  {
+    id: 28,
+    name: 'Pragati Coaching Institute',
+    image: '/avatars/avatar28.jpg',
+    paragraph:
+      'Automated reports helped us stay audit-ready throughout the year.',
+  },
+  {
+    id: 29,
+    name: 'Shree Vidya Mandir',
+    image: '/avatars/avatar29.jpg',
+    paragraph: 'We now run a paperless office—thanks to Shiksha Cloud.',
+  },
+  {
+    id: 30,
+    name: 'Newton’s Edge Learning',
+    image: '/avatars/avatar30.jpg',
+    paragraph: 'Smart tools helped us scale from 300 to 1200 students easily.',
+  },
+  {
+    id: 31,
+    name: 'Alpha Public School',
+    image: '/avatars/avatar31.jpg',
+    paragraph: 'Role-based dashboards make everyone’s work smoother.',
+  },
+  {
+    id: 32,
+    name: 'Mentor Academy',
+    image: '/avatars/avatar32.jpg',
+    paragraph: 'Our teachers track student performance with ease now.',
+  },
+  {
+    id: 33,
+    name: 'Excel Tutorials',
+    image: '/avatars/avatar33.jpg',
+    paragraph: 'Automated notifications improved our communication instantly.',
+  },
+  {
+    id: 34,
+    name: 'Sharda Vidyalaya',
+    image: '/avatars/avatar34.jpg',
+    paragraph: 'Parents can check results and attendance on their phones.',
+  },
+  {
+    id: 35,
+    name: 'TopRank Coaching',
+    image: '/avatars/avatar35.jpg',
+    paragraph: 'Leads from Facebook Ads directly flow into our CRM dashboard.',
+  },
+  {
+    id: 36,
+    name: 'Mount Carmel School',
+    image: '/avatars/avatar36.jpg',
+    paragraph: 'Everything—from attendance to documents—is cloud managed.',
+  },
+  {
+    id: 37,
+    name: 'Inspire Academy',
+    image: '/avatars/avatar37.jpg',
+    paragraph: 'We use analytics to monitor attendance and engagement daily.',
+  },
+  {
+    id: 38,
+    name: 'Vision Coaching Center',
+    image: '/avatars/avatar38.jpg',
+    paragraph: 'Our counselors track and convert inquiries faster than before.',
+  },
+  {
+    id: 39,
+    name: 'Sai International School',
+    image: '/avatars/avatar39.jpg',
+    paragraph: 'Shiksha Cloud reduced our admin workload by over 60%.',
+  },
+  {
+    id: 40,
+    name: 'Bright Path Junior College',
+    image: '/avatars/avatar40.jpg',
+    paragraph: 'Students and parents both love the new digital experience.',
+  },
+  {
+    id: 41,
+    name: 'MindSpace Coaching',
+    image: '/avatars/avatar41.jpg',
+    paragraph: 'Tracking leads and follow-ups has become effortless for us.',
+  },
+  {
+    id: 42,
+    name: 'Sunbeam Public School',
+    image: '/avatars/avatar42.jpg',
+    paragraph: 'No more lost records—every detail is securely stored online.',
+  },
+  {
+    id: 43,
+    name: 'Trinity Convent School',
+    image: '/avatars/avatar43.jpg',
+    paragraph: 'Online payments made collections easy for all parents.',
+  },
+  {
+    id: 44,
+    name: 'StepUp Coaching Institute',
+    image: '/avatars/avatar44.jpg',
+    paragraph: 'We now manage multiple batches without any confusion.',
+  },
+  {
+    id: 45,
+    name: 'Cambridge Junior College',
+    image: '/avatars/avatar45.jpg',
+    paragraph: 'We get accurate reports on attendance and fees instantly.',
+  },
+  {
+    id: 46,
+    name: 'Daffodil High School',
+    image: '/avatars/avatar46.jpg',
+    paragraph: 'Digital circulars replaced manual notice boards completely.',
+  },
+  {
+    id: 47,
+    name: 'Rising Star Academy',
+    image: '/avatars/avatar47.jpg',
+    paragraph:
+      'Parents appreciate getting notifications instantly on WhatsApp.',
+  },
+  {
+    id: 48,
+    name: 'Alpha Tutorials',
+    image: '/avatars/avatar48.jpg',
+    paragraph: 'Everything runs smoothly—attendance, fees, communication.',
+  },
+  {
+    id: 49,
+    name: 'Kidz Orbit Pre-School',
+    image: '/avatars/avatar49.jpg',
+    paragraph: 'Managing tiny tots’ attendance is finally easy and fun.',
+  },
+  {
+    id: 50,
+    name: 'Bright Minds Learning Center',
+    image: '/avatars/avatar50.jpg',
+    paragraph: 'We use the mobile app daily—parents love its simplicity.',
+  },
+  {
+    id: 51,
+    name: 'City Scholars College',
+    image: '/avatars/avatar51.jpg',
+    paragraph: 'Fee receipts are auto-generated and error-free now.',
+  },
+  {
+    id: 52,
+    name: 'EduWave Coaching',
+    image: '/avatars/avatar52.jpg',
+    paragraph: 'CRM integration simplified our admission process entirely.',
+  },
+  {
+    id: 53,
+    name: 'Pioneer Convent',
+    image: '/avatars/avatar53.jpg',
+    paragraph: 'The dashboard is intuitive—no training required.',
+  },
+  {
+    id: 54,
+    name: 'Visionary Public School',
+    image: '/avatars/avatar54.jpg',
+    paragraph: 'Transparency between parents and teachers improved a lot.',
+  },
+  {
+    id: 55,
+    name: 'National Academy',
+    image: '/avatars/avatar55.jpg',
+    paragraph: 'Document verification takes minutes instead of days.',
+  },
+  {
+    id: 56,
+    name: 'Modern Edge Institute',
+    image: '/avatars/avatar56.jpg',
+    paragraph: 'We handle 5 branches from one admin dashboard now.',
+  },
+  {
+    id: 57,
+    name: 'Smart Steps Academy',
+    image: '/avatars/avatar57.jpg',
+    paragraph: 'All communication logs are stored neatly for future reference.',
+  },
+  {
+    id: 58,
+    name: 'Global Convent School',
+    image: '/avatars/avatar58.jpg',
+    paragraph: 'Our multi-branch data is synchronized automatically.',
+  },
+  {
+    id: 59,
+    name: 'Excel Academy',
+    image: '/avatars/avatar59.jpg',
+    paragraph: 'We save hours every week thanks to automation tools.',
+  },
+  {
+    id: 60,
+    name: 'Shanti Vidyalaya',
+    image: '/avatars/avatar60.jpg',
+    paragraph: 'Parents can now download fee receipts anytime they want.',
+  },
+  {
+    id: 61,
+    name: 'EduNext Coaching',
+    image: '/avatars/avatar61.jpg',
+    paragraph: 'Leads from WhatsApp ads are captured automatically.',
+  },
+  {
+    id: 62,
+    name: 'Springdale High School',
+    image: '/avatars/avatar62.jpg',
+    paragraph: 'Attendance analytics help us monitor trends quickly.',
+  },
+  {
+    id: 63,
+    name: 'MindBloom Academy',
+    image: '/avatars/avatar63.jpg',
+    paragraph: 'Our teachers no longer rely on paper registers.',
+  },
+  {
+    id: 64,
+    name: 'Innova Public School',
+    image: '/avatars/avatar64.jpg',
+    paragraph: 'The admin dashboard is our go-to for daily operations.',
+  },
+  {
+    id: 65,
+    name: 'Peak Performance Coaching',
+    image: '/avatars/avatar65.jpg',
+    paragraph: 'Lead management improved our admission rate significantly.',
+  },
+  {
+    id: 66,
+    name: 'Alpha Beta International School',
+    image: '/avatars/avatar66.jpg',
+    paragraph: 'Everything is digital, organized, and parent-friendly.',
+  },
+  {
+    id: 67,
+    name: 'Elite Edge Tutorials',
+    image: '/avatars/avatar67.jpg',
+    paragraph: 'With Shiksha Cloud, our teachers feel empowered and efficient.',
+  },
+  {
+    id: 68,
+    name: 'New Era Junior College',
+    image: '/avatars/avatar68.jpg',
+    paragraph: 'Instant notifications make communication much faster.',
+  },
+  {
+    id: 69,
+    name: 'SmartStart Academy',
+    image: '/avatars/avatar69.jpg',
+    paragraph: 'Fee collection tracking is now fully automated.',
+  },
+  {
+    id: 70,
+    name: 'Evergreen Public School',
+    image: '/avatars/avatar70.jpg',
+    paragraph: 'We trust Shiksha Cloud to run our entire school digitally.',
+  },
+  {
+    id: 71,
+    name: 'Bright Future High School',
+    image: '/avatars/avatar71.jpg',
+    paragraph:
+      'Managing fees and attendance has never been easier. Shiksha Cloud saves us hours every week.',
+  },
+  {
+    id: 72,
+    name: 'Sunrise International School',
+    image: '/avatars/avatar72.jpg',
+    paragraph:
+      'Parents love getting instant updates — no more WhatsApp chaos. Everything is on one dashboard.',
+  },
+  {
+    id: 73,
+    name: 'Bluebell Public School',
+    image: '/avatars/avatar73.jpg',
+    paragraph:
+      'Our teachers find the attendance module fast and reliable. We’ve completely stopped using paper registers.',
+  },
+  {
+    id: 74,
+    name: 'Mount View Academy',
+    image: '/avatars/avatar74.jpg',
+    paragraph:
+      'The dashboard gives us total control — from fee tracking to staff reports. Super helpful for admins.',
+  },
+  {
+    id: 75,
+    name: 'Harmony Convent School',
+    image: '/avatars/avatar75.jpg',
+    paragraph:
+      'Setup took less than a day. Everything just works out of the box — perfect for schools like ours.',
+  },
+  {
+    id: 76,
+    name: 'Oxford Junior College',
+    image: '/avatars/avatar76.jpg',
+    paragraph:
+      'We switched from spreadsheets to Shiksha Cloud — now everything is automated and beautifully organized.',
+  },
+  {
+    id: 77,
+    name: 'Little Champs Pre-School',
+    image: '/avatars/avatar77.jpg',
+    paragraph:
+      'Our parents are happier than ever. Fee payments and communication are seamless now.',
+  },
+  {
+    id: 78,
+    name: 'Hillcrest Senior Secondary',
+    image: '/avatars/avatar78.jpg',
+    paragraph:
+      'The admin dashboard gives a clear picture of daily operations. Reports are detailed and easy to export.',
+  },
+  {
+    id: 79,
+    name: 'Elite Scholars Academy',
+    image: '/avatars/avatar79.jpg',
+    paragraph:
+      'We finally have one place for attendance, communication, and reports — all in real time.',
+  },
+  {
+    id: 80,
+    name: 'Greenfield Convent School',
+    image: '/avatars/avatar80.jpg',
+    paragraph:
+      'Everything feels so organized now. The automation has reduced our manual work by half.',
+  },
+  {
+    id: 81,
+    name: 'Riverdale Public School',
+    image: '/avatars/avatar81.jpg',
+    paragraph:
+      'As a principal, I love how transparent the system is. Parents and teachers are finally on the same page.',
+  },
+  {
+    id: 82,
+    name: 'Galaxy Coaching Center',
+    image: '/avatars/avatar82.jpg',
+    paragraph:
+      'Lead management and student tracking are top-notch. We no longer lose inquiries.',
+  },
+  {
+    id: 83,
+    name: 'Knowledge Tree Academy',
+    image: '/avatars/avatar83.jpg',
+    paragraph:
+      'Smooth interface and fast performance. Even our less tech-savvy staff adapted quickly.',
+  },
+  {
+    id: 84,
+    name: 'Inspire Learning Hub',
+    image: '/avatars/avatar84.jpg',
+    paragraph:
+      'I’ve tried three school CRMs — Shiksha Cloud is the only one that delivers everything it promises.',
+  },
+  {
+    id: 85,
+    name: 'NextGen Tutorials',
+    image: '/avatars/avatar85.jpg',
+    paragraph:
+      'Attendance, fees, and results — all in one place. Makes managing coaching batches effortless.',
+  },
+  {
+    id: 86,
+    name: 'Vision Valley School',
+    image: '/avatars/avatar86.jpg',
+    paragraph:
+      'Real-time notifications to parents have completely changed how we communicate.',
+  },
+  {
+    id: 87,
+    name: 'StepUp Coaching Institute',
+    image: '/avatars/avatar87.jpg',
+    paragraph:
+      'The lead follow-up feature helps us convert inquiries much faster than before.',
+  },
+  {
+    id: 88,
+    name: 'Starlight High School',
+    image: '/avatars/avatar88.jpg',
+    paragraph:
+      'No more missed payments or lost documents. Shiksha Cloud keeps everything organized for us.',
+  },
+  {
+    id: 89,
+    name: 'City Edge Academy',
+    image: '/avatars/avatar89.jpg',
+    paragraph:
+      'Our teachers love the clean interface. Attendance and reports are just a few clicks away.',
+  },
+  {
+    id: 90,
+    name: 'DreamPath International',
+    image: '/avatars/avatar90.jpg',
+    paragraph:
+      'The parent portal is a game-changer. Parents get every update instantly.',
+  },
+  {
+    id: 91,
+    name: 'Wisdom Public School',
+    image: '/avatars/avatar91.jpg',
+    paragraph:
+      'We’ve gone completely paperless. Shiksha Cloud made digital transformation simple.',
+  },
+  {
+    id: 92,
+    name: 'Global Heights Academy',
+    image: '/avatars/avatar92.jpg',
+    paragraph:
+      'Support is amazing — they listen to feedback and actually roll out updates based on it.',
+  },
+  {
+    id: 93,
+    name: 'Mentor Academy',
+    image: '/avatars/avatar93.jpg',
+    paragraph:
+      'Document verification workflow has saved us countless hours during admissions.',
+  },
+  {
+    id: 94,
+    name: 'Silver Oak Public School',
+    image: '/avatars/avatar94.jpg',
+    paragraph:
+      'The analytics dashboard gives deep insights into attendance and fee trends. Very useful for planning.',
+  },
+  {
+    id: 95,
+    name: 'Smart Minds Junior School',
+    image: '/avatars/avatar95.jpg',
+    paragraph:
+      'Parents appreciate the transparency. They can see everything without having to ask.',
+  },
+  {
+    id: 96,
+    name: 'Alpha Convent Academy',
+    image: '/avatars/avatar96.jpg',
+    paragraph:
+      'We’ve reduced communication gaps between staff and parents to almost zero.',
+  },
+  {
+    id: 97,
+    name: 'Harmony Tutorial Center',
+    image: '/avatars/avatar97.jpg',
+    paragraph:
+      'Integrating PhonePe payments has made fee collection completely stress-free.',
+  },
+  {
+    id: 98,
+    name: 'Oakridge Public School',
+    image: '/avatars/avatar98.jpg',
+    paragraph:
+      'The anonymous complaint box was a thoughtful addition — students feel safer speaking up.',
+  },
+  {
+    id: 99,
+    name: 'Bright Scholars Institute',
+    image: '/avatars/avatar99.jpg',
+    paragraph:
+      'Reports are accurate, quick, and easy to share with our management team.',
+  },
+  {
+    id: 100,
+    name: 'Evergreen Learning Center',
+    image: '/avatars/avatar100.jpg',
+    paragraph:
+      'From setup to daily use, everything about Shiksha Cloud feels simple and reliable.',
+  },
+];
+
 // Teacher Management:
 export const subjects = [
   { value: 'Mathematics', label: 'Mathematics' },

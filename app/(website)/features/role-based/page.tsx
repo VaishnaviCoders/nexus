@@ -262,7 +262,12 @@ const featuresData = {
         icon: Calendar,
       },
     ],
-    pending: [],
+    pending: [
+      {
+        feature: 'Lead Followup (CRM)',
+        description: 'Follow up with prospective students and parents',
+      },
+    ],
     planned: [
       {
         feature: 'Write Feedback',
@@ -283,10 +288,6 @@ const featuresData = {
       {
         feature: 'Teacher Salary & Payout',
         description: 'View salary details and payment history',
-      },
-      {
-        feature: 'Lead Followup (CRM)',
-        description: 'Follow up with prospective students and parents',
       },
     ],
   },
@@ -389,12 +390,12 @@ const featuresData = {
         description: 'Manage Exams and manage enrolled student',
         icon: CheckCircle,
       },
-    ],
-    planned: [
       {
         feature: 'Lead Management',
         description: 'Comprehensive CRM for managing prospective students',
       },
+    ],
+    planned: [
       {
         feature: 'Course & Batch Management',
         description: 'Create and manage academic courses and batches',

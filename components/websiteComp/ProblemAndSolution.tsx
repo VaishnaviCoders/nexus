@@ -5,7 +5,7 @@ import type React from 'react';
 import { memo } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { ArrowRightIcon, Calendar, CheckCircle, Clock } from 'lucide-react';
-import { Suspense, lazy, useState, useMemo } from 'react';
+import { Suspense, useState, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -16,11 +16,7 @@ import {
   IndianRupee,
   GraduationCap,
   ArrowRight,
-  Sparkles,
 } from 'lucide-react';
-import AnimatedShinyText from '../ui/animated-shiny-text';
-
-// Lazy load the problem card component
 
 const indianEducationProblems = [
   {
@@ -141,49 +137,6 @@ export default function ProblemAndSolution() {
 
   return (
     <>
-      {/* Hero Section */}
-      <div
-        className="py-16 px-4 
-        "
-      >
-        <div className="max-w-7xl mx-auto text-center">
-          <AnimatedShinyText className="inline-flex items-center justify-center px-4 py-1 transition ease-out hover:text-neutral-600 hover:duration-300 hover:dark:text-neutral-400">
-            <span>✨ Build for Indian Education </span>
-            <ArrowRightIcon className="ml-1 size-3 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5" />
-          </AnimatedShinyText>
-
-          <h1 className="text-4xl mt-4 md:text-6xl font-bold text-slate-900 mb-6">
-            Tired of Spreadsheets, Calls, and Chaos?
-            <br />
-            <span className="text-lg md:text-xl bg-gradient-to-r from-rose-600 to-indigo-600 bg-clip-text text-transparent mt-3">
-              Your School Runs Smarter with Shiksha Cloud.
-            </span>
-          </h1>
-
-          <p className="text-sm text-slate-600 max-w-2xl mx-auto mb-8">
-            Indian schools, colleges और coaching classes के लिए specially
-            designed। Daily की problems को minutes में solve करो।
-          </p>
-
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button
-              size="lg"
-              className="bg-blue-600 hover:bg-blue-700 text-white px-8"
-            >
-              Get Free Trial
-              <ArrowRight className="w-4 h-4 ml-2" />
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="border-slate-300 bg-transparent"
-            >
-              Demo
-            </Button>
-          </div>
-        </div>
-      </div>
-
       {/* Problems Section */}
       <div className=" px-4 py-4 max-w-7xl mx-auto">
         <Suspense fallback={<div>Loading...</div>}>

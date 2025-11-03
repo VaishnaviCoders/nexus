@@ -6,17 +6,13 @@ import {
   KnockFeedProvider,
   NotificationIconButton,
   NotificationFeedPopover,
+  NotificationFeed,
 } from '@knocklabs/react';
 import '@knocklabs/react/dist/index.css';
 import { useUser } from '@clerk/nextjs';
+import NotificationEmptyState from '@/components/dashboard/shared/notification-empty-state';
 
-// Type assertion for Knock components
-const TypedNotificationIconButton =
-  NotificationIconButton as JSXElementConstructor<any>;
-const TypedNotificationFeedPopover =
-  NotificationFeedPopover as JSXElementConstructor<any>;
-
-const NotificationFeed = () => {
+const CustomNotificationFeed = () => {
   const [isVisible, setIsVisible] = useState(false);
   const notifButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -32,14 +28,15 @@ const NotificationFeed = () => {
         feedId={process.env.NEXT_PUBLIC_KNOCK_FEED_CHANNEL_ID || ''}
       >
         <>
-          <TypedNotificationIconButton
+          <NotificationIconButton
             ref={notifButtonRef}
             onClick={() => setIsVisible(!isVisible)}
           />
-          <TypedNotificationFeedPopover
+          <NotificationFeedPopover
             buttonRef={notifButtonRef}
             isVisible={isVisible}
             onClose={() => setIsVisible(false)}
+            EmptyComponent={<NotificationEmptyState />}
           />
         </>
       </KnockFeedProvider>
@@ -47,4 +44,4 @@ const NotificationFeed = () => {
   );
 };
 
-export default NotificationFeed;
+export default CustomNotificationFeed;

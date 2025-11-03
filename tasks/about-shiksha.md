@@ -101,7 +101,7 @@ Teacher
 Personal Profile Page
 
 Lead Management
- 
+
 Manage Classes
 
 Take Attendance
@@ -386,6 +386,14 @@ Shiksha Cloud recognizes that students and parents sometimes need to raise sensi
 Complaints are routed to administrators and relevant teachers for investigation. The system includes a resolution workflow where complaints can be marked as under review, resolved, or escalated. While the complainant remains anonymous, they can track the status of their complaint and see when action has been taken.
 
 This feature improves institutional accountability and helps schools address problems before they escalate, while maintaining the privacy and safety of those who report issues.
+
+## Lead Management
+
+Shiksha Cloud provides a lead management system that helps institutions manage leads generated from various channels. The system allows administrators to create and manage leads, assign them to teachers, and track their status.
+
+The system also provides a lead scoring system that helps administrators identify the most promising leads and prioritize their follow-up. The system also provides a lead nurturing system that helps administrators keep in touch with leads and move them through the sales process.
+
+Get Leads From Facebook Ad's , Google Ads, Instagram Ads, WhatsApp Ads, Google Form
 
 ## Analytics & Reporting
 

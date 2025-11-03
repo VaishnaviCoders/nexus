@@ -1,19 +1,41 @@
 import { Button } from '@/components/ui/button';
-import Features from '../../components/websiteComp/Features';
-import BentoGrid from '../../components/websiteComp/BentoGrid';
-import Testimonials from '../../components/websiteComp/Testimonials';
-import Footer from '../../components/websiteComp/Footer';
-// import { Spotlight } from '@/components/ui/Spotlight';
-// import { TextScramble } from '@/components/ui/text-scramble';
-// import DotPattern from '@/components/ui/dot-pattern';
-// import { TextEffectWithExit } from '@/components/ui/TextEffectWithExit';
-import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
-import IntegrationComponent from '../../components/websiteComp/IntegrationComponent';
+import Features from '@/components/websiteComp/Features';
+import BentoGrid from '@/components/websiteComp/BentoGrid';
+import Testimonials from '@/components/websiteComp/Testimonials';
+import Footer from '@/components/websiteComp/Footer';
+import { Spotlight } from '@/components/ui/Spotlight';
+import {
+  CreateOrganization,
+  // SignInButton,
+  // SignedIn,
+  // SignedOut,
+  // UserButton,
+} from '@clerk/nextjs';
+import IntegrationComponent from '@/components/websiteComp/IntegrationComponent';
 import Link from 'next/link';
-import { ShieldCheck, UserCircleIcon } from 'lucide-react';
+import {
+  ArrowRight,
+  ArrowRightIcon,
+  ShieldCheck,
+  UserCircleIcon,
+} from 'lucide-react';
 import ProblemAndSolution from '@/components/websiteComp/ProblemAndSolution';
 import { Metadata } from 'next';
-// import MagicBentoGrid from '../components/websiteComp/magic-bento';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import DotPattern from '@/components/ui/dot-pattern';
+import { cn } from '@/lib/utils';
+import AnimatedShinyText from '@/components/ui/animated-shiny-text';
+import { indianEducationProblems } from '@/constants';
+import CardFlip from '@/components/ui/card-flip';
+import InstitutesShowcase from '@/components/websiteComp/shared/institute-showcase';
+import CTA from '@/components/websiteComp/ctc';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.shiksha.cloud'),
@@ -66,7 +88,7 @@ export default async function IndexPage() {
         <div className="flex items-center space-x-2">
           {/* <ModeToggle /> */}
 
-          <SignedOut>
+          {/* <SignedOut>
             <SignInButton signUpForceRedirectUrl={'/dashboard'}>
               <Button
                 variant="outline"
@@ -78,55 +100,87 @@ export default async function IndexPage() {
             </SignInButton>
           </SignedOut>
           <SignedIn>
-            <Button variant="outline" className="z-10" size={'sm'}>
-              <Link href="/dashboard">Dashboard</Link>
-            </Button>
-            <UserButton />
-          </SignedIn>
+           */}
+          <Button variant="outline" className="z-10" size={'sm'}>
+            <Link href="/dashboard">Dashboard</Link>
+          </Button>
+          {/* <UserButton />
+          </SignedIn> */}
         </div>
       </header>
 
-      {/* <div className="relative flex h-[500px]  w-full flex-col items-center justify-center overflow-hidden rounded-lg bg-background">
-        <p className="z-10 whitespace-pre-wrap text-center text-5xl font-medium tracking-tighter text-black dark:text-white">
-          Everything Your School Needs — In One Smart CRM
-        </p>
-        <TextScramble
-          className="font-mono text-sm my-5 h-3"
-          duration={1.2}
-          characterSet=". "
-        >
-          Automate Admin, Engage Students, Empower Educators
-        </TextScramble> */}
+      <div className="py-16 px-4">
+        <div className="max-w-7xl mx-auto text-center">
+          <AnimatedShinyText className="inline-flex items-center justify-center px-4 py-1 transition ease-out hover:text-neutral-600 hover:duration-300 hover:dark:text-neutral-400">
+            <span>✨ Build for Indian Education </span>
+            <ArrowRightIcon className="ml-1 size-3 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5" />
+          </AnimatedShinyText>
+          <DotPattern
+            className={cn(
+              '[mask-image:radial-gradient(300px_circle_at_center,white,transparent)]'
+            )}
+          />
+          <h1 className="text-4xl mt-4 md:text-6xl font-bold text-slate-900 mb-6">
+            Tired of Spreadsheets, Calls, and Chaos?
+            <br />
+            <span className="text-lg md:text-xl bg-gradient-to-r from-rose-600 to-indigo-600 bg-clip-text text-transparent mt-3">
+              Your School Runs Smarter with Shiksha Cloud.
+            </span>
+          </h1>
 
-      {/* <div className="h-5">
-          <TextEffectWithExit />
-        </div> */}
+          <p className="text-sm text-slate-600 max-w-2xl mx-auto mb-8">
+            Indian schools, colleges और coaching classes के लिए specially
+            designed। Daily की problems को minutes में solve करो।
+          </p>
 
-      {/* <div className="my-4 z-10 flex items-center justify-between gap-3">
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button>Get Early Access</Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-md p-0 [&>button]:hidden top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 fixed">
-              <DialogHeader>
-                <DialogTitle></DialogTitle>
-                <DialogDescription></DialogDescription>
-              </DialogHeader>
-              <CreateOrganization afterCreateOrganizationUrl={'/dashboard'} />
-            </DialogContent>
-          </Dialog>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button>
+                  Get Early Access
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-md p-0 [&>button]:hidden top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 fixed">
+                <DialogHeader>
+                  <DialogTitle></DialogTitle>
+                  <DialogDescription></DialogDescription>
+                </DialogHeader>
+                <CreateOrganization afterCreateOrganizationUrl={'/dashboard'} />
+              </DialogContent>
+            </Dialog>
 
-          <Button variant="outline" className="z-10">
-            Download PDF
-          </Button>
+            <Button size="lg" variant="outline">
+              Download PDF
+            </Button>
+          </div>
         </div>
-        <DotPattern
-          className={cn(
-            '[mask-image:radial-gradient(300px_circle_at_center,white,transparent)]'
-          )}
-        />
-      </div> */}
-      <ProblemAndSolution />
+      </div>
+      {/* <ProblemAndSolutionFlipCard /> */}
+
+      <div className="w-full px-4 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 justify-items-center">
+          {indianEducationProblems.map((problem) => (
+            <CardFlip
+              key={problem.id}
+              title={problem.title}
+              subtitle={problem.subtitle}
+              description={problem.description}
+              features={problem.features}
+            />
+          ))}
+        </div>
+        <div className="text-center mt-12">
+          <h2 className="text-xl font-bold text-slate-900 mb-4">
+            ये Problems आपको भी परेशान करती हैं?
+          </h2>
+          <p className="text-slate-600 text-lg">
+            हर Indian educator की daily life में ये situations आती हैं। Solution
+            भी यहीं है।
+          </p>
+        </div>
+      </div>
+
       <BentoGrid />
 
       <Features />
@@ -137,7 +191,31 @@ export default async function IndexPage() {
 
       <IntegrationComponent />
       <Testimonials />
+      <section className="text-center">
+        <AnimatedShinyText className="inline-flex items-center justify-center px-4 py-1 transition ease-out hover:text-neutral-600 hover:duration-300 hover:dark:text-neutral-400">
+          <span>✨ Build for Indian Education </span>
+          <ArrowRightIcon className="ml-1 size-3 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5" />
+        </AnimatedShinyText>
 
+        <DotPattern
+          className={cn(
+            '[mask-image:radial-gradient(300px_circle_at_center,white,transparent)]'
+          )}
+        />
+        <InstitutesShowcase />
+        <h1 className="text-lg font-bold md:text-xl bg-gradient-to-r from-rose-600 to-indigo-600 bg-clip-text text-transparent mb-8">
+          Manage Everything. From One Dashboard.
+        </h1>
+        <h2 className="text-sm text-slate-600 max-w-2xl mx-auto">
+          100+ institutes already trust Shiksha Cloud to run smarter, faster,
+          and fully digital.
+        </h2>
+      </section>
+
+      <div className="flex items-center justify-center space-x-5 mt-5">
+        <Button>Get Started</Button>
+        <Button variant="outline">Watch Demo</Button>
+      </div>
       <Footer />
     </main>
   );
