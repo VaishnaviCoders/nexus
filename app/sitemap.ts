@@ -7,6 +7,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return [
     // Homepage
+
     {
       url: `${appUrl}/`,
       lastModified: currentDate,

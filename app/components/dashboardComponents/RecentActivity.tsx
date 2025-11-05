@@ -17,11 +17,22 @@ import {
   UserCheck,
   TrendingUp,
   Activity,
+  LucideIcon,
 } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Card, CardContent } from '@/components/ui/card';
 
-interface ActivityItem {
+const iconMap: Record<string, LucideIcon> = {
+  payment: CreditCard,
+  student: Users,
+  teacher: GraduationCap,
+  complaint: AlertTriangle,
+  notice: Bell,
+  document: FileText,
+  attendance: UserCheck,
+  system: Calendar,
+};
+export interface ActivityItem {
   id: string;
   type:
     | 'student'
@@ -36,7 +47,7 @@ interface ActivityItem {
     | 'system';
   title: string;
   description: string;
-  icon: React.ComponentType<any>;
+  icon?: LucideIcon; // Made icon optional
   iconStyle: string;
   time: string;
   badge?: {
@@ -258,14 +269,25 @@ const priorityColors = {
   critical: 'border-l-red-500',
 };
 
-export default function AdminRecentActivity() {
+export default function AdminRecentActivity({
+  activities,
+}: {
+  activities: ActivityItem[];
+}) {
   const [selectedFilter, setSelectedFilter] = useState('all');
-  const [activities] = useState(SAMPLE_ACTIVITIES);
+  // const [activities] = useState(SAMPLE_ACTIVITIES);
 
-  const filteredActivities =
-    selectedFilter === 'all'
-      ? activities
-      : activities.filter((activity) => activity.type === selectedFilter);
+  const filteredActivities = React.useMemo(() => {
+    return (
+      selectedFilter === 'all'
+        ? activities
+        : activities.filter((activity) => activity.type === selectedFilter)
+    ).map((activity) => ({
+      ...activity,
+      // Ensure we have an icon, either from the activity or from the icon map
+      icon: activity.icon || iconMap[activity.type] || Activity,
+    }));
+  }, [activities, selectedFilter]);
 
   return (
     <Card className="p-6 space-y-6">
@@ -374,8 +396,7 @@ export default function AdminRecentActivity() {
                     {/* Icon */}
                     <div
                       className={cn(
-                        'shrink-0 p-3 rounded-2xl',
-                        'bg-gradient-to-br',
+                        'flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-br',
                         iconStyles[
                           activity.iconStyle as keyof typeof iconStyles
                         ],
@@ -383,7 +404,7 @@ export default function AdminRecentActivity() {
                         'transition-all duration-300 group-hover:scale-105'
                       )}
                     >
-                      <Icon className="w-5 h-5" />
+                      <activity.icon className="w-5 h-5" />
                     </div>
 
                     {/* Content */}

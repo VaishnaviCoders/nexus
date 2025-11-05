@@ -97,9 +97,12 @@ async function RecentActivitiesContent() {
                   variant="outline"
                   size="sm"
                   className="text-xs bg-transparent"
+                  asChild
                 >
-                  <Bell className="w-3 h-3 mr-1" />
-                  Post Notice
+                  <Link href={'/dashboard/notices/create'}>
+                    <Bell className="w-3 h-3 mr-1" />
+                    Post Notice
+                  </Link>
                 </Button>
               </div>
             </div>

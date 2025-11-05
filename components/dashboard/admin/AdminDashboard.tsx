@@ -27,10 +27,12 @@ import AdminRecentActivity from '@/app/components/dashboardComponents/RecentActi
 import { UpcomingEvents } from '@/app/components/dashboardComponents/UpcomingEvents';
 import { getCurrentAcademicYear } from '@/lib/academicYear';
 import Link from 'next/link';
+import { getRecentAdminActivities } from '@/lib/data/admin/get-recent-activities';
 
 const AdminDashboard = async () => {
   const data = await getMonthlyFeeData(2025);
   const academicYear = await getCurrentAcademicYear();
+  const activities = await getRecentAdminActivities();
 
   if (!academicYear) {
     return (
@@ -90,7 +92,7 @@ const AdminDashboard = async () => {
               <MonthlyFeeCollection data={data} />
             </Suspense>
             <Suspense fallback={<ActivitySkeleton />}>
-              <AdminRecentActivity />
+              <AdminRecentActivity activities={activities} />
             </Suspense>
           </div>
         </div>

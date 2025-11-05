@@ -833,10 +833,10 @@ const StudentAdminRoute = async ({
                       <FileText className="w-5 h-5" />
                       Documents
                     </div>
-                    <Button size={'sm'}>
+                    {/* <Button size={'sm'}>
                       <Plus className="w-4 h-4 mr-2" />
                       Upload Document
-                    </Button>
+                    </Button> */}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -864,7 +864,7 @@ const StudentAdminRoute = async ({
                           {parentStudent.relationship}
                           {parentStudent.isPrimary}
                           {parentStudent.isPrimary && (
-                            <Badge variant="default" className="text-xs">
+                            <Badge variant="COUNSELING" className="text-xs">
                               Primary
                             </Badge>
                           )}

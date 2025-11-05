@@ -6,10 +6,10 @@ import Footer from '@/components/websiteComp/Footer';
 import { Spotlight } from '@/components/ui/Spotlight';
 import {
   CreateOrganization,
-  // SignInButton,
-  // SignedIn,
-  // SignedOut,
-  // UserButton,
+  SignInButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
 } from '@clerk/nextjs';
 import IntegrationComponent from '@/components/websiteComp/IntegrationComponent';
 import Link from 'next/link';
@@ -88,7 +88,7 @@ export default async function IndexPage() {
         <div className="flex items-center space-x-2">
           {/* <ModeToggle /> */}
 
-          {/* <SignedOut>
+          <SignedOut>
             <SignInButton signUpForceRedirectUrl={'/dashboard'}>
               <Button
                 variant="outline"
@@ -100,12 +100,11 @@ export default async function IndexPage() {
             </SignInButton>
           </SignedOut>
           <SignedIn>
-           */}
-          <Button variant="outline" className="z-10" size={'sm'}>
-            <Link href="/dashboard">Dashboard</Link>
-          </Button>
-          {/* <UserButton />
-          </SignedIn> */}
+            <Button variant="outline" className="z-10" size={'sm'}>
+              <Link href="/dashboard">Dashboard</Link>
+            </Button>
+            <UserButton />
+          </SignedIn>
         </div>
       </header>
 

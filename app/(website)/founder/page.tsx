@@ -91,7 +91,7 @@ export default function AdvancedProfilePage() {
           <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
             <Code className="w-4 h-4 text-white" />
           </div>
-          <span className="text-xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+          <span className="text-xl  font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
             Sameer Kad
           </span>
         </div>
@@ -107,7 +107,7 @@ export default function AdvancedProfilePage() {
               GitHub
             </Link>
           </Button>
-          <Button
+          {/* <Button
             size="sm"
             asChild
             className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 border-0"
@@ -116,7 +116,7 @@ export default function AdvancedProfilePage() {
               <Globe className="w-4 h-4 mr-2" />
               Shiksha.cloud
             </Link>
-          </Button>
+          </Button> */}
         </div>
       </nav>
 

@@ -42,6 +42,7 @@ const isTeacher = createRouteMatcher([
   // '/dashboard/attendance/mark(.*)',
   // '/dashboard/grades(.*)',
   // '/dashboard/holidays(.*)',
+  // '/dashboard/notices/create',
 ]);
 
 const isAdmin = createRouteMatcher([
@@ -50,14 +51,43 @@ const isAdmin = createRouteMatcher([
   // '/dashboard/grades(.*)',
   // '/dashboard/holidays(.*)',
   // '/dashboard/documents/verification(.*)',
-  '/dashboard/notices/create',
+  // '/dashboard/notices/create',
   '/dashboard/teachers',
 ]);
 
+// Detect if request is from a search engine crawler
+function isCrawler(userAgent: string | null): boolean {
+  if (!userAgent) return false;
+
+  const crawlers = [
+    'googlebot',
+    'bingbot',
+    'slurp',
+    'duckduckbot',
+    'baiduspider',
+    'yandexbot',
+    'sogou',
+    'exabot',
+    'facebot',
+    'ia_archiver',
+  ];
+
+  const ua = userAgent.toLowerCase();
+  return crawlers.some((crawler) => ua.includes(crawler));
+}
 export default clerkMiddleware(async (auth, req) => {
+  const userAgent = req.headers.get('user-agent');
+
+  // CRITICAL: Allow all crawlers on public routes WITHOUT any auth checks
   if (isPublicRoute(req)) {
+    // If it's a crawler, skip ALL Clerk processing
+    if (isCrawler(userAgent)) {
+      return NextResponse.next();
+    }
+    // For regular users, also skip auth on public routes
     return NextResponse.next();
   }
+
   const { userId, orgId, orgRole } = await auth();
 
   // If user is authenticated but has no organization and trying to access protected routes
