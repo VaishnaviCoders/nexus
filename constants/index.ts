@@ -1,3 +1,4 @@
+import { Institute } from '@/components/websiteComp/shared/Institute-avatar-popover';
 import { DocumentType } from '@/generated/prisma/enums';
 import { StudentDocument } from '@/types/document';
 import {
@@ -94,654 +95,856 @@ export const indianEducationProblems = [
     ],
   },
 ];
-
-export const institutes = [
+const link = [
+  'https://images.pexels.com/photos/34556410/pexels-photo-34556410.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/34583569/pexels-photo-34583569.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/34583479/pexels-photo-34583479.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/34571564/pexels-photo-34571564.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/34571562/pexels-photo-34571562.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/34573326/pexels-photo-34573326.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/34549632/pexels-photo-34549632.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/1462637/pexels-photo-1462637.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/5885963/pexels-photo-5885963.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/2825034/pexels-photo-2825034.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/19133587/pexels-photo-19133587.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/7450281/pexels-photo-7450281.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/4761388/pexels-photo-4761388.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/6603118/pexels-photo-6603118.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/12471831/pexels-photo-12471831.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/4718513/pexels-photo-4718513.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/31305922/pexels-photo-31305922.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/12244374/pexels-photo-12244374.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/19913299/pexels-photo-19913299.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/5885799/pexels-photo-5885799.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/6530923/pexels-photo-6530923.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/34556410/pexels-photo-34556410.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/34583569/pexels-photo-34583569.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/34583479/pexels-photo-34583479.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/34571564/pexels-photo-34571564.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/34571562/pexels-photo-34571562.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/34573326/pexels-photo-34573326.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/34549632/pexels-photo-34549632.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/1462637/pexels-photo-1462637.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/5885963/pexels-photo-5885963.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/2825034/pexels-photo-2825034.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/19133587/pexels-photo-19133587.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/7450281/pexels-photo-7450281.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/4761388/pexels-photo-4761388.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/6603118/pexels-photo-6603118.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/12471831/pexels-photo-12471831.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/4718513/pexels-photo-4718513.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/31305922/pexels-photo-31305922.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/12244374/pexels-photo-12244374.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/19913299/pexels-photo-19913299.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/5885799/pexels-photo-5885799.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/6530923/pexels-photo-6530923.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/9775672/pexels-photo-9775672.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/33323042/pexels-photo-33323042.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/7702449/pexels-photo-7702449.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/2476040/pexels-photo-2476040.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/4974418/pexels-photo-4974418.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/26852338/pexels-photo-26852338.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/10683343/pexels-photo-10683343.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/13802951/pexels-photo-13802951.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/7859331/pexels-photo-7859331.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/6626747/pexels-photo-6626747.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/5911872/pexels-photo-5911872.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/9489454/pexels-photo-9489454.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/8727486/pexels-photo-8727486.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/10398050/pexels-photo-10398050.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/6256848/pexels-photo-6256848.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/9363723/pexels-photo-9363723.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/11432781/pexels-photo-11432781.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/10414226/pexels-photo-10414226.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/7658949/pexels-photo-7658949.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/7496163/pexels-photo-7496163.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/7253666/pexels-photo-7253666.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/10210033/pexels-photo-10210033.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/2700073/pexels-photo-2700073.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/4550836/pexels-photo-4550836.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/6973811/pexels-photo-6973811.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/6594254/pexels-photo-6594254.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/5645923/pexels-photo-5645923.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/7578688/pexels-photo-7578688.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/9167940/pexels-photo-9167940.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/19303044/pexels-photo-19303044.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/10317460/pexels-photo-10317460.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/2836541/pexels-photo-2836541.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/5095882/pexels-photo-5095882.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/6964122/pexels-photo-6964122.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/5491892/pexels-photo-5491892.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/6508565/pexels-photo-6508565.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/7193537/pexels-photo-7193537.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/8273622/pexels-photo-8273622.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/8499278/pexels-photo-8499278.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/7690880/pexels-photo-7690880.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/9366572/pexels-photo-9366572.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/19426671/pexels-photo-19426671.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/29848304/pexels-photo-29848304.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/33323054/pexels-photo-33323054.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/2541981/pexels-photo-2541981.png?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/3095442/pexels-photo-3095442.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/6802957/pexels-photo-6802957.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/7515728/pexels-photo-7515728.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/7295722/pexels-photo-7295722.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/13188826/pexels-photo-13188826.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/6809860/pexels-photo-6809860.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/7657851/pexels-photo-7657851.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/8250215/pexels-photo-8250215.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/9363386/pexels-photo-9363386.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/9363611/pexels-photo-9363611.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/8346224/pexels-photo-8346224.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/3640571/pexels-photo-3640571.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/3289131/pexels-photo-3289131.jpeg?auto=compress&cs=tinysrgb&h=350',
+  'https://images.pexels.com/photos/30116476/pexels-photo-30116476.jpeg?auto=compress&cs=tinysrgb&h=350',
+];
+export const institutes: Institute[] = [
   {
     id: 1,
-    name: 'St. Xavier’s High School',
-    image: '/avatars/avatar1.jpg',
+    name: "St. Xavier's High School",
+    image:
+      'https://images.pexels.com/photos/34556412/pexels-photo-34556412.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph:
       'Managing attendance and fee tracking is now a breeze with Shiksha Cloud.',
   },
   {
     id: 2,
     name: 'Bright Future Public School',
-    image: '/avatars/avatar2.jpg',
+    image:
+      'https://images.pexels.com/photos/34583569/pexels-photo-34583569.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph:
-      'We’ve replaced paper registers with digital dashboards—parents love the updates.',
+      "We've replaced paper registers with digital dashboards—parents love the updates.",
   },
   {
     id: 3,
     name: 'City Pride Junior College',
-    image: '/avatars/avatar3.jpg',
+    image:
+      'https://images.pexels.com/photos/34583479/pexels-photo-34583479.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph:
       'Shiksha Cloud helped us centralize student data and simplify parent communication.',
   },
   {
     id: 4,
     name: 'Little Scholars Academy',
-    image: '/avatars/avatar4.jpg',
+    image:
+      'https://images.pexels.com/photos/34571564/pexels-photo-34571564.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph:
       'Our teachers spend more time teaching and less time on admin work now.',
   },
   {
     id: 5,
     name: 'EduBridge Coaching Center',
-    image: '/avatars/avatar5.jpg',
+    image:
+      'https://images.pexels.com/photos/34571562/pexels-photo-34571562.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph:
       'Admissions, leads, and follow-ups—all managed in one place effortlessly.',
   },
   {
     id: 6,
     name: 'Sunrise International School',
-    image: '/avatars/avatar6.jpg',
+    image:
+      'https://images.pexels.com/photos/34573326/pexels-photo-34573326.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph: 'Parents get real-time alerts about attendance and performance.',
   },
   {
     id: 7,
     name: 'Wisdom Valley High',
-    image: '/avatars/avatar7.jpg',
+    image:
+      'https://images.pexels.com/photos/34549632/pexels-photo-34549632.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph:
       'We run all our branches on Shiksha Cloud—smooth, fast, and reliable.',
   },
   {
     id: 8,
     name: 'Bloomfield Montessori',
-    image: '/avatars/avatar8.jpg',
+    image:
+      'https://images.pexels.com/photos/1462637/pexels-photo-1462637.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph:
       'Our staff onboarding is faster than ever with digital document tracking.',
   },
   {
     id: 9,
     name: 'National Convent School',
-    image: '/avatars/avatar9.jpg',
+    image:
+      'https://images.pexels.com/photos/5885963/pexels-photo-5885963.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph:
       'From fee reminders to report cards, everything is automated now.',
   },
   {
     id: 10,
     name: 'Elite Coaching Classes',
-    image: '/avatars/avatar10.jpg',
+    image:
+      'https://images.pexels.com/photos/2825034/pexels-photo-2825034.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph:
       'CRM integration helped us increase enrollments by 30% this season.',
   },
   {
     id: 11,
     name: 'Greenwood Academy',
-    image: '/avatars/avatar11.jpg',
+    image:
+      'https://images.pexels.com/photos/19133587/pexels-photo-19133587.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph:
       'Shiksha Cloud simplified our attendance and fee reconciliation process.',
   },
   {
     id: 12,
     name: 'Blue Horizon Public School',
-    image: '/avatars/avatar12.jpg',
+    image:
+      'https://images.pexels.com/photos/7450281/pexels-photo-7450281.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph:
       'The parent dashboard keeps families updated without extra effort.',
   },
   {
     id: 13,
     name: 'Achievers Science Hub',
-    image: '/avatars/avatar13.jpg',
+    image:
+      'https://images.pexels.com/photos/4761388/pexels-photo-4761388.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph: 'We manage leads from Google Ads seamlessly through the CRM.',
   },
   {
     id: 14,
     name: 'Silver Oak High School',
-    image: '/avatars/avatar14.jpg',
+    image:
+      'https://images.pexels.com/photos/6603118/pexels-photo-6603118.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph:
       'Switching from Excel to Shiksha Cloud was the best decision for us.',
   },
   {
     id: 15,
     name: 'Future Minds Academy',
-    image: '/avatars/avatar15.jpg',
+    image:
+      'https://images.pexels.com/photos/12471831/pexels-photo-12471831.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph: 'Our teachers now mark attendance digitally in seconds.',
   },
   {
     id: 16,
     name: 'Harmony Public School',
-    image: '/avatars/avatar16.jpg',
+    image:
+      'https://images.pexels.com/photos/4718513/pexels-photo-4718513.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph: 'Shiksha Cloud made data management transparent and organized.',
   },
   {
     id: 17,
     name: 'Apex Junior College',
-    image: '/avatars/avatar17.jpg',
+    image:
+      'https://images.pexels.com/photos/31305922/pexels-photo-31305922.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph:
       'The online payment system is smooth and reliable for all parents.',
   },
   {
     id: 18,
     name: 'Galaxy English Medium School',
-    image: '/avatars/avatar18.jpg',
+    image:
+      'https://images.pexels.com/photos/12244374/pexels-photo-12244374.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph: 'Managing grades and sections has never been this easy.',
   },
   {
     id: 19,
     name: 'Scholars Den Coaching',
-    image: '/avatars/avatar19.jpg',
+    image:
+      'https://images.pexels.com/photos/19913299/pexels-photo-19913299.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph:
       'We track every inquiry to admission using built-in lead management.',
   },
   {
     id: 20,
     name: 'Smart Vision School',
-    image: '/avatars/avatar20.jpg',
+    image:
+      'https://images.pexels.com/photos/5885799/pexels-photo-5885799.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph:
-      'Our admins love the analytics dashboard—it’s clear and powerful.',
+      "Our admins love the analytics dashboard—it's clear and powerful.",
   },
   {
     id: 21,
     name: 'Nirmal Jyoti High School',
-    image: '/avatars/avatar21.jpg',
+    image:
+      'https://images.pexels.com/photos/6530923/pexels-photo-6530923.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph: 'All student documents are now digital and securely stored.',
   },
   {
     id: 22,
     name: 'Kumar Science Academy',
-    image: '/avatars/avatar22.jpg',
+    image:
+      'https://images.pexels.com/photos/34556410/pexels-photo-34556410.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph: 'Shiksha Cloud gave us complete visibility across all batches.',
   },
   {
     id: 23,
     name: 'Oxford International School',
-    image: '/avatars/avatar23.jpg',
+    image:
+      'https://images.pexels.com/photos/34583569/pexels-photo-34583569.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph:
       'Parents appreciate getting instant alerts on attendance and grades.',
   },
   {
     id: 24,
     name: 'EduPoint Tutorials',
-    image: '/avatars/avatar24.jpg',
+    image:
+      'https://images.pexels.com/photos/34583479/pexels-photo-34583479.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph: 'Fee reminders go automatically—no more manual follow-ups.',
   },
   {
     id: 25,
     name: 'Heritage Convent',
-    image: '/avatars/avatar25.jpg',
+    image:
+      'https://images.pexels.com/photos/34571564/pexels-photo-34571564.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph: 'Our teachers collaborate better now with centralized access.',
   },
   {
     id: 26,
     name: 'Bright Scholars Academy',
-    image: '/avatars/avatar26.jpg',
+    image:
+      'https://images.pexels.com/photos/34571562/pexels-photo-34571562.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph:
       'Digital notices save us hours of manual communication each week.',
   },
   {
     id: 27,
     name: 'Zenith Commerce Classes',
-    image: '/avatars/avatar27.jpg',
+    image:
+      'https://images.pexels.com/photos/34573326/pexels-photo-34573326.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph: 'CRM tracking helped us convert more leads into admissions.',
   },
   {
     id: 28,
     name: 'Pragati Coaching Institute',
-    image: '/avatars/avatar28.jpg',
+    image:
+      'https://images.pexels.com/photos/34549632/pexels-photo-34549632.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph:
       'Automated reports helped us stay audit-ready throughout the year.',
   },
   {
     id: 29,
     name: 'Shree Vidya Mandir',
-    image: '/avatars/avatar29.jpg',
+    image:
+      'https://images.pexels.com/photos/1462637/pexels-photo-1462637.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph: 'We now run a paperless office—thanks to Shiksha Cloud.',
   },
   {
     id: 30,
-    name: 'Newton’s Edge Learning',
-    image: '/avatars/avatar30.jpg',
+    name: "Newton's Edge Learning",
+    image:
+      'https://images.pexels.com/photos/5885963/pexels-photo-5885963.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph: 'Smart tools helped us scale from 300 to 1200 students easily.',
   },
   {
     id: 31,
     name: 'Alpha Public School',
-    image: '/avatars/avatar31.jpg',
-    paragraph: 'Role-based dashboards make everyone’s work smoother.',
+    image:
+      'https://images.pexels.com/photos/2825034/pexels-photo-2825034.jpeg?auto=compress&cs=tinysrgb&h=350',
+    paragraph: "Role-based dashboards make everyone's work smoother.",
   },
   {
     id: 32,
     name: 'Mentor Academy',
-    image: '/avatars/avatar32.jpg',
+    image:
+      'https://images.pexels.com/photos/19133587/pexels-photo-19133587.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph: 'Our teachers track student performance with ease now.',
   },
   {
     id: 33,
     name: 'Excel Tutorials',
-    image: '/avatars/avatar33.jpg',
+    image:
+      'https://images.pexels.com/photos/7450281/pexels-photo-7450281.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph: 'Automated notifications improved our communication instantly.',
   },
   {
     id: 34,
     name: 'Sharda Vidyalaya',
-    image: '/avatars/avatar34.jpg',
+    image:
+      'https://images.pexels.com/photos/4761388/pexels-photo-4761388.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph: 'Parents can check results and attendance on their phones.',
   },
   {
     id: 35,
     name: 'TopRank Coaching',
-    image: '/avatars/avatar35.jpg',
+    image:
+      'https://images.pexels.com/photos/6603118/pexels-photo-6603118.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph: 'Leads from Facebook Ads directly flow into our CRM dashboard.',
   },
   {
     id: 36,
     name: 'Mount Carmel School',
-    image: '/avatars/avatar36.jpg',
+    image:
+      'https://images.pexels.com/photos/12471831/pexels-photo-12471831.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph: 'Everything—from attendance to documents—is cloud managed.',
   },
   {
     id: 37,
     name: 'Inspire Academy',
-    image: '/avatars/avatar37.jpg',
+    image:
+      'https://images.pexels.com/photos/4718513/pexels-photo-4718513.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph: 'We use analytics to monitor attendance and engagement daily.',
   },
   {
     id: 38,
     name: 'Vision Coaching Center',
-    image: '/avatars/avatar38.jpg',
+    image:
+      'https://images.pexels.com/photos/31305922/pexels-photo-31305922.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph: 'Our counselors track and convert inquiries faster than before.',
   },
   {
     id: 39,
     name: 'Sai International School',
-    image: '/avatars/avatar39.jpg',
+    image:
+      'https://images.pexels.com/photos/12244374/pexels-photo-12244374.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph: 'Shiksha Cloud reduced our admin workload by over 60%.',
   },
   {
     id: 40,
     name: 'Bright Path Junior College',
-    image: '/avatars/avatar40.jpg',
+    image:
+      'https://images.pexels.com/photos/19913299/pexels-photo-19913299.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph: 'Students and parents both love the new digital experience.',
   },
   {
     id: 41,
     name: 'MindSpace Coaching',
-    image: '/avatars/avatar41.jpg',
+    image:
+      'https://images.pexels.com/photos/5885799/pexels-photo-5885799.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph: 'Tracking leads and follow-ups has become effortless for us.',
   },
   {
     id: 42,
     name: 'Sunbeam Public School',
-    image: '/avatars/avatar42.jpg',
+    image:
+      'https://images.pexels.com/photos/6530923/pexels-photo-6530923.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph: 'No more lost records—every detail is securely stored online.',
   },
   {
     id: 43,
     name: 'Trinity Convent School',
-    image: '/avatars/avatar43.jpg',
+    image:
+      'https://images.pexels.com/photos/9775672/pexels-photo-9775672.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph: 'Online payments made collections easy for all parents.',
   },
   {
     id: 44,
     name: 'StepUp Coaching Institute',
-    image: '/avatars/avatar44.jpg',
+    image:
+      'https://images.pexels.com/photos/33323042/pexels-photo-33323042.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph: 'We now manage multiple batches without any confusion.',
   },
   {
     id: 45,
     name: 'Cambridge Junior College',
-    image: '/avatars/avatar45.jpg',
+    image:
+      'https://images.pexels.com/photos/7702449/pexels-photo-7702449.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph: 'We get accurate reports on attendance and fees instantly.',
   },
   {
     id: 46,
     name: 'Daffodil High School',
-    image: '/avatars/avatar46.jpg',
+    image:
+      'https://images.pexels.com/photos/2476040/pexels-photo-2476040.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph: 'Digital circulars replaced manual notice boards completely.',
   },
   {
     id: 47,
     name: 'Rising Star Academy',
-    image: '/avatars/avatar47.jpg',
+    image:
+      'https://images.pexels.com/photos/4974418/pexels-photo-4974418.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph:
       'Parents appreciate getting notifications instantly on WhatsApp.',
   },
   {
     id: 48,
     name: 'Alpha Tutorials',
-    image: '/avatars/avatar48.jpg',
+    image:
+      'https://images.pexels.com/photos/26852338/pexels-photo-26852338.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph: 'Everything runs smoothly—attendance, fees, communication.',
   },
   {
     id: 49,
     name: 'Kidz Orbit Pre-School',
-    image: '/avatars/avatar49.jpg',
-    paragraph: 'Managing tiny tots’ attendance is finally easy and fun.',
+    image:
+      'https://images.pexels.com/photos/10683343/pexels-photo-10683343.jpeg?auto=compress&cs=tinysrgb&h=350',
+    paragraph: "Managing tiny tots' attendance is finally easy and fun.",
   },
   {
     id: 50,
     name: 'Bright Minds Learning Center',
-    image: '/avatars/avatar50.jpg',
+    image:
+      'https://images.pexels.com/photos/13802951/pexels-photo-13802951.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph: 'We use the mobile app daily—parents love its simplicity.',
   },
   {
     id: 51,
     name: 'City Scholars College',
-    image: '/avatars/avatar51.jpg',
+    image:
+      'https://images.pexels.com/photos/7859331/pexels-photo-7859331.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph: 'Fee receipts are auto-generated and error-free now.',
   },
   {
     id: 52,
     name: 'EduWave Coaching',
-    image: '/avatars/avatar52.jpg',
+    image:
+      'https://images.pexels.com/photos/6626747/pexels-photo-6626747.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph: 'CRM integration simplified our admission process entirely.',
   },
   {
     id: 53,
     name: 'Pioneer Convent',
-    image: '/avatars/avatar53.jpg',
+    image:
+      'https://images.pexels.com/photos/5911872/pexels-photo-5911872.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph: 'The dashboard is intuitive—no training required.',
   },
   {
     id: 54,
     name: 'Visionary Public School',
-    image: '/avatars/avatar54.jpg',
+    image:
+      'https://images.pexels.com/photos/9489454/pexels-photo-9489454.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph: 'Transparency between parents and teachers improved a lot.',
   },
   {
     id: 55,
     name: 'National Academy',
-    image: '/avatars/avatar55.jpg',
+    image:
+      'https://images.pexels.com/photos/8727486/pexels-photo-8727486.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph: 'Document verification takes minutes instead of days.',
   },
   {
     id: 56,
     name: 'Modern Edge Institute',
-    image: '/avatars/avatar56.jpg',
+    image:
+      'https://images.pexels.com/photos/10398050/pexels-photo-10398050.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph: 'We handle 5 branches from one admin dashboard now.',
   },
   {
     id: 57,
     name: 'Smart Steps Academy',
-    image: '/avatars/avatar57.jpg',
+    image:
+      'https://images.pexels.com/photos/6256848/pexels-photo-6256848.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph: 'All communication logs are stored neatly for future reference.',
   },
   {
     id: 58,
     name: 'Global Convent School',
-    image: '/avatars/avatar58.jpg',
+    image:
+      'https://images.pexels.com/photos/9363723/pexels-photo-9363723.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph: 'Our multi-branch data is synchronized automatically.',
   },
   {
     id: 59,
     name: 'Excel Academy',
-    image: '/avatars/avatar59.jpg',
+    image:
+      'https://images.pexels.com/photos/11432781/pexels-photo-11432781.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph: 'We save hours every week thanks to automation tools.',
   },
   {
     id: 60,
     name: 'Shanti Vidyalaya',
-    image: '/avatars/avatar60.jpg',
+    image:
+      'https://images.pexels.com/photos/10414226/pexels-photo-10414226.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph: 'Parents can now download fee receipts anytime they want.',
   },
   {
     id: 61,
     name: 'EduNext Coaching',
-    image: '/avatars/avatar61.jpg',
+    image:
+      'https://images.pexels.com/photos/7658949/pexels-photo-7658949.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph: 'Leads from WhatsApp ads are captured automatically.',
   },
   {
     id: 62,
     name: 'Springdale High School',
-    image: '/avatars/avatar62.jpg',
+    image:
+      'https://images.pexels.com/photos/7496163/pexels-photo-7496163.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph: 'Attendance analytics help us monitor trends quickly.',
   },
   {
     id: 63,
     name: 'MindBloom Academy',
-    image: '/avatars/avatar63.jpg',
+    image:
+      'https://images.pexels.com/photos/7253666/pexels-photo-7253666.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph: 'Our teachers no longer rely on paper registers.',
   },
   {
     id: 64,
     name: 'Innova Public School',
-    image: '/avatars/avatar64.jpg',
+    image:
+      'https://images.pexels.com/photos/10210033/pexels-photo-10210033.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph: 'The admin dashboard is our go-to for daily operations.',
   },
   {
     id: 65,
     name: 'Peak Performance Coaching',
-    image: '/avatars/avatar65.jpg',
+    image:
+      'https://images.pexels.com/photos/2700073/pexels-photo-2700073.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph: 'Lead management improved our admission rate significantly.',
   },
   {
     id: 66,
     name: 'Alpha Beta International School',
-    image: '/avatars/avatar66.jpg',
+    image:
+      'https://images.pexels.com/photos/4550836/pexels-photo-4550836.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph: 'Everything is digital, organized, and parent-friendly.',
   },
   {
     id: 67,
     name: 'Elite Edge Tutorials',
-    image: '/avatars/avatar67.jpg',
+    image:
+      'https://images.pexels.com/photos/6973811/pexels-photo-6973811.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph: 'With Shiksha Cloud, our teachers feel empowered and efficient.',
   },
   {
     id: 68,
     name: 'New Era Junior College',
-    image: '/avatars/avatar68.jpg',
+    image:
+      'https://images.pexels.com/photos/6594254/pexels-photo-6594254.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph: 'Instant notifications make communication much faster.',
   },
   {
     id: 69,
     name: 'SmartStart Academy',
-    image: '/avatars/avatar69.jpg',
+    image:
+      'https://images.pexels.com/photos/5645923/pexels-photo-5645923.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph: 'Fee collection tracking is now fully automated.',
   },
   {
     id: 70,
     name: 'Evergreen Public School',
-    image: '/avatars/avatar70.jpg',
+    image:
+      'https://images.pexels.com/photos/7578688/pexels-photo-7578688.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph: 'We trust Shiksha Cloud to run our entire school digitally.',
   },
   {
     id: 71,
     name: 'Bright Future High School',
-    image: '/avatars/avatar71.jpg',
+    image:
+      'https://images.pexels.com/photos/9167940/pexels-photo-9167940.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph:
       'Managing fees and attendance has never been easier. Shiksha Cloud saves us hours every week.',
   },
   {
     id: 72,
     name: 'Sunrise International School',
-    image: '/avatars/avatar72.jpg',
+    image:
+      'https://images.pexels.com/photos/19303044/pexels-photo-19303044.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph:
       'Parents love getting instant updates — no more WhatsApp chaos. Everything is on one dashboard.',
   },
   {
     id: 73,
     name: 'Bluebell Public School',
-    image: '/avatars/avatar73.jpg',
+    image:
+      'https://images.pexels.com/photos/10317460/pexels-photo-10317460.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph:
-      'Our teachers find the attendance module fast and reliable. We’ve completely stopped using paper registers.',
+      "Our teachers find the attendance module fast and reliable. We've completely stopped using paper registers.",
   },
   {
     id: 74,
     name: 'Mount View Academy',
-    image: '/avatars/avatar74.jpg',
+    image:
+      'https://images.pexels.com/photos/2836541/pexels-photo-2836541.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph:
       'The dashboard gives us total control — from fee tracking to staff reports. Super helpful for admins.',
   },
   {
     id: 75,
     name: 'Harmony Convent School',
-    image: '/avatars/avatar75.jpg',
+    image:
+      'https://images.pexels.com/photos/5095882/pexels-photo-5095882.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph:
       'Setup took less than a day. Everything just works out of the box — perfect for schools like ours.',
   },
   {
     id: 76,
     name: 'Oxford Junior College',
-    image: '/avatars/avatar76.jpg',
+    image:
+      'https://images.pexels.com/photos/6964122/pexels-photo-6964122.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph:
       'We switched from spreadsheets to Shiksha Cloud — now everything is automated and beautifully organized.',
   },
   {
     id: 77,
     name: 'Little Champs Pre-School',
-    image: '/avatars/avatar77.jpg',
+    image:
+      'https://images.pexels.com/photos/5491892/pexels-photo-5491892.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph:
       'Our parents are happier than ever. Fee payments and communication are seamless now.',
   },
   {
     id: 78,
     name: 'Hillcrest Senior Secondary',
-    image: '/avatars/avatar78.jpg',
+    image:
+      'https://images.pexels.com/photos/6508565/pexels-photo-6508565.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph:
       'The admin dashboard gives a clear picture of daily operations. Reports are detailed and easy to export.',
   },
   {
     id: 79,
     name: 'Elite Scholars Academy',
-    image: '/avatars/avatar79.jpg',
+    image:
+      'https://images.pexels.com/photos/7193537/pexels-photo-7193537.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph:
       'We finally have one place for attendance, communication, and reports — all in real time.',
   },
   {
     id: 80,
     name: 'Greenfield Convent School',
-    image: '/avatars/avatar80.jpg',
+    image:
+      'https://images.pexels.com/photos/8273622/pexels-photo-8273622.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph:
       'Everything feels so organized now. The automation has reduced our manual work by half.',
   },
   {
     id: 81,
     name: 'Riverdale Public School',
-    image: '/avatars/avatar81.jpg',
+    image:
+      'https://images.pexels.com/photos/8499278/pexels-photo-8499278.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph:
       'As a principal, I love how transparent the system is. Parents and teachers are finally on the same page.',
   },
   {
     id: 82,
     name: 'Galaxy Coaching Center',
-    image: '/avatars/avatar82.jpg',
+    image:
+      'https://images.pexels.com/photos/7690880/pexels-photo-7690880.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph:
       'Lead management and student tracking are top-notch. We no longer lose inquiries.',
   },
   {
     id: 83,
     name: 'Knowledge Tree Academy',
-    image: '/avatars/avatar83.jpg',
+    image:
+      'https://images.pexels.com/photos/9366572/pexels-photo-9366572.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph:
       'Smooth interface and fast performance. Even our less tech-savvy staff adapted quickly.',
   },
   {
     id: 84,
     name: 'Inspire Learning Hub',
-    image: '/avatars/avatar84.jpg',
+    image:
+      'https://images.pexels.com/photos/19426671/pexels-photo-19426671.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph:
-      'I’ve tried three school CRMs — Shiksha Cloud is the only one that delivers everything it promises.',
+      "I've tried three school CRMs — Shiksha Cloud is the only one that delivers everything it promises.",
   },
   {
     id: 85,
     name: 'NextGen Tutorials',
-    image: '/avatars/avatar85.jpg',
+    image:
+      'https://images.pexels.com/photos/29848304/pexels-photo-29848304.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph:
       'Attendance, fees, and results — all in one place. Makes managing coaching batches effortless.',
   },
   {
     id: 86,
     name: 'Vision Valley School',
-    image: '/avatars/avatar86.jpg',
+    image:
+      'https://images.pexels.com/photos/33323054/pexels-photo-33323054.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph:
       'Real-time notifications to parents have completely changed how we communicate.',
   },
   {
     id: 87,
     name: 'StepUp Coaching Institute',
-    image: '/avatars/avatar87.jpg',
+    image:
+      'https://images.pexels.com/photos/2541981/pexels-photo-2541981.png?auto=compress&cs=tinysrgb&h=350',
     paragraph:
       'The lead follow-up feature helps us convert inquiries much faster than before.',
   },
   {
     id: 88,
     name: 'Starlight High School',
-    image: '/avatars/avatar88.jpg',
+    image:
+      'https://images.pexels.com/photos/3095442/pexels-photo-3095442.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph:
       'No more missed payments or lost documents. Shiksha Cloud keeps everything organized for us.',
   },
   {
     id: 89,
     name: 'City Edge Academy',
-    image: '/avatars/avatar89.jpg',
+    image:
+      'https://images.pexels.com/photos/6802957/pexels-photo-6802957.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph:
       'Our teachers love the clean interface. Attendance and reports are just a few clicks away.',
   },
   {
     id: 90,
     name: 'DreamPath International',
-    image: '/avatars/avatar90.jpg',
+    image:
+      'https://images.pexels.com/photos/7515728/pexels-photo-7515728.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph:
       'The parent portal is a game-changer. Parents get every update instantly.',
   },
   {
     id: 91,
     name: 'Wisdom Public School',
-    image: '/avatars/avatar91.jpg',
+    image:
+      'https://images.pexels.com/photos/7295722/pexels-photo-7295722.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph:
-      'We’ve gone completely paperless. Shiksha Cloud made digital transformation simple.',
+      "We've gone completely paperless. Shiksha Cloud made digital transformation simple.",
   },
   {
     id: 92,
     name: 'Global Heights Academy',
-    image: '/avatars/avatar92.jpg',
+    image:
+      'https://images.pexels.com/photos/13188826/pexels-photo-13188826.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph:
       'Support is amazing — they listen to feedback and actually roll out updates based on it.',
   },
   {
     id: 93,
     name: 'Mentor Academy',
-    image: '/avatars/avatar93.jpg',
+    image:
+      'https://images.pexels.com/photos/6809860/pexels-photo-6809860.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph:
       'Document verification workflow has saved us countless hours during admissions.',
   },
   {
     id: 94,
     name: 'Silver Oak Public School',
-    image: '/avatars/avatar94.jpg',
+    image:
+      'https://images.pexels.com/photos/7657851/pexels-photo-7657851.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph:
       'The analytics dashboard gives deep insights into attendance and fee trends. Very useful for planning.',
   },
   {
     id: 95,
     name: 'Smart Minds Junior School',
-    image: '/avatars/avatar95.jpg',
+    image:
+      'https://images.pexels.com/photos/8250215/pexels-photo-8250215.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph:
       'Parents appreciate the transparency. They can see everything without having to ask.',
   },
   {
     id: 96,
     name: 'Alpha Convent Academy',
-    image: '/avatars/avatar96.jpg',
+    image:
+      'https://images.pexels.com/photos/9363386/pexels-photo-9363386.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph:
-      'We’ve reduced communication gaps between staff and parents to almost zero.',
+      "We've reduced communication gaps between staff and parents to almost zero.",
   },
   {
     id: 97,
     name: 'Harmony Tutorial Center',
-    image: '/avatars/avatar97.jpg',
+    image:
+      'https://images.pexels.com/photos/9363611/pexels-photo-9363611.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph:
       'Integrating PhonePe payments has made fee collection completely stress-free.',
   },
   {
     id: 98,
     name: 'Oakridge Public School',
-    image: '/avatars/avatar98.jpg',
+    image:
+      'https://images.pexels.com/photos/8346224/pexels-photo-8346224.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph:
       'The anonymous complaint box was a thoughtful addition — students feel safer speaking up.',
   },
   {
     id: 99,
     name: 'Bright Scholars Institute',
-    image: '/avatars/avatar99.jpg',
+    image:
+      'https://images.pexels.com/photos/3640571/pexels-photo-3640571.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph:
       'Reports are accurate, quick, and easy to share with our management team.',
   },
   {
     id: 100,
     name: 'Evergreen Learning Center',
-    image: '/avatars/avatar100.jpg',
+    image:
+      'https://images.pexels.com/photos/3289131/pexels-photo-3289131.jpeg?auto=compress&cs=tinysrgb&h=350',
     paragraph:
       'From setup to daily use, everything about Shiksha Cloud feels simple and reliable.',
   },

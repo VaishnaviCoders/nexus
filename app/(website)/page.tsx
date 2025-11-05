@@ -150,8 +150,10 @@ export default async function IndexPage() {
               </DialogContent>
             </Dialog>
 
-            <Button size="lg" variant="outline">
-              Download PDF
+            <Button size="lg" variant="outline" asChild>
+              <Link href="https://gamma.app/docs/Shikshacloud-gtpghwx8wdrjyxs">
+                Download PDF
+              </Link>
             </Button>
           </div>
         </div>
@@ -213,8 +215,27 @@ export default async function IndexPage() {
       </section>
 
       <div className="flex items-center justify-center space-x-5 mt-5">
-        <Button>Get Started</Button>
-        <Button variant="outline">Watch Demo</Button>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button>
+              Get Early Access
+              <ArrowRight className="w-4 h-4 ml-2" />
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-md p-0 [&>button]:hidden top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 fixed">
+            <DialogHeader>
+              <DialogTitle></DialogTitle>
+              <DialogDescription></DialogDescription>
+            </DialogHeader>
+            <CreateOrganization afterCreateOrganizationUrl={'/dashboard'} />
+          </DialogContent>
+        </Dialog>
+
+        <Button size="lg" variant="outline" asChild>
+          <Link href="https://gamma.app/docs/Shikshacloud-gtpghwx8wdrjyxs">
+            Download PDF
+          </Link>
+        </Button>
       </div>
       <Footer />
     </main>

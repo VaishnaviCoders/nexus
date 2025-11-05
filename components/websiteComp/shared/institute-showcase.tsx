@@ -4,6 +4,14 @@ import InstituteAvatarPopover from './Institute-avatar-popover';
 import { institutes } from '@/constants';
 import { Globe } from '@/components/ui/globe';
 
+// i have new idea can we do this as grid and columns and rows
+// first Row : 1 , 2 ,3 ,4 ,5 ,6 ,6 ,7 .... 16 for desktop , 15 for tab , 8 for mobile
+// Second Row :then last index 16 length for desktop , 15 for tab , 8 for mobile
+// 3rd Row :then last index 10 length for desktop (5left - 5right ), 15 for tab , 8 for mobile
+// 4th Row :then last index 16 length for desktop (4left - 5right ),  , 15 for tab(3-3) , 8 for mobile(2-2)
+// 5th Row :then last index 16 length for desktop (2left - 2right ), , 15 for tab , 8 for mobile((1left - 1right ),)
+
+// tailwind css and shad-cn
 const InstitutesShowcase = () => {
   return (
     <div className="text-center py-4 px-4 relative overflow-hidden">
@@ -15,7 +23,7 @@ const InstitutesShowcase = () => {
       {/* Tablet & Desktop Layout */}
       <div className="lg:grid grid-cols-7 max-w-7xl mx-auto">
         {/* Row 1 */}
-        <div className="col-span-7 flex justify-between max-w-[95%] mx-auto">
+        <div className="col-span-7 flex justify-between ">
           {institutes.slice(0, 22).map((institute) => (
             <motion.div
               key={institute.id}
@@ -27,7 +35,7 @@ const InstitutesShowcase = () => {
         </div>
 
         {/* Row 2 */}
-        <div className="col-span-7 flex justify-end max-w-[87%] mx-end">
+        <div className="col-span-7 flex justify-between ">
           {institutes.slice(23, 40).map((institute) => (
             <motion.div
               key={institute.id}
@@ -64,7 +72,7 @@ const InstitutesShowcase = () => {
 
         {/* Row 5 */}
         <div className="col-span-7 flex justify-between">
-          {institutes.slice(18, 35).map((institute) => (
+          {institutes.slice(84, 101).map((institute) => (
             <motion.div
               key={institute.id}
               className="w-16 h-16 flex transition-opacity duration-300 ease-in-out"
@@ -78,7 +86,7 @@ const InstitutesShowcase = () => {
         <div className="col-span-7 flex justify-between">
           <div className="flex justify-between w-full">
             <div className="flex">
-              {institutes.slice(50, 57).map((institute) => (
+              {institutes.slice(101, 108).map((institute) => (
                 <motion.div
                   key={institute.id}
                   className="w-16 h-16 flex transition-opacity duration-300 ease-in-out"
@@ -88,7 +96,7 @@ const InstitutesShowcase = () => {
               ))}
             </div>
             <div className="flex">
-              {institutes.slice(55, 62).map((institute) => (
+              {institutes.slice(109, 116).map((institute) => (
                 <motion.div
                   key={institute.id}
                   className="w-16 h-16 flex transition-opacity duration-300 ease-in-out"

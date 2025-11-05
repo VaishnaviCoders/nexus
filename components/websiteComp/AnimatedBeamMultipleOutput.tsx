@@ -4,7 +4,6 @@ import React, { forwardRef, useRef } from 'react';
 
 import { AnimatedBeam } from '@/components/ui/animated-beam';
 import { cn } from '@/lib/utils';
-import { Feather } from 'lucide-react';
 
 const Circle = forwardRef<
   HTMLDivElement,
@@ -47,18 +46,6 @@ export function AnimatedBeamMultipleOutput({
       )}
       ref={containerRef}
     >
-      <div className="flex items-center space-x-4 mb-4">
-        <h3 className="text-xl font-semibold flex items-center gap-2">
-          <Feather className="size-5 text-primary" />
-          Real-Time Update, What happen in your Organization .
-        </h3>
-      </div>
-      <p className="text-sm text-muted-foreground">
-        {' '}
-        Take the pain out of book keeping! Wave goodbye to mountains of
-        paperwork and endless email reminders. There`s now a new way of
-        accounting.
-      </p>
       <div className="flex size-full flex-row items-stretch justify-between gap-10 max-w-lg">
         <div className="flex flex-col justify-center gap-2">
           <Circle ref={div1Ref}>

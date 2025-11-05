@@ -37,6 +37,31 @@ In short:
 Shiksha.cloud isn’t just a system — it’s a smarter way to run your institution.
 Built by developers who understand education.
 
+# Comments
+
+{
+"comments": [
+"हमारे स्कूल में पहले हर छोटी बात के लिए फाइलें पलटनी पड़ती थीं — कौन-सा बच्चा किस सेक्शन में है, किसकी फीस बाकी है, ये सब ढूँढना मुश्किल होता था। जब से Shiksha.cloud आया है, सबकुछ एक क्लिक पर है। अब स्टाफ को भी राहत मिली है और पेरेंट्स भी खुश हैं।",
+"मैंने कई सॉफ्टवेयर देखे थे, लेकिन ज़्यादातर दिखावे के थे। Shiksha.cloud पहली बार लगा कि किसी ने वाकई स्कूल की ज़रूरत को समझा है। हमारे टीचर्स से लेकर ऑफिस स्टाफ तक सब इसे सहजता से चला रहे हैं। इससे हमारे काम में एक अनुशासन आ गया है।",
+"हमारे यहाँ पुराने टीचर्स को टेक्नोलॉजी से थोड़ी झिझक थी। उन्हें लगा कि सिस्टम समझना मुश्किल होगा। लेकिन Shiksha.cloud इतना आसान निकला कि अब वही लोग बाकी को सिखाते हैं। ये हमारे लिए बड़ी बात है।",
+"मी तांत्रिक गोष्टींमध्ये फार पटाईत नाही, पण या अॅपचं इंटरफेस इतकं साधं आहे की मला स्वतः वापरताना आत्मविश्वास वाटतो. शिक्षक म्हणून वेळ वाचतोय, हेच मोठं बक्षीस आहे.",
+"आधी पालक मीटिंगमध्ये सतत प्रश्न विचारायचे — ‘माझ्या मुलाची हजेरी काय आहे?’ ‘गृहपाठ दिला का नाही?’ आता अॅपमुळे त्यांना स्वतःच सगळं कळतं. त्यामुळे चर्चा आता मुलांच्या प्रगतीवर होते, कागदांवर नाही.",
+"Shiksha.cloud वापरल्यापासून शिक्षकांना आता रोजचं रजिस्टर लिहिण्याचं ओझं कमी झालं आहे. त्यामुळे वर्गात वेळ घालवण्यापेक्षा विद्यार्थ्यांकडे लक्ष देण्यासाठी वेळ मिळतो.",
+"माझ्या दृष्टीने Shiksha.cloud हे केवळ सॉफ्टवेअर नाही, तर शाळेचं डिजिटल सहकारी आहे. हे रोजचं काम सोपं करतं आणि आपल्याला पुढच्या स्तरावर नेतं.",
+"Our teachers were a little nervous about using new software, but the interface was so simple that within a week everyone got used to it. Now they can’t imagine going back to manual registers.",
+"I personally appreciate how responsive the support team is. Whenever we face even a small issue, they call and resolve it immediately. That’s rare these days.",
+"पालकांना विद्यार्थ्यांची प्रगती, उपस्थिती आणि फीची माहिती लगेच मिळते. त्यामुळे पारदर्शकता वाढली आणि पालक समाधानी झाले.",
+"पूर्वी पेपरवर्क खूप व्हायचं, आता सगळं डिजिटल झालंय. खरंच वेळ आणि श्रम दोन्ही वाचतात. आम्ही याबद्दल खूप आनंदी आहोत.",
+"मुझे इस सॉफ्टवेयर की सबसे अच्छी बात ये लगी कि इसे स्कूल की असली जरूरतों को समझकर बनाया गया है। हर फीचर का कोई न कोई इस्तेमाल रोज़ होता है।",
+"पहले पेरेंट्स को बच्चों की अटेंडेंस या फीस डिटेल के लिए बार-बार स्कूल आना पड़ता था। अब ऐप पर सब कुछ दिख जाता है — सब खुश हैं।",
+"सपोर्ट टीम को खास तौर पर धन्यवाद देना चाहूंगी — जब भी कोई परेशानी आई, उन्होंने बहुत जल्दी हल निकाला।",
+"हमने पहले भी कुछ सॉफ्टवेयर ट्राय किए थे, लेकिन Shiksha.cloud जितना भरोसेमंद और सुचारू सिस्टम हमें कहीं नहीं मिला।",
+"Earlier, we used to depend heavily on paper records. During audits, it was always stressful to find old data. After shifting to Shiksha.cloud, everything became systematic. I can check any student’s details instantly. It’s honestly one of the best decisions we made for our school.",
+"Our teachers used to spend hours maintaining registers and preparing reports. With Shiksha.cloud, that time is now spent focusing on students. The change is visible — less paperwork, more teaching.",
+"One thing I appreciate about Shiksha.cloud is the personal support. Whenever we had any doubt, the team guided us patiently. They didn’t just sell the software; they made sure we could actually use it effectively."
+]
+}
+
 # What is Shiksha Cloud?
 
 Shiksha Cloud is a comprehensive, cloud-based school management system designed to digitally transform educational institutions by connecting students, parents, teachers, and administrators on a single unified platform. Built with modern web technologies including Next.js, Prisma ORM, and Supabase, it eliminates manual paperwork and automates critical daily operations such as attendance tracking, fee collection, communication, and academic management.
@@ -289,7 +314,6 @@ Unlimited Users - No per-user pricing restrictions (depending on plan)
 AI-Powered Insights - Automated report generation and predictions
 Voice Assistant - Alexa integration for hands-free operations
 Smart Attendance - AI-suggested attendance based on patterns
-Lead Management CRM - Convert inquiries into enrollments
 Exam & Result Management - Complete assessment lifecycle
 Certificate Generation - Automated certificate creation and distribution
 
