@@ -28,14 +28,12 @@ const isStudent = createRouteMatcher([
   '/dashboard/assignments(.*)',
   '/dashboard/my-attendance(.*)',
   '/dashboard/documents',
-  // Add other student routes here
 ]);
 
 const isParent = createRouteMatcher([
   '/dashboard/fees/parent(.*)',
   '/dashboard/my-children(.*)',
   '/dashboard/child-attendance(.*)',
-  // Add other parent routes here
 ]);
 
 const isTeacher = createRouteMatcher([
@@ -44,7 +42,6 @@ const isTeacher = createRouteMatcher([
   // '/dashboard/attendance/mark(.*)',
   // '/dashboard/grades(.*)',
   // '/dashboard/holidays(.*)',
-  // Add other teacher routes here
 ]);
 
 const isAdmin = createRouteMatcher([
@@ -53,19 +50,16 @@ const isAdmin = createRouteMatcher([
   // '/dashboard/grades(.*)',
   // '/dashboard/holidays(.*)',
   // '/dashboard/documents/verification(.*)',
-
   '/dashboard/notices/create',
   '/dashboard/teachers',
-
-  // Add any other admin routes here
 ]);
 
 export default clerkMiddleware(async (auth, req) => {
-  const { userId, orgId, orgRole } = await auth();
-
   if (isPublicRoute(req)) {
     return NextResponse.next();
   }
+  const { userId, orgId, orgRole } = await auth();
+
   // If user is authenticated but has no organization and trying to access protected routes
   if (userId && !orgId && isProtectedRoute(req)) {
     const selectOrgUrl = new URL('/select-organization', req.url);

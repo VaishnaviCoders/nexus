@@ -1,10 +1,11 @@
 import type { NextConfig } from 'next';
-const withPWA = require('next-pwa')({
-  dest: 'public',
-  register: true,
-  skipWaiting: true,
-  disable: process.env.NODE_ENV === 'development',
-});
+// const withPWA = require('next-pwa')({
+//   dest: 'public',
+//   register: true,
+//   skipWaiting: true,
+//   disable: process.env.NODE_ENV === 'development',
+
+// });
 
 const nextConfig: NextConfig = {
   distDir: '.next',
@@ -69,4 +70,6 @@ const nextConfig: NextConfig = {
 };
 
 // Export with PWA settings
-export default withPWA(nextConfig);
+// export default withPWA(nextConfig);
+
+export default nextConfig;

@@ -268,7 +268,7 @@ const BentoGrid = () => {
               title="Continuous Innovation"
               description="We keep adding powerful features based on real feedback from educators like you. Your needs shape our roadmap."
             />
-            <div className="">
+            <div className="overflow-hidden">
               <DisplayCards cards={defaultCards} />
             </div>
           </MagicCard>

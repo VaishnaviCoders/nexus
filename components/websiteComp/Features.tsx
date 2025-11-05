@@ -144,28 +144,28 @@ const Features = () => {
               </div>
             </div>
           </div>
-          <div className="bottom-0 flex items-center w-full mt-20 pb- justify-evenly lg:mt-auto">
+          <div className="flex flex-col sm:flex-row items-center w-full mt-12 sm:mt-20 pb-4 gap-8 sm:gap-4 justify-evenly lg:mt-auto">
             <div className="flex flex-col items-center">
-              <h1 className="text-2xl font-medium text-transparent md:text-4xl bg-gradient-to-b from-neutral-950 dark:from-neutral-50 to-neutral-500 dark:to-neutral-600 bg-clip-text">
+              <h1 className="text-3xl sm:text-2xl font-medium text-transparent md:text-4xl bg-gradient-to-b from-neutral-950 dark:from-neutral-50 to-neutral-500 dark:to-neutral-600 bg-clip-text">
                 7+
               </h1>
-              <span className="text-sm text-muted-foreground">
+              <span className="text-sm sm:text-xs md:text-sm text-muted-foreground text-center">
                 Schools & Coaching Institutes
               </span>
             </div>
             <div className="flex flex-col items-center">
-              <h1 className="text-2xl font-medium text-transparent md:text-4xl bg-gradient-to-b from-neutral-950 dark:from-neutral-50 to-neutral-500 dark:to-neutral-600 bg-clip-text">
+              <h1 className="text-3xl sm:text-2xl font-medium text-transparent md:text-4xl bg-gradient-to-b from-neutral-950 dark:from-neutral-50 to-neutral-500 dark:to-neutral-600 bg-clip-text">
                 1,760+
               </h1>
-              <span className="text-sm text-muted-foreground">
+              <span className="text-sm sm:text-xs md:text-sm text-muted-foreground text-center">
                 Students Tracked Daily
               </span>
             </div>
             <div className="flex flex-col items-center">
-              <h1 className="text-2xl font-medium text-transparent md:text-4xl bg-gradient-to-b from-neutral-950 dark:from-neutral-50 to-neutral-500 dark:to-neutral-600 bg-clip-text">
+              <h1 className="text-3xl sm:text-2xl font-medium text-transparent md:text-4xl bg-gradient-to-b from-neutral-950 dark:from-neutral-50 to-neutral-500 dark:to-neutral-600 bg-clip-text">
                 ₹8.4L+
               </h1>
-              <span className="text-sm text-muted-foreground">
+              <span className="text-sm sm:text-xs md:text-sm text-muted-foreground text-center">
                 Fees Processed
               </span>
             </div>
