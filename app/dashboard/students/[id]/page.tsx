@@ -854,62 +854,102 @@ const StudentAdminRoute = async ({
             </TabsContent>
 
             <TabsContent value="parents" className="mt-0">
-              <div className="grid gap-6 md:grid-cols-2">
+              <div
+                className={`grid gap-4 ${
+                  parents.length === 1
+                    ? 'md:grid-cols-1 lg:grid-cols-1 max-w-2xl'
+                    : parents.length === 2
+                      ? 'md:grid-cols-2 lg:grid-cols-2'
+                      : parents.length === 3
+                        ? 'md:grid-cols-2 lg:grid-cols-3'
+                        : 'md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3'
+                }`}
+              >
                 {parents.map((parentStudent, index) => (
-                  <Card key={index}>
-                    <CardHeader>
-                      <CardTitle className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <Users className="w-5 h-5" />
-                          {parentStudent.relationship}
-                          {parentStudent.isPrimary}
-                          {parentStudent.isPrimary && (
-                            <Badge variant="COUNSELING" className="text-xs">
-                              Primary
-                            </Badge>
-                          )}
+                  <Card
+                    key={index}
+                    className="overflow-hidden hover:shadow-lg transition-shadow duration-200"
+                  >
+                    <CardHeader className="bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 pb-4">
+                      <div className="flex items-start justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className="p-2 bg-white dark:bg-slate-800 rounded-lg shadow-sm">
+                            <Users className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                          </div>
+                          <div>
+                            <CardTitle className="text-lg">
+                              {parentStudent.parent.firstName}{' '}
+                              {parentStudent.parent.lastName}
+                            </CardTitle>
+                            <div className="flex items-center gap-2 mt-1">
+                              <span className="text-sm text-slate-600 dark:text-slate-400">
+                                {parentStudent.relationship}
+                              </span>
+                              {parentStudent.isPrimary && (
+                                <Badge
+                                  variant="DOCUMENT_SENT"
+                                  className="text-xs"
+                                >
+                                  Primary
+                                </Badge>
+                              )}
+                            </div>
+                          </div>
                         </div>
-                        <Button variant="outline" size="sm">
-                          <MessageCircle className="w-4 h-4 mr-2" />
-                          Contact
-                        </Button>
-                      </CardTitle>
+                      </div>
                     </CardHeader>
-                    <CardContent className="space-y-3">
-                      <div>
-                        <label className="text-sm font-medium text-slate-600 dark:text-slate-400">
-                          Name
-                        </label>
-                        <p className="font-medium">
-                          {parentStudent.parent.firstName}{' '}
-                          {parentStudent.parent.lastName}
-                        </p>
+                    <CardContent className="pt-4">
+                      <div className="space-y-3">
+                        <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+                          <div className="p-2 bg-blue-50 dark:bg-blue-900/20 rounded-md">
+                            <Mail className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <label className="text-xs font-medium text-slate-500 dark:text-slate-400 block">
+                              Email
+                            </label>
+                            <p className="font-medium text-sm truncate">
+                              {parentStudent.parent.email}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+                          <div className="p-2 bg-green-50 dark:bg-green-900/20 rounded-md">
+                            <Phone className="w-4 h-4 text-green-600 dark:text-green-400" />
+                          </div>
+                          <div className="flex-1">
+                            <label className="text-xs font-medium text-slate-500 dark:text-slate-400 block">
+                              Phone
+                            </label>
+                            <p className="font-medium text-sm">
+                              {parentStudent.parent.phoneNumber}
+                            </p>
+                          </div>
+                        </div>
+
+                        {parentStudent.parent.whatsAppNumber && (
+                          <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+                            <div className="p-2 bg-emerald-50 dark:bg-emerald-900/20 rounded-md">
+                              <MessageCircle className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                            </div>
+                            <div className="flex-1">
+                              <label className="text-xs font-medium text-slate-500 dark:text-slate-400 block">
+                                WhatsApp
+                              </label>
+                              <p className="font-medium text-sm">
+                                {parentStudent.parent.whatsAppNumber}
+                              </p>
+                            </div>
+                          </div>
+                        )}
                       </div>
-                      <div>
-                        <label className="text-sm font-medium text-slate-600 dark:text-slate-400">
-                          Email
-                        </label>
-                        <p className="font-medium flex items-center gap-2">
-                          <Mail className="w-4 h-4" />
-                          {parentStudent.parent.email}
-                        </p>
-                      </div>
-                      <div>
-                        <label className="text-sm font-medium text-slate-600 dark:text-slate-400">
-                          Phone
-                        </label>
-                        <p className="font-medium flex items-center gap-2">
-                          <Phone className="w-4 h-4" />
-                          {parentStudent.parent.phoneNumber}
-                        </p>
-                      </div>
-                      <div>
-                        <label className="text-sm font-medium text-slate-600 dark:text-slate-400">
-                          WhatsApp
-                        </label>
-                        <p className="font-medium">
-                          {parentStudent.parent.whatsAppNumber}
-                        </p>
+
+                      <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700">
+                        <Button className="w-full" variant="outline" size="sm">
+                          <MessageCircle className="w-4 h-4 mr-2" />
+                          Contact Parent
+                        </Button>
                       </div>
                     </CardContent>
                   </Card>

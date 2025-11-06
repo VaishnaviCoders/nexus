@@ -11,5 +11,6 @@ export default function robots(): MetadataRoute.Robots {
       },
     ],
     sitemap: 'https://www.shiksha.cloud/sitemap.xml',
+    host: 'https://www.shiksha.cloud',
   };
 }
