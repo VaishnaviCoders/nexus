@@ -13,13 +13,6 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Textarea } from '@/components/ui/textarea';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import {
   Phone,
@@ -38,6 +31,11 @@ import {
   DollarSign,
   MessageSquare,
   Loader2,
+  UserCircle,
+  IndianRupee,
+  CalendarClock,
+  Activity,
+  Globe,
 } from 'lucide-react';
 import { Prisma } from '@/generated/prisma/client';
 import { LeadPriority, LeadStatus } from '@/generated/prisma/enums';
@@ -120,7 +118,6 @@ export default function LeadDetails({ lead }: LeadDetailProps) {
 
         if (result.success) {
           toast.success('Lead deleted successfully.');
-          // Optionally redirect or refresh the page
           window.location.href = '/dashboard/leads';
         } else {
           toast.error(
@@ -136,7 +133,7 @@ export default function LeadDetails({ lead }: LeadDetailProps) {
   const isOverdue = lead.nextFollowUpAt && new Date() > lead.nextFollowUpAt;
 
   return (
-    <div className="space-y-6 px-2">
+    <div className="space-y-6 px-2 my-4">
       {/* Header Section - Modern Design */}
       <div className="bg-white rounded-2xl shadow-sm border p-6">
         <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
@@ -177,22 +174,19 @@ export default function LeadDetails({ lead }: LeadDetailProps) {
           <div className="flex gap-2 flex-wrap lg:flex-nowrap">
             <Button variant="outline" size="sm" className="gap-2" asChild>
               <Link href={`/dashboard/leads/${lead.id}/edit`} prefetch={true}>
-                {' '}
                 <Edit2 className="w-4 h-4" />
                 Edit
               </Link>
             </Button>
             {lead.status === 'CONVERTED' ? (
-              <>
-                <Button
-                  size="sm"
-                  disabled
-                  className="gap-2 bg-green-100 hover:bg-green-200 text-green-500"
-                >
-                  <CheckCircle className="w-4 h-4" />
-                  Converted
-                </Button>
-              </>
+              <Button
+                size="sm"
+                disabled
+                className="gap-2 bg-green-100 hover:bg-green-200 text-green-500"
+              >
+                <CheckCircle className="w-4 h-4" />
+                Converted
+              </Button>
             ) : (
               <Button
                 size="sm"
@@ -349,40 +343,50 @@ export default function LeadDetails({ lead }: LeadDetailProps) {
         </div>
       </div>
 
-      {/* Main Content - 3 Column Layout */}
-      <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 my-2">
-        {/* Left Column - Details */}
-        <div className="xl:col-span-5 space-y-6 ">
+      {/* Main Content - Two Column Layout */}
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
+        {/* Left Column - 2/3 width */}
+        <div className="xl:col-span-8 space-y-6">
           {/* Enquiry Details */}
           <Card className="shadow-sm">
             <CardHeader className="pb-4">
-              <CardTitle className="flex items-center gap-2 text-lg">
+              <div className="flex items-center gap-2">
                 <School className="w-5 h-5 text-blue-600" />
-                Enquiry Details
-              </CardTitle>
+                <CardTitle className="text-lg">Enquiry Details</CardTitle>
+              </div>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-1">
-                  <Label className="text-sm text-gray-500">Enquiry For</Label>
-                  <p className="font-medium">{lead.enquiryFor}</p>
+            <CardContent className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <Label className="text-xs text-gray-500 uppercase tracking-wide font-medium">
+                    Enquiry For
+                  </Label>
+                  <p className="text-base font-semibold text-gray-900">
+                    {lead.enquiryFor}
+                  </p>
                 </div>
-                <div className="space-y-1">
-                  <Label className="text-sm text-gray-500">
+                <div className="space-y-2">
+                  <Label className="text-xs text-gray-500 uppercase tracking-wide font-medium">
                     Current School
                   </Label>
-                  <p className="font-medium">{lead.currentSchool}</p>
+                  <p className="text-base font-semibold text-gray-900">
+                    {lead.currentSchool}
+                  </p>
                 </div>
               </div>
 
-              <div className="space-y-1">
-                <Label className="text-sm text-gray-500">Requirements</Label>
-                <div className="flex flex-wrap gap-2 mt-2">
+              <Separator />
+
+              <div className="space-y-3">
+                <Label className="text-xs text-gray-500 uppercase tracking-wide font-medium">
+                  Requirements
+                </Label>
+                <div className="flex flex-wrap gap-2">
                   {lead.requirements.map((req) => (
                     <Badge
                       key={req}
                       variant="secondary"
-                      className="bg-blue-50 text-blue-700"
+                      className="bg-blue-50 text-blue-700 px-3 py-1.5 text-sm"
                     >
                       {req}
                     </Badge>
@@ -390,42 +394,110 @@ export default function LeadDetails({ lead }: LeadDetailProps) {
                 </div>
               </div>
 
-              <div className="space-y-1">
-                <Label className="text-sm text-gray-500">Budget Range</Label>
-                <div className="flex items-center gap-2">
-                  <DollarSign className="w-4 h-4 text-green-600" />
-                  <p className="font-medium">{lead.budgetRange}</p>
+              <Separator />
+
+              <div className="grid grid-cols-2 gap-y-5 md:grid-cols-4">
+                <div className="space-y-2">
+                  <Label className="text-xs text-gray-500 uppercase tracking-wide font-medium">
+                    Budget Range
+                  </Label>
+                  <div className="flex items-center gap-2">
+                    <div className="bg-pink-100 rounded-lg p-2">
+                      <IndianRupee className="w-5 h-5 text-pink-600" />
+                    </div>
+                    <p className="text-base font-semibold text-gray-900">
+                      {lead.budgetRange}
+                    </p>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-xs text-gray-500 uppercase tracking-wide font-medium">
+                    Source
+                  </Label>
+                  <div className="flex items-center gap-2">
+                    <div className="bg-green-100 rounded-lg p-2">
+                      <Globe className="w-5 h-5 text-green-600" />
+                    </div>
+                    <p className="text-base font-semibold text-gray-900">
+                      {lead.source
+                        ?.replace(/[-_]/g, ' ')
+                        .replace(/\b\w/g, (c) => c.toUpperCase())}
+                    </p>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-xs text-gray-500 uppercase tracking-wide font-medium">
+                    Created Date
+                  </Label>
+                  <div className="flex items-center gap-2">
+                    <div className="bg-blue-100 rounded-lg p-2">
+                      <CalendarClock className="w-5 h-5 text-blue-600" />
+                    </div>
+                    <p className="text-base font-semibold text-gray-900">
+                      {formatDateIN(lead.createdAt)}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label className="text-xs text-gray-500 uppercase tracking-wide font-medium">
+                    Total Follow-ups
+                  </Label>
+                  <div className="flex items-center gap-2">
+                    <div className="bg-purple-100 rounded-lg p-2">
+                      <Activity className="w-5 h-5 text-purple-600" />
+                    </div>
+                    <p className="text-base font-semibold text-gray-900">
+                      {lead.followUpCount} interactions
+                    </p>
+                  </div>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          {/* Address Information */}
+          {/* Address Section */}
           <Card className="shadow-sm">
             <CardHeader className="pb-4">
-              <CardTitle className="flex items-center gap-2 text-lg">
+              <div className="flex items-center gap-2">
                 <MapPin className="w-5 h-5 text-orange-600" />
-                Address Information
-              </CardTitle>
+                <CardTitle className="text-lg">Address</CardTitle>
+              </div>
             </CardHeader>
             <CardContent>
-              <div className="space-y-3">
-                <div className="space-y-1">
-                  <Label className="text-sm text-gray-500">Address</Label>
-                  <p className="font-medium">{lead.address}</p>
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label className="text-xs text-gray-500 uppercase tracking-wide font-medium">
+                    Street Address
+                  </Label>
+                  <p className="text-base font-medium text-gray-900">
+                    {lead.address}
+                  </p>
                 </div>
-                <div className="grid grid-cols-3 gap-4">
-                  <div className="space-y-1">
-                    <Label className="text-sm text-gray-500">City</Label>
-                    <p className="font-medium">{lead.city}</p>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div className="space-y-2">
+                    <Label className="text-xs text-gray-500 uppercase tracking-wide font-medium">
+                      City
+                    </Label>
+                    <p className="text-base font-medium text-gray-900">
+                      {lead.city}
+                    </p>
                   </div>
-                  <div className="space-y-1">
-                    <Label className="text-sm text-gray-500">State</Label>
-                    <p className="font-medium">{lead.state}</p>
+                  <div className="space-y-2">
+                    <Label className="text-xs text-gray-500 uppercase tracking-wide font-medium">
+                      State
+                    </Label>
+                    <p className="text-base font-medium text-gray-900">
+                      {lead.state}
+                    </p>
                   </div>
-                  <div className="space-y-1">
-                    <Label className="text-sm text-gray-500">Pincode</Label>
-                    <p className="font-medium">{lead.pincode}</p>
+                  <div className="space-y-2">
+                    <Label className="text-xs text-gray-500 uppercase tracking-wide font-medium">
+                      Pincode
+                    </Label>
+                    <p className="text-base font-medium text-gray-900">
+                      {lead.pincode}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -433,7 +505,7 @@ export default function LeadDetails({ lead }: LeadDetailProps) {
           </Card>
 
           {/* Notes */}
-          <Card className="border-0 shadow-sm">
+          <Card className="shadow-sm">
             <CardHeader className="pb-4">
               <CardTitle className="text-lg">Notes</CardTitle>
               <CardDescription>Private notes about this lead</CardDescription>
@@ -444,11 +516,11 @@ export default function LeadDetails({ lead }: LeadDetailProps) {
                   value={notes || ''}
                   onChange={(e) => handleNotesChange(e.target.value)}
                   placeholder="Add your notes here..."
-                  rows={4}
+                  rows={6}
                   className="resize-none"
                 />
                 {notesChanged && (
-                  <div className="flex items-center gap-2 text-xs text-gray-500">
+                  <div className="flex items-center gap-2 text-xs text-orange-600 font-medium">
                     <Clock className="w-3 h-3" />
                     Unsaved changes
                   </div>
@@ -458,147 +530,62 @@ export default function LeadDetails({ lead }: LeadDetailProps) {
           </Card>
         </div>
 
-        {/* Middle Column - Activities */}
-        <div className="xl:col-span-4">
-          <Card className="">
+        {/* Right Column - 1/3 width */}
+        <div className="xl:col-span-4 space-y-6">
+          {/* Assignment Card */}
+          <Card className="shadow-sm">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-lg">Assignment</CardTitle>
+              <CardDescription>
+                Assign this lead to a team member
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-3">
+                <Label className="text-xs text-gray-500 uppercase tracking-wide font-medium">
+                  Currently Assigned To
+                </Label>
+                {lead.assignedTo ? (
+                  <div className="flex items-center gap-3 p-4 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border border-blue-200">
+                    <Avatar className="w-12 h-12 ring-2 ring-white">
+                      <AvatarImage src={lead.assignedTo.profileImage || ''} />
+                      <AvatarFallback className="bg-blue-500 text-white font-semibold text-sm">
+                        {lead.assignedTo.firstName.charAt(0)}
+                        {lead.assignedTo.lastName.charAt(0)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-sm text-gray-900">
+                        {lead.assignedTo.firstName} {lead.assignedTo.lastName}
+                      </p>
+                      <p className="text-xs text-gray-600 mt-0.5">
+                        Assigned {formatDateIN(lead.assignedAt)}
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="text-center py-8 text-gray-500 border-2 border-dashed rounded-xl bg-gray-50">
+                    <UserCircle className="w-10 h-10 mx-auto mb-2 opacity-40" />
+                    <p className="text-sm font-medium">Not assigned</p>
+                  </div>
+                )}
+              </div>
+
+              <AssignLeadDialog
+                leadId={lead.id}
+                currentAssignedTo={lead.assignedTo}
+                onAssignmentChange={() => {}}
+              />
+            </CardContent>
+          </Card>
+
+          {/* Activity Timeline */}
+          <Card className="shadow-sm">
             <CardContent className="p-4">
               <LeadActivityTimeline
                 activities={lead.activities}
                 leadId={lead.id}
               />
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Right Column - Management */}
-        <div className="xl:col-span-3 space-y-6 ">
-          {/* Quick Info */}
-          <Card className="shadow-sm">
-            <CardHeader className="pb-4">
-              <CardTitle className="text-lg">Quick Info</CardTitle>
-              <CardDescription>Lead metadata and assignment</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-1">
-                <Label className="text-sm text-gray-500">Source</Label>
-                <Badge variant="outline" className="mt-1">
-                  {lead.source}
-                </Badge>
-              </div>
-
-              <Separator />
-
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-1">
-                  <Label className="text-sm text-gray-500">Created</Label>
-                  <p className="text-sm font-medium">
-                    {formatDateIN(lead.createdAt)}
-                  </p>
-                </div>
-                <div className="space-y-1">
-                  <Label className="text-sm text-gray-500">Follow-ups</Label>
-                  <p className="text-sm font-medium">{lead.followUpCount}</p>
-                </div>
-              </div>
-
-              <Card className="shadow-sm">
-                <CardHeader className="pb-4">
-                  <CardTitle className="text-lg">Assignment</CardTitle>
-                  <CardDescription>
-                    Assign this lead to a team member
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="space-y-3">
-                    <div className="space-y-2">
-                      <Label className="text-sm font-medium">
-                        Currently Assigned To
-                      </Label>
-                      {lead.assignedTo ? (
-                        <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                          <Avatar className="w-10 h-10">
-                            <AvatarImage
-                              src={lead.assignedTo.profileImage || ''}
-                            />
-                            <AvatarFallback className="bg-blue-100 text-blue-800">
-                              {lead.assignedTo.firstName.charAt(0)}
-                              {lead.assignedTo.lastName.charAt(0)}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div className="flex-1 min-w-0">
-                            <p className="font-medium text-sm truncate">
-                              {lead.assignedTo.firstName}{' '}
-                              {lead.assignedTo.lastName}
-                            </p>
-                            <p className="text-xs text-gray-500">
-                              Assigned {formatDateIN(lead.assignedAt)}
-                            </p>
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="text-center py-6 text-gray-500 border-2 border-dashed rounded-lg">
-                          <User className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                          <p className="text-sm">Not assigned to anyone</p>
-                        </div>
-                      )}
-                    </div>
-
-                    <AssignLeadDialog
-                      leadId={lead.id}
-                      currentAssignedTo={lead.assignedTo}
-                      onAssignmentChange={() => {
-                        // You can add a callback to refresh the lead data
-                        // or show a success message
-                      }}
-                    />
-                  </div>
-                </CardContent>
-              </Card>
-            </CardContent>
-          </Card>
-
-          {/* Lead Management */}
-          <Card className="shadow-sm">
-            <CardHeader className="pb-4">
-              <CardTitle className="text-lg">Lead Management</CardTitle>
-              <CardDescription>Update status and priority</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label className="text-sm font-medium">Status</Label>
-                <Select defaultValue={lead.status}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {Object.values(LeadStatus).map((status) => (
-                      <SelectItem value={status} key={status}>
-                        {status}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label className="text-sm font-medium">Priority</Label>
-                <Select defaultValue={lead.priority}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {Object.values(LeadPriority).map((priority) => (
-                      <SelectItem value={priority} key={priority}>
-                        {priority}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <Button className="w-full bg-blue-600 hover:bg-blue-700">
-                Save Changes
-              </Button>
             </CardContent>
           </Card>
         </div>

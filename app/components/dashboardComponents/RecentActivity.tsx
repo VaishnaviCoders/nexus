@@ -38,6 +38,7 @@ export interface ActivityItem {
     | 'student'
     | 'teacher'
     | 'fee'
+    | 'lead'
     | 'attendance'
     | 'notice'
     | 'complaint'
@@ -61,6 +62,9 @@ export interface ActivityItem {
     status?: string;
     grade?: string;
     section?: string;
+    studentName?: string;
+    email?: string;
+    phone?: string;
   };
 }
 
@@ -70,6 +74,7 @@ const iconStyles = {
   teacher:
     'from-green-500/20 to-green-500/10 text-green-600 dark:from-green-400/20 dark:to-green-400/10 dark:text-green-400',
   fee: 'from-emerald-500/20 to-emerald-500/10 text-emerald-600 dark:from-emerald-400/20 dark:to-emerald-400/10 dark:text-emerald-400',
+  lead: 'from-emerald-500/20 to-emerald-500/10 text-emerald-600 dark:from-emerald-400/20 dark:to-emerald-400/10 dark:text-emerald-400',
   attendance:
     'from-orange-500/20 to-orange-500/10 text-orange-600 dark:from-orange-400/20 dark:to-orange-400/10 dark:text-orange-400',
   notice:
@@ -255,7 +260,8 @@ const filterTypes = [
   { id: 'student', label: 'Students', icon: Users },
   { id: 'teacher', label: 'Teachers', icon: GraduationCap },
   { id: 'payment', label: 'Payments', icon: CreditCard },
-  { id: 'fee', label: 'Fees', icon: IndianRupee },
+  { id: 'lead', label: 'Leads', icon: UserPlus },
+  // { id: 'fee', label: 'Fees', icon: IndianRupee },
   { id: 'attendance', label: 'Attendance', icon: UserCheck },
   { id: 'complaint', label: 'Complaints', icon: AlertTriangle },
   { id: 'notice', label: 'Notices', icon: Bell },

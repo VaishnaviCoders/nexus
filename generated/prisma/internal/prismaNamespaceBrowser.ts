@@ -21,6 +21,9 @@ export const Decimal = runtime.Decimal
 export const ModelName = {
   AcademicYear: 'AcademicYear',
   Organization: 'Organization',
+  FeeSenseAgent: 'FeeSenseAgent',
+  FeeSenseExecutionLog: 'FeeSenseExecutionLog',
+  FeeSenseReport: 'FeeSenseReport',
   User: 'User',
   Student: 'Student',
   Parent: 'Parent',
@@ -108,6 +111,78 @@ export const OrganizationScalarFieldEnum = {
 } as const
 
 export type OrganizationScalarFieldEnum = (typeof OrganizationScalarFieldEnum)[keyof typeof OrganizationScalarFieldEnum]
+
+
+export const FeeSenseAgentScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  name: 'name',
+  description: 'description',
+  isActive: 'isActive',
+  capabilities: 'capabilities',
+  riskScoreLowThreshold: 'riskScoreLowThreshold',
+  riskScoreMediumThreshold: 'riskScoreMediumThreshold',
+  riskScoreHighThreshold: 'riskScoreHighThreshold',
+  maxNotificationAttempts: 'maxNotificationAttempts',
+  voiceCallThreshold: 'voiceCallThreshold',
+  enableEmailReminders: 'enableEmailReminders',
+  enableSMSReminders: 'enableSMSReminders',
+  enableVoiceCalls: 'enableVoiceCalls',
+  enableWhatsApp: 'enableWhatsApp',
+  runFrequency: 'runFrequency',
+  scheduleTime: 'scheduleTime',
+  lastRunAt: 'lastRunAt',
+  nextRunAt: 'nextRunAt',
+  totalRuns: 'totalRuns',
+  successfulRuns: 'successfulRuns',
+  failedRuns: 'failedRuns',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type FeeSenseAgentScalarFieldEnum = (typeof FeeSenseAgentScalarFieldEnum)[keyof typeof FeeSenseAgentScalarFieldEnum]
+
+
+export const FeeSenseExecutionLogScalarFieldEnum = {
+  id: 'id',
+  agentId: 'agentId',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt',
+  status: 'status',
+  studentsAnalyzed: 'studentsAnalyzed',
+  remindersGenerated: 'remindersGenerated',
+  emailsSent: 'emailsSent',
+  smsSent: 'smsSent',
+  voiceCallsScheduled: 'voiceCallsScheduled',
+  totalAmountOverdue: 'totalAmountOverdue',
+  errorMessage: 'errorMessage',
+  errorDetails: 'errorDetails',
+  createdAt: 'createdAt'
+} as const
+
+export type FeeSenseExecutionLogScalarFieldEnum = (typeof FeeSenseExecutionLogScalarFieldEnum)[keyof typeof FeeSenseExecutionLogScalarFieldEnum]
+
+
+export const FeeSenseReportScalarFieldEnum = {
+  id: 'id',
+  agentId: 'agentId',
+  reportDate: 'reportDate',
+  totalStudentsAtRisk: 'totalStudentsAtRisk',
+  highRiskCount: 'highRiskCount',
+  mediumRiskCount: 'mediumRiskCount',
+  lowRiskCount: 'lowRiskCount',
+  totalOverdueAmount: 'totalOverdueAmount',
+  paymentsReceived: 'paymentsReceived',
+  emailsSent: 'emailsSent',
+  smsSent: 'smsSent',
+  voiceCallsScheduled: 'voiceCallsScheduled',
+  responseRate: 'responseRate',
+  insights: 'insights',
+  sentToEmails: 'sentToEmails',
+  createdAt: 'createdAt'
+} as const
+
+export type FeeSenseReportScalarFieldEnum = (typeof FeeSenseReportScalarFieldEnum)[keyof typeof FeeSenseReportScalarFieldEnum]
 
 
 export const UserScalarFieldEnum = {
@@ -553,7 +628,9 @@ export const ExamEnrollmentScalarFieldEnum = {
   examId: 'examId',
   status: 'status',
   enrolledAt: 'enrolledAt',
-  exemptionReason: 'exemptionReason'
+  exemptionReason: 'exemptionReason',
+  hallTicketIssued: 'hallTicketIssued',
+  hallTicketIssuedAt: 'hallTicketIssuedAt'
 } as const
 
 export type ExamEnrollmentScalarFieldEnum = (typeof ExamEnrollmentScalarFieldEnum)[keyof typeof ExamEnrollmentScalarFieldEnum]
@@ -579,9 +656,11 @@ export type ExamResultScalarFieldEnum = (typeof ExamResultScalarFieldEnum)[keyof
 
 export const HallTicketScalarFieldEnum = {
   id: 'id',
+  hallTicketNumber: 'hallTicketNumber',
   studentId: 'studentId',
   examId: 'examId',
   examSessionId: 'examSessionId',
+  issuedAt: 'issuedAt',
   pdfUrl: 'pdfUrl',
   qrCode: 'qrCode',
   generatedAt: 'generatedAt',
@@ -718,19 +797,19 @@ export const SortOrder = {
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
-export const JsonNullValueInput = {
-  JsonNull: JsonNull
-} as const
-
-export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
-
-
 export const NullableJsonNullValueInput = {
   DbNull: DbNull,
   JsonNull: JsonNull
 } as const
 
 export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
 export const QueryMode = {
@@ -772,6 +851,45 @@ export const OrganizationOrderByRelevanceFieldEnum = {
 } as const
 
 export type OrganizationOrderByRelevanceFieldEnum = (typeof OrganizationOrderByRelevanceFieldEnum)[keyof typeof OrganizationOrderByRelevanceFieldEnum]
+
+
+export const FeeSenseAgentOrderByRelevanceFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  name: 'name',
+  description: 'description',
+  capabilities: 'capabilities',
+  scheduleTime: 'scheduleTime'
+} as const
+
+export type FeeSenseAgentOrderByRelevanceFieldEnum = (typeof FeeSenseAgentOrderByRelevanceFieldEnum)[keyof typeof FeeSenseAgentOrderByRelevanceFieldEnum]
+
+
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
+
+
+export const FeeSenseExecutionLogOrderByRelevanceFieldEnum = {
+  id: 'id',
+  agentId: 'agentId',
+  errorMessage: 'errorMessage'
+} as const
+
+export type FeeSenseExecutionLogOrderByRelevanceFieldEnum = (typeof FeeSenseExecutionLogOrderByRelevanceFieldEnum)[keyof typeof FeeSenseExecutionLogOrderByRelevanceFieldEnum]
+
+
+export const FeeSenseReportOrderByRelevanceFieldEnum = {
+  id: 'id',
+  agentId: 'agentId',
+  sentToEmails: 'sentToEmails'
+} as const
+
+export type FeeSenseReportOrderByRelevanceFieldEnum = (typeof FeeSenseReportOrderByRelevanceFieldEnum)[keyof typeof FeeSenseReportOrderByRelevanceFieldEnum]
 
 
 export const UserOrderByRelevanceFieldEnum = {
@@ -1051,15 +1169,6 @@ export const NotificationLogOrderByRelevanceFieldEnum = {
 export type NotificationLogOrderByRelevanceFieldEnum = (typeof NotificationLogOrderByRelevanceFieldEnum)[keyof typeof NotificationLogOrderByRelevanceFieldEnum]
 
 
-export const JsonNullValueFilter = {
-  DbNull: DbNull,
-  JsonNull: JsonNull,
-  AnyNull: AnyNull
-} as const
-
-export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
-
-
 export const ScheduledJobOrderByRelevanceFieldEnum = {
   id: 'id',
   status: 'status',
@@ -1123,6 +1232,7 @@ export type ExamResultOrderByRelevanceFieldEnum = (typeof ExamResultOrderByRelev
 
 export const HallTicketOrderByRelevanceFieldEnum = {
   id: 'id',
+  hallTicketNumber: 'hallTicketNumber',
   studentId: 'studentId',
   examId: 'examId',
   examSessionId: 'examSessionId',

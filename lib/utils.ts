@@ -365,29 +365,29 @@ export function getGradeColorBadge(
   | 'outline'
   | 'verified'
   | 'pending'
-  | 'pass'
-  | 'failed'
-  | 'excellent'
-  | 'outstanding'
-  | 'veryGood'
-  | 'good'
-  | 'aboveAverage'
-  | 'average'
-  | 'belowAverage'
-  | 'poor' {
-  if (!isPassed) return 'failed';
+  | 'PASS'
+  | 'FAILED'
+  | 'EXCELLENT'
+  | 'OUTSTANDING'
+  | 'VERY_GOOD'
+  | 'GOOD'
+  | 'ABOVE_AVERAGE'
+  | 'AVERAGE'
+  | 'BELOW_AVERAGE'
+  | 'POOR' {
+  if (!isPassed) return 'FAILED';
 
   const percentage = (grade.minPercentage + grade.maxPercentage) / 2;
 
   // Use specific badge variants for better visual distinction
-  if (percentage >= 90) return 'excellent'; // 90-100% - Emerald (best performance)
-  if (percentage >= 80) return 'outstanding'; // 80-89% - Green (very good)
-  if (percentage >= 70) return 'veryGood'; // 70-79% - Lime (good)
-  if (percentage >= 60) return 'good'; // 60-69% - Yellow (satisfactory)
-  if (percentage >= 50) return 'aboveAverage'; // 50-59% - Orange (above average)
-  if (percentage >= passingMarks) return 'pass'; // Just passed - Light Green
+  if (percentage >= 90) return 'EXCELLENT'; // 90-100% - Emerald (best performance)
+  if (percentage >= 80) return 'GOOD'; // 80-89% - Green (very good)
+  if (percentage >= 70) return 'VERY_GOOD'; // 70-79% - Lime (good)
+  if (percentage >= 60) return 'AVERAGE'; // 60-69% - Yellow (satisfactory)
+  if (percentage >= 50) return 'ABOVE_AVERAGE'; // 50-59% - Orange (above average)
+  if (percentage >= passingMarks) return 'PASS'; // Just passed - Light Green
 
-  return 'failed'; // Below passing marks - Red
+  return 'POOR'; // Below passing marks - Red
 }
 
 export function isPassingGrade(

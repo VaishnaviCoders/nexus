@@ -108,6 +108,7 @@ export default function RootLayout({
     >
       <html lang="en" suppressHydrationWarning data-clerk-suppress>
         <link rel="canonical" href="https://www.shiksha.cloud/" />
+        <meta name="apple-mobile-web-app-title" content="Shiksha Cloud" />
         <meta name="robots" content="index, follow" />
         <head>
           <link rel="preconnect" href="https://uploadthing.com" />

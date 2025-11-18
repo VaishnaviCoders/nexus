@@ -36,6 +36,8 @@ import { indianEducationProblems } from '@/constants';
 import CardFlip from '@/components/ui/card-flip';
 import InstitutesShowcase from '@/components/websiteComp/shared/institute-showcase';
 import CTA from '@/components/websiteComp/ctc';
+import FeatureHoverDots from '@/components/websiteComp/feature-hover-dots';
+import { MegaNavbar } from '@/components/websiteComp/shared/mega-navbar';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.shiksha.cloud'),
@@ -79,14 +81,14 @@ export default async function IndexPage() {
   return (
     <main className="mx-2">
       {/* <Spotlight className="" /> */}
-      <header className="flex items-center justify-between my-3">
+      {/* <header className="flex items-center justify-between my-3">
         <div className="flex items-center space-x-2">
           <ShieldCheck className="h-6 w-6 text-green-400" />
           <h1 className="text-primary font-medium">Shiksha Cloud</h1>
         </div>
 
         <div className="flex items-center space-x-2">
-          {/* <ModeToggle /> */}
+          <ModeToggle />
 
           <SignedOut>
             <SignInButton signUpForceRedirectUrl={'/dashboard'}>
@@ -106,8 +108,9 @@ export default async function IndexPage() {
             <UserButton />
           </SignedIn>
         </div>
-      </header>
+      </header> */}
 
+      <MegaNavbar />
       <div className="py-16 px-4">
         <div className="max-w-7xl mx-auto text-center">
           <AnimatedShinyText className="inline-flex items-center justify-center px-4 py-1 transition ease-out hover:text-neutral-600 hover:duration-300 hover:dark:text-neutral-400">
@@ -189,6 +192,7 @@ export default async function IndexPage() {
       {/* <div className="w-full mx-auto lg:max-w-screen-xl lg:mx-auto px-4 md:px-12">
         <MagicBentoGrid />
       </div> */}
+      <FeatureHoverDots />
 
       <IntegrationComponent />
       <Testimonials />

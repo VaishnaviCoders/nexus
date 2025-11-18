@@ -9,6 +9,9 @@
  */
 export type * from './models/AcademicYear'
 export type * from './models/Organization'
+export type * from './models/FeeSenseAgent'
+export type * from './models/FeeSenseExecutionLog'
+export type * from './models/FeeSenseReport'
 export type * from './models/User'
 export type * from './models/Student'
 export type * from './models/Parent'

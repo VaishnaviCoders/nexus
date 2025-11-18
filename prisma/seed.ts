@@ -1,13 +1,24 @@
 import { Exam, PrismaClient } from '../generated/prisma/client';
 import { NoticeType } from '../generated/prisma/enums';
 // import { faker } from '@faker-js/faker';
+// import { PrismaClient } from '@prisma/client';
+import { PrismaPg } from '@prisma/adapter-pg';
+import { Pool } from 'pg';
 
+const pool = new Pool({
+  connectionString: process.env.DIRECT_URL || process.env.DATABASE_URL,
+});
+
+// Create adapter
+const adapter = new PrismaPg(pool);
+
+const prisma = new PrismaClient({ adapter });
 // Sample IDs for relations (adjust as needed)
 const organizationIds = ['org_2yikjYDIq5D8AjIyLvq2T6K5jZF', 'org2', 'org3'];
 const academicYearIds = ['cmd4i9bq60007vh6spt4lp4er', 'ay2026'];
 const userIds = ['user1', 'user2', 'user3'];
 
-const prisma = new PrismaClient();
+// const prisma = new PrismaClient();
 
 function randomDates() {
   const start = new Date();
@@ -176,58 +187,86 @@ function randomArr<T>(arr: T[]) {
 }
 
 const main = async () => {
-  console.log('🌱 Seeding notices...');
-
-  const notices = await generateNotices();
-
-  // Now seed Leads
+  // console.log('🌱 Seeding notices...');
+  // const notices = await generateNotices();
+  await prisma.feeSenseAgent.create({
+    data: {
+      organizationId: 'org_2yikjYDIq5D8AjIyLvq2T6K5jZF',
+      name: 'FeeSense AI Agent',
+      description:
+        'Intelligent fee collection assistant that analyzes payment patterns and sends personalized reminders',
+      isActive: true,
+      capabilities: [
+        'Fetch all Fees Data and check if any fee is pending or not',
+        'Analyzes payment patterns and identifies at-risk families',
+        'Sends personalized payment reminders via email and SMS',
+        'Generates daily reports with collection insights',
+        'Schedules voice calls for high-priority overdue fees',
+      ],
+      lastRunAt: new Date(),
+      successfulRuns: 0,
+      failedRuns: 0,
+      totalRuns: 0,
+      createdAt: new Date(),
+      riskScoreLowThreshold: 30,
+      riskScoreMediumThreshold: 60,
+      riskScoreHighThreshold: 80,
+      maxNotificationAttempts: 3,
+      voiceCallThreshold: 3,
+      enableEmailReminders: true,
+      enableSMSReminders: true,
+      enableVoiceCalls: false,
+      enableWhatsApp: false,
+      runFrequency: 'DAILY',
+      scheduleTime: '23:00',
+    },
+  });
   console.log('🌱 Seeding leads...');
   await seedLeads();
   console.log('✅ 100 Leads created!');
 
-  const result = await prisma.notice.createMany({
-    data: notices,
-    skipDuplicates: false,
-  });
-  console.log(`✅ Created ${result.count} notices successfully!`);
+  // const result = await prisma.notice.createMany({
+  //   data: notices,
+  //   skipDuplicates: false,
+  // });
+  // console.log(`✅ Created ${result.count} notices successfully!`);
+  // await prisma.scheduledJob.create({
+  //   data: {
+  //     organizationId: 'org_2yikjYDIq5D8AjIyLvq2T6K5jZF',
+  //     type: 'FEE_REMINDER',
+  //     scheduledAt: new Date('2025-07-22T22:00:00Z'),
+  //     channels: ['EMAIL', 'WHATSAPP'], // must be array of enums
+  //     data: {
+  //       studentId: '...',
+  //       feeId: '...',
+  //     },
+  //   },
+  // });
 
-  await prisma.scheduledJob.create({
-    data: {
-      organizationId: 'org_2yikjYDIq5D8AjIyLvq2T6K5jZF',
-      type: 'FEE_REMINDER',
-      scheduledAt: new Date('2025-07-22T22:00:00Z'),
-      channels: ['EMAIL', 'WHATSAPP'], // must be array of enums
-      data: {
-        studentId: '...',
-        feeId: '...',
-      },
-    },
-  });
+  // const sampleNotices = await prisma.notice.findMany({
+  //   take: 5,
+  //   select: {
+  //     id: true,
+  //     title: true,
+  //     noticeType: true,
+  //     targetAudience: true,
+  //   },
+  // });
 
-  const sampleNotices = await prisma.notice.findMany({
-    take: 5,
-    select: {
-      id: true,
-      title: true,
-      noticeType: true,
-      targetAudience: true,
-    },
-  });
+  // console.log('📋 Sample notices created:');
+  // sampleNotices.forEach((notice: any, index: number) => {
+  //   console.log(
+  //     `${index + 1}. ${notice.title} (${notice.noticeType}) - Published: ${notice.isPublished}`
+  //   );
+  // });
 
-  console.log('📋 Sample notices created:');
-  sampleNotices.forEach((notice: any, index: number) => {
-    console.log(
-      `${index + 1}. ${notice.title} (${notice.noticeType}) - Published: ${notice.isPublished}`
-    );
-  });
+  // const exams = await prisma.exam.findMany({
+  //   where: {
+  //     organizationId: 'org_2yikjYDIq5D8AjIyLvq2T6K5jZF',
+  //   },
+  // });
 
-  const exams = await prisma.exam.findMany({
-    where: {
-      organizationId: 'org_2yikjYDIq5D8AjIyLvq2T6K5jZF',
-    },
-  });
-
-  console.log('📋 Sample exams created:', exams);
+  // console.log('📋 Sample exams created:', exams);
 };
 
 main()

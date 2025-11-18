@@ -332,6 +332,7 @@ export type OrganizationWhereInput = {
   exam?: Prisma.ExamListRelationFilter
   hallTicket?: Prisma.HallTicketListRelationFilter
   leads?: Prisma.LeadListRelationFilter
+  feeSenseAgent?: Prisma.XOR<Prisma.FeeSenseAgentNullableScalarRelationFilter, Prisma.FeeSenseAgentWhereInput> | null
 }
 
 export type OrganizationOrderByWithRelationInput = {
@@ -373,6 +374,7 @@ export type OrganizationOrderByWithRelationInput = {
   exam?: Prisma.ExamOrderByRelationAggregateInput
   hallTicket?: Prisma.HallTicketOrderByRelationAggregateInput
   leads?: Prisma.LeadOrderByRelationAggregateInput
+  feeSenseAgent?: Prisma.FeeSenseAgentOrderByWithRelationInput
   _relevance?: Prisma.OrganizationOrderByRelevanceInput
 }
 
@@ -418,6 +420,7 @@ export type OrganizationWhereUniqueInput = Prisma.AtLeast<{
   exam?: Prisma.ExamListRelationFilter
   hallTicket?: Prisma.HallTicketListRelationFilter
   leads?: Prisma.LeadListRelationFilter
+  feeSenseAgent?: Prisma.XOR<Prisma.FeeSenseAgentNullableScalarRelationFilter, Prisma.FeeSenseAgentWhereInput> | null
 }, "id" | "organizationSlug">
 
 export type OrganizationOrderByWithAggregationInput = {
@@ -507,6 +510,7 @@ export type OrganizationCreateInput = {
   exam?: Prisma.ExamCreateNestedManyWithoutOrganizationInput
   hallTicket?: Prisma.HallTicketCreateNestedManyWithoutOrganizationInput
   leads?: Prisma.LeadCreateNestedManyWithoutOrganizationInput
+  feeSenseAgent?: Prisma.FeeSenseAgentCreateNestedOneWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateInput = {
@@ -548,6 +552,7 @@ export type OrganizationUncheckedCreateInput = {
   exam?: Prisma.ExamUncheckedCreateNestedManyWithoutOrganizationInput
   hallTicket?: Prisma.HallTicketUncheckedCreateNestedManyWithoutOrganizationInput
   leads?: Prisma.LeadUncheckedCreateNestedManyWithoutOrganizationInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUncheckedCreateNestedOneWithoutOrganizationInput
 }
 
 export type OrganizationUpdateInput = {
@@ -589,6 +594,7 @@ export type OrganizationUpdateInput = {
   exam?: Prisma.ExamUpdateManyWithoutOrganizationNestedInput
   hallTicket?: Prisma.HallTicketUpdateManyWithoutOrganizationNestedInput
   leads?: Prisma.LeadUpdateManyWithoutOrganizationNestedInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUpdateOneWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateInput = {
@@ -630,6 +636,7 @@ export type OrganizationUncheckedUpdateInput = {
   exam?: Prisma.ExamUncheckedUpdateManyWithoutOrganizationNestedInput
   hallTicket?: Prisma.HallTicketUncheckedUpdateManyWithoutOrganizationNestedInput
   leads?: Prisma.LeadUncheckedUpdateManyWithoutOrganizationNestedInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUncheckedUpdateOneWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateManyInput = {
@@ -808,6 +815,20 @@ export type NullableIntFieldUpdateOperationsInput = {
 
 export type NullableEnumOrganizationTypeFieldUpdateOperationsInput = {
   set?: $Enums.OrganizationType | null
+}
+
+export type OrganizationCreateNestedOneWithoutFeeSenseAgentInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutFeeSenseAgentInput, Prisma.OrganizationUncheckedCreateWithoutFeeSenseAgentInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutFeeSenseAgentInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+}
+
+export type OrganizationUpdateOneRequiredWithoutFeeSenseAgentNestedInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutFeeSenseAgentInput, Prisma.OrganizationUncheckedCreateWithoutFeeSenseAgentInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutFeeSenseAgentInput
+  upsert?: Prisma.OrganizationUpsertWithoutFeeSenseAgentInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutFeeSenseAgentInput, Prisma.OrganizationUpdateWithoutFeeSenseAgentInput>, Prisma.OrganizationUncheckedUpdateWithoutFeeSenseAgentInput>
 }
 
 export type OrganizationCreateNestedOneWithoutUsersInput = {
@@ -1132,6 +1153,7 @@ export type OrganizationCreateWithoutAcademicYearInput = {
   exam?: Prisma.ExamCreateNestedManyWithoutOrganizationInput
   hallTicket?: Prisma.HallTicketCreateNestedManyWithoutOrganizationInput
   leads?: Prisma.LeadCreateNestedManyWithoutOrganizationInput
+  feeSenseAgent?: Prisma.FeeSenseAgentCreateNestedOneWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutAcademicYearInput = {
@@ -1172,6 +1194,7 @@ export type OrganizationUncheckedCreateWithoutAcademicYearInput = {
   exam?: Prisma.ExamUncheckedCreateNestedManyWithoutOrganizationInput
   hallTicket?: Prisma.HallTicketUncheckedCreateNestedManyWithoutOrganizationInput
   leads?: Prisma.LeadUncheckedCreateNestedManyWithoutOrganizationInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUncheckedCreateNestedOneWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutAcademicYearInput = {
@@ -1228,6 +1251,7 @@ export type OrganizationUpdateWithoutAcademicYearInput = {
   exam?: Prisma.ExamUpdateManyWithoutOrganizationNestedInput
   hallTicket?: Prisma.HallTicketUpdateManyWithoutOrganizationNestedInput
   leads?: Prisma.LeadUpdateManyWithoutOrganizationNestedInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUpdateOneWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutAcademicYearInput = {
@@ -1263,6 +1287,187 @@ export type OrganizationUncheckedUpdateWithoutAcademicYearInput = {
   Subject?: Prisma.SubjectUncheckedUpdateManyWithoutOrganizationNestedInput
   TeachingAssignment?: Prisma.TeachingAssignmentUncheckedUpdateManyWithoutOrganizationNestedInput
   NotificationLog?: Prisma.NotificationLogUncheckedUpdateManyWithoutOrganizationNestedInput
+  scheduledJob?: Prisma.ScheduledJobUncheckedUpdateManyWithoutOrganizationNestedInput
+  leaves?: Prisma.LeaveUncheckedUpdateManyWithoutOrganizationNestedInput
+  exam?: Prisma.ExamUncheckedUpdateManyWithoutOrganizationNestedInput
+  hallTicket?: Prisma.HallTicketUncheckedUpdateManyWithoutOrganizationNestedInput
+  leads?: Prisma.LeadUncheckedUpdateManyWithoutOrganizationNestedInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUncheckedUpdateOneWithoutOrganizationNestedInput
+}
+
+export type OrganizationCreateWithoutFeeSenseAgentInput = {
+  id?: string
+  name?: string | null
+  organizationSlug: string
+  organizationLogo?: string | null
+  contactEmail?: string | null
+  contactPhone?: string | null
+  website?: string | null
+  isActive?: boolean
+  isPaid?: boolean
+  plan?: $Enums.PlanType
+  planStartedAt?: Date | string | null
+  planExpiresAt?: Date | string | null
+  maxStudents?: number | null
+  organizationType?: $Enums.OrganizationType | null
+  createdBy?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserCreateNestedManyWithoutOrganizationInput
+  notices?: Prisma.NoticeCreateNestedManyWithoutOrganizationInput
+  Student?: Prisma.StudentCreateNestedManyWithoutOrganizationInput
+  StudentDocument?: Prisma.StudentDocumentCreateNestedManyWithoutOrganizationInput
+  Grade?: Prisma.GradeCreateNestedManyWithoutOrganizationInput
+  Section?: Prisma.SectionCreateNestedManyWithoutOrganizationInput
+  Fee?: Prisma.FeeCreateNestedManyWithoutOrganizationInput
+  FeeCategory?: Prisma.FeeCategoryCreateNestedManyWithoutOrganizationInput
+  FeePayment?: Prisma.FeePaymentCreateNestedManyWithoutOrganizationInput
+  AcademicCalendar?: Prisma.AcademicCalendarCreateNestedManyWithoutOrganizationInput
+  AnonymousComplaint?: Prisma.AnonymousComplaintCreateNestedManyWithoutOrganizationInput
+  Teacher?: Prisma.TeacherCreateNestedManyWithoutOrganizationInput
+  Subject?: Prisma.SubjectCreateNestedManyWithoutOrganizationInput
+  TeachingAssignment?: Prisma.TeachingAssignmentCreateNestedManyWithoutOrganizationInput
+  NotificationLog?: Prisma.NotificationLogCreateNestedManyWithoutOrganizationInput
+  AcademicYear?: Prisma.AcademicYearCreateNestedManyWithoutOrganizationInput
+  scheduledJob?: Prisma.ScheduledJobCreateNestedManyWithoutOrganizationInput
+  leaves?: Prisma.LeaveCreateNestedManyWithoutOrganizationInput
+  exam?: Prisma.ExamCreateNestedManyWithoutOrganizationInput
+  hallTicket?: Prisma.HallTicketCreateNestedManyWithoutOrganizationInput
+  leads?: Prisma.LeadCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationUncheckedCreateWithoutFeeSenseAgentInput = {
+  id?: string
+  name?: string | null
+  organizationSlug: string
+  organizationLogo?: string | null
+  contactEmail?: string | null
+  contactPhone?: string | null
+  website?: string | null
+  isActive?: boolean
+  isPaid?: boolean
+  plan?: $Enums.PlanType
+  planStartedAt?: Date | string | null
+  planExpiresAt?: Date | string | null
+  maxStudents?: number | null
+  organizationType?: $Enums.OrganizationType | null
+  createdBy?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutOrganizationInput
+  notices?: Prisma.NoticeUncheckedCreateNestedManyWithoutOrganizationInput
+  Student?: Prisma.StudentUncheckedCreateNestedManyWithoutOrganizationInput
+  StudentDocument?: Prisma.StudentDocumentUncheckedCreateNestedManyWithoutOrganizationInput
+  Grade?: Prisma.GradeUncheckedCreateNestedManyWithoutOrganizationInput
+  Section?: Prisma.SectionUncheckedCreateNestedManyWithoutOrganizationInput
+  Fee?: Prisma.FeeUncheckedCreateNestedManyWithoutOrganizationInput
+  FeeCategory?: Prisma.FeeCategoryUncheckedCreateNestedManyWithoutOrganizationInput
+  FeePayment?: Prisma.FeePaymentUncheckedCreateNestedManyWithoutOrganizationInput
+  AcademicCalendar?: Prisma.AcademicCalendarUncheckedCreateNestedManyWithoutOrganizationInput
+  AnonymousComplaint?: Prisma.AnonymousComplaintUncheckedCreateNestedManyWithoutOrganizationInput
+  Teacher?: Prisma.TeacherUncheckedCreateNestedManyWithoutOrganizationInput
+  Subject?: Prisma.SubjectUncheckedCreateNestedManyWithoutOrganizationInput
+  TeachingAssignment?: Prisma.TeachingAssignmentUncheckedCreateNestedManyWithoutOrganizationInput
+  NotificationLog?: Prisma.NotificationLogUncheckedCreateNestedManyWithoutOrganizationInput
+  AcademicYear?: Prisma.AcademicYearUncheckedCreateNestedManyWithoutOrganizationInput
+  scheduledJob?: Prisma.ScheduledJobUncheckedCreateNestedManyWithoutOrganizationInput
+  leaves?: Prisma.LeaveUncheckedCreateNestedManyWithoutOrganizationInput
+  exam?: Prisma.ExamUncheckedCreateNestedManyWithoutOrganizationInput
+  hallTicket?: Prisma.HallTicketUncheckedCreateNestedManyWithoutOrganizationInput
+  leads?: Prisma.LeadUncheckedCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationCreateOrConnectWithoutFeeSenseAgentInput = {
+  where: Prisma.OrganizationWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutFeeSenseAgentInput, Prisma.OrganizationUncheckedCreateWithoutFeeSenseAgentInput>
+}
+
+export type OrganizationUpsertWithoutFeeSenseAgentInput = {
+  update: Prisma.XOR<Prisma.OrganizationUpdateWithoutFeeSenseAgentInput, Prisma.OrganizationUncheckedUpdateWithoutFeeSenseAgentInput>
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutFeeSenseAgentInput, Prisma.OrganizationUncheckedCreateWithoutFeeSenseAgentInput>
+  where?: Prisma.OrganizationWhereInput
+}
+
+export type OrganizationUpdateToOneWithWhereWithoutFeeSenseAgentInput = {
+  where?: Prisma.OrganizationWhereInput
+  data: Prisma.XOR<Prisma.OrganizationUpdateWithoutFeeSenseAgentInput, Prisma.OrganizationUncheckedUpdateWithoutFeeSenseAgentInput>
+}
+
+export type OrganizationUpdateWithoutFeeSenseAgentInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organizationSlug?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationLogo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  plan?: Prisma.EnumPlanTypeFieldUpdateOperationsInput | $Enums.PlanType
+  planStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  maxStudents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  organizationType?: Prisma.NullableEnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType | null
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUpdateManyWithoutOrganizationNestedInput
+  notices?: Prisma.NoticeUpdateManyWithoutOrganizationNestedInput
+  Student?: Prisma.StudentUpdateManyWithoutOrganizationNestedInput
+  StudentDocument?: Prisma.StudentDocumentUpdateManyWithoutOrganizationNestedInput
+  Grade?: Prisma.GradeUpdateManyWithoutOrganizationNestedInput
+  Section?: Prisma.SectionUpdateManyWithoutOrganizationNestedInput
+  Fee?: Prisma.FeeUpdateManyWithoutOrganizationNestedInput
+  FeeCategory?: Prisma.FeeCategoryUpdateManyWithoutOrganizationNestedInput
+  FeePayment?: Prisma.FeePaymentUpdateManyWithoutOrganizationNestedInput
+  AcademicCalendar?: Prisma.AcademicCalendarUpdateManyWithoutOrganizationNestedInput
+  AnonymousComplaint?: Prisma.AnonymousComplaintUpdateManyWithoutOrganizationNestedInput
+  Teacher?: Prisma.TeacherUpdateManyWithoutOrganizationNestedInput
+  Subject?: Prisma.SubjectUpdateManyWithoutOrganizationNestedInput
+  TeachingAssignment?: Prisma.TeachingAssignmentUpdateManyWithoutOrganizationNestedInput
+  NotificationLog?: Prisma.NotificationLogUpdateManyWithoutOrganizationNestedInput
+  AcademicYear?: Prisma.AcademicYearUpdateManyWithoutOrganizationNestedInput
+  scheduledJob?: Prisma.ScheduledJobUpdateManyWithoutOrganizationNestedInput
+  leaves?: Prisma.LeaveUpdateManyWithoutOrganizationNestedInput
+  exam?: Prisma.ExamUpdateManyWithoutOrganizationNestedInput
+  hallTicket?: Prisma.HallTicketUpdateManyWithoutOrganizationNestedInput
+  leads?: Prisma.LeadUpdateManyWithoutOrganizationNestedInput
+}
+
+export type OrganizationUncheckedUpdateWithoutFeeSenseAgentInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organizationSlug?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationLogo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  plan?: Prisma.EnumPlanTypeFieldUpdateOperationsInput | $Enums.PlanType
+  planStartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  planExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  maxStudents?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  organizationType?: Prisma.NullableEnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType | null
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUncheckedUpdateManyWithoutOrganizationNestedInput
+  notices?: Prisma.NoticeUncheckedUpdateManyWithoutOrganizationNestedInput
+  Student?: Prisma.StudentUncheckedUpdateManyWithoutOrganizationNestedInput
+  StudentDocument?: Prisma.StudentDocumentUncheckedUpdateManyWithoutOrganizationNestedInput
+  Grade?: Prisma.GradeUncheckedUpdateManyWithoutOrganizationNestedInput
+  Section?: Prisma.SectionUncheckedUpdateManyWithoutOrganizationNestedInput
+  Fee?: Prisma.FeeUncheckedUpdateManyWithoutOrganizationNestedInput
+  FeeCategory?: Prisma.FeeCategoryUncheckedUpdateManyWithoutOrganizationNestedInput
+  FeePayment?: Prisma.FeePaymentUncheckedUpdateManyWithoutOrganizationNestedInput
+  AcademicCalendar?: Prisma.AcademicCalendarUncheckedUpdateManyWithoutOrganizationNestedInput
+  AnonymousComplaint?: Prisma.AnonymousComplaintUncheckedUpdateManyWithoutOrganizationNestedInput
+  Teacher?: Prisma.TeacherUncheckedUpdateManyWithoutOrganizationNestedInput
+  Subject?: Prisma.SubjectUncheckedUpdateManyWithoutOrganizationNestedInput
+  TeachingAssignment?: Prisma.TeachingAssignmentUncheckedUpdateManyWithoutOrganizationNestedInput
+  NotificationLog?: Prisma.NotificationLogUncheckedUpdateManyWithoutOrganizationNestedInput
+  AcademicYear?: Prisma.AcademicYearUncheckedUpdateManyWithoutOrganizationNestedInput
   scheduledJob?: Prisma.ScheduledJobUncheckedUpdateManyWithoutOrganizationNestedInput
   leaves?: Prisma.LeaveUncheckedUpdateManyWithoutOrganizationNestedInput
   exam?: Prisma.ExamUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -1308,6 +1513,7 @@ export type OrganizationCreateWithoutUsersInput = {
   exam?: Prisma.ExamCreateNestedManyWithoutOrganizationInput
   hallTicket?: Prisma.HallTicketCreateNestedManyWithoutOrganizationInput
   leads?: Prisma.LeadCreateNestedManyWithoutOrganizationInput
+  feeSenseAgent?: Prisma.FeeSenseAgentCreateNestedOneWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutUsersInput = {
@@ -1348,6 +1554,7 @@ export type OrganizationUncheckedCreateWithoutUsersInput = {
   exam?: Prisma.ExamUncheckedCreateNestedManyWithoutOrganizationInput
   hallTicket?: Prisma.HallTicketUncheckedCreateNestedManyWithoutOrganizationInput
   leads?: Prisma.LeadUncheckedCreateNestedManyWithoutOrganizationInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUncheckedCreateNestedOneWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutUsersInput = {
@@ -1404,6 +1611,7 @@ export type OrganizationUpdateWithoutUsersInput = {
   exam?: Prisma.ExamUpdateManyWithoutOrganizationNestedInput
   hallTicket?: Prisma.HallTicketUpdateManyWithoutOrganizationNestedInput
   leads?: Prisma.LeadUpdateManyWithoutOrganizationNestedInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUpdateOneWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutUsersInput = {
@@ -1444,6 +1652,7 @@ export type OrganizationUncheckedUpdateWithoutUsersInput = {
   exam?: Prisma.ExamUncheckedUpdateManyWithoutOrganizationNestedInput
   hallTicket?: Prisma.HallTicketUncheckedUpdateManyWithoutOrganizationNestedInput
   leads?: Prisma.LeadUncheckedUpdateManyWithoutOrganizationNestedInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUncheckedUpdateOneWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutStudentInput = {
@@ -1484,6 +1693,7 @@ export type OrganizationCreateWithoutStudentInput = {
   exam?: Prisma.ExamCreateNestedManyWithoutOrganizationInput
   hallTicket?: Prisma.HallTicketCreateNestedManyWithoutOrganizationInput
   leads?: Prisma.LeadCreateNestedManyWithoutOrganizationInput
+  feeSenseAgent?: Prisma.FeeSenseAgentCreateNestedOneWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutStudentInput = {
@@ -1524,6 +1734,7 @@ export type OrganizationUncheckedCreateWithoutStudentInput = {
   exam?: Prisma.ExamUncheckedCreateNestedManyWithoutOrganizationInput
   hallTicket?: Prisma.HallTicketUncheckedCreateNestedManyWithoutOrganizationInput
   leads?: Prisma.LeadUncheckedCreateNestedManyWithoutOrganizationInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUncheckedCreateNestedOneWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutStudentInput = {
@@ -1580,6 +1791,7 @@ export type OrganizationUpdateWithoutStudentInput = {
   exam?: Prisma.ExamUpdateManyWithoutOrganizationNestedInput
   hallTicket?: Prisma.HallTicketUpdateManyWithoutOrganizationNestedInput
   leads?: Prisma.LeadUpdateManyWithoutOrganizationNestedInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUpdateOneWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutStudentInput = {
@@ -1620,6 +1832,7 @@ export type OrganizationUncheckedUpdateWithoutStudentInput = {
   exam?: Prisma.ExamUncheckedUpdateManyWithoutOrganizationNestedInput
   hallTicket?: Prisma.HallTicketUncheckedUpdateManyWithoutOrganizationNestedInput
   leads?: Prisma.LeadUncheckedUpdateManyWithoutOrganizationNestedInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUncheckedUpdateOneWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutTeacherInput = {
@@ -1660,6 +1873,7 @@ export type OrganizationCreateWithoutTeacherInput = {
   exam?: Prisma.ExamCreateNestedManyWithoutOrganizationInput
   hallTicket?: Prisma.HallTicketCreateNestedManyWithoutOrganizationInput
   leads?: Prisma.LeadCreateNestedManyWithoutOrganizationInput
+  feeSenseAgent?: Prisma.FeeSenseAgentCreateNestedOneWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutTeacherInput = {
@@ -1700,6 +1914,7 @@ export type OrganizationUncheckedCreateWithoutTeacherInput = {
   exam?: Prisma.ExamUncheckedCreateNestedManyWithoutOrganizationInput
   hallTicket?: Prisma.HallTicketUncheckedCreateNestedManyWithoutOrganizationInput
   leads?: Prisma.LeadUncheckedCreateNestedManyWithoutOrganizationInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUncheckedCreateNestedOneWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutTeacherInput = {
@@ -1756,6 +1971,7 @@ export type OrganizationUpdateWithoutTeacherInput = {
   exam?: Prisma.ExamUpdateManyWithoutOrganizationNestedInput
   hallTicket?: Prisma.HallTicketUpdateManyWithoutOrganizationNestedInput
   leads?: Prisma.LeadUpdateManyWithoutOrganizationNestedInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUpdateOneWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutTeacherInput = {
@@ -1796,6 +2012,7 @@ export type OrganizationUncheckedUpdateWithoutTeacherInput = {
   exam?: Prisma.ExamUncheckedUpdateManyWithoutOrganizationNestedInput
   hallTicket?: Prisma.HallTicketUncheckedUpdateManyWithoutOrganizationNestedInput
   leads?: Prisma.LeadUncheckedUpdateManyWithoutOrganizationNestedInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUncheckedUpdateOneWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutGradeInput = {
@@ -1836,6 +2053,7 @@ export type OrganizationCreateWithoutGradeInput = {
   exam?: Prisma.ExamCreateNestedManyWithoutOrganizationInput
   hallTicket?: Prisma.HallTicketCreateNestedManyWithoutOrganizationInput
   leads?: Prisma.LeadCreateNestedManyWithoutOrganizationInput
+  feeSenseAgent?: Prisma.FeeSenseAgentCreateNestedOneWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutGradeInput = {
@@ -1876,6 +2094,7 @@ export type OrganizationUncheckedCreateWithoutGradeInput = {
   exam?: Prisma.ExamUncheckedCreateNestedManyWithoutOrganizationInput
   hallTicket?: Prisma.HallTicketUncheckedCreateNestedManyWithoutOrganizationInput
   leads?: Prisma.LeadUncheckedCreateNestedManyWithoutOrganizationInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUncheckedCreateNestedOneWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutGradeInput = {
@@ -1932,6 +2151,7 @@ export type OrganizationUpdateWithoutGradeInput = {
   exam?: Prisma.ExamUpdateManyWithoutOrganizationNestedInput
   hallTicket?: Prisma.HallTicketUpdateManyWithoutOrganizationNestedInput
   leads?: Prisma.LeadUpdateManyWithoutOrganizationNestedInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUpdateOneWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutGradeInput = {
@@ -1972,6 +2192,7 @@ export type OrganizationUncheckedUpdateWithoutGradeInput = {
   exam?: Prisma.ExamUncheckedUpdateManyWithoutOrganizationNestedInput
   hallTicket?: Prisma.HallTicketUncheckedUpdateManyWithoutOrganizationNestedInput
   leads?: Prisma.LeadUncheckedUpdateManyWithoutOrganizationNestedInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUncheckedUpdateOneWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutSectionInput = {
@@ -2012,6 +2233,7 @@ export type OrganizationCreateWithoutSectionInput = {
   exam?: Prisma.ExamCreateNestedManyWithoutOrganizationInput
   hallTicket?: Prisma.HallTicketCreateNestedManyWithoutOrganizationInput
   leads?: Prisma.LeadCreateNestedManyWithoutOrganizationInput
+  feeSenseAgent?: Prisma.FeeSenseAgentCreateNestedOneWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutSectionInput = {
@@ -2052,6 +2274,7 @@ export type OrganizationUncheckedCreateWithoutSectionInput = {
   exam?: Prisma.ExamUncheckedCreateNestedManyWithoutOrganizationInput
   hallTicket?: Prisma.HallTicketUncheckedCreateNestedManyWithoutOrganizationInput
   leads?: Prisma.LeadUncheckedCreateNestedManyWithoutOrganizationInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUncheckedCreateNestedOneWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutSectionInput = {
@@ -2108,6 +2331,7 @@ export type OrganizationUpdateWithoutSectionInput = {
   exam?: Prisma.ExamUpdateManyWithoutOrganizationNestedInput
   hallTicket?: Prisma.HallTicketUpdateManyWithoutOrganizationNestedInput
   leads?: Prisma.LeadUpdateManyWithoutOrganizationNestedInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUpdateOneWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutSectionInput = {
@@ -2148,6 +2372,7 @@ export type OrganizationUncheckedUpdateWithoutSectionInput = {
   exam?: Prisma.ExamUncheckedUpdateManyWithoutOrganizationNestedInput
   hallTicket?: Prisma.HallTicketUncheckedUpdateManyWithoutOrganizationNestedInput
   leads?: Prisma.LeadUncheckedUpdateManyWithoutOrganizationNestedInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUncheckedUpdateOneWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutSubjectInput = {
@@ -2188,6 +2413,7 @@ export type OrganizationCreateWithoutSubjectInput = {
   exam?: Prisma.ExamCreateNestedManyWithoutOrganizationInput
   hallTicket?: Prisma.HallTicketCreateNestedManyWithoutOrganizationInput
   leads?: Prisma.LeadCreateNestedManyWithoutOrganizationInput
+  feeSenseAgent?: Prisma.FeeSenseAgentCreateNestedOneWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutSubjectInput = {
@@ -2228,6 +2454,7 @@ export type OrganizationUncheckedCreateWithoutSubjectInput = {
   exam?: Prisma.ExamUncheckedCreateNestedManyWithoutOrganizationInput
   hallTicket?: Prisma.HallTicketUncheckedCreateNestedManyWithoutOrganizationInput
   leads?: Prisma.LeadUncheckedCreateNestedManyWithoutOrganizationInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUncheckedCreateNestedOneWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutSubjectInput = {
@@ -2284,6 +2511,7 @@ export type OrganizationUpdateWithoutSubjectInput = {
   exam?: Prisma.ExamUpdateManyWithoutOrganizationNestedInput
   hallTicket?: Prisma.HallTicketUpdateManyWithoutOrganizationNestedInput
   leads?: Prisma.LeadUpdateManyWithoutOrganizationNestedInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUpdateOneWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutSubjectInput = {
@@ -2324,6 +2552,7 @@ export type OrganizationUncheckedUpdateWithoutSubjectInput = {
   exam?: Prisma.ExamUncheckedUpdateManyWithoutOrganizationNestedInput
   hallTicket?: Prisma.HallTicketUncheckedUpdateManyWithoutOrganizationNestedInput
   leads?: Prisma.LeadUncheckedUpdateManyWithoutOrganizationNestedInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUncheckedUpdateOneWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutTeachingAssignmentInput = {
@@ -2364,6 +2593,7 @@ export type OrganizationCreateWithoutTeachingAssignmentInput = {
   exam?: Prisma.ExamCreateNestedManyWithoutOrganizationInput
   hallTicket?: Prisma.HallTicketCreateNestedManyWithoutOrganizationInput
   leads?: Prisma.LeadCreateNestedManyWithoutOrganizationInput
+  feeSenseAgent?: Prisma.FeeSenseAgentCreateNestedOneWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutTeachingAssignmentInput = {
@@ -2404,6 +2634,7 @@ export type OrganizationUncheckedCreateWithoutTeachingAssignmentInput = {
   exam?: Prisma.ExamUncheckedCreateNestedManyWithoutOrganizationInput
   hallTicket?: Prisma.HallTicketUncheckedCreateNestedManyWithoutOrganizationInput
   leads?: Prisma.LeadUncheckedCreateNestedManyWithoutOrganizationInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUncheckedCreateNestedOneWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutTeachingAssignmentInput = {
@@ -2460,6 +2691,7 @@ export type OrganizationUpdateWithoutTeachingAssignmentInput = {
   exam?: Prisma.ExamUpdateManyWithoutOrganizationNestedInput
   hallTicket?: Prisma.HallTicketUpdateManyWithoutOrganizationNestedInput
   leads?: Prisma.LeadUpdateManyWithoutOrganizationNestedInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUpdateOneWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutTeachingAssignmentInput = {
@@ -2500,6 +2732,7 @@ export type OrganizationUncheckedUpdateWithoutTeachingAssignmentInput = {
   exam?: Prisma.ExamUncheckedUpdateManyWithoutOrganizationNestedInput
   hallTicket?: Prisma.HallTicketUncheckedUpdateManyWithoutOrganizationNestedInput
   leads?: Prisma.LeadUncheckedUpdateManyWithoutOrganizationNestedInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUncheckedUpdateOneWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutStudentDocumentInput = {
@@ -2540,6 +2773,7 @@ export type OrganizationCreateWithoutStudentDocumentInput = {
   exam?: Prisma.ExamCreateNestedManyWithoutOrganizationInput
   hallTicket?: Prisma.HallTicketCreateNestedManyWithoutOrganizationInput
   leads?: Prisma.LeadCreateNestedManyWithoutOrganizationInput
+  feeSenseAgent?: Prisma.FeeSenseAgentCreateNestedOneWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutStudentDocumentInput = {
@@ -2580,6 +2814,7 @@ export type OrganizationUncheckedCreateWithoutStudentDocumentInput = {
   exam?: Prisma.ExamUncheckedCreateNestedManyWithoutOrganizationInput
   hallTicket?: Prisma.HallTicketUncheckedCreateNestedManyWithoutOrganizationInput
   leads?: Prisma.LeadUncheckedCreateNestedManyWithoutOrganizationInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUncheckedCreateNestedOneWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutStudentDocumentInput = {
@@ -2636,6 +2871,7 @@ export type OrganizationUpdateWithoutStudentDocumentInput = {
   exam?: Prisma.ExamUpdateManyWithoutOrganizationNestedInput
   hallTicket?: Prisma.HallTicketUpdateManyWithoutOrganizationNestedInput
   leads?: Prisma.LeadUpdateManyWithoutOrganizationNestedInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUpdateOneWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutStudentDocumentInput = {
@@ -2676,6 +2912,7 @@ export type OrganizationUncheckedUpdateWithoutStudentDocumentInput = {
   exam?: Prisma.ExamUncheckedUpdateManyWithoutOrganizationNestedInput
   hallTicket?: Prisma.HallTicketUncheckedUpdateManyWithoutOrganizationNestedInput
   leads?: Prisma.LeadUncheckedUpdateManyWithoutOrganizationNestedInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUncheckedUpdateOneWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutFeeInput = {
@@ -2716,6 +2953,7 @@ export type OrganizationCreateWithoutFeeInput = {
   exam?: Prisma.ExamCreateNestedManyWithoutOrganizationInput
   hallTicket?: Prisma.HallTicketCreateNestedManyWithoutOrganizationInput
   leads?: Prisma.LeadCreateNestedManyWithoutOrganizationInput
+  feeSenseAgent?: Prisma.FeeSenseAgentCreateNestedOneWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutFeeInput = {
@@ -2756,6 +2994,7 @@ export type OrganizationUncheckedCreateWithoutFeeInput = {
   exam?: Prisma.ExamUncheckedCreateNestedManyWithoutOrganizationInput
   hallTicket?: Prisma.HallTicketUncheckedCreateNestedManyWithoutOrganizationInput
   leads?: Prisma.LeadUncheckedCreateNestedManyWithoutOrganizationInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUncheckedCreateNestedOneWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutFeeInput = {
@@ -2812,6 +3051,7 @@ export type OrganizationUpdateWithoutFeeInput = {
   exam?: Prisma.ExamUpdateManyWithoutOrganizationNestedInput
   hallTicket?: Prisma.HallTicketUpdateManyWithoutOrganizationNestedInput
   leads?: Prisma.LeadUpdateManyWithoutOrganizationNestedInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUpdateOneWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutFeeInput = {
@@ -2852,6 +3092,7 @@ export type OrganizationUncheckedUpdateWithoutFeeInput = {
   exam?: Prisma.ExamUncheckedUpdateManyWithoutOrganizationNestedInput
   hallTicket?: Prisma.HallTicketUncheckedUpdateManyWithoutOrganizationNestedInput
   leads?: Prisma.LeadUncheckedUpdateManyWithoutOrganizationNestedInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUncheckedUpdateOneWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutFeePaymentInput = {
@@ -2892,6 +3133,7 @@ export type OrganizationCreateWithoutFeePaymentInput = {
   exam?: Prisma.ExamCreateNestedManyWithoutOrganizationInput
   hallTicket?: Prisma.HallTicketCreateNestedManyWithoutOrganizationInput
   leads?: Prisma.LeadCreateNestedManyWithoutOrganizationInput
+  feeSenseAgent?: Prisma.FeeSenseAgentCreateNestedOneWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutFeePaymentInput = {
@@ -2932,6 +3174,7 @@ export type OrganizationUncheckedCreateWithoutFeePaymentInput = {
   exam?: Prisma.ExamUncheckedCreateNestedManyWithoutOrganizationInput
   hallTicket?: Prisma.HallTicketUncheckedCreateNestedManyWithoutOrganizationInput
   leads?: Prisma.LeadUncheckedCreateNestedManyWithoutOrganizationInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUncheckedCreateNestedOneWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutFeePaymentInput = {
@@ -2988,6 +3231,7 @@ export type OrganizationUpdateWithoutFeePaymentInput = {
   exam?: Prisma.ExamUpdateManyWithoutOrganizationNestedInput
   hallTicket?: Prisma.HallTicketUpdateManyWithoutOrganizationNestedInput
   leads?: Prisma.LeadUpdateManyWithoutOrganizationNestedInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUpdateOneWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutFeePaymentInput = {
@@ -3028,6 +3272,7 @@ export type OrganizationUncheckedUpdateWithoutFeePaymentInput = {
   exam?: Prisma.ExamUncheckedUpdateManyWithoutOrganizationNestedInput
   hallTicket?: Prisma.HallTicketUncheckedUpdateManyWithoutOrganizationNestedInput
   leads?: Prisma.LeadUncheckedUpdateManyWithoutOrganizationNestedInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUncheckedUpdateOneWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutFeeCategoryInput = {
@@ -3068,6 +3313,7 @@ export type OrganizationCreateWithoutFeeCategoryInput = {
   exam?: Prisma.ExamCreateNestedManyWithoutOrganizationInput
   hallTicket?: Prisma.HallTicketCreateNestedManyWithoutOrganizationInput
   leads?: Prisma.LeadCreateNestedManyWithoutOrganizationInput
+  feeSenseAgent?: Prisma.FeeSenseAgentCreateNestedOneWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutFeeCategoryInput = {
@@ -3108,6 +3354,7 @@ export type OrganizationUncheckedCreateWithoutFeeCategoryInput = {
   exam?: Prisma.ExamUncheckedCreateNestedManyWithoutOrganizationInput
   hallTicket?: Prisma.HallTicketUncheckedCreateNestedManyWithoutOrganizationInput
   leads?: Prisma.LeadUncheckedCreateNestedManyWithoutOrganizationInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUncheckedCreateNestedOneWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutFeeCategoryInput = {
@@ -3164,6 +3411,7 @@ export type OrganizationUpdateWithoutFeeCategoryInput = {
   exam?: Prisma.ExamUpdateManyWithoutOrganizationNestedInput
   hallTicket?: Prisma.HallTicketUpdateManyWithoutOrganizationNestedInput
   leads?: Prisma.LeadUpdateManyWithoutOrganizationNestedInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUpdateOneWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutFeeCategoryInput = {
@@ -3204,6 +3452,7 @@ export type OrganizationUncheckedUpdateWithoutFeeCategoryInput = {
   exam?: Prisma.ExamUncheckedUpdateManyWithoutOrganizationNestedInput
   hallTicket?: Prisma.HallTicketUncheckedUpdateManyWithoutOrganizationNestedInput
   leads?: Prisma.LeadUncheckedUpdateManyWithoutOrganizationNestedInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUncheckedUpdateOneWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutAcademicCalendarInput = {
@@ -3244,6 +3493,7 @@ export type OrganizationCreateWithoutAcademicCalendarInput = {
   exam?: Prisma.ExamCreateNestedManyWithoutOrganizationInput
   hallTicket?: Prisma.HallTicketCreateNestedManyWithoutOrganizationInput
   leads?: Prisma.LeadCreateNestedManyWithoutOrganizationInput
+  feeSenseAgent?: Prisma.FeeSenseAgentCreateNestedOneWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutAcademicCalendarInput = {
@@ -3284,6 +3534,7 @@ export type OrganizationUncheckedCreateWithoutAcademicCalendarInput = {
   exam?: Prisma.ExamUncheckedCreateNestedManyWithoutOrganizationInput
   hallTicket?: Prisma.HallTicketUncheckedCreateNestedManyWithoutOrganizationInput
   leads?: Prisma.LeadUncheckedCreateNestedManyWithoutOrganizationInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUncheckedCreateNestedOneWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutAcademicCalendarInput = {
@@ -3340,6 +3591,7 @@ export type OrganizationUpdateWithoutAcademicCalendarInput = {
   exam?: Prisma.ExamUpdateManyWithoutOrganizationNestedInput
   hallTicket?: Prisma.HallTicketUpdateManyWithoutOrganizationNestedInput
   leads?: Prisma.LeadUpdateManyWithoutOrganizationNestedInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUpdateOneWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutAcademicCalendarInput = {
@@ -3380,6 +3632,7 @@ export type OrganizationUncheckedUpdateWithoutAcademicCalendarInput = {
   exam?: Prisma.ExamUncheckedUpdateManyWithoutOrganizationNestedInput
   hallTicket?: Prisma.HallTicketUncheckedUpdateManyWithoutOrganizationNestedInput
   leads?: Prisma.LeadUncheckedUpdateManyWithoutOrganizationNestedInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUncheckedUpdateOneWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutAnonymousComplaintInput = {
@@ -3420,6 +3673,7 @@ export type OrganizationCreateWithoutAnonymousComplaintInput = {
   exam?: Prisma.ExamCreateNestedManyWithoutOrganizationInput
   hallTicket?: Prisma.HallTicketCreateNestedManyWithoutOrganizationInput
   leads?: Prisma.LeadCreateNestedManyWithoutOrganizationInput
+  feeSenseAgent?: Prisma.FeeSenseAgentCreateNestedOneWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutAnonymousComplaintInput = {
@@ -3460,6 +3714,7 @@ export type OrganizationUncheckedCreateWithoutAnonymousComplaintInput = {
   exam?: Prisma.ExamUncheckedCreateNestedManyWithoutOrganizationInput
   hallTicket?: Prisma.HallTicketUncheckedCreateNestedManyWithoutOrganizationInput
   leads?: Prisma.LeadUncheckedCreateNestedManyWithoutOrganizationInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUncheckedCreateNestedOneWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutAnonymousComplaintInput = {
@@ -3516,6 +3771,7 @@ export type OrganizationUpdateWithoutAnonymousComplaintInput = {
   exam?: Prisma.ExamUpdateManyWithoutOrganizationNestedInput
   hallTicket?: Prisma.HallTicketUpdateManyWithoutOrganizationNestedInput
   leads?: Prisma.LeadUpdateManyWithoutOrganizationNestedInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUpdateOneWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutAnonymousComplaintInput = {
@@ -3556,6 +3812,7 @@ export type OrganizationUncheckedUpdateWithoutAnonymousComplaintInput = {
   exam?: Prisma.ExamUncheckedUpdateManyWithoutOrganizationNestedInput
   hallTicket?: Prisma.HallTicketUncheckedUpdateManyWithoutOrganizationNestedInput
   leads?: Prisma.LeadUncheckedUpdateManyWithoutOrganizationNestedInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUncheckedUpdateOneWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutNoticesInput = {
@@ -3596,6 +3853,7 @@ export type OrganizationCreateWithoutNoticesInput = {
   exam?: Prisma.ExamCreateNestedManyWithoutOrganizationInput
   hallTicket?: Prisma.HallTicketCreateNestedManyWithoutOrganizationInput
   leads?: Prisma.LeadCreateNestedManyWithoutOrganizationInput
+  feeSenseAgent?: Prisma.FeeSenseAgentCreateNestedOneWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutNoticesInput = {
@@ -3636,6 +3894,7 @@ export type OrganizationUncheckedCreateWithoutNoticesInput = {
   exam?: Prisma.ExamUncheckedCreateNestedManyWithoutOrganizationInput
   hallTicket?: Prisma.HallTicketUncheckedCreateNestedManyWithoutOrganizationInput
   leads?: Prisma.LeadUncheckedCreateNestedManyWithoutOrganizationInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUncheckedCreateNestedOneWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutNoticesInput = {
@@ -3692,6 +3951,7 @@ export type OrganizationUpdateWithoutNoticesInput = {
   exam?: Prisma.ExamUpdateManyWithoutOrganizationNestedInput
   hallTicket?: Prisma.HallTicketUpdateManyWithoutOrganizationNestedInput
   leads?: Prisma.LeadUpdateManyWithoutOrganizationNestedInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUpdateOneWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutNoticesInput = {
@@ -3732,6 +3992,7 @@ export type OrganizationUncheckedUpdateWithoutNoticesInput = {
   exam?: Prisma.ExamUncheckedUpdateManyWithoutOrganizationNestedInput
   hallTicket?: Prisma.HallTicketUncheckedUpdateManyWithoutOrganizationNestedInput
   leads?: Prisma.LeadUncheckedUpdateManyWithoutOrganizationNestedInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUncheckedUpdateOneWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutNotificationLogInput = {
@@ -3772,6 +4033,7 @@ export type OrganizationCreateWithoutNotificationLogInput = {
   exam?: Prisma.ExamCreateNestedManyWithoutOrganizationInput
   hallTicket?: Prisma.HallTicketCreateNestedManyWithoutOrganizationInput
   leads?: Prisma.LeadCreateNestedManyWithoutOrganizationInput
+  feeSenseAgent?: Prisma.FeeSenseAgentCreateNestedOneWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutNotificationLogInput = {
@@ -3812,6 +4074,7 @@ export type OrganizationUncheckedCreateWithoutNotificationLogInput = {
   exam?: Prisma.ExamUncheckedCreateNestedManyWithoutOrganizationInput
   hallTicket?: Prisma.HallTicketUncheckedCreateNestedManyWithoutOrganizationInput
   leads?: Prisma.LeadUncheckedCreateNestedManyWithoutOrganizationInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUncheckedCreateNestedOneWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutNotificationLogInput = {
@@ -3868,6 +4131,7 @@ export type OrganizationUpdateWithoutNotificationLogInput = {
   exam?: Prisma.ExamUpdateManyWithoutOrganizationNestedInput
   hallTicket?: Prisma.HallTicketUpdateManyWithoutOrganizationNestedInput
   leads?: Prisma.LeadUpdateManyWithoutOrganizationNestedInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUpdateOneWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutNotificationLogInput = {
@@ -3908,6 +4172,7 @@ export type OrganizationUncheckedUpdateWithoutNotificationLogInput = {
   exam?: Prisma.ExamUncheckedUpdateManyWithoutOrganizationNestedInput
   hallTicket?: Prisma.HallTicketUncheckedUpdateManyWithoutOrganizationNestedInput
   leads?: Prisma.LeadUncheckedUpdateManyWithoutOrganizationNestedInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUncheckedUpdateOneWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutScheduledJobInput = {
@@ -3948,6 +4213,7 @@ export type OrganizationCreateWithoutScheduledJobInput = {
   exam?: Prisma.ExamCreateNestedManyWithoutOrganizationInput
   hallTicket?: Prisma.HallTicketCreateNestedManyWithoutOrganizationInput
   leads?: Prisma.LeadCreateNestedManyWithoutOrganizationInput
+  feeSenseAgent?: Prisma.FeeSenseAgentCreateNestedOneWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutScheduledJobInput = {
@@ -3988,6 +4254,7 @@ export type OrganizationUncheckedCreateWithoutScheduledJobInput = {
   exam?: Prisma.ExamUncheckedCreateNestedManyWithoutOrganizationInput
   hallTicket?: Prisma.HallTicketUncheckedCreateNestedManyWithoutOrganizationInput
   leads?: Prisma.LeadUncheckedCreateNestedManyWithoutOrganizationInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUncheckedCreateNestedOneWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutScheduledJobInput = {
@@ -4044,6 +4311,7 @@ export type OrganizationUpdateWithoutScheduledJobInput = {
   exam?: Prisma.ExamUpdateManyWithoutOrganizationNestedInput
   hallTicket?: Prisma.HallTicketUpdateManyWithoutOrganizationNestedInput
   leads?: Prisma.LeadUpdateManyWithoutOrganizationNestedInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUpdateOneWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutScheduledJobInput = {
@@ -4084,6 +4352,7 @@ export type OrganizationUncheckedUpdateWithoutScheduledJobInput = {
   exam?: Prisma.ExamUncheckedUpdateManyWithoutOrganizationNestedInput
   hallTicket?: Prisma.HallTicketUncheckedUpdateManyWithoutOrganizationNestedInput
   leads?: Prisma.LeadUncheckedUpdateManyWithoutOrganizationNestedInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUncheckedUpdateOneWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutExamInput = {
@@ -4124,6 +4393,7 @@ export type OrganizationCreateWithoutExamInput = {
   leaves?: Prisma.LeaveCreateNestedManyWithoutOrganizationInput
   hallTicket?: Prisma.HallTicketCreateNestedManyWithoutOrganizationInput
   leads?: Prisma.LeadCreateNestedManyWithoutOrganizationInput
+  feeSenseAgent?: Prisma.FeeSenseAgentCreateNestedOneWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutExamInput = {
@@ -4164,6 +4434,7 @@ export type OrganizationUncheckedCreateWithoutExamInput = {
   leaves?: Prisma.LeaveUncheckedCreateNestedManyWithoutOrganizationInput
   hallTicket?: Prisma.HallTicketUncheckedCreateNestedManyWithoutOrganizationInput
   leads?: Prisma.LeadUncheckedCreateNestedManyWithoutOrganizationInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUncheckedCreateNestedOneWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutExamInput = {
@@ -4220,6 +4491,7 @@ export type OrganizationUpdateWithoutExamInput = {
   leaves?: Prisma.LeaveUpdateManyWithoutOrganizationNestedInput
   hallTicket?: Prisma.HallTicketUpdateManyWithoutOrganizationNestedInput
   leads?: Prisma.LeadUpdateManyWithoutOrganizationNestedInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUpdateOneWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutExamInput = {
@@ -4260,6 +4532,7 @@ export type OrganizationUncheckedUpdateWithoutExamInput = {
   leaves?: Prisma.LeaveUncheckedUpdateManyWithoutOrganizationNestedInput
   hallTicket?: Prisma.HallTicketUncheckedUpdateManyWithoutOrganizationNestedInput
   leads?: Prisma.LeadUncheckedUpdateManyWithoutOrganizationNestedInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUncheckedUpdateOneWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutHallTicketInput = {
@@ -4300,6 +4573,7 @@ export type OrganizationCreateWithoutHallTicketInput = {
   leaves?: Prisma.LeaveCreateNestedManyWithoutOrganizationInput
   exam?: Prisma.ExamCreateNestedManyWithoutOrganizationInput
   leads?: Prisma.LeadCreateNestedManyWithoutOrganizationInput
+  feeSenseAgent?: Prisma.FeeSenseAgentCreateNestedOneWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutHallTicketInput = {
@@ -4340,6 +4614,7 @@ export type OrganizationUncheckedCreateWithoutHallTicketInput = {
   leaves?: Prisma.LeaveUncheckedCreateNestedManyWithoutOrganizationInput
   exam?: Prisma.ExamUncheckedCreateNestedManyWithoutOrganizationInput
   leads?: Prisma.LeadUncheckedCreateNestedManyWithoutOrganizationInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUncheckedCreateNestedOneWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutHallTicketInput = {
@@ -4396,6 +4671,7 @@ export type OrganizationUpdateWithoutHallTicketInput = {
   leaves?: Prisma.LeaveUpdateManyWithoutOrganizationNestedInput
   exam?: Prisma.ExamUpdateManyWithoutOrganizationNestedInput
   leads?: Prisma.LeadUpdateManyWithoutOrganizationNestedInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUpdateOneWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutHallTicketInput = {
@@ -4436,6 +4712,7 @@ export type OrganizationUncheckedUpdateWithoutHallTicketInput = {
   leaves?: Prisma.LeaveUncheckedUpdateManyWithoutOrganizationNestedInput
   exam?: Prisma.ExamUncheckedUpdateManyWithoutOrganizationNestedInput
   leads?: Prisma.LeadUncheckedUpdateManyWithoutOrganizationNestedInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUncheckedUpdateOneWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutLeavesInput = {
@@ -4476,6 +4753,7 @@ export type OrganizationCreateWithoutLeavesInput = {
   exam?: Prisma.ExamCreateNestedManyWithoutOrganizationInput
   hallTicket?: Prisma.HallTicketCreateNestedManyWithoutOrganizationInput
   leads?: Prisma.LeadCreateNestedManyWithoutOrganizationInput
+  feeSenseAgent?: Prisma.FeeSenseAgentCreateNestedOneWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutLeavesInput = {
@@ -4516,6 +4794,7 @@ export type OrganizationUncheckedCreateWithoutLeavesInput = {
   exam?: Prisma.ExamUncheckedCreateNestedManyWithoutOrganizationInput
   hallTicket?: Prisma.HallTicketUncheckedCreateNestedManyWithoutOrganizationInput
   leads?: Prisma.LeadUncheckedCreateNestedManyWithoutOrganizationInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUncheckedCreateNestedOneWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutLeavesInput = {
@@ -4572,6 +4851,7 @@ export type OrganizationUpdateWithoutLeavesInput = {
   exam?: Prisma.ExamUpdateManyWithoutOrganizationNestedInput
   hallTicket?: Prisma.HallTicketUpdateManyWithoutOrganizationNestedInput
   leads?: Prisma.LeadUpdateManyWithoutOrganizationNestedInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUpdateOneWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutLeavesInput = {
@@ -4612,6 +4892,7 @@ export type OrganizationUncheckedUpdateWithoutLeavesInput = {
   exam?: Prisma.ExamUncheckedUpdateManyWithoutOrganizationNestedInput
   hallTicket?: Prisma.HallTicketUncheckedUpdateManyWithoutOrganizationNestedInput
   leads?: Prisma.LeadUncheckedUpdateManyWithoutOrganizationNestedInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUncheckedUpdateOneWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutLeadsInput = {
@@ -4652,6 +4933,7 @@ export type OrganizationCreateWithoutLeadsInput = {
   leaves?: Prisma.LeaveCreateNestedManyWithoutOrganizationInput
   exam?: Prisma.ExamCreateNestedManyWithoutOrganizationInput
   hallTicket?: Prisma.HallTicketCreateNestedManyWithoutOrganizationInput
+  feeSenseAgent?: Prisma.FeeSenseAgentCreateNestedOneWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutLeadsInput = {
@@ -4692,6 +4974,7 @@ export type OrganizationUncheckedCreateWithoutLeadsInput = {
   leaves?: Prisma.LeaveUncheckedCreateNestedManyWithoutOrganizationInput
   exam?: Prisma.ExamUncheckedCreateNestedManyWithoutOrganizationInput
   hallTicket?: Prisma.HallTicketUncheckedCreateNestedManyWithoutOrganizationInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUncheckedCreateNestedOneWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutLeadsInput = {
@@ -4748,6 +5031,7 @@ export type OrganizationUpdateWithoutLeadsInput = {
   leaves?: Prisma.LeaveUpdateManyWithoutOrganizationNestedInput
   exam?: Prisma.ExamUpdateManyWithoutOrganizationNestedInput
   hallTicket?: Prisma.HallTicketUpdateManyWithoutOrganizationNestedInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUpdateOneWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutLeadsInput = {
@@ -4788,6 +5072,7 @@ export type OrganizationUncheckedUpdateWithoutLeadsInput = {
   leaves?: Prisma.LeaveUncheckedUpdateManyWithoutOrganizationNestedInput
   exam?: Prisma.ExamUncheckedUpdateManyWithoutOrganizationNestedInput
   hallTicket?: Prisma.HallTicketUncheckedUpdateManyWithoutOrganizationNestedInput
+  feeSenseAgent?: Prisma.FeeSenseAgentUncheckedUpdateOneWithoutOrganizationNestedInput
 }
 
 
@@ -5040,6 +5325,7 @@ export type OrganizationSelect<ExtArgs extends runtime.Types.Extensions.Internal
   exam?: boolean | Prisma.Organization$examArgs<ExtArgs>
   hallTicket?: boolean | Prisma.Organization$hallTicketArgs<ExtArgs>
   leads?: boolean | Prisma.Organization$leadsArgs<ExtArgs>
+  feeSenseAgent?: boolean | Prisma.Organization$feeSenseAgentArgs<ExtArgs>
   _count?: boolean | Prisma.OrganizationCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["organization"]>
 
@@ -5126,6 +5412,7 @@ export type OrganizationInclude<ExtArgs extends runtime.Types.Extensions.Interna
   exam?: boolean | Prisma.Organization$examArgs<ExtArgs>
   hallTicket?: boolean | Prisma.Organization$hallTicketArgs<ExtArgs>
   leads?: boolean | Prisma.Organization$leadsArgs<ExtArgs>
+  feeSenseAgent?: boolean | Prisma.Organization$feeSenseAgentArgs<ExtArgs>
   _count?: boolean | Prisma.OrganizationCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type OrganizationIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -5155,6 +5442,7 @@ export type $OrganizationPayload<ExtArgs extends runtime.Types.Extensions.Intern
     exam: Prisma.$ExamPayload<ExtArgs>[]
     hallTicket: Prisma.$HallTicketPayload<ExtArgs>[]
     leads: Prisma.$LeadPayload<ExtArgs>[]
+    feeSenseAgent: Prisma.$FeeSenseAgentPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -5589,6 +5877,7 @@ export interface Prisma__OrganizationClient<T, Null = never, ExtArgs extends run
   exam<T extends Prisma.Organization$examArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$examArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExamPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   hallTicket<T extends Prisma.Organization$hallTicketArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$hallTicketArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$HallTicketPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   leads<T extends Prisma.Organization$leadsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$leadsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  feeSenseAgent<T extends Prisma.Organization$feeSenseAgentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$feeSenseAgentArgs<ExtArgs>>): Prisma.Prisma__FeeSenseAgentClient<runtime.Types.Result.GetResult<Prisma.$FeeSenseAgentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6524,6 +6813,25 @@ export type Organization$leadsArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.LeadScalarFieldEnum | Prisma.LeadScalarFieldEnum[]
+}
+
+/**
+ * Organization.feeSenseAgent
+ */
+export type Organization$feeSenseAgentArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the FeeSenseAgent
+   */
+  select?: Prisma.FeeSenseAgentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the FeeSenseAgent
+   */
+  omit?: Prisma.FeeSenseAgentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FeeSenseAgentInclude<ExtArgs> | null
+  where?: Prisma.FeeSenseAgentWhereInput
 }
 
 /**

@@ -117,15 +117,149 @@ model Organization {
   scheduledJob       ScheduledJob[]
   leaves             Leave[]
 
-  createdBy  String?
-  createdAt  DateTime     @default(now())
-  updatedAt  DateTime     @updatedAt
-  exam       Exam[]
-  hallTicket HallTicket[]
-  leads      Lead[]
+  createdBy     String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  exam          Exam[]
+  hallTicket    HallTicket[]
+  leads         Lead[]
+  feeSenseAgent FeeSenseAgent?
 
   @@index([id])
   @@index([organizationSlug])
+}
+
+model FeeSenseAgent {
+  id             String       @id @default(cuid())
+  organizationId String       @unique // One per org
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  name           String       @default("FeeSense AI Agent")
+  description    String?      @default("Intelligent fee collection assistant that analyzes payment patterns and sends personalized reminders")
+
+  isActive Boolean @default(true)
+
+  capabilities             String[]
+  // capabilities: [
+  //       "Fetch all Fees Data and check if any fee is pending or not",
+  //       "Analyzes payment patterns and identifies at-risk families",
+  //       "Sends personalized payment reminders via email and SMS",
+  //       "Generates daily reports with collection insights",
+  //       "Schedules voice calls for high-priority overdue fees",
+  //     ],
+  // FeeSense-specific configuration
+  riskScoreLowThreshold    Int      @default(30)
+  riskScoreMediumThreshold Int      @default(60)
+  riskScoreHighThreshold   Int      @default(80)
+  maxNotificationAttempts  Int      @default(3)
+  voiceCallThreshold       Int      @default(3) // Days overdue before call
+
+  // Notification preferences
+  enableEmailReminders Boolean @default(true)
+  enableSMSReminders   Boolean @default(true)
+  enableVoiceCalls     Boolean @default(false)
+  enableWhatsApp       Boolean @default(false)
+
+  // Scheduling
+  runFrequency AIAgentRunFrequency @default(DAILY)
+  scheduleTime String              @default("23:00") // HH:mm format
+
+  // // AI Model config
+  // aiModel     String @default("gpt-4")
+  // temperature Float  @default(0.7)
+
+  // Execution tracking
+  lastRunAt      DateTime?
+  nextRunAt      DateTime?
+  totalRuns      Int       @default(0)
+  successfulRuns Int       @default(0)
+  failedRuns     Int       @default(0)
+
+  // Relations
+  executionLogs FeeSenseExecutionLog[]
+  reports       FeeSenseReport[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([organizationId, isActive])
+}
+
+model FeeSenseExecutionLog {
+  id      String        @id @default(cuid())
+  agentId String
+  agent   FeeSenseAgent @relation(fields: [agentId], references: [id])
+
+  startedAt   DateTime
+  completedAt DateTime?
+  status      AIAgentExecutionStatus // RUNNING, SUCCESS, FAILED, PARTIAL
+
+  // FeeSense-specific metrics
+  studentsAnalyzed    Int
+  remindersGenerated  Int
+  emailsSent          Int
+  smsSent             Int
+  voiceCallsScheduled Int
+  totalAmountOverdue  Float
+
+  errorMessage String?
+  errorDetails Json?
+
+  createdAt DateTime @default(now())
+
+  @@index([agentId, startedAt])
+}
+
+model FeeSenseReport {
+  id String @id @default(cuid())
+
+  agentId String
+  agent   FeeSenseAgent @relation(fields: [agentId], references: [id])
+
+  reportDate DateTime
+
+  // Summary metrics
+  totalStudentsAtRisk Int
+  highRiskCount       Int
+  mediumRiskCount     Int
+  lowRiskCount        Int
+
+  totalOverdueAmount Float
+  paymentsReceived   Float // Since last report
+
+  // Outreach summary
+  emailsSent          Int
+  smsSent             Int
+  voiceCallsScheduled Int
+  responseRate        Float?
+
+  // Detailed insights (AI-generated)
+  insights Json
+  // Example: {
+  //   "trends": "Payment rates down 15% this week",
+  //   "recommendations": ["Focus on Grade 10 students", "Increase SMS frequency"],
+  //   "topRiskStudents": [...]
+  // }
+
+  sentToEmails String[] // Admin emails where report was sent
+
+  createdAt DateTime @default(now())
+
+  @@unique([agentId, reportDate])
+  @@index([agentId, reportDate])
+}
+
+enum AIAgentRunFrequency {
+  DAILY
+  WEEKLY
+  MONTHLY
+  ON_DEMAND
+}
+
+enum AIAgentExecutionStatus {
+  RUNNING
+  SUCCESS
+  FAILED
+  PARTIAL
 }
 
 // model OrganizationMembership {
@@ -365,8 +499,6 @@ model TeacherProfile {
   languagesKnown    String[]
   certificateUrls   String[]
 }
-
-// 
 
 model Grade {
   id                 String               @id @default(cuid())
@@ -1048,6 +1180,14 @@ enum EvaluationType {
   OTHER
 }
 
+enum ExamMode {
+  ONLINE
+  OFFLINE
+  PRACTICAL
+  VIVA
+  TAKE_HOME
+}
+
 enum ExamStatus {
   UPCOMING //SCHEDULED   // ✅ Better than UPCOMING
   LIVE
@@ -1058,18 +1198,11 @@ enum ExamStatus {
 
 enum StudentExamStatus {
   ENROLLED // Default for all students
+  HALL_TICKET_ISSUED
   ATTENDED // Appeared for exam
   ABSENT // Didn't appear
   EXEMPT // Medical leave, etc.
   DISQUALIFIED // Disciplinary action
-}
-
-enum ExamMode {
-  ONLINE
-  OFFLINE
-  PRACTICAL
-  VIVA
-  TAKE_HOME
 }
 
 model ExamSession {
@@ -1136,12 +1269,14 @@ model Exam {
 }
 
 model ExamEnrollment {
-  id              String            @id @default(cuid())
-  studentId       String
-  examId          String
-  status          StudentExamStatus @default(ENROLLED)
-  enrolledAt      DateTime          @default(now())
-  exemptionReason String? // Medical leave, etc.
+  id                 String            @id @default(cuid())
+  studentId          String
+  examId             String
+  status             StudentExamStatus @default(ENROLLED)
+  enrolledAt         DateTime          @default(now())
+  exemptionReason    String? // Medical leave, etc.
+  hallTicketIssued   Boolean           @default(false)
+  hallTicketIssuedAt DateTime?
 
   student Student @relation(fields: [studentId], references: [id])
   exam    Exam    @relation(fields: [examId], references: [id])
@@ -1174,17 +1309,18 @@ model ExamResult {
 }
 
 model HallTicket {
-  id            String  @id @default(cuid())
-  studentId     String
-  examId        String?
-  examSessionId String?
-
-  pdfUrl         String // S3 link with student details, QR code
-  qrCode         String?
-  generatedAt    DateTime  @default(now())
-  downloadedAt   DateTime? // Track downloads
-  expiryDate     DateTime? // Post-exam expiry
-  organizationId String
+  id               String    @id @default(cuid())
+  hallTicketNumber String?
+  studentId        String
+  examId           String?
+  examSessionId    String?
+  issuedAt         DateTime?
+  pdfUrl           String // S3 link with student details, QR code
+  qrCode           String?
+  generatedAt      DateTime  @default(now())
+  downloadedAt     DateTime? // Track downloads
+  expiryDate       DateTime? // Post-exam expiry
+  organizationId   String
 
   student      Student      @relation(fields: [studentId], references: [id], onDelete: Cascade)
   exam         Exam?        @relation(fields: [examId], references: [id], onDelete: Cascade)
@@ -1244,8 +1380,6 @@ enum ResultStatus {
 // "FeedbackCategory",         // Optional - categorize feedback (e.g., Academics, Behavior)
 // "Assignment",            // Not in schema - could be needed for academic tracking
 // "AssignmentSubmission"    // Not in schema - could be needed for academic tracking
-// LeaveManagement
-// Lead Management
 // Courses and Batches
 // Certificate Generator
 // Amazon Alexa  Integration

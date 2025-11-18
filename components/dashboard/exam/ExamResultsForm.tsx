@@ -26,11 +26,14 @@ import {
 } from '@/components/ui/table';
 import {
   Calculator,
-  GraduationCap,
   Loader2,
   Save,
   Users,
   RefreshCw,
+  CheckCircle,
+  XCircle,
+  AlertCircle,
+  FileCheck,
 } from 'lucide-react';
 import {
   AlertDialog,
@@ -48,7 +51,6 @@ import {
   GRADING_SCALES,
   calculateGrade,
   getGradeColorBadge,
-  isPassingGrade,
   type GradeScale,
 } from '@/lib/utils';
 import ExamResultEntry from '@/lib/data/exam/exam-result-entry';
@@ -65,6 +67,14 @@ interface Student {
   rollNumber: string;
   email?: string;
 }
+
+type Enrollment = {
+  id: string;
+  studentId: string;
+  status: string;
+  enrolledAt: Date;
+  hallTicketIssued: boolean;
+};
 
 interface Exam {
   id: string;
@@ -92,12 +102,22 @@ interface ExistingResult {
 interface ExamResultsFormProps {
   exam: Exam;
   students: Student[];
+  enrollments: Enrollment[];
   existingResults?: ExistingResult[];
 }
+
+// Helper: Check if student passes (>= not >)
+const checkIfPassed = (
+  obtainedMarks: number,
+  passingMarks: number
+): boolean => {
+  return obtainedMarks >= passingMarks;
+};
 
 export default function ExamResultsForm({
   exam,
   students,
+  enrollments,
   existingResults = [],
 }: ExamResultsFormProps) {
   const [isPending, startTransition] = useTransition();
@@ -105,9 +125,15 @@ export default function ExamResultsForm({
     GRADING_SCALES[0]
   );
 
+  // Create maps for quick lookups
+  const enrollmentMap = new Map(enrollments.map((e) => [e.studentId, e]));
+
   const existingResultsMap = new Map(
     existingResults.map((result) => [result.studentId, result])
   );
+
+  // Calculate passing marks (use ceil to avoid fractional passing marks)
+  const passingMarks = exam.passingMarks ?? Math.ceil(exam.maxMarks * 0.33);
 
   const form = useForm<studentExamResultFormData>({
     resolver: zodResolver(studentExamResultSchema),
@@ -139,14 +165,18 @@ export default function ExamResultsForm({
     const numericMarks = marks === '' ? null : Number.parseFloat(marks);
 
     if (numericMarks !== null && !isNaN(numericMarks)) {
+      // Validate marks range
+      if (numericMarks < 0 || numericMarks > exam.maxMarks) {
+        toast.error(`Marks must be between 0 and ${exam.maxMarks}`);
+        return;
+      }
+
       const percentage =
         Math.round((numericMarks / exam.maxMarks) * 100 * 100) / 100;
       const grade = calculateGrade(percentage, selectedGradeScale);
-      const passingPercentage = exam.passingMarks
-        ? (exam.passingMarks / exam.maxMarks) * 100
-        : 33;
 
-      const isPassed = isPassingGrade(percentage, passingPercentage);
+      // Check if passed using >= (not >)
+      const isPassed = checkIfPassed(numericMarks, passingMarks);
 
       form.setValue(`results.${index}.obtainedMarks`, numericMarks);
       form.setValue(`results.${index}.percentage`, percentage);
@@ -154,7 +184,7 @@ export default function ExamResultsForm({
       form.setValue(`results.${index}.isPassed`, isPassed);
       form.setValue(`results.${index}.isAbsent`, false);
     } else {
-      form.setValue(`results.${index}.obtainedMarks`, numericMarks);
+      form.setValue(`results.${index}.obtainedMarks`, null);
       form.setValue(`results.${index}.percentage`, null);
       form.setValue(`results.${index}.gradeLabel`, null);
       form.setValue(`results.${index}.isPassed`, null);
@@ -180,12 +210,13 @@ export default function ExamResultsForm({
 
     // Recalculate all grades with new scale
     watchedResults.forEach((result, index) => {
-      if (result.percentage !== null && !result.isAbsent) {
+      if (
+        result.percentage !== null &&
+        !result.isAbsent &&
+        result.obtainedMarks !== null
+      ) {
         const grade = calculateGrade(result.percentage, newScale);
-        const passingPercentage = exam.passingMarks
-          ? (exam.passingMarks / exam.maxMarks) * 100
-          : 33;
-        const isPassed = isPassingGrade(result.percentage, passingPercentage);
+        const isPassed = checkIfPassed(result.obtainedMarks, passingMarks);
 
         form.setValue(`results.${index}.gradeLabel`, grade?.label || null);
         form.setValue(`results.${index}.isPassed`, isPassed);
@@ -240,6 +271,16 @@ export default function ExamResultsForm({
 
   const stats = calculateStats();
 
+  // Get enrollment info for a student
+  const getEnrollmentInfo = (studentId: string) => {
+    const enrollment = enrollmentMap.get(studentId);
+    return {
+      isEnrolled: !!enrollment,
+      hallTicketIssued: enrollment?.hallTicketIssued || false,
+      status: enrollment?.status || 'NOT_ENROLLED',
+    };
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -248,14 +289,11 @@ export default function ExamResultsForm({
           <div className="flex items-center justify-between">
             <div className="space-y-1">
               <CardTitle className="flex items-center gap-2">
-                <GraduationCap className="h-5 w-5" />
                 {exam.title} - Results Entry
               </CardTitle>
               <CardDescription>
                 {exam.subject.name} • {exam.examSession.title} • Max Marks:{' '}
-                {exam.maxMarks}
-                {exam.passingMarks !== null &&
-                  ` • Passing: ${exam.passingMarks}`}
+                {exam.maxMarks} • Passing: {passingMarks}
               </CardDescription>
             </div>
             <div className="items-center gap-2 hidden md:flex">
@@ -275,12 +313,11 @@ export default function ExamResultsForm({
             </div>
           </div>
         </CardHeader>
+        <GradeScaleSelector
+          selectedScale={selectedGradeScale}
+          onScaleChange={handleGradeScaleChange}
+        />
       </Card>
-
-      <GradeScaleSelector
-        selectedScale={selectedGradeScale}
-        onScaleChange={handleGradeScaleChange}
-      />
 
       {/* Statistics */}
       <Card>
@@ -298,12 +335,12 @@ export default function ExamResultsForm({
               </div>
               <div className="text-sm text-muted-foreground">Total</div>
             </div>
-            {/* <div className="text-center">
-              <div className="text-2xl font-bold text-green-600">
+            <div className="text-center">
+              <div className="text-2xl font-bold text-purple-600">
                 {stats.attempted}
               </div>
               <div className="text-sm text-muted-foreground">Attempted</div>
-            </div> */}
+            </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-emerald-600">
                 {stats.passed}
@@ -323,16 +360,10 @@ export default function ExamResultsForm({
               <div className="text-sm text-muted-foreground">Absent</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-purple-600">
-                {stats.averageMarks}
+              <div className="text-2xl font-bold text-indigo-600">
+                {stats.averageMarks}/{exam.maxMarks}
               </div>
               <div className="text-sm text-muted-foreground">Avg Marks</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-indigo-600">
-                {stats.averagePercentage}%
-              </div>
-              <div className="text-sm text-muted-foreground">Avg %</div>
             </div>
           </div>
         </CardContent>
@@ -346,57 +377,52 @@ export default function ExamResultsForm({
             <CardHeader>
               <CardTitle>Student Results</CardTitle>
               <CardDescription>
-                Enter marks for each student. Grades are calculated
-                automatically using the selected scale.
+                Enter marks for each student. Passing threshold: {passingMarks}/
+                {exam.maxMarks} marks
                 {existingResults.length > 0 &&
-                  ' Existing results are pre-filled for editing.'}
+                  ' • Existing results are pre-filled for editing.'}
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="rounded-md border">
+              <div className="rounded-md border overflow-x-auto">
                 <Table>
                   <TableHeader>
                     <TableRow>
                       <TableHead className="w-[50px]">#</TableHead>
-                      <TableHead>Student</TableHead>
-                      <TableHead className="whitespace-nowrap">
-                        Roll No.
+                      <TableHead className="min-w-[200px]">Student</TableHead>
+                      <TableHead className="min-w-[100px]">Roll No.</TableHead>
+                      <TableHead className="min-w-[150px]">Status</TableHead>
+                      <TableHead className="w-[120px] truncate">
+                        Marks (/{exam.maxMarks})
                       </TableHead>
-                      <TableHead className="w-[120px]">Marks</TableHead>
                       <TableHead className="w-[80px]">%</TableHead>
                       <TableHead className="w-[80px]">Grade</TableHead>
-                      <TableHead className="w-[80px]">Status</TableHead>
+                      <TableHead className="w-[100px]">Result</TableHead>
                       <TableHead className="w-[80px]">Absent</TableHead>
-                      <TableHead>Remarks</TableHead>
+                      <TableHead className="min-w-[120px]">Remarks</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {fields.map((field, index) => {
                       const student = students[index];
-                      const result = watchedResults?.[index] || {
-                        studentId: student.id,
-                        examId: exam.id,
-                        obtainedMarks: null,
-                        percentage: null,
-                        gradeLabel: null,
-                        remarks: null,
-                        isPassed: null,
-                        isAbsent: false,
-                      };
+                      const enrollmentInfo = getEnrollmentInfo(student.id);
+                      const result = watchedResults?.[index];
 
                       const grade =
-                        result.percentage !== null
+                        result?.percentage !== null &&
+                        result?.percentage !== undefined
                           ? calculateGrade(
                               result.percentage,
                               selectedGradeScale
                             )
                           : null;
+
                       const gradeBadge =
-                        grade && result.isPassed !== null
+                        grade && result?.isPassed !== null
                           ? getGradeColorBadge(
                               grade,
                               result.isPassed || false,
-                              exam.passingMarks || 33
+                              passingMarks
                             )
                           : 'outline';
 
@@ -417,8 +443,42 @@ export default function ExamResultsForm({
                               )}
                             </div>
                           </TableCell>
-                          <TableCell>{student.rollNumber}</TableCell>
-                          <TableCell className="min-w-[90px]">
+                          <TableCell>
+                            <Badge variant="outline">
+                              {student.rollNumber}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            {enrollmentInfo.isEnrolled ? (
+                              <>
+                                <Badge
+                                  variant="ENROLLED"
+                                  className="gap-1 justify-start"
+                                >
+                                  <CheckCircle className="h-3 w-3" />
+                                  Enrolled
+                                </Badge>
+                                {enrollmentInfo.hallTicketIssued && (
+                                  <Badge
+                                    variant="secondary"
+                                    className="gap-1 justify-start"
+                                  >
+                                    <FileCheck className="h-3 w-3" />
+                                    Hall Ticket
+                                  </Badge>
+                                )}
+                              </>
+                            ) : (
+                              <Badge
+                                variant="NOT_ENROLLED"
+                                className="gap-1 justify-start"
+                              >
+                                <XCircle className="h-3 w-3" />
+                                Not Enrolled
+                              </Badge>
+                            )}
+                          </TableCell>
+                          <TableCell>
                             <FormField
                               control={form.control}
                               name={`results.${index}.obtainedMarks`}
@@ -440,72 +500,84 @@ export default function ExamResultsForm({
                                           e.target.value
                                         );
                                       }}
-                                      disabled={result.isAbsent}
+                                      disabled={
+                                        result?.isAbsent ||
+                                        !enrollmentInfo.isEnrolled
+                                      }
                                       className="w-full"
                                     />
                                   </FormControl>
                                 </FormItem>
                               )}
                             />
-                          </TableCell>
-                          <TableCell>
-                            {result.percentage !== null && (
-                              <Badge
-                                variant={
-                                  result.isPassed ? 'default' : 'destructive'
-                                }
-                              >
-                                {result.percentage}%
-                              </Badge>
+                            {!enrollmentInfo.isEnrolled && (
+                              <p className="text-xs text-muted-foreground mt-1 truncate">
+                                Not enrolled
+                              </p>
                             )}
                           </TableCell>
                           <TableCell>
-                            {result.gradeLabel && (
+                            {result?.percentage !== null &&
+                              result?.percentage !== undefined && (
+                                <Badge
+                                  variant={result.isPassed ? 'PASS' : 'FAILED'}
+                                >
+                                  {result.percentage}%
+                                </Badge>
+                              )}
+                          </TableCell>
+                          <TableCell>
+                            {result?.gradeLabel && (
                               <Badge variant={gradeBadge}>
                                 {result.gradeLabel}
                               </Badge>
                             )}
                           </TableCell>
                           <TableCell>
-                            {result.isPassed !== null && (
-                              <Badge
-                                variant={
-                                  result.isAbsent
-                                    ? 'absent'
-                                    : result.isPassed
-                                      ? 'pass'
-                                      : 'failed'
-                                }
-                              >
-                                {result.isAbsent
-                                  ? 'Absent'
-                                  : result.isPassed
-                                    ? 'Pass'
-                                    : 'Fail'}
+                            {result?.isAbsent ? (
+                              <Badge variant="ABSENT" className="gap-1">
+                                <AlertCircle className="h-3 w-3" />
+                                Absent
                               </Badge>
-                            )}
+                            ) : result?.isPassed !== null &&
+                              result?.isPassed !== undefined ? (
+                              <Badge
+                                variant={result.isPassed ? 'PASS' : 'FAILED'}
+                                className="gap-1"
+                              >
+                                {result.isPassed ? (
+                                  <>
+                                    <CheckCircle className="h-3 w-3" />
+                                    Pass
+                                  </>
+                                ) : (
+                                  <>
+                                    <XCircle className="h-3 w-3" />
+                                    Fail
+                                  </>
+                                )}
+                              </Badge>
+                            ) : null}
                           </TableCell>
                           <TableCell>
                             <Checkbox
-                              checked={result.isAbsent}
+                              checked={result?.isAbsent || false}
                               onCheckedChange={(checked) =>
                                 handleAbsentToggle(index, !!checked)
                               }
+                              disabled={!enrollmentInfo.isEnrolled}
                             />
                           </TableCell>
                           <TableCell>
                             <AlertDialog>
                               <AlertDialogTrigger asChild>
                                 <Button
-                                  variant={
-                                    result.remarks ? 'outline' : 'outline'
-                                  }
+                                  variant="outline"
                                   size="sm"
                                   className="w-full"
+                                  disabled={!enrollmentInfo.isEnrolled}
                                 >
-                                  {result.remarks
-                                    ? 'Edit Remark'
-                                    : 'Add Remark'}
+                                  {result?.remarks ? 'Edit' : 'Add'}
                                 </Button>
                               </AlertDialogTrigger>
                               <AlertDialogContent>

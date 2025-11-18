@@ -45,6 +45,7 @@ const Features = () => {
     return null;
   }
   const currentTheme = theme === 'system' ? systemTheme : theme;
+
   return (
     <div className="my-10 p-10">
       <div className="z-10 flex  items-center justify-center">

@@ -219,7 +219,7 @@ export function LeadActivityTimeline({
         </div>
       ) : (
         <div className="space-y-0 ">
-          <ScrollArea className="space-y-1 h-[80vh]">
+          <ScrollArea className="space-y-1 h-[50vh]">
             {filteredActivities.map((activity, index) => {
               const isExpanded = expandedId === activity.id;
               const colorClass =

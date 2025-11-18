@@ -23,14 +23,16 @@ import {
 import { useCallback, useState } from 'react';
 import { toast } from 'sonner';
 import Papa from 'papaparse';
-import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-} from '@/components/ui/popover';
+
 import { goggleImportHolidayFormSchema } from '@/lib/schemas';
 import { z } from 'zod';
 import { ImportGoogleSheetHolidayAction } from '@/lib/data/holiday/import-google-sheet-holiday-action';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 interface ParsedHoliday {
   name: string;
@@ -378,34 +380,39 @@ const HolidayGoogleSheetImporter = () => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-base">
             Google Sheets URL{' '}
-            <Popover>
-              <PopoverTrigger>
-                <HelpCircle className="ml-1 h-5 w-5 text-blue-500" />
-              </PopoverTrigger>
-              <PopoverContent className="mt-10 px-16">
-                <Alert>
-                  <Info className="h-4 w-4" />
-                  <AlertDescription>
-                    <div className="space-y-2 text-sm">
-                      <span>
-                        <strong>Required columns:</strong> name, startDate,
-                        endDate, type, reason, isRecurring
-                      </span>
-                      <br />
-                      <span>
-                        <strong>Supported date formats:</strong> DD/MM/YYYY,
-                        MM/DD/YYYY, YYYY-MM-DD, DD-MM-YYYY
-                      </span>
-                      <br />
-                      <span>
-                        <strong>Valid types:</strong> PLANNED, SUDDEN,
-                        INSTITUTION_SPECIFIC
-                      </span>
-                    </div>
-                  </AlertDescription>
-                </Alert>
-              </PopoverContent>
-            </Popover>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <HelpCircle className="ml-1 h-5 w-5 text-blue-500 cursor-pointer" />
+                </TooltipTrigger>
+                <TooltipContent className="max-w-sm p-4 rounded-xl text-sm space-y-3 bg-white shadow-xl border">
+                  <div className="p-3 rounded-lg bg-blue-50 border border-blue-100 space-y-1">
+                    <p className="font-semibold text-blue-800">
+                      Required columns
+                    </p>
+                    <p className="text-blue-700 text-xs">
+                      name, startDate, endDate, type, reason, isRecurring
+                    </p>
+                  </div>
+
+                  <div className="p-3 rounded-lg bg-green-50 border border-green-100 space-y-1">
+                    <p className="font-semibold text-green-800">
+                      Supported date formats
+                    </p>
+                    <p className="text-green-700 text-xs">
+                      DD/MM/YYYY, MM/DD/YYYY, YYYY-MM-DD, DD-MM-YYYY
+                    </p>
+                  </div>
+
+                  <div className="p-3 rounded-lg bg-purple-50 border border-purple-100 space-y-1">
+                    <p className="font-semibold text-purple-800">Valid types</p>
+                    <p className="text-purple-700 text-xs">
+                      PLANNED, SUDDEN, INSTITUTION_SPECIFIC
+                    </p>
+                  </div>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </CardTitle>
           <CardDescription>
             <p className="text-muted-foreground text-sm">

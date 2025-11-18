@@ -127,6 +127,26 @@ interface LeadTableProps {
   leads: LeaveWithAssignTo[];
 }
 
+function onShare(leadName: string, leadId: string) {
+  const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
+  const shareUrl = `${baseUrl}/dashboard/leads/${leadId}`;
+
+  if (navigator.share) {
+    navigator
+      .share({
+        title: leadName,
+        text: 'Check this lead’s details.',
+        url: shareUrl,
+      })
+      .catch(() => {
+        // user canceled
+      });
+  } else {
+    navigator.clipboard.writeText(shareUrl);
+    toast.success('Shareable link copied to clipboard.');
+  }
+}
+
 // Custom filter function for multi-column searching
 const multiColumnFilterFn: FilterFn<LeaveWithAssignTo> = (
   row,
@@ -208,8 +228,10 @@ const columns: ColumnDef<LeaveWithAssignTo>[] = [
     accessorKey: 'city',
     cell: ({ row }) => (
       <div className="flex flex-col">
-        <div className="text-sm leading-5">{row.original.city || '-'}</div>
-        <div className="text-xs text-muted-foreground leading-4">
+        <div className="text-sm leading-5 truncate">
+          {row.original.city || '-'}
+        </div>
+        <div className="text-xs text-muted-foreground leading-4 truncate">
           {row.original.state || '-'}
         </div>
       </div>
@@ -220,7 +242,9 @@ const columns: ColumnDef<LeaveWithAssignTo>[] = [
     header: 'Enquiry For',
     accessorKey: 'enquiryFor',
     cell: ({ row }) => (
-      <div className="text-sm leading-5">{row.original.enquiryFor || '-'}</div>
+      <div className="text-sm leading-5 truncate">
+        {row.original.enquiryFor || '-'}
+      </div>
     ),
     size: 150,
   },
@@ -303,7 +327,7 @@ const columns: ColumnDef<LeaveWithAssignTo>[] = [
     cell: ({ row }) => {
       const source = row.original.source as string;
       return (
-        <div className="text-sm leading-5 capitalize">
+        <div className="text-sm leading-5 capitalize whitespace-nowrap">
           {source.toLowerCase().replace(/_/g, ' ')}
         </div>
       );
@@ -937,25 +961,35 @@ function RowActions({ row }: { row: Row<LeaveWithAssignTo> }) {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuGroup>
-          <DropdownMenuItem>
-            <span>View Details</span>
+          <DropdownMenuItem asChild>
+            <Link href={`/dashboard/leads/${row.original.id}`} prefetch={true}>
+              View Details
+            </Link>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <span>Edit Lead</span>
-            <DropdownMenuShortcut>⌘E</DropdownMenuShortcut>
+            <Link
+              href={`/dashboard/leads/${row.original.id}/edit`}
+              prefetch={true}
+            >
+              Edit Lead
+            </Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>Share</DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => onShare(row.original.studentName, row.original.id)}
+          >
+            Share
+          </DropdownMenuItem>
           <DropdownMenuItem>Add to favorites</DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem className="text-destructive focus:text-destructive">
+        {/* <DropdownMenuItem className="text-destructive focus:text-destructive">
           <span>Delete</span>
           <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
-        </DropdownMenuItem>
+        </DropdownMenuItem> */}
       </DropdownMenuContent>
     </DropdownMenu>
   );

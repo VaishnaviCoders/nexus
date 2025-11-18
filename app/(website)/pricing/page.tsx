@@ -3,7 +3,7 @@ import React from 'react';
 
 const page = () => {
   return (
-    <div className="h-screen">
+    <div className="min-h-screen grid place-items-center">
       <PricingSection />
     </div>
   );

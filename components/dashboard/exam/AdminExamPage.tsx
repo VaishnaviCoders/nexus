@@ -491,7 +491,7 @@ export function AdminExamsPage({
                   ) : (
                     <Button size="sm" asChild aria-label="Get hall ticket">
                       <Link href={`/dashboard/exams/${e.id}#hall-ticket`}>
-                        Get Hall Ticket
+                        Hall Ticket
                       </Link>
                     </Button>
                   )}

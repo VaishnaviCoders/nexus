@@ -38,37 +38,48 @@ const badgeVariants = cva(
           'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
 
         // Fees
-
         PAID: 'bg-emerald-50 text-emerald-700 hover:bg-emerald-50 border-emerald-200',
         UNPAID:
           'bg-yellow-50 text-yellow-700 hover:bg-yellow-50 border-yellow-200',
         OVERDUE: 'bg-red-50 text-red-700 hover:bg-red-50 border-red-200',
 
-        // For Exams
-        LIVE: 'bg-green-700/10 text-green-800 border-green-700/20',
-        UPCOMING: 'bg-yellow-600/10 text-yellow-700 border-yellow-600/20',
-        OPEN: 'bg-blue-700/10 text-blue-800 border-blue-700/20',
+        // For Exams Status
+        LIVE: 'bg-green-50 text-green-500 hover:bg-green-50 border-green-200',
+        UPCOMING:
+          'bg-yellow-50 text-yellow-500 hover:bg-yellow-50 border-yellow-200',
+        OPEN: 'bg-blue-50 text-blue-500 hover:bg-blue-50 border-blue-200',
         COMPLETED: 'bg-muted text-foreground/70 border-border',
-        CANCELLED: 'bg-red-600/10 text-red-700 border-red-600/20',
+        CANCELLED: 'bg-red-50 text-red-500 hover:bg-red-50 border-red-200',
+
+        // Exam Enrollment Status
+        ENROLLED: 'bg-green-50 text-green-500 border-green-200',
+        NOT_ENROLLED: 'bg-red-50 text-red-500 border-red-200',
+        ATTENDED: 'bg-green-50 text-green-500 border-green-200',
+        ABSENT: 'bg-red-50 text-red-500 border-red-200',
+        EXEMPT: 'bg-yellow-50 text-yellow-500 border-yellow-200',
+        DISQUALIFIED: 'bg-red-50 text-red-500 border-red-200',
+
+        HALL_TICKET_ISSUED: 'bg-green-50 text-green-500 border-green-200',
+        HALL_TICKET_NOT_ISSUED: 'bg-red-50 text-red-500 border-red-200',
         //  Student Exam Status
 
-        pass: 'border-transparent bg-green-100 text-green-600 hover:bg-green-200 cursor-pointer',
-        failed:
-          'border-transparent bg-red-100 text-red-600 hover:bg-red-200 cursor-pointer',
-        excellent:
-          'border-transparent bg-emerald-100 text-emerald-700 hover:bg-emerald-200 cursor-pointer',
-        outstanding:
-          'border-transparent bg-green-100 text-green-700 hover:bg-green-200 cursor-pointer',
-        veryGood:
-          'border-transparent bg-lime-100 text-lime-700 hover:bg-lime-200 cursor-pointer',
-        good: 'border-transparent bg-yellow-100 text-yellow-700 hover:bg-yellow-200 cursor-pointer',
-        aboveAverage:
-          'border-transparent bg-orange-100 text-orange-700 hover:bg-orange-200 cursor-pointer',
-        average:
+        PASS: 'border-transparent bg-green-100 text-green-700 hover:bg-green-200 cursor-pointer',
+        FAILED:
+          'border-transparent bg-red-100 text-red-700 hover:bg-red-200 cursor-pointer',
+        EXCELLENT:
           'border-transparent bg-blue-100 text-blue-700 hover:bg-blue-200 cursor-pointer',
-        belowAverage:
-          'border-transparent bg-purple-100 text-purple-700 hover:bg-purple-200 cursor-pointer',
-        poor: 'border-transparent bg-pink-100 text-pink-700 hover:bg-pink-200 cursor-pointer',
+        OUTSTANDING:
+          'border-transparent bg-indigo-100 text-indigo-700 hover:bg-indigo-200 cursor-pointer',
+        VERY_GOOD:
+          'border-transparent bg-emerald-100 text-emerald-700 hover:bg-emerald-200 cursor-pointer',
+        GOOD: 'border-transparent bg-lime-100 text-lime-700 hover:bg-lime-200 cursor-pointer',
+        ABOVE_AVERAGE:
+          'border-transparent bg-yellow-100 text-yellow-700 hover:bg-yellow-200 cursor-pointer',
+        AVERAGE:
+          'border-transparent bg-gray-100 text-gray-700 hover:bg-gray-200 cursor-pointer',
+        BELOW_AVERAGE:
+          'border-transparent bg-orange-100 text-orange-700 hover:bg-orange-200 cursor-pointer',
+        POOR: 'border-transparent bg-red-100 text-red-800 hover:bg-red-200 cursor-pointer',
 
         // Notice Priority
         URGENT: 'bg-red-100 text-red-800 border-red-200',

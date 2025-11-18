@@ -51,6 +51,21 @@ export type AcademicYear = Prisma.AcademicYearModel
  */
 export type Organization = Prisma.OrganizationModel
 /**
+ * Model FeeSenseAgent
+ * 
+ */
+export type FeeSenseAgent = Prisma.FeeSenseAgentModel
+/**
+ * Model FeeSenseExecutionLog
+ * 
+ */
+export type FeeSenseExecutionLog = Prisma.FeeSenseExecutionLogModel
+/**
+ * Model FeeSenseReport
+ * 
+ */
+export type FeeSenseReport = Prisma.FeeSenseReportModel
+/**
  * Model User
  * 
  */

@@ -25,6 +25,7 @@ export const getRecentAdminActivities = async (): Promise<ActivityItem[]> => {
 
   const [
     payments,
+    leads,
     complaints,
     notices,
     attendance,
@@ -38,6 +39,12 @@ export const getRecentAdminActivities = async (): Promise<ActivityItem[]> => {
       take: 10,
       orderBy: { createdAt: 'desc' },
       include: { fee: { include: { student: true } }, payer: true },
+    }),
+    prisma.lead.findMany({
+      where: { organizationId: orgId },
+      take: 10,
+      orderBy: { createdAt: 'desc' },
+      include: { activities: true },
     }),
     prisma.anonymousComplaint.findMany({
       where: { academicYearId: ayId, organizationId: orgId },
@@ -94,6 +101,34 @@ export const getRecentAdminActivities = async (): Promise<ActivityItem[]> => {
       badge: { text: 'Paid', variant: 'green' },
       priority: 'medium',
       metadata: { amount: p.amount },
+    });
+  });
+
+  leads.forEach((l) => {
+    activities.push({
+      id: `lead-${l.id}`,
+      type: 'lead',
+      title: 'New Lead Generated',
+      description: `${l.studentName} ${l.email} (${l.phone})`,
+      iconStyle: 'lead',
+      time: rel(l.createdAt),
+      badge: { text: 'New', variant: 'blue' },
+      priority: 'high',
+      metadata: {
+        studentName: l.studentName,
+        email: l.email || '',
+        phone: l.phone || '',
+      },
+    });
+    activities.push({
+      id: `lead-${l.activities.map((a) => a.id)}`,
+      type: 'lead',
+      title: 'Lead Activity',
+      description: l.activities.map((a) => a.description).join(', '),
+      iconStyle: 'lead',
+      time: rel(l.createdAt),
+      badge: { text: 'New', variant: 'blue' },
+      priority: 'high',
     });
   });
 
@@ -178,20 +213,22 @@ export const getRecentAdminActivities = async (): Promise<ActivityItem[]> => {
   students.forEach((s) => {
     const gradeInfo = s.grade ? `Grade ${s.grade.grade}` : '';
     const sectionInfo = s.section?.name ? `-${s.section.name}` : '';
-    const gradeSection = gradeInfo || sectionInfo ? ` (${gradeInfo}${sectionInfo})` : '';
-    
+    const gradeSection =
+      gradeInfo || sectionInfo ? ` (${gradeInfo}${sectionInfo})` : '';
+
     activities.push({
       id: `student-${s.id}`,
       type: 'student',
       title: 'Student Record',
-      description: `${s.firstName || ''} ${s.lastName || ''}${gradeSection}`.trim(),
+      description:
+        `${s.firstName || ''} ${s.lastName || ''}${gradeSection}`.trim(),
       iconStyle: 'student',
       time: rel(s.createdAt),
       badge: { text: 'New', variant: 'blue' },
       priority: 'medium',
-      metadata: { 
+      metadata: {
         grade: s.grade?.grade,
-        section: s.section?.name 
+        section: s.section?.name,
       },
     });
   });
@@ -207,8 +244,8 @@ export const getRecentAdminActivities = async (): Promise<ActivityItem[]> => {
       priority: 'medium',
       badge: {
         text: 'System',
-        variant: 'blue'
-      }
+        variant: 'blue',
+      },
     });
   });
 

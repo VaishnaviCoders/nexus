@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useMemo, useTransition } from 'react';
 import { format } from 'date-fns';
 import { Button } from '@/components/ui/button';
 import {
@@ -32,196 +32,256 @@ import {
   Home,
 } from 'lucide-react';
 import { toast } from 'sonner';
-import {
-  Exam,
-  ExamEnrollment,
-  ExamResult,
-  HallTicket,
-} from '@/generated/prisma/client';
+import { Prisma } from '@/generated/prisma/client';
+import { ExamMode, ExamStatus } from '@/generated/prisma/enums';
 import { enrollStudentToExam } from '@/lib/data/exam/enroll-student-to-exam';
 import { formatDateTimeIN } from '@/lib/utils';
 import Link from 'next/link';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import HallTicketUI from './HallTicketUI';
 
-function onCopy(examId: string) {
-  navigator.clipboard
-    .writeText(examId)
-    .then(() => toast.success('Exam ID copied to clipboard.'))
-    .catch(() => toast.error('Unable to copy exam ID. Please try again.'));
-}
-
-function onShare(examTitle: string) {
-  const url = typeof window !== 'undefined' ? window.location.href : '';
-  if (navigator.share) {
-    navigator
-      .share({
-        title: examTitle,
-        text: 'Check this exam details.',
-        url,
-      })
-      .catch(() => {
-        // ignore cancel
-      });
-  } else {
-    navigator.clipboard.writeText(url);
-    toast.success('Shareable link copied to clipboard.');
-  }
-}
-
-function onAddCalendar(exam: any, start: Date, end: Date) {
-  // Simple calendar event creation - in production you'd use a proper ICS library
-  const event = {
-    title: exam.title,
-    start: start.toISOString(),
-    end: end.toISOString(),
-    description: exam.description || '',
-    location: exam.venue || '',
-  };
-
-  // Create a simple calendar URL for Google Calendar
-  const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(event.title)}&dates=${start.toISOString().replace(/[-:]/g, '').split('.')[0]}Z/${end.toISOString().replace(/[-:]/g, '').split('.')[0]}Z&details=${encodeURIComponent(event.description)}&location=${encodeURIComponent(event.location)}`;
-
-  window.open(googleCalendarUrl, '_blank');
-  toast.success('Opening calendar...');
-}
-
-// Define the complete exam type with includes
-type ExamWithIncludes = Exam & {
+type Exam = {
+  id: string;
+  title: string;
+  description: string | null;
+  maxMarks: number;
+  passingMarks: number | null;
+  startDate: Date;
+  endDate: Date | null;
+  status: ExamStatus;
+  mode: ExamMode;
+  venue: string | null;
+  venueMapUrl: string | null;
+  instructions: string | null;
+  isResultsPublished: boolean;
+  durationInMinutes: number | null;
   subject: {
     id: string;
     name: string;
     code: string;
     description: string | null;
+    organizationId: string;
+    createdAt: Date;
+    updatedAt: Date;
   };
   examSession: {
     id: string;
     title: string;
-    description: string | null;
     startDate: Date;
     endDate: Date;
   };
-  examResult: ExamResult[];
-  examEnrollment: ExamEnrollment[];
-  hallTickets: HallTicket[];
-  _count: {
-    examEnrollment: number;
-    examResult: number;
+  organization: {
+    name: string | null;
+    organizationLogo: string | null;
+    contactEmail: string | null;
+    contactPhone: string | null;
+    website: string | null;
+  };
+  grade: {
+    id: string;
+    grade: string;
+  };
+  section: {
+    id: string;
+    name: string;
+    classTeacher: {
+      id: string;
+      user: {
+        firstName: string;
+        lastName: string;
+      };
+    } | null;
   };
 };
 
+type Enrollment = Prisma.ExamEnrollmentGetPayload<{}>;
+
+type Result = Prisma.ExamResultGetPayload<{}>;
+
+type HallTicket = Prisma.HallTicketGetPayload<{
+  include: {
+    organization: {
+      select: {
+        name: true;
+        organizationLogo: true;
+        contactEmail: true;
+        contactPhone: true;
+        website: true;
+      };
+    };
+    student: {
+      select: {
+        firstName: true;
+        lastName: true;
+        rollNumber: true;
+        profileImage: true;
+        email: true;
+        phoneNumber: true;
+        grade: { select: { grade: true } };
+        section: { select: { name: true } };
+      };
+    };
+    examSession: {
+      select: {
+        title: true;
+        startDate: true;
+        endDate: true;
+      };
+    };
+    exam: {
+      select: {
+        id: true;
+        title: true;
+        startDate: true;
+        endDate: true;
+        venue: true;
+        mode: true;
+        durationInMinutes: true;
+        subject: { select: { name: true; code: true } };
+      };
+    };
+  };
+}>;
+
+type ExamResultSummary = {
+  obtainedMarks: number | null;
+  percentage: number | null;
+  isPassed: boolean | null;
+  isAbsent: boolean;
+};
+
 interface ExamDetailsPageProps {
-  exam: ExamWithIncludes;
+  exam: Exam;
   studentId: string;
-  enrolledStudentsCount: number;
-  studentEnrollment: ExamEnrollment | null;
-  studentResult: ExamResult | null;
-  studentHallTicket: HallTicket | null;
-  allExamResults: Array<{
-    obtainedMarks: number | null;
-    isPassed: boolean | null;
-    isAbsent: boolean;
-    percentage: number | null;
-  }>;
+  enrollment: Enrollment | null;
+  result: Result | null;
+  hallTicket: HallTicket | null;
+  examResults: ExamResultSummary[];
 }
 
 export function ExamDetailsPage({
   exam,
   studentId,
-  enrolledStudentsCount,
-  studentEnrollment,
-  studentResult,
-  studentHallTicket,
-  allExamResults,
+  enrollment,
+  result,
+  hallTicket,
+  examResults,
 }: ExamDetailsPageProps) {
-  const [isEnrolling, setIsEnrolling] = useState(false);
-  const [isHallTicketDownloading, setIsHallTicketDownloading] = useState(false);
+  const [isEnrolling, startTransition] = useTransition();
 
   const startDate = new Date(exam.startDate);
   const endDate = exam.endDate
     ? new Date(exam.endDate)
     : new Date(startDate.getTime() + (exam.durationInMinutes || 60) * 60000);
 
-  const handleEnroll = async () => {
-    setIsEnrolling(true);
-    try {
-      const result = await enrollStudentToExam(studentId, exam.id);
+  function copyExamId(examId: string) {
+    navigator.clipboard
+      .writeText(examId)
+      .then(() => toast.success('Exam ID copied to clipboard.'))
+      .catch(() => toast.error('Unable to copy exam ID. Please try again.'));
+  }
 
-      if (result.error) {
-        toast.error(result.error);
-      } else {
-        toast.success('Successfully enrolled in exam!');
-        // The page will revalidate automatically due to revalidatePath in the action
-      }
-    } catch (error) {
-      console.error('Enrollment failed:', error);
-      toast.error('Failed to enroll. Please try again.');
-    } finally {
-      setIsEnrolling(false);
+  function shareExam(examTitle: string) {
+    const url = typeof window !== 'undefined' ? window.location.href : '';
+    if (navigator.share) {
+      navigator
+        .share({
+          title: examTitle,
+          text: 'Check this exam details.',
+          url,
+        })
+        .catch(() => {});
+    } else {
+      navigator.clipboard.writeText(url);
+      toast.success('Shareable link copied to clipboard.');
     }
+  }
+
+  function addToCalendar(exam: Exam, startDate: Date, endDate: Date) {
+    const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(exam.title)}&dates=${startDate.toISOString().replace(/[-:]/g, '').split('.')[0]}Z/${endDate.toISOString().replace(/[-:]/g, '').split('.')[0]}Z&details=${encodeURIComponent(exam.description || '')}&location=${encodeURIComponent(exam.venue || '')}`;
+
+    window.open(googleCalendarUrl, '_blank');
+    toast.success('Opening calendar...');
+  }
+
+  const handleEnroll = async () => {
+    startTransition(async () => {
+      try {
+        const enrollResult = await enrollStudentToExam(studentId, exam.id);
+
+        if (enrollResult.error) {
+          toast.error(enrollResult.error);
+        } else {
+          toast.success('Successfully enrolled in exam!');
+        }
+      } catch (error) {
+        console.error('Enrollment failed:', error);
+        toast.error('Failed to enroll. Please try again.');
+      }
+    });
   };
 
   const handleDownloadHallTicket = () => {
-    if (studentHallTicket?.pdfUrl) {
-      window.open(studentHallTicket.pdfUrl, '_blank');
+    if (hallTicket?.pdfUrl) {
+      window.open(hallTicket.pdfUrl, '_blank');
       toast.success('Opening hall ticket...');
     }
   };
 
-  // Memoized calculations for better performance
-  const examStats = useMemo(() => {
-    if (allExamResults.length === 0) {
+  // Calculate statistics
+  const stats = useMemo(() => {
+    const total = examResults.length;
+
+    if (total === 0) {
       return {
+        totalEnrolled: 0,
+        totalAttended: 0,
+        totalAbsent: 0,
+        attendanceRate: 0,
         passRate: 0,
         averageScore: 0,
-        attendedCount: 0,
-        absentCount: 0,
-        attendanceRate: 0,
         averagePercentage: 0,
-        passingMarks: exam.passingMarks || Math.round(exam.maxMarks * 0.4),
         topScore: 0,
         topScorePercentage: 0,
+        passingMarks: exam.passingMarks || Math.round(exam.maxMarks * 0.4),
       };
     }
 
-    const passedCount = allExamResults.filter((r) => r.isPassed).length;
-    const attendedCount = allExamResults.filter((r) => !r.isAbsent).length;
-    const absentCount = allExamResults.filter((r) => r.isAbsent).length;
-    const totalMarks = allExamResults.reduce(
-      (sum, result) => sum + (result.obtainedMarks || 0),
+    const attended = examResults.filter((r) => !r.isAbsent);
+    const totalAttended = attended.length;
+    const totalAbsent = examResults.filter((r) => r.isAbsent).length;
+    const passedCount = examResults.filter((r) => r.isPassed === true).length;
+
+    const totalMarks = attended.reduce(
+      (sum, r) => sum + (r.obtainedMarks || 0),
       0
     );
-    const maxMarks = Math.max(
-      ...allExamResults.map((r) => r.obtainedMarks || 0)
-    );
+    const topScore = Math.max(0, ...attended.map((r) => r.obtainedMarks || 0));
+
+    const averageScore = totalAttended > 0 ? totalMarks / totalAttended : 0;
+    const averagePercentage =
+      totalAttended > 0 ? (averageScore / exam.maxMarks) * 100 : 0;
 
     return {
-      passRate: (passedCount / allExamResults.length) * 100,
-      averageScore: totalMarks / allExamResults.length,
-      attendedCount,
-      absentCount,
-      attendanceRate: (attendedCount / allExamResults.length) * 100,
-      averagePercentage:
-        totalMarks > 0
-          ? (totalMarks / allExamResults.length / exam.maxMarks) * 100
-          : 0,
+      totalEnrolled: total,
+      totalAttended,
+      totalAbsent,
+      attendanceRate: (totalAttended / total) * 100,
+      passRate: (passedCount / total) * 100,
+      averageScore,
+      averagePercentage,
+      topScore,
+      topScorePercentage: topScore > 0 ? (topScore / exam.maxMarks) * 100 : 0,
       passingMarks: exam.passingMarks || Math.round(exam.maxMarks * 0.4),
-      topScore: maxMarks,
-      topScorePercentage: maxMarks > 0 ? (maxMarks / exam.maxMarks) * 100 : 0,
     };
-  }, [allExamResults, exam.maxMarks, exam.passingMarks]);
-
-  const {
-    passRate,
-    averageScore,
-    attendedCount,
-    absentCount,
-    attendanceRate,
-    averagePercentage,
-    passingMarks,
-    topScore,
-    topScorePercentage,
-  } = examStats;
-
-  const hallTicketDownload = () => {};
+  }, [examResults, exam.maxMarks, exam.passingMarks]);
 
   return (
     <div className="space-y-4 px-2">
@@ -281,14 +341,14 @@ export function ExamDetailsPage({
 
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div className="flex items-center gap-4">
-              {studentEnrollment ? (
+              {enrollment ? (
                 <Badge
                   variant="outline"
                   className="bg-green-50 text-green-700 border-green-200"
                 >
-                  {studentEnrollment.status === 'ENROLLED'
+                  {enrollment.status === 'ENROLLED'
                     ? 'Enrolled'
-                    : studentEnrollment.status}
+                    : enrollment.status}
                 </Badge>
               ) : (
                 <Badge
@@ -304,7 +364,7 @@ export function ExamDetailsPage({
               <Button
                 variant="default"
                 size="sm"
-                onClick={() => onAddCalendar(exam, startDate, endDate)}
+                onClick={() => addToCalendar(exam, startDate, endDate)}
                 className="bg-blue-600 hover:bg-blue-700"
               >
                 <CalendarPlus className="h-4 w-4 mr-2" />
@@ -313,7 +373,7 @@ export function ExamDetailsPage({
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => onShare(exam.title)}
+                onClick={() => shareExam(exam.title)}
               >
                 <Share className="h-4 w-4 mr-2" />
                 Share
@@ -321,16 +381,15 @@ export function ExamDetailsPage({
               <Button
                 variant="outline"
                 size="sm"
-                className="truncate"
-                onClick={() => onCopy(exam.id)}
+                onClick={() => copyExamId(exam.id)}
               >
                 <Copy className="h-4 w-4 mr-2" />
-                Copy Exam ID
+                Copy ID
               </Button>
             </div>
           </div>
 
-          {!studentEnrollment && exam.status === 'UPCOMING' && (
+          {!enrollment && exam.status === 'UPCOMING' && (
             <Card className="mt-8 border-blue-200 bg-blue-50/50">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
@@ -354,32 +413,44 @@ export function ExamDetailsPage({
               </CardContent>
             </Card>
           )}
-          {studentEnrollment && exam.status === 'UPCOMING' && (
-            <Card className="mt-8 border-blue-200 bg-blue-50/50">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="font-semibold text-blue-900 mb-1">
-                      Download HallTicket
-                    </h3>
-                    <p className="text-blue-700 text-sm">
-                      Your hall ticket is available for this exam. Please
-                      download and keep a copy handy for entry.
-                    </p>
+
+          {enrollment &&
+            (exam.status === 'UPCOMING' || exam.status === 'LIVE') && (
+              <Card className="mt-8 border-blue-200 bg-blue-50/50">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="font-semibold text-blue-900 mb-1">
+                        Download Hall Ticket
+                      </h3>
+                      <p className="text-blue-700 text-sm">
+                        Your hall ticket is available for this exam. Please
+                        download and keep a copy handy for entry.
+                      </p>
+                    </div>
+
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button className="bg-blue-600 hover:bg-blue-700">
+                          Download Now
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle>Hall Ticket</DialogTitle>
+                          <DialogDescription>
+                            Review your hall ticket before downloading.
+                          </DialogDescription>
+                        </DialogHeader>
+                        <DialogContent className="max-w-7xl h-full overflow-y-auto">
+                          {hallTicket && <HallTicketUI data={hallTicket} />}
+                        </DialogContent>
+                      </DialogContent>
+                    </Dialog>
                   </div>
-                  <Button
-                    onClick={hallTicketDownload}
-                    disabled={isHallTicketDownloading}
-                    className="bg-blue-600 hover:bg-blue-700"
-                  >
-                    {isHallTicketDownloading
-                      ? 'Downloading ...'
-                      : 'Download Now'}
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          )}
+                </CardContent>
+              </Card>
+            )}
         </CardContent>
       </Card>
 
@@ -393,7 +464,7 @@ export function ExamDetailsPage({
         <CardContent className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {/* Participation Card */}
-            <Card className="border-0 shadow-sm bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-950/20 dark:to-blue-900/20">
+            <Card className="border-0 shadow-sm bg-gradient-to-br from-blue-50 to-blue-50 dark:from-blue-950/20 dark:to-blue-900/20">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
@@ -403,33 +474,33 @@ export function ExamDetailsPage({
                     </span>
                   </div>
                   <Badge variant="secondary" className="text-xs">
-                    {attendanceRate.toFixed(0)}%
+                    {stats.attendanceRate.toFixed(0)}%
                   </Badge>
                 </div>
 
                 <div className="space-y-3">
                   <div>
                     <div className="text-2xl font-bold text-blue-900 dark:text-blue-100">
-                      {attendedCount}
+                      {stats.totalAttended}
                     </div>
                     <div className="text-xs text-blue-600 dark:text-blue-400">
-                      out of {enrolledStudentsCount} enrolled
+                      out of {stats.totalEnrolled} enrolled
                     </div>
                   </div>
 
                   <Progress
-                    value={attendanceRate}
+                    value={stats.attendanceRate}
                     className="h-2 bg-blue-200 dark:bg-blue-800"
                   />
 
                   <div className="flex justify-between text-xs text-blue-600 dark:text-blue-400">
                     <span className="flex items-center gap-1">
                       <CheckCircle className="h-3 w-3" />
-                      {attendedCount} attended
+                      {stats.totalAttended} attended
                     </span>
                     <span className="flex items-center gap-1">
                       <XCircle className="h-3 w-3" />
-                      {absentCount} absent
+                      {stats.totalAbsent} absent
                     </span>
                   </div>
                 </div>
@@ -448,17 +519,17 @@ export function ExamDetailsPage({
                   </div>
                   <Badge
                     variant={
-                      passRate >= 75
-                        ? 'default'
-                        : passRate >= 50
-                          ? 'secondary'
-                          : 'destructive'
+                      stats.passRate >= 75
+                        ? 'EXCELLENT'
+                        : stats.passRate >= 50
+                          ? 'GOOD'
+                          : 'BELOW_AVERAGE'
                     }
                     className="text-xs"
                   >
-                    {passRate >= 75
+                    {stats.passRate >= 75
                       ? 'Excellent'
-                      : passRate >= 50
+                      : stats.passRate >= 50
                         ? 'Good'
                         : 'Needs Improvement'}
                   </Badge>
@@ -467,7 +538,7 @@ export function ExamDetailsPage({
                 <div className="space-y-3">
                   <div>
                     <div className="text-2xl font-bold text-green-900 dark:text-green-100">
-                      {passRate.toFixed(1)}%
+                      {stats.passRate.toFixed(1)}%
                     </div>
                     <div className="text-xs text-green-600 dark:text-green-400">
                       students passed
@@ -475,12 +546,13 @@ export function ExamDetailsPage({
                   </div>
 
                   <Progress
-                    value={passRate}
+                    value={stats.passRate}
                     className="h-2 bg-green-200 dark:bg-green-800"
                   />
 
                   <div className="text-xs text-green-600 dark:text-green-400">
-                    Passing threshold: {passingMarks}/{exam.maxMarks} marks
+                    Passing threshold: {stats.passingMarks}/{exam.maxMarks}{' '}
+                    marks
                   </div>
                 </div>
               </CardContent>
@@ -498,22 +570,24 @@ export function ExamDetailsPage({
                   </div>
                   <Badge
                     variant={
-                      averagePercentage >= 75
+                      stats.averagePercentage >= 75
                         ? 'default'
-                        : averagePercentage >= 50
+                        : stats.averagePercentage >= 50
                           ? 'secondary'
                           : 'destructive'
                     }
                     className="text-xs"
                   >
-                    {averagePercentage.toFixed(0)}%
+                    {stats.averagePercentage.toFixed(0)}%
                   </Badge>
                 </div>
 
                 <div className="space-y-3">
                   <div>
                     <div className="text-2xl font-bold text-orange-900 dark:text-orange-100">
-                      {averageScore > 0 ? averageScore.toFixed(1) : '—'}
+                      {stats.averageScore > 0
+                        ? stats.averageScore.toFixed(1)
+                        : '—'}
                     </div>
                     <div className="text-xs text-orange-600 dark:text-orange-400">
                       out of {exam.maxMarks} marks
@@ -521,14 +595,14 @@ export function ExamDetailsPage({
                   </div>
 
                   <Progress
-                    value={averagePercentage}
+                    value={stats.averagePercentage}
                     className="h-2 bg-orange-200 dark:bg-orange-800"
                   />
 
                   <div className="text-xs text-orange-600 dark:text-orange-400">
-                    {averagePercentage >= 75
+                    {stats.averagePercentage >= 75
                       ? 'Above expectations'
-                      : averagePercentage >= 50
+                      : stats.averagePercentage >= 50
                         ? 'Meeting expectations'
                         : 'Below expectations'}
                   </div>
@@ -557,7 +631,7 @@ export function ExamDetailsPage({
                 <div className="space-y-3">
                   <div>
                     <div className="text-2xl font-bold text-purple-900 dark:text-purple-100">
-                      {topScore > 0 ? topScore.toFixed(1) : '—'}
+                      {stats.topScore > 0 ? stats.topScore.toFixed(1) : '—'}
                     </div>
                     <div className="text-xs text-purple-600 dark:text-purple-400">
                       out of {exam.maxMarks} marks
@@ -565,14 +639,14 @@ export function ExamDetailsPage({
                   </div>
 
                   <Progress
-                    value={topScorePercentage}
+                    value={stats.topScorePercentage}
                     className="h-2 bg-purple-200 dark:bg-purple-800"
                   />
 
                   <div className="text-xs text-purple-600 dark:text-purple-400">
-                    {topScorePercentage >= 90
+                    {stats.topScorePercentage >= 90
                       ? 'Outstanding performance'
-                      : topScorePercentage >= 75
+                      : stats.topScorePercentage >= 75
                         ? 'Excellent performance'
                         : 'Good performance'}
                   </div>
@@ -597,7 +671,6 @@ export function ExamDetailsPage({
               <h3 className="font-semibold text-gray-900 mb-4">Overview</h3>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-                {/* Subject */}
                 <div className="flex items-center gap-2">
                   <User className="h-4 w-4 text-muted-foreground" />
                   <span className="text-muted-foreground">Subject:</span>
@@ -606,7 +679,6 @@ export function ExamDetailsPage({
                   </span>
                 </div>
 
-                {/* Date & Time */}
                 <div className="flex items-center gap-2">
                   <Clock className="h-4 w-4 text-muted-foreground" />
                   <span className="text-muted-foreground">Date & Time:</span>
@@ -616,7 +688,6 @@ export function ExamDetailsPage({
                   </span>
                 </div>
 
-                {/* Duration */}
                 {exam.durationInMinutes && (
                   <div className="flex items-center gap-2">
                     <Clock className="h-4 w-4 text-muted-foreground" />
@@ -627,7 +698,6 @@ export function ExamDetailsPage({
                   </div>
                 )}
 
-                {/* Venue */}
                 {exam.venue && (
                   <div className="flex items-center gap-2">
                     <MapPin className="h-4 w-4 text-muted-foreground" />
@@ -636,7 +706,6 @@ export function ExamDetailsPage({
                   </div>
                 )}
 
-                {/* Max & Passing Marks */}
                 <div className="flex items-center gap-2">
                   <Trophy className="h-4 w-4 text-muted-foreground" />
                   <span className="text-muted-foreground">Max Marks:</span>
@@ -648,14 +717,12 @@ export function ExamDetailsPage({
                   )}
                 </div>
 
-                {/* Mode */}
                 <div className="flex items-center gap-2">
                   <FileText className="h-4 w-4 text-muted-foreground" />
                   <span className="text-muted-foreground">Mode:</span>
                   <Badge variant="outline">{exam.mode}</Badge>
                 </div>
 
-                {/* Session */}
                 {exam.examSession?.title && (
                   <div className="flex items-center gap-2">
                     <FileText className="h-4 w-4 text-muted-foreground" />
@@ -666,14 +733,12 @@ export function ExamDetailsPage({
                   </div>
                 )}
 
-                {/* Status */}
                 <div className="flex items-center gap-2">
                   <FileText className="h-4 w-4 text-muted-foreground" />
                   <span className="text-muted-foreground">Status:</span>
                   <span className="font-medium">{exam.status}</span>
                 </div>
 
-                {/* Description */}
                 {exam.description && (
                   <div className="flex items-start gap-2 sm:col-span-2">
                     <FileText className="h-4 w-4 text-muted-foreground mt-1" />
@@ -728,7 +793,7 @@ export function ExamDetailsPage({
                   Venue information will be updated soon.
                 </p>
               )}
-              {exam.venueMapUrl ? (
+              {exam.venueMapUrl && (
                 <div className="flex items-start gap-3">
                   <MapPin className="h-5 w-5 text-muted-foreground mt-0.5" />
                   <div>
@@ -737,18 +802,13 @@ export function ExamDetailsPage({
                       className="underline text-primary"
                       target="_blank"
                     >
-                      {' '}
-                      {exam.venueMapUrl}{' '}
+                      {exam.venueMapUrl}
                     </Link>
                     <p className="text-sm text-muted-foreground mt-1">
-                      Click This link or copy
+                      Click this link to view the location
                     </p>
                   </div>
                 </div>
-              ) : (
-                <p className="text-muted-foreground">
-                  Venue information will be updated soon.
-                </p>
               )}
             </CardContent>
           </Card>
@@ -756,14 +816,13 @@ export function ExamDetailsPage({
 
         <TabsContent value="results">
           <div className="space-y-6">
-            {/* Hall Ticket Section */}
-            {studentEnrollment && (
+            {enrollment && (
               <Card className="border-0 shadow-sm">
                 <CardContent className="p-6">
                   <h3 className="font-semibold text-gray-900 mb-4">
                     Hall Ticket
                   </h3>
-                  {studentHallTicket &&
+                  {hallTicket &&
                   (exam.status === 'UPCOMING' || exam.status === 'LIVE') ? (
                     <div className="flex items-center justify-between p-4 bg-green-50 rounded-lg border border-green-200">
                       <div className="flex items-center gap-3">
@@ -774,10 +833,7 @@ export function ExamDetailsPage({
                           </p>
                           <p className="text-sm text-green-700">
                             Generated on{' '}
-                            {format(
-                              new Date(studentHallTicket.generatedAt),
-                              'PPP'
-                            )}
+                            {format(new Date(hallTicket.generatedAt), 'PPP')}
                           </p>
                         </div>
                       </div>
@@ -808,20 +864,19 @@ export function ExamDetailsPage({
               </Card>
             )}
 
-            {/* Results Section */}
             <Card className="border-0 shadow-sm">
               <CardContent className="p-6">
                 <h3 className="font-semibold text-gray-900 mb-4">
                   Exam Results
                 </h3>
-                {studentResult &&
+                {result &&
                 exam.isResultsPublished &&
                 exam.status === 'COMPLETED' ? (
                   <div className="space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <div className="text-center p-4 bg-blue-50 rounded-lg">
                         <div className="text-2xl font-bold text-blue-600">
-                          {studentResult.obtainedMarks}
+                          {result.obtainedMarks}
                         </div>
                         <div className="text-sm text-blue-700">
                           Marks Obtained
@@ -832,13 +887,13 @@ export function ExamDetailsPage({
                       </div>
                       <div className="text-center p-4 bg-green-50 rounded-lg">
                         <div className="text-2xl font-bold text-green-600">
-                          {studentResult.percentage?.toFixed(1)}%
+                          {result.percentage?.toFixed(1)}%
                         </div>
                         <div className="text-sm text-green-700">Percentage</div>
                       </div>
                       <div className="text-center p-4 bg-purple-50 rounded-lg">
                         <div className="text-2xl font-bold text-purple-600">
-                          {studentResult.gradeLabel || 'N/A'}
+                          {result.gradeLabel || 'N/A'}
                         </div>
                         <div className="text-sm text-purple-700">Grade</div>
                       </div>
@@ -846,23 +901,23 @@ export function ExamDetailsPage({
 
                     <div className="flex items-center justify-center gap-4">
                       <Badge
-                        variant={studentResult.isPassed ? 'pass' : 'failed'}
+                        variant={result.isPassed ? 'PASS' : 'FAILED'}
                         className="px-4 py-2"
                       >
-                        {studentResult.isPassed ? 'PASSED' : 'FAILED'}
+                        {result.isPassed ? 'PASSED' : 'FAILED'}
                       </Badge>
-                      {studentResult.isAbsent && (
+                      {result.isAbsent && (
                         <Badge variant="absent" className="px-4 py-2">
                           ABSENT
                         </Badge>
                       )}
                     </div>
 
-                    {studentResult.remarks && (
+                    {result.remarks && (
                       <div className="p-4 bg-gray-50 rounded-lg">
                         <h4 className="font-medium mb-2">Remarks</h4>
                         <p className="text-sm text-muted-foreground">
-                          {studentResult.remarks}
+                          {result.remarks}
                         </p>
                       </div>
                     )}
@@ -875,7 +930,7 @@ export function ExamDetailsPage({
                         ? 'Results will be available after the exam is completed'
                         : !exam.isResultsPublished
                           ? 'Results are being processed and will be published soon'
-                          : !studentEnrollment
+                          : !enrollment
                             ? 'Enroll in the exam to view results'
                             : 'No results available'}
                     </p>

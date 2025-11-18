@@ -220,9 +220,7 @@ One cloud platform where:
 
 **Pay-as-you-scale**:
 
-- 200 students = ₹15,800/month
-- 500 students = ₹39,500/month
-- 1000 students = ₹79,000/month
+- 1 student = ₹79/month
 
 **No Hidden Costs**:
 
@@ -466,7 +464,6 @@ One cloud platform where:
 ❌ "Alexa voice assistant integration" (PLANNED, NOT BUILT)
 ❌ "Enterprise plan available" (SINGLE PLAN ONLY)
 ❌ "Assignment management system" (NOT BUILT)
-❌ "Exam marks entry" (NOT BUILT)
 
 ### Correct AI Responses (Based on Reality)
 
@@ -641,7 +638,7 @@ One cloud platform where:
 ✅ Faster setup (24 hrs vs weeks)
 ✅ Simpler interface (less training)
 ✅ WhatsApp-first communication
-❌ They have more advanced features (assignments, marks, etc.)
+❌ They have more advanced features (assignments etc.)
 ❌ They have mobile apps (we're PWA only)
 ❌ They have multi-language (we're English only)
 

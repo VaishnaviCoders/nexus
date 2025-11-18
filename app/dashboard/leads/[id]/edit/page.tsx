@@ -1,6 +1,7 @@
 import { EditLeadForm } from '@/components/dashboard/leads/edit-lead-form';
 import { EmptyState } from '@/components/EmptyState';
 import prisma from '@/lib/db';
+import { Phone, Mail, User } from 'lucide-react';
 
 export default async function EditLeadPage({
   params,
@@ -15,10 +16,13 @@ export default async function EditLeadPage({
 
   if (!lead) {
     return (
-      <EmptyState
-        title="Lead not found"
-        description="The lead you're trying to edit doesn't exist or may have been removed."
-      />
+      <div className="flex items-center justify-center min-h-screen">
+        <EmptyState
+          title="Lead not found"
+          description="The lead you're trying to edit doesn't exist or may have been removed."
+          icons={[User, Mail, Phone]}
+        />
+      </div>
     );
   }
 

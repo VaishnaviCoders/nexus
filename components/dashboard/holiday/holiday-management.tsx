@@ -580,9 +580,9 @@ Summer Break,2025-04-20,2025-06-10,PLANNED,Annual vacation,false`;
                             className="font-mono text-sm"
                           />
                         </div>
-                        <Alert>
+                        <Alert className="border-orange-200 bg-orange-50">
                           <AlertCircle className="h-4 w-4" />
-                          <AlertDescription>
+                          <AlertDescription className="text-orange-00">
                             <strong>Date Format:</strong> YYYY-MM-DD |{' '}
                             <strong>Type:</strong> PLANNED, SUDDEN, or
                             INSTITUTION_SPECIFIC |{' '}

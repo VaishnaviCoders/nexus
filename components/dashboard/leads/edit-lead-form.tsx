@@ -84,16 +84,16 @@ export function EditLeadForm(lead: Lead) {
         const result = await editLead(data);
 
         if (result.success) {
-          toast.success('Lead created successfully.');
+          toast.success('Lead edited successfully.');
           router.push('/dashboard/leads');
           router.refresh();
         } else {
           toast.error(
-            result.message || 'Failed to create lead. Please try again.'
+            result.message || 'Failed to edit lead. Please try again.'
           );
         }
       } catch (error) {
-        toast.error('Failed to create lead. Please try again.');
+        toast.error('Failed to edit lead. Please try again.');
       }
     });
   };
@@ -654,10 +654,10 @@ export function EditLeadForm(lead: Lead) {
                 {isPending ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Creating Lead...
+                    Editing Lead...
                   </>
                 ) : (
-                  'Create Lead'
+                  'Edit Lead'
                 )}
               </Button>
               <Button

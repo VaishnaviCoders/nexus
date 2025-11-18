@@ -41,6 +41,26 @@ export const YearType = {
 export type YearType = (typeof YearType)[keyof typeof YearType]
 
 
+export const AIAgentRunFrequency = {
+  DAILY: 'DAILY',
+  WEEKLY: 'WEEKLY',
+  MONTHLY: 'MONTHLY',
+  ON_DEMAND: 'ON_DEMAND'
+} as const
+
+export type AIAgentRunFrequency = (typeof AIAgentRunFrequency)[keyof typeof AIAgentRunFrequency]
+
+
+export const AIAgentExecutionStatus = {
+  RUNNING: 'RUNNING',
+  SUCCESS: 'SUCCESS',
+  FAILED: 'FAILED',
+  PARTIAL: 'PARTIAL'
+} as const
+
+export type AIAgentExecutionStatus = (typeof AIAgentExecutionStatus)[keyof typeof AIAgentExecutionStatus]
+
+
 export const AssignmentStatus = {
   PENDING: 'PENDING',
   ASSIGNED: 'ASSIGNED',
@@ -264,6 +284,17 @@ export const EvaluationType = {
 export type EvaluationType = (typeof EvaluationType)[keyof typeof EvaluationType]
 
 
+export const ExamMode = {
+  ONLINE: 'ONLINE',
+  OFFLINE: 'OFFLINE',
+  PRACTICAL: 'PRACTICAL',
+  VIVA: 'VIVA',
+  TAKE_HOME: 'TAKE_HOME'
+} as const
+
+export type ExamMode = (typeof ExamMode)[keyof typeof ExamMode]
+
+
 export const ExamStatus = {
   UPCOMING: 'UPCOMING',
   LIVE: 'LIVE',
@@ -276,6 +307,7 @@ export type ExamStatus = (typeof ExamStatus)[keyof typeof ExamStatus]
 
 export const StudentExamStatus = {
   ENROLLED: 'ENROLLED',
+  HALL_TICKET_ISSUED: 'HALL_TICKET_ISSUED',
   ATTENDED: 'ATTENDED',
   ABSENT: 'ABSENT',
   EXEMPT: 'EXEMPT',
@@ -283,17 +315,6 @@ export const StudentExamStatus = {
 } as const
 
 export type StudentExamStatus = (typeof StudentExamStatus)[keyof typeof StudentExamStatus]
-
-
-export const ExamMode = {
-  ONLINE: 'ONLINE',
-  OFFLINE: 'OFFLINE',
-  PRACTICAL: 'PRACTICAL',
-  VIVA: 'VIVA',
-  TAKE_HOME: 'TAKE_HOME'
-} as const
-
-export type ExamMode = (typeof ExamMode)[keyof typeof ExamMode]
 
 
 export const ResultStatus = {

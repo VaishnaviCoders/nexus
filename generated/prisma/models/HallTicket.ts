@@ -25,9 +25,11 @@ export type AggregateHallTicket = {
 
 export type HallTicketMinAggregateOutputType = {
   id: string | null
+  hallTicketNumber: string | null
   studentId: string | null
   examId: string | null
   examSessionId: string | null
+  issuedAt: Date | null
   pdfUrl: string | null
   qrCode: string | null
   generatedAt: Date | null
@@ -38,9 +40,11 @@ export type HallTicketMinAggregateOutputType = {
 
 export type HallTicketMaxAggregateOutputType = {
   id: string | null
+  hallTicketNumber: string | null
   studentId: string | null
   examId: string | null
   examSessionId: string | null
+  issuedAt: Date | null
   pdfUrl: string | null
   qrCode: string | null
   generatedAt: Date | null
@@ -51,9 +55,11 @@ export type HallTicketMaxAggregateOutputType = {
 
 export type HallTicketCountAggregateOutputType = {
   id: number
+  hallTicketNumber: number
   studentId: number
   examId: number
   examSessionId: number
+  issuedAt: number
   pdfUrl: number
   qrCode: number
   generatedAt: number
@@ -66,9 +72,11 @@ export type HallTicketCountAggregateOutputType = {
 
 export type HallTicketMinAggregateInputType = {
   id?: true
+  hallTicketNumber?: true
   studentId?: true
   examId?: true
   examSessionId?: true
+  issuedAt?: true
   pdfUrl?: true
   qrCode?: true
   generatedAt?: true
@@ -79,9 +87,11 @@ export type HallTicketMinAggregateInputType = {
 
 export type HallTicketMaxAggregateInputType = {
   id?: true
+  hallTicketNumber?: true
   studentId?: true
   examId?: true
   examSessionId?: true
+  issuedAt?: true
   pdfUrl?: true
   qrCode?: true
   generatedAt?: true
@@ -92,9 +102,11 @@ export type HallTicketMaxAggregateInputType = {
 
 export type HallTicketCountAggregateInputType = {
   id?: true
+  hallTicketNumber?: true
   studentId?: true
   examId?: true
   examSessionId?: true
+  issuedAt?: true
   pdfUrl?: true
   qrCode?: true
   generatedAt?: true
@@ -178,9 +190,11 @@ export type HallTicketGroupByArgs<ExtArgs extends runtime.Types.Extensions.Inter
 
 export type HallTicketGroupByOutputType = {
   id: string
+  hallTicketNumber: string | null
   studentId: string
   examId: string | null
   examSessionId: string | null
+  issuedAt: Date | null
   pdfUrl: string
   qrCode: string | null
   generatedAt: Date
@@ -212,9 +226,11 @@ export type HallTicketWhereInput = {
   OR?: Prisma.HallTicketWhereInput[]
   NOT?: Prisma.HallTicketWhereInput | Prisma.HallTicketWhereInput[]
   id?: Prisma.StringFilter<"HallTicket"> | string
+  hallTicketNumber?: Prisma.StringNullableFilter<"HallTicket"> | string | null
   studentId?: Prisma.StringFilter<"HallTicket"> | string
   examId?: Prisma.StringNullableFilter<"HallTicket"> | string | null
   examSessionId?: Prisma.StringNullableFilter<"HallTicket"> | string | null
+  issuedAt?: Prisma.DateTimeNullableFilter<"HallTicket"> | Date | string | null
   pdfUrl?: Prisma.StringFilter<"HallTicket"> | string
   qrCode?: Prisma.StringNullableFilter<"HallTicket"> | string | null
   generatedAt?: Prisma.DateTimeFilter<"HallTicket"> | Date | string
@@ -229,9 +245,11 @@ export type HallTicketWhereInput = {
 
 export type HallTicketOrderByWithRelationInput = {
   id?: Prisma.SortOrder
+  hallTicketNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   studentId?: Prisma.SortOrder
   examId?: Prisma.SortOrderInput | Prisma.SortOrder
   examSessionId?: Prisma.SortOrderInput | Prisma.SortOrder
+  issuedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   pdfUrl?: Prisma.SortOrder
   qrCode?: Prisma.SortOrderInput | Prisma.SortOrder
   generatedAt?: Prisma.SortOrder
@@ -251,9 +269,11 @@ export type HallTicketWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.HallTicketWhereInput | Prisma.HallTicketWhereInput[]
   OR?: Prisma.HallTicketWhereInput[]
   NOT?: Prisma.HallTicketWhereInput | Prisma.HallTicketWhereInput[]
+  hallTicketNumber?: Prisma.StringNullableFilter<"HallTicket"> | string | null
   studentId?: Prisma.StringFilter<"HallTicket"> | string
   examId?: Prisma.StringNullableFilter<"HallTicket"> | string | null
   examSessionId?: Prisma.StringNullableFilter<"HallTicket"> | string | null
+  issuedAt?: Prisma.DateTimeNullableFilter<"HallTicket"> | Date | string | null
   pdfUrl?: Prisma.StringFilter<"HallTicket"> | string
   qrCode?: Prisma.StringNullableFilter<"HallTicket"> | string | null
   generatedAt?: Prisma.DateTimeFilter<"HallTicket"> | Date | string
@@ -268,9 +288,11 @@ export type HallTicketWhereUniqueInput = Prisma.AtLeast<{
 
 export type HallTicketOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
+  hallTicketNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   studentId?: Prisma.SortOrder
   examId?: Prisma.SortOrderInput | Prisma.SortOrder
   examSessionId?: Prisma.SortOrderInput | Prisma.SortOrder
+  issuedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   pdfUrl?: Prisma.SortOrder
   qrCode?: Prisma.SortOrderInput | Prisma.SortOrder
   generatedAt?: Prisma.SortOrder
@@ -287,9 +309,11 @@ export type HallTicketScalarWhereWithAggregatesInput = {
   OR?: Prisma.HallTicketScalarWhereWithAggregatesInput[]
   NOT?: Prisma.HallTicketScalarWhereWithAggregatesInput | Prisma.HallTicketScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"HallTicket"> | string
+  hallTicketNumber?: Prisma.StringNullableWithAggregatesFilter<"HallTicket"> | string | null
   studentId?: Prisma.StringWithAggregatesFilter<"HallTicket"> | string
   examId?: Prisma.StringNullableWithAggregatesFilter<"HallTicket"> | string | null
   examSessionId?: Prisma.StringNullableWithAggregatesFilter<"HallTicket"> | string | null
+  issuedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"HallTicket"> | Date | string | null
   pdfUrl?: Prisma.StringWithAggregatesFilter<"HallTicket"> | string
   qrCode?: Prisma.StringNullableWithAggregatesFilter<"HallTicket"> | string | null
   generatedAt?: Prisma.DateTimeWithAggregatesFilter<"HallTicket"> | Date | string
@@ -300,6 +324,8 @@ export type HallTicketScalarWhereWithAggregatesInput = {
 
 export type HallTicketCreateInput = {
   id?: string
+  hallTicketNumber?: string | null
+  issuedAt?: Date | string | null
   pdfUrl: string
   qrCode?: string | null
   generatedAt?: Date | string
@@ -313,9 +339,11 @@ export type HallTicketCreateInput = {
 
 export type HallTicketUncheckedCreateInput = {
   id?: string
+  hallTicketNumber?: string | null
   studentId: string
   examId?: string | null
   examSessionId?: string | null
+  issuedAt?: Date | string | null
   pdfUrl: string
   qrCode?: string | null
   generatedAt?: Date | string
@@ -326,6 +354,8 @@ export type HallTicketUncheckedCreateInput = {
 
 export type HallTicketUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  hallTicketNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  issuedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pdfUrl?: Prisma.StringFieldUpdateOperationsInput | string
   qrCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   generatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -339,9 +369,11 @@ export type HallTicketUpdateInput = {
 
 export type HallTicketUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  hallTicketNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   examId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   examSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  issuedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pdfUrl?: Prisma.StringFieldUpdateOperationsInput | string
   qrCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   generatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -352,9 +384,11 @@ export type HallTicketUncheckedUpdateInput = {
 
 export type HallTicketCreateManyInput = {
   id?: string
+  hallTicketNumber?: string | null
   studentId: string
   examId?: string | null
   examSessionId?: string | null
+  issuedAt?: Date | string | null
   pdfUrl: string
   qrCode?: string | null
   generatedAt?: Date | string
@@ -365,6 +399,8 @@ export type HallTicketCreateManyInput = {
 
 export type HallTicketUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  hallTicketNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  issuedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pdfUrl?: Prisma.StringFieldUpdateOperationsInput | string
   qrCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   generatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -374,9 +410,11 @@ export type HallTicketUpdateManyMutationInput = {
 
 export type HallTicketUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  hallTicketNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   examId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   examSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  issuedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pdfUrl?: Prisma.StringFieldUpdateOperationsInput | string
   qrCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   generatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -408,9 +446,11 @@ export type HallTicketStudentIdExamIdCompoundUniqueInput = {
 
 export type HallTicketCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  hallTicketNumber?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
   examId?: Prisma.SortOrder
   examSessionId?: Prisma.SortOrder
+  issuedAt?: Prisma.SortOrder
   pdfUrl?: Prisma.SortOrder
   qrCode?: Prisma.SortOrder
   generatedAt?: Prisma.SortOrder
@@ -421,9 +461,11 @@ export type HallTicketCountOrderByAggregateInput = {
 
 export type HallTicketMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  hallTicketNumber?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
   examId?: Prisma.SortOrder
   examSessionId?: Prisma.SortOrder
+  issuedAt?: Prisma.SortOrder
   pdfUrl?: Prisma.SortOrder
   qrCode?: Prisma.SortOrder
   generatedAt?: Prisma.SortOrder
@@ -434,9 +476,11 @@ export type HallTicketMaxOrderByAggregateInput = {
 
 export type HallTicketMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  hallTicketNumber?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
   examId?: Prisma.SortOrder
   examSessionId?: Prisma.SortOrder
+  issuedAt?: Prisma.SortOrder
   pdfUrl?: Prisma.SortOrder
   qrCode?: Prisma.SortOrder
   generatedAt?: Prisma.SortOrder
@@ -615,6 +659,8 @@ export type HallTicketUncheckedUpdateManyWithoutExamNestedInput = {
 
 export type HallTicketCreateWithoutOrganizationInput = {
   id?: string
+  hallTicketNumber?: string | null
+  issuedAt?: Date | string | null
   pdfUrl: string
   qrCode?: string | null
   generatedAt?: Date | string
@@ -627,9 +673,11 @@ export type HallTicketCreateWithoutOrganizationInput = {
 
 export type HallTicketUncheckedCreateWithoutOrganizationInput = {
   id?: string
+  hallTicketNumber?: string | null
   studentId: string
   examId?: string | null
   examSessionId?: string | null
+  issuedAt?: Date | string | null
   pdfUrl: string
   qrCode?: string | null
   generatedAt?: Date | string
@@ -668,9 +716,11 @@ export type HallTicketScalarWhereInput = {
   OR?: Prisma.HallTicketScalarWhereInput[]
   NOT?: Prisma.HallTicketScalarWhereInput | Prisma.HallTicketScalarWhereInput[]
   id?: Prisma.StringFilter<"HallTicket"> | string
+  hallTicketNumber?: Prisma.StringNullableFilter<"HallTicket"> | string | null
   studentId?: Prisma.StringFilter<"HallTicket"> | string
   examId?: Prisma.StringNullableFilter<"HallTicket"> | string | null
   examSessionId?: Prisma.StringNullableFilter<"HallTicket"> | string | null
+  issuedAt?: Prisma.DateTimeNullableFilter<"HallTicket"> | Date | string | null
   pdfUrl?: Prisma.StringFilter<"HallTicket"> | string
   qrCode?: Prisma.StringNullableFilter<"HallTicket"> | string | null
   generatedAt?: Prisma.DateTimeFilter<"HallTicket"> | Date | string
@@ -681,6 +731,8 @@ export type HallTicketScalarWhereInput = {
 
 export type HallTicketCreateWithoutStudentInput = {
   id?: string
+  hallTicketNumber?: string | null
+  issuedAt?: Date | string | null
   pdfUrl: string
   qrCode?: string | null
   generatedAt?: Date | string
@@ -693,8 +745,10 @@ export type HallTicketCreateWithoutStudentInput = {
 
 export type HallTicketUncheckedCreateWithoutStudentInput = {
   id?: string
+  hallTicketNumber?: string | null
   examId?: string | null
   examSessionId?: string | null
+  issuedAt?: Date | string | null
   pdfUrl: string
   qrCode?: string | null
   generatedAt?: Date | string
@@ -731,6 +785,8 @@ export type HallTicketUpdateManyWithWhereWithoutStudentInput = {
 
 export type HallTicketCreateWithoutExamSessionInput = {
   id?: string
+  hallTicketNumber?: string | null
+  issuedAt?: Date | string | null
   pdfUrl: string
   qrCode?: string | null
   generatedAt?: Date | string
@@ -743,8 +799,10 @@ export type HallTicketCreateWithoutExamSessionInput = {
 
 export type HallTicketUncheckedCreateWithoutExamSessionInput = {
   id?: string
+  hallTicketNumber?: string | null
   studentId: string
   examId?: string | null
+  issuedAt?: Date | string | null
   pdfUrl: string
   qrCode?: string | null
   generatedAt?: Date | string
@@ -781,6 +839,8 @@ export type HallTicketUpdateManyWithWhereWithoutExamSessionInput = {
 
 export type HallTicketCreateWithoutExamInput = {
   id?: string
+  hallTicketNumber?: string | null
+  issuedAt?: Date | string | null
   pdfUrl: string
   qrCode?: string | null
   generatedAt?: Date | string
@@ -793,8 +853,10 @@ export type HallTicketCreateWithoutExamInput = {
 
 export type HallTicketUncheckedCreateWithoutExamInput = {
   id?: string
+  hallTicketNumber?: string | null
   studentId: string
   examSessionId?: string | null
+  issuedAt?: Date | string | null
   pdfUrl: string
   qrCode?: string | null
   generatedAt?: Date | string
@@ -831,9 +893,11 @@ export type HallTicketUpdateManyWithWhereWithoutExamInput = {
 
 export type HallTicketCreateManyOrganizationInput = {
   id?: string
+  hallTicketNumber?: string | null
   studentId: string
   examId?: string | null
   examSessionId?: string | null
+  issuedAt?: Date | string | null
   pdfUrl: string
   qrCode?: string | null
   generatedAt?: Date | string
@@ -843,6 +907,8 @@ export type HallTicketCreateManyOrganizationInput = {
 
 export type HallTicketUpdateWithoutOrganizationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  hallTicketNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  issuedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pdfUrl?: Prisma.StringFieldUpdateOperationsInput | string
   qrCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   generatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -855,9 +921,11 @@ export type HallTicketUpdateWithoutOrganizationInput = {
 
 export type HallTicketUncheckedUpdateWithoutOrganizationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  hallTicketNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   examId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   examSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  issuedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pdfUrl?: Prisma.StringFieldUpdateOperationsInput | string
   qrCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   generatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -867,9 +935,11 @@ export type HallTicketUncheckedUpdateWithoutOrganizationInput = {
 
 export type HallTicketUncheckedUpdateManyWithoutOrganizationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  hallTicketNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   examId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   examSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  issuedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pdfUrl?: Prisma.StringFieldUpdateOperationsInput | string
   qrCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   generatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -879,8 +949,10 @@ export type HallTicketUncheckedUpdateManyWithoutOrganizationInput = {
 
 export type HallTicketCreateManyStudentInput = {
   id?: string
+  hallTicketNumber?: string | null
   examId?: string | null
   examSessionId?: string | null
+  issuedAt?: Date | string | null
   pdfUrl: string
   qrCode?: string | null
   generatedAt?: Date | string
@@ -891,6 +963,8 @@ export type HallTicketCreateManyStudentInput = {
 
 export type HallTicketUpdateWithoutStudentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  hallTicketNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  issuedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pdfUrl?: Prisma.StringFieldUpdateOperationsInput | string
   qrCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   generatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -903,8 +977,10 @@ export type HallTicketUpdateWithoutStudentInput = {
 
 export type HallTicketUncheckedUpdateWithoutStudentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  hallTicketNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   examId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   examSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  issuedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pdfUrl?: Prisma.StringFieldUpdateOperationsInput | string
   qrCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   generatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -915,8 +991,10 @@ export type HallTicketUncheckedUpdateWithoutStudentInput = {
 
 export type HallTicketUncheckedUpdateManyWithoutStudentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  hallTicketNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   examId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   examSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  issuedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pdfUrl?: Prisma.StringFieldUpdateOperationsInput | string
   qrCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   generatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -927,8 +1005,10 @@ export type HallTicketUncheckedUpdateManyWithoutStudentInput = {
 
 export type HallTicketCreateManyExamSessionInput = {
   id?: string
+  hallTicketNumber?: string | null
   studentId: string
   examId?: string | null
+  issuedAt?: Date | string | null
   pdfUrl: string
   qrCode?: string | null
   generatedAt?: Date | string
@@ -939,6 +1019,8 @@ export type HallTicketCreateManyExamSessionInput = {
 
 export type HallTicketUpdateWithoutExamSessionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  hallTicketNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  issuedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pdfUrl?: Prisma.StringFieldUpdateOperationsInput | string
   qrCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   generatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -951,8 +1033,10 @@ export type HallTicketUpdateWithoutExamSessionInput = {
 
 export type HallTicketUncheckedUpdateWithoutExamSessionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  hallTicketNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   examId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  issuedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pdfUrl?: Prisma.StringFieldUpdateOperationsInput | string
   qrCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   generatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -963,8 +1047,10 @@ export type HallTicketUncheckedUpdateWithoutExamSessionInput = {
 
 export type HallTicketUncheckedUpdateManyWithoutExamSessionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  hallTicketNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   examId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  issuedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pdfUrl?: Prisma.StringFieldUpdateOperationsInput | string
   qrCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   generatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -975,8 +1061,10 @@ export type HallTicketUncheckedUpdateManyWithoutExamSessionInput = {
 
 export type HallTicketCreateManyExamInput = {
   id?: string
+  hallTicketNumber?: string | null
   studentId: string
   examSessionId?: string | null
+  issuedAt?: Date | string | null
   pdfUrl: string
   qrCode?: string | null
   generatedAt?: Date | string
@@ -987,6 +1075,8 @@ export type HallTicketCreateManyExamInput = {
 
 export type HallTicketUpdateWithoutExamInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  hallTicketNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  issuedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pdfUrl?: Prisma.StringFieldUpdateOperationsInput | string
   qrCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   generatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -999,8 +1089,10 @@ export type HallTicketUpdateWithoutExamInput = {
 
 export type HallTicketUncheckedUpdateWithoutExamInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  hallTicketNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   examSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  issuedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pdfUrl?: Prisma.StringFieldUpdateOperationsInput | string
   qrCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   generatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1011,8 +1103,10 @@ export type HallTicketUncheckedUpdateWithoutExamInput = {
 
 export type HallTicketUncheckedUpdateManyWithoutExamInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  hallTicketNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   examSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  issuedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pdfUrl?: Prisma.StringFieldUpdateOperationsInput | string
   qrCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   generatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1025,9 +1119,11 @@ export type HallTicketUncheckedUpdateManyWithoutExamInput = {
 
 export type HallTicketSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  hallTicketNumber?: boolean
   studentId?: boolean
   examId?: boolean
   examSessionId?: boolean
+  issuedAt?: boolean
   pdfUrl?: boolean
   qrCode?: boolean
   generatedAt?: boolean
@@ -1042,9 +1138,11 @@ export type HallTicketSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
 
 export type HallTicketSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  hallTicketNumber?: boolean
   studentId?: boolean
   examId?: boolean
   examSessionId?: boolean
+  issuedAt?: boolean
   pdfUrl?: boolean
   qrCode?: boolean
   generatedAt?: boolean
@@ -1059,9 +1157,11 @@ export type HallTicketSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
 
 export type HallTicketSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  hallTicketNumber?: boolean
   studentId?: boolean
   examId?: boolean
   examSessionId?: boolean
+  issuedAt?: boolean
   pdfUrl?: boolean
   qrCode?: boolean
   generatedAt?: boolean
@@ -1076,9 +1176,11 @@ export type HallTicketSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
 
 export type HallTicketSelectScalar = {
   id?: boolean
+  hallTicketNumber?: boolean
   studentId?: boolean
   examId?: boolean
   examSessionId?: boolean
+  issuedAt?: boolean
   pdfUrl?: boolean
   qrCode?: boolean
   generatedAt?: boolean
@@ -1087,7 +1189,7 @@ export type HallTicketSelectScalar = {
   organizationId?: boolean
 }
 
-export type HallTicketOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "studentId" | "examId" | "examSessionId" | "pdfUrl" | "qrCode" | "generatedAt" | "downloadedAt" | "expiryDate" | "organizationId", ExtArgs["result"]["hallTicket"]>
+export type HallTicketOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "hallTicketNumber" | "studentId" | "examId" | "examSessionId" | "issuedAt" | "pdfUrl" | "qrCode" | "generatedAt" | "downloadedAt" | "expiryDate" | "organizationId", ExtArgs["result"]["hallTicket"]>
 export type HallTicketInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
   exam?: boolean | Prisma.HallTicket$examArgs<ExtArgs>
@@ -1117,9 +1219,11 @@ export type $HallTicketPayload<ExtArgs extends runtime.Types.Extensions.Internal
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
+    hallTicketNumber: string | null
     studentId: string
     examId: string | null
     examSessionId: string | null
+    issuedAt: Date | null
     pdfUrl: string
     qrCode: string | null
     generatedAt: Date
@@ -1554,9 +1658,11 @@ export interface Prisma__HallTicketClient<T, Null = never, ExtArgs extends runti
  */
 export interface HallTicketFieldRefs {
   readonly id: Prisma.FieldRef<"HallTicket", 'String'>
+  readonly hallTicketNumber: Prisma.FieldRef<"HallTicket", 'String'>
   readonly studentId: Prisma.FieldRef<"HallTicket", 'String'>
   readonly examId: Prisma.FieldRef<"HallTicket", 'String'>
   readonly examSessionId: Prisma.FieldRef<"HallTicket", 'String'>
+  readonly issuedAt: Prisma.FieldRef<"HallTicket", 'DateTime'>
   readonly pdfUrl: Prisma.FieldRef<"HallTicket", 'String'>
   readonly qrCode: Prisma.FieldRef<"HallTicket", 'String'>
   readonly generatedAt: Prisma.FieldRef<"HallTicket", 'DateTime'>

@@ -30,6 +30,8 @@ export type ExamEnrollmentMinAggregateOutputType = {
   status: $Enums.StudentExamStatus | null
   enrolledAt: Date | null
   exemptionReason: string | null
+  hallTicketIssued: boolean | null
+  hallTicketIssuedAt: Date | null
 }
 
 export type ExamEnrollmentMaxAggregateOutputType = {
@@ -39,6 +41,8 @@ export type ExamEnrollmentMaxAggregateOutputType = {
   status: $Enums.StudentExamStatus | null
   enrolledAt: Date | null
   exemptionReason: string | null
+  hallTicketIssued: boolean | null
+  hallTicketIssuedAt: Date | null
 }
 
 export type ExamEnrollmentCountAggregateOutputType = {
@@ -48,6 +52,8 @@ export type ExamEnrollmentCountAggregateOutputType = {
   status: number
   enrolledAt: number
   exemptionReason: number
+  hallTicketIssued: number
+  hallTicketIssuedAt: number
   _all: number
 }
 
@@ -59,6 +65,8 @@ export type ExamEnrollmentMinAggregateInputType = {
   status?: true
   enrolledAt?: true
   exemptionReason?: true
+  hallTicketIssued?: true
+  hallTicketIssuedAt?: true
 }
 
 export type ExamEnrollmentMaxAggregateInputType = {
@@ -68,6 +76,8 @@ export type ExamEnrollmentMaxAggregateInputType = {
   status?: true
   enrolledAt?: true
   exemptionReason?: true
+  hallTicketIssued?: true
+  hallTicketIssuedAt?: true
 }
 
 export type ExamEnrollmentCountAggregateInputType = {
@@ -77,6 +87,8 @@ export type ExamEnrollmentCountAggregateInputType = {
   status?: true
   enrolledAt?: true
   exemptionReason?: true
+  hallTicketIssued?: true
+  hallTicketIssuedAt?: true
   _all?: true
 }
 
@@ -159,6 +171,8 @@ export type ExamEnrollmentGroupByOutputType = {
   status: $Enums.StudentExamStatus
   enrolledAt: Date
   exemptionReason: string | null
+  hallTicketIssued: boolean
+  hallTicketIssuedAt: Date | null
   _count: ExamEnrollmentCountAggregateOutputType | null
   _min: ExamEnrollmentMinAggregateOutputType | null
   _max: ExamEnrollmentMaxAggregateOutputType | null
@@ -189,6 +203,8 @@ export type ExamEnrollmentWhereInput = {
   status?: Prisma.EnumStudentExamStatusFilter<"ExamEnrollment"> | $Enums.StudentExamStatus
   enrolledAt?: Prisma.DateTimeFilter<"ExamEnrollment"> | Date | string
   exemptionReason?: Prisma.StringNullableFilter<"ExamEnrollment"> | string | null
+  hallTicketIssued?: Prisma.BoolFilter<"ExamEnrollment"> | boolean
+  hallTicketIssuedAt?: Prisma.DateTimeNullableFilter<"ExamEnrollment"> | Date | string | null
   student?: Prisma.XOR<Prisma.StudentScalarRelationFilter, Prisma.StudentWhereInput>
   exam?: Prisma.XOR<Prisma.ExamScalarRelationFilter, Prisma.ExamWhereInput>
 }
@@ -200,6 +216,8 @@ export type ExamEnrollmentOrderByWithRelationInput = {
   status?: Prisma.SortOrder
   enrolledAt?: Prisma.SortOrder
   exemptionReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  hallTicketIssued?: Prisma.SortOrder
+  hallTicketIssuedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   student?: Prisma.StudentOrderByWithRelationInput
   exam?: Prisma.ExamOrderByWithRelationInput
   _relevance?: Prisma.ExamEnrollmentOrderByRelevanceInput
@@ -216,6 +234,8 @@ export type ExamEnrollmentWhereUniqueInput = Prisma.AtLeast<{
   status?: Prisma.EnumStudentExamStatusFilter<"ExamEnrollment"> | $Enums.StudentExamStatus
   enrolledAt?: Prisma.DateTimeFilter<"ExamEnrollment"> | Date | string
   exemptionReason?: Prisma.StringNullableFilter<"ExamEnrollment"> | string | null
+  hallTicketIssued?: Prisma.BoolFilter<"ExamEnrollment"> | boolean
+  hallTicketIssuedAt?: Prisma.DateTimeNullableFilter<"ExamEnrollment"> | Date | string | null
   student?: Prisma.XOR<Prisma.StudentScalarRelationFilter, Prisma.StudentWhereInput>
   exam?: Prisma.XOR<Prisma.ExamScalarRelationFilter, Prisma.ExamWhereInput>
 }, "id" | "studentId_examId">
@@ -227,6 +247,8 @@ export type ExamEnrollmentOrderByWithAggregationInput = {
   status?: Prisma.SortOrder
   enrolledAt?: Prisma.SortOrder
   exemptionReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  hallTicketIssued?: Prisma.SortOrder
+  hallTicketIssuedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.ExamEnrollmentCountOrderByAggregateInput
   _max?: Prisma.ExamEnrollmentMaxOrderByAggregateInput
   _min?: Prisma.ExamEnrollmentMinOrderByAggregateInput
@@ -242,6 +264,8 @@ export type ExamEnrollmentScalarWhereWithAggregatesInput = {
   status?: Prisma.EnumStudentExamStatusWithAggregatesFilter<"ExamEnrollment"> | $Enums.StudentExamStatus
   enrolledAt?: Prisma.DateTimeWithAggregatesFilter<"ExamEnrollment"> | Date | string
   exemptionReason?: Prisma.StringNullableWithAggregatesFilter<"ExamEnrollment"> | string | null
+  hallTicketIssued?: Prisma.BoolWithAggregatesFilter<"ExamEnrollment"> | boolean
+  hallTicketIssuedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"ExamEnrollment"> | Date | string | null
 }
 
 export type ExamEnrollmentCreateInput = {
@@ -249,6 +273,8 @@ export type ExamEnrollmentCreateInput = {
   status?: $Enums.StudentExamStatus
   enrolledAt?: Date | string
   exemptionReason?: string | null
+  hallTicketIssued?: boolean
+  hallTicketIssuedAt?: Date | string | null
   student: Prisma.StudentCreateNestedOneWithoutExamEnrollmentInput
   exam: Prisma.ExamCreateNestedOneWithoutExamEnrollmentInput
 }
@@ -260,6 +286,8 @@ export type ExamEnrollmentUncheckedCreateInput = {
   status?: $Enums.StudentExamStatus
   enrolledAt?: Date | string
   exemptionReason?: string | null
+  hallTicketIssued?: boolean
+  hallTicketIssuedAt?: Date | string | null
 }
 
 export type ExamEnrollmentUpdateInput = {
@@ -267,6 +295,8 @@ export type ExamEnrollmentUpdateInput = {
   status?: Prisma.EnumStudentExamStatusFieldUpdateOperationsInput | $Enums.StudentExamStatus
   enrolledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   exemptionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hallTicketIssued?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hallTicketIssuedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   student?: Prisma.StudentUpdateOneRequiredWithoutExamEnrollmentNestedInput
   exam?: Prisma.ExamUpdateOneRequiredWithoutExamEnrollmentNestedInput
 }
@@ -278,6 +308,8 @@ export type ExamEnrollmentUncheckedUpdateInput = {
   status?: Prisma.EnumStudentExamStatusFieldUpdateOperationsInput | $Enums.StudentExamStatus
   enrolledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   exemptionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hallTicketIssued?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hallTicketIssuedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type ExamEnrollmentCreateManyInput = {
@@ -287,6 +319,8 @@ export type ExamEnrollmentCreateManyInput = {
   status?: $Enums.StudentExamStatus
   enrolledAt?: Date | string
   exemptionReason?: string | null
+  hallTicketIssued?: boolean
+  hallTicketIssuedAt?: Date | string | null
 }
 
 export type ExamEnrollmentUpdateManyMutationInput = {
@@ -294,6 +328,8 @@ export type ExamEnrollmentUpdateManyMutationInput = {
   status?: Prisma.EnumStudentExamStatusFieldUpdateOperationsInput | $Enums.StudentExamStatus
   enrolledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   exemptionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hallTicketIssued?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hallTicketIssuedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type ExamEnrollmentUncheckedUpdateManyInput = {
@@ -303,6 +339,8 @@ export type ExamEnrollmentUncheckedUpdateManyInput = {
   status?: Prisma.EnumStudentExamStatusFieldUpdateOperationsInput | $Enums.StudentExamStatus
   enrolledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   exemptionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hallTicketIssued?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hallTicketIssuedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type ExamEnrollmentListRelationFilter = {
@@ -333,6 +371,8 @@ export type ExamEnrollmentCountOrderByAggregateInput = {
   status?: Prisma.SortOrder
   enrolledAt?: Prisma.SortOrder
   exemptionReason?: Prisma.SortOrder
+  hallTicketIssued?: Prisma.SortOrder
+  hallTicketIssuedAt?: Prisma.SortOrder
 }
 
 export type ExamEnrollmentMaxOrderByAggregateInput = {
@@ -342,6 +382,8 @@ export type ExamEnrollmentMaxOrderByAggregateInput = {
   status?: Prisma.SortOrder
   enrolledAt?: Prisma.SortOrder
   exemptionReason?: Prisma.SortOrder
+  hallTicketIssued?: Prisma.SortOrder
+  hallTicketIssuedAt?: Prisma.SortOrder
 }
 
 export type ExamEnrollmentMinOrderByAggregateInput = {
@@ -351,6 +393,8 @@ export type ExamEnrollmentMinOrderByAggregateInput = {
   status?: Prisma.SortOrder
   enrolledAt?: Prisma.SortOrder
   exemptionReason?: Prisma.SortOrder
+  hallTicketIssued?: Prisma.SortOrder
+  hallTicketIssuedAt?: Prisma.SortOrder
 }
 
 export type ExamEnrollmentCreateNestedManyWithoutStudentInput = {
@@ -446,6 +490,8 @@ export type ExamEnrollmentCreateWithoutStudentInput = {
   status?: $Enums.StudentExamStatus
   enrolledAt?: Date | string
   exemptionReason?: string | null
+  hallTicketIssued?: boolean
+  hallTicketIssuedAt?: Date | string | null
   exam: Prisma.ExamCreateNestedOneWithoutExamEnrollmentInput
 }
 
@@ -455,6 +501,8 @@ export type ExamEnrollmentUncheckedCreateWithoutStudentInput = {
   status?: $Enums.StudentExamStatus
   enrolledAt?: Date | string
   exemptionReason?: string | null
+  hallTicketIssued?: boolean
+  hallTicketIssuedAt?: Date | string | null
 }
 
 export type ExamEnrollmentCreateOrConnectWithoutStudentInput = {
@@ -493,6 +541,8 @@ export type ExamEnrollmentScalarWhereInput = {
   status?: Prisma.EnumStudentExamStatusFilter<"ExamEnrollment"> | $Enums.StudentExamStatus
   enrolledAt?: Prisma.DateTimeFilter<"ExamEnrollment"> | Date | string
   exemptionReason?: Prisma.StringNullableFilter<"ExamEnrollment"> | string | null
+  hallTicketIssued?: Prisma.BoolFilter<"ExamEnrollment"> | boolean
+  hallTicketIssuedAt?: Prisma.DateTimeNullableFilter<"ExamEnrollment"> | Date | string | null
 }
 
 export type ExamEnrollmentCreateWithoutExamInput = {
@@ -500,6 +550,8 @@ export type ExamEnrollmentCreateWithoutExamInput = {
   status?: $Enums.StudentExamStatus
   enrolledAt?: Date | string
   exemptionReason?: string | null
+  hallTicketIssued?: boolean
+  hallTicketIssuedAt?: Date | string | null
   student: Prisma.StudentCreateNestedOneWithoutExamEnrollmentInput
 }
 
@@ -509,6 +561,8 @@ export type ExamEnrollmentUncheckedCreateWithoutExamInput = {
   status?: $Enums.StudentExamStatus
   enrolledAt?: Date | string
   exemptionReason?: string | null
+  hallTicketIssued?: boolean
+  hallTicketIssuedAt?: Date | string | null
 }
 
 export type ExamEnrollmentCreateOrConnectWithoutExamInput = {
@@ -543,6 +597,8 @@ export type ExamEnrollmentCreateManyStudentInput = {
   status?: $Enums.StudentExamStatus
   enrolledAt?: Date | string
   exemptionReason?: string | null
+  hallTicketIssued?: boolean
+  hallTicketIssuedAt?: Date | string | null
 }
 
 export type ExamEnrollmentUpdateWithoutStudentInput = {
@@ -550,6 +606,8 @@ export type ExamEnrollmentUpdateWithoutStudentInput = {
   status?: Prisma.EnumStudentExamStatusFieldUpdateOperationsInput | $Enums.StudentExamStatus
   enrolledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   exemptionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hallTicketIssued?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hallTicketIssuedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   exam?: Prisma.ExamUpdateOneRequiredWithoutExamEnrollmentNestedInput
 }
 
@@ -559,6 +617,8 @@ export type ExamEnrollmentUncheckedUpdateWithoutStudentInput = {
   status?: Prisma.EnumStudentExamStatusFieldUpdateOperationsInput | $Enums.StudentExamStatus
   enrolledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   exemptionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hallTicketIssued?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hallTicketIssuedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type ExamEnrollmentUncheckedUpdateManyWithoutStudentInput = {
@@ -567,6 +627,8 @@ export type ExamEnrollmentUncheckedUpdateManyWithoutStudentInput = {
   status?: Prisma.EnumStudentExamStatusFieldUpdateOperationsInput | $Enums.StudentExamStatus
   enrolledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   exemptionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hallTicketIssued?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hallTicketIssuedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type ExamEnrollmentCreateManyExamInput = {
@@ -575,6 +637,8 @@ export type ExamEnrollmentCreateManyExamInput = {
   status?: $Enums.StudentExamStatus
   enrolledAt?: Date | string
   exemptionReason?: string | null
+  hallTicketIssued?: boolean
+  hallTicketIssuedAt?: Date | string | null
 }
 
 export type ExamEnrollmentUpdateWithoutExamInput = {
@@ -582,6 +646,8 @@ export type ExamEnrollmentUpdateWithoutExamInput = {
   status?: Prisma.EnumStudentExamStatusFieldUpdateOperationsInput | $Enums.StudentExamStatus
   enrolledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   exemptionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hallTicketIssued?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hallTicketIssuedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   student?: Prisma.StudentUpdateOneRequiredWithoutExamEnrollmentNestedInput
 }
 
@@ -591,6 +657,8 @@ export type ExamEnrollmentUncheckedUpdateWithoutExamInput = {
   status?: Prisma.EnumStudentExamStatusFieldUpdateOperationsInput | $Enums.StudentExamStatus
   enrolledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   exemptionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hallTicketIssued?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hallTicketIssuedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type ExamEnrollmentUncheckedUpdateManyWithoutExamInput = {
@@ -599,6 +667,8 @@ export type ExamEnrollmentUncheckedUpdateManyWithoutExamInput = {
   status?: Prisma.EnumStudentExamStatusFieldUpdateOperationsInput | $Enums.StudentExamStatus
   enrolledAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   exemptionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hallTicketIssued?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hallTicketIssuedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 
@@ -610,6 +680,8 @@ export type ExamEnrollmentSelect<ExtArgs extends runtime.Types.Extensions.Intern
   status?: boolean
   enrolledAt?: boolean
   exemptionReason?: boolean
+  hallTicketIssued?: boolean
+  hallTicketIssuedAt?: boolean
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
   exam?: boolean | Prisma.ExamDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["examEnrollment"]>
@@ -621,6 +693,8 @@ export type ExamEnrollmentSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   status?: boolean
   enrolledAt?: boolean
   exemptionReason?: boolean
+  hallTicketIssued?: boolean
+  hallTicketIssuedAt?: boolean
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
   exam?: boolean | Prisma.ExamDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["examEnrollment"]>
@@ -632,6 +706,8 @@ export type ExamEnrollmentSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   status?: boolean
   enrolledAt?: boolean
   exemptionReason?: boolean
+  hallTicketIssued?: boolean
+  hallTicketIssuedAt?: boolean
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
   exam?: boolean | Prisma.ExamDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["examEnrollment"]>
@@ -643,9 +719,11 @@ export type ExamEnrollmentSelectScalar = {
   status?: boolean
   enrolledAt?: boolean
   exemptionReason?: boolean
+  hallTicketIssued?: boolean
+  hallTicketIssuedAt?: boolean
 }
 
-export type ExamEnrollmentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "studentId" | "examId" | "status" | "enrolledAt" | "exemptionReason", ExtArgs["result"]["examEnrollment"]>
+export type ExamEnrollmentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "studentId" | "examId" | "status" | "enrolledAt" | "exemptionReason" | "hallTicketIssued" | "hallTicketIssuedAt", ExtArgs["result"]["examEnrollment"]>
 export type ExamEnrollmentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
   exam?: boolean | Prisma.ExamDefaultArgs<ExtArgs>
@@ -672,6 +750,8 @@ export type $ExamEnrollmentPayload<ExtArgs extends runtime.Types.Extensions.Inte
     status: $Enums.StudentExamStatus
     enrolledAt: Date
     exemptionReason: string | null
+    hallTicketIssued: boolean
+    hallTicketIssuedAt: Date | null
   }, ExtArgs["result"]["examEnrollment"]>
   composites: {}
 }
@@ -1103,6 +1183,8 @@ export interface ExamEnrollmentFieldRefs {
   readonly status: Prisma.FieldRef<"ExamEnrollment", 'StudentExamStatus'>
   readonly enrolledAt: Prisma.FieldRef<"ExamEnrollment", 'DateTime'>
   readonly exemptionReason: Prisma.FieldRef<"ExamEnrollment", 'String'>
+  readonly hallTicketIssued: Prisma.FieldRef<"ExamEnrollment", 'Boolean'>
+  readonly hallTicketIssuedAt: Prisma.FieldRef<"ExamEnrollment", 'DateTime'>
 }
     
 
