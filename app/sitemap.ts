@@ -23,9 +23,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
 
-    // Blog
+    // Blogs
     {
-      url: `${appUrl}/blog`,
+      url: `${appUrl}/blogs`,
       lastModified: currentDate,
       changeFrequency: 'weekly',
       priority: 0.8,

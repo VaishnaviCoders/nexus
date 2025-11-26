@@ -55,7 +55,6 @@ const BlogPage = () => {
           </div>
         </div>
       </section>
-      <Footer />
     </div>
   );
 };

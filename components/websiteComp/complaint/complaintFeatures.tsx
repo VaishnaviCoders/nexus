@@ -26,7 +26,6 @@ import {
 export default function AnonymousComplaintSystemClientPage() {
   return (
     <main className="min-h-dvh">
-      <Header />
       <Hero />
       <TrustIndicators />
       <Problem />
@@ -41,50 +40,7 @@ export default function AnonymousComplaintSystemClientPage() {
   );
 }
 
-// Local header with anchor nav for single page
-function Header() {
-  return (
-    <header className="border-b border-border sticky top-0 z-30 bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="mx-auto max-w-7xl px-4 py-3 flex items-center justify-between">
-        <Link href="/" className="font-semibold tracking-tight text-pretty">
-          Shiksha.cloud
-          <span className="sr-only">{'Shiksha.cloud Home'}</span>
-        </Link>
-        <nav className="hidden md:flex items-center gap-6 text-sm">
-          <a href="#features" className="hover:underline underline-offset-4">
-            Features
-          </a>
-          <a
-            href="#how-it-works"
-            className="hover:underline underline-offset-4"
-          >
-            How it works
-          </a>
-          <a href="#benefits" className="hover:underline underline-offset-4">
-            Benefits
-          </a>
-          <a
-            href="#testimonials"
-            className="hover:underline underline-offset-4"
-          >
-            Testimonials
-          </a>
-          <a href="#contact" className="hover:underline underline-offset-4">
-            Contact
-          </a>
-        </nav>
-        <div className="flex items-center gap-2">
-          <Button variant="secondary" asChild>
-            <a href="#demo">Schedule Demo</a>
-          </Button>
-          <Button asChild>
-            <a href="#start">Get Started</a>
-          </Button>
-        </div>
-      </div>
-    </header>
-  );
-}
+
 
 // Hero section with strong hierarchy and accessible CTAs
 function Hero() {

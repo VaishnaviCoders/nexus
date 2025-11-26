@@ -2,7 +2,6 @@ import { Button } from '@/components/ui/button';
 import Features from '@/components/websiteComp/Features';
 import BentoGrid from '@/components/websiteComp/BentoGrid';
 import Testimonials from '@/components/websiteComp/Testimonials';
-import Footer from '@/components/websiteComp/Footer';
 import { Spotlight } from '@/components/ui/Spotlight';
 import {
   CreateOrganization,
@@ -37,7 +36,6 @@ import CardFlip from '@/components/ui/card-flip';
 import InstitutesShowcase from '@/components/websiteComp/shared/institute-showcase';
 import CTA from '@/components/websiteComp/ctc';
 import FeatureHoverDots from '@/components/websiteComp/feature-hover-dots';
-import { MegaNavbar } from '@/components/websiteComp/shared/mega-navbar';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.shiksha.cloud'),
@@ -110,7 +108,7 @@ export default async function IndexPage() {
         </div>
       </header> */}
 
-      <MegaNavbar />
+      {/* <MegaNavbar /> */}
       <div className="py-16 px-4">
         <div className="max-w-7xl mx-auto text-center">
           <AnimatedShinyText className="inline-flex items-center justify-center px-4 py-1 transition ease-out hover:text-neutral-600 hover:duration-300 hover:dark:text-neutral-400">
@@ -132,7 +130,7 @@ export default async function IndexPage() {
 
           <p className="text-sm text-slate-600 max-w-2xl mx-auto mb-8">
             Indian schools, colleges और coaching classes के लिए specially
-            designed। Daily की problems को minutes में solve करो।
+            designed। Daily की Problems को minutes में solve करो।
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -240,7 +238,6 @@ export default async function IndexPage() {
           </Link>
         </Button>
       </div>
-      <Footer />
     </main>
   );
 }

@@ -144,7 +144,7 @@ export default function PricingSection() {
                   'Document Verification System',
                   'Fee Receipt Generation',
                   'Bulk Student Import',
-                  'Multi-Branch Support',
+                  'Many More',
                 ].map((feature) => (
                   <div key={feature} className="flex items-start gap-2.5">
                     <div className="mt-0.5 flex-shrink-0">

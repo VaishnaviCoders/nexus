@@ -16,7 +16,7 @@ import {
 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import CTA from '@/components/websiteComp/ctc';
+import CTA from '@/components/websiteComp/cta';
 
 const features = [
   {
@@ -196,16 +196,6 @@ const FeaturesList = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-gray-50">
       {/* Header Section */}
-
-      {/* <iframe
-      src="https://gamma.app/embed/gtpghwx8wdrjyxs"
-      allow="fullscreen"
-      allowFullScreen={true}
-      width={2000}
-      height={2000}
-      frameBorder="0"
-      title="Shiksha.cloud: Transforming Indian Education"
-    ></iframe> */}
       <section className="pt-20 pb-16 px-4">
         <div className="max-w-7xl mx-auto text-center">
           <motion.div
@@ -329,43 +319,6 @@ const FeaturesList = () => {
           </div>
         </div>
       </section>
-
-      {/* Bottom CTA Section */}
-      {/* <section className="py-20 px-4 bg-gradient-to-r from-blue-600 to-purple-600">
-      <div className="max-w-4xl mx-auto text-center text-white">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-        >
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">
-            Ready to Transform Your Institution?
-          </h2>
-          <p className="text-xl opacity-90 mb-8 leading-relaxed">
-            These 9 modules solve every major challenge educational
-            institutions face. Start your transformation today.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button
-              size="lg"
-              variant="secondary"
-              className="px-8 py-4 text-lg font-semibold"
-            >
-              Start Free Trial
-              <ArrowRight className="ml-2 w-5 h-5" />
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="px-8 py-4 text-lg font-semibold border-white text-white hover:bg-white hover:text-blue-600"
-            >
-              Schedule Demo
-            </Button>
-          </div>
-        </motion.div>
-      </div>
-    </section> */}
 
       <CTA />
     </div>

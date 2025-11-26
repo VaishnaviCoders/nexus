@@ -220,7 +220,7 @@ This is my current middleware and also ive setup webhook but I want complete flo
 ```
 └── 📁app
     └── 📁(website)
-        └── 📁blog
+        └── 📁blogs
             ├── page.tsx
         └── 📁features
             └── 📁role-based

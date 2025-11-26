@@ -29,11 +29,16 @@ export const metadata: Metadata = {
   metadataBase: appUrl,
   alternates: {
     canonical: appUrl.toString(),
+    languages: {
+      'en': 'https://www.shiksha.cloud/',
+      'x-default': 'https://www.shiksha.cloud/',
+    },
   },
   other: {
     'mobile-web-app-capable': 'yes',
     'apple-mobile-web-app-capable': 'yes',
     'apple-mobile-web-app-status-bar-style': 'black-translucent', // 👈 hides notch area
+    'apple-mobile-web-app-title': 'Shiksha Cloud',
     'theme-color': '#000000',
     // viewport:
     //   'width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover', // 👈 important for notch fit
@@ -107,33 +112,9 @@ export default function RootLayout({
       publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
     >
       <html lang="en" suppressHydrationWarning data-clerk-suppress>
-        <link rel="canonical" href="https://www.shiksha.cloud/" />
-        <meta name="apple-mobile-web-app-title" content="Shiksha Cloud" />
-        <meta name="robots" content="index, follow" />
         <head>
           <link rel="preconnect" href="https://uploadthing.com" />
           <link rel="dns-prefetch" href="https://uploadthing.com" />
-          <link
-            rel="alternate"
-            href="https://www.shiksha.cloud/"
-            hrefLang="x-default"
-          />
-          <link
-            rel="alternate"
-            href="https://www.shiksha.cloud/"
-            hrefLang="en"
-          />
-
-          <link
-            rel="alternate"
-            href="https://www.shiksha.cloud/"
-            hrefLang="x-default"
-          />
-          <link
-            rel="alternate"
-            href="https://www.shiksha.cloud/"
-            hrefLang="en"
-          />
         </head>
         <body className={GeistSans.className}>
           {/* <CustomGoogleOneTap /> */}

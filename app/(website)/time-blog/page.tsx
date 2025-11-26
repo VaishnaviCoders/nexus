@@ -54,7 +54,7 @@ export const metadata: Metadata = {
       'Complete guide showing how schools save 20+ hours weekly through automation',
   },
   alternates: {
-    canonical: '/blog/school-management-systems-save-time',
+    canonical: '/blogs/school-management-systems-save-time',
   },
 };
 
@@ -82,7 +82,7 @@ const jsonLd = {
   dateModified: '2025-09-27T00:00:00.000Z',
   mainEntityOfPage: {
     '@type': 'WebPage',
-    '@id': '/blog/school-management-systems-save-time',
+    '@id': '/blogs/school-management-systems-save-time',
   },
   keywords:
     'school management software India, automated attendance system, digital fee collection, school administration automation',
@@ -169,27 +169,7 @@ export default function BlogPost({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <div className="min-h-screen bg-background">
-        {/* Header Navigation */}
-        <header className="border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
-          <div className="container mx-auto px-4 py-4">
-            <div className="flex items-center justify-between">
-              <Link
-                href="/"
-                className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-              >
-                <ArrowLeft className="w-4 h-4" />
-                Back to Home
-              </Link>
-              <div className="flex items-center gap-4">
-                <Badge variant="secondary" className="hidden sm:flex">
-                  Education Technology
-                </Badge>
-              </div>
-            </div>
-          </div>
-        </header>
-
+      <div >
         {/* Hero Section */}
         <section className="py-12 md:py-20">
           <div className="container mx-auto px-4">
@@ -224,7 +204,7 @@ export default function BlogPost({
               {/* Hero Image */}
               <div className="relative rounded-2xl overflow-hidden bg-muted/50 mb-12">
                 <Image
-                  src="/images/blogBanner.jpg"
+                  src="/images/blogsBanner.jpg"
                   alt="Modern school management system dashboard showing time savings analytics"
                   width={800}
                   height={400}
@@ -237,8 +217,6 @@ export default function BlogPost({
         </section>
 
         {/* Main Content */}
-        <main className="pb-20">
-          <div className="px-4">
             <div className="max-w-7xl mx-auto">
               <article className="prose prose-lg">
                 {/* Opening Hook */}
@@ -702,27 +680,7 @@ export default function BlogPost({
                 </section>
               </article>
             </div>
-          </div>
-        </main>
-
-        {/* Footer */}
-        <footer className="border-t border-border/40 py-12">
-          <div className="container mx-auto px-4">
-            <div className="max-w-4xl mx-auto text-center">
-              <p className="text-muted-foreground mb-4">
-                <strong>About Shiksha.cloud:</strong> We're building India's #1
-                school management platform, helping educational institutions
-                save time, reduce costs, and improve student outcomes through
-                intelligent automation and data-driven insights.
-              </p>
-              <p className="text-lg font-medium">
-                Transform your school operations in 30 days or less. Join the
-                digital education revolution today.
-              </p>
-            </div>
-          </div>
-        </footer>
-      </div>
+      </div> 
     </>
   );
 }

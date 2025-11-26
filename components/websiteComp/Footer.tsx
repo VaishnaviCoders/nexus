@@ -13,7 +13,7 @@ const links = [
   },
   {
     title: 'Blogs',
-    href: `${APP_URL}/blog`,
+    href: `${APP_URL}/blogs`,
   },
   {
     title: 'Pricing',

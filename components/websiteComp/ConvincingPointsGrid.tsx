@@ -216,7 +216,7 @@ const ConvincingPointsGrid = () => {
               whileHover={{ y: -8 }}
               className="group h-full cursor-pointer"
             >
-              <Card className="h-full bg-white border-0 shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden relative">
+              <Card className="h-full bg-white border-0 shadow-lg hover:shadow-xl transition-all duration-500 overflow-hidden relative">
                 {/* Background Gradient */}
                 <div
                   className={`absolute inset-0 bg-gradient-to-br ${point.lightGradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}
