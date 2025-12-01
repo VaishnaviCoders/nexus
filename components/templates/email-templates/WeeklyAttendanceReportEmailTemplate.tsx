@@ -30,7 +30,7 @@ export interface AttendanceRecord {
 export interface Organization {
   id: string;
   name: string;
-  organizationLogo?: string;
+  logo?: string;
   contactEmail?: string;
   contactPhone?: string;
   website?: string;
@@ -127,9 +127,9 @@ const WeeklyAttendanceReportEmailTemplate: React.FC<
             <table width="100%" cellPadding="0" cellSpacing="0">
               <tr>
                 <td style={{ verticalAlign: 'middle' }}>
-                  {organization.organizationLogo && (
+                  {organization.logo && (
                     <img
-                      src={organization.organizationLogo || '/placeholder.svg'}
+                      src={organization.logo || '/placeholder.svg'}
                       alt={organization.name}
                       style={{
                         width: '48px',

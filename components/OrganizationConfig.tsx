@@ -41,8 +41,8 @@ import { updateOrganization } from '@/lib/data/update-organization';
 interface Organization {
   id: string;
   name: string | null;
-  organizationSlug: string;
-  organizationLogo: string | null;
+  slug: string;
+  logo: string | null;
   contactEmail: string | null;
   contactPhone: string | null;
   website: string | null;
@@ -66,7 +66,7 @@ export default function OrganizationConfig({
     resolver: zodResolver(organizationSchema),
     defaultValues: {
       name: organization?.name || '',
-      organizationSlug: organization?.organizationSlug || '',
+      slug: organization?.slug || '',
       contactEmail: organization?.contactEmail || '',
       contactPhone: organization?.contactPhone || '',
       website: organization?.website || '',
@@ -159,7 +159,7 @@ export default function OrganizationConfig({
                       size="sm"
                       onClick={() => {
                         setLogoFile(null);
-                        setLogoPreview(organization?.organizationLogo);
+                        setLogoPreview(organization?.logo);
                       }}
                     >
                       <X className="h-4 w-4" />
@@ -230,7 +230,7 @@ export default function OrganizationConfig({
 
               <FormField
                 control={form.control}
-                name="organizationSlug"
+                name="slug"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Organization Slug</FormLabel>

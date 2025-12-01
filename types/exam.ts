@@ -195,7 +195,7 @@ export type StudentHallTicketInfo = {
   generatedAt: Date;
   organization: {
     name: string;
-    organizationLogo: string | null;
+    logo: string | null;
     contactEmail: string | null;
     contactPhone: string | null;
     website: string | null;

@@ -25,6 +25,7 @@ export interface FeeRecord {
     organizationName?: string;
     organizationEmail?: string;
     organizationPhone?: string;
+    organizationLogo?:string
     createdAt: Date;
     updatedAt: Date;
   };

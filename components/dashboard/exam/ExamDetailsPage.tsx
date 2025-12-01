@@ -79,7 +79,7 @@ type Exam = {
   };
   organization: {
     name: string | null;
-    organizationLogo: string | null;
+    logo: string | null;
     contactEmail: string | null;
     contactPhone: string | null;
     website: string | null;
@@ -110,7 +110,7 @@ type HallTicket = Prisma.HallTicketGetPayload<{
     organization: {
       select: {
         name: true;
-        organizationLogo: true;
+        logo: true;
         contactEmail: true;
         contactPhone: true;
         website: true;
@@ -197,7 +197,7 @@ export function ExamDetailsPage({
           text: 'Check this exam details.',
           url,
         })
-        .catch(() => {});
+        .catch(() => { });
     } else {
       navigator.clipboard.writeText(url);
       toast.success('Shareable link copied to clipboard.');
@@ -823,7 +823,7 @@ export function ExamDetailsPage({
                     Hall Ticket
                   </h3>
                   {hallTicket &&
-                  (exam.status === 'UPCOMING' || exam.status === 'LIVE') ? (
+                    (exam.status === 'UPCOMING' || exam.status === 'LIVE') ? (
                     <div className="flex items-center justify-between p-4 bg-green-50 rounded-lg border border-green-200">
                       <div className="flex items-center gap-3">
                         <CheckCircle className="h-5 w-5 text-green-600" />
@@ -870,8 +870,8 @@ export function ExamDetailsPage({
                   Exam Results
                 </h3>
                 {result &&
-                exam.isResultsPublished &&
-                exam.status === 'COMPLETED' ? (
+                  exam.isResultsPublished &&
+                  exam.status === 'COMPLETED' ? (
                   <div className="space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <div className="text-center p-4 bg-blue-50 rounded-lg">

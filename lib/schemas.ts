@@ -12,7 +12,6 @@ import {
   LeadStatus,
   LeaveType,
   NoticePriority,
-  NoticeStatus,
   NoticeType,
   PaymentMethod,
 } from '@/generated/prisma/enums';
@@ -227,7 +226,7 @@ export type StudentProfileFormData = z.infer<typeof studentProfileSchema>;
 
 export const organizationSchema = z.object({
   name: z.string().min(2, 'Organization name must be at least 2 characters'),
-  organizationSlug: z
+  slug: z
     .string()
     .min(3, 'Slug must be at least 3 characters')
     .regex(
@@ -425,7 +424,6 @@ export const reminderFormSchema = z.object({
     .min(1, 'Select at least one channel'),
   templateId: z.string().min(1, 'Please select a template'),
   templateType: z.enum([
-    'FEE_ASSIGNMENT',
     'FRIENDLY_REMINDER',
     'PAYMENT_DUE_TODAY',
     'OVERDUE_NOTICE',

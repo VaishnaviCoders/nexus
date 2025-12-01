@@ -40,7 +40,7 @@ type StudentHallTicketData = Prisma.HallTicketGetPayload<{
     organization: {
       select: {
         name: true;
-        organizationLogo: true;
+        logo: true;
         contactEmail: true;
         contactPhone: true;
         website: true;
@@ -91,11 +91,11 @@ export default function HallTicketUI({ data }: HallTicketUIProps) {
   const qrCodeRef = useRef<HTMLDivElement>(null);
   const barcodeRef = useRef<HTMLDivElement>(null);
 
-  const generateCode = () => {};
+  const generateCode = () => { };
 
-  const downloadAsPNG = async () => {};
+  const downloadAsPNG = async () => { };
 
-  const downloadAsPDF = () => {};
+  const downloadAsPDF = () => { };
 
   return (
     <div className="min-h-screen bg-zinc-50 p-4 md:p-8">
@@ -165,7 +165,7 @@ export default function HallTicketUI({ data }: HallTicketUIProps) {
                 <div className="w-16 h-16 bg-white rounded-full p-1 flex items-center justify-center shadow-md">
                   <img
                     src={
-                      data.organization.organizationLogo ||
+                      data.organization.logo ||
                       '/image/organization.png'
                     }
                     alt="School Logo"

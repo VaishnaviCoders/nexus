@@ -25,9 +25,9 @@ function mapClerkRole(clerkRole: string): Role {
 //   await prisma.organization.create({
 //     data: {
 //       id: evt.data.id,
-//       organizationSlug: evt.data.slug,
+//       slug: evt.data.slug,
 //       name: evt.data.name,
-//       organizationLogo: evt.data.image_url,
+//       logo: evt.data.image_url,
 //       isActive: true,
 //       isPaid: false,
 //       createdAt: new Date(evt.data.created_at),
@@ -91,9 +91,9 @@ export async function POST(req: Request) {
       await prisma.organization.create({
         data: {
           id: evt.data.id,
-          organizationSlug: evt.data.slug,
+          slug: evt.data.slug,
           name: evt.data.name,
-          organizationLogo: evt.data.image_url,
+          logo: evt.data.image_url,
           isActive: true,
           isPaid: false,
           createdAt: new Date(evt.data.created_at),
@@ -109,8 +109,8 @@ export async function POST(req: Request) {
         },
         data: {
           name: evt.data.name,
-          organizationSlug: evt.data.slug,
-          organizationLogo: evt.data.image_url,
+          slug: evt.data.slug,
+          logo: evt.data.image_url,
           isActive: true,
           isPaid: false,
           updatedAt: new Date(evt.data.updated_at),

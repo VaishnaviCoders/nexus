@@ -118,6 +118,41 @@ export async function syncOrganizationUser(
     const clerkUserEmail = clerkUser.emailAddresses[0]?.emailAddress;
     if (!clerkUserEmail) throw new Error('User email not found in Clerk');
 
+    // Optimization: Check if sync is needed to avoid unnecessary transactions
+    const existingUser = await prisma.user.findUnique({
+      where: { clerkId: clerkUser.id },
+    });
+
+    if (
+      existingUser &&
+      existingUser.organizationId === clerkOrganization.id &&
+      existingUser.role === internalRole &&
+      existingUser.email === clerkUserEmail &&
+      (!clerkUser.firstName || existingUser.firstName === clerkUser.firstName) &&
+      (!clerkUser.lastName || existingUser.lastName === clerkUser.lastName) &&
+      (!clerkUser.imageUrl || existingUser.profileImage === clerkUser.imageUrl)
+    ) {
+      // Check role specific records
+      let roleSynced = true;
+      if (internalRole === 'TEACHER') {
+        const teacher = await prisma.teacher.findUnique({
+          where: { userId: existingUser.id },
+        });
+        if (!teacher || teacher.organizationId !== clerkOrganization.id)
+          roleSynced = false;
+      } else if (internalRole === 'PARENT') {
+        const parent = await prisma.parent.findUnique({
+          where: { userId: existingUser.id },
+        });
+        if (!parent) roleSynced = false;
+      }
+
+      if (roleSynced) {
+        // console.log('✅ User already synced (Skipping transaction)');
+        return;
+      }
+    }
+
     // 2. Start a transaction to ensure data consistency
     await prisma.$transaction(async (tx) => {
       // 3. Sync Organization (only if doesn't exist)
@@ -130,8 +165,8 @@ export async function syncOrganizationUser(
           data: {
             id: clerkOrganization.id,
             name: clerkOrganization.name,
-            organizationSlug: clerkOrganization.slug,
-            organizationLogo: clerkOrganization.imageUrl,
+            slug: clerkOrganization.slug,
+            logo: clerkOrganization.imageUrl,
             contactEmail: clerkUserEmail,
             createdBy: clerkUser.id,
             createdAt: new Date(clerkOrganization.createdAt),

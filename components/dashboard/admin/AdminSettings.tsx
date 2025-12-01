@@ -12,8 +12,8 @@ async function getOrganization(organizationId: string) {
     select: {
       id: true,
       name: true,
-      organizationSlug: true,
-      organizationLogo: true,
+      slug: true,
+      logo: true,
       contactEmail: true,
       contactPhone: true,
       website: true,

@@ -9,7 +9,7 @@ export async function getFeeRecords(count: number = 50): Promise<FeeRecord[]> {
       include: {
         organization: {
           select: {
-            organizationLogo: true,
+            logo: true,
             contactEmail: true,
             contactPhone: true,
             name: true,

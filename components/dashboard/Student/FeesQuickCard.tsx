@@ -54,9 +54,9 @@ export function FeesQuickCard({ className, feesData }: Props) {
       : 0;
   const daysUntilDue = feesData.nextDueDate
     ? Math.ceil(
-        (feesData.nextDueDate.getTime() - new Date().getTime()) /
-          (1000 * 60 * 60 * 24)
-      )
+      (feesData.nextDueDate.getTime() - new Date().getTime()) /
+      (1000 * 60 * 60 * 24)
+    )
     : null;
 
   return (
@@ -70,8 +70,8 @@ export function FeesQuickCard({ className, feesData }: Props) {
           <Badge
             variant={
               daysUntilDue !== null && daysUntilDue <= 7
-                ? 'destructive'
-                : 'secondary'
+                ? 'OVERDUE'
+                : 'UNPAID'
             }
           >
             {daysUntilDue === null

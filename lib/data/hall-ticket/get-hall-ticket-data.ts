@@ -57,7 +57,7 @@ export interface HallTicketDataWithRelations {
   organization: {
     id: string;
     name?: string | null;
-    organizationLogo?: string | null;
+    logo?: string | null;
     contactEmail?: string | null;
     contactPhone?: string | null;
     website?: string | null;
@@ -121,7 +121,7 @@ export async function getHallTicketData(
           select: {
             id: true,
             name: true,
-            organizationLogo: true,
+            logo: true,
             contactEmail: true,
             contactPhone: true,
             website: true,
@@ -196,7 +196,7 @@ export async function getHallTicketForStudentExam(
           select: {
             id: true,
             name: true,
-            organizationLogo: true,
+            logo: true,
             contactEmail: true,
             contactPhone: true,
             website: true,

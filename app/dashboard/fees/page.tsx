@@ -22,7 +22,7 @@ import {
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { formatDateIN } from '@/lib/utils';
+import { formatDateTimeIN } from '@/lib/utils';
 
 function FeesPageContent() {
   const searchParams = useSearchParams();
@@ -36,7 +36,7 @@ function FeesPageContent() {
           icon: CheckCircle,
           title: 'Payment Successful!',
           description: 'Your fee payment has been processed successfully.',
-          badgeVariant: 'default' as const,
+          badgeVariant: 'PASS' as const,
           badgeText: 'Completed',
           iconColor: 'text-green-500',
           bgColor: 'bg-green-50',
@@ -48,7 +48,7 @@ function FeesPageContent() {
           icon: XCircle,
           title: 'Payment Failed',
           description: 'Unfortunately, your payment could not be processed.',
-          badgeVariant: 'destructive' as const,
+          badgeVariant: 'FAILED' as const,
           badgeText: 'Failed',
           iconColor: 'text-red-500',
           bgColor: 'bg-red-50',
@@ -112,7 +112,7 @@ function FeesPageContent() {
 
               <div className="flex justify-between items-center">
                 <span className="text-muted-foreground">Date & Time:</span>
-                <span className="font-medium">{formatDateIN(new Date())}</span>
+                <span className="font-medium">{formatDateTimeIN(new Date())}</span>
               </div>
 
               <div className="flex justify-between items-center">

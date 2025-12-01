@@ -42,7 +42,7 @@ interface HallTicketStudent {
 interface HallTicketOrganization {
   id: string;
   name?: string | null;
-  organizationLogo?: string | null;
+  logo?: string | null;
   contactEmail?: string | null;
   contactPhone?: string | null;
   website?: string | null;
@@ -160,7 +160,7 @@ export function HallTicketPDF({
     }
   };
 
-  const handlePrint = () => {};
+  const handlePrint = () => { };
 
   return (
     <div className={`min-h-screen bg-muted/30 p-4 ${className}`}>
@@ -189,7 +189,7 @@ export function HallTicketPDF({
               <div className="flex items-center gap-4">
                 <img
                   src={
-                    hallTicketData.organization.organizationLogo ||
+                    hallTicketData.organization.logo ||
                     '/placeholder.svg'
                   }
                   alt="Organization Logo"
@@ -231,10 +231,10 @@ export function HallTicketPDF({
               </h2>
               <p className="text-muted-foreground">
                 {hallTicketData.examSession?.startDate &&
-                hallTicketData.examSession?.endDate
+                  hallTicketData.examSession?.endDate
                   ? `${formatDateIN(hallTicketData.examSession.startDate.toISOString())} - ${formatDateIN(hallTicketData.examSession.endDate.toISOString())}`
                   : hallTicketData.exam?.startDate &&
-                      hallTicketData.exam?.endDate
+                    hallTicketData.exam?.endDate
                     ? `${formatDateIN(hallTicketData.exam.startDate.toISOString())} - ${formatDateIN(hallTicketData.exam.endDate.toISOString())}`
                     : 'Examination Dates'}
               </p>

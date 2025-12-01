@@ -18,6 +18,7 @@ import { Resend } from 'resend';
 import { z } from 'zod';
 import { FriendlyReminderTemplate } from '@/components/templates/email-templates/fees/friendly-reminder';
 import { OverdueNoticeTemplate } from '@/components/templates/email-templates/fees/overdue-notice';
+import { sendWhatsAppMessage } from '@/lib/whatsapp';
 
 const reminderDataSchema = z.object({
   recipients: z.array(
@@ -48,7 +49,6 @@ const reminderDataSchema = z.object({
   scheduleDate: z.date().nullable().optional(),
   scheduleTime: z.string().nullable().optional(),
   templateType: z.enum([
-    'FEE_ASSIGNMENT',
     'FRIENDLY_REMINDER',
     'PAYMENT_DUE_TODAY',
     'OVERDUE_NOTICE',
@@ -75,9 +75,6 @@ const getEmailTemplate = (templateType: string, props: any) => {
       return FriendlyReminderTemplate(props);
     case 'OVERDUE_NOTICE':
       return OverdueNoticeTemplate(props);
-    case 'FEE_ASSIGNMENT':
-      // Create fee assignment template or use friendly reminder as fallback
-      return FriendlyReminderTemplate({ ...props, isAssignment: true });
     case 'PAYMENT_DUE_TODAY':
       // Create payment due today template or use friendly reminder as fallback
       return FriendlyReminderTemplate({ ...props, isUrgent: true });
@@ -122,9 +119,36 @@ const sendSMS = async (recipientPhone: string, message: string) => {
 };
 
 const sendWhatsApp = async (recipientPhone: string, message: string) => {
-  // Implement WhatsApp sending logic
   console.log('Sending WhatsApp to:', recipientPhone, message);
-  // Add your WhatsApp provider integration here
+  await sendWhatsAppMessage({
+    messaging_product:"whatsapp",
+    type:'template',
+    template:{
+      name:"hello_world",
+      language:{
+        code:"en_US",
+        policy:"deterministic",
+      }
+
+    },
+    
+    // template:{
+    //   name:"friendly_fee_reminder",
+    //   language:{
+    //     code:"en_IN",
+    //     policy:"deterministic",
+    //   },
+    //   components:[{
+    //     type:"body",
+    //     parameters:[{
+    //       type:"text" as const,
+    //       text: message
+    //     }]
+    //   }]
+    // },
+    recipient_type:"individual",
+    to:'+918459324821'
+  })
   return { success: true };
 };
 

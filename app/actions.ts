@@ -71,7 +71,7 @@ export const syncUserWithOrg = async () => {
     },
     create: {
       id: orgId,
-      organizationSlug: orgSlug,
+      slug: orgSlug,
       isActive: true,
       isPaid: false,
       createdAt: new Date(),

@@ -29,7 +29,7 @@ export interface AttendanceRecord {
 export interface Organization {
   id: string;
   name: string;
-  organizationLogo?: string;
+  logo?: string;
   contactEmail?: string;
   contactPhone?: string;
   website?: string;
@@ -115,7 +115,7 @@ export default function MinimalEmailDemo() {
     organization: {
       id: 'org_123',
       name: 'Delhi Public School',
-      organizationLogo: '/placeholder.svg?height=48&width=48',
+      logo: '/placeholder.svg?height=48&width=48',
       contactEmail: 'info@dpsdelhi.edu.in',
       contactPhone: '+91-11-12345678',
       website: 'www.dpsdelhi.edu.in',

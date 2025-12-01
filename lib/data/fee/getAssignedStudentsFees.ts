@@ -35,7 +35,7 @@ export async function getAssignedStudentsFees(
     include: {
       organization: {
         select: {
-          organizationLogo: true,
+          logo: true,
           contactEmail: true,
           contactPhone: true,
           name: true,

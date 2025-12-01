@@ -6,7 +6,9 @@ import StudentDashboard from '@/components/dashboard/Student/StudentDashboard';
 import TeacherDashboard from '@/components/dashboard/teacher/TeacherDashboard';
 import { getOrganization } from '@/lib/organization';
 
+
 export default async function DashboardPage() {
+
   const { orgRole } = await getOrganization();
 
   switch (orgRole) {
