@@ -9,8 +9,8 @@
  * 🟢 You can import this file directly.
  */
 import type * as runtime from "@prisma/client/runtime/client"
-import type * as $Enums from "../enums"
-import type * as Prisma from "../internal/prismaNamespace"
+import type * as $Enums from "../enums.ts"
+import type * as Prisma from "../internal/prismaNamespace.ts"
 
 /**
  * Model FeeSenseReport
@@ -353,7 +353,6 @@ export type FeeSenseReportOrderByWithRelationInput = {
   sentToEmails?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   agent?: Prisma.FeeSenseAgentOrderByWithRelationInput
-  _relevance?: Prisma.FeeSenseReportOrderByRelevanceInput
 }
 
 export type FeeSenseReportWhereUniqueInput = Prisma.AtLeast<{
@@ -566,12 +565,6 @@ export type FeeSenseReportListRelationFilter = {
 
 export type FeeSenseReportOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
-}
-
-export type FeeSenseReportOrderByRelevanceInput = {
-  fields: Prisma.FeeSenseReportOrderByRelevanceFieldEnum | Prisma.FeeSenseReportOrderByRelevanceFieldEnum[]
-  sort: Prisma.SortOrder
-  search: string
 }
 
 export type FeeSenseReportAgentIdReportDateCompoundUniqueInput = {

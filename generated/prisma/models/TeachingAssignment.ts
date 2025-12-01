@@ -9,8 +9,8 @@
  * 🟢 You can import this file directly.
  */
 import type * as runtime from "@prisma/client/runtime/client"
-import type * as $Enums from "../enums"
-import type * as Prisma from "../internal/prismaNamespace"
+import type * as $Enums from "../enums.ts"
+import type * as Prisma from "../internal/prismaNamespace.ts"
 
 /**
  * Model TeachingAssignment
@@ -247,7 +247,6 @@ export type TeachingAssignmentOrderByWithRelationInput = {
   section?: Prisma.SectionOrderByWithRelationInput
   organization?: Prisma.OrganizationOrderByWithRelationInput
   academicYear?: Prisma.AcademicYearOrderByWithRelationInput
-  _relevance?: Prisma.TeachingAssignmentOrderByRelevanceInput
 }
 
 export type TeachingAssignmentWhereUniqueInput = Prisma.AtLeast<{
@@ -398,12 +397,6 @@ export type TeachingAssignmentListRelationFilter = {
 
 export type TeachingAssignmentOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
-}
-
-export type TeachingAssignmentOrderByRelevanceInput = {
-  fields: Prisma.TeachingAssignmentOrderByRelevanceFieldEnum | Prisma.TeachingAssignmentOrderByRelevanceFieldEnum[]
-  sort: Prisma.SortOrder
-  search: string
 }
 
 export type TeachingAssignmentTeacherIdSubjectIdGradeIdSectionIdAcademicYearIdCompoundUniqueInput = {

@@ -17,6 +17,7 @@ const nextConfig: NextConfig = {
     serverActions: {
       bodySizeLimit: '3mb',
     },
+    typedEnv:true
   },
   headers: async () => {
     return [

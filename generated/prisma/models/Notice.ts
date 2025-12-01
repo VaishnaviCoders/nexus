@@ -9,8 +9,8 @@
  * 🟢 You can import this file directly.
  */
 import type * as runtime from "@prisma/client/runtime/client"
-import type * as $Enums from "../enums"
-import type * as Prisma from "../internal/prismaNamespace"
+import type * as $Enums from "../enums.ts"
+import type * as Prisma from "../internal/prismaNamespace.ts"
 
 /**
  * Model Notice
@@ -365,7 +365,6 @@ export type NoticeOrderByWithRelationInput = {
   notifications?: Prisma.NotificationLogOrderByRelationAggregateInput
   organization?: Prisma.OrganizationOrderByWithRelationInput
   academicYear?: Prisma.AcademicYearOrderByWithRelationInput
-  _relevance?: Prisma.NoticeOrderByRelevanceInput
 }
 
 export type NoticeWhereUniqueInput = Prisma.AtLeast<{
@@ -665,12 +664,6 @@ export type NoticeListRelationFilter = {
 
 export type NoticeOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
-}
-
-export type NoticeOrderByRelevanceInput = {
-  fields: Prisma.NoticeOrderByRelevanceFieldEnum | Prisma.NoticeOrderByRelevanceFieldEnum[]
-  sort: Prisma.SortOrder
-  search: string
 }
 
 export type NoticeCountOrderByAggregateInput = {

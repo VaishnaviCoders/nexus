@@ -2,11 +2,14 @@
   "name": "nexus",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "prisma generate && next build ",
+    "dev": "next dev",
+    "build": "prisma generate && next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "generate": "prisma generate",
+    "migrate": "prisma migrate dev"
   },
   "dependencies": {
     "@ai-sdk/google": "^2.0.23",
@@ -96,6 +99,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@faker-js/faker": "^10.1.0",
     "@types/lodash.debounce": "^4.0.9",
     "@types/node": "^20",
     "@types/papaparse": "^5.3.16",

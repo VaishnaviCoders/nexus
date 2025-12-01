@@ -9,8 +9,8 @@
  * 🟢 You can import this file directly.
  */
 import type * as runtime from "@prisma/client/runtime/client"
-import type * as $Enums from "../enums"
-import type * as Prisma from "../internal/prismaNamespace"
+import type * as $Enums from "../enums.ts"
+import type * as Prisma from "../internal/prismaNamespace.ts"
 
 /**
  * Model ComplaintStatusTimeline
@@ -210,7 +210,6 @@ export type ComplaintStatusTimelineOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   complaint?: Prisma.AnonymousComplaintOrderByWithRelationInput
-  _relevance?: Prisma.ComplaintStatusTimelineOrderByRelevanceInput
 }
 
 export type ComplaintStatusTimelineWhereUniqueInput = Prisma.AtLeast<{
@@ -330,12 +329,6 @@ export type ComplaintStatusTimelineListRelationFilter = {
 
 export type ComplaintStatusTimelineOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
-}
-
-export type ComplaintStatusTimelineOrderByRelevanceInput = {
-  fields: Prisma.ComplaintStatusTimelineOrderByRelevanceFieldEnum | Prisma.ComplaintStatusTimelineOrderByRelevanceFieldEnum[]
-  sort: Prisma.SortOrder
-  search: string
 }
 
 export type ComplaintStatusTimelineCountOrderByAggregateInput = {

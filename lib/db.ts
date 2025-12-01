@@ -1,19 +1,18 @@
-import { PrismaClient } from '@/generated/prisma/client';
+import { PrismaClient, Prisma } from "@/generated/prisma/client";
 import { PrismaPg } from '@prisma/adapter-pg';
 import { getCurrentAcademicYearId } from './academicYear';
 
-const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
-const base = new PrismaClient({ adapter });
+const adapter = new PrismaPg({ 
+  connectionString: process.env.DATABASE_URL,
+});
+const globalForPrisma = global as unknown as {
+    prisma: PrismaClient
+}
 
-// ✅ Only models that actually have academicYearId field in schema
-const MODELS_WITH_ACADEMIC_YEAR = [
-  'Fee',
-  'TeachingAssignment',
-  'StudentAttendance',
-  'AcademicCalendar',
-  'AnonymousComplaint',
-  'Notice',
-] as const;
+const base = globalForPrisma.prisma || new PrismaClient({
+  adapter,
+})
+
 
 const prisma = base.$extends({
   name: 'withAcademicYear',
@@ -345,5 +344,8 @@ const prisma = base.$extends({
     },
   },
 });
+
+// if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
+
 
 export default prisma;

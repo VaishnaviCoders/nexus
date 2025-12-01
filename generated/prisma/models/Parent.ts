@@ -9,8 +9,8 @@
  * 🟢 You can import this file directly.
  */
 import type * as runtime from "@prisma/client/runtime/client"
-import type * as $Enums from "../enums"
-import type * as Prisma from "../internal/prismaNamespace"
+import type * as $Enums from "../enums.ts"
+import type * as Prisma from "../internal/prismaNamespace.ts"
 
 /**
  * Model Parent
@@ -232,7 +232,6 @@ export type ParentOrderByWithRelationInput = {
   user?: Prisma.UserOrderByWithRelationInput
   students?: Prisma.ParentStudentOrderByRelationAggregateInput
   NotificationLog?: Prisma.NotificationLogOrderByRelationAggregateInput
-  _relevance?: Prisma.ParentOrderByRelevanceInput
 }
 
 export type ParentWhereUniqueInput = Prisma.AtLeast<{
@@ -377,12 +376,6 @@ export type ParentUncheckedUpdateManyInput = {
 export type ParentNullableScalarRelationFilter = {
   is?: Prisma.ParentWhereInput | null
   isNot?: Prisma.ParentWhereInput | null
-}
-
-export type ParentOrderByRelevanceInput = {
-  fields: Prisma.ParentOrderByRelevanceFieldEnum | Prisma.ParentOrderByRelevanceFieldEnum[]
-  sort: Prisma.SortOrder
-  search: string
 }
 
 export type ParentCountOrderByAggregateInput = {

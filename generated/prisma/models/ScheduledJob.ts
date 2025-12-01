@@ -9,8 +9,8 @@
  * 🟢 You can import this file directly.
  */
 import type * as runtime from "@prisma/client/runtime/client"
-import type * as $Enums from "../enums"
-import type * as Prisma from "../internal/prismaNamespace"
+import type * as $Enums from "../enums.ts"
+import type * as Prisma from "../internal/prismaNamespace.ts"
 
 /**
  * Model ScheduledJob
@@ -261,7 +261,6 @@ export type ScheduledJobOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
   organization?: Prisma.OrganizationOrderByWithRelationInput
-  _relevance?: Prisma.ScheduledJobOrderByRelevanceInput
 }
 
 export type ScheduledJobWhereUniqueInput = Prisma.AtLeast<{
@@ -459,12 +458,6 @@ export type EnumNotificationChannelNullableListFilter<$PrismaModel = never> = {
   hasEvery?: $Enums.NotificationChannel[] | Prisma.ListEnumNotificationChannelFieldRefInput<$PrismaModel>
   hasSome?: $Enums.NotificationChannel[] | Prisma.ListEnumNotificationChannelFieldRefInput<$PrismaModel>
   isEmpty?: boolean
-}
-
-export type ScheduledJobOrderByRelevanceInput = {
-  fields: Prisma.ScheduledJobOrderByRelevanceFieldEnum | Prisma.ScheduledJobOrderByRelevanceFieldEnum[]
-  sort: Prisma.SortOrder
-  search: string
 }
 
 export type ScheduledJobCountOrderByAggregateInput = {

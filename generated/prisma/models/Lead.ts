@@ -9,8 +9,8 @@
  * 🟢 You can import this file directly.
  */
 import type * as runtime from "@prisma/client/runtime/client"
-import type * as $Enums from "../enums"
-import type * as Prisma from "../internal/prismaNamespace"
+import type * as $Enums from "../enums.ts"
+import type * as Prisma from "../internal/prismaNamespace.ts"
 
 /**
  * Model Lead
@@ -484,7 +484,6 @@ export type LeadOrderByWithRelationInput = {
   convertedToStudent?: Prisma.StudentOrderByWithRelationInput
   activities?: Prisma.LeadActivityOrderByRelationAggregateInput
   createdBy?: Prisma.UserOrderByWithRelationInput
-  _relevance?: Prisma.LeadOrderByRelevanceInput
 }
 
 export type LeadWhereUniqueInput = Prisma.AtLeast<{
@@ -884,12 +883,6 @@ export type EnumLeadCommunicationPreferenceNullableListFilter<$PrismaModel = nev
   hasEvery?: $Enums.LeadCommunicationPreference[] | Prisma.ListEnumLeadCommunicationPreferenceFieldRefInput<$PrismaModel>
   hasSome?: $Enums.LeadCommunicationPreference[] | Prisma.ListEnumLeadCommunicationPreferenceFieldRefInput<$PrismaModel>
   isEmpty?: boolean
-}
-
-export type LeadOrderByRelevanceInput = {
-  fields: Prisma.LeadOrderByRelevanceFieldEnum | Prisma.LeadOrderByRelevanceFieldEnum[]
-  sort: Prisma.SortOrder
-  search: string
 }
 
 export type LeadCountOrderByAggregateInput = {

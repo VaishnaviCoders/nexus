@@ -9,8 +9,8 @@
  * 🟢 You can import this file directly.
  */
 import type * as runtime from "@prisma/client/runtime/client"
-import type * as $Enums from "../enums"
-import type * as Prisma from "../internal/prismaNamespace"
+import type * as $Enums from "../enums.ts"
+import type * as Prisma from "../internal/prismaNamespace.ts"
 
 /**
  * Model FeeSenseExecutionLog
@@ -323,7 +323,6 @@ export type FeeSenseExecutionLogOrderByWithRelationInput = {
   errorDetails?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   agent?: Prisma.FeeSenseAgentOrderByWithRelationInput
-  _relevance?: Prisma.FeeSenseExecutionLogOrderByRelevanceInput
 }
 
 export type FeeSenseExecutionLogWhereUniqueInput = Prisma.AtLeast<{
@@ -515,12 +514,6 @@ export type FeeSenseExecutionLogListRelationFilter = {
 
 export type FeeSenseExecutionLogOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
-}
-
-export type FeeSenseExecutionLogOrderByRelevanceInput = {
-  fields: Prisma.FeeSenseExecutionLogOrderByRelevanceFieldEnum | Prisma.FeeSenseExecutionLogOrderByRelevanceFieldEnum[]
-  sort: Prisma.SortOrder
-  search: string
 }
 
 export type FeeSenseExecutionLogCountOrderByAggregateInput = {

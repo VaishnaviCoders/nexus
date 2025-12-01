@@ -9,8 +9,8 @@
  * 🟢 You can import this file directly.
  */
 import type * as runtime from "@prisma/client/runtime/client"
-import type * as $Enums from "../enums"
-import type * as Prisma from "../internal/prismaNamespace"
+import type * as $Enums from "../enums.ts"
+import type * as Prisma from "../internal/prismaNamespace.ts"
 
 /**
  * Model FeeCategory
@@ -203,7 +203,6 @@ export type FeeCategoryOrderByWithRelationInput = {
   organizationId?: Prisma.SortOrder
   fees?: Prisma.FeeOrderByRelationAggregateInput
   Organization?: Prisma.OrganizationOrderByWithRelationInput
-  _relevance?: Prisma.FeeCategoryOrderByRelevanceInput
 }
 
 export type FeeCategoryWhereUniqueInput = Prisma.AtLeast<{
@@ -324,12 +323,6 @@ export type FeeCategoryOrderByRelationAggregateInput = {
 export type FeeCategoryScalarRelationFilter = {
   is?: Prisma.FeeCategoryWhereInput
   isNot?: Prisma.FeeCategoryWhereInput
-}
-
-export type FeeCategoryOrderByRelevanceInput = {
-  fields: Prisma.FeeCategoryOrderByRelevanceFieldEnum | Prisma.FeeCategoryOrderByRelevanceFieldEnum[]
-  sort: Prisma.SortOrder
-  search: string
 }
 
 export type FeeCategoryNameOrganizationIdCompoundUniqueInput = {

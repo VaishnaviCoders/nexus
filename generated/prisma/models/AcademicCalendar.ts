@@ -9,8 +9,8 @@
  * 🟢 You can import this file directly.
  */
 import type * as runtime from "@prisma/client/runtime/client"
-import type * as $Enums from "../enums"
-import type * as Prisma from "../internal/prismaNamespace"
+import type * as $Enums from "../enums.ts"
+import type * as Prisma from "../internal/prismaNamespace.ts"
 
 /**
  * Model AcademicCalendar
@@ -257,7 +257,6 @@ export type AcademicCalendarOrderByWithRelationInput = {
   academicYearId?: Prisma.SortOrderInput | Prisma.SortOrder
   organization?: Prisma.OrganizationOrderByWithRelationInput
   academicYear?: Prisma.AcademicYearOrderByWithRelationInput
-  _relevance?: Prisma.AcademicCalendarOrderByRelevanceInput
 }
 
 export type AcademicCalendarWhereUniqueInput = Prisma.AtLeast<{
@@ -428,12 +427,6 @@ export type AcademicCalendarListRelationFilter = {
 
 export type AcademicCalendarOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
-}
-
-export type AcademicCalendarOrderByRelevanceInput = {
-  fields: Prisma.AcademicCalendarOrderByRelevanceFieldEnum | Prisma.AcademicCalendarOrderByRelevanceFieldEnum[]
-  sort: Prisma.SortOrder
-  search: string
 }
 
 export type AcademicCalendarOrganizationIdStartDateEndDateCompoundUniqueInput = {
