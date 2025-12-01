@@ -261,6 +261,7 @@ export type ScheduledJobOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
   organization?: Prisma.OrganizationOrderByWithRelationInput
+  _relevance?: Prisma.ScheduledJobOrderByRelevanceInput
 }
 
 export type ScheduledJobWhereUniqueInput = Prisma.AtLeast<{
@@ -458,6 +459,12 @@ export type EnumNotificationChannelNullableListFilter<$PrismaModel = never> = {
   hasEvery?: $Enums.NotificationChannel[] | Prisma.ListEnumNotificationChannelFieldRefInput<$PrismaModel>
   hasSome?: $Enums.NotificationChannel[] | Prisma.ListEnumNotificationChannelFieldRefInput<$PrismaModel>
   isEmpty?: boolean
+}
+
+export type ScheduledJobOrderByRelevanceInput = {
+  fields: Prisma.ScheduledJobOrderByRelevanceFieldEnum | Prisma.ScheduledJobOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type ScheduledJobCountOrderByAggregateInput = {

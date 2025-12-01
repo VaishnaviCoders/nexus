@@ -323,6 +323,7 @@ export type FeeSenseExecutionLogOrderByWithRelationInput = {
   errorDetails?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   agent?: Prisma.FeeSenseAgentOrderByWithRelationInput
+  _relevance?: Prisma.FeeSenseExecutionLogOrderByRelevanceInput
 }
 
 export type FeeSenseExecutionLogWhereUniqueInput = Prisma.AtLeast<{
@@ -514,6 +515,12 @@ export type FeeSenseExecutionLogListRelationFilter = {
 
 export type FeeSenseExecutionLogOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type FeeSenseExecutionLogOrderByRelevanceInput = {
+  fields: Prisma.FeeSenseExecutionLogOrderByRelevanceFieldEnum | Prisma.FeeSenseExecutionLogOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type FeeSenseExecutionLogCountOrderByAggregateInput = {

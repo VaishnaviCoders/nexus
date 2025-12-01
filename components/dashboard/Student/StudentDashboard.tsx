@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import { Suspense } from 'react';
 import { StudentDashboardStatsCards } from './StudentDashboardStatsCards';
 import {
   Card,
@@ -9,7 +9,6 @@ import {
 } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
 import prisma from '@/lib/db';
 import StudentSubjectsRadar from './student-subjects-radar';
 import { RecentNoticesCards } from '../notice/recent-notices-cards';
@@ -19,12 +18,9 @@ import { Button } from '@/components/ui/button';
 import {
   CreditCard,
   Download,
-  Upload,
   MessageSquare,
   Zap,
-  Bell,
-  Calendar,
-  BookOpen,
+
   TrendingUp,
   AlertCircle,
 } from 'lucide-react';
@@ -33,7 +29,6 @@ import { getCurrentAcademicYear } from '@/lib/academicYear';
 import { getCurrentUserByRole } from '@/lib/auth';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
-import { format, isToday, isTomorrow, isAfter } from 'date-fns';
 
 // Enhanced fees status with better error handling and caching
 export async function getFeesStatus(studentId: string) {

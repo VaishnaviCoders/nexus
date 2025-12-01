@@ -202,6 +202,7 @@ export type SectionOrderByWithRelationInput = {
   students?: Prisma.StudentOrderByRelationAggregateInput
   StudentAttendance?: Prisma.StudentAttendanceOrderByRelationAggregateInput
   TeachingAssignment?: Prisma.TeachingAssignmentOrderByRelationAggregateInput
+  _relevance?: Prisma.SectionOrderByRelevanceInput
 }
 
 export type SectionWhereUniqueInput = Prisma.AtLeast<{
@@ -322,6 +323,12 @@ export type SectionOrderByRelationAggregateInput = {
 export type SectionScalarRelationFilter = {
   is?: Prisma.SectionWhereInput
   isNot?: Prisma.SectionWhereInput
+}
+
+export type SectionOrderByRelevanceInput = {
+  fields: Prisma.SectionOrderByRelevanceFieldEnum | Prisma.SectionOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type SectionNameGradeIdCompoundUniqueInput = {

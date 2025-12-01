@@ -381,6 +381,7 @@ export type StudentDocumentOrderByWithRelationInput = {
   organizationId?: Prisma.SortOrder
   student?: Prisma.StudentOrderByWithRelationInput
   Organization?: Prisma.OrganizationOrderByWithRelationInput
+  _relevance?: Prisma.StudentDocumentOrderByRelevanceInput
 }
 
 export type StudentDocumentWhereUniqueInput = Prisma.AtLeast<{
@@ -652,6 +653,12 @@ export type StudentDocumentListRelationFilter = {
 
 export type StudentDocumentOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type StudentDocumentOrderByRelevanceInput = {
+  fields: Prisma.StudentDocumentOrderByRelevanceFieldEnum | Prisma.StudentDocumentOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type StudentDocumentCountOrderByAggregateInput = {

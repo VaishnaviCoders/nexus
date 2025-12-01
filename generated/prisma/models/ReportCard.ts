@@ -391,6 +391,7 @@ export type ReportCardOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   student?: Prisma.StudentOrderByWithRelationInput
   examSession?: Prisma.ExamSessionOrderByWithRelationInput
+  _relevance?: Prisma.ReportCardOrderByRelevanceInput
 }
 
 export type ReportCardWhereUniqueInput = Prisma.AtLeast<{
@@ -643,6 +644,12 @@ export type ReportCardListRelationFilter = {
 
 export type ReportCardOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type ReportCardOrderByRelevanceInput = {
+  fields: Prisma.ReportCardOrderByRelevanceFieldEnum | Prisma.ReportCardOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type ReportCardStudentIdExamSessionIdCompoundUniqueInput = {

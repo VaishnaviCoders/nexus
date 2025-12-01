@@ -253,6 +253,7 @@ export type NoticeAttachmentOrderByWithRelationInput = {
   publicId?: Prisma.SortOrder
   uploadedAt?: Prisma.SortOrder
   notice?: Prisma.NoticeOrderByWithRelationInput
+  _relevance?: Prisma.NoticeAttachmentOrderByRelevanceInput
 }
 
 export type NoticeAttachmentWhereUniqueInput = Prisma.AtLeast<{
@@ -384,6 +385,12 @@ export type NoticeAttachmentListRelationFilter = {
 
 export type NoticeAttachmentOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type NoticeAttachmentOrderByRelevanceInput = {
+  fields: Prisma.NoticeAttachmentOrderByRelevanceFieldEnum | Prisma.NoticeAttachmentOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type NoticeAttachmentCountOrderByAggregateInput = {

@@ -425,6 +425,7 @@ export type FeeSenseAgentOrderByWithRelationInput = {
   organization?: Prisma.OrganizationOrderByWithRelationInput
   executionLogs?: Prisma.FeeSenseExecutionLogOrderByRelationAggregateInput
   reports?: Prisma.FeeSenseReportOrderByRelationAggregateInput
+  _relevance?: Prisma.FeeSenseAgentOrderByRelevanceInput
 }
 
 export type FeeSenseAgentWhereUniqueInput = Prisma.AtLeast<{
@@ -729,6 +730,12 @@ export type StringNullableListFilter<$PrismaModel = never> = {
   hasEvery?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
   hasSome?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
   isEmpty?: boolean
+}
+
+export type FeeSenseAgentOrderByRelevanceInput = {
+  fields: Prisma.FeeSenseAgentOrderByRelevanceFieldEnum | Prisma.FeeSenseAgentOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type FeeSenseAgentCountOrderByAggregateInput = {

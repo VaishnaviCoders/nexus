@@ -324,6 +324,7 @@ export type FeePaymentOrderByWithRelationInput = {
   fee?: Prisma.FeeOrderByWithRelationInput
   payer?: Prisma.UserOrderByWithRelationInput
   organization?: Prisma.OrganizationOrderByWithRelationInput
+  _relevance?: Prisma.FeePaymentOrderByRelevanceInput
 }
 
 export type FeePaymentWhereUniqueInput = Prisma.AtLeast<{
@@ -525,6 +526,12 @@ export type FeePaymentListRelationFilter = {
 
 export type FeePaymentOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type FeePaymentOrderByRelevanceInput = {
+  fields: Prisma.FeePaymentOrderByRelevanceFieldEnum | Prisma.FeePaymentOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type FeePaymentCountOrderByAggregateInput = {

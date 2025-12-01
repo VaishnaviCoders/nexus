@@ -221,6 +221,7 @@ export type ExamEnrollmentOrderByWithRelationInput = {
   hallTicketIssuedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   student?: Prisma.StudentOrderByWithRelationInput
   exam?: Prisma.ExamOrderByWithRelationInput
+  _relevance?: Prisma.ExamEnrollmentOrderByRelevanceInput
 }
 
 export type ExamEnrollmentWhereUniqueInput = Prisma.AtLeast<{
@@ -351,6 +352,12 @@ export type ExamEnrollmentListRelationFilter = {
 
 export type ExamEnrollmentOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type ExamEnrollmentOrderByRelevanceInput = {
+  fields: Prisma.ExamEnrollmentOrderByRelevanceFieldEnum | Prisma.ExamEnrollmentOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type ExamEnrollmentStudentIdExamIdCompoundUniqueInput = {

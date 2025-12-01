@@ -201,6 +201,7 @@ export type LeaveStatusTimelineOrderByWithRelationInput = {
   changedBy?: Prisma.SortOrderInput | Prisma.SortOrder
   changedAt?: Prisma.SortOrder
   leave?: Prisma.LeaveOrderByWithRelationInput
+  _relevance?: Prisma.LeaveStatusTimelineOrderByRelevanceInput
 }
 
 export type LeaveStatusTimelineWhereUniqueInput = Prisma.AtLeast<{
@@ -310,6 +311,12 @@ export type LeaveStatusTimelineListRelationFilter = {
 
 export type LeaveStatusTimelineOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type LeaveStatusTimelineOrderByRelevanceInput = {
+  fields: Prisma.LeaveStatusTimelineOrderByRelevanceFieldEnum | Prisma.LeaveStatusTimelineOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type LeaveStatusTimelineCountOrderByAggregateInput = {

@@ -264,6 +264,7 @@ export type AcademicYearOrderByWithRelationInput = {
   examSession?: Prisma.ExamSessionOrderByRelationAggregateInput
   leaves?: Prisma.LeaveOrderByRelationAggregateInput
   leads?: Prisma.LeadOrderByRelationAggregateInput
+  _relevance?: Prisma.AcademicYearOrderByRelevanceInput
 }
 
 export type AcademicYearWhereUniqueInput = Prisma.AtLeast<{
@@ -459,6 +460,12 @@ export type AcademicYearUncheckedUpdateManyInput = {
   createdBy?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type AcademicYearOrderByRelevanceInput = {
+  fields: Prisma.AcademicYearOrderByRelevanceFieldEnum | Prisma.AcademicYearOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type AcademicYearOrganizationIdNameCompoundUniqueInput = {

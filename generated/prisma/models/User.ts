@@ -273,6 +273,7 @@ export type UserOrderByWithRelationInput = {
   leadActivity?: Prisma.LeadActivityOrderByRelationAggregateInput
   assignedLeads?: Prisma.LeadOrderByRelationAggregateInput
   createdLeads?: Prisma.LeadOrderByRelationAggregateInput
+  _relevance?: Prisma.UserOrderByRelevanceInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -487,6 +488,12 @@ export type UserListRelationFilter = {
 
 export type UserOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type UserOrderByRelevanceInput = {
+  fields: Prisma.UserOrderByRelevanceFieldEnum | Prisma.UserOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type UserCountOrderByAggregateInput = {

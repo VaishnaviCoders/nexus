@@ -354,6 +354,7 @@ export type NotificationLogOrderByWithRelationInput = {
   parent?: Prisma.ParentOrderByWithRelationInput
   student?: Prisma.StudentOrderByWithRelationInput
   notice?: Prisma.NoticeOrderByWithRelationInput
+  _relevance?: Prisma.NotificationLogOrderByRelevanceInput
 }
 
 export type NotificationLogWhereUniqueInput = Prisma.AtLeast<{
@@ -575,6 +576,12 @@ export type NotificationLogListRelationFilter = {
 
 export type NotificationLogOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type NotificationLogOrderByRelevanceInput = {
+  fields: Prisma.NotificationLogOrderByRelevanceFieldEnum | Prisma.NotificationLogOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type NotificationLogCountOrderByAggregateInput = {

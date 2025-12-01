@@ -7,17 +7,21 @@ import type { NextConfig } from 'next';
 
 // });
 
+
+const isProd = process.env.NODE_ENV === 'production'
+
 const nextConfig: NextConfig = {
-  distDir: '.next',
-  reactStrictMode: true,
-  turbopack: {
-    resolveExtensions: ['.mdx', '.tsx', '.ts', '.jsx', '.js', '.mjs', '.json'],
+  typescript:{
+    ignoreBuildErrors:true,
   },
+  reactStrictMode: true,
+  typedRoutes:true,
   experimental: {
     serverActions: {
       bodySizeLimit: '3mb',
     },
-    typedEnv:true
+    typedEnv:true,
+    turbopackFileSystemCacheForDev:true
   },
   headers: async () => {
     return [

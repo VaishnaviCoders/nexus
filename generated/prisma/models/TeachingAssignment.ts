@@ -247,6 +247,7 @@ export type TeachingAssignmentOrderByWithRelationInput = {
   section?: Prisma.SectionOrderByWithRelationInput
   organization?: Prisma.OrganizationOrderByWithRelationInput
   academicYear?: Prisma.AcademicYearOrderByWithRelationInput
+  _relevance?: Prisma.TeachingAssignmentOrderByRelevanceInput
 }
 
 export type TeachingAssignmentWhereUniqueInput = Prisma.AtLeast<{
@@ -397,6 +398,12 @@ export type TeachingAssignmentListRelationFilter = {
 
 export type TeachingAssignmentOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type TeachingAssignmentOrderByRelevanceInput = {
+  fields: Prisma.TeachingAssignmentOrderByRelevanceFieldEnum | Prisma.TeachingAssignmentOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type TeachingAssignmentTeacherIdSubjectIdGradeIdSectionIdAcademicYearIdCompoundUniqueInput = {
