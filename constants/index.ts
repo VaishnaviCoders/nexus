@@ -15,6 +15,466 @@ import {
   ZapIcon,
 } from 'lucide-react';
 
+
+ export const features = [
+    {
+      id: "FEE_RECEIPT_VIEW",
+      name: "View & Download Fee Receipts",
+      description: "Students and parents can view all past fee payments and download official receipts anytime",
+      roles: ["STUDENT", "PARENT"],
+      status: "LIVE",
+      problem_solved: "Eliminates need to visit school office for receipt copies. Parents often lose paper receipts and need reprints for reimbursements or records."
+    },
+    {
+      id: "ONLINE_FEE_PAYMENT",
+      name: "Online Fee Payment",
+      description: "Pay school fees online using UPI, credit/debit cards, net banking, and digital wallets",
+      roles: ["STUDENT", "PARENT"],
+      status: "LIVE",
+      problem_solved: "Removes need to stand in school office queues during limited hours. Parents can pay at midnight on Sunday from home. Eliminates cash handling risks."
+    },
+    {
+      id: "SCHOOL_NOTICES",
+      name: "Receive School Notices",
+      description: "Get school announcements and notices via SMS, Email, and WhatsApp with delivery confirmation",
+      roles: ["STUDENT", "PARENT", "TEACHER"],
+      status: "LIVE",
+      problem_solved: "Students lose printed circulars. Parents miss important announcements. Schools waste 2+ hours calling parents individually for urgent updates."
+    },
+    {
+      id: "STUDENT_PROFILE",
+      name: "Student Profile Management",
+      description: "Students can view and update their personal information, contact details, and profile picture",
+      roles: ["STUDENT"],
+      status: "LIVE",
+      problem_solved: "Schools maintain outdated contact info because updating requires physical forms. Students can't verify what information school has on file."
+    },
+    {
+      id: "ATTENDANCE_HISTORY",
+      name: "Attendance History Tracking",
+      description: "View complete attendance records with daily, weekly, and monthly breakdowns showing present/absent/late status",
+      roles: ["STUDENT", "PARENT"],
+      status: "LIVE",
+      problem_solved: "Parents have zero visibility into child's attendance. Students don't know their attendance percentage until report cards. Schools get repeated queries."
+    },
+    {
+      id: "HOLIDAY_CALENDAR",
+      name: "Holiday Calendar View",
+      description: "View declared holidays, upcoming breaks, and emergency closures in a calendar format",
+      roles: ["STUDENT", "PARENT", "TEACHER"],
+      status: "LIVE",
+      problem_solved: "Parents and students miss holiday announcements. Confusion about whether school is open on specific dates leads to unnecessary trips."
+    },
+    {
+      id: "DOCUMENT_UPLOAD",
+      name: "Document Upload System",
+      description: "Upload required documents like Aadhaar card, Transfer Certificate, Birth Certificate, and ID proofs",
+      roles: ["STUDENT", "TEACHER"],
+      status: "LIVE",
+      problem_solved: "Physical document submission requires school visits. Documents get lost or damaged. Searching through physical files wastes admin time during audits."
+    },
+    {
+      id: "DOCUMENT_STATUS",
+      name: "Document Verification Status",
+      description: "Track real-time verification status of uploaded documents (pending, verified, rejected with reason)",
+      roles: ["STUDENT"],
+      status: "LIVE",
+      problem_solved: "Students don't know if their documents were accepted. Repeated visits to ask 'Did you verify my documents?' waste everyone's time."
+    },
+    {
+      id: "ANONYMOUS_COMPLAINT",
+      name: "Anonymous Complaint System",
+      description: "Submit issues, feedback, or complaints privately without revealing identity to school admin and teachers",
+      roles: ["STUDENT", "PARENT"],
+      status: "LIVE",
+      problem_solved: "Students fear retaliation for reporting problems. Parents hesitate to complain about teachers. Important issues go unreported and unresolved."
+    },
+    {
+      id: "VIEW_SECTION_TEACHERS",
+      name: "View Section & Teachers",
+      description: "See assigned grade, section, and complete list of subject teachers with contact information",
+      roles: ["STUDENT"],
+      status: "LIVE",
+      problem_solved: "Students don't know which teacher teaches which subject. Contact information for teachers not easily accessible when students need help."
+    },
+    {
+      id: "FEE_TRACKING",
+      name: "Fee History & Tracking",
+      description: "Complete view of all past payments, pending dues, upcoming deadlines, and payment reminders",
+      roles: ["PARENT"],
+      status: "LIVE",
+      problem_solved: "Parents forget payment deadlines. Confusion about how much was paid vs what's pending. Schools spend hours answering 'What's my fee balance?'"
+    },
+    {
+      id: "MULTI_CHILD_LINK",
+      name: "Link Multiple Children",
+      description: "Parents can link and monitor multiple children's profiles from single account with aggregated view",
+      roles: ["PARENT"],
+      status: "LIVE",
+      problem_solved: "Parents with multiple children need separate logins. Tracking each child's fees and attendance separately is cumbersome."
+    },
+    {
+      id: "MULTI_PARENT_SUPPORT",
+      name: "Multiple Parents per Child",
+      description: "Both mother and father (or guardians) can independently access child's information with separate accounts",
+      roles: ["PARENT"],
+      status: "LIVE",
+      problem_solved: "Only one parent gets updates. Father doesn't know if mother paid fees. Both parents want visibility without sharing login credentials."
+    },
+    {
+      id: "PARENT_PROFILE",
+      name: "Parent Profile Management",
+      description: "Edit parent contact information, notification preferences, and view all linked children",
+      roles: ["PARENT"],
+      status: "LIVE",
+      problem_solved: "Schools have outdated parent phone numbers. Parents can't control which channel they receive notifications on."
+    },
+    {
+      id: "TEACHER_PROFILE",
+      name: "Teacher Profile & Credentials",
+      description: "Add bio, resume, educational certificates, teaching philosophy, and contact information",
+      roles: ["TEACHER"],
+      status: "LIVE",
+      problem_solved: "Parents don't know teacher qualifications. Schools lack centralized teacher credential records for audits. Teacher information not accessible to parents."
+    },
+    {
+      id: "MANAGE_CLASSES",
+      name: "Class & Student Management",
+      description: "View all assigned sections, enrolled students, and subject assignments in one dashboard",
+      roles: ["TEACHER"],
+      status: "LIVE",
+      problem_solved: "Teachers maintain manual lists of students per class. No quick way to see which students are in which section. Confusion during mid-year section changes."
+    },
+    {
+      id: "TAKE_ATTENDANCE",
+      name: "Digital Attendance Marking",
+      description: "Mark student attendance with 2 taps using AI suggestions based on patterns, saves automatically",
+      roles: ["TEACHER"],
+      status: "LIVE",
+      problem_solved: "Manual attendance registers take 20 minutes per class. Paper registers get lost or damaged. Teachers waste teaching time on roll calls."
+    },
+    {
+      id: "SECTION_SUMMARY",
+      name: "Section Attendance Summary",
+      description: "View attendance overview showing class-wide patterns, frequently absent students, and late arrival stats",
+      roles: ["TEACHER"],
+      status: "LIVE",
+      problem_solved: "Teachers don't identify attendance patterns until it's too late. No easy way to spot students with deteriorating attendance needing intervention."
+    },
+    {
+      id: "SUBJECT_ASSIGNMENT",
+      name: "Subject Assignment Management",
+      description: "Teachers are assigned specific subjects per grade and section by administrators",
+      roles: ["TEACHER", "ADMIN"],
+      status: "LIVE",
+      problem_solved: "Manual tracking of who teaches what subject in which class leads to scheduling conflicts. Teachers don't have clarity on their teaching load."
+    },
+    {
+      id: "COMPLAINT_RESOLUTION",
+      name: "Complaint Investigation & Resolution",
+      description: "Teachers can investigate complaints, add responses, and update resolution status",
+      roles: ["TEACHER", "ADMIN"],
+      status: "LIVE",
+      problem_solved: "Complaints go unaddressed. No tracking system for who's handling what issue. Students don't know if their complaint was even seen."
+    },
+    {
+      id: "TEACHER_DOCUMENTS",
+      name: "Teacher Document Upload",
+      description: "Upload ID proofs, educational certificates, resume, and experience letters",
+      roles: ["TEACHER"],
+      status: "LIVE",
+      problem_solved: "Teacher credential verification during audits is chaotic. Physical certificate copies get lost. No centralized credential database."
+    },
+    {
+      id: "ORG_SETUP",
+      name: "Organization Configuration",
+      description: "Configure school name, logo, type (school/college/coaching), student limits, and subscription plans",
+      roles: ["ADMIN"],
+      status: "LIVE",
+      problem_solved: "No centralized place to manage institutional branding and configuration. Plan limitations not enforced systematically."
+    },
+    {
+      id: "TEACHER_MANAGEMENT",
+      name: "Add & Assign Teachers",
+      description: "Add new teachers, assign them to specific sections and subjects, manage teaching load distribution",
+      roles: ["ADMIN"],
+      status: "LIVE",
+      problem_solved: "Manual tracking of teacher assignments leads to conflicts. Teachers assigned to too many/few classes. No visibility into workload balance."
+    },
+    {
+      id: "GRADE_SECTION_MGMT",
+      name: "Grade & Section Management",
+      description: "Create and edit class names, sections (10-A, 12-B), and define academic structure",
+      roles: ["ADMIN"],
+      status: "LIVE",
+      problem_solved: "Academic structure changes yearly but no system tracks it. Adding new sections mid-year is painful with manual systems."
+    },
+    {
+      id: "FEE_SETUP",
+      name: "Fee Configuration & Tracking",
+      description: "Create fee categories (tuition, transport, exam), assign to students/grades, monitor real-time collections",
+      roles: ["ADMIN"],
+      status: "LIVE",
+      problem_solved: "Complex fee structures hard to track manually. No real-time visibility into who paid what. Chasing defaulters takes hours daily."
+    },
+    {
+      id: "PAYMENT_TRACKING",
+      name: "Online Payment Monitoring",
+      description: "Monitor all online transactions including payment status, platform fees, gateway charges, and reconciliation",
+      roles: ["ADMIN"],
+      status: "LIVE",
+      problem_solved: "Manual reconciliation of online payments with bank statements is error-prone. No visibility into failed transactions or refund status."
+    },
+    {
+      id: "BULK_IMPORT",
+      name: "Bulk Student Import",
+      description: "Import hundreds of student records via CSV or Google Sheets with automatic validation and error detection",
+      roles: ["ADMIN"],
+      status: "LIVE",
+      problem_solved: "Manual data entry for 500+ students takes weeks. High error rate in manual entry. New academic year setup is painful and time-consuming."
+    },
+    {
+      id: "HOLIDAY_MANAGEMENT",
+      name: "Holiday Declaration System",
+      description: "Create and declare planned holidays and emergency closures, automatically notify all stakeholders",
+      roles: ["ADMIN"],
+      status: "LIVE",
+      problem_solved: "Holiday announcements require individual calls to all parents. Confusion about whether school is open during uncertain weather/situations."
+    },
+    {
+      id: "NOTICE_PUBLISHING",
+      name: "Notice Publishing & Scheduling",
+      description: "Create, approve, schedule, and publish notices to specific user groups with delivery tracking",
+      roles: ["ADMIN"],
+      status: "LIVE",
+      problem_solved: "Printing and distributing circulars to 500+ students takes 2+ hours. Students lose papers. Parents miss critical announcements."
+    },
+    {
+      id: "ADMIN_DASHBOARD",
+      name: "Analytics Dashboard",
+      description: "View real-time stats on fee collection, attendance rates, complaint resolution, and overall school health",
+      roles: ["ADMIN"],
+      status: "LIVE",
+      problem_solved: "No data-driven insights into school operations. Can't identify problems until they become crises. Manual report generation takes days."
+    },
+    {
+      id: "NOTIFICATION_LOGS",
+      name: "Notification Delivery Tracking",
+      description: "Track which notifications were delivered via SMS/WhatsApp/Email, delivery status, and read receipts",
+      roles: ["ADMIN"],
+      status: "LIVE",
+      problem_solved: "Parents claim 'I never got that message'. No proof of communication delivery. Can't verify if critical alerts reached everyone."
+    },
+    {
+      id: "DOCUMENT_VERIFICATION",
+      name: "Document Verification Workflow",
+      description: "Review, approve, or reject submitted student and teacher documents with feedback notes",
+      roles: ["ADMIN"],
+      status: "LIVE",
+      problem_solved: "Physical document verification is time-consuming. No systematic tracking of pending vs verified documents. Audit preparation is chaotic."
+    },
+    {
+      id: "ADMIN_PROFILE",
+      name: "Admin Profile & Settings",
+      description: "Update admin contact details, password, notification preferences, and security settings",
+      roles: ["ADMIN"],
+      status: "LIVE",
+      problem_solved: "Admin accounts shared among multiple staff. No audit trail of who made what changes. Security settings not customizable."
+    },
+    {
+      id: "ORG_PLANS",
+      name: "Subscription Plan Management",
+      description: "Control feature access based on Free, Premium, or Enterprise subscription tier",
+      roles: ["ADMIN"],
+      status: "LIVE",
+      problem_solved: "Schools want to try before buying. Need tiered pricing for different institution sizes. Feature access not programmatically controlled."
+    },
+    {
+      id: "STUDENT_DASHBOARD",
+      name: "Student Dashboard Overview",
+      description: "Visual dashboard with widgets showing fees summary, attendance percentage, pending documents, and recent notices",
+      roles: ["STUDENT"],
+      status: "UPCOMING",
+      problem_solved: "Students have to navigate multiple pages to get basic information. No at-a-glance view of their school status."
+    },
+    {
+      id: "ATTENDANCE_ALERTS",
+      name: "Automated Attendance Alerts",
+      description: "Students and parents receive automatic SMS/WhatsApp alerts when marked absent or late",
+      roles: ["STUDENT", "PARENT"],
+      status: "UPCOMING",
+      problem_solved: "Parents learn about absences days later. Students skip school without parents knowing. Early intervention not possible."
+    },
+    {
+      id: "ACADEMIC_PROFILE",
+      name: "Academic Performance Profile",
+      description: "Comprehensive view of academic performance, enrolled subjects, grades, and assignment status",
+      roles: ["STUDENT"],
+      status: "UPCOMING",
+      problem_solved: "Students have no centralized view of their academic standing. Performance tracking scattered across multiple systems."
+    },
+    {
+      id: "BULK_STUDENT_INVITE",
+      name: "Bulk Student Onboarding with Invites",
+      description: "CSV-based import that automatically sends login credentials and invitation links to student emails",
+      roles: ["ADMIN"],
+      status: "UPCOMING",
+      problem_solved: "Manually sending login credentials to hundreds of students is tedious. Students forget to register, delaying full system adoption."
+    },
+    {
+      id: "PHONEPE_DASHBOARD",
+      name: "PhonePe Payment Analytics",
+      description: "Dedicated dashboard summarizing PhonePe gateway transactions, success rates, and settlement status",
+      roles: ["ADMIN"],
+      status: "UPCOMING",
+      problem_solved: "Payment gateway data scattered. No consolidated view of transaction success/failure rates. Reconciliation with PhonePe is manual."
+    },
+    {
+      id: "AI_REPORTS",
+      name: "AI-Powered Report Generation",
+      description: "Automatically generate monthly fee collection and attendance trend reports using AI analysis",
+      roles: ["ADMIN"],
+      status: "UPCOMING",
+      problem_solved: "Manual report creation takes hours. Insights buried in data. Management needs executive summaries, not raw spreadsheets."
+    },
+    {
+      id: "EXAM_MANAGEMENT",
+      name: "Examination Lifecycle Management",
+      description: "Manage complete exam process: scheduling, student enrollment, hall tickets, seating arrangements",
+      roles: ["ADMIN", "TEACHER"],
+      status: "UPCOMING",
+      problem_solved: "Exam scheduling has conflicts. Hall ticket generation is manual. No systematic student enrollment for exams. Seating chaos before exams."
+    },
+    {
+      id: "LEAD_MANAGEMENT",
+      name: "Admission Lead Management (CRM)",
+      description: "Track prospective students from inquiry to enrollment with follow-up workflows and conversion tracking",
+      roles: ["ADMIN", "TEACHER"],
+      status: "UPCOMING",
+      problem_solved: "Potential students slip through cracks. No systematic follow-up. Conversion rates unknown. Admissions process unstructured."
+    },
+    {
+      id: "MONTHLY_ATTENDANCE_SUMMARY",
+      name: "Monthly Attendance Reports",
+      description: "Comprehensive monthly attendance reports with analytics, trends, and comparison with previous months",
+      roles: ["STUDENT", "PARENT"],
+      status: "PLANNED",
+      problem_solved: "Students can't track monthly attendance patterns. Parents want consolidated monthly reports, not daily notifications."
+    },
+    {
+      id: "ASSIGNMENT_SYSTEM",
+      name: "Assignment Submission & Tracking",
+      description: "Teachers assign homework, students submit online, automatic tracking of pending/completed assignments",
+      roles: ["STUDENT", "TEACHER"],
+      status: "PLANNED",
+      problem_solved: "Students forget assignments. Teachers track submissions manually. No systematic way to know who submitted what and when."
+    },
+    {
+      id: "MARKS_PERFORMANCE",
+      name: "Exam Marks & Performance Analytics",
+      description: "View exam results, subject-wise marks, performance trends, class rankings, and improvement areas",
+      roles: ["STUDENT", "PARENT"],
+      status: "PLANNED",
+      problem_solved: "Students get paper mark sheets that get lost. No historical performance tracking. Parents can't see performance trends over time."
+    },
+    {
+      id: "CERTIFICATE_DOWNLOAD",
+      name: "Digital Certificate Management",
+      description: "Download academic certificates, participation certificates, and achievement awards anytime",
+      roles: ["STUDENT", "PARENT"],
+      status: "PLANNED",
+      problem_solved: "Physical certificates get lost or damaged. Requesting duplicates requires school visits. No digital archive of certificates."
+    },
+    {
+      id: "LEAVE_REQUEST",
+      name: "Leave Application System",
+      description: "Students apply for leave online, track approval status, and view leave balance",
+      roles: ["STUDENT"],
+      status: "PLANNED",
+      problem_solved: "Leave applications require physical forms. Parents don't know if leave was approved. Teachers manually track leave balances."
+    },
+    {
+      id: "COURSE_ENROLLMENT",
+      name: "Course & Batch Enrollment",
+      description: "Enroll in elective courses, manage batch assignments, and track course completion status",
+      roles: ["STUDENT", "ADMIN"],
+      status: "PLANNED",
+      problem_solved: "Elective course enrollment is chaotic. No systematic batch assignment. Students don't know which courses they're enrolled in."
+    },
+    {
+      id: "VOICE_ASSISTANT",
+      name: "Voice Assistant (Alexa Integration)",
+      description: "Voice-powered queries for attendance, fees, notices via Alexa or Google Assistant",
+      roles: ["STUDENT", "PARENT"],
+      status: "PLANNED",
+      problem_solved: "Parents want hands-free access while cooking/driving. Students prefer voice over typing. Accessibility for visually impaired users."
+    },
+    {
+      id: "TEACHER_FEEDBACK",
+      name: "Student Feedback & Comments",
+      description: "Teachers write detailed feedback on student behavior, progress, and areas needing improvement",
+      roles: ["TEACHER"],
+      status: "PLANNED",
+      problem_solved: "Feedback limited to report card comments. No continuous feedback system. Parents want regular updates, not just quarterly."
+    },
+    {
+      id: "MARKS_ENTRY",
+      name: "Exam Marks Entry System",
+      description: "Teachers enter exam marks, automatic grade calculation, and integration with report card generation",
+      roles: ["TEACHER", "ADMIN"],
+      status: "PLANNED",
+      problem_solved: "Manual mark sheets are error-prone. Calculating grades manually is time-consuming. No systematic marks database."
+    },
+    {
+      id: "TEACHER_ASSIGNMENT",
+      name: "Assignment Creation & Distribution",
+      description: "Create assignments, attach files, set deadlines, and track student submissions",
+      roles: ["TEACHER"],
+      status: "PLANNED",
+      problem_solved: "Distributing assignments to 100+ students manually. Students miss deadlines. No central repository of assignments."
+    },
+    {
+      id: "TEACHER_LEAVE",
+      name: "Teacher Leave Management",
+      description: "Apply for leave, track approval status, view leave balance, and arrange substitute teachers",
+      roles: ["TEACHER", "ADMIN"],
+      status: "PLANNED",
+      problem_solved: "Teacher leave applications are manual. No visibility into who's on leave. Finding substitute teachers is chaotic. Leave balances tracked in Excel."
+    },
+    {
+      id: "SALARY_MANAGEMENT",
+      name: "Teacher Salary & Payout Tracking",
+      description: "View salary details, payment history, salary slips, tax deductions, and payout schedules",
+      roles: ["TEACHER", "ADMIN"],
+      status: "PLANNED",
+      problem_solved: "Teachers have no self-service access to salary info. HR spends time answering salary queries. Salary slip distribution is manual."
+    },
+    {
+      id: "COURSE_BATCH_MGMT",
+      name: "Course & Batch Administration",
+      description: "Create academic courses, define batches, assign students, and manage course schedules",
+      roles: ["ADMIN"],
+      status: "PLANNED",
+      problem_solved: "Complex course structures hard to manage. Batch assignments messy. Elective course scheduling conflicts not detected systematically."
+    },
+    {
+      id: "CERTIFICATE_GENERATOR",
+      name: "Automated Certificate Generation",
+      description: "Bulk generate certificates with customizable templates, automatic student data merge, and digital signatures",
+      roles: ["ADMIN"],
+      status: "PLANNED",
+      problem_solved: "Manual certificate creation for 500+ students takes days. Typos in certificates. No template consistency. Digital signatures not possible."
+    }
+  ]
+  // "metadata": {
+  //   "total_features": 66,
+  //   "live_features": 38,
+  //   "upcoming_features": 8,
+  //   "planned_features": 20,
+  //   "last_updated": "2024-11-28"
+  // }
+
+
 export const indianEducationProblems = [
   {
     id: 1,
@@ -1459,3 +1919,6 @@ const mockDocuments = [
     updatedAt: new Date('2024-01-25'),
   },
 ];
+
+
+

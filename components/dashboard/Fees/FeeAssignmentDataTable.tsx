@@ -73,6 +73,7 @@ import {
   HoverCardTrigger,
 } from '@/components/ui/hover-card';
 import { Calendar } from '@/components/ui/calendar';
+import { FeeStatus } from '@/generated/prisma/enums';
 
 type FeeCategory = {
   id: string;
@@ -102,7 +103,7 @@ interface FeeAssignmentProps {
       totalFee: number;
       paidAmount: number;
       dueDate: Date;
-      status: 'PAID' | 'UNPAID' | 'OVERDUE';
+      status: FeeStatus;
       feeCategory: FeeCategory;
     }[];
   }[];
@@ -122,19 +123,6 @@ const FeeAssignmentDataTable = ({
       setSelectedStudents(students.map((s) => s.id));
     } else {
       setSelectedStudents([]);
-    }
-  };
-
-  const getFeeStatusColor = (status: 'PAID' | 'UNPAID' | 'OVERDUE') => {
-    switch (status) {
-      case 'PAID':
-        return 'bg-green-100 text-green-800 hover:bg-green-200 dark:bg-green-900/30 dark:text-green-400';
-      case 'UNPAID':
-        return 'bg-amber-100 text-amber-800 hover:bg-amber-200 dark:bg-amber-900/30 dark:text-amber-400';
-      case 'OVERDUE':
-        return 'bg-red-100 text-red-800 hover:bg-red-200 dark:bg-red-900/30 dark:text-red-400';
-      default:
-        return 'bg-gray-100 text-gray-500 border-gray-500';
     }
   };
 
@@ -389,11 +377,11 @@ const FeeAssignmentDataTable = ({
                             <HoverCardTrigger asChild>
                               <div className="flex items-center gap-2 cursor-pointer">
                                 <Badge
-                                  variant="outline"
+                                  variant={fee.status}
                                   className={cn(
                                     'transition-all',
-                                    getFeeStatusColor(fee.status)
                                   )}
+
                                 >
                                   <span className="flex items-center gap-1">
                                     {getStatusIcon(fee.status)}
@@ -407,13 +395,12 @@ const FeeAssignmentDataTable = ({
                             </HoverCardTrigger>
                             <HoverCardContent className="w-80 p-0 shadow-lg">
                               <div
-                                className={`${
-                                  fee.status === 'PAID'
-                                    ? 'bg-gradient-to-r from-green-400 to-green-100 dark:from-teal-950/30 dark:to-emerald-950/30'
-                                    : fee.status === 'OVERDUE'
-                                      ? 'bg-gradient-to-r from-red-400 to-red-100 dark:from-red-950/30 dark:to-red-950/30'
-                                      : 'bg-gradient-to-r from-orange-100 to-orange-50 dark:from-teal-950/30 dark:to-orange-950/30'
-                                } p-4 rounded-t-lg`}
+                                className={`${fee.status === 'PAID'
+                                  ? 'bg-gradient-to-r from-green-400 to-green-100 dark:from-teal-950/30 dark:to-emerald-950/30'
+                                  : fee.status === 'OVERDUE'
+                                    ? 'bg-gradient-to-r from-red-400 to-red-100 dark:from-red-950/30 dark:to-red-950/30'
+                                    : 'bg-gradient-to-r from-orange-100 to-orange-50 dark:from-teal-950/30 dark:to-orange-950/30'
+                                  } p-4 rounded-t-lg`}
                               >
                                 <h4 className="font-semibold text-lg flex items-center gap-2">
                                   <Info className="h-4 w-4" />
@@ -434,7 +421,7 @@ const FeeAssignmentDataTable = ({
                                     Total Fee
                                   </div>
                                   <div className="text-sm font-medium text-right">
-                                    ₹{fee.totalFee.toLocaleString()}
+                                    ₹{formatCurrencyIN(fee.totalFee)}
                                   </div>
                                 </div>
                                 <div className="grid grid-cols-2 gap-2">
@@ -442,7 +429,7 @@ const FeeAssignmentDataTable = ({
                                     Paid Amount
                                   </div>
                                   <div className="text-sm font-medium text-right">
-                                    ₹{fee.paidAmount.toLocaleString()}
+                                    ₹{formatCurrencyIN(fee.paidAmount)}
                                   </div>
                                 </div>
                                 {fee.status !== 'PAID' && (
@@ -451,10 +438,7 @@ const FeeAssignmentDataTable = ({
                                       Balance
                                     </div>
                                     <div className="text-sm font-medium text-right text-red-600">
-                                      ₹
-                                      {formatCurrencyIN(
-                                        (fee.totalFee = fee.paidAmount)
-                                      )}
+                                      ₹{formatCurrencyIN(fee.totalFee - fee.paidAmount)}
                                     </div>
                                   </div>
                                 )}
@@ -472,10 +456,10 @@ const FeeAssignmentDataTable = ({
                                   </div>
                                   <div className="text-right">
                                     <Badge
-                                      variant="outline"
+                                      variant={fee.status}
+
                                       className={cn(
                                         'transition-all',
-                                        getFeeStatusColor(fee.status)
                                       )}
                                     >
                                       <span className="flex items-center gap-1">

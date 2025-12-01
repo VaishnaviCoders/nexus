@@ -28,11 +28,14 @@ import { UpcomingEvents } from '@/app/components/dashboardComponents/UpcomingEve
 import { getCurrentAcademicYear } from '@/lib/academicYear';
 import Link from 'next/link';
 import { getRecentAdminActivities } from '@/lib/data/admin/get-recent-activities';
+import { RecentNoticesCards } from '../notice/recent-notices-cards';
+import { getAdminNotices } from '@/lib/data/notice/get-admin-notices';
 
 const AdminDashboard = async () => {
   const data = await getMonthlyFeeData(2025);
   const academicYear = await getCurrentAcademicYear();
   const activities = await getRecentAdminActivities();
+  const recentAdminNotices = await getAdminNotices();
 
   if (!academicYear) {
     return (
@@ -100,7 +103,7 @@ const AdminDashboard = async () => {
         {/* Right Column - Sidebar Info */}
         <div className="space-y-4 sm:space-y-6 ">
           <Suspense fallback={<EventsSkeleton />}>
-            <UpcomingEvents />
+            <RecentNoticesCards recentNotices={recentAdminNotices} />
           </Suspense>
           <Suspense fallback={<ComplaintsSkeleton />}>
             {/* <ComplaintsSummary /> */}

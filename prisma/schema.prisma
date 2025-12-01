@@ -80,11 +80,11 @@ enum YearType {
 model Organization {
   id               String  @id @default(cuid())
   name             String?
-  organizationSlug String  @unique
-  organizationLogo String?
+  slug String  @unique
+  logo String?
 
-  contactEmail String? // admin or billing contact
-  contactPhone String? // admin or billing contact
+  email String? // admin or billing contact
+  phone String? // admin or billing contact
   website      String?
 
   isActive      Boolean   @default(true)

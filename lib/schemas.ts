@@ -12,7 +12,6 @@ import {
   LeadStatus,
   LeaveType,
   NoticePriority,
-  NoticeStatus,
   NoticeType,
   PaymentMethod,
 } from '@/generated/prisma/enums';
@@ -425,7 +424,6 @@ export const reminderFormSchema = z.object({
     .min(1, 'Select at least one channel'),
   templateId: z.string().min(1, 'Please select a template'),
   templateType: z.enum([
-    'FEE_ASSIGNMENT',
     'FRIENDLY_REMINDER',
     'PAYMENT_DUE_TODAY',
     'OVERDUE_NOTICE',

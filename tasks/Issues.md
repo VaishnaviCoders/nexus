@@ -1,3 +1,4 @@
+
 1. Invite Teacher => Accept Invite but not Clerk not redirect to dashboard or website
 2. Get Error Organization not found : But solved on page refresh
 3. How to admin assign section and subjects to teacher
@@ -6,17 +7,30 @@
 6. New User Sign_up Using Clerk => Database not updated with the user and user's organization
 7. Need To manage Guest User : Signin By Clerk but not added in any organization or have any role in`organization
 8. What about Installments Fees ?
+9. UTC AND IST DATETIME Issue : Its not Understandable
+10. USER / ORGANIZATION SYNC Issue
+11. Prisma Middleware / Extends : AcademicYearId
+12. Installments Fees ?
+13. Notification Engine : Notification Channel Cost Dynamic > Which Notification , When Send , Who Received , What Notification Exam, Notice ,Fees, , from Which channel ? PUSH, WHATSAPP , SMS, EMAIL
+14. User firstName lastName : used in teacher , student : Repeated
+15. When we create notice one field is createdBy : We are passing only user.firstName but for audit we need full user
+16. Exam Model have many Issues : Enrolled, Issue HallTicket
+17. Ingest functions
+18. Pagination For Exams, Fees any many more
+19. Admins May Have roles , TEACHER , ADMIN
+20. Teaching : Teacher Daily Schedule ,
+21. Notification Inbox Change UI
+22. Sidebar UI : Search Option
+23. Fix Dialog box : Fee Reminder, Fee Details
 
+
+# What Owner Says
 As a software developer, I've always been passionate about building things that make people's lives easier. There's something incredibly rewarding about knowing that the code I write can help someone accomplish their daily tasks more efficiently.
 
-Website Pending
+# Website Pending
 
 - Feedback Form : ExtractUrl || ExtractUserId ||ExtractUserOrgId || DropDown Subject || Message || Feedback Submitted Message with Icon : ✅ Fixed
   || Error/ Crash Auto Submit Form Like Microsoft : Dynamic Pending/ server action Pending
-- List of Features : {
-  "Name": Online Fee Payment
-  "description": ""
-  }
 - SEO Each Feature
 - Talk To Expert : Cal.com Integration
 - Policy's Pages :
@@ -140,29 +154,8 @@ In Parent
 8. Exams : All Exams , Exam Details Page, Get Hall Ticket / Print /Download , Add to Calendar , Performance/ Marks , Participants , Pass Rate , Average Score ,Venue Map Option , Teacher/Supervisor Names instead of ID's
 9. Exam Result : Download Single Exam Result , Download Exam Session result , Download Combine Result (Selected Sessions)
 
-Email Templates
 
-- Admission : Success/Fail (If success → Next Details, Location, Time)
-- Fees : Enrolment Fees
-- Class Time Table
-- Exam | Notice | Event | Result Declare | hall Ticket
-- Attendance Reports : Weekly, Monthly , Yearly => PARENT
-- Document Verified || Rejected with Reason => PARENT , STUDENT
-- Smart Fee reminder scheduling (7 days before, due date, overdue) => PARENT
-- Instant receipt generation & delivery
-
-💬 WhatsApp Templates
-
-- For Holidays
-- Urgent Notice
-
-📲 SMS Templates
-
-Holidays / School Closed Tomorrow
-
-Urgent Problems
-
-🔮 Future Enhancements
+# Future Enhancements
 
 1. TimeTable : Exam TimeTable , Daily Class TimeTable : ❌ Pending
 2. Pay Fees At Home : ✅ Solved
@@ -177,6 +170,33 @@ Urgent Problems
 11. own LMS
 12. Own Webinar Like Scaler, Zoom
 13. Exam , Hall Tickets, Exam Results/ Performance
+
+# Templates
+Email Templates
+- Admission : Success/Fail (If success → Next Details, Location, Time)
+- Fees : Enrolment Fees
+- Class Time Table
+- Exam | Notice | Event | Result Declare | hall Ticket
+- Attendance Reports : Weekly, Monthly , Yearly => PARENT
+- Document Verified || Rejected with Reason => PARENT , STUDENT
+- Smart Fee reminder scheduling (7 days before, due date, overdue) => PARENT
+- Instant receipt generation & delivery
+
+💬 WhatsApp Templates
+
+- For Holidays : Urgent Declare , 5pm Notice For Holiday Tomorrow
+- Urgent Notice : Notice Approved Only 
+- Fees Reminders: 'FRIENDLY_REMINDER', 'PAYMENT_DUE_TODAY', 'OVERDUE_NOTICE',
+- Exam Reminders : Notify Student To Inrolled, Exam Hall Ticket, Exam Result Declare  
+- Document Verified || Rejected with Reason => PARENT , STUDENT
+- Smart Fee reminder scheduling (7 days before, due date, overdue) => PARENT,STUDENT
+- Instant receipt generation & delivery on Mail Whatsapp
+
+📲 SMS Templates
+- Holidays / School Closed Tomorrow
+- Urgent Problems
+
+
 
 <!-- FEES Model-->
 
@@ -198,3 +218,50 @@ Payment Date: 25 June 2025
 Status: COMPLETED
 Payment Method: UPI
 Transaction ID: TXN98765
+
+
+
+# Feature And What Feature Does
+
+## Student Attendance
+What we giving in Attendance ?
+
+Teacher /Admin can Take Attendance
+Select Grade / Section - Absent Note , Late Note
+
+After Submit Redirect To dashboard/attendance/analytics To se Todays Sections Wise Attendance
+
+Parent/Students Will Notify Push Notification  
+Student Can see daily Attendance In Dashboard and all history in dashboard/my-attendance
+Parents Can seeThere children's daily Attendance In Dashboard
+Admin Can see Which Section wise attendance which section in not recorded attendance today
+Also Have option To track all History with Filters
+
+
+## Holiday Management
+What we are providing in holiday management
+Route: ${domainName}/dashboard/holidays
+
+Admin/Teachers Can see
+clear Dahboard of Academic Year Overview
+Real-time calculation of working days and holiday impact
+
+Feature in this Emergency Holiday Declaration
+Instantly declare emergency holidays for unexpected situations
+
+Bulk Import Holidays
+Import multiple holidays using various convenient methods
+Google Sheets
+Single Holiday
+Paste Data
+Template
+Instant Upload
+
+Delete Holiday
+Delete All At Once
+
+Student/Parents Can see Academic Calendar
+when Holiday declare then we get Push notification and for emergry holiday get on also whatsapp
+also option to see upcomming holidays
+
+## Grade / SectionManagement

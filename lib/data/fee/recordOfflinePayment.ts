@@ -29,6 +29,20 @@ export const recordOfflinePayment = async (data: offlinePaymentFormData) => {
   if (fee.status === FeeStatus.PAID)
     throw new Error('Fee is already fully paid');
 
+  // Validate Payer ID
+  if (validatedData.payerId) {
+    const payer = await prisma.user.findUnique({
+      where: { id: validatedData.payerId },
+      select: { id: true },
+    });
+
+    if (!payer) {
+      throw new Error(
+        `Payer ID '${validatedData.payerId}' does not exist. Please provide a valid User ID.`
+      );
+    }
+  }
+
   // 4. Transaction: Create payment & update fee atomically
 
   await prisma.$transaction(async (tx) => {
@@ -62,6 +76,7 @@ export const recordOfflinePayment = async (data: offlinePaymentFormData) => {
     });
 
     revalidatePath('/dashboard/fees');
+    revalidatePath('/dashboard/fees/admin');
 
     return {
       success: true,

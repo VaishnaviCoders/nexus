@@ -84,10 +84,9 @@ export interface SendReminderData {
   scheduleDate?: Date | null;
   scheduleTime?: string | null;
   templateType:
-    | 'FEE_ASSIGNMENT'
-    | 'FRIENDLY_REMINDER'
-    | 'PAYMENT_DUE_TODAY'
-    | 'OVERDUE_NOTICE';
+  | 'FRIENDLY_REMINDER'
+  | 'PAYMENT_DUE_TODAY'
+  | 'OVERDUE_NOTICE';
 }
 
 export interface ReminderResult {
@@ -104,42 +103,7 @@ interface SendReminderDialogProps {
 }
 
 const FeeReminderTemplates = [
-  {
-    id: 'fee-assignment',
-    name: 'Fee Assignment',
-    description: 'Notify parents when new fees are assigned',
-    subject: 'New Fee Assigned for {STUDENT_NAME}',
-    message: `Dear {PARENT_NAME},
 
-A new fee has been assigned to {STUDENT_NAME} (Class {GRADE}-{SECTION}).
-
-Fee Details:
-• Amount: {AMOUNT}
-• Due Date: {DUE_DATE}
-• Status: Assigned
-
-Payment Methods:
-• Online Portal: {PORTAL_LINK}
-• Cash at School Office
-
-Please make the payment by the due date to avoid any inconvenience.
-
-Best regards,
-{ORGANIZATION_NAME}
-{ORGANIZATION_CONTACT_EMAIL}
-{ORGANIZATION_CONTACT_PHONE}`,
-    variables: [
-      'STUDENT_NAME',
-      'PARENT_NAME',
-      'GRADE',
-      'SECTION',
-      'AMOUNT',
-      'DUE_DATE',
-      'ORGANIZATION_NAME',
-      'ORGANIZATION_CONTACT_PHONE',
-      'ORGANIZATION_CONTACT_EMAIL',
-    ],
-  },
   {
     id: 'friendly-reminder',
     name: 'Friendly Reminder',
@@ -321,7 +285,6 @@ export function SendFeesReminderDialog({
       const templateType = selectedTemplate.id
         .toUpperCase()
         .replace(/-/g, '_') as
-        | 'FEE_ASSIGNMENT'
         | 'FRIENDLY_REMINDER'
         | 'PAYMENT_DUE_TODAY'
         | 'OVERDUE_NOTICE';
@@ -397,9 +360,9 @@ export function SendFeesReminderDialog({
           if (result.success) {
             toast.success(
               result.message ||
-                (data.sendNow
-                  ? 'Reminders sent successfully!'
-                  : 'Reminders scheduled successfully!')
+              (data.sendNow
+                ? 'Reminders sent successfully!'
+                : 'Reminders scheduled successfully!')
             );
             console.log('Reminder operation successful:', reminderData, result);
 
@@ -659,10 +622,10 @@ export function SendFeesReminderDialog({
                                   return checked
                                     ? field.onChange([...field.value, 'email'])
                                     : field.onChange(
-                                        field.value?.filter(
-                                          (value) => value !== 'email'
-                                        )
-                                      );
+                                      field.value?.filter(
+                                        (value) => value !== 'email'
+                                      )
+                                    );
                                 }}
                               />
                             </FormControl>
@@ -686,10 +649,10 @@ export function SendFeesReminderDialog({
                                   return checked
                                     ? field.onChange([...field.value, 'sms'])
                                     : field.onChange(
-                                        field.value?.filter(
-                                          (value) => value !== 'sms'
-                                        )
-                                      );
+                                      field.value?.filter(
+                                        (value) => value !== 'sms'
+                                      )
+                                    );
                                 }}
                               />
                             </FormControl>
@@ -712,14 +675,14 @@ export function SendFeesReminderDialog({
                                 onCheckedChange={(checked) => {
                                   return checked
                                     ? field.onChange([
-                                        ...field.value,
-                                        'whatsapp',
-                                      ])
+                                      ...field.value,
+                                      'whatsapp',
+                                    ])
                                     : field.onChange(
-                                        field.value?.filter(
-                                          (value) => value !== 'whatsapp'
-                                        )
-                                      );
+                                      field.value?.filter(
+                                        (value) => value !== 'whatsapp'
+                                      )
+                                    );
                                 }}
                               />
                             </FormControl>
@@ -1041,9 +1004,9 @@ const RecipientCard = ({
           className={cn(
             'font-medium text-xs px-2 py-0.5 flex-shrink-0',
             recipient.status === 'UNPAID' &&
-              'bg-amber-50 text-amber-700 border-amber-200',
+            'bg-amber-50 text-amber-700 border-amber-200',
             recipient.status === 'OVERDUE' &&
-              'bg-red-50 text-red-700 border-red-200'
+            'bg-red-50 text-red-700 border-red-200'
           )}
         >
           {recipient.status}

@@ -43,6 +43,7 @@
     "@radix-ui/react-tabs": "^1.1.2",
     "@radix-ui/react-tooltip": "^1.2.8",
     "@react-email/components": "^0.5.5",
+    "@react-pdf/renderer": "^4.3.1",
     "@svgr/webpack": "^8.1.0",
     "@tanstack/react-table": "^8.21.3",
     "@tsparticles/engine": "^3.9.1",

@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect, useMemo, useTransition } from 'react';
-import { z } from 'zod';
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
@@ -20,8 +19,10 @@ import {
   MailIcon,
   EyeIcon,
   Send,
+  CircleDot,
+  Clock,
 } from 'lucide-react';
-import { cn, formatCurrencyIN, formatDateIN } from '@/lib/utils';
+import { cn, formatCurrencyIN, formatDateIN, formatDateTimeIN } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
@@ -90,6 +91,8 @@ import {
   FeeReminderRecipient,
   SendFeesReminderDialog,
 } from './SendFeesReminderDialog';
+import { FeeReceiptPDF } from '@/lib/pdf-generator/FeeReceiptPDF';
+import { DownloadReceiptDialog } from './download-receipt-dialog';
 
 interface FilterState {
   searchTerm: string;
@@ -235,9 +238,13 @@ export default function StudentPaymentHistoryTable({
 // Record Payment Dialog Component
 interface RecordPaymentCardProps {
   selectedRecord: FeeRecord;
+  onSuccess?: () => void;
 }
 
-const RecordPaymentCard = ({ selectedRecord }: RecordPaymentCardProps) => {
+const RecordPaymentCard = ({
+  selectedRecord,
+  onSuccess,
+}: RecordPaymentCardProps) => {
   const [isPending, startTransition] = useTransition();
 
   const maxPayableAmount =
@@ -254,7 +261,7 @@ const RecordPaymentCard = ({ selectedRecord }: RecordPaymentCardProps) => {
       method: PaymentMethod.CASH, // Default to CASH
       transactionId: '',
       note: '',
-      payerId: selectedRecord.student.userId,
+      payerId: selectedRecord.student.userId || '',
     },
   });
 
@@ -284,7 +291,10 @@ const RecordPaymentCard = ({ selectedRecord }: RecordPaymentCardProps) => {
 
         await recordOfflinePayment(data);
         toast.success('Payment recorded successfully!');
-        // Optionally reset form or navigate
+
+        if (onSuccess) {
+          onSuccess();
+        }
         form.reset();
       } catch (error) {
         console.error('Payment recording failed:', error);
@@ -423,8 +433,16 @@ const RecordPaymentCard = ({ selectedRecord }: RecordPaymentCardProps) => {
                       />
                     </FormControl>
                     <FormDescription>
-                      Required: Enter the user ID of the person who made this
-                      payment (parent, student, or guardian).
+
+                      <span className="flex flex-col border border-orange-300 bg-orange-50 p-2 rounded">
+                        <span>
+                          Required: Enter the user ID of the person who made this
+                          payment (parent, student, or guardian).
+                        </span>
+                        <span className='border-t border-gray-200 my-2'>
+                          Default: The user ID of the student.
+                        </span>
+                      </span>
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -536,16 +554,16 @@ function FilterControls({
                 'ml-1 text-xs',
                 tab === 'all' && 'bg-gray-200 text-gray-700 hover:bg-gray-200',
                 tab === 'paid' &&
-                  'bg-emerald-100 text-emerald-700 hover:bg-emerald-100',
+                'bg-emerald-100 text-emerald-700 hover:bg-emerald-100',
                 tab === 'unpaid' &&
-                  'bg-amber-100 text-amber-700 hover:bg-amber-100',
+                'bg-amber-100 text-amber-700 hover:bg-amber-100',
                 tab === 'overdue' && 'bg-red-100 text-red-700 hover:bg-red-100'
               )}
             >
               {tab === 'all'
                 ? feeRecords.length
                 : feeRecords.filter((r) => r.fee.status === tab.toUpperCase())
-                    .length}
+                  .length}
             </Badge>
           </TabsTrigger>
         ))}
@@ -848,16 +866,7 @@ function FeeTableRow({ record }: FeeTableRowProps) {
       </TableCell>
       <TableCell>
         <Badge
-          variant="outline"
-          className={cn(
-            'font-normal',
-            record.fee.status === 'PAID' &&
-              'bg-emerald-50 text-emerald-700 border-emerald-200',
-            record.fee.status === 'UNPAID' &&
-              'bg-amber-50 text-amber-700 border-amber-200',
-            record.fee.status === 'OVERDUE' &&
-              'bg-red-50 text-red-700 border-red-200'
-          )}
+          variant={record.fee.status}
         >
           {record.fee.status === 'PAID' && (
             <CheckCircle2Icon className="mr-1 h-3 w-3" />
@@ -896,97 +905,7 @@ const FeeDetailsContent = ({
 }: {
   selectedRecord: FeeRecord | null;
 }) => {
-  function downloadFeeDetails(record: FeeRecord) {
-    const data = JSON.stringify(record, null, 2);
-    const blob = new Blob([data], { type: 'application/json' });
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `fee-details-${record.fee.id}.json`;
-    link.click();
-    window.URL.revokeObjectURL(url);
-  }
-
-  function downloadFeeDetailsAsPDF(record: FeeRecord) {
-    const doc = new jsPDF();
-
-    doc.setFontSize(16);
-    doc.text('Fee Details Report', 14, 20);
-
-    // Student Information
-    doc.setFontSize(12);
-    doc.text('Student Information:', 14, 30);
-    autoTable(doc, {
-      margin: { top: 35 },
-      head: [['Field', 'Value']],
-      body: [
-        ['Name', `${record.student.firstName} ${record.student.lastName}`],
-        ['Roll Number', record.student.rollNumber],
-        ['Class', `${record.grade.grade} - ${record.section.name}`],
-        ['Email', record.student.email || 'N/A'],
-        ['Phone', record.student.phoneNumber || 'N/A'],
-      ],
-      theme: 'grid',
-      styles: { fontSize: 10 },
-    });
-
-    // Fee Information
-    let finalY = (doc as any).lastAutoTable.finalY + 10;
-    doc.text('Fee Information:', 14, finalY);
-
-    autoTable(doc, {
-      startY: finalY + 5,
-      head: [['Field', 'Value']],
-      body: [
-        ['Fee ID', record.fee.id],
-        ['Category', record.feeCategory.name],
-        ['Total Amount', record.fee.totalFee.toLocaleString()],
-        ['Paid Amount', record.fee.paidAmount.toLocaleString()],
-        ['Pending Amount', (record.fee.pendingAmount ?? 0).toLocaleString()],
-        ['Due Date', new Date(record.fee.dueDate).toLocaleDateString()],
-        ['Status', record.fee.status],
-      ],
-      theme: 'grid',
-      styles: { fontSize: 10 },
-    });
-
-    // Payment History
-    if (record.payments && record.payments.length > 0) {
-      finalY = (doc as any).lastAutoTable.finalY + 10;
-      doc.text('Payment History:', 14, finalY);
-
-      autoTable(doc, {
-        startY: finalY + 5,
-        head: [
-          [
-            'Receipt No.',
-            'Payer',
-            'Amount',
-            'Date',
-            'Method',
-            'Transaction ID',
-            'Payment Status',
-          ],
-        ],
-        body: record.payments.map((payment) => [
-          payment.receiptNumber,
-          payment.payer
-            ? `${payment.payer.firstName} ${payment.payer.lastName}`
-            : 'N/A',
-          payment.amountPaid.toLocaleString(),
-          new Date(payment.paymentDate).toLocaleDateString(),
-          payment.paymentMethod,
-          payment.transactionId || 'N/A',
-          payment.status,
-        ]),
-        styles: { fontSize: 9 },
-      });
-    }
-
-    // Save
-    doc.save(`fee-details-${record.fee.id}.pdf`);
-  }
-
+  const [isRecordPaymentOpen, setIsRecordPaymentOpen] = useState(false);
   return (
     <>
       {selectedRecord && (
@@ -1052,12 +971,12 @@ const FeeDetailsContent = ({
                           <dd
                             className={cn(
                               payment.status === 'COMPLETED' &&
-                                'text-emerald-600',
+                              'text-emerald-600',
                               payment.status === 'PENDING' && 'text-yellow-600',
                               payment.status === 'FAILED' && 'text-red-600',
                               payment.status === 'UNPAID' && 'text-gray-600',
                               payment.status === 'REFUNDED' &&
-                                'text-purple-600',
+                              'text-purple-600',
                               payment.status === 'CANCELLED' && 'text-gray-500'
                             )}
                           >
@@ -1077,7 +996,7 @@ const FeeDetailsContent = ({
                             Payment Date:
                           </dt>
                           <dd className="truncate">
-                            {formatDateIN(payment.paymentDate) || 'N/A'}
+                            {formatDateTimeIN(payment.paymentDate) || 'N/A'}
                           </dd>
 
                           <dt className="font-medium text-muted-foreground">
@@ -1154,7 +1073,7 @@ const FeeDetailsContent = ({
                     <dd
                       className={cn(
                         selectedRecord.fee.status === 'OVERDUE' &&
-                          'text-red-600 font-medium'
+                        'text-red-600 font-medium'
                       )}
                     >
                       {formatDateIN(selectedRecord.fee.dueDate)}
@@ -1164,22 +1083,16 @@ const FeeDetailsContent = ({
                     </dt>
                     <dd>
                       <Badge
-                        variant="outline"
-                        className={cn(
-                          'font-normal',
-                          selectedRecord.fee.status === 'PAID' &&
-                            'bg-emerald-50 text-emerald-700 border-emerald-200',
-                          selectedRecord.fee.status === 'UNPAID' &&
-                            'bg-amber-50 text-amber-700 border-amber-200',
-                          selectedRecord.fee.status === 'OVERDUE' &&
-                            'bg-red-50 text-red-700 border-red-200'
-                        )}
+                        variant={selectedRecord.fee.status}
                       >
                         {selectedRecord.fee.status === 'PAID' && (
                           <CheckCircle2Icon className="mr-1 h-3 w-3" />
                         )}
                         {selectedRecord.fee.status === 'OVERDUE' && (
                           <XCircleIcon className="mr-1 h-3 w-3" />
+                        )}
+                        {selectedRecord.fee.status === 'UNPAID' && (
+                          <Clock className="mr-1 h-3 w-3" />
                         )}
                         {selectedRecord.fee.status}
                       </Badge>
@@ -1276,16 +1189,16 @@ const FeeDetailsContent = ({
                               className={cn(
                                 'font-medium',
                                 payment.status === 'COMPLETED' &&
-                                  'text-emerald-600',
+                                'text-emerald-600',
                                 payment.status === 'PENDING' &&
-                                  'text-yellow-600',
+                                'text-yellow-600',
                                 payment.status === 'UNPAID' &&
-                                  'text-yellow-600',
+                                'text-yellow-600',
                                 payment.status === 'FAILED' && 'text-red-600',
                                 payment.status === 'REFUNDED' &&
-                                  'text-purple-600',
+                                'text-purple-600',
                                 payment.status === 'CANCELLED' &&
-                                  'text-gray-500'
+                                'text-gray-500'
                               )}
                             >
                               {formatCurrencyIN(payment.amountPaid)}
@@ -1367,7 +1280,7 @@ const FeeDetailsContent = ({
                         {Math.round(
                           (selectedRecord.fee.paidAmount /
                             selectedRecord.fee.totalFee) *
-                            100
+                          100
                         )}
                         %
                       </div>
@@ -1398,7 +1311,10 @@ const FeeDetailsContent = ({
 
           <DialogFooter className="gap-2 grid grid-cols-2 ">
             {selectedRecord.fee.status !== 'PAID' && (
-              <Dialog>
+              <Dialog
+                open={isRecordPaymentOpen}
+                onOpenChange={setIsRecordPaymentOpen}
+              >
                 <DialogTrigger asChild>
                   <Button aria-label="Record payment">
                     <CreditCardIcon className="h-4 w-4 mr-2" />
@@ -1415,28 +1331,41 @@ const FeeDetailsContent = ({
                         : 'selected student'}
                     </DialogDescription>
                   </DialogHeader>
-                  <RecordPaymentCard selectedRecord={selectedRecord} />
+                  <RecordPaymentCard
+                    selectedRecord={selectedRecord}
+                    onSuccess={() => setIsRecordPaymentOpen(false)}
+                  />
                 </DialogContent>
               </Dialog>
             )}
-            <Button
-              variant="outline"
-              aria-label="Download details"
-              onClick={() => downloadFeeDetailsAsPDF(selectedRecord)}
-            >
-              <DownloadIcon className="h-4 w-4 mr-2" />
-              Download Details
-            </Button>
-            <Button variant="outline" aria-label="Print receipt">
+            <DownloadReceiptDialog
+              record={selectedRecord}
+            />
+            {/* <Button variant="outline" aria-label="Print receipt">
               <PrinterIcon className="h-4 w-4 mr-2" />
               Print
             </Button>
             {selectedRecord.fee.status !== 'PAID' && (
-              <Button variant="outline" aria-label="Send reminder">
-                <MailIcon className="h-4 w-4 mr-2" />
-                Send Reminder
-              </Button>
-            )}
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="outline" aria-label="Send reminder">
+                    <MailIcon className="h-4 w-4 mr-2" />
+                    Send Reminder
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto mx-auto">
+                  <DialogHeader>
+                    <DialogTitle>Send Fee Reminders</DialogTitle>
+                    <DialogDescription>
+                      Send payment reminders to students or parents with outstanding
+                      fees
+                    </DialogDescription>
+                  </DialogHeader>
+                  <SendFeesReminderDialog initialRecipients={} />
+                </DialogContent>
+              </Dialog>
+
+            )} */}
           </DialogFooter>
         </>
       )}

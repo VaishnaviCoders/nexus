@@ -7,6 +7,7 @@ export default defineConfig({
     path: 'prisma/migrations',
     seed: 'ts-node prisma/seed.ts',
   },
+  
   experimental: {},
 
 });
