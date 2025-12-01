@@ -34,7 +34,7 @@ import AnimatedShinyText from '@/components/ui/animated-shiny-text';
 import { indianEducationProblems } from '@/constants';
 import CardFlip from '@/components/ui/card-flip';
 import InstitutesShowcase from '@/components/websiteComp/shared/institute-showcase';
-import CTA from '@/components/websiteComp/ctc';
+import CTA from '@/components/websiteComp/cta';
 import FeatureHoverDots from '@/components/websiteComp/feature-hover-dots';
 
 export const metadata: Metadata = {

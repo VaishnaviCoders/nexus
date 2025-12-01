@@ -226,7 +226,7 @@ export type StudentProfileFormData = z.infer<typeof studentProfileSchema>;
 
 export const organizationSchema = z.object({
   name: z.string().min(2, 'Organization name must be at least 2 characters'),
-  organizationSlug: z
+  slug: z
     .string()
     .min(3, 'Slug must be at least 3 characters')
     .regex(

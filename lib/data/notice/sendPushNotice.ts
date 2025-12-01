@@ -7,8 +7,8 @@ type NoticeWithOrg = Prisma.NoticeGetPayload<{
     organization: {
       select: {
         name: true;
-        organizationSlug: true;
-        organizationLogo: true;
+        slug: true;
+        logo: true;
         organizationType: true;
       };
     };

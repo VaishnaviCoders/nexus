@@ -17,7 +17,7 @@ export async function updateOrganization({
       contactEmail: data.contactEmail,
       contactPhone: data.contactPhone,
       website: data.website,
-      organizationSlug: data.organizationSlug,
+      slug: data.slug,
     },
   });
 }

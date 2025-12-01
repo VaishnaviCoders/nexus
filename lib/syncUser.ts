@@ -165,8 +165,8 @@ export async function syncOrganizationUser(
           data: {
             id: clerkOrganization.id,
             name: clerkOrganization.name,
-            organizationSlug: clerkOrganization.slug,
-            organizationLogo: clerkOrganization.imageUrl,
+            slug: clerkOrganization.slug,
+            logo: clerkOrganization.imageUrl,
             contactEmail: clerkUserEmail,
             createdBy: clerkUser.id,
             createdAt: new Date(clerkOrganization.createdAt),

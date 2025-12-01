@@ -43,7 +43,7 @@ export default async function UnifiedExamPage({
       organization: {
         select: {
           name: true,
-          organizationLogo: true,
+          logo: true,
           contactEmail: true,
           contactPhone: true,
           website: true,
@@ -280,7 +280,7 @@ export default async function UnifiedExamPage({
         organization: {
           select: {
             name: true,
-            organizationLogo: true,
+            logo: true,
             contactEmail: true,
             contactPhone: true,
             website: true,
@@ -346,14 +346,14 @@ export default async function UnifiedExamPage({
     // All results for statistics (only if results are published)
     exam.isResultsPublished
       ? prisma.examResult.findMany({
-          where: { examId },
-          select: {
-            obtainedMarks: true,
-            percentage: true,
-            isPassed: true,
-            isAbsent: true,
-          },
-        })
+        where: { examId },
+        select: {
+          obtainedMarks: true,
+          percentage: true,
+          isPassed: true,
+          isAbsent: true,
+        },
+      })
       : [],
   ]);
 

@@ -69,7 +69,7 @@ export async function generateReceiptPDF(
     doc.rect(0, 0, 210, 40, 'F');
 
     // Organization Logo placeholder (if logo exists)
-    if (organization.organizationLogo) {
+    if (organization.logo) {
       // In a real implementation, you'd load and add the actual logo
       doc.setFillColor(255, 255, 255);
       doc.rect(15, 8, 24, 24, 'F');
@@ -84,7 +84,7 @@ export async function generateReceiptPDF(
     doc.setFont('helvetica', 'bold');
     doc.text(
       organization.name || 'School Name',
-      organization.organizationLogo ? 45 : 15,
+      organization.logo ? 45 : 15,
       20
     );
 
@@ -101,7 +101,7 @@ export async function generateReceiptPDF(
 
     doc.text(
       orgDetails.join(' | '),
-      organization.organizationLogo ? 45 : 15,
+      organization.logo ? 45 : 15,
       30
     );
 

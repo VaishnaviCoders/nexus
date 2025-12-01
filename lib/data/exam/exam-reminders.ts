@@ -74,7 +74,7 @@ export async function sendExamReminder7Days() {
   //         subjectName: exam.subject.name,
   //         startDate: exam.startDate,
   //         organizationName: organization.name,
-  //         organizationLogo: organization.organizationLogo,
+  //         logo: organization.logo,
   //         supportEmail: organization.contactEmail,
   //         enrollments: exam.examEnrollment.map((e) => ({
   //           studentName: e.student.firstName + '' + e.student.lastName,

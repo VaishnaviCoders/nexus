@@ -39,7 +39,7 @@ export const sendNoticeEmails = async (
       targetAudience: notice.targetAudience,
       organizationName: notice.organization.name || '',
       publishedBy: notice.publishedBy || 'System',
-      organizationImage: notice.organization.organizationLogo ?? '',
+      organizationImage: notice.organization.logo ?? '',
       createdBy: notice.createdBy || 'System',
       publishedAt: notice.createdAt,
     }),

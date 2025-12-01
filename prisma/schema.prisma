@@ -1,5 +1,5 @@
 generator client {
-  provider        = "prisma-client" // (or "prisma-client-js") 
+  provider        = "prisma-client"
   output          = "../generated/prisma"
   engineType      = "client"
   previewFeatures = ["fullTextSearchPostgres"]
@@ -8,9 +8,7 @@ generator client {
 // , "queryCompiler", "driverAdapters"
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider = "postgresql"
 }
 
 enum PlanType {
@@ -78,13 +76,13 @@ enum YearType {
 }
 
 model Organization {
-  id               String  @id @default(cuid())
-  name             String?
+  id   String  @id @default(cuid())
+  name String?
   slug String  @unique
   logo String?
 
-  email String? // admin or billing contact
-  phone String? // admin or billing contact
+  contactEmail String? // admin or billing contact
+  contactPhone String? // admin or billing contact
   website      String?
 
   isActive      Boolean   @default(true)
@@ -126,7 +124,7 @@ model Organization {
   feeSenseAgent FeeSenseAgent?
 
   @@index([id])
-  @@index([organizationSlug])
+  @@index([slug])
 }
 
 model FeeSenseAgent {

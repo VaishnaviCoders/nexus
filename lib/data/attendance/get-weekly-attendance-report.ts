@@ -100,7 +100,7 @@ export async function getWeeklyAttendanceReport(
     },
     organization: {
       name: student.organization.name,
-      organizationLogo: student.organization.organizationLogo,
+      logo: student.organization.logo,
       contactEmail: student.organization.contactEmail,
       contactPhone: student.organization.contactPhone,
     },
