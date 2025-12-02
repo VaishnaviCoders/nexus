@@ -24,21 +24,31 @@ const nextConfig: NextConfig = {
     turbopackFileSystemCacheForDev:true
   },
   headers: async () => {
+    const isProd = process.env.VERCEL_ENV === 'production' || process.env.NODE_ENV === 'production';
+    
     return [
+      // Public pages - allow indexing in production only
       {
-        source: '/:path*',
+        source: '/:path((?!api|dashboard).*)*',
         headers: [
           {
             key: 'X-Robots-Tag',
-            value:
-              'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1',
+            value: isProd
+              ? 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'
+              : 'noindex, nofollow',
           },
         ],
       },
-    //   {
-    //     source: '/api/:path*',
-    //     headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }],
-    //   },
+      // Dashboard and API routes - never index
+      {
+        source: '/(dashboard|api)/:path*',
+        headers: [
+          { 
+            key: 'X-Robots-Tag', 
+            value: 'noindex, nofollow' 
+          }
+        ],
+      },
     ];
   },
   images: {
