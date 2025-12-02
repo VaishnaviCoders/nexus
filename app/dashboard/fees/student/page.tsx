@@ -30,9 +30,29 @@ async function getFees(studentId: string) {
     },
     include: {
       feeCategory: true,
+      organization: true,
+      student: {
+        include: {
+          grade: true,
+          section: true,
+          parents: {
+            include: {
+              parent: true,
+            },
+          },
+        },
+      },
       payments: {
         where: { status: 'COMPLETED' },
-        select: { id: true },
+        include: {
+          payer: {
+            select: {
+              firstName: true,
+              lastName: true,
+              email: true,
+            },
+          },
+        },
       },
     },
     orderBy: {
@@ -70,8 +90,8 @@ export default async function StudentFeePage() {
   const admissionDate = student?.createdAt;
   const monthsEnrolled = admissionDate
     ? Math.floor(
-        (Date.now() - admissionDate.getTime()) / (1000 * 60 * 60 * 24 * 30)
-      )
+      (Date.now() - admissionDate.getTime()) / (1000 * 60 * 60 * 24 * 30)
+    )
     : 0;
 
   return (
@@ -256,7 +276,25 @@ export default async function StudentFeePage() {
                   <PayFeeButton feeId={fee.id} />
                 ) : (
                   <ReceiptDownloadButton
-                    paymentId={fee.payments[0]?.id!}
+                    record={{
+                      fee: {
+                        ...fee,
+                        pendingAmount: fee.pendingAmount ?? 0,
+                        organizationName: fee.organization.name || undefined,
+                        organizationEmail: fee.organization.contactEmail || undefined,
+                        organizationPhone: fee.organization.contactPhone || undefined,
+                        organizationLogo: fee.organization.logo || undefined,
+                      },
+                      student: fee.student,
+                      feeCategory: fee.feeCategory,
+                      grade: fee.student.grade,
+                      section: fee.student.section,
+                      payments: fee.payments.map((payment) => ({
+                        ...payment,
+                        amountPaid: payment.amount,
+                        transactionId: payment.transactionId || undefined,
+                      })),
+                    }}
                     variant="outline"
                   />
                 )}

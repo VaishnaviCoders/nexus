@@ -50,6 +50,7 @@ import { updateComplaintStatus } from '@/lib/data/complaints/complaint-actions';
 import { toast } from 'sonner';
 import { ComplaintDetailModal } from './complaint-detail-modal';
 import { ComplaintAnalytics } from './complaints-analytics';
+import { formatDateIN } from '@/lib/utils';
 
 interface ComplaintData {
   complaints: any[];
@@ -196,15 +197,7 @@ export function ComplaintManagementDashboard({
     }
   };
 
-  const formatDate = (date: Date | string) => {
-    return new Intl.DateTimeFormat('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    }).format(new Date(date));
-  };
+
 
   const getUrgencyScore = (complaint: any) => {
     const severityScore =
@@ -212,7 +205,7 @@ export function ComplaintManagementDashboard({
         ?.priority || 1;
     const daysSinceSubmitted = Math.floor(
       (new Date().getTime() - new Date(complaint.submittedAt).getTime()) /
-        (1000 * 60 * 60 * 24)
+      (1000 * 60 * 60 * 24)
     );
     return severityScore * (daysSinceSubmitted + 1);
   };
@@ -240,11 +233,11 @@ export function ComplaintManagementDashboard({
                     <p className="text-sm font-medium text-slate-600">
                       Total Complaints
                     </p>
-                    <p className="text-3xl font-bold text-slate-900">
+                    <p className="text-2xl font-bold text-slate-900">
                       {data.analytics.totalComplaints}
                     </p>
                   </div>
-                  <div className="h-12 w-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                  <div className="h-12 w-12 bg-blue-100 border-blue-200 rounded-lg flex items-center justify-center">
                     <FileText className="h-6 w-6 text-blue-600" />
                   </div>
                 </div>
@@ -262,7 +255,7 @@ export function ComplaintManagementDashboard({
                     <p className="text-sm font-medium text-slate-600">
                       Pending Review
                     </p>
-                    <p className="text-3xl font-bold text-yellow-600">
+                    <p className="text-2xl font-bold text-yellow-600">
                       {data.analytics.pendingComplaints}
                     </p>
                   </div>
@@ -284,7 +277,7 @@ export function ComplaintManagementDashboard({
                     <p className="text-sm font-medium text-slate-600">
                       Resolved
                     </p>
-                    <p className="text-3xl font-bold text-green-600">
+                    <p className="text-2xl font-bold text-green-600">
                       {data.analytics.resolvedComplaints}
                     </p>
                   </div>
@@ -296,10 +289,10 @@ export function ComplaintManagementDashboard({
                   <span className="text-slate-600">
                     {data.analytics.resolvedComplaints > 0
                       ? Math.round(
-                          (data.analytics.resolvedComplaints /
-                            data.analytics.totalComplaints) *
-                            100
-                        )
+                        (data.analytics.resolvedComplaints /
+                          data.analytics.totalComplaints) *
+                        100
+                      )
                       : 0}
                     % resolution rate
                   </span>
@@ -314,7 +307,7 @@ export function ComplaintManagementDashboard({
                     <p className="text-sm font-medium text-slate-600">
                       Critical Issues
                     </p>
-                    <p className="text-3xl font-bold text-red-600">
+                    <p className="text-2xl font-bold text-red-600">
                       {data.analytics.criticalComplaints}
                     </p>
                   </div>
@@ -364,7 +357,7 @@ export function ComplaintManagementDashboard({
                           </p>
                           <p className="text-sm text-slate-500">
                             {complaint.trackingId} •{' '}
-                            {formatDate(complaint.submittedAt)}
+                            {formatDateIN(complaint.submittedAt)}
                           </p>
                         </div>
                         <div className="flex items-center gap-2">
@@ -434,7 +427,7 @@ export function ComplaintManagementDashboard({
                           </p>
                           <p className="text-xs text-slate-500">
                             Status: {complaint.currentStatus.replace('_', ' ')}{' '}
-                            • {formatDate(complaint.updatedAt)}
+                            • {formatDateIN(complaint.updatedAt)}
                           </p>
                         </div>
                       </div>
@@ -632,7 +625,7 @@ export function ComplaintManagementDashboard({
                               .replace(/\b\w/g, (l: string) => l.toUpperCase())}
                           </span>
                           <span>•</span>
-                          <span>{formatDate(complaint.submittedAt)}</span>
+                          <span>{formatDateIN(complaint.submittedAt)}</span>
                           {complaint.evidenceUrls?.length > 0 && (
                             <>
                               <span>•</span>

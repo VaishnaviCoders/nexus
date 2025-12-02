@@ -103,6 +103,7 @@ export async function getFeeRecords(count: number = 50): Promise<FeeRecord[]> {
         studentId: fee.studentId,
         feeCategoryId: fee.feeCategoryId,
         organizationId: fee.organizationId,
+        organizationLogo: fee.organization.logo ?? undefined,
         organizationName: fee.organization.name ?? undefined,
         organizationEmail: fee.organization.contactEmail ?? undefined,
         organizationPhone: fee.organization.contactPhone ?? undefined,

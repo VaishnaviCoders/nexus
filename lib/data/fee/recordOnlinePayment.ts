@@ -168,8 +168,12 @@ export const verifyPhonePePayment = async (transactionId: string) => {
   const json = await res.json();
   console.log('PhonePe Status Response in verifyPhonePePayment:', json);
 
-  if (!res.ok || !json.success) {
+  if (!res.ok) {
     throw new Error('Failed to verify payment');
+  }
+
+  if (json.success === false) {
+    return { success: false, status: 'FAILED' };
   }
 
   console.log('Payment Verification Response:', json);

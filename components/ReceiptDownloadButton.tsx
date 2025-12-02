@@ -1,66 +1,62 @@
 'use client';
 
-import { useState } from 'react';
+import { useTransition } from 'react';
 import { Download, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
-import { generateReceiptPDF } from '@/lib/data/generate-receipt';
+import { FeeRecord } from '@/types';
+import { FeeReceiptPDF } from '@/lib/pdf-generator/FeeReceiptPDF';
+import { pdf } from '@react-pdf/renderer';
+
 
 interface ReceiptDownloadButtonProps {
-  paymentId: string;
-  receiptNumber?: string;
+  record: FeeRecord;
   variant?: 'default' | 'outline' | 'ghost';
   size?: 'default' | 'sm' | 'lg';
 }
 
 export function ReceiptDownloadButton({
-  paymentId,
-  receiptNumber,
+  record,
   variant = 'outline',
   size = 'default',
 }: ReceiptDownloadButtonProps) {
-  const [isGenerating, setIsGenerating] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
-  const handleDownload = async () => {
-    try {
-      setIsGenerating(true);
-
-      const result = await generateReceiptPDF(paymentId);
-
-      if (result && result.success && result.pdf) {
-        // Create download link
+  const handleDownload = () => {
+    startTransition(async () => {
+      try {
+        const pdfDoc = <FeeReceiptPDF feeRecord={record} copyType="STUDENT COPY" />;
+        const blob = await pdf(pdfDoc).toBlob();
+        const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
-        link.href = result.pdf;
-        link.download = result.filename || `receipt-${receiptNumber}.pdf`;
+        link.href = url;
+        link.download = `fee-receipt-${record.student.firstName}-${record.student.lastName}.pdf`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+        URL.revokeObjectURL(url);
 
-        toast.success('Receipt downloaded successfully!');
-      } else {
-        toast.error(result?.error || 'Failed to generate receipt');
+      } catch (error) {
+        toast.error('Failed to generate receipt');
       }
-    } catch (error) {
-      console.error('Error downloading receipt:', error);
-      toast.error('Failed to download receipt');
-    } finally {
-      setIsGenerating(false);
-    }
+    });
   };
+
+
 
   return (
     <Button
       variant={variant}
       size={size}
       onClick={handleDownload}
-      disabled={isGenerating}
+      disabled={isPending}
     >
-      {isGenerating ? (
+      {isPending ? (
         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
       ) : (
         <Download className="mr-2 h-4 w-4" />
       )}
-      {isGenerating ? 'Generating...' : 'Download Receipt'}
+      {isPending ? 'Generating...' : 'Download Receipt'}
     </Button>
   );
 }

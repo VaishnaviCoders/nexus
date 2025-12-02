@@ -1,7 +1,5 @@
 "use client"
 
-import type React from "react"
-
 import { useState } from "react"
 import { pdf } from "@react-pdf/renderer"
 import { DownloadIcon, Loader2, MinusIcon, PlusIcon, FileTextIcon, AlertCircle } from "lucide-react"

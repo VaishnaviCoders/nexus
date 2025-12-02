@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import {
-  Download,
   Receipt,
   Calendar,
   CreditCard,
@@ -20,7 +19,6 @@ import {
 } from 'lucide-react';
 import { formatCurrencyIN, formatDateIN } from '@/lib/utils';
 import { PaymentStatus } from '@/generated/prisma/enums';
-import { generateReceiptPDF } from '@/lib/data/generate-receipt';
 
 interface PaymentData {
   id: string;

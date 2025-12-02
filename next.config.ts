@@ -15,7 +15,7 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors:true,
   },
   reactStrictMode: true,
-  typedRoutes:true,
+  // typedRoutes:true,
   experimental: {
     serverActions: {
       bodySizeLimit: '3mb',
