@@ -21,6 +21,7 @@ export async function getStudentNotices() {
     orderBy: {
       createdAt: 'desc',
     },
+    take:10
   });
   return notices;
 }

@@ -236,10 +236,11 @@ async function generateLeads(count: number) {
 async function main() {
   console.log(`\n🚀 Seeding Started...\n`);
 
-  await generateNotices(1000);
+  // await generateNotices(1000);
   // await initFeeSenseAgent();
-  await generateLeads(500); // <-- specify count
+  // await generateLeads(500); // <-- specify count
 
+  
   console.log(`\n✅ Seeding Completed Successfully!\n`);
 }
 

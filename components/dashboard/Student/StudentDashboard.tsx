@@ -222,34 +222,6 @@ const quickActions = [
   // },
 ];
 
-// Skeleton Loaders
-function DashboardSkeleton() {
-  return (
-    <div className="grid gap-4 md:gap-6 px-2">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {Array.from({ length: 4 }).map((_, i) => (
-          <Card key={i}>
-            <CardHeader className="pb-2">
-              <Skeleton className="h-4 w-1/2" />
-              <Skeleton className="h-6 w-3/4 mt-2" />
-            </CardHeader>
-          </Card>
-        ))}
-      </div>
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-6">
-        <div className="lg:col-span-7 xl:col-span-8 space-y-4">
-          <Skeleton className="h-64 w-full" />
-          <Skeleton className="h-48 w-full" />
-        </div>
-        <div className="lg:col-span-5 xl:col-span-4 space-y-4">
-          <Skeleton className="h-48 w-full" />
-          <Skeleton className="h-48 w-full" />
-        </div>
-      </div>
-    </div>
-  );
-}
-
 // Enhanced Quick Action Card Component
 function QuickActionCard({ action }: { action: typeof quickActions[0] }) {
   return (
@@ -392,36 +364,29 @@ const StudentDashboard = async () => {
   return (
     <div className="grid gap-4 md:gap-6 px-2">
       {/* Stats Cards */}
-      <Suspense fallback={
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <Skeleton key={i} className="h-32 w-full" />
-          ))}
-        </div>
-      }>
-        <StudentDashboardStatsCards studentId={currentUser.studentId} />
-      </Suspense>
+      <StudentDashboardStatsCards studentId={currentUser.studentId} />
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-6">
+
+      <div className="grid gap-4 sm:gap-6 grid-cols-1 xl:grid-cols-12">
         {/* Left Column - Main Content */}
-        <div className="lg:col-span-7 xl:col-span-8 space-y-4 md:space-y-6">
+        <div className="xl:col-span-8 space-y-4 sm:space-y-6">
           {/* Subject Performance */}
           <Card className="border-slate-200/50 dark:border-slate-700/50">
-            <CardHeader className="pb-4 bg-gradient-to-r from-blue-50 to-teal-50 dark:from-blue-950/20 dark:to-teal-950/20 rounded-t-lg border-b border-blue-200/30 dark:border-blue-800/30">
-              <div className="flex items-center justify-between">
-                <div>
-                  <CardTitle className="text-lg font-semibold flex items-center gap-2">
-                    <TrendingUp className="h-5 w-5" />
+            <CardHeader className="pb-3 sm:pb-4 bg-gradient-to-r from-blue-50 to-teal-50 dark:from-blue-950/20 dark:to-teal-950/20 rounded-t-lg border-b border-blue-200/30 dark:border-blue-800/30">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                <div className="flex-1">
+                  <CardTitle className="text-base sm:text-lg font-semibold flex items-center gap-2">
+                    <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5" />
                     Subject Performance
                   </CardTitle>
-                  <CardDescription>
+                  <CardDescription className="text-xs sm:text-sm mt-1">
                     Comprehensive academic performance tracking and analysis
                   </CardDescription>
                 </div>
-                <Badge variant="outline">Live</Badge>
+                <Badge variant="outline" className="self-start sm:self-auto shrink-0">Live</Badge>
               </div>
             </CardHeader>
-            <CardContent className="p-4 md:p-6">
+            <CardContent className="p-4 sm:p-5 md:p-6">
               <Suspense fallback={<Skeleton className="h-64 w-full" />}>
                 <StudentSubjectsRadar />
               </Suspense>
@@ -430,15 +395,17 @@ const StudentDashboard = async () => {
 
           {/* Quick Actions */}
           <Card>
-            <CardHeader className="pb-4 bg-gradient-to-r from-purple-50 to-teal-50 dark:from-purple-950/20 dark:to-teal-950/20 rounded-t-lg border-b border-purple-200/30 dark:border-purple-800/30">
-              <CardTitle className="text-lg font-semibold flex items-center gap-2">
-                <Zap className="h-5 w-5" />
+            <CardHeader className="pb-3 sm:pb-4 bg-gradient-to-r from-purple-50 to-teal-50 dark:from-purple-950/20 dark:to-teal-950/20 rounded-t-lg border-b border-purple-200/30 dark:border-purple-800/30">
+              <CardTitle className="text-base sm:text-lg font-semibold flex items-center gap-2">
+                <Zap className="h-4 w-4 sm:h-5 sm:w-5" />
                 Quick Actions
               </CardTitle>
-              <CardDescription>Frequently used features and tools</CardDescription>
+              <CardDescription className="text-xs sm:text-sm mt-1">
+                Frequently used features and tools
+              </CardDescription>
             </CardHeader>
-            <CardContent className="mt-2">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            <CardContent className="p-4 sm:p-5 md:p-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                 {quickActions.map((action, index) => (
                   <QuickActionCard key={index} action={action} />
                 ))}
@@ -448,7 +415,7 @@ const StudentDashboard = async () => {
         </div>
 
         {/* Right Column - Sidebar */}
-        <div className="lg:col-span-5 xl:col-span-4 space-y-4 md:space-y-6">
+        <div className="space-y-4 sm:space-y-6 xl:col-span-4">
           <Suspense fallback={<Skeleton className="h-48 w-full" />}>
             <RecentNoticesCards recentNotices={recentNotices} />
           </Suspense>
@@ -458,8 +425,8 @@ const StudentDashboard = async () => {
           </Suspense>
 
           {/* <Suspense fallback={<Skeleton className="h-48 w-full" />}>
-            <UpcomingEvents studentId={currentUser.studentId} />
-          </Suspense> */}
+      <UpcomingEvents studentId={currentUser.studentId} />
+    </Suspense> */}
         </div>
       </div>
     </div>

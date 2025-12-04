@@ -32,10 +32,8 @@ import { RecentNoticesCards } from '../notice/recent-notices-cards';
 import { getAdminNotices } from '@/lib/data/notice/get-admin-notices';
 
 const AdminDashboard = async () => {
-  const data = await getMonthlyFeeData(2025);
+  // Check academic year first before fetching any data
   const academicYear = await getCurrentAcademicYear();
-  const activities = await getRecentAdminActivities();
-  const recentAdminNotices = await getAdminNotices();
 
   if (!academicYear) {
     return (
@@ -51,6 +49,11 @@ const AdminDashboard = async () => {
       </div>
     );
   }
+
+  // Now safely fetch data since we know academic year exists
+  const data = await getMonthlyFeeData(2025);
+  const activities = await getRecentAdminActivities();
+  const recentAdminNotices = await getAdminNotices();
 
   // const data = mockMonthlyFeeCollectionData;
   return (
@@ -87,9 +90,9 @@ const AdminDashboard = async () => {
 
       <AdminDashboardCards />
 
-      <div className="grid gap-4 sm:gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 ">
+      <div className="grid gap-4 sm:gap-6 grid-cols-1 xl:grid-cols-12">
         {/* Left Column - Charts */}
-        <div className="md:col-span-2 lg:col-span-2 xl:col-span-3 space-y-4 sm:space-y-6 ">
+        <div className="xl:col-span-8 space-y-4 sm:space-y-6">
           <div className="grid gap-4 sm:gap-6 grid-cols-1">
             <Suspense fallback={<ActivitySkeleton />}>
               <MonthlyFeeCollection data={data} />
@@ -101,9 +104,9 @@ const AdminDashboard = async () => {
         </div>
 
         {/* Right Column - Sidebar Info */}
-        <div className="space-y-4 sm:space-y-6 ">
+        <div className="space-y-4 sm:space-y-6 xl:col-span-4">
           <Suspense fallback={<EventsSkeleton />}>
-            <RecentNoticesCards recentNotices={recentAdminNotices} />
+            <RecentNoticesCards recentNotices={recentAdminNotices} className="h-screen" />
           </Suspense>
           <Suspense fallback={<ComplaintsSkeleton />}>
             {/* <ComplaintsSummary /> */}

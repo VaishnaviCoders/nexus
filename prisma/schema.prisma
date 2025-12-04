@@ -803,6 +803,15 @@ model Fee {
   organizationId String
   payments       FeePayment[]
 
+  breakdown      Json?
+  // breakdown: {
+  //   tuition: 18000,
+  //   exam: 2000,
+  //   library: 1000,
+  //   sports: 3000,
+  //   annualDay: 4000,
+  //   lab: 2000
+  // }
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
   academicYear   AcademicYear @relation(fields: [academicYearId], references: [id])

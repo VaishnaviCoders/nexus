@@ -36,6 +36,7 @@ import CardFlip from '@/components/ui/card-flip';
 import InstitutesShowcase from '@/components/websiteComp/shared/institute-showcase';
 import CTA from '@/components/websiteComp/cta';
 import FeatureHoverDots from '@/components/websiteComp/feature-hover-dots';
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.shiksha.cloud'),
@@ -134,21 +135,19 @@ export default async function IndexPage() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Dialog>
-              <DialogTrigger asChild>
+
+            <Popover>
+              <PopoverTrigger asChild>
                 <Button>
                   Get Early Access
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
-              </DialogTrigger>
-              <DialogContent className="max-w-md p-0 [&>button]:hidden top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 fixed">
-                <DialogHeader>
-                  <DialogTitle></DialogTitle>
-                  <DialogDescription></DialogDescription>
-                </DialogHeader>
+              </PopoverTrigger>
+              <PopoverContent className='w-full h-full'>
                 <CreateOrganization afterCreateOrganizationUrl={'/dashboard'} />
-              </DialogContent>
-            </Dialog>
+
+              </PopoverContent>
+            </Popover>
 
             <Button size="lg" variant="outline" asChild>
               <Link href="https://gamma.app/docs/Shikshacloud-gtpghwx8wdrjyxs">

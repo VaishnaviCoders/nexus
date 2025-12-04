@@ -23,7 +23,7 @@ interface Props {
 export function RecentNoticesCards({ className, recentNotices }: Props) {
   return (
     <Card className={cn('flex flex-col h-[40vh]', className)}>
-      <CardHeader className="pb-3 flex-shrink-0">
+      <CardHeader className="pb-3 flex-shrink-0 p-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="p-2 bg-blue-100 dark:bg-blue-900/20 rounded-lg">
@@ -48,7 +48,7 @@ export function RecentNoticesCards({ className, recentNotices }: Props) {
         </div>
       </CardHeader>
 
-      <CardContent className="flex-1 overflow-hidden">
+      <CardContent className="flex-1 overflow-hidden px-3">
         <ScrollArea className="h-full">
           <div className="space-y-3 pr-2">
             {recentNotices.map((notice) => (

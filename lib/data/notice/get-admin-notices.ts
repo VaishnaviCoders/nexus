@@ -16,6 +16,7 @@ export async function getAdminNotices() {
     orderBy: {
       createdAt: 'desc',
     },
+    take:10
   });
   return notices;
 }

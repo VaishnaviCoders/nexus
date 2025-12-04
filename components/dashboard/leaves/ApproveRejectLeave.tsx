@@ -104,7 +104,7 @@ const ApproveRejectLeave = ({ leaves }: ApproveRejectLeaveProps) => {
   };
 
   return (
-    <div className=" bg-gray-50 p-8">
+    <div className="">
       {leaves.length === 0 ? (
         <div className="flex justify-center items-center min-h-[400px]">
           <EmptyState
@@ -120,78 +120,145 @@ const ApproveRejectLeave = ({ leaves }: ApproveRejectLeaveProps) => {
         </div>
       ) : (
         <>
-          <div className="max-w-2xl mx-auto space-y-3">
+          <div className="max-w-2xl mx-auto space-y-3 ">
             {/* Main Card */}
-
-            <Card className=" rounded-[16px] rounded-tr-[62px] bg-white ">
-              <CardContent className="p-2">
-                <div className="flex items-center gap-3 p-4  ">
-                  <div className="bg-red-100 p-3 rounded-full">
-                    <Calendar className="w-5 h-5 " />
-                  </div>
-                  <h1 className="text-xl font-bold text-gray-900">
-                    Leave Requests
-                  </h1>
-                </div>
-                <div className="p-4 pb-0 ">
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex items-center gap-4">
-                      <Image
-                        src={currentLeave.appliedBy.profileImage}
-                        alt={currentLeave.appliedBy.firstName}
-                        className="w-24 h-24 rounded-xl object-cover"
-                        width={100}
-                        height={100}
-                      />
+            <Card className="rounded-2xl rounded-tr-[62px] overflow-hidden shadow-sm border border-slate-200/60 hover:shadow-md transition-shadow">
+              <CardContent className="p-0">
+                {/* Header */}
+                <div className="bg-gradient-to-br from-red-50 via-orange-50 to-amber-50 border-b border-red-100/50">
+                  <div className="flex items-center justify-between p-4 sm:p-6">
+                    <div className="flex items-center gap-3">
+                      <div className="bg-gradient-to-br from-red-500 to-orange-500 p-3 rounded-xl shadow-lg shadow-red-200/50">
+                        <Calendar className="w-5 h-5 text-white" />
+                      </div>
                       <div>
-                        <div className="flex items-center gap-2 mb-1">
-                          <Badge variant={'PENDING_REVIEW'}>
-                            {currentLeave.totalDays}{' '}
-                            {currentLeave.totalDays === 1 ? 'Day' : 'Days'}
-                          </Badge>
-                          <span>
-                            {currentLeave.appliedBy.student?.grade.grade}{' '}
-                            {currentLeave.appliedBy.student?.grade.section
-                              .map((section) => section.name)
-                              .join(', ')}
-                          </span>
-                          <h2 className="text-xl font-medium text-gray-900">
-                            {currentLeave.appliedBy.firstName}{' '}
-                            {currentLeave.appliedBy.lastName}
-                          </h2>
-                          <div className="flex items-center gap-2 text-sm text-gray-600">
-                            <span>{currentLeave.appliedBy.role}</span>
-                            <span>
-                              {currentLeave.appliedBy.student?.grade.grade}{' '}
-                              {currentLeave.appliedBy.student?.grade.section.map(
-                                (section) => section.name
-                              )}
-                            </span>
+                        <h1 className="text-lg sm:text-xl font-bold text-gray-900">
+                          Leave Requests
+                        </h1>
+                        <p className="text-xs sm:text-sm text-gray-600 mt-0.5">
+                          Review and manage leave applications
+                        </p>
+                      </div>
+                    </div>
+
+
+                  </div>
+                </div>
+
+                {/* Content */}
+                <div className="p-4 sm:p-6">
+                  {/* Profile Section */}
+                  <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
+                    <div className='flex justify-between'>
+                      {/* Profile Image */}
+                      <div className="relative group shrink-0">
+                        <div className="relative w-20 h-20 sm:w-24 sm:h-24">
+                          <Image
+                            src={currentLeave.appliedBy.profileImage}
+                            alt={currentLeave.appliedBy.firstName}
+                            className="w-full h-full rounded-2xl object-cover ring-4 ring-slate-100 group-hover:ring-red-100 transition-all"
+                            width={96}
+                            height={96}
+                          />
+                          <div className="absolute -bottom-2 -right-2 bg-white rounded-full p-1.5 shadow-md border border-slate-100">
+                            <Badge
+                              variant="PENDING_REVIEW"
+                              className="text-xs font-semibold px-2 py-0.5"
+                            >
+                              {currentLeave.totalDays}d
+                            </Badge>
                           </div>
                         </div>
                       </div>
 
-                      {/* Pagination */}
-                      <div className="flex items-center gap-2 rounded-lg ">
-                        <Button
-                          variant="outline"
-                          onClick={handlePrevious}
-                          className="!rounded-full w-10 h-10 text-gray-600 hover:text-gray-900 transition-colors flex items-center justify-center"
-                        >
-                          <ChevronLeft className="w-4 h-4" />
-                        </Button>
-
-                        <span className="text-sm font-medium text-gray-900 min-w-[3rem] text-center">
-                          {currentIndex + 1}/{leaves.length}
-                        </span>
-                        <Button
-                          variant="outline"
-                          onClick={handleNext}
-                          className="!rounded-full w-10 h-10 text-gray-600 hover:text-gray-900 transition-colors flex items-center justify-center"
-                        >
-                          <ChevronRight className="w-4 h-4" />
-                        </Button>
+                      {/* Pagination - Mobile */}
+                      <div className="sm:hidden mt-4 pt-4 border-t border-slate-100">
+                        <div className="flex items-center justify-center gap-3 bg-slate-50 px-4 py-2.5 rounded-xl">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={handlePrevious}
+                            disabled={currentIndex === 0}
+                            className="rounded-full w-9 h-9 p-0 hover:bg-white disabled:opacity-40"
+                          >
+                            <ChevronLeft className="w-4 h-4" />
+                          </Button>
+                          <span className="text-sm font-semibold text-gray-700 min-w-[4rem] text-center">
+                            {currentIndex + 1} of {leaves.length}
+                          </span>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={handleNext}
+                            disabled={currentIndex === leaves.length - 1}
+                            className="rounded-full w-9 h-9 p-0 hover:bg-white disabled:opacity-40"
+                          >
+                            <ChevronRight className="w-4 h-4" />
+                          </Button>
+                        </div>
                       </div>
+                    </div>
+
+
+                    {/* Info Section */}
+                    <div className="flex-1 min-w-0">
+                      {/* Name and Role */}
+                      <div className="mb-3">
+                        <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-1 truncate">
+                          {currentLeave.appliedBy.firstName} {currentLeave.appliedBy.lastName}
+                        </h2>
+                        <div className="flex flex-wrap items-center gap-2 text-sm">
+                          <Badge variant="outline" className="font-medium capitalize">
+                            {currentLeave.appliedBy.role}
+                          </Badge>
+                          {currentLeave.appliedBy.student && (
+                            <>
+                              <span className="text-gray-400">•</span>
+                              <span className="text-gray-600 font-medium">
+                                Grade {currentLeave.appliedBy.student.grade.grade}
+                              </span>
+                              <span className="text-gray-400">•</span>
+                              <span className="text-gray-600">
+                                Section {currentLeave.appliedBy.student.grade.section
+                                  .map((section) => section.name)
+                                  .join(', ')}
+                              </span>
+                            </>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Leave Duration Badge */}
+                      <div className="inline-flex items-center gap-2 bg-gradient-to-r from-red-50 to-orange-50 border border-red-200/50 rounded-xl px-4 py-2">
+                        <Calendar className="w-4 h-4 text-red-600" />
+                        <span className="text-sm font-semibold text-gray-900">
+                          {currentLeave.totalDays} {currentLeave.totalDays === 1 ? 'Day' : 'Days'} Leave
+                        </span>
+                      </div>
+                    </div>
+                    {/* Pagination - Desktop */}
+                    <div className="hidden sm:flex items-center gap-2 bg-white/80 backdrop-blur-sm px-3 py-2 rounded-full shadow-sm border border-white/60">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={handlePrevious}
+                        disabled={currentIndex === 0}
+                        className="rounded-full w-8 h-8 p-0 hover:bg-red-100 disabled:opacity-40"
+                      >
+                        <ChevronLeft className="w-4 h-4" />
+                      </Button>
+                      <span className="text-sm font-semibold text-gray-700 min-w-[3rem] text-center px-2">
+                        {currentIndex + 1} / {leaves.length}
+                      </span>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={handleNext}
+                        disabled={currentIndex === leaves.length - 1}
+                        className="rounded-full w-8 h-8 p-0 hover:bg-red-100 disabled:opacity-40"
+                      >
+                        <ChevronRight className="w-4 h-4" />
+                      </Button>
                     </div>
                   </div>
                 </div>
@@ -256,7 +323,7 @@ const ApproveRejectLeave = ({ leaves }: ApproveRejectLeaveProps) => {
                 </div>
 
                 {/* Action Buttons */}
-                <div className="p-2 flex items-center gap-3 ">
+                <div className="p-2 flex items-center gap-10">
                   <Button
                     variant={'outline'}
                     onClick={handleSkip}
@@ -264,22 +331,24 @@ const ApproveRejectLeave = ({ leaves }: ApproveRejectLeaveProps) => {
                   >
                     Skip
                   </Button>
-                  <Button
-                    variant={'outline'}
-                    onClick={handleReject}
-                    className="flex-1 px-6 py-3 border-2 hover:text-red-600 border-red-200 rounded-xl text-red-600 font-semibold hover:bg-red-50 transition-colors flex items-center justify-center gap-2"
-                  >
-                    <XCircle className="w-5 h-5" />
-                    Reject
-                  </Button>
-                  <Button
-                    variant={'outline'}
-                    onClick={handleApprove}
-                    className="flex-1 px-6 py-3 hover:text-green-600 bg-green-100 rounded-xl text-green-500 font-semibold hover:bg-green-200 transition-colors flex items-center justify-center gap-2"
-                  >
-                    <CheckCircle className="w-5 h-5" />
-                    {isPending ? 'Approving' : 'Approve'}
-                  </Button>
+                  <div className='flex items-center justify-between space-x-3 w-full'>
+                    <Button
+                      variant={'outline'}
+                      onClick={handleReject}
+                      className="flex-1 px-6 py-3 border-2 hover:text-red-600 border-red-200 rounded-xl text-red-600 font-semibold hover:bg-red-50 transition-colors flex items-center justify-center gap-2"
+                    >
+                      <XCircle className="w-5 h-5" />
+                      Reject
+                    </Button>
+                    <Button
+                      variant={'outline'}
+                      onClick={handleApprove}
+                      className="flex-1 px-6 py-3 hover:text-green-600 bg-green-100 rounded-xl text-green-500 font-semibold hover:bg-green-200 transition-colors flex items-center justify-center gap-2"
+                    >
+                      <CheckCircle className="w-5 h-5" />
+                      {isPending ? 'Approving' : 'Approve'}
+                    </Button>
+                  </div>
                 </div>
               </CardContent>
             </Card>

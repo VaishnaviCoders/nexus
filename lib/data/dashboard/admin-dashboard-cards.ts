@@ -2,7 +2,6 @@
 
 import prisma from '@/lib/db';
 import { getOrganizationId } from '@/lib/organization';
-import { auth } from '@clerk/nextjs/server';
 
 export async function getStudentStats() {
   const organizationId = await getOrganizationId();

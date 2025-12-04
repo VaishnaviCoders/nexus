@@ -120,15 +120,17 @@ export const getRecentAdminActivities = async (): Promise<ActivityItem[]> => {
         phone: l.phone || '',
       },
     });
-    activities.push({
-      id: `lead-${l.activities.map((a) => a.id)}`,
-      type: 'lead',
-      title: 'Lead Activity',
-      description: l.activities.map((a) => a.description).join(', '),
-      iconStyle: 'lead',
-      time: rel(l.createdAt),
-      badge: { text: 'New', variant: 'blue' },
-      priority: 'high',
+    l.activities.forEach((activity, index) => {
+      activities.push({
+        id: `lead-${l.id}-activity-${index}`,
+        type: 'lead',
+        title: 'Lead Activity',
+        description: activity.description || '',
+        iconStyle: 'lead',
+        time: rel(activity.createdAt || l.createdAt || new Date()),
+        badge: { text: 'New', variant: 'blue' },
+        priority: 'high',
+      });
     });
   });
 

@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Calendar, TrendingUp, Target, Clock } from 'lucide-react';
 import { getStudentAttendanceStatsCards } from '@/lib/data/attendance/get-student-attendance-stats';
+import { DashboardFourGridsCardSkeleton } from '@/lib/skeletons/DashboardCardSkeleton';
 // import { getStudentAttendanceOverview } from "@/lib/actions/student-attendance-actions"
 
 async function AttendanceStatsCardsContent() {
@@ -123,31 +124,11 @@ async function AttendanceStatsCardsContent() {
   );
 }
 
-function AttendanceStatsCardsContentSkeleton() {
-  return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-      {Array.from({ length: 4 }).map((_, i) => (
-        <Card key={i} className="animate-pulse border-0">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between mb-4">
-              <div className="h-4 bg-muted rounded w-20"></div>
-              <div className="h-4 w-4 bg-muted rounded"></div>
-            </div>
-            <div className="space-y-3">
-              <div className="h-8 bg-muted rounded w-16"></div>
-              <div className="h-2 bg-muted rounded"></div>
-              <div className="h-3 bg-muted rounded w-24"></div>
-            </div>
-          </CardContent>
-        </Card>
-      ))}
-    </div>
-  );
-}
+
 
 export function AttendanceStatsCards() {
   return (
-    <Suspense fallback={<AttendanceStatsCardsContentSkeleton />}>
+    <Suspense fallback={<DashboardFourGridsCardSkeleton />}>
       <AttendanceStatsCardsContent />
     </Suspense>
   );
