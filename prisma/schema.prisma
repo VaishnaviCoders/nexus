@@ -803,7 +803,7 @@ model Fee {
   organizationId String
   payments       FeePayment[]
 
-  breakdown      Json?
+  // breakdown      Json?
   // breakdown: {
   //   tuition: 18000,
   //   exam: 2000,

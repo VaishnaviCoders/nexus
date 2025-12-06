@@ -43,7 +43,7 @@ export const metadata: Metadata = {
   alternates: {
     canonical: '/',
   },
-  title: 'Shiksha.cloud – Modern School Management CRM',
+  title: 'Shiksha.cloud – Innovative School Management CRM for Modern Education',
   description:
     'All-in-one platform to manage students, fees, attendance, and reports. Built for schools, colleges, and coaching institutes.',
   keywords: [
@@ -57,7 +57,6 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
-
   openGraph: {
     title: 'Shiksha.cloud',
     description: 'Streamline your school operations with Shiksha.cloud',

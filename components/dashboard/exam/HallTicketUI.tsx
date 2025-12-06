@@ -27,8 +27,6 @@ import {
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { formatDateIN, formatDateTimeIN } from '@/lib/utils';
 import QRCodeLib from 'qrcode';
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
 import { Prisma } from '@/generated/prisma/client';
 
 type StudentHallTicketData = Prisma.HallTicketGetPayload<{

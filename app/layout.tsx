@@ -28,7 +28,7 @@ const appUrl = new URL('https://www.shiksha.cloud');
 export const metadata: Metadata = {
   metadataBase: appUrl,
   alternates: {
-    canonical: appUrl.toString(),
+    canonical: appUrl,
     languages: {
       'en': 'https://www.shiksha.cloud/',
       'x-default': 'https://www.shiksha.cloud/',

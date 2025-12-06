@@ -1,6 +1,4 @@
 import { Institute } from '@/components/websiteComp/shared/Institute-avatar-popover';
-import { DocumentType } from '@/generated/prisma/enums';
-import { StudentDocument } from '@/types/document';
 import {
   ChartColumnBigIcon,
   CheckCircle2,
@@ -1491,7 +1489,7 @@ export const indianStates = [
   'West Bengal',
 ];
 
-const maharashtraDistricts = [
+export const maharashtraDistricts = [
   'Ahmednagar',
   'Akola',
   'Amravati',
@@ -1686,147 +1684,7 @@ const attendanceChartData = [
   { month: 'March', attendance: 19 },
 ];
 
-// Mock attendance data
-const attendanceData = [
-  {
-    id: 1,
-    date: '2025-03-10',
-    student: 'Alex Johnson',
-    rollNumber: 'S001',
-    section: 'A',
-    status: 'present',
-  },
-  {
-    id: 2,
-    date: '2025-03-10',
-    student: 'Maria Garcia',
-    rollNumber: 'S002',
-    section: 'A',
-    status: 'absent',
-  },
-  {
-    id: 3,
-    date: '2025-03-10',
-    student: 'James Wilson',
-    rollNumber: 'S003',
-    section: 'A',
-    status: 'late',
-  },
-  {
-    id: 4,
-    date: '2025-03-10',
-    student: 'Sarah Brown',
-    rollNumber: 'S004',
-    section: 'A',
-    status: 'present',
-  },
-  {
-    id: 5,
-    date: '2025-03-10',
-    student: 'David Lee',
-    rollNumber: 'S005',
-    section: 'A',
-    status: 'present',
-  },
-  {
-    id: 6,
-    date: '2025-03-09',
-    student: 'Alex Johnson',
-    rollNumber: 'S001',
-    section: 'A',
-    status: 'present',
-  },
-  {
-    id: 7,
-    date: '2025-03-09',
-    student: 'Maria Garcia',
-    rollNumber: 'S002',
-    section: 'A',
-    status: 'present',
-  },
-  {
-    id: 8,
-    date: '2025-03-09',
-    student: 'James Wilson',
-    rollNumber: 'S003',
-    section: 'A',
-    status: 'present',
-  },
-  {
-    id: 9,
-    date: '2025-03-09',
-    student: 'Sarah Brown',
-    rollNumber: 'S004',
-    section: 'A',
-    status: 'absent',
-  },
-  {
-    id: 10,
-    date: '2025-03-09',
-    student: 'David Lee',
-    rollNumber: 'S005',
-    section: 'A',
-    status: 'late',
-  },
-];
 
-const mockSectionAttendance = [
-  {
-    id: '1',
-    section: 'Grade 1 - Section A',
-    grade: 'Grade 1',
-    date: '2025-03-20',
-    reportedBy: 'John Smith',
-    status: 'completed',
-    percentage: 100,
-    studentsPresent: 25,
-    totalStudents: 25,
-  },
-  {
-    id: '2',
-    section: 'Grade 1 - Section B',
-    grade: 'Grade 1',
-    date: '2025-03-20',
-    reportedBy: 'Jane Doe',
-    status: 'completed',
-    percentage: 96,
-    studentsPresent: 24,
-    totalStudents: 25,
-  },
-  {
-    id: '3',
-    section: 'Grade 2 - Section A',
-    grade: 'Grade 2',
-    date: '2025-03-20',
-    reportedBy: 'Michael Johnson',
-    status: 'pending',
-    percentage: 0,
-    studentsPresent: 0,
-    totalStudents: 28,
-  },
-  {
-    id: '4',
-    section: 'Grade 2 - Section B',
-    grade: 'Grade 2',
-    date: '2025-03-20',
-    reportedBy: 'Sarah Williams',
-    status: 'in-progress',
-    percentage: 68,
-    studentsPresent: 17,
-    totalStudents: 25,
-  },
-  {
-    id: '5',
-    section: 'Grade 3 - Section A',
-    grade: 'Grade 3',
-    date: '2025-03-20',
-    reportedBy: 'Robert Brown',
-    status: 'completed',
-    percentage: 92,
-    studentsPresent: 23,
-    totalStudents: 25,
-  },
-];
 
 export const mockMonthlyFeeCollectionData = [
   { month: 1, year: 2025, amount: 105000, count: 51 },
@@ -1857,68 +1715,7 @@ export const mockMonthlyFeeCollectionData = [
   { month: 11, year: 2024, amount: 105000, count: 50 },
 ];
 
-const mockFeeCategories = [
-  { name: 'Tuition Fee', amount: 650000 },
-  { name: 'Exam Fee', amount: 75000 },
-  { name: 'Library Fee', amount: 50000 },
-  { name: 'Lab Fee', amount: 60000 },
-  { name: 'Sports Fee', amount: 40000 },
-];
 
-// Mock data - replace with actual API calls
-const mockDocuments = [
-  {
-    id: '1',
-    type: DocumentType.AADHAAR,
-    fileName: 'aadhaar_card.pdf',
-    fileSize: 2048576,
-    fileType: 'application/pdf',
-    documentUrl: '/placeholder.svg?height=400&width=600',
-    studentId: 'student1',
-    verified: true,
-    verifiedBy: 'admin1',
-    verifiedAt: new Date('2024-01-15'),
-    uploadedBy: 'student1',
-    uploadedAt: new Date('2024-01-10'),
-    note: 'Clear copy of Aadhaar card',
-    isDeleted: false,
-    createdAt: new Date('2024-01-10'),
-    updatedAt: new Date('2024-01-15'),
-  },
-  {
-    id: '2',
-    type: DocumentType.BIRTH_CERTIFICATE,
-    fileName: 'birth_certificate.jpg',
-    fileSize: 1536000,
-    fileType: 'image/jpeg',
-    documentUrl: '/placeholder.svg?height=400&width=600',
-    studentId: 'student1',
-    verified: false,
-    uploadedBy: 'parent1',
-    uploadedAt: new Date('2024-01-20'),
-    note: 'Original birth certificate scan',
-    isDeleted: false,
-    createdAt: new Date('2024-01-20'),
-    updatedAt: new Date('2024-01-20'),
-  },
-  {
-    id: '3',
-    type: DocumentType.TRANSFER_CERTIFICATE,
-    fileName: 'tc.pdf',
-    fileSize: 3072000,
-    fileType: 'application/pdf',
-    documentUrl: '/placeholder.svg?height=400&width=600',
-    studentId: 'student1',
-    verified: true,
-    verifiedBy: 'admin2',
-    verifiedAt: new Date('2024-01-25'),
-    uploadedBy: 'student1',
-    uploadedAt: new Date('2024-01-22'),
-    isDeleted: false,
-    createdAt: new Date('2024-01-22'),
-    updatedAt: new Date('2024-01-25'),
-  },
-];
 
 
 

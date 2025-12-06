@@ -1,3 +1,4 @@
+import { CallToAction } from '@/components/websiteComp/cta';
 import FeaturesList from '@/components/websiteComp/FeaturesList';
 import { Metadata } from 'next';
 
@@ -131,5 +132,12 @@ export const metadata: Metadata = {
 
 
 export default function FeaturesPage() {
-  return <FeaturesList />;
+  return (
+    <>
+      <FeaturesList />
+      <div className="flex items-center justify-center p-4">
+        <CallToAction />
+      </div>
+    </>
+  )
 }

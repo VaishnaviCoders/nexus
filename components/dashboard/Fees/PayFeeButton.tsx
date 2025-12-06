@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useTransition } from 'react';
-import { Button } from './ui/button';
+import { Button } from '@/components/ui/button';
 import { CreditCard, Loader2 } from 'lucide-react';
 import { phonePayInitPayment } from '@/lib/data/fee/recordOnlinePayment';
 import { useRouter } from 'next/navigation';

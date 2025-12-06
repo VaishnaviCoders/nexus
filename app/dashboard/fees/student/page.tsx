@@ -18,10 +18,10 @@ import {
   Receipt,
   Wallet,
 } from 'lucide-react';
-import PayFeeButton from '@/components/PayFeeButton';
-import { ReceiptDownloadButton } from '@/components/ReceiptDownloadButton';
+import { ReceiptDownloadButton } from '@/components/dashboard/Fees/ReceiptDownloadButton';
 import { getCurrentUserByRole } from '@/lib/auth';
 import { EmptyState } from '@/components/EmptyState';
+import PayFeeButton from '@/components/dashboard/Fees/PayFeeButton';
 
 async function getFees(studentId: string) {
   return await prisma.fee.findMany({

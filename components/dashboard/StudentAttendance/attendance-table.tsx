@@ -32,8 +32,8 @@ import {
 } from '@/components/ui/dropdown-menu';
 import Link from 'next/link';
 import { formatDateIN } from '@/lib/utils';
-
-type AttendanceStatus = 'PRESENT' | 'ABSENT' | 'LATE';
+import { Badge } from '@/components/ui/badge';
+import { AttendanceStatus } from '@/generated/prisma/enums';
 
 interface AttendanceRecord {
   id: string;
@@ -201,43 +201,54 @@ export function AttendanceTable({ records }: AttendanceRecordsProps) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {sortedRecords.map((row) => (
-              <TableRow key={row.id} className="group">
+            {sortedRecords.map((record) => (
+              <TableRow key={record.id} className="group">
                 <TableCell>
                   <Checkbox
-                    checked={selectedIds.includes(row.id)}
-                    onCheckedChange={() => toggleSelection(row.id)}
+                    checked={selectedIds.includes(record.id)}
+                    onCheckedChange={() => toggleSelection(record.id)}
                   />
                 </TableCell>
                 <TableCell className="whitespace-nowrap">
-                  {formatDateIN(row.date)}
+                  {formatDateIN(record.date)}
                 </TableCell>
                 <TableCell>
-                  <div className="font-medium capitalize whitespace-nowrap">
-                    {row.student.firstName} {row.student.lastName}
-                  </div>
-                  <div className="text-sm text-muted-foreground">
-                    #{row.student.rollNumber}
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-medium text-primary">
+                      {record.student.firstName[0]}
+                      {record.student.lastName[0]}
+                    </div>
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-medium capitalize text-foreground">
+                        {record.student.firstName} {record.student.lastName}
+                      </p>
+                      <p className="text-xs text-muted-foreground">#{record.student.rollNumber}</p>
+                    </div>
                   </div>
                 </TableCell>
                 <TableCell className="whitespace-nowrap">
                   <div className="flex flex-col leading-tight">
                     <span className="font-medium text-sm text-foreground">
-                      {row.grade.grade}
+                      {record.grade.grade}
                     </span>
                     <span className="text-xs text-muted-foreground">
-                      {row.section.name}
+                      {record.section.name}
                     </span>
                   </div>
                 </TableCell>
 
-                <TableCell>{getStatusBadgeWithIcon(row.status)}</TableCell>
+                <TableCell>
+                  <Badge variant={record.status}>
+                    {record.status}
+                  </Badge>
+
+                </TableCell>
                 <TableCell>
                   <div
                     className="max-w-[200px] truncate"
-                    title={row.note || ''}
+                    title={record.note || ''}
                   >
-                    {row.note || '-'}
+                    {record.note || '-'}
                   </div>
                 </TableCell>
                 <TableCell>
@@ -250,24 +261,23 @@ export function AttendanceTable({ records }: AttendanceRecordsProps) {
                     </DropdownMenuTrigger>
 
                     <DropdownMenuContent align="end">
-                      {/* Delete */}
-                      <DropdownMenuItem
-                        className="text-destructive focus:text-destructive cursor-pointer"
-                        onClick={() => handleDelete(row.id)}
-                      >
-                        <Trash2 className="h-4 w-4 mr-2" />
-                        Delete
-                      </DropdownMenuItem>
-
                       {/* View Student */}
                       <DropdownMenuItem asChild>
                         <Link
-                          href={`/dashboard/students/${row.studentId}`}
+                          href={`/dashboard/students/${record.studentId}`}
                           className="p-0 flex items-center gap-2 cursor-pointer"
                         >
                           <User className="h-4 w-4 mr-2" />
                           View Student
                         </Link>
+                      </DropdownMenuItem>
+                      {/* Delete */}
+                      <DropdownMenuItem
+                        className="text-destructive focus:text-destructive cursor-pointer"
+                        onClick={() => handleDelete(record.id)}
+                      >
+                        <Trash2 className="h-4 w-4 mr-2" />
+                        Delete
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -298,30 +308,4 @@ export function AttendanceTable({ records }: AttendanceRecordsProps) {
   );
 }
 
-const getStatusBadgeWithIcon = (status: AttendanceStatus) => {
-  switch (status) {
-    case 'PRESENT':
-      return (
-        <div className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-800/20 dark:text-green-400">
-          <CheckCircle className="h-3 w-3 mr-1" />
-          Present
-        </div>
-      );
-    case 'ABSENT':
-      return (
-        <div className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-800/20 dark:text-red-400">
-          <XCircle className="h-3 w-3 mr-1" />
-          Absent
-        </div>
-      );
-    case 'LATE':
-      return (
-        <div className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-800/20 dark:text-yellow-400">
-          <Clock className="h-3 w-3 mr-1" />
-          Late
-        </div>
-      );
-    default:
-      return null;
-  }
-};
+

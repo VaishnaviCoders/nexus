@@ -32,8 +32,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-
-import { YearType } from '@/generated/prisma/enums';
 import { AcademicYearForm } from './AcademicYearForm';
 import { deleteAcademicYear, setCurrentAcademicYear } from '@/app/actions';
 import { Separator } from '@/components/ui/separator';
@@ -188,7 +186,9 @@ export function AcademicYearConfig({
                     {format(year.startDate, 'MMM d, yyyy')} -{' '}
                     {format(year.endDate, 'MMM d, yyyy')}
                   </p>
-                  <Separator />
+                  {year.description && (
+                    <Separator />
+                  )}
 
                   <p className="text-sm text-muted-foreground">
                     {year.description && ` ${year.description}`}

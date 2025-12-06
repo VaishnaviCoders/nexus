@@ -1,4 +1,3 @@
-// app/robots.ts - FIXED
 import type { MetadataRoute } from 'next';
 
 export default function robots(): MetadataRoute.Robots {
@@ -12,6 +11,5 @@ export default function robots(): MetadataRoute.Robots {
     ],
     sitemap: 'https://www.shiksha.cloud/sitemap.xml',
     host: 'https://www.shiksha.cloud',
-    
   };
 }

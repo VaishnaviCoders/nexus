@@ -11,6 +11,7 @@ import type { NextConfig } from 'next';
 const isProd = process.env.NODE_ENV === 'production'
 
 const nextConfig: NextConfig = {
+  
   typescript:{
     ignoreBuildErrors:true,
   },
@@ -20,22 +21,19 @@ const nextConfig: NextConfig = {
     serverActions: {
       bodySizeLimit: '3mb',
     },
+    optimizeCss:true,
     typedEnv:true,
     turbopackFileSystemCacheForDev:true
   },
-  headers: async () => {
-    const isProd = process.env.VERCEL_ENV === 'production' || process.env.NODE_ENV === 'production';
-    
+    headers: async () => {
     return [
-      // Public pages - allow indexing in production only
+      // Public pages - ALWAYS allow indexing
       {
         source: '/:path((?!api|dashboard).*)*',
         headers: [
           {
             key: 'X-Robots-Tag',
-            value: isProd
-              ? 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'
-              : 'noindex, nofollow',
+            value: 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1',
           },
         ],
       },

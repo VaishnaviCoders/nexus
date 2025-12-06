@@ -17,6 +17,12 @@ const badgeVariants = cva(
         absent:
           'border-transparent bg-red-100 text-red-600 hover:bg-red-200 cursor-pointer',
         late: 'border-transparent bg-yellow-100 text-yellow-600 hover:bg-yellow-200 cursor-pointer',
+        PRESENT:
+          'border-transparent bg-green-100 text-green-600 hover:bg-green-200 cursor-pointer',
+        ABSENT:
+          'border-transparent bg-red-100 text-red-600 hover:bg-red-200 cursor-pointer',
+        LATE: 'border-transparent bg-yellow-100 text-yellow-600 hover:bg-yellow-200 cursor-pointer',
+
         destructive:
           'border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80',
         outline: 'text-foreground',
@@ -55,7 +61,7 @@ const badgeVariants = cva(
         ENROLLED: 'bg-green-50 text-green-500 border-green-200',
         NOT_ENROLLED: 'bg-red-50 text-red-500 border-red-200',
         ATTENDED: 'bg-green-50 text-green-500 border-green-200',
-        ABSENT: 'bg-red-50 text-red-500 border-red-200',
+        // ABSENT: 'bg-red-50 text-red-500 border-red-200',
         EXEMPT: 'bg-yellow-50 text-yellow-500 border-yellow-200',
         DISQUALIFIED: 'bg-red-50 text-red-500 border-red-200',
 
@@ -183,7 +189,7 @@ const badgeVariants = cva(
 
 export interface BadgeProps
   extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof badgeVariants> {}
+  VariantProps<typeof badgeVariants> { }
 
 function Badge({ className, variant, ...props }: BadgeProps) {
   return (

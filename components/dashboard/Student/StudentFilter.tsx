@@ -44,7 +44,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import debounce from 'lodash.debounce';
 
 type GradeAndSection = {
   id: string;
@@ -99,7 +98,6 @@ export default function StudentFilter({
   const [searchQuery, setSearchQuery] = useState<string>(initialSearch);
   const isFirstLoadRef = useRef(true);
 
-  const router = useRouter();
 
   // Memoize active filters count
   const activeFiltersCount = useMemo(() => {
@@ -155,7 +153,7 @@ export default function StudentFilter({
 
   // Fetch students with debouncing
   const fetchStudents = useCallback(
-    debounce(async (search: string, gradeId: string, sectionId: string) => {
+    async (search: string, gradeId: string, sectionId: string) => {
       try {
         startTransition(async () => {
           // Avoid capturing stale closure by passing args through
@@ -170,16 +168,14 @@ export default function StudentFilter({
       } catch (error) {
         console.error('Error fetching students:', error);
       }
-    }, 250),
+    },
     []
   );
 
-  // Cancel debounce on unmount
+  // Trigger fetch on filter changes
   useEffect(() => {
-    return () => {
-      fetchStudents.cancel();
-    };
-  }, [fetchStudents]);
+    fetchStudents(searchQuery, selectedGrade, selectedSection);
+  }, [selectedGrade, selectedSection, searchQuery, fetchStudents]);
 
   // Fetch students on filter changes without updating the URL
   useEffect(() => {
@@ -321,7 +317,7 @@ export default function StudentFilter({
                       className={cn(
                         'h-12 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 hover:border-purple-300 dark:hover:border-purple-600 transition-colors',
                         selectedGrade !== 'all' &&
-                          'border-purple-300 dark:border-purple-600 bg-purple-50/50 dark:bg-purple-950/20'
+                        'border-purple-300 dark:border-purple-600 bg-purple-50/50 dark:bg-purple-950/20'
                       )}
                     >
                       <div className="flex items-center gap-3">
@@ -383,9 +379,9 @@ export default function StudentFilter({
                       className={cn(
                         'h-12 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 hover:border-green-300 dark:hover:border-green-600 transition-colors',
                         selectedSection !== 'all' &&
-                          'border-green-300 dark:border-green-600 bg-green-50/50 dark:bg-green-950/20',
+                        'border-green-300 dark:border-green-600 bg-green-50/50 dark:bg-green-950/20',
                         selectedGrade === 'all' &&
-                          'opacity-50 cursor-not-allowed'
+                        'opacity-50 cursor-not-allowed'
                       )}
                     >
                       <div className="flex items-center gap-3">
@@ -527,14 +523,14 @@ export default function StudentFilter({
             )}
 
             {/* Loading State */}
-            {isPending && (
+            {/* {isPending && (
               <div className="flex justify-center items-center py-4 bg-blue-50/50 dark:bg-blue-950/10 rounded-lg border border-blue-200/30 dark:border-blue-800/30">
                 <Loader2 className="h-5 w-5 animate-spin text-blue-600 dark:text-blue-400 mr-2" />
                 <span className="text-sm text-blue-700 dark:text-blue-300">
                   Loading students...
                 </span>
               </div>
-            )}
+            )} */}
           </div>
         </CardContent>
       </Card>

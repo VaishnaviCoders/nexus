@@ -27,7 +27,6 @@ import {
   Download,
   Filter,
   RotateCcw,
-  TrendingUp,
   PartyPopper,
 } from 'lucide-react';
 import {
@@ -41,7 +40,6 @@ import {
   getDay,
   isWithinInterval,
 } from 'date-fns';
-import { Separator } from '@/components/ui/separator';
 
 // Types based on Prisma schema
 type AttendanceStatus = 'PRESENT' | 'ABSENT' | 'LATE';
@@ -90,13 +88,13 @@ interface CalendarDay {
   attendance?: StudentAttendanceRecord;
   holiday?: AcademicCalendarEvent;
   status:
-    | 'present'
-    | 'absent'
-    | 'late'
-    | 'no-data'
-    | 'future'
-    | 'weekend'
-    | 'holiday';
+  | 'present'
+  | 'absent'
+  | 'late'
+  | 'no-data'
+  | 'future'
+  | 'weekend'
+  | 'holiday';
 }
 
 interface MonthlyStats {
@@ -314,7 +312,7 @@ export function StudentAttendanceCalendar({
       const overlapDays =
         Math.ceil(
           (overlapEnd.getTime() - overlapStart.getTime()) /
-            (1000 * 60 * 60 * 24)
+          (1000 * 60 * 60 * 24)
         ) + 1;
       holidayDays += Math.max(0, overlapDays);
     });
@@ -620,8 +618,8 @@ export function StudentAttendanceCalendar({
                           day.isCurrentMonth ? 'opacity-100' : 'opacity-30',
                           day.isToday && 'ring-1 ring-blue-500 ring-offset-1',
                           filterStatus !== 'all' &&
-                            day.status !== filterStatus &&
-                            'opacity-20',
+                          day.status !== filterStatus &&
+                          'opacity-20',
                           'hover:scale-105 hover:shadow-md'
                         )}
                         onClick={() => handleDateClick(day)}
@@ -632,7 +630,7 @@ export function StudentAttendanceCalendar({
                               className={cn(
                                 'text-xs font-medium',
                                 day.isToday &&
-                                  'font-bold text-blue-600 dark:text-blue-400'
+                                'font-bold text-blue-600 dark:text-blue-400'
                               )}
                             >
                               {day.dayNumber}

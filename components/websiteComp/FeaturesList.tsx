@@ -16,7 +16,6 @@ import {
 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import CTA from '@/components/websiteComp/cta';
 
 const features = [
   {
@@ -320,7 +319,7 @@ const FeaturesList = () => {
         </div>
       </section>
 
-      <CTA />
+
     </div>
   );
 };

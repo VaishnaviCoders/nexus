@@ -20,11 +20,11 @@ export const FilterAttendance = async ({
   startDate,
   endDate,
 }: FilterAttendanceProps) => {
-  const orgId = await getOrganizationId();
+  const organizationId = await getOrganizationId();
 
   const whereClause: any = {
     student: {
-      organizationId: orgId,
+      organizationId,
     },
   };
 

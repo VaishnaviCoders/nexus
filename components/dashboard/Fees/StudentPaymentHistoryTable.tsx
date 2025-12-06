@@ -85,8 +85,6 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 
-import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
 import {
   FeeReminderRecipient,
   SendFeesReminderDialog,
