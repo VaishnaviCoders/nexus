@@ -39,3 +39,6 @@ next-env.d.ts
 
 
 /lib/generated/prisma
+
+certificates
+service_key.json

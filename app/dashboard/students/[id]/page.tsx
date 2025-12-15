@@ -35,6 +35,8 @@ import { getOrganizationId } from '@/lib/organization';
 import { DocumentCard } from '@/components/dashboard/Student/documents/DocumentCard';
 import { getStudentDocuments } from '@/lib/data/documents/get-student-documents';
 import StudentAcademicPerformance from '@/components/dashboard/Student/StudentPerformance';
+import { getStudentReport } from '@/lib/data/student/get-student-report';
+import { StudentReportDialog } from '@/components/dashboard/Student/student-report-dialog';
 
 const getStudentAdminData = async (studentId: string) => {
   const [student, attendance, fees, parents, documents, performance] =
@@ -134,6 +136,10 @@ const StudentAdminRoute = async ({
     fees,
   } = studentData;
 
+  // const studentReportData = await getStudentReport(studentId);
+
+  // console.log(studentReportData);
+
   const organizationId = await getOrganizationId();
   const academicYearId = await getCurrentAcademicYearId();
 
@@ -145,6 +151,19 @@ const StudentAdminRoute = async ({
   const holidayData = await prisma.academicCalendar.findMany({
     where: { organizationId, academicYearId },
   });
+
+  const academicYears = await prisma.academicYear.findMany({
+    where: { organizationId },
+    select: {
+      id: true,
+      name: true,
+      isCurrent: true,
+      startDate: true,
+      endDate: true
+    },
+    orderBy: { startDate: 'desc' }
+  });
+
 
   return (
     <div className="mx-2 space-y-8 pb-8">
@@ -221,14 +240,7 @@ const StudentAdminRoute = async ({
                 Edit Profile
               </Link>
             </Button>
-
-            <Button
-              variant="outline"
-              className="border-slate-300 hover:bg-slate-50 dark:border-slate-600 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300"
-            >
-              <Download className="mr-2 h-4 w-4" />
-              Generate Report
-            </Button>
+            <StudentReportDialog academicYears={academicYears} currentAcademicYearId={academicYearId} studentId={studentId} />
           </div>
         </div>
       </div>
@@ -336,7 +348,7 @@ const StudentAdminRoute = async ({
                               Age:{' '}
                               {student?.dateOfBirth
                                 ? new Date().getFullYear() -
-                                  new Date(student.dateOfBirth).getFullYear()
+                                new Date(student.dateOfBirth).getFullYear()
                                 : 'N/A'}{' '}
                               years
                             </p>
@@ -567,7 +579,7 @@ const StudentAdminRoute = async ({
                                 {Math.round(
                                   ((record.obtainedMarks ?? 0) /
                                     record.exam.maxMarks) *
-                                    100
+                                  100
                                 )}
                                 %
                               </div>
@@ -845,7 +857,7 @@ const StudentAdminRoute = async ({
                       <DocumentCard
                         key={document.id}
                         studentDocument={document}
-                        // onDelete={handleDeleteDocument}
+                      // onDelete={handleDeleteDocument}
                       />
                     ))}
                   </div>
@@ -855,15 +867,14 @@ const StudentAdminRoute = async ({
 
             <TabsContent value="parents" className="mt-0">
               <div
-                className={`grid gap-4 ${
-                  parents.length === 1
-                    ? 'md:grid-cols-1 lg:grid-cols-1 max-w-2xl'
-                    : parents.length === 2
-                      ? 'md:grid-cols-2 lg:grid-cols-2'
-                      : parents.length === 3
-                        ? 'md:grid-cols-2 lg:grid-cols-3'
-                        : 'md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3'
-                }`}
+                className={`grid gap-4 ${parents.length === 1
+                  ? 'md:grid-cols-1 lg:grid-cols-1 max-w-2xl'
+                  : parents.length === 2
+                    ? 'md:grid-cols-2 lg:grid-cols-2'
+                    : parents.length === 3
+                      ? 'md:grid-cols-2 lg:grid-cols-3'
+                      : 'md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3'
+                  }`}
               >
                 {parents.map((parentStudent, index) => (
                   <Card

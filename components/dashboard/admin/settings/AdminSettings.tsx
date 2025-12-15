@@ -1,4 +1,3 @@
-import { Suspense } from "react"
 import prisma from "@/lib/db"
 import { getOrganizationId } from "@/lib/organization"
 import AdminSettingsSidebar from "@/components/dashboard/admin/settings/AdminSettingsSidebar"

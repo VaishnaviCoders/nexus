@@ -348,9 +348,23 @@ model User {
   leadActivity    LeadActivity[]
   assignedLeads   Lead[]            @relation("LeadAssignedTo")
   createdLeads    Lead[]            @relation("LeadCreatedBy")
+  deviceTokens    DeviceToken[]
 
   @@index([id, clerkId])
   @@index([organizationId])
+}
+
+model DeviceToken {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token      String   @unique
+  platform   String   @default("web") // web, android, ios
+  lastUsedAt DateTime @default(now())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([userId])
 }
 
 model Student {
@@ -1084,12 +1098,19 @@ model NotificationLog {
   notice   Notice? @relation(fields: [noticeId], references: [id])
   noticeId String?
 
+  // Content
+  title   String? // For inbox display
+  message String? // For inbox display
+
   // Delivery details
   errorMessage String?
   retryCount   Int     @default(0)
   maxRetries   Int     @default(3)
   units        Int     @default(1) // optional, 1 per message, or set for bulk
   cost         Float   @default(0)
+
+  isRead Boolean   @default(false)
+  readAt DateTime?
 
   sentAt    DateTime @default(now())
   createdAt DateTime @default(now())
@@ -1295,10 +1316,9 @@ model ExamEnrollment {
 }
 
 model ExamResult {
-  id        String @id @default(cuid())
-  studentId String
-  examId    String
-
+  id                 String   @id @default(cuid())
+  studentId          String
+  examId             String
   obtainedMarks      Float?
   percentage         Float? // Auto-calculated
   gradeLabel         String?

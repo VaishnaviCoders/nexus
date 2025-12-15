@@ -57,6 +57,7 @@ export const ModelName = {
   FeeSenseExecutionLog: 'FeeSenseExecutionLog',
   FeeSenseReport: 'FeeSenseReport',
   User: 'User',
+  DeviceToken: 'DeviceToken',
   Student: 'Student',
   Parent: 'Parent',
   ParentStudent: 'ParentStudent',
@@ -234,6 +235,19 @@ export const UserScalarFieldEnum = {
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const DeviceTokenScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  token: 'token',
+  platform: 'platform',
+  lastUsedAt: 'lastUsedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DeviceTokenScalarFieldEnum = (typeof DeviceTokenScalarFieldEnum)[keyof typeof DeviceTokenScalarFieldEnum]
 
 
 export const StudentScalarFieldEnum = {
@@ -577,11 +591,15 @@ export const NotificationLogScalarFieldEnum = {
   status: 'status',
   notificationType: 'notificationType',
   noticeId: 'noticeId',
+  title: 'title',
+  message: 'message',
   errorMessage: 'errorMessage',
   retryCount: 'retryCount',
   maxRetries: 'maxRetries',
   units: 'units',
   cost: 'cost',
+  isRead: 'isRead',
+  readAt: 'readAt',
   sentAt: 'sentAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -939,6 +957,16 @@ export const UserOrderByRelevanceFieldEnum = {
 export type UserOrderByRelevanceFieldEnum = (typeof UserOrderByRelevanceFieldEnum)[keyof typeof UserOrderByRelevanceFieldEnum]
 
 
+export const DeviceTokenOrderByRelevanceFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  token: 'token',
+  platform: 'platform'
+} as const
+
+export type DeviceTokenOrderByRelevanceFieldEnum = (typeof DeviceTokenOrderByRelevanceFieldEnum)[keyof typeof DeviceTokenOrderByRelevanceFieldEnum]
+
+
 export const StudentOrderByRelevanceFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -1196,6 +1224,8 @@ export const NotificationLogOrderByRelevanceFieldEnum = {
   parentId: 'parentId',
   studentId: 'studentId',
   noticeId: 'noticeId',
+  title: 'title',
+  message: 'message',
   errorMessage: 'errorMessage'
 } as const
 

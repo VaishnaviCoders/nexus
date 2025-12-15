@@ -70,6 +70,7 @@ export function ChildCard({ child }: ChildCardProps) {
               <AvatarImage
                 src={child.profileImage || ''}
                 alt={`${child.firstName} ${child.lastName}`}
+                className='object-cover'
               />
               <AvatarFallback className="bg-gradient-to-br from-primary/10 to-secondary/10 text-primary font-semibold text-lg">
                 {child.firstName.charAt(0)}

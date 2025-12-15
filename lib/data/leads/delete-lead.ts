@@ -5,7 +5,13 @@ import { revalidatePath } from 'next/cache';
 
 export async function deleteLead(leadId: string) {
   try {
-    // Delete the leads
+    // 1️⃣ Delete related activities first
+    await prisma.leadActivity.deleteMany({
+      where: {
+        leadId,
+      },
+    });
+
     await prisma.lead.delete({
       where: {
         id: leadId,
@@ -13,6 +19,7 @@ export async function deleteLead(leadId: string) {
     });
 
     revalidatePath('/dashboard/leads');
+    revalidatePath(`/dashboard/leads/${leadId}`);
 
     return {
       success: true,

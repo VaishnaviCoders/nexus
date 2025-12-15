@@ -28,7 +28,6 @@ import {
   MapPin,
   School,
   Calendar,
-  DollarSign,
   MessageSquare,
   Loader2,
   UserCircle,
@@ -38,7 +37,6 @@ import {
   Globe,
 } from 'lucide-react';
 import { Prisma } from '@/generated/prisma/client';
-import { LeadPriority, LeadStatus } from '@/generated/prisma/enums';
 import { formatDateIN } from '@/lib/utils';
 import { LeadActivityTimeline } from './lead-activity-timeline';
 import { AssignLeadDialog } from './assign-lead-dialog';
@@ -239,8 +237,8 @@ export default function LeadDetails({ lead }: LeadDetailProps) {
                     />
                   </div>
                 </div>
-                <div className="bg-blue-500 rounded-xl p-3 ml-4">
-                  <TrendingUp className="w-6 h-6 text-white" />
+                <div className="bg-blue-50 rounded-xl p-3 ml-4 border-blue-200 border">
+                  <TrendingUp className="w-6 h-6 text-blue-600" />
                 </div>
               </div>
             </CardContent>
@@ -261,8 +259,8 @@ export default function LeadDetails({ lead }: LeadDetailProps) {
                     Total interactions
                   </p>
                 </div>
-                <div className="bg-green-500 rounded-xl p-3 ml-4">
-                  <MessageSquare className="w-6 h-6 text-white" />
+                <div className="bg-green-50 rounded-xl p-3 ml-4 border-green-200 border">
+                  <MessageSquare className="w-6 h-6 text-green-600" />
                 </div>
               </div>
             </CardContent>
@@ -283,8 +281,8 @@ export default function LeadDetails({ lead }: LeadDetailProps) {
                     Recent activity
                   </p>
                 </div>
-                <div className="bg-purple-500 rounded-xl p-3 ml-4">
-                  <Clock className="w-6 h-6 text-white" />
+                <div className="bg-purple-50 rounded-xl p-3 ml-4 border-purple-200 border">
+                  <Clock className="w-6 h-6 text-purple-600" />
                 </div>
               </div>
             </CardContent>
@@ -292,11 +290,10 @@ export default function LeadDetails({ lead }: LeadDetailProps) {
 
           {/* Next Follow-up Card */}
           <Card
-            className={`bg-gradient-to-br ${
-              isOverdue
-                ? 'from-red-50 to-orange-50 border-red-200'
-                : 'from-orange-50 to-amber-50 border-orange-200'
-            } shadow-sm hover:shadow-md transition-shadow`}
+            className={`bg-gradient-to-br ${isOverdue
+              ? 'from-red-50 to-orange-50 border-red-200'
+              : 'from-orange-50 to-amber-50 border-orange-200'
+              } shadow-sm hover:shadow-md transition-shadow`}
           >
             <CardContent className="p-5">
               <div className="flex items-center justify-between">
@@ -306,33 +303,30 @@ export default function LeadDetails({ lead }: LeadDetailProps) {
                       Next Follow-up
                     </p>
                     {isOverdue && (
-                      <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full font-bold animate-pulse">
+                      <span className="bg-red-50 text-red-500 border-red-200 border text-xs px-2 py-1 rounded-full font-bold animate-pulse">
                         URGENT
                       </span>
                     )}
                   </div>
                   <p
-                    className={`text-lg font-bold leading-tight ${
-                      isOverdue ? 'text-red-900' : 'text-orange-900'
-                    }`}
+                    className={`text-lg font-bold leading-tight ${isOverdue ? 'text-red-900' : 'text-orange-900'
+                      }`}
                   >
                     {formatDateIN(lead.nextFollowUpAt)}
                   </p>
                   <p
-                    className={`text-xs mt-1 font-medium ${
-                      isOverdue ? 'text-red-600' : 'text-orange-600'
-                    }`}
+                    className={`text-xs mt-1 font-medium ${isOverdue ? 'text-red-600' : 'text-orange-600'
+                      }`}
                   >
                     {isOverdue ? 'Action required' : 'Scheduled'}
                   </p>
                 </div>
                 <div
-                  className={`rounded-xl p-3 ml-4 ${
-                    isOverdue ? 'bg-red-500' : 'bg-orange-500'
-                  }`}
+                  className={`rounded-xl p-3 ml-4 ${isOverdue ? 'bg-red-50' : 'bg-orange-50'
+                    } border-red-200 border`}
                 >
                   {isOverdue ? (
-                    <AlertCircle className="w-6 h-6 text-white" />
+                    <AlertCircle className="w-6 h-6 text-red-600" />
                   ) : (
                     <Calendar className="w-6 h-6 text-white" />
                   )}
@@ -574,7 +568,7 @@ export default function LeadDetails({ lead }: LeadDetailProps) {
               <AssignLeadDialog
                 leadId={lead.id}
                 currentAssignedTo={lead.assignedTo}
-                onAssignmentChange={() => {}}
+                onAssignmentChange={() => { }}
               />
             </CardContent>
           </Card>

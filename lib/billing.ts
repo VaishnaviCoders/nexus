@@ -1,7 +1,4 @@
-import prisma from "./db";
-import { getOrganizationId } from "./organization";
-
-
+import prisma from "@/lib/db";
 
 export async function getBillingSummary(organizationId:string) {
 

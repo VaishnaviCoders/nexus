@@ -23,7 +23,7 @@ async function ChildrenOverviewContent() {
             className="flex items-center space-x-4 p-3 rounded-lg border bg-background/50 hover:bg-background/80 transition-colors"
           >
             <Avatar className="h-12 w-12">
-              <AvatarImage src={child.profileImage || ''} alt={child.name} />
+              <AvatarImage src={child.profileImage || ''} alt={child.name} className='object-cover' />
               <AvatarFallback>
                 {child.name
                   .split(' ')
@@ -38,13 +38,12 @@ async function ChildrenOverviewContent() {
                 <p className="text-sm font-medium leading-none">{child.name}</p>
                 <Badge
                   variant="outline"
-                  className={`text-xs ${
-                    child.todayAttendance === 'PRESENT'
-                      ? 'bg-green-50 text-green-700 border-green-200 dark:bg-green-950 dark:text-green-300'
-                      : child.todayAttendance === 'ABSENT'
-                        ? 'bg-red-50 text-red-700 border-red-200 dark:bg-red-950 dark:text-red-300'
-                        : 'bg-gray-50 text-gray-700 border-gray-200 dark:bg-gray-950 dark:text-gray-300'
-                  }`}
+                  className={`text-xs ${child.todayAttendance === 'PRESENT'
+                    ? 'bg-green-50 text-green-700 border-green-200 dark:bg-green-950 dark:text-green-300'
+                    : child.todayAttendance === 'ABSENT'
+                      ? 'bg-red-50 text-red-700 border-red-200 dark:bg-red-950 dark:text-red-300'
+                      : 'bg-gray-50 text-gray-700 border-gray-200 dark:bg-gray-950 dark:text-gray-300'
+                    }`}
                 >
                   {child.todayAttendance === 'NOT_MARKED'
                     ? 'Not Marked'

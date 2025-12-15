@@ -30,6 +30,8 @@ import Link from 'next/link';
 import { getRecentAdminActivities } from '@/lib/data/admin/get-recent-activities';
 import { RecentNoticesCards } from '../notice/recent-notices-cards';
 import { getAdminNotices } from '@/lib/data/notice/get-admin-notices';
+import NotificationPanel from '../shared/notification-panel';
+import { Calendar } from 'lucide-react';
 
 const AdminDashboard = async () => {
   // Check academic year first before fetching any data
@@ -37,15 +39,42 @@ const AdminDashboard = async () => {
 
   if (!academicYear) {
     return (
-      <div className="p-6 flex flex-col items-center justify-center text-center space-y-4 ">
-        <h2 className="text-2xl font-semibold">Academic Year Not Set</h2>
-        <p className="text-muted-foreground max-w-md">
-          Please set the current academic year before using the dashboard
-          features.
-        </p>
-        <Button asChild>
-          <Link href="/dashboard/settings">Go to Settings</Link>
-        </Button>
+      <div className="p-6 flex flex-col items-center justify-center min-h-[80vh] text-center space-y-6">
+        <div className="rounded-full bg-orange-100 p-4">
+          <Calendar className="h-12 w-12 text-orange-600" />
+        </div>
+
+        <div className="space-y-2 max-w-md">
+          <h2 className="text-2xl font-semibold">Welcome! Let's Get Started</h2>
+          <p className="text-muted-foreground">
+            Before you can use the dashboard, we need to set up your current academic year.
+            This helps organize all your data properly.
+          </p>
+        </div>
+
+        <div className="flex gap-3">
+          {/* <Button asChild size="lg">
+            <Link href="/dashboard/settings/academic-year">
+              <Calendar className="mr-2 h-4 w-4" />
+              Set Up Academic Year
+            </Link>
+          </Button> */}
+          <Button variant="outline" asChild size="lg">
+            <Link href="/dashboard/settings">
+              Set Up Academic Year
+            </Link>
+          </Button>
+        </div>
+
+        <Card className="max-w-md">
+          <CardHeader>
+            <CardTitle className="text-sm">What is Academic Year?</CardTitle>
+          </CardHeader>
+          <CardContent className="text-sm text-muted-foreground text-left">
+            The academic year defines your school's session period (e.g., 2024-2025).
+            All fees, attendance, and reports are organized by academic year.
+          </CardContent>
+        </Card>
       </div>
     );
   }
@@ -88,6 +117,8 @@ const AdminDashboard = async () => {
         </div>
       </Card>
 
+
+      <NotificationPanel />
       <AdminDashboardCards />
 
       <div className="grid gap-4 sm:gap-6 grid-cols-1 xl:grid-cols-12">

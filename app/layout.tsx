@@ -97,7 +97,8 @@ function DeferredAnalytics() {
   return (
     <>
       <GoogleAnalytics gaId="G-Z9HW1EQ694" />
-      <GoogleTagManager gtmId="GTM-WNFTTCM4" />
+      <GoogleTagManager gtmId="GTM-5KFRG7HG" />
+      {/* GTM-WNFTTCM4 */}
     </>
   );
 }

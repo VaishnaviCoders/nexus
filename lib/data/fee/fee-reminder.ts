@@ -18,7 +18,7 @@ import { Resend } from 'resend';
 import { z } from 'zod';
 import { FriendlyReminderTemplate } from '@/components/templates/email-templates/fees/friendly-reminder';
 import { OverdueNoticeTemplate } from '@/components/templates/email-templates/fees/overdue-notice';
-import { sendWhatsAppMessage } from '@/lib/whatsapp';
+import { sendWhatsAppMessage } from '@/lib/notifications/providers/whatsapp';
 
 const reminderDataSchema = z.object({
   recipients: z.array(

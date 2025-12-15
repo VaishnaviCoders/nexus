@@ -95,7 +95,7 @@ async function ChildrenList({ parentId }: { parentId: string }) {
       </div>
 
       {/* Children Grid */}
-      <div className="grid gap-6 grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+      <div className="grid gap-6 grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-3">
         {data.students.map(({ student }) => (
           <div key={student.rollNumber} className="flex">
             <ChildCard child={student} />

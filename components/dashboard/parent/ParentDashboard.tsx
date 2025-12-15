@@ -2,6 +2,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardHeader,
   CardTitle,
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -9,12 +10,17 @@ import { Button } from '@/components/ui/button';
 import { CheckCircle, Users, Calendar, IndianRupee, Bell } from 'lucide-react';
 import Link from 'next/link';
 import { ParentDashboardStats } from '@/components/dashboard/parent/parent-dashboard-stats-cards';
-import { NoticesSummaryCard } from '@/components/dashboard/parent/notice-summary-card';
 import { AttendanceSummaryCard } from '@/components/dashboard/parent/attendance-summary-card';
 import { FeesSummaryCard } from '@/components/dashboard/parent/fees-summary-card';
 import { ChildrenOverviewCard } from '@/components/dashboard/parent/children-overview-card';
+import { Suspense } from 'react';
+import { RecentNoticesCards } from '../notice/recent-notices-cards';
+import { getNoticesSummary } from '@/lib/data/parent/getParent-dashboard-stats';
 
-export default function ParentDashboard() {
+export default async function ParentDashboard() {
+  const notices = await getNoticesSummary();
+
+
   return (
     <div className="">
       <div className="space-y-6">
@@ -73,7 +79,9 @@ export default function ParentDashboard() {
           {/* Right Column - Sidebar */}
           <div className="lg:col-span-4 space-y-6">
             <FeesSummaryCard />
-            <NoticesSummaryCard />
+            <Suspense fallback={<EventsSkeleton />}>
+              <RecentNoticesCards recentNotices={notices} />
+            </Suspense>
           </div>
         </div>
 
@@ -111,5 +119,23 @@ export default function ParentDashboard() {
         </Card>
       </div>
     </div>
+  );
+}
+
+function EventsSkeleton() {
+  return (
+    <Card className="animate-pulse">
+      <CardHeader>
+        <div className="h-5 bg-muted rounded w-32"></div>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        {Array.from({ length: 3 }).map((_, i) => (
+          <div key={i} className="space-y-2">
+            <div className="h-4 bg-muted rounded w-full"></div>
+            <div className="h-3 bg-muted rounded w-2/3"></div>
+          </div>
+        ))}
+      </CardContent>
+    </Card>
   );
 }

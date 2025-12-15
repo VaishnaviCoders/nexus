@@ -22,7 +22,8 @@
 21. Notification Inbox Change UI
 22. Sidebar UI : Search Option
 23. Fix Dialog box : Fee Reminder, Fee Details
-
+24. Attendance Mark : Copy Privios is not working
+ 
 
 # What Owner Says
 As a software developer, I've always been passionate about building things that make people's lives easier. There's something incredibly rewarding about knowing that the code I write can help someone accomplish their daily tasks more efficiently.

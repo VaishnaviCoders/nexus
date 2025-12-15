@@ -80,7 +80,6 @@
 ❌ Leave management
 ❌ Salary tracking
 ❌ Voice assistant (Alexa)
-❌ Advanced CRM features
 ❌ Certificate generator
 
 ---
@@ -202,6 +201,8 @@ One cloud platform where:
 **Safety**: Encourages honest feedback without fear
 **Resolution**: Admin tracks, resolves, updates status
 **Trust building**: Shows institution cares about accountability
+
+### 8. A
 
 ---
 

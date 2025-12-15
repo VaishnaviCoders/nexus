@@ -30,6 +30,8 @@ import { getOrganizationId } from '@/lib/organization';
 import { redis } from '@/lib/redis';
 import { SupportFormData } from '@/components/websiteComp/SupportPopup';
 import { getCurrentAcademicYearId } from '@/lib/academicYear';
+import { NotificationEngine } from '@/lib/notifications/engine';
+import { formatDateIN } from '@/lib/utils';
 
 export const syncUserWithOrg = async () => {
   const { orgId, orgRole, orgSlug } = await auth();
@@ -250,6 +252,13 @@ export async function markAttendance(
     where: { id: sectionId, organizationId },
     select: {
       id: true,
+      name: true,
+      grade: {
+        select: { grade: true },
+      },
+      organization: {
+        select: { name: true },
+      },
       students: {
         select: { id: true },
       },
@@ -296,11 +305,109 @@ export async function markAttendance(
     },
   }));
 
-  const data = await prisma.$transaction(
+  // 1. Perform DB updates first (Critical path)
+  await prisma.$transaction(
     attendanceUpdates.map((updateData) =>
       prisma.studentAttendance.upsert(updateData)
     )
   );
+
+  // 2. Send Notifications for Absent Students (Async, side-effect)
+  try {
+    const absentRecords = attendanceData.filter(
+      (record) => record.status === 'ABSENT'
+    );
+
+    if (absentRecords.length > 0) {
+      const schoolName = section.organization.name || 'School';
+      const gradeName = section.grade.grade;
+      const sectionName = section.name;
+      
+
+      // Fetch student details for absent students
+      const absentStudents = await prisma.student.findMany({
+        where: {
+          id: { in: absentRecords.map((r) => r.studentId) },
+          organizationId,
+        },
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+          email: true,             // Added
+          phoneNumber: true,       // Added
+          whatsAppNumber: true,    // Added
+          userId: true,            // Added
+          parents: {
+            select: {
+              parent: {
+                select: {
+                  id: true,
+                  userId: true,
+                  email: true,
+                  phoneNumber: true,
+                  whatsAppNumber: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      // Process notifications
+      const notificationPromises = absentStudents.map(async (student) => {
+        // Construct recipients list from parents AND student
+        const recipients = [
+            // Add parents
+            ...student.parents.map(({ parent }) => ({
+            userId: parent.userId || undefined,
+            parentId: parent.id,
+            email: parent.email,
+            phone: parent.phoneNumber,
+            whatsappNumber: parent.whatsAppNumber,
+          })),
+          // Add student
+          {
+            userId: student.userId,
+            studentId: student.id,
+            email: student.email,
+            phone: student.phoneNumber,
+            whatsappNumber: student.whatsAppNumber
+          }
+        ].filter(
+            (r) =>
+              r.email || (r.phone && r.phone.length >= 10) || r.whatsappNumber || r.userId
+          );
+
+        if (recipients.length === 0) return;
+
+        const studentName = [student.firstName, student.lastName]
+          .filter(Boolean)
+          .join(' ');
+
+        await NotificationEngine.send({
+          type: 'ATTENDANCE_ALERT',
+          priority: 'HIGH',
+          recipients,
+          templateId: 'STUDENT_ABSENT',
+          variables: {
+            studentName,
+            date: formatDateIN(attendanceDate),
+            schoolName,
+            grade: gradeName,
+            section: sectionName,
+          },
+          organizationId,
+        });
+      });
+
+      // Execute all notifications
+      await Promise.allSettled(notificationPromises);
+    }
+  } catch (error) {
+    // Log error but don't fail the request since attendance is already marked
+    console.error('Failed to send attendance notifications:', error);
+  }
 }
 
 export async function getPreviousDayAttendance(

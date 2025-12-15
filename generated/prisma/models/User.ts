@@ -248,6 +248,7 @@ export type UserWhereInput = {
   leadActivity?: Prisma.LeadActivityListRelationFilter
   assignedLeads?: Prisma.LeadListRelationFilter
   createdLeads?: Prisma.LeadListRelationFilter
+  deviceTokens?: Prisma.DeviceTokenListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -273,6 +274,7 @@ export type UserOrderByWithRelationInput = {
   leadActivity?: Prisma.LeadActivityOrderByRelationAggregateInput
   assignedLeads?: Prisma.LeadOrderByRelationAggregateInput
   createdLeads?: Prisma.LeadOrderByRelationAggregateInput
+  deviceTokens?: Prisma.DeviceTokenOrderByRelationAggregateInput
   _relevance?: Prisma.UserOrderByRelevanceInput
 }
 
@@ -302,6 +304,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   leadActivity?: Prisma.LeadActivityListRelationFilter
   assignedLeads?: Prisma.LeadListRelationFilter
   createdLeads?: Prisma.LeadListRelationFilter
+  deviceTokens?: Prisma.DeviceTokenListRelationFilter
 }, "id" | "email" | "clerkId">
 
 export type UserOrderByWithAggregationInput = {
@@ -362,6 +365,7 @@ export type UserCreateInput = {
   leadActivity?: Prisma.LeadActivityCreateNestedManyWithoutPerformedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutAssignedToInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
+  deviceTokens?: Prisma.DeviceTokenCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -386,6 +390,7 @@ export type UserUncheckedCreateInput = {
   leadActivity?: Prisma.LeadActivityUncheckedCreateNestedManyWithoutPerformedByInput
   assignedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutAssignedToInput
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
+  deviceTokens?: Prisma.DeviceTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -410,6 +415,7 @@ export type UserUpdateInput = {
   leadActivity?: Prisma.LeadActivityUpdateManyWithoutPerformedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutAssignedToNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
+  deviceTokens?: Prisma.DeviceTokenUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -434,6 +440,7 @@ export type UserUncheckedUpdateInput = {
   leadActivity?: Prisma.LeadActivityUncheckedUpdateManyWithoutPerformedByNestedInput
   assignedLeads?: Prisma.LeadUncheckedUpdateManyWithoutAssignedToNestedInput
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
+  deviceTokens?: Prisma.DeviceTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -597,6 +604,20 @@ export type EnumRoleFieldUpdateOperationsInput = {
   set?: $Enums.Role
 }
 
+export type UserCreateNestedOneWithoutDeviceTokensInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutDeviceTokensInput, Prisma.UserUncheckedCreateWithoutDeviceTokensInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutDeviceTokensInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutDeviceTokensNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutDeviceTokensInput, Prisma.UserUncheckedCreateWithoutDeviceTokensInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutDeviceTokensInput
+  upsert?: Prisma.UserUpsertWithoutDeviceTokensInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutDeviceTokensInput, Prisma.UserUpdateWithoutDeviceTokensInput>, Prisma.UserUncheckedUpdateWithoutDeviceTokensInput>
+}
+
 export type UserCreateNestedOneWithoutStudentInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutStudentInput, Prisma.UserUncheckedCreateWithoutStudentInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutStudentInput
@@ -754,6 +775,7 @@ export type UserCreateWithoutOrganizationInput = {
   leadActivity?: Prisma.LeadActivityCreateNestedManyWithoutPerformedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutAssignedToInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
+  deviceTokens?: Prisma.DeviceTokenCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutOrganizationInput = {
@@ -777,6 +799,7 @@ export type UserUncheckedCreateWithoutOrganizationInput = {
   leadActivity?: Prisma.LeadActivityUncheckedCreateNestedManyWithoutPerformedByInput
   assignedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutAssignedToInput
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
+  deviceTokens?: Prisma.DeviceTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutOrganizationInput = {
@@ -823,6 +846,118 @@ export type UserScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
 }
 
+export type UserCreateWithoutDeviceTokensInput = {
+  id?: string
+  firstName: string
+  lastName: string
+  email: string
+  password?: string | null
+  profileImage: string
+  role?: $Enums.Role
+  clerkId: string
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  organization?: Prisma.OrganizationCreateNestedOneWithoutUsersInput
+  teacher?: Prisma.TeacherCreateNestedOneWithoutUserInput
+  student?: Prisma.StudentCreateNestedOneWithoutUserInput
+  parent?: Prisma.ParentCreateNestedOneWithoutUserInput
+  feePayment?: Prisma.FeePaymentCreateNestedManyWithoutPayerInput
+  notificationLog?: Prisma.NotificationLogCreateNestedManyWithoutUserInput
+  leave?: Prisma.LeaveCreateNestedManyWithoutAppliedByInput
+  leadActivity?: Prisma.LeadActivityCreateNestedManyWithoutPerformedByInput
+  assignedLeads?: Prisma.LeadCreateNestedManyWithoutAssignedToInput
+  createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserUncheckedCreateWithoutDeviceTokensInput = {
+  id?: string
+  firstName: string
+  lastName: string
+  email: string
+  password?: string | null
+  profileImage: string
+  role?: $Enums.Role
+  clerkId: string
+  isActive?: boolean
+  organizationId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  teacher?: Prisma.TeacherUncheckedCreateNestedOneWithoutUserInput
+  student?: Prisma.StudentUncheckedCreateNestedOneWithoutUserInput
+  parent?: Prisma.ParentUncheckedCreateNestedOneWithoutUserInput
+  feePayment?: Prisma.FeePaymentUncheckedCreateNestedManyWithoutPayerInput
+  notificationLog?: Prisma.NotificationLogUncheckedCreateNestedManyWithoutUserInput
+  leave?: Prisma.LeaveUncheckedCreateNestedManyWithoutAppliedByInput
+  leadActivity?: Prisma.LeadActivityUncheckedCreateNestedManyWithoutPerformedByInput
+  assignedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutAssignedToInput
+  createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserCreateOrConnectWithoutDeviceTokensInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutDeviceTokensInput, Prisma.UserUncheckedCreateWithoutDeviceTokensInput>
+}
+
+export type UserUpsertWithoutDeviceTokensInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutDeviceTokensInput, Prisma.UserUncheckedUpdateWithoutDeviceTokensInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutDeviceTokensInput, Prisma.UserUncheckedCreateWithoutDeviceTokensInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutDeviceTokensInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutDeviceTokensInput, Prisma.UserUncheckedUpdateWithoutDeviceTokensInput>
+}
+
+export type UserUpdateWithoutDeviceTokensInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileImage?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  clerkId?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  organization?: Prisma.OrganizationUpdateOneWithoutUsersNestedInput
+  teacher?: Prisma.TeacherUpdateOneWithoutUserNestedInput
+  student?: Prisma.StudentUpdateOneWithoutUserNestedInput
+  parent?: Prisma.ParentUpdateOneWithoutUserNestedInput
+  feePayment?: Prisma.FeePaymentUpdateManyWithoutPayerNestedInput
+  notificationLog?: Prisma.NotificationLogUpdateManyWithoutUserNestedInput
+  leave?: Prisma.LeaveUpdateManyWithoutAppliedByNestedInput
+  leadActivity?: Prisma.LeadActivityUpdateManyWithoutPerformedByNestedInput
+  assignedLeads?: Prisma.LeadUpdateManyWithoutAssignedToNestedInput
+  createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutDeviceTokensInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileImage?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  clerkId?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  teacher?: Prisma.TeacherUncheckedUpdateOneWithoutUserNestedInput
+  student?: Prisma.StudentUncheckedUpdateOneWithoutUserNestedInput
+  parent?: Prisma.ParentUncheckedUpdateOneWithoutUserNestedInput
+  feePayment?: Prisma.FeePaymentUncheckedUpdateManyWithoutPayerNestedInput
+  notificationLog?: Prisma.NotificationLogUncheckedUpdateManyWithoutUserNestedInput
+  leave?: Prisma.LeaveUncheckedUpdateManyWithoutAppliedByNestedInput
+  leadActivity?: Prisma.LeadActivityUncheckedUpdateManyWithoutPerformedByNestedInput
+  assignedLeads?: Prisma.LeadUncheckedUpdateManyWithoutAssignedToNestedInput
+  createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
+}
+
 export type UserCreateWithoutStudentInput = {
   id?: string
   firstName: string
@@ -844,6 +979,7 @@ export type UserCreateWithoutStudentInput = {
   leadActivity?: Prisma.LeadActivityCreateNestedManyWithoutPerformedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutAssignedToInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
+  deviceTokens?: Prisma.DeviceTokenCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutStudentInput = {
@@ -867,6 +1003,7 @@ export type UserUncheckedCreateWithoutStudentInput = {
   leadActivity?: Prisma.LeadActivityUncheckedCreateNestedManyWithoutPerformedByInput
   assignedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutAssignedToInput
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
+  deviceTokens?: Prisma.DeviceTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutStudentInput = {
@@ -906,6 +1043,7 @@ export type UserUpdateWithoutStudentInput = {
   leadActivity?: Prisma.LeadActivityUpdateManyWithoutPerformedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutAssignedToNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
+  deviceTokens?: Prisma.DeviceTokenUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutStudentInput = {
@@ -929,6 +1067,7 @@ export type UserUncheckedUpdateWithoutStudentInput = {
   leadActivity?: Prisma.LeadActivityUncheckedUpdateManyWithoutPerformedByNestedInput
   assignedLeads?: Prisma.LeadUncheckedUpdateManyWithoutAssignedToNestedInput
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
+  deviceTokens?: Prisma.DeviceTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutParentInput = {
@@ -952,6 +1091,7 @@ export type UserCreateWithoutParentInput = {
   leadActivity?: Prisma.LeadActivityCreateNestedManyWithoutPerformedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutAssignedToInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
+  deviceTokens?: Prisma.DeviceTokenCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutParentInput = {
@@ -975,6 +1115,7 @@ export type UserUncheckedCreateWithoutParentInput = {
   leadActivity?: Prisma.LeadActivityUncheckedCreateNestedManyWithoutPerformedByInput
   assignedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutAssignedToInput
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
+  deviceTokens?: Prisma.DeviceTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutParentInput = {
@@ -1014,6 +1155,7 @@ export type UserUpdateWithoutParentInput = {
   leadActivity?: Prisma.LeadActivityUpdateManyWithoutPerformedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutAssignedToNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
+  deviceTokens?: Prisma.DeviceTokenUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutParentInput = {
@@ -1037,6 +1179,7 @@ export type UserUncheckedUpdateWithoutParentInput = {
   leadActivity?: Prisma.LeadActivityUncheckedUpdateManyWithoutPerformedByNestedInput
   assignedLeads?: Prisma.LeadUncheckedUpdateManyWithoutAssignedToNestedInput
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
+  deviceTokens?: Prisma.DeviceTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutTeacherInput = {
@@ -1060,6 +1203,7 @@ export type UserCreateWithoutTeacherInput = {
   leadActivity?: Prisma.LeadActivityCreateNestedManyWithoutPerformedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutAssignedToInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
+  deviceTokens?: Prisma.DeviceTokenCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTeacherInput = {
@@ -1083,6 +1227,7 @@ export type UserUncheckedCreateWithoutTeacherInput = {
   leadActivity?: Prisma.LeadActivityUncheckedCreateNestedManyWithoutPerformedByInput
   assignedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutAssignedToInput
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
+  deviceTokens?: Prisma.DeviceTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTeacherInput = {
@@ -1122,6 +1267,7 @@ export type UserUpdateWithoutTeacherInput = {
   leadActivity?: Prisma.LeadActivityUpdateManyWithoutPerformedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutAssignedToNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
+  deviceTokens?: Prisma.DeviceTokenUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTeacherInput = {
@@ -1145,6 +1291,7 @@ export type UserUncheckedUpdateWithoutTeacherInput = {
   leadActivity?: Prisma.LeadActivityUncheckedUpdateManyWithoutPerformedByNestedInput
   assignedLeads?: Prisma.LeadUncheckedUpdateManyWithoutAssignedToNestedInput
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
+  deviceTokens?: Prisma.DeviceTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutFeePaymentInput = {
@@ -1168,6 +1315,7 @@ export type UserCreateWithoutFeePaymentInput = {
   leadActivity?: Prisma.LeadActivityCreateNestedManyWithoutPerformedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutAssignedToInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
+  deviceTokens?: Prisma.DeviceTokenCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutFeePaymentInput = {
@@ -1191,6 +1339,7 @@ export type UserUncheckedCreateWithoutFeePaymentInput = {
   leadActivity?: Prisma.LeadActivityUncheckedCreateNestedManyWithoutPerformedByInput
   assignedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutAssignedToInput
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
+  deviceTokens?: Prisma.DeviceTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutFeePaymentInput = {
@@ -1230,6 +1379,7 @@ export type UserUpdateWithoutFeePaymentInput = {
   leadActivity?: Prisma.LeadActivityUpdateManyWithoutPerformedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutAssignedToNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
+  deviceTokens?: Prisma.DeviceTokenUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFeePaymentInput = {
@@ -1253,6 +1403,7 @@ export type UserUncheckedUpdateWithoutFeePaymentInput = {
   leadActivity?: Prisma.LeadActivityUncheckedUpdateManyWithoutPerformedByNestedInput
   assignedLeads?: Prisma.LeadUncheckedUpdateManyWithoutAssignedToNestedInput
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
+  deviceTokens?: Prisma.DeviceTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutNotificationLogInput = {
@@ -1276,6 +1427,7 @@ export type UserCreateWithoutNotificationLogInput = {
   leadActivity?: Prisma.LeadActivityCreateNestedManyWithoutPerformedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutAssignedToInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
+  deviceTokens?: Prisma.DeviceTokenCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutNotificationLogInput = {
@@ -1299,6 +1451,7 @@ export type UserUncheckedCreateWithoutNotificationLogInput = {
   leadActivity?: Prisma.LeadActivityUncheckedCreateNestedManyWithoutPerformedByInput
   assignedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutAssignedToInput
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
+  deviceTokens?: Prisma.DeviceTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutNotificationLogInput = {
@@ -1338,6 +1491,7 @@ export type UserUpdateWithoutNotificationLogInput = {
   leadActivity?: Prisma.LeadActivityUpdateManyWithoutPerformedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutAssignedToNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
+  deviceTokens?: Prisma.DeviceTokenUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNotificationLogInput = {
@@ -1361,6 +1515,7 @@ export type UserUncheckedUpdateWithoutNotificationLogInput = {
   leadActivity?: Prisma.LeadActivityUncheckedUpdateManyWithoutPerformedByNestedInput
   assignedLeads?: Prisma.LeadUncheckedUpdateManyWithoutAssignedToNestedInput
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
+  deviceTokens?: Prisma.DeviceTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutLeaveInput = {
@@ -1384,6 +1539,7 @@ export type UserCreateWithoutLeaveInput = {
   leadActivity?: Prisma.LeadActivityCreateNestedManyWithoutPerformedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutAssignedToInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
+  deviceTokens?: Prisma.DeviceTokenCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutLeaveInput = {
@@ -1407,6 +1563,7 @@ export type UserUncheckedCreateWithoutLeaveInput = {
   leadActivity?: Prisma.LeadActivityUncheckedCreateNestedManyWithoutPerformedByInput
   assignedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutAssignedToInput
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
+  deviceTokens?: Prisma.DeviceTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutLeaveInput = {
@@ -1446,6 +1603,7 @@ export type UserUpdateWithoutLeaveInput = {
   leadActivity?: Prisma.LeadActivityUpdateManyWithoutPerformedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutAssignedToNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
+  deviceTokens?: Prisma.DeviceTokenUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutLeaveInput = {
@@ -1469,6 +1627,7 @@ export type UserUncheckedUpdateWithoutLeaveInput = {
   leadActivity?: Prisma.LeadActivityUncheckedUpdateManyWithoutPerformedByNestedInput
   assignedLeads?: Prisma.LeadUncheckedUpdateManyWithoutAssignedToNestedInput
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
+  deviceTokens?: Prisma.DeviceTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAssignedLeadsInput = {
@@ -1492,6 +1651,7 @@ export type UserCreateWithoutAssignedLeadsInput = {
   leave?: Prisma.LeaveCreateNestedManyWithoutAppliedByInput
   leadActivity?: Prisma.LeadActivityCreateNestedManyWithoutPerformedByInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
+  deviceTokens?: Prisma.DeviceTokenCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAssignedLeadsInput = {
@@ -1515,6 +1675,7 @@ export type UserUncheckedCreateWithoutAssignedLeadsInput = {
   leave?: Prisma.LeaveUncheckedCreateNestedManyWithoutAppliedByInput
   leadActivity?: Prisma.LeadActivityUncheckedCreateNestedManyWithoutPerformedByInput
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
+  deviceTokens?: Prisma.DeviceTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAssignedLeadsInput = {
@@ -1543,6 +1704,7 @@ export type UserCreateWithoutCreatedLeadsInput = {
   leave?: Prisma.LeaveCreateNestedManyWithoutAppliedByInput
   leadActivity?: Prisma.LeadActivityCreateNestedManyWithoutPerformedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutAssignedToInput
+  deviceTokens?: Prisma.DeviceTokenCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCreatedLeadsInput = {
@@ -1566,6 +1728,7 @@ export type UserUncheckedCreateWithoutCreatedLeadsInput = {
   leave?: Prisma.LeaveUncheckedCreateNestedManyWithoutAppliedByInput
   leadActivity?: Prisma.LeadActivityUncheckedCreateNestedManyWithoutPerformedByInput
   assignedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutAssignedToInput
+  deviceTokens?: Prisma.DeviceTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCreatedLeadsInput = {
@@ -1605,6 +1768,7 @@ export type UserUpdateWithoutAssignedLeadsInput = {
   leave?: Prisma.LeaveUpdateManyWithoutAppliedByNestedInput
   leadActivity?: Prisma.LeadActivityUpdateManyWithoutPerformedByNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
+  deviceTokens?: Prisma.DeviceTokenUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAssignedLeadsInput = {
@@ -1628,6 +1792,7 @@ export type UserUncheckedUpdateWithoutAssignedLeadsInput = {
   leave?: Prisma.LeaveUncheckedUpdateManyWithoutAppliedByNestedInput
   leadActivity?: Prisma.LeadActivityUncheckedUpdateManyWithoutPerformedByNestedInput
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
+  deviceTokens?: Prisma.DeviceTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutCreatedLeadsInput = {
@@ -1662,6 +1827,7 @@ export type UserUpdateWithoutCreatedLeadsInput = {
   leave?: Prisma.LeaveUpdateManyWithoutAppliedByNestedInput
   leadActivity?: Prisma.LeadActivityUpdateManyWithoutPerformedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutAssignedToNestedInput
+  deviceTokens?: Prisma.DeviceTokenUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCreatedLeadsInput = {
@@ -1685,6 +1851,7 @@ export type UserUncheckedUpdateWithoutCreatedLeadsInput = {
   leave?: Prisma.LeaveUncheckedUpdateManyWithoutAppliedByNestedInput
   leadActivity?: Prisma.LeadActivityUncheckedUpdateManyWithoutPerformedByNestedInput
   assignedLeads?: Prisma.LeadUncheckedUpdateManyWithoutAssignedToNestedInput
+  deviceTokens?: Prisma.DeviceTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutLeadActivityInput = {
@@ -1708,6 +1875,7 @@ export type UserCreateWithoutLeadActivityInput = {
   leave?: Prisma.LeaveCreateNestedManyWithoutAppliedByInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutAssignedToInput
   createdLeads?: Prisma.LeadCreateNestedManyWithoutCreatedByInput
+  deviceTokens?: Prisma.DeviceTokenCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutLeadActivityInput = {
@@ -1731,6 +1899,7 @@ export type UserUncheckedCreateWithoutLeadActivityInput = {
   leave?: Prisma.LeaveUncheckedCreateNestedManyWithoutAppliedByInput
   assignedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutAssignedToInput
   createdLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutCreatedByInput
+  deviceTokens?: Prisma.DeviceTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutLeadActivityInput = {
@@ -1770,6 +1939,7 @@ export type UserUpdateWithoutLeadActivityInput = {
   leave?: Prisma.LeaveUpdateManyWithoutAppliedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutAssignedToNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
+  deviceTokens?: Prisma.DeviceTokenUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutLeadActivityInput = {
@@ -1793,6 +1963,7 @@ export type UserUncheckedUpdateWithoutLeadActivityInput = {
   leave?: Prisma.LeaveUncheckedUpdateManyWithoutAppliedByNestedInput
   assignedLeads?: Prisma.LeadUncheckedUpdateManyWithoutAssignedToNestedInput
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
+  deviceTokens?: Prisma.DeviceTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyOrganizationInput = {
@@ -1830,6 +2001,7 @@ export type UserUpdateWithoutOrganizationInput = {
   leadActivity?: Prisma.LeadActivityUpdateManyWithoutPerformedByNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutAssignedToNestedInput
   createdLeads?: Prisma.LeadUpdateManyWithoutCreatedByNestedInput
+  deviceTokens?: Prisma.DeviceTokenUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutOrganizationInput = {
@@ -1853,6 +2025,7 @@ export type UserUncheckedUpdateWithoutOrganizationInput = {
   leadActivity?: Prisma.LeadActivityUncheckedUpdateManyWithoutPerformedByNestedInput
   assignedLeads?: Prisma.LeadUncheckedUpdateManyWithoutAssignedToNestedInput
   createdLeads?: Prisma.LeadUncheckedUpdateManyWithoutCreatedByNestedInput
+  deviceTokens?: Prisma.DeviceTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateManyWithoutOrganizationInput = {
@@ -1881,6 +2054,7 @@ export type UserCountOutputType = {
   leadActivity: number
   assignedLeads: number
   createdLeads: number
+  deviceTokens: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1890,6 +2064,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   leadActivity?: boolean | UserCountOutputTypeCountLeadActivityArgs
   assignedLeads?: boolean | UserCountOutputTypeCountAssignedLeadsArgs
   createdLeads?: boolean | UserCountOutputTypeCountCreatedLeadsArgs
+  deviceTokens?: boolean | UserCountOutputTypeCountDeviceTokensArgs
 }
 
 /**
@@ -1944,6 +2119,13 @@ export type UserCountOutputTypeCountCreatedLeadsArgs<ExtArgs extends runtime.Typ
   where?: Prisma.LeadWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountDeviceTokensArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DeviceTokenWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1968,6 +2150,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   leadActivity?: boolean | Prisma.User$leadActivityArgs<ExtArgs>
   assignedLeads?: boolean | Prisma.User$assignedLeadsArgs<ExtArgs>
   createdLeads?: boolean | Prisma.User$createdLeadsArgs<ExtArgs>
+  deviceTokens?: boolean | Prisma.User$deviceTokensArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -2030,6 +2213,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   leadActivity?: boolean | Prisma.User$leadActivityArgs<ExtArgs>
   assignedLeads?: boolean | Prisma.User$assignedLeadsArgs<ExtArgs>
   createdLeads?: boolean | Prisma.User$createdLeadsArgs<ExtArgs>
+  deviceTokens?: boolean | Prisma.User$deviceTokensArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2052,6 +2236,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     leadActivity: Prisma.$LeadActivityPayload<ExtArgs>[]
     assignedLeads: Prisma.$LeadPayload<ExtArgs>[]
     createdLeads: Prisma.$LeadPayload<ExtArgs>[]
+    deviceTokens: Prisma.$DeviceTokenPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2470,6 +2655,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   leadActivity<T extends Prisma.User$leadActivityArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$leadActivityArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeadActivityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   assignedLeads<T extends Prisma.User$assignedLeadsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$assignedLeadsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   createdLeads<T extends Prisma.User$createdLeadsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$createdLeadsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  deviceTokens<T extends Prisma.User$deviceTokensArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$deviceTokensArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DeviceTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3124,6 +3310,30 @@ export type User$createdLeadsArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.LeadScalarFieldEnum | Prisma.LeadScalarFieldEnum[]
+}
+
+/**
+ * User.deviceTokens
+ */
+export type User$deviceTokensArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DeviceToken
+   */
+  select?: Prisma.DeviceTokenSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DeviceToken
+   */
+  omit?: Prisma.DeviceTokenOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DeviceTokenInclude<ExtArgs> | null
+  where?: Prisma.DeviceTokenWhereInput
+  orderBy?: Prisma.DeviceTokenOrderByWithRelationInput | Prisma.DeviceTokenOrderByWithRelationInput[]
+  cursor?: Prisma.DeviceTokenWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DeviceTokenScalarFieldEnum | Prisma.DeviceTokenScalarFieldEnum[]
 }
 
 /**

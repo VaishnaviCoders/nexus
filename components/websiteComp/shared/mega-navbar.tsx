@@ -323,9 +323,8 @@ export function MegaNavbar() {
                 <button className="flex items-center gap-1 px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-accent/50">
                   {item}
                   <ChevronDown
-                    className={`w-3.5 h-3.5 transition-transform ${
-                      activeMenu === item ? 'rotate-180' : ''
-                    }`}
+                    className={`w-3.5 h-3.5 transition-transform ${activeMenu === item ? 'rotate-180' : ''
+                      }`}
                   />
                 </button>
 
@@ -401,7 +400,7 @@ export function MegaNavbar() {
                   Dashboard
                 </Button>
               </Link>
-              <UserButton afterSignOutUrl="/" />
+              <UserButton />
             </SignedIn>
           </div>
         </div>
@@ -415,7 +414,7 @@ export function MegaNavbar() {
 
           <div className="flex items-center gap-2">
             <SignedIn>
-              <UserButton afterSignOutUrl="/" />
+              <UserButton />
             </SignedIn>
             <button
               onClick={() => {
@@ -454,9 +453,8 @@ export function MegaNavbar() {
                 >
                   {item}
                   <ChevronDown
-                    className={`w-4 h-4 transition-transform ${
-                      activeMenu === item ? 'rotate-180' : ''
-                    }`}
+                    className={`w-4 h-4 transition-transform ${activeMenu === item ? 'rotate-180' : ''
+                      }`}
                   />
                 </button>
 
