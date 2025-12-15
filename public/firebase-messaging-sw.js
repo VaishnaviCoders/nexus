@@ -4,15 +4,17 @@ importScripts(
 );
 
 const firebaseConfig = {
-  apiKey: process.env.FIREBASE_API_KEY,
-  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.FIREBASE_PROJECT_ID,
-  storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.FIREBASE_APP_ID,
-  measurementId: process.env.FIREBASE_MEASUREMENT_ID
+  apiKey: "AIzaSyDUnbPMzL1Fysq6w9TihS2w4QLQLv8BMYo",
+  authDomain: "shiksha-cloud.firebaseapp.com",
+  projectId: "shiksha-cloud",
+  storageBucket: "shiksha-cloud.firebasestorage.app",
+  messagingSenderId: "388761801362",
+  appId: "1:388761801362:web:5543ca1c497b2813374c4b",
+  measurementId: "G-WEDDVDTSG9"
 };
+
 firebase.initializeApp(firebaseConfig);
+
 
 const messaging = firebase.messaging();
 
