@@ -1,5 +1,7 @@
 "use client";
 
+import { useUser } from "@clerk/nextjs";
+
 import { useEffect, useRef, useState } from "react";
 import { getToken, onMessage, Unsubscribe } from "firebase/messaging";
 import { fetchToken, messaging } from "@/lib/firebase";
@@ -32,6 +34,7 @@ async function getNotificationPermissionAndToken() {
 }
 
 const useFcmToken = () => {
+    const { isSignedIn } = useUser();
     const router = useRouter(); // Initialize the router for navigation.
     const [notificationPermissionStatus, setNotificationPermissionStatus] =
         useState<NotificationPermission | null>(null); // State to store the notification permission status.
@@ -82,23 +85,27 @@ const useFcmToken = () => {
         setToken(token);
 
         // Save token to server
-        const result = await saveDeviceToken(token);
+        if (isSignedIn) {
+            const result = await saveDeviceToken(token);
 
-        if (result.success) {
-            console.log(`✅ Device token saved: ${token}`);
-        } else {
-            console.error(`❌ Failed to save device token: ${result.error}`);
+            if (result.success) {
+                console.log(`✅ Device token saved: ${token}`);
+            } else {
+                console.error(`❌ Failed to save device token: ${result.error}`);
+            }
         }
 
         isLoading.current = false;
     };
+
+
 
     useEffect(() => {
         // Step 8: Initialize token loading when the component mounts.
         if ("Notification" in window) {
             loadToken();
         }
-    }, []);
+    }, [isSignedIn]);
 
     useEffect(() => {
         const setupListener = async () => {
