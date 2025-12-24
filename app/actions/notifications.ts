@@ -5,7 +5,7 @@ import { getCurrentUserId } from "@/lib/user";
 import { revalidatePath } from "next/cache";
 
 export async function getUserNotifications() {
-  const userId  = await getCurrentUserId();
+  const userId  =await getCurrentUserId()
 
   // We need to match Clerk userId to our User model to get the internal ID if needed, 
   // OR if we stored Clerk ID in NotificationLog.
@@ -24,13 +24,16 @@ export async function getUserNotifications() {
     take: 50, // Limit to recent 50
     select: {
       id: true,
-    //   title: true,
-    //   message: true,
+      title: true,
+      message: true,
       notificationType: true,
       channel: true,
       status: true,
       sentAt: true,
-    //   isRead: true,
+      cost: true,
+      isRead: true,
+      student:true,
+      parent:true,
       // We don't store the *content* directly in NotificationLog typically, 
       // but the model might have it?
       // Checking schema... NotificationLog has `errorMessage`, but not `body`.

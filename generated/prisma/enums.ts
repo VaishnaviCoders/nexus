@@ -201,7 +201,7 @@ export const NotificationType = {
   ATTENDANCE_ALERT: 'ATTENDANCE_ALERT',
   DOCUMENT_REQUEST: 'DOCUMENT_REQUEST',
   GENERAL_ANNOUNCEMENT: 'GENERAL_ANNOUNCEMENT',
-  Exam: 'Exam'
+  EXAM: 'EXAM'
 } as const
 
 export type NotificationType = (typeof NotificationType)[keyof typeof NotificationType]
@@ -230,7 +230,10 @@ export type NotificationStatus = (typeof NotificationStatus)[keyof typeof Notifi
 export const scheduledJobType = {
   FEE_REMINDER: 'FEE_REMINDER',
   NOTICE: 'NOTICE',
-  EXAM: 'EXAM'
+  EXAM: 'EXAM',
+  ATTENDANCE_ALERT: 'ATTENDANCE_ALERT',
+  DOCUMENT_REQUEST: 'DOCUMENT_REQUEST',
+  GENERAL_ANNOUNCEMENT: 'GENERAL_ANNOUNCEMENT'
 } as const
 
 export type scheduledJobType = (typeof scheduledJobType)[keyof typeof scheduledJobType]

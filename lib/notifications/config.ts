@@ -1,7 +1,7 @@
 // lib/notifications/config.ts
 
 import { NotificationChannel } from "@/generated/prisma/enums";
-import { NotificationTemplate, NotificationPriority } from "./engine";
+import { NotificationTemplate} from "./engine";
 
 // ============================================
 // CHANNEL COSTS (in ₹)
@@ -14,22 +14,6 @@ export const CHANNEL_COSTS: Record<NotificationChannel, number> = {
 };
 
 // ============================================
-// PRIORITY-BASED CHANNEL SELECTION
-// ============================================
-const PRIORITY_CHANNELS: Record<NotificationPriority, NotificationChannel[]> = {
-  LOW: ["PUSH", "EMAIL"],
-  MEDIUM: ["PUSH", "EMAIL", "WHATSAPP"],
-  HIGH: ["PUSH", "WHATSAPP", "EMAIL", "SMS"],
-  URGENT: ["SMS", "WHATSAPP", "PUSH", "EMAIL"],
-};
-
-export function getChannelsByPriority(
-  priority: NotificationPriority
-): NotificationChannel[] {
-  return PRIORITY_CHANNELS[priority] || PRIORITY_CHANNELS.MEDIUM;
-}
-
-// ============================================
 // NOTIFICATION TEMPLATES
 // Simple templates with minimal variables
 // ============================================
@@ -38,18 +22,17 @@ export const NOTIFICATION_TEMPLATES: Record<string, NotificationTemplate> = {
   STUDENT_ABSENT: {
     id: "STUDENT_ABSENT",
     type: "ATTENDANCE_ALERT",
-    priority: "HIGH",
     defaultChannels: ["SMS", "WHATSAPP", "PUSH"],
     templates: {
       SMS: {
-        body: "Dear Parent, {{studentName}} was marked ABSENT on {{date}}. - {{schoolName}}",
+        body: "Dear Parent, {{studentName}} was marked ABSENT on {{date}}. - {{organizationName}}",
       },
       WHATSAPP: {
-        body: "🔔 *Attendance Alert*\n\n{{studentName}} was marked ABSENT on {{date}}.\n\nClass: {{grade}}-{{section}}\n\n- {{schoolName}}",
+        body: "🔔 *Attendance Alert*\n\n{{studentName}} was marked ABSENT on {{date}}.\n\nClass: {{grade}}-{{section}}\n\n- {{organizationName}}",
       },
       EMAIL: {
         subject: "Attendance Alert - {{studentName}}",
-        body: "Dear Parent,\n\n{{studentName}} was marked ABSENT on {{date}} in class {{grade}}-{{section}}.\n\nBest regards,\n{{schoolName}}",
+        body: "Dear Parent,\n\n{{studentName}} was marked ABSENT on {{date}} in class {{grade}}-{{section}}.\n\nBest regards,\n{{organizationName}}",
       },
       PUSH: {
         body: "{{studentName}} was absent on {{date}}",
@@ -61,7 +44,6 @@ export const NOTIFICATION_TEMPLATES: Record<string, NotificationTemplate> = {
   NEW_FEE_CREATED: {
     id: "NEW_FEE_CREATED",
     type: "FEE_REMINDER",
-    priority: "HIGH",
     defaultChannels: ["SMS", "WHATSAPP"],
     templates: {
       SMS: {
@@ -72,7 +54,7 @@ export const NOTIFICATION_TEMPLATES: Record<string, NotificationTemplate> = {
       },
       EMAIL: {
         subject: "New Fee - {{studentName}}",
-        body: "Dear Parent,\n\nNew fee of ₹{{amount}} for {{studentName}}.\nDue Date: {{dueDate}}\n\nPay online: {{paymentLink}}\n\nRegards,\n{{schoolName}}",
+        body: "Dear Parent,\n\nNew fee of ₹{{amount}} for {{studentName}}.\nDue Date: {{dueDate}}\n\nPay online: {{paymentLink}}\n\nRegards,\n{{organizationName}}",
       },
     },
   },
@@ -80,7 +62,6 @@ export const NOTIFICATION_TEMPLATES: Record<string, NotificationTemplate> = {
   FEE_OVERDUE: {
     id: "FEE_OVERDUE",
     type: "FEE_REMINDER",
-    priority: "URGENT",
     defaultChannels: ["SMS", "WHATSAPP"],
     templates: {
       SMS: {
@@ -91,7 +72,7 @@ export const NOTIFICATION_TEMPLATES: Record<string, NotificationTemplate> = {
       },
       EMAIL: {
         subject: "URGENT: Overdue Fee - {{studentName}}",
-        body: "Dear Parent,\n\nFee ₹{{amount}} for {{studentName}} is OVERDUE.\n\nPlease pay immediately: {{paymentLink}}\n\nRegards,\n{{schoolName}}",
+        body: "Dear Parent,\n\nFee ₹{{amount}} for {{studentName}} is OVERDUE.\n\nPlease pay immediately: {{paymentLink}}\n\nRegards,\n{{organizationName}}",
       },
     },
   },
@@ -99,7 +80,6 @@ export const NOTIFICATION_TEMPLATES: Record<string, NotificationTemplate> = {
   PAYMENT_SUCCESS: {
     id: "PAYMENT_SUCCESS",
     type: "FEE_REMINDER",
-    priority: "MEDIUM",
     defaultChannels: ["SMS", "WHATSAPP"],
     templates: {
       SMS: {
@@ -110,7 +90,7 @@ export const NOTIFICATION_TEMPLATES: Record<string, NotificationTemplate> = {
       },
       EMAIL: {
         subject: "Payment Receipt - {{receiptNumber}}",
-        body: "Dear Parent,\n\nPayment of ₹{{amount}} received for {{studentName}}.\nReceipt: {{receiptNumber}}\n\nDownload: {{receiptUrl}}\n\nRegards,\n{{schoolName}}",
+        body: "Dear Parent,\n\nPayment of ₹{{amount}} received for {{studentName}}.\nReceipt: {{receiptNumber}}\n\nDownload: {{receiptUrl}}\n\nRegards,\n{{organizationName}}",
       },
     },
   },
@@ -118,8 +98,7 @@ export const NOTIFICATION_TEMPLATES: Record<string, NotificationTemplate> = {
   // === EXAMS ===
   EXAM_REMINDER: {
     id: "EXAM_REMINDER",
-    type: "Exam",
-    priority: "HIGH",
+    type: "EXAM",
     defaultChannels: ["SMS", "WHATSAPP"],
     templates: {
       SMS: {
@@ -130,15 +109,14 @@ export const NOTIFICATION_TEMPLATES: Record<string, NotificationTemplate> = {
       },
       EMAIL: {
         subject: "Exam Tomorrow - {{examName}}",
-        body: "Dear Student,\n\nExam: {{examName}}\nDate: {{date}}\nTime: {{time}}\nVenue: {{venue}}\n\nGood luck!\n\nRegards,\n{{schoolName}}",
+        body: "Dear Student,\n\nExam: {{examName}}\nDate: {{date}}\nTime: {{time}}\nVenue: {{venue}}\n\nGood luck!\n\nRegards,\n{{organizationName}}",
       },
     },
   },
 
   RESULT_PUBLISHED: {
     id: "RESULT_PUBLISHED",
-    type: "Exam",
-    priority: "HIGH",
+    type: "EXAM",
     defaultChannels: ["SMS", "WHATSAPP", "PUSH"],
     templates: {
       SMS: {
@@ -149,7 +127,7 @@ export const NOTIFICATION_TEMPLATES: Record<string, NotificationTemplate> = {
       },
       EMAIL: {
         subject: "Results - {{examName}}",
-        body: "Dear Student,\n\nResults for {{examName}} are published.\nScore: {{percentage}}%\n\nView: {{resultUrl}}\n\nRegards,\n{{schoolName}}",
+        body: "Dear Student,\n\nResults for {{examName}} are published.\nScore: {{percentage}}%\n\nView: {{resultUrl}}\n\nRegards,\n{{organizationName}}",
       },
       PUSH: {
         body: "Results for {{examName}} are available",
@@ -161,21 +139,20 @@ export const NOTIFICATION_TEMPLATES: Record<string, NotificationTemplate> = {
   GENERAL_NOTICE: {
     id: "GENERAL_NOTICE",
     type: "GENERAL_ANNOUNCEMENT",
-    priority: "MEDIUM",
     defaultChannels: ["PUSH", "EMAIL"],
     templates: {
       EMAIL: {
         subject: "{{title}}",
-        body: "{{message}}\n\nRegards,\n{{schoolName}}",
+        body: "{{message}}\n\nRegards,\n{{organizationName}}",
       },
       PUSH: {
         body: "{{title}}",
       },
       SMS: {
-        body: "{{title}} - {{schoolName}}",
+        body: "{{title}} - {{organizationName}}",
       },
       WHATSAPP: {
-        body: "📢 *{{title}}*\n\n{{message}}\n\n- {{schoolName}}",
+        body: "📢 *{{title}}*\n\n{{message}}\n\n- {{organizationName}}",
       },
     },
   },
@@ -183,18 +160,17 @@ export const NOTIFICATION_TEMPLATES: Record<string, NotificationTemplate> = {
   URGENT_NOTICE: {
     id: "URGENT_NOTICE",
     type: "GENERAL_ANNOUNCEMENT",
-    priority: "URGENT",
     defaultChannels: ["SMS", "WHATSAPP", "PUSH"],
     templates: {
       SMS: {
-        body: "URGENT: {{title}} - {{schoolName}}",
+        body: "URGENT: {{title}} - {{organizationName}}",
       },
       WHATSAPP: {
         body: "🚨 *URGENT*\n\n{{title}}\n\n{{message}}",
       },
       EMAIL: {
         subject: "URGENT: {{title}}",
-        body: "URGENT NOTICE\n\n{{title}}\n\n{{message}}\n\nRegards,\n{{schoolName}}",
+        body: "URGENT NOTICE\n\n{{title}}\n\n{{message}}\n\nRegards,\n{{organizationName}}",
       },
       PUSH: {
         body: "URGENT: {{title}}",
@@ -206,18 +182,17 @@ export const NOTIFICATION_TEMPLATES: Record<string, NotificationTemplate> = {
   LEAVE_APPROVED: {
     id: "LEAVE_APPROVED",
     type: "GENERAL_ANNOUNCEMENT",
-    priority: "MEDIUM",
     defaultChannels: ["SMS", "WHATSAPP"],
     templates: {
       SMS: {
-        body: "Leave approved from {{startDate}} to {{endDate}} - {{schoolName}}",
+        body: "Leave approved from {{startDate}} to {{endDate}} - {{organizationName}}",
       },
       WHATSAPP: {
         body: "✅ *Leave Approved*\n\nFrom: {{startDate}}\nTo: {{endDate}}\n\nApproved by: {{approvedBy}}",
       },
       EMAIL: {
         subject: "Leave Approved",
-        body: "Dear {{name}},\n\nYour leave from {{startDate}} to {{endDate}} is approved.\n\nRegards,\n{{schoolName}}",
+        body: "Dear {{name}},\n\nYour leave from {{startDate}} to {{endDate}} is approved.\n\nRegards,\n{{organizationName}}",
       },
     },
   },
@@ -225,18 +200,60 @@ export const NOTIFICATION_TEMPLATES: Record<string, NotificationTemplate> = {
   LEAVE_REJECTED: {
     id: "LEAVE_REJECTED",
     type: "GENERAL_ANNOUNCEMENT",
-    priority: "HIGH",
     defaultChannels: ["SMS", "WHATSAPP"],
     templates: {
       SMS: {
-        body: "Leave rejected. Reason: {{reason}} - {{schoolName}}",
+        body: "Leave rejected. Reason: {{reason}} - {{organizationName}}",
       },
       WHATSAPP: {
         body: "❌ *Leave Rejected*\n\nReason: {{reason}}\n\nContact admin for details.",
       },
       EMAIL: {
         subject: "Leave Rejected",
-        body: "Dear {{name}},\n\nYour leave application is rejected.\nReason: {{reason}}\n\nRegards,\n{{schoolName}}",
+        body: "Dear {{name}},\n\nYour leave application is rejected.\nReason: {{reason}}\n\nRegards,\n{{organizationName}}",
+      },
+    },
+  },
+
+  // === DOCUMENT VERIFICATION ===
+  DOCUMENT_APPROVED: {
+    id: "DOCUMENT_APPROVED",
+    type: "DOCUMENT_REQUEST",
+    defaultChannels: ["PUSH", "EMAIL"],
+    templates: {
+      SMS: {
+        body: "Document Verified: Your {{documentType}} has been approved. - {{organizationName}}",
+      },
+      WHATSAPP: {
+        body: "✅ *Document Approved*\n\nDocument: {{documentType}}\nStatus: Verified\n\n- {{organizationName}}",
+      },
+      EMAIL: {
+        subject: "Document Approved - {{documentType}}",
+        body: "Dear Student,\n\nYour {{documentType}} has been successfully verified.\n\nRegards,\n{{organizationName}}",
+      },
+      PUSH: {
+        body: "Your {{documentType}} has been approved",
+      },
+    },
+  },
+
+  DOCUMENT_REJECTED: {
+    id: "DOCUMENT_REJECTED",
+    type: "DOCUMENT_REQUEST",
+    defaultChannels: ["PUSH", "EMAIL"],
+    templates: {
+      SMS: {
+        body: "Document Rejected: Your {{documentType}} was rejected. Reason: {{reason}} - {{organizationName}}",
+      },
+      WHATSAPP: {
+        body: "❌ *Document Rejected*\n\nDocument: {{documentType}}\nReason: {{reason}}\n\nPlease re-upload correct document.\n\n- {{organizationName}}",
+      },
+      EMAIL: {
+        subject: "Document Rejected - {{documentType}}",
+        body: "Dear Student,\n\nYour {{documentType}} has been rejected.\nReason: {{reason}}\n\nPlease login to portal and re-upload the correct document.\n\nRegards,\n{{organizationName}}",
+      },
+      PUSH: {
+        body: "Your {{documentType}} was rejected. Action required.",
       },
     },
   },

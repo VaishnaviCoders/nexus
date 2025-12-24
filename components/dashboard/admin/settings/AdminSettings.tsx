@@ -4,7 +4,7 @@ import AdminSettingsSidebar from "@/components/dashboard/admin/settings/AdminSet
 import GeneralSettings from "@/components/dashboard/admin/settings/GeneralSettings"
 import ConfigSettings from "@/components/dashboard/admin/settings/ConfigSettings"
 import { GradingSettings } from "@/components/dashboard/admin/settings/GradingSettings"
-import { NotificationsSettings } from "@/components/dashboard/admin/settings/NotificationSettings"
+import { NotificationSettings } from "@/components/dashboard/admin/settings/NotificationSettings"
 import RolesAccessSettings from "@/components/dashboard/admin/settings/RolesAccessSettings"
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { EmptyState } from "@/components/EmptyState"
@@ -179,7 +179,7 @@ export default async function AdminSettingsPage() {
           <GeneralSettings organization={organization} />
           <ConfigSettings academicYears={academicYears} organizationId={organizationId} />
           <GradingSettings />
-          <NotificationsSettings />
+          <NotificationSettings />
           <BillingSettings billingSummary={billingSummary} organization={organization} />
           <RolesAccessSettings data={rolesAccessData} />
         </AdminSettingsSidebar>

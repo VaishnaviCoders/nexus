@@ -21,7 +21,7 @@ import { redirect } from 'next/navigation';
 import { parseWithZod } from '@conform-to/zod';
 import FilterStudents from '@/lib/data/student/FilterStudents';
 import { endOfDay, startOfDay, subDays } from 'date-fns';
-import { AttendanceStatus, Role } from '@/generated/prisma/enums';
+import { AttendanceStatus, Role, NotificationType } from '@/generated/prisma/enums';
 import { getCurrentUser, getCurrentUserId } from '@/lib/user';
 import { DocumentVerificationAction } from '@/types/document';
 import prisma from '@/lib/db';
@@ -319,7 +319,7 @@ export async function markAttendance(
     );
 
     if (absentRecords.length > 0) {
-      const schoolName = section.organization.name || 'School';
+      const organizationName = section.organization.name || 'Institute';
       const gradeName = section.grade.grade;
       const sectionName = section.name;
       
@@ -387,13 +387,13 @@ export async function markAttendance(
 
         await NotificationEngine.send({
           type: 'ATTENDANCE_ALERT',
-          priority: 'HIGH',
           recipients,
+          channels: ['PUSH', 'WHATSAPP'],
           templateId: 'STUDENT_ABSENT',
           variables: {
             studentName,
             date: formatDateIN(attendanceDate),
-            schoolName,
+            organizationName,
             grade: gradeName,
             section: sectionName,
           },
@@ -688,10 +688,44 @@ export async function verifyStudentDocument(
             rejectReason: data.rejectionReason,
           };
 
-    await prisma.studentDocument.update({
+    const result = await prisma.studentDocument.update({
       where: { id: documentId },
       data: updateData,
+      include: {
+        student: {
+          include: {
+            user: true,
+          },
+        },
+        Organization: true,
+      },
     });
+
+    if (result && result.student) {
+      // Send notification based on action
+      const templateId =
+        data.action === 'APPROVE' ? 'DOCUMENT_APPROVED' : 'DOCUMENT_REJECTED';
+      
+      const recipient = {
+        userId: result.student.userId,
+        studentId: result.student.id,
+        email: result.student.email,
+        phone: result.student.phoneNumber,
+      };
+
+      await NotificationEngine.send({
+        type: NotificationType.DOCUMENT_REQUEST,
+        recipients: [recipient],
+        templateId,
+        variables: {
+          documentType: result.type.replace(/_/g, ' '), // Request AAR_CARD -> AAR CARD
+          reason: data.rejectionReason || 'Verification failed',
+          organizationName: result.Organization?.name || 'Institute',
+          studentName: result.student.firstName,
+        },
+        organizationId: result.organizationId,
+      });
+    }
 
     revalidatePath('/dashboard/document/verification');
 

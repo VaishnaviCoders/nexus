@@ -1,27 +1,50 @@
-We have already implemented Create Single Exam, All Exams Page, and Exam Details Page.
-Now I want to implement:
+# Senior-Friendly Form Builder - Instructions
 
-Bulk Exam Creation and Exam Timetable
+## Design Priority
+Keep the interface SIMPLE and CLEAN - this will be used by elderly users.
+- Large, readable text
+- Clear labels
+- Obvious buttons
+- Minimal clutter
 
-Instructions:
-I want to keep This Easy For Understand cuz old people will use this feature so keep it clean and easy to understand ,
+## Tech Stack
+- Next.js 15 /16 
+- Prisma (setup only, no backend implementation yet)
+- shadcn/ui components
+- shadcn Form components
+- react-hook-form
+- Zod validation
+- Server Actions (structure only)
+- useTransition for loading states
+- Sonner for toast notifications
+- No API Calls (prefer Server Actions)
+- No Database (prefer Prisma)
 
-Create all UIUX But later on i'll add backend
-
-You can use AI If needed
+## AI Integration (Optional)
+Only use if necessary:
+```typescript
 import { createGoogleGenerativeAI } from '@ai-sdk/google';
-
 import { generateText } from 'ai';
+```
 
-Stack: Nextjs 15 , prisma , shadcn , react-form-hook, server actions only , zod , react Suspence
+## Requirements
+1. **Focus on Frontend First** - Create complete UI/UX, backend will be added later
+2. **Clean Code Only** - No unnecessary code or comments
+3. **Proper Form Structure**:
+   - Full form validation with Zod
+   - Loading states with useTransition
+   - Success/error feedback with Sonner
+   - Server Action structure (empty functions for now)
+4. **Accessibility**:
+   - High contrast
+   - Large touch targets (minimum 44x44px)
+   - Clear error messages
+   - Keyboard navigation support
 
-schema: Check Pasted file
+## Deliverables
+- Complete form component with validation
+- Server action file structure (empty functions)
+- Prisma schema (no database connection needed yet)
+- All necessary shadcn components properly configured
 
-<!--  Form Prompt  -->
-
-Create proper shadcn Form using Nextjs 15 , prisma , shadcn , shadcn From , react-form-hook, server actions only , zod , useTransition , sonner ,
-
-<!-- End Prompt -->
-
-i want clean and proper code , dont write unnesserasy code
-I Know you can do design /alignment better than we think
+**Note**: Prioritize excellent visual design and alignment - make it look professional and polished.

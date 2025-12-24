@@ -2,12 +2,8 @@
 
 import { NotificationChannel, NotificationType } from "@/generated/prisma/enums";
 import prisma  from "@/lib/db"; 
-import { CHANNEL_COSTS, chunkArray, getChannelsByPriority, getTemplate, isValidEmail, isValidPhone, replaceTemplateVariables, retry, sanitizePhone, sleep } from "./config";
+import { CHANNEL_COSTS, chunkArray, getTemplate, isValidEmail, isValidPhone, replaceTemplateVariables, retry, sanitizePhone, sleep } from "./config";
 import { ChannelFactory } from "./channels";
-
-
-
-export type NotificationPriority = "LOW" | "MEDIUM" | "HIGH" | "URGENT";
 
 export interface NotificationRecipient {
   userId?: string;
@@ -20,7 +16,6 @@ export interface NotificationRecipient {
 
 export interface NotificationPayload {
   type: NotificationType;
-  priority: NotificationPriority;
   recipients: NotificationRecipient[];
   templateId: string;
   variables: Record<string, any>;
@@ -39,7 +34,6 @@ export interface ChannelConfig {
 export interface NotificationTemplate {
   id: string;
   type: NotificationType;
-  priority: NotificationPriority;
   defaultChannels: NotificationChannel[];
   templates: {
     [key in NotificationChannel]?: {
@@ -86,7 +80,6 @@ export class NotificationEngine {
     try {
       console.log("📨 NotificationEngine: Starting send process...", {
         type: payload.type,
-        priority: payload.priority,
         recipientCount: payload.recipients.length,
         templateId: payload.templateId,
       });
@@ -96,7 +89,6 @@ export class NotificationEngine {
 
       const {
         type,
-        priority,
         recipients,
         templateId,
         variables,
@@ -124,8 +116,7 @@ export class NotificationEngine {
       // Determine channels to use
       const channelsToUse =
         customChannels ||
-        template.defaultChannels ||
-        getChannelsByPriority(priority);
+        template.defaultChannels 
 
       console.log("📡 Channels to use:", channelsToUse);
 
@@ -192,10 +183,6 @@ export class NotificationEngine {
   private static validatePayload(payload: NotificationPayload): void {
     if (!payload.type) {
       throw new Error("Notification type is required");
-    }
-
-    if (!payload.priority) {
-      throw new Error("Priority is required");
     }
 
     if (!payload.recipients || payload.recipients.length === 0) {
@@ -466,7 +453,7 @@ export class NotificationEngine {
     }
   ): Promise<void> {
     try {
-      await prisma.notificationLog.create({
+      await prisma.notificationLog.createMany({
         data: {
           organizationId: meta.organizationId,
           userId: recipient.userId || undefined,
@@ -494,24 +481,13 @@ export class NotificationEngine {
     payload: NotificationPayload
   ): Promise<void> {
     try {
-      const channels =
-        payload.channels || getChannelsByPriority(payload.priority);
-
-      // Determine job type based on notification type
-      let jobType: "FEE_REMINDER" | "NOTICE" | "EXAM" = "NOTICE";
-      
-      if (payload.type === "FEE_REMINDER") {
-        jobType = "FEE_REMINDER";
-      } else if (payload.type === "Exam") {
-        jobType = "EXAM";
-      }
 
       await prisma.scheduledJob.create({
         data: {
-          type: jobType,
+          type: payload.type,
           organizationId: payload.organizationId,
           scheduledAt: payload.scheduledAt!,
-          channels,
+          channels:payload.channels,
           data: payload as any,
           status: "PENDING",
         },

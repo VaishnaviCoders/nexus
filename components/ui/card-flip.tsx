@@ -2,6 +2,7 @@
 
 import { cn } from '@/lib/utils';
 import { ArrowRight, Repeat2 } from 'lucide-react';
+
 import Link from 'next/link';
 import { useState } from 'react';
 
@@ -49,6 +50,7 @@ export default function CardFlip({
             isFlipped ? 'opacity-0' : 'opacity-100'
           )}
         >
+          {/* <Image src={"/images/documents-verification.png"} width={500} height={500} alt='ss' /> */}
           <div className="relative h-full overflow-hidden bg-gradient-to-b from-zinc-100 to-white dark:from-zinc-900 dark:to-black">
             <div className="absolute inset-0 flex items-start justify-center pt-24">
               <div className="relative w-[200px] h-[100px] flex items-center justify-center">

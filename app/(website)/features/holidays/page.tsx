@@ -108,7 +108,7 @@ const softwareApplicationSchema = {
     'WhatsApp Notifications to Parents',
     'Bulk Import from Google Sheets',
     'Academic Calendar Dashboard',
-    'Multi-Channel Notifications (WhatsApp, Push, Email)',
+    'Multi-Channel Notifications (WhatsApp, Push, Email ,SMS)',
     'Parent Portal with Calendar Sync',
     'Smart Delete and Cleanup',
     '5 Import Methods (Google Sheets, Excel, CSV, Paste, Upload)',

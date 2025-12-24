@@ -1127,7 +1127,7 @@ enum NotificationType {
   ATTENDANCE_ALERT
   DOCUMENT_REQUEST
   GENERAL_ANNOUNCEMENT
-  Exam
+  EXAM
 }
 
 enum NotificationChannel {
@@ -1172,6 +1172,9 @@ enum scheduledJobType {
   FEE_REMINDER
   NOTICE
   EXAM
+  ATTENDANCE_ALERT
+  DOCUMENT_REQUEST
+  GENERAL_ANNOUNCEMENT
 }
 
 enum Role {
