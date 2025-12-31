@@ -1,139 +1,241 @@
 "use client";
 
 import { useUser } from "@clerk/nextjs";
-
-import { useEffect, useRef, useState } from "react";
-import { getToken, onMessage, Unsubscribe } from "firebase/messaging";
+import { useEffect, useRef, useState, useCallback } from "react";
+import { onMessage, Unsubscribe } from "firebase/messaging";
 import { fetchToken, messaging } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { saveDeviceToken } from "@/app/actions/device-token";
 
-async function getNotificationPermissionAndToken() {
-    // Step 1: Check if Notifications are supported in the browser.
-    if (!("Notification" in window)) {
-        console.info("This browser does not support desktop notification");
-        return null;
+/**
+ * Detect the platform for FCM token storage
+ */
+function detectPlatform(): 'web' | 'android' | 'ios' {
+    const userAgent = navigator.userAgent || navigator.vendor || (window as any).opera || '';
+
+    if (/android/i.test(userAgent)) {
+        return 'android';
     }
 
-    // Step 2: Check if permission is already granted.
-    if (Notification.permission === "granted") {
-        return await fetchToken();
+    if (/iPad|iPhone|iPod/.test(userAgent) && !(window as any).MSStream) {
+        return 'ios';
     }
 
-    // Step 3: If permission is not denied, request permission from the user.
-    if (Notification.permission !== "denied") {
-        const permission = await Notification.requestPermission();
-        if (permission === "granted") {
-            return await fetchToken();
-        }
+    return 'web';
+}
+
+/**
+ * Wait for service worker to be ready
+ */
+async function waitForServiceWorker(): Promise<ServiceWorkerRegistration | undefined> {
+    if (!('serviceWorker' in navigator)) {
+        console.warn('Service Worker not supported');
+        return undefined;
     }
 
-    console.log("Notification permission not granted.");
-    return null;
+    // First try to get existing registration
+    let registration = await navigator.serviceWorker.getRegistration();
+
+    if (registration) {
+        return registration;
+    }
+
+    // Wait for service worker to be ready (max 5 seconds)
+    return new Promise((resolve) => {
+        const timeout = setTimeout(() => {
+            console.warn('Service Worker registration timeout');
+            resolve(undefined);
+        }, 5000);
+
+        navigator.serviceWorker.ready.then((reg) => {
+            clearTimeout(timeout);
+            resolve(reg);
+        }).catch(() => {
+            clearTimeout(timeout);
+            resolve(undefined);
+        });
+    });
 }
 
 const useFcmToken = () => {
-    const { isSignedIn } = useUser();
-    const router = useRouter(); // Initialize the router for navigation.
+    const { isSignedIn, isLoaded } = useUser();
+    const router = useRouter();
+
     const [notificationPermissionStatus, setNotificationPermissionStatus] =
-        useState<NotificationPermission | null>(null); // State to store the notification permission status.
-    const [token, setToken] = useState<string | null>(null); // State to store the FCM token.
-    const retryLoadToken = useRef(0); // Ref to keep track of retry attempts.
-    const isLoading = useRef(false); // Ref to keep track if a token fetch is currently in progress.
+        useState<NotificationPermission | null>(null);
+    const [token, setToken] = useState<string | null>(null);
 
-    const loadToken = async () => {
-        // Step 4: Prevent multiple fetches if already fetched or in progress.
-        if (isLoading.current) return;
+    const retryCount = useRef(0);
+    const isLoading = useRef(false);
+    const tokenSavedToServer = useRef(false);
+    const lastSavedToken = useRef<string | null>(null);
 
-        isLoading.current = true; // Mark loading as in progress.
-        const token = await getNotificationPermissionAndToken(); // Fetch the token.
-
-        // Step 5: Handle the case where permission is denied.
-        if (Notification.permission === "denied") {
-            setNotificationPermissionStatus("denied");
-            console.info(
-                "%cPush Notifications issue - permission denied",
-                "color: green; background: #c7c7c7; padding: 8px; font-size: 20px"
-            );
-            isLoading.current = false;
+    /**
+     * Save token to server (with duplicate check)
+     */
+    const saveTokenToServer = useCallback(async (fcmToken: string) => {
+        // Skip if not signed in or already saved this token
+        if (!isSignedIn || lastSavedToken.current === fcmToken) {
             return;
         }
 
-        // Step 6: Retry fetching the token if necessary. (up to 3 times)
-        // This step is typical initially as the service worker may not be ready/installed yet.
-        if (!token) {
-            if (retryLoadToken.current >= 3) {
-                alert("Unable to load token, refresh the browser");
-                console.info(
-                    "%cPush Notifications issue - unable to load token after 3 retries",
-                    "color: green; background: #c7c7c7; padding: 8px; font-size: 20px"
-                );
+        try {
+            const platform = detectPlatform();
+            const result = await saveDeviceToken(fcmToken, platform);
+
+            if (result.success) {
+                console.log(`✅ FCM token saved: ${fcmToken.substring(0, 20)}... (${platform})`);
+                lastSavedToken.current = fcmToken;
+                tokenSavedToServer.current = true;
+            } else {
+                console.error(`❌ Failed to save FCM token: ${result.error}`);
+            }
+        } catch (error) {
+            console.error('❌ Error saving FCM token:', error);
+        }
+    }, [isSignedIn]);
+
+    /**
+     * Request notification permission and get token
+     */
+    const requestPermissionAndGetToken = useCallback(async (): Promise<string | null> => {
+        // Check if notifications are supported
+        if (!("Notification" in window)) {
+            console.info("This browser does not support notifications");
+            return null;
+        }
+
+        // Request permission if not already granted
+        if (Notification.permission === "default") {
+            const permission = await Notification.requestPermission();
+            if (permission !== "granted") {
+                console.log("Notification permission denied");
+                setNotificationPermissionStatus("denied");
+                return null;
+            }
+        }
+
+        if (Notification.permission === "denied") {
+            setNotificationPermissionStatus("denied");
+            return null;
+        }
+
+        setNotificationPermissionStatus("granted");
+
+        // Wait for service worker to be ready
+        await waitForServiceWorker();
+
+        // Fetch the token
+        const fcmToken = await fetchToken();
+        return fcmToken;
+    }, []);
+
+    /**
+     * Main token loading function
+     */
+    const loadToken = useCallback(async () => {
+        // Prevent concurrent loading
+        if (isLoading.current) {
+            console.log('Token loading already in progress...');
+            return;
+        }
+
+        isLoading.current = true;
+
+        try {
+            const fcmToken = await requestPermissionAndGetToken();
+
+            if (!fcmToken) {
+                // Retry logic (up to 3 times)
+                if (retryCount.current < 3) {
+                    retryCount.current += 1;
+                    console.log(`Retrying token fetch (${retryCount.current}/3)...`);
+                    isLoading.current = false;
+
+                    // Wait a bit before retrying
+                    setTimeout(() => loadToken(), 1000 * retryCount.current);
+                    return;
+                }
+
+                console.error("Failed to get FCM token after 3 retries");
                 isLoading.current = false;
                 return;
             }
 
-            retryLoadToken.current += 1;
-            console.error("An error occurred while retrieving token. Retrying...");
+            // Token fetched successfully
+            setToken(fcmToken);
+            retryCount.current = 0;
+
+            // Save to server if signed in
+            if (isSignedIn) {
+                await saveTokenToServer(fcmToken);
+            }
+
+        } catch (error) {
+            console.error("Error loading FCM token:", error);
+        } finally {
             isLoading.current = false;
-            await loadToken();
+        }
+    }, [isSignedIn, requestPermissionAndGetToken, saveTokenToServer]);
+
+    /**
+     * Effect: Initialize token when user auth state is loaded
+     */
+    useEffect(() => {
+        // Wait for auth to be loaded
+        if (!isLoaded) return;
+
+        // Reset state on logout
+        if (!isSignedIn) {
+            tokenSavedToServer.current = false;
+            lastSavedToken.current = null;
             return;
         }
 
-        // Step 7: Set the fetched token and mark as fetched.
-        setNotificationPermissionStatus(Notification.permission);
-        setToken(token);
-
-        // Save token to server
-        if (isSignedIn) {
-            const result = await saveDeviceToken(token);
-
-            if (result.success) {
-                console.log(`✅ Device token saved: ${token}`);
-            } else {
-                console.error(`❌ Failed to save device token: ${result.error}`);
-            }
-        }
-
-        isLoading.current = false;
-    };
-
-
-
-    useEffect(() => {
-        // Step 8: Initialize token loading when the component mounts.
+        // Load token when signed in
         if ("Notification" in window) {
             loadToken();
         }
-    }, [isSignedIn]);
+    }, [isLoaded, isSignedIn, loadToken]);
 
+    /**
+     * Effect: Save token to server when user signs in (if token already exists)
+     */
     useEffect(() => {
+        if (isSignedIn && token && !tokenSavedToServer.current) {
+            saveTokenToServer(token);
+        }
+    }, [isSignedIn, token, saveTokenToServer]);
+
+    /**
+     * Effect: Set up foreground message listener
+     */
+    useEffect(() => {
+        if (!token) return;
+
+        let unsubscribe: Unsubscribe | null = null;
+
         const setupListener = async () => {
-            if (!token) return; // Exit if no token is available.
+            console.log(`Setting up FCM message listener (token: ${token.substring(0, 20)}...)`);
 
-            console.log(`onMessage registered with token ${token}`);
             const m = await messaging();
-            if (!m) return;
+            if (!m) return null;
 
-            // Step 9: Register a listener for incoming FCM messages.
-            const unsubscribe = onMessage(m, (payload) => {
+            return onMessage(m, (payload) => {
                 if (Notification.permission !== "granted") return;
 
-                console.log("Foreground push notification received:", payload);
+                console.log("Foreground push notification:", payload);
                 const link = payload.fcmOptions?.link || payload.data?.link;
 
+                // Show toast notification
                 if (link) {
                     toast.info(
                         `${payload.notification?.title}: ${payload.notification?.body}`,
                         {
                             action: {
                                 label: "Visit",
-                                onClick: () => {
-                                    const link = payload.fcmOptions?.link || payload.data?.link;
-                                    if (link) {
-                                        router.push(link);
-                                    }
-                                },
+                                onClick: () => router.push(link),
                             },
                         }
                     );
@@ -143,8 +245,7 @@ const useFcmToken = () => {
                     );
                 }
 
-                // --------------------------------------------
-                // Disable this if you only want toast notifications.
+                // Also show browser notification
                 const n = new Notification(
                     payload.notification?.title || "New message",
                     {
@@ -153,35 +254,31 @@ const useFcmToken = () => {
                     }
                 );
 
-                // Step 10: Handle notification click event to navigate to a link if present.
                 n.onclick = (event) => {
                     event.preventDefault();
-                    const link = (event.target as any)?.data?.url;
-                    if (link) {
-                        router.push(link);
-                    } else {
-                        console.log("No link found in the notification payload");
+                    const url = (event.target as any)?.data?.url;
+                    if (url) {
+                        router.push(url);
                     }
                 };
-                // --------------------------------------------
             });
-
-            return unsubscribe;
         };
 
-        let unsubscribe: Unsubscribe | null = null;
-
         setupListener().then((unsub) => {
-            if (unsub) {
-                unsubscribe = unsub;
-            }
+            if (unsub) unsubscribe = unsub;
         });
 
-        // Step 11: Cleanup the listener when the component unmounts.
-        return () => unsubscribe?.();
-    }, [token, router, toast]);
+        return () => {
+            if (unsubscribe) unsubscribe();
+        };
+    }, [token, router]);
 
-    return { token, notificationPermissionStatus }; // Return the token and permission status.
+    return {
+        token,
+        notificationPermissionStatus,
+        refreshToken: loadToken, // Exposed for manual refresh if needed
+    };
 };
 
 export default useFcmToken;
+

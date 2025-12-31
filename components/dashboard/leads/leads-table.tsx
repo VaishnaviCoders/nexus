@@ -383,6 +383,7 @@ const columns: ColumnDef<LeaveWithAssignTo>[] = [
             <AvatarImage
               src={assignTo?.profileImage}
               alt={`${assignTo?.firstName} ${assignTo?.lastName}`}
+              className='object-cover'
             />
             <AvatarFallback className="text-xs bg-blue-100 text-blue-700">
               {assignTo?.firstName?.[0]}
@@ -533,7 +534,7 @@ export default function LeadTable({ leads }: LeadTableProps) {
               className={cn(
                 'peer min-w-60 ps-9',
                 Boolean(table.getColumn('studentName')?.getFilterValue()) &&
-                  'pe-9'
+                'pe-9'
               )}
               value={
                 (table.getColumn('studentName')?.getFilterValue() ??
@@ -728,7 +729,7 @@ export default function LeadTable({ leads }: LeadTableProps) {
                         <div
                           className={cn(
                             header.column.getCanSort() &&
-                              'flex h-full cursor-pointer items-center justify-between gap-2 select-none'
+                            'flex h-full cursor-pointer items-center justify-between gap-2 select-none'
                           )}
                           onClick={header.column.getToggleSortingHandler()}
                           onKeyDown={(e) => {
@@ -866,8 +867,8 @@ export default function LeadTable({ leads }: LeadTableProps) {
               {Math.min(
                 Math.max(
                   table.getState().pagination.pageIndex *
-                    table.getState().pagination.pageSize +
-                    table.getState().pagination.pageSize,
+                  table.getState().pagination.pageSize +
+                  table.getState().pagination.pageSize,
                   0
                 ),
                 table.getRowCount()

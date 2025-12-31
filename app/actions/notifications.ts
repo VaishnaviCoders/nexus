@@ -21,7 +21,7 @@ export async function getUserNotifications() {
     orderBy: {
       sentAt: 'desc',
     },
-    take: 50, // Limit to recent 50
+    take: 10, // Limit to recent 50
     select: {
       id: true,
       title: true,
@@ -52,7 +52,54 @@ export async function getUserNotifications() {
     }
   });
 
-  console.log("noti", notifications)
 
   return notifications;
+}
+
+export async function markAsRead(notificationId: string) {
+  const userId = await getCurrentUserId();
+  
+
+  try {
+    await prisma.notificationLog.update({
+      where: {
+        id: notificationId,
+        // Ensure user owns this notification
+        userId: userId,
+      },
+      data: {
+        isRead: true,
+        readAt: new Date(),
+      },
+    });
+    
+    revalidatePath("/dashboard");
+    return { success: true };
+  } catch (error) {
+    console.error("Failed to mark notification as read:", error);
+    return { success: false, error: "Failed to update notification" };
+  }
+}
+
+export async function markAllAsRead() {
+  const userId = await getCurrentUserId();
+
+  try {
+    await prisma.notificationLog.updateMany({
+      where: {
+        userId: userId,
+        isRead: false,
+      },
+      data: {
+        isRead: true,
+        readAt: new Date(),
+      },
+    });
+    
+    revalidatePath("/dashboard");
+    return { success: true };
+  } catch (error) {
+    console.error("Failed to mark all notifications as read:", error);
+    return { success: false, error: "Failed to update notifications" };
+  }
 }

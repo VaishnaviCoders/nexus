@@ -636,14 +636,6 @@ export type EnumAIAgentExecutionStatusFieldUpdateOperationsInput = {
   set?: $Enums.AIAgentExecutionStatus
 }
 
-export type FloatFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type FeeSenseExecutionLogCreateWithoutAgentInput = {
   id?: string
   startedAt: Date | string

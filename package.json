@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@ai-sdk/google": "^2.0.23",
-    "@clerk/nextjs": "^6.35.5",
+    "@clerk/nextjs": "^6.36.5",
     "@conform-to/react": "^1.2.2",
     "@conform-to/zod": "^1.2.2",
     "@hookform/resolvers": "^3.10.0",
@@ -81,7 +81,7 @@
     "radix-ui": "^1.4.3",
     "react": "^19.2.1",
     "react-day-picker": "^9.5.1",
-    "react-dom": "^19.2.0",
+    "react-dom": "^19.2.1",
     "react-dropzone": "^14.3.5",
     "react-email": "^4.2.3",
     "react-hook-form": "^7.54.2",

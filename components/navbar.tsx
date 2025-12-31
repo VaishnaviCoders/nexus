@@ -11,13 +11,12 @@ import {
 import { Suspense } from 'react';
 import { auth, currentUser } from '@clerk/nextjs/server';
 import { WelcomeMessage } from './dashboard-layout/WelcomeMessage';
-import CustomNotificationFeed from '@/components/dashboard/shared/custom-notification-feed';
 import { Bell, Building2, UserCircleIcon } from 'lucide-react';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { Skeleton } from './ui/skeleton';
 import { syncOrganizationUser, syncUser } from '@/lib/syncUser';
-import NotificationEmptyState from './dashboard/shared/notification-empty-state';
+import NotificationPanel from './dashboard-layout/notification-panel';
 
 const RoleBadge = ({ role }: { role: string }) => {
   const roleConfig = {
@@ -141,7 +140,7 @@ export async function Navbar() {
                     <Bell className="h-5 w-5 text-muted-foreground animate-pulse" />
                   }
                 >
-                  <CustomNotificationFeed />
+                  <NotificationPanel />
                 </Suspense>
 
                 {/* User button */}

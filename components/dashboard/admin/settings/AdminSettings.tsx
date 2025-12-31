@@ -10,6 +10,7 @@ import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/ca
 import { EmptyState } from "@/components/EmptyState"
 import { getBillingSummary } from "@/lib/billing"
 import BillingSettings from "./BillingSettings"
+import { getOrganizationNotificationSettings } from "@/lib/organization-notification-settings"
 
 export interface ConfigurationsData {
   academic: {
@@ -46,29 +47,6 @@ export interface GradingData {
   }
 }
 
-export interface NotificationsData {
-  channels: {
-    email: boolean
-    sms: boolean
-    whatsapp: boolean
-    push: boolean
-  }
-  events: {
-    feeDueReminders: boolean
-    feePaymentConfirmation: boolean
-    attendanceAlerts: boolean
-    examSchedules: boolean
-    resultPublished: boolean
-    leaveStatusUpdates: boolean
-  }
-  recipients: Array<{
-    event: string
-    admin: boolean
-    teacher: boolean
-    student: boolean
-    parent: boolean
-  }>
-}
 
 export interface RoleData {
   id: string
@@ -111,6 +89,14 @@ const rolesAccessData: RolesAccessData = {
       description: "Basic access",
       users: 520,
       permissions: ["View Profile", "View Results"]
+    },
+    {
+      id: "r4",
+      name: "Parent",
+      type: "System",
+      description: "Can view child's profile and results",
+      users: 1270,
+      permissions: ["View Profile", "View Results", "View Attendance", "View Fees", "View Exams", "View Notifications", "View Leave"]
     }
   ]
 }
@@ -150,12 +136,12 @@ async function getAcademicYears(organizationId: string) {
 }
 export default async function AdminSettingsPage() {
   const organizationId = await getOrganizationId()
-  const [organization, academicYears, billingSummary] = await Promise.all([
+  const [organization, academicYears, billingSummary, notificationSettings] = await Promise.all([
     getOrganization(organizationId),
     getAcademicYears(organizationId),
-    getBillingSummary(organizationId)
+    getBillingSummary(organizationId),
+    getOrganizationNotificationSettings(organizationId)
   ])
-
   if (!organization) {
     return (
       <EmptyState title="Organization not found" description="Please contact support." />
@@ -179,7 +165,7 @@ export default async function AdminSettingsPage() {
           <GeneralSettings organization={organization} />
           <ConfigSettings academicYears={academicYears} organizationId={organizationId} />
           <GradingSettings />
-          <NotificationSettings />
+          <NotificationSettings notificationSettings={notificationSettings} />
           <BillingSettings billingSummary={billingSummary} organization={organization} />
           <RolesAccessSettings data={rolesAccessData} />
         </AdminSettingsSidebar>

@@ -118,206 +118,41 @@ model Organization {
   scheduledJob       ScheduledJob[]
   leaves             Leave[]
 
-  createdBy     String?
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-  exam          Exam[]
-  hallTicket    HallTicket[]
-  leads         Lead[]
-  feeSenseAgent FeeSenseAgent?
+  createdBy            String?
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+  exam                 Exam[]
+  hallTicket           HallTicket[]
+  leads                Lead[]
+  feeSenseAgent        FeeSenseAgent?
+  notificationSettings NotificationSetting[]
 
   @@index([id])
   @@index([slug])
 }
 
-model FeeSenseAgent {
-  id             String       @id @default(cuid())
-  organizationId String       @unique // One per org
-  organization   Organization @relation(fields: [organizationId], references: [id])
-  name           String       @default("FeeSense AI Agent")
-  description    String?      @default("Intelligent fee collection assistant that analyzes payment patterns and sends personalized reminders")
+// Main notification configuration table
+model NotificationSetting {
+  id               String           @id @default(cuid())
+  // Notification type identifier (e.g., "attendance", "fees", "exam_reminder")
+  notificationType NotificationType
+  label            String
+  description      String?
 
-  isActive Boolean @default(true)
-
-  capabilities             String[]
-  // capabilities: [
-  //       "Fetch all Fees Data and check if any fee is pending or not",
-  //       "Analyzes payment patterns and identifies at-risk families",
-  //       "Sends personalized payment reminders via email and SMS",
-  //       "Generates daily reports with collection insights",
-  //       "Schedules voice calls for high-priority overdue fees",
-  //     ],
-  // FeeSense-specific configuration
-  riskScoreLowThreshold    Int      @default(30)
-  riskScoreMediumThreshold Int      @default(60)
-  riskScoreHighThreshold   Int      @default(80)
-  maxNotificationAttempts  Int      @default(3)
-  voiceCallThreshold       Int      @default(3) // Days overdue before call
-
-  // Notification preferences
-  enableEmailReminders Boolean @default(true)
-  enableSMSReminders   Boolean @default(true)
-  enableVoiceCalls     Boolean @default(false)
-  enableWhatsApp       Boolean @default(false)
-
-  // Scheduling
-  runFrequency AIAgentRunFrequency @default(DAILY)
-  scheduleTime String              @default("23:00") // HH:mm format
-
-  // // AI Model config
-  // aiModel     String @default("gpt-4")
-  // temperature Float  @default(0.7)
-
-  // Execution tracking
-  lastRunAt      DateTime?
-  nextRunAt      DateTime?
-  totalRuns      Int       @default(0)
-  successfulRuns Int       @default(0)
-  failedRuns     Int       @default(0)
-
-  // Relations
-  executionLogs FeeSenseExecutionLog[]
-  reports       FeeSenseReport[]
-
+  // Flexible channel configuration
+  // Stores { [channel]: { enabled: boolean, locked: boolean } }
+  channels  Json     @default("{}")
+  isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId String
+
+  @@unique([organizationId, notificationType])
+  @@index([organizationId, notificationType])
   @@index([organizationId, isActive])
 }
-
-model FeeSenseExecutionLog {
-  id      String        @id @default(cuid())
-  agentId String
-  agent   FeeSenseAgent @relation(fields: [agentId], references: [id])
-
-  startedAt   DateTime
-  completedAt DateTime?
-  status      AIAgentExecutionStatus // RUNNING, SUCCESS, FAILED, PARTIAL
-
-  // FeeSense-specific metrics
-  studentsAnalyzed    Int
-  remindersGenerated  Int
-  emailsSent          Int
-  smsSent             Int
-  voiceCallsScheduled Int
-  totalAmountOverdue  Float
-
-  errorMessage String?
-  errorDetails Json?
-
-  createdAt DateTime @default(now())
-
-  @@index([agentId, startedAt])
-}
-
-model FeeSenseReport {
-  id String @id @default(cuid())
-
-  agentId String
-  agent   FeeSenseAgent @relation(fields: [agentId], references: [id])
-
-  reportDate DateTime
-
-  // Summary metrics
-  totalStudentsAtRisk Int
-  highRiskCount       Int
-  mediumRiskCount     Int
-  lowRiskCount        Int
-
-  totalOverdueAmount Float
-  paymentsReceived   Float // Since last report
-
-  // Outreach summary
-  emailsSent          Int
-  smsSent             Int
-  voiceCallsScheduled Int
-  responseRate        Float?
-
-  // Detailed insights (AI-generated)
-  insights Json
-  // Example: {
-  //   "trends": "Payment rates down 15% this week",
-  //   "recommendations": ["Focus on Grade 10 students", "Increase SMS frequency"],
-  //   "topRiskStudents": [...]
-  // }
-
-  sentToEmails String[] // Admin emails where report was sent
-
-  createdAt DateTime @default(now())
-
-  @@unique([agentId, reportDate])
-  @@index([agentId, reportDate])
-}
-
-enum AIAgentRunFrequency {
-  DAILY
-  WEEKLY
-  MONTHLY
-  ON_DEMAND
-}
-
-enum AIAgentExecutionStatus {
-  RUNNING
-  SUCCESS
-  FAILED
-  PARTIAL
-}
-
-// model OrganizationMembership {
-//   id             String   @id @default(cuid())
-//   userId         String
-//   organizationId String
-//   role           MembershipRole
-
-//   // Membership status
-//   status         MembershipStatus @default(ACTIVE)
-//   permissions    String[] // Custom permissions
-
-//   // Invitation system (like Clerk)
-//   invitedByEmail String?    // Email of inviter
-//   invitedFromIp  String?
-//   invitationId   String?    @unique // For invitation links
-
-//   // Timestamps
-//   createdAt      DateTime   @default(now())
-//   updatedAt      DateTime   @updatedAt
-//   acceptedAt     DateTime?  // When user accepted invitation
-//   revokedAt      DateTime?  // When membership was revoked
-
-//   // Relations
-//   user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-//   organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-
-//   // Link to specific profile types
-//   teacher    Teacher?
-//   student    Student?
-//   parent     Parent?
-
-//   @@unique([userId, organizationId])
-//   @@index([organizationId, role])
-//   @@index([userId, status])
-//   @@index([invitationId])
-//   @@map("organization_memberships")
-// }
-
-// // Enhanced role system
-// enum MembershipRole {
-//   OWNER       // Full control, can delete org
-//   ADMIN       // Manage members, settings
-//   TEACHER     // Teaching staff
-//   STUDENT     // Student access
-//   PARENT      // Parent access  
-//   MEMBER      // Basic member
-//   GUEST       // Limited access
-// }
-
-// enum MembershipStatus {
-//   INVITED     // Invitation sent, not accepted
-//   ACTIVE      // Active member
-//   INACTIVE    // Member inactive
-//   REVOKED     // Access revoked
-//   DECLINED    // Invitation declined
-// }
 
 model User {
   id           String  @id @default(cuid())
@@ -591,135 +426,6 @@ model TeachingAssignment {
   @@index([subjectId, sectionId])
   @@index([organizationId])
 }
-
-// // Define time periods/slots for the school
-// model TimePeriod {
-//   id             String       @id @default(cuid())
-
-//   name           String       // "Period 1", "Morning Assembly", "Lunch Break"
-//   startTime      String       // "09:00" (24-hour format)
-//   endTime        String       // "09:45"
-//   dayOfWeek      DayOfWeek    // MONDAY, TUESDAY, etc.
-//   periodOrder    Int          // 1, 2, 3... for sorting periods in a day
-//   periodType     PeriodType   @default(ACADEMIC)
-//   isActive       Boolean      @default(true)
-//   timetableEntries Timetable[]
-//   academicYearId String
-//   academicYear   AcademicYear @relation(fields: [academicYearId], references: [id])
-//   organizationId String
-//   organization   Organization @relation(fields: [organizationId], references: [id])
-
-//   createdAt      DateTime     @default(now())
-//   updatedAt      DateTime     @updatedAt
-
-//   @@unique([organizationId, academicYearId, dayOfWeek, startTime, endTime])
-//   @@index([organizationId, academicYearId, dayOfWeek, periodOrder])
-// }
-
-// // Main timetable model - connects teaching assignments with specific time periods
-// model Timetable {
-//   id                   String             @id @default(cuid())
-//   timePeriodId         String
-//   timePeriod           TimePeriod         @relation(fields: [timePeriodId], references: [id])
-//   roomNumber           String?            // Classroom/venue
-//   effectiveDate        DateTime           // When this schedule starts
-//   endDate              DateTime?          // When it ends (null = ongoing)
-//   status               TimetableStatus    @default(ACTIVE)
-//   notes                String?            // Special instructions
-//   isRecurring          Boolean            @default(true)
-//   organizationId       String
-//   organization         Organization       @relation(fields: [organizationId], references: [id])
-//   teachingAssignmentId String
-//   teachingAssignment   TeachingAssignment @relation(fields: [teachingAssignmentId], references: [id]) 
-//   academicYearId       String
-//   academicYear         AcademicYear       @relation(fields: [academicYearId], references: [id])
-
-//   createdBy            String             // Who created this entry
-//   createdAt            DateTime           @default(now())
-//   updatedAt            DateTime           @updatedAt
-
-//   // Prevent double-booking same room at same time
-//   @@unique([organizationId, timePeriodId, roomNumber, effectiveDate])
-
-//   // Prevent teacher double-booking
-//   @@unique([teachingAssignmentId, timePeriodId, effectiveDate])
-
-//   @@index([organizationId, academicYearId, status])
-//   @@index([teachingAssignmentId])
-//   @@index([timePeriodId])
-// }
-
-// // For handling special schedule changes/substitutions
-// model TimetableException {
-//   id               String          @id @default(cuid())
-//   organizationId   String
-//   organization     Organization    @relation(fields: [organizationId], references: [id])
-
-//   // Reference to the original timetable entry
-//   originalTimetableId String?
-//   originalTimetable   Timetable?      @relation(fields: [originalTimetableId], references: [id])
-
-//   // Exception details
-//   exceptionDate    DateTime        // Specific date of the exception
-//   exceptionType    ExceptionType   // CANCELLED, SUBSTITUTED, RESCHEDULED, ROOM_CHANGE
-
-//   // Substitute details (if applicable)
-//   substituteTeacherId    String?
-//   substituteTeacher      Teacher?         @relation(fields: [substituteTeacherId], references: [id])
-
-//   newTimePeriodId        String?
-//   newTimePeriod          TimePeriod?      @relation(fields: [newTimePeriodId], references: [id])
-
-//   newRoomNumber          String?
-
-//   // Reason and approval
-//   reason                 String
-//   approvedBy            String?
-//   approvedAt            DateTime?
-
-//   // Notification status
-//   notificationSent      Boolean          @default(false)
-
-//   createdBy             String
-//   createdAt             DateTime         @default(now())
-//   updatedAt             DateTime         @updatedAt
-
-//   @@index([organizationId, exceptionDate])
-//   @@index([originalTimetableId])
-// }
-// enum DayOfWeek {
-//   MONDAY
-//   TUESDAY
-//   WEDNESDAY
-//   THURSDAY
-//   FRIDAY
-//   SATURDAY
-//   SUNDAY
-// }
-
-// enum PeriodType {
-//   ACADEMIC       // Regular classes
-//   BREAK         // Recess, lunch break
-//   ASSEMBLY      // Morning assembly
-//   SPORTS        // Physical education
-//   EXTRA_CURRICULAR // Clubs, activities
-//   EXAM          // Examination periods
-// }
-
-// enum TimetableStatus {
-//   ACTIVE
-//   INACTIVE
-//   SUSPENDED
-//   COMPLETED
-// }
-
-// enum ExceptionType {
-//   CANCELLED
-//   SUBSTITUTED
-//   RESCHEDULED
-//   ROOM_CHANGE
-//   TEACHER_ABSENT
-// }
 
 enum AssignmentStatus {
   PENDING
@@ -1099,8 +805,8 @@ model NotificationLog {
   noticeId String?
 
   // Content
-  title   String? // For inbox display
-  message String? // For inbox display
+  title   String // For inbox display
+  message String // For inbox display
 
   // Delivery details
   errorMessage String?
@@ -1128,6 +834,9 @@ enum NotificationType {
   DOCUMENT_REQUEST
   GENERAL_ANNOUNCEMENT
   EXAM
+  LEAVE
+  ACADEMIC_REPORT
+  GREETING
 }
 
 enum NotificationChannel {
@@ -1663,3 +1372,321 @@ enum LeadCommunicationPreference {
   PHONE_CALL
   NO_CONTACT
 }
+
+model FeeSenseAgent {
+  id             String       @id @default(cuid())
+  organizationId String       @unique // One per org
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  name           String       @default("FeeSense AI Agent")
+  description    String?      @default("Intelligent fee collection assistant that analyzes payment patterns and sends personalized reminders")
+
+  isActive Boolean @default(true)
+
+  capabilities             String[]
+  // capabilities: [
+  //       "Fetch all Fees Data and check if any fee is pending or not",
+  //       "Analyzes payment patterns and identifies at-risk families",
+  //       "Sends personalized payment reminders via email and SMS",
+  //       "Generates daily reports with collection insights",
+  //       "Schedules voice calls for high-priority overdue fees",
+  //     ],
+  // FeeSense-specific configuration
+  riskScoreLowThreshold    Int      @default(30)
+  riskScoreMediumThreshold Int      @default(60)
+  riskScoreHighThreshold   Int      @default(80)
+  maxNotificationAttempts  Int      @default(3)
+  voiceCallThreshold       Int      @default(3) // Days overdue before call
+
+  // Notification preferences
+  enableEmailReminders Boolean @default(true)
+  enableSMSReminders   Boolean @default(true)
+  enableVoiceCalls     Boolean @default(false)
+  enableWhatsApp       Boolean @default(false)
+
+  // Scheduling
+  runFrequency AIAgentRunFrequency @default(DAILY)
+  scheduleTime String              @default("23:00") // HH:mm format
+
+  // // AI Model config
+  // aiModel     String @default("gpt-4")
+  // temperature Float  @default(0.7)
+
+  // Execution tracking
+  lastRunAt      DateTime?
+  nextRunAt      DateTime?
+  totalRuns      Int       @default(0)
+  successfulRuns Int       @default(0)
+  failedRuns     Int       @default(0)
+
+  // Relations
+  executionLogs FeeSenseExecutionLog[]
+  reports       FeeSenseReport[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([organizationId, isActive])
+}
+
+model FeeSenseExecutionLog {
+  id      String        @id @default(cuid())
+  agentId String
+  agent   FeeSenseAgent @relation(fields: [agentId], references: [id])
+
+  startedAt   DateTime
+  completedAt DateTime?
+  status      AIAgentExecutionStatus // RUNNING, SUCCESS, FAILED, PARTIAL
+
+  // FeeSense-specific metrics
+  studentsAnalyzed    Int
+  remindersGenerated  Int
+  emailsSent          Int
+  smsSent             Int
+  voiceCallsScheduled Int
+  totalAmountOverdue  Float
+
+  errorMessage String?
+  errorDetails Json?
+
+  createdAt DateTime @default(now())
+
+  @@index([agentId, startedAt])
+}
+
+model FeeSenseReport {
+  id String @id @default(cuid())
+
+  agentId String
+  agent   FeeSenseAgent @relation(fields: [agentId], references: [id])
+
+  reportDate DateTime
+
+  // Summary metrics
+  totalStudentsAtRisk Int
+  highRiskCount       Int
+  mediumRiskCount     Int
+  lowRiskCount        Int
+
+  totalOverdueAmount Float
+  paymentsReceived   Float // Since last report
+
+  // Outreach summary
+  emailsSent          Int
+  smsSent             Int
+  voiceCallsScheduled Int
+  responseRate        Float?
+
+  // Detailed insights (AI-generated)
+  insights Json
+  // Example: {
+  //   "trends": "Payment rates down 15% this week",
+  //   "recommendations": ["Focus on Grade 10 students", "Increase SMS frequency"],
+  //   "topRiskStudents": [...]
+  // }
+
+  sentToEmails String[] // Admin emails where report was sent
+
+  createdAt DateTime @default(now())
+
+  @@unique([agentId, reportDate])
+  @@index([agentId, reportDate])
+}
+
+enum AIAgentRunFrequency {
+  DAILY
+  WEEKLY
+  MONTHLY
+  ON_DEMAND
+}
+
+enum AIAgentExecutionStatus {
+  RUNNING
+  SUCCESS
+  FAILED
+  PARTIAL
+}
+
+// model OrganizationMembership {
+//   id             String   @id @default(cuid())
+//   userId         String
+//   organizationId String
+//   role           MembershipRole
+
+//   // Membership status
+//   status         MembershipStatus @default(ACTIVE)
+//   permissions    String[] // Custom permissions
+
+//   // Invitation system (like Clerk)
+//   invitedByEmail String?    // Email of inviter
+//   invitedFromIp  String?
+//   invitationId   String?    @unique // For invitation links
+
+//   // Timestamps
+//   createdAt      DateTime   @default(now())
+//   updatedAt      DateTime   @updatedAt
+//   acceptedAt     DateTime?  // When user accepted invitation
+//   revokedAt      DateTime?  // When membership was revoked
+
+//   // Relations
+//   user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+//   organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+//   // Link to specific profile types
+//   teacher    Teacher?
+//   student    Student?
+//   parent     Parent?
+
+//   @@unique([userId, organizationId])
+//   @@index([organizationId, role])
+//   @@index([userId, status])
+//   @@index([invitationId])
+//   @@map("organization_memberships")
+// }
+
+// // Enhanced role system
+// enum MembershipRole {
+//   OWNER       // Full control, can delete org
+//   ADMIN       // Manage members, settings
+//   TEACHER     // Teaching staff
+//   STUDENT     // Student access
+//   PARENT      // Parent access  
+//   MEMBER      // Basic member
+//   GUEST       // Limited access
+// }
+
+// enum MembershipStatus {
+//   INVITED     // Invitation sent, not accepted
+//   ACTIVE      // Active member
+//   INACTIVE    // Member inactive
+//   REVOKED     // Access revoked
+//   DECLINED    // Invitation declined
+// }
+
+// // Define time periods/slots for the school
+// model TimePeriod {
+//   id             String       @id @default(cuid())
+
+//   name           String       // "Period 1", "Morning Assembly", "Lunch Break"
+//   startTime      String       // "09:00" (24-hour format)
+//   endTime        String       // "09:45"
+//   dayOfWeek      DayOfWeek    // MONDAY, TUESDAY, etc.
+//   periodOrder    Int          // 1, 2, 3... for sorting periods in a day
+//   periodType     PeriodType   @default(ACADEMIC)
+//   isActive       Boolean      @default(true)
+//   timetableEntries Timetable[]
+//   academicYearId String
+//   academicYear   AcademicYear @relation(fields: [academicYearId], references: [id])
+//   organizationId String
+//   organization   Organization @relation(fields: [organizationId], references: [id])
+
+//   createdAt      DateTime     @default(now())
+//   updatedAt      DateTime     @updatedAt
+
+//   @@unique([organizationId, academicYearId, dayOfWeek, startTime, endTime])
+//   @@index([organizationId, academicYearId, dayOfWeek, periodOrder])
+// }
+
+// // Main timetable model - connects teaching assignments with specific time periods
+// model Timetable {
+//   id                   String             @id @default(cuid())
+//   timePeriodId         String
+//   timePeriod           TimePeriod         @relation(fields: [timePeriodId], references: [id])
+//   roomNumber           String?            // Classroom/venue
+//   effectiveDate        DateTime           // When this schedule starts
+//   endDate              DateTime?          // When it ends (null = ongoing)
+//   status               TimetableStatus    @default(ACTIVE)
+//   notes                String?            // Special instructions
+//   isRecurring          Boolean            @default(true)
+//   organizationId       String
+//   organization         Organization       @relation(fields: [organizationId], references: [id])
+//   teachingAssignmentId String
+//   teachingAssignment   TeachingAssignment @relation(fields: [teachingAssignmentId], references: [id]) 
+//   academicYearId       String
+//   academicYear         AcademicYear       @relation(fields: [academicYearId], references: [id])
+
+//   createdBy            String             // Who created this entry
+//   createdAt            DateTime           @default(now())
+//   updatedAt            DateTime           @updatedAt
+
+//   // Prevent double-booking same room at same time
+//   @@unique([organizationId, timePeriodId, roomNumber, effectiveDate])
+
+//   // Prevent teacher double-booking
+//   @@unique([teachingAssignmentId, timePeriodId, effectiveDate])
+
+//   @@index([organizationId, academicYearId, status])
+//   @@index([teachingAssignmentId])
+//   @@index([timePeriodId])
+// }
+
+// // For handling special schedule changes/substitutions
+// model TimetableException {
+//   id               String          @id @default(cuid())
+//   organizationId   String
+//   organization     Organization    @relation(fields: [organizationId], references: [id])
+
+//   // Reference to the original timetable entry
+//   originalTimetableId String?
+//   originalTimetable   Timetable?      @relation(fields: [originalTimetableId], references: [id])
+
+//   // Exception details
+//   exceptionDate    DateTime        // Specific date of the exception
+//   exceptionType    ExceptionType   // CANCELLED, SUBSTITUTED, RESCHEDULED, ROOM_CHANGE
+
+//   // Substitute details (if applicable)
+//   substituteTeacherId    String?
+//   substituteTeacher      Teacher?         @relation(fields: [substituteTeacherId], references: [id])
+
+//   newTimePeriodId        String?
+//   newTimePeriod          TimePeriod?      @relation(fields: [newTimePeriodId], references: [id])
+
+//   newRoomNumber          String?
+
+//   // Reason and approval
+//   reason                 String
+//   approvedBy            String?
+//   approvedAt            DateTime?
+
+//   // Notification status
+//   notificationSent      Boolean          @default(false)
+
+//   createdBy             String
+//   createdAt             DateTime         @default(now())
+//   updatedAt             DateTime         @updatedAt
+
+//   @@index([organizationId, exceptionDate])
+//   @@index([originalTimetableId])
+// }
+// enum DayOfWeek {
+//   MONDAY
+//   TUESDAY
+//   WEDNESDAY
+//   THURSDAY
+//   FRIDAY
+//   SATURDAY
+//   SUNDAY
+// }
+
+// enum PeriodType {
+//   ACADEMIC       // Regular classes
+//   BREAK         // Recess, lunch break
+//   ASSEMBLY      // Morning assembly
+//   SPORTS        // Physical education
+//   EXTRA_CURRICULAR // Clubs, activities
+//   EXAM          // Examination periods
+// }
+
+// enum TimetableStatus {
+//   ACTIVE
+//   INACTIVE
+//   SUSPENDED
+//   COMPLETED
+// }
+
+// enum ExceptionType {
+//   CANCELLED
+//   SUBSTITUTED
+//   RESCHEDULED
+//   ROOM_CHANGE
+//   TEACHER_ABSENT
+// }

@@ -4,6 +4,7 @@ const NotificationEmptyState = () => {
   return (
     <div className="flex flex-col items-center w-full h-full">
       <svg
+        className="max-w-full h-auto"
         width="342"
         height="320"
         viewBox="0 0 342 320"

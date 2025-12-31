@@ -42,26 +42,6 @@ export const YearType = {
 export type YearType = (typeof YearType)[keyof typeof YearType]
 
 
-export const AIAgentRunFrequency = {
-  DAILY: 'DAILY',
-  WEEKLY: 'WEEKLY',
-  MONTHLY: 'MONTHLY',
-  ON_DEMAND: 'ON_DEMAND'
-} as const
-
-export type AIAgentRunFrequency = (typeof AIAgentRunFrequency)[keyof typeof AIAgentRunFrequency]
-
-
-export const AIAgentExecutionStatus = {
-  RUNNING: 'RUNNING',
-  SUCCESS: 'SUCCESS',
-  FAILED: 'FAILED',
-  PARTIAL: 'PARTIAL'
-} as const
-
-export type AIAgentExecutionStatus = (typeof AIAgentExecutionStatus)[keyof typeof AIAgentExecutionStatus]
-
-
 export const AssignmentStatus = {
   PENDING: 'PENDING',
   ASSIGNED: 'ASSIGNED',
@@ -201,7 +181,10 @@ export const NotificationType = {
   ATTENDANCE_ALERT: 'ATTENDANCE_ALERT',
   DOCUMENT_REQUEST: 'DOCUMENT_REQUEST',
   GENERAL_ANNOUNCEMENT: 'GENERAL_ANNOUNCEMENT',
-  EXAM: 'EXAM'
+  EXAM: 'EXAM',
+  LEAVE: 'LEAVE',
+  ACADEMIC_REPORT: 'ACADEMIC_REPORT',
+  GREETING: 'GREETING'
 } as const
 
 export type NotificationType = (typeof NotificationType)[keyof typeof NotificationType]
@@ -455,3 +438,23 @@ export const LeadCommunicationPreference = {
 } as const
 
 export type LeadCommunicationPreference = (typeof LeadCommunicationPreference)[keyof typeof LeadCommunicationPreference]
+
+
+export const AIAgentRunFrequency = {
+  DAILY: 'DAILY',
+  WEEKLY: 'WEEKLY',
+  MONTHLY: 'MONTHLY',
+  ON_DEMAND: 'ON_DEMAND'
+} as const
+
+export type AIAgentRunFrequency = (typeof AIAgentRunFrequency)[keyof typeof AIAgentRunFrequency]
+
+
+export const AIAgentExecutionStatus = {
+  RUNNING: 'RUNNING',
+  SUCCESS: 'SUCCESS',
+  FAILED: 'FAILED',
+  PARTIAL: 'PARTIAL'
+} as const
+
+export type AIAgentExecutionStatus = (typeof AIAgentExecutionStatus)[keyof typeof AIAgentExecutionStatus]

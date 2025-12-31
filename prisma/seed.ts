@@ -230,6 +230,27 @@ async function generateLeads(count: number) {
   }
 }
 
+async function updateNotificationLog() {
+  const notifications = await prisma.notificationLog.findMany({
+    where: {
+      title: null,
+      // message: null,
+    },
+  });
+
+  for (const notification of notifications) {
+    await prisma.notificationLog.update({
+      where: {
+        id: notification.id,
+      },
+      data: {
+        title: "Test Notification",
+        message: "Test Notification lorem ipsum dolor sit amet consectetur adipiscing elit",
+      },
+    });
+  }
+}
+
 /* ----------------------------------------------
  * Main Runner
  * ---------------------------------------------- */
@@ -239,7 +260,7 @@ async function main() {
   // await generateNotices(1000);
   // await initFeeSenseAgent();
   // await generateLeads(500); // <-- specify count
-
+  await updateNotificationLog();
   
   console.log(`\n✅ Seeding Completed Successfully!\n`);
 }

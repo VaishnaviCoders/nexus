@@ -1,10 +1,13 @@
 import type { NextConfig } from 'next';
+const runtimeCaching = require("next-pwa/cache");
 const withPWA = require('next-pwa')({
   dest: 'public',
   register: true,
   skipWaiting: true,
-  disable: process.env.NODE_ENV === 'development',
-
+  importScripts: ['/firebase-messaging-sw.js'],
+  runtimeCaching,
+  
+  // disable: process.env.NODE_ENV === 'development',
 });
 
 
@@ -21,7 +24,7 @@ const nextConfig: NextConfig = {
     serverActions: {
       bodySizeLimit: '3mb',
     },
-    optimizeCss:true,
+    // optimizeCss:true,
     typedEnv:true,
     turbopackFileSystemCacheForDev:true
   },

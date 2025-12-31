@@ -678,6 +678,22 @@ export type FeeUncheckedUpdateManyWithoutStudentNestedInput = {
   deleteMany?: Prisma.FeeScalarWhereInput | Prisma.FeeScalarWhereInput[]
 }
 
+export type FloatFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
+export type NullableFloatFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
 export type EnumFeeStatusFieldUpdateOperationsInput = {
   set?: $Enums.FeeStatus
 }

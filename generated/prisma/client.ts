@@ -50,20 +50,10 @@ export type AcademicYear = Prisma.AcademicYearModel
  */
 export type Organization = Prisma.OrganizationModel
 /**
- * Model FeeSenseAgent
+ * Model NotificationSetting
  * 
  */
-export type FeeSenseAgent = Prisma.FeeSenseAgentModel
-/**
- * Model FeeSenseExecutionLog
- * 
- */
-export type FeeSenseExecutionLog = Prisma.FeeSenseExecutionLogModel
-/**
- * Model FeeSenseReport
- * 
- */
-export type FeeSenseReport = Prisma.FeeSenseReportModel
+export type NotificationSetting = Prisma.NotificationSettingModel
 /**
  * Model User
  * 
@@ -229,3 +219,18 @@ export type Lead = Prisma.LeadModel
  * 
  */
 export type LeadActivity = Prisma.LeadActivityModel
+/**
+ * Model FeeSenseAgent
+ * 
+ */
+export type FeeSenseAgent = Prisma.FeeSenseAgentModel
+/**
+ * Model FeeSenseExecutionLog
+ * 
+ */
+export type FeeSenseExecutionLog = Prisma.FeeSenseExecutionLogModel
+/**
+ * Model FeeSenseReport
+ * 
+ */
+export type FeeSenseReport = Prisma.FeeSenseReportModel

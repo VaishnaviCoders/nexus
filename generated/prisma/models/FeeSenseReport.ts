@@ -704,14 +704,6 @@ export type FeeSenseReportCreatesentToEmailsInput = {
   set: string[]
 }
 
-export type NullableFloatFieldUpdateOperationsInput = {
-  set?: number | null
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type FeeSenseReportUpdatesentToEmailsInput = {
   set?: string[]
   push?: string | string[]

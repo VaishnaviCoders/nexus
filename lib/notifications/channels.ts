@@ -3,6 +3,7 @@
 import { NotificationChannel } from "@/generated/prisma/enums";
 import admin from "firebase-admin";
 import { Message } from "firebase-admin/messaging";
+import { Resend } from "resend";
 
 // ============================================
 // CHANNEL PROVIDER INTERFACE
@@ -11,11 +12,13 @@ export interface ChannelProvider {
   send(
     to: string,
     subject: string | undefined,
-    body: string
+    body: string,
+    data?: { link?: string;[key: string]: any }
   ): Promise<{
     success: boolean;
     messageId?: string;
     error?: string;
+    data?: any;
   }>;
 }
 
@@ -23,39 +26,17 @@ export interface ChannelProvider {
 // EMAIL PROVIDER (using Resend)
 // ============================================
 class EmailProvider implements ChannelProvider {
-  async send(to: string, subject: string | undefined, body: string) {
+  async send(to: string, subject: string, body: string) {
     try {
-      const apiKey = process.env.RESEND_API_KEY;
-      const fromEmail = process.env.SENDER_EMAIL || "noreply@school.com";
 
-      if (!apiKey) {
-        return { success: false, error: "RESEND_API_KEY not configured" };
-      }
-
-      const response = await fetch("https://api.resend.com/emails", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${apiKey}`,
-        },
-        body: JSON.stringify({
-          from: fromEmail,
-          to: [to],
-          subject: subject || "Notification",
-          text: body,
-        }),
+      const resend = new Resend(process.env.RESEND_API_KEY!);
+      const { data, error } = await resend.emails.send({
+        from: 'no-reply@shiksha.cloud',
+        to,
+        subject,
+        react: body,
       });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        return { success: true, messageId: data.id };
-      }
-
-      return {
-        success: false,
-        error: data.message || "Failed to send email",
-      };
+      return { success: true, data };
     } catch (error) {
       return {
         success: false,
@@ -117,37 +98,37 @@ class SMSProvider implements ChannelProvider {
 class WhatsAppProvider implements ChannelProvider {
   async send(to: string, _subject: string | undefined, body: string) {
     try {
-   const payload = {
+      const payload = {
         messaging_product: "whatsapp",
         to: `91${to}`, // Add country code
         type: "text",
         text: { body },
       };
       const response = await fetch(`https://graph.facebook.com/v22.0/${process.env.WHATSAPP_PHONE_NUMBER_ID}/messages`, {
-      method: 'POST',
-      headers: {
-      Authorization: `Bearer ${process.env.WHATSAPP_ACCESS_TOKEN}`,
-      "Content-Type": "application/json",
-    },
-      body: JSON.stringify(payload),
-    });
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${process.env.WHATSAPP_ACCESS_TOKEN}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
 
-    const data = await response.json();
-    console.log("WhatsApp API Response:", data); 
-    
-    if (response.ok && data.messages) {
+      const data = await response.json();
+      console.log("WhatsApp API Response:", data);
+
+      if (response.ok && data.messages) {
         return { success: true, messageId: data.messages[0].id };
       }// Optional logging
-    return {
-      success: true,
-      data,
-    };
+      return {
+        success: true,
+        data,
+      };
     } catch (error) {
-       console.error("WhatsApp Send Error:", error);
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : "Failed to send message",
-    };
+      console.error("WhatsApp Send Error:", error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "Failed to send message",
+      };
     }
   }
 }
@@ -172,7 +153,7 @@ class PushProvider implements ChannelProvider {
     fcmToken: string,
     subject: string | undefined,
     body: string,
-    data?: { link?: string; [key: string]: any }
+    data?: { link?: string;[key: string]: any }
   ) {
     try {
       if (!fcmToken) {
@@ -193,22 +174,35 @@ class PushProvider implements ChannelProvider {
         // Add link if provided
         webpush: data?.link
           ? {
-              fcmOptions: {
-                link: data.link,
-              },
-            }
-          : undefined,
+            fcmOptions: {
+              link: data.link,
+            },
+            notification: {
+              timestamp: Date.now(),
+              icon: '/icons/icon-192x192.png',
+              badge: '/icons/badge-72x72.png',
+            },
+          }
+          : {
+            notification: {
+              timestamp: Date.now(),
+              icon: '/icons/icon-192x192.png',
+              badge: '/icons/badge-72x72.png',
+            },
+          },
         // Add custom data
-        data: data
-          ? Object.fromEntries(
-              Object.entries(data).map(([k, v]) => [k, String(v)])
-            )
-          : undefined,
+        data: {
+          ...(data ? Object.fromEntries(
+            Object.entries(data).map(([k, v]) => [k, String(v)])
+          ) : {}),
+          notif_id: Math.random().toString(36).substring(7),
+          sent_at: new Date().toISOString(),
+        },
       };
 
       const response = await admin.messaging().send(payload);
 
-         
+
       // For now, just log
 
       return {

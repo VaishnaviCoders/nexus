@@ -386,9 +386,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 export const ModelName = {
   AcademicYear: 'AcademicYear',
   Organization: 'Organization',
-  FeeSenseAgent: 'FeeSenseAgent',
-  FeeSenseExecutionLog: 'FeeSenseExecutionLog',
-  FeeSenseReport: 'FeeSenseReport',
+  NotificationSetting: 'NotificationSetting',
   User: 'User',
   DeviceToken: 'DeviceToken',
   Student: 'Student',
@@ -421,7 +419,10 @@ export const ModelName = {
   Leave: 'Leave',
   LeaveStatusTimeline: 'LeaveStatusTimeline',
   Lead: 'Lead',
-  LeadActivity: 'LeadActivity'
+  LeadActivity: 'LeadActivity',
+  FeeSenseAgent: 'FeeSenseAgent',
+  FeeSenseExecutionLog: 'FeeSenseExecutionLog',
+  FeeSenseReport: 'FeeSenseReport'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -437,7 +438,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "academicYear" | "organization" | "feeSenseAgent" | "feeSenseExecutionLog" | "feeSenseReport" | "user" | "deviceToken" | "student" | "parent" | "parentStudent" | "teacher" | "teacherProfile" | "grade" | "section" | "subject" | "teachingAssignment" | "studentAttendance" | "studentDocument" | "fee" | "feePayment" | "feeCategory" | "academicCalendar" | "anonymousComplaint" | "complaintStatusTimeline" | "notice" | "noticeAttachment" | "notificationLog" | "scheduledJob" | "examSession" | "exam" | "examEnrollment" | "examResult" | "hallTicket" | "reportCard" | "leave" | "leaveStatusTimeline" | "lead" | "leadActivity"
+    modelProps: "academicYear" | "organization" | "notificationSetting" | "user" | "deviceToken" | "student" | "parent" | "parentStudent" | "teacher" | "teacherProfile" | "grade" | "section" | "subject" | "teachingAssignment" | "studentAttendance" | "studentDocument" | "fee" | "feePayment" | "feeCategory" | "academicCalendar" | "anonymousComplaint" | "complaintStatusTimeline" | "notice" | "noticeAttachment" | "notificationLog" | "scheduledJob" | "examSession" | "exam" | "examEnrollment" | "examResult" | "hallTicket" | "reportCard" | "leave" | "leaveStatusTimeline" | "lead" | "leadActivity" | "feeSenseAgent" | "feeSenseExecutionLog" | "feeSenseReport"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -589,225 +590,77 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
-    FeeSenseAgent: {
-      payload: Prisma.$FeeSenseAgentPayload<ExtArgs>
-      fields: Prisma.FeeSenseAgentFieldRefs
+    NotificationSetting: {
+      payload: Prisma.$NotificationSettingPayload<ExtArgs>
+      fields: Prisma.NotificationSettingFieldRefs
       operations: {
         findUnique: {
-          args: Prisma.FeeSenseAgentFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseAgentPayload> | null
+          args: Prisma.NotificationSettingFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationSettingPayload> | null
         }
         findUniqueOrThrow: {
-          args: Prisma.FeeSenseAgentFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseAgentPayload>
+          args: Prisma.NotificationSettingFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationSettingPayload>
         }
         findFirst: {
-          args: Prisma.FeeSenseAgentFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseAgentPayload> | null
+          args: Prisma.NotificationSettingFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationSettingPayload> | null
         }
         findFirstOrThrow: {
-          args: Prisma.FeeSenseAgentFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseAgentPayload>
+          args: Prisma.NotificationSettingFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationSettingPayload>
         }
         findMany: {
-          args: Prisma.FeeSenseAgentFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseAgentPayload>[]
+          args: Prisma.NotificationSettingFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationSettingPayload>[]
         }
         create: {
-          args: Prisma.FeeSenseAgentCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseAgentPayload>
+          args: Prisma.NotificationSettingCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationSettingPayload>
         }
         createMany: {
-          args: Prisma.FeeSenseAgentCreateManyArgs<ExtArgs>
+          args: Prisma.NotificationSettingCreateManyArgs<ExtArgs>
           result: BatchPayload
         }
         createManyAndReturn: {
-          args: Prisma.FeeSenseAgentCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseAgentPayload>[]
+          args: Prisma.NotificationSettingCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationSettingPayload>[]
         }
         delete: {
-          args: Prisma.FeeSenseAgentDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseAgentPayload>
+          args: Prisma.NotificationSettingDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationSettingPayload>
         }
         update: {
-          args: Prisma.FeeSenseAgentUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseAgentPayload>
+          args: Prisma.NotificationSettingUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationSettingPayload>
         }
         deleteMany: {
-          args: Prisma.FeeSenseAgentDeleteManyArgs<ExtArgs>
+          args: Prisma.NotificationSettingDeleteManyArgs<ExtArgs>
           result: BatchPayload
         }
         updateMany: {
-          args: Prisma.FeeSenseAgentUpdateManyArgs<ExtArgs>
+          args: Prisma.NotificationSettingUpdateManyArgs<ExtArgs>
           result: BatchPayload
         }
         updateManyAndReturn: {
-          args: Prisma.FeeSenseAgentUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseAgentPayload>[]
+          args: Prisma.NotificationSettingUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationSettingPayload>[]
         }
         upsert: {
-          args: Prisma.FeeSenseAgentUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseAgentPayload>
+          args: Prisma.NotificationSettingUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationSettingPayload>
         }
         aggregate: {
-          args: Prisma.FeeSenseAgentAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateFeeSenseAgent>
+          args: Prisma.NotificationSettingAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateNotificationSetting>
         }
         groupBy: {
-          args: Prisma.FeeSenseAgentGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.FeeSenseAgentGroupByOutputType>[]
+          args: Prisma.NotificationSettingGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.NotificationSettingGroupByOutputType>[]
         }
         count: {
-          args: Prisma.FeeSenseAgentCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.FeeSenseAgentCountAggregateOutputType> | number
-        }
-      }
-    }
-    FeeSenseExecutionLog: {
-      payload: Prisma.$FeeSenseExecutionLogPayload<ExtArgs>
-      fields: Prisma.FeeSenseExecutionLogFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.FeeSenseExecutionLogFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseExecutionLogPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.FeeSenseExecutionLogFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseExecutionLogPayload>
-        }
-        findFirst: {
-          args: Prisma.FeeSenseExecutionLogFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseExecutionLogPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.FeeSenseExecutionLogFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseExecutionLogPayload>
-        }
-        findMany: {
-          args: Prisma.FeeSenseExecutionLogFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseExecutionLogPayload>[]
-        }
-        create: {
-          args: Prisma.FeeSenseExecutionLogCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseExecutionLogPayload>
-        }
-        createMany: {
-          args: Prisma.FeeSenseExecutionLogCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.FeeSenseExecutionLogCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseExecutionLogPayload>[]
-        }
-        delete: {
-          args: Prisma.FeeSenseExecutionLogDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseExecutionLogPayload>
-        }
-        update: {
-          args: Prisma.FeeSenseExecutionLogUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseExecutionLogPayload>
-        }
-        deleteMany: {
-          args: Prisma.FeeSenseExecutionLogDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.FeeSenseExecutionLogUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.FeeSenseExecutionLogUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseExecutionLogPayload>[]
-        }
-        upsert: {
-          args: Prisma.FeeSenseExecutionLogUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseExecutionLogPayload>
-        }
-        aggregate: {
-          args: Prisma.FeeSenseExecutionLogAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateFeeSenseExecutionLog>
-        }
-        groupBy: {
-          args: Prisma.FeeSenseExecutionLogGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.FeeSenseExecutionLogGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.FeeSenseExecutionLogCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.FeeSenseExecutionLogCountAggregateOutputType> | number
-        }
-      }
-    }
-    FeeSenseReport: {
-      payload: Prisma.$FeeSenseReportPayload<ExtArgs>
-      fields: Prisma.FeeSenseReportFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.FeeSenseReportFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseReportPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.FeeSenseReportFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseReportPayload>
-        }
-        findFirst: {
-          args: Prisma.FeeSenseReportFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseReportPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.FeeSenseReportFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseReportPayload>
-        }
-        findMany: {
-          args: Prisma.FeeSenseReportFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseReportPayload>[]
-        }
-        create: {
-          args: Prisma.FeeSenseReportCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseReportPayload>
-        }
-        createMany: {
-          args: Prisma.FeeSenseReportCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.FeeSenseReportCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseReportPayload>[]
-        }
-        delete: {
-          args: Prisma.FeeSenseReportDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseReportPayload>
-        }
-        update: {
-          args: Prisma.FeeSenseReportUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseReportPayload>
-        }
-        deleteMany: {
-          args: Prisma.FeeSenseReportDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.FeeSenseReportUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.FeeSenseReportUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseReportPayload>[]
-        }
-        upsert: {
-          args: Prisma.FeeSenseReportUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseReportPayload>
-        }
-        aggregate: {
-          args: Prisma.FeeSenseReportAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateFeeSenseReport>
-        }
-        groupBy: {
-          args: Prisma.FeeSenseReportGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.FeeSenseReportGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.FeeSenseReportCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.FeeSenseReportCountAggregateOutputType> | number
+          args: Prisma.NotificationSettingCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.NotificationSettingCountAggregateOutputType> | number
         }
       }
     }
@@ -3253,6 +3106,228 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    FeeSenseAgent: {
+      payload: Prisma.$FeeSenseAgentPayload<ExtArgs>
+      fields: Prisma.FeeSenseAgentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.FeeSenseAgentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseAgentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.FeeSenseAgentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseAgentPayload>
+        }
+        findFirst: {
+          args: Prisma.FeeSenseAgentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseAgentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.FeeSenseAgentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseAgentPayload>
+        }
+        findMany: {
+          args: Prisma.FeeSenseAgentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseAgentPayload>[]
+        }
+        create: {
+          args: Prisma.FeeSenseAgentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseAgentPayload>
+        }
+        createMany: {
+          args: Prisma.FeeSenseAgentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.FeeSenseAgentCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseAgentPayload>[]
+        }
+        delete: {
+          args: Prisma.FeeSenseAgentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseAgentPayload>
+        }
+        update: {
+          args: Prisma.FeeSenseAgentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseAgentPayload>
+        }
+        deleteMany: {
+          args: Prisma.FeeSenseAgentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.FeeSenseAgentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.FeeSenseAgentUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseAgentPayload>[]
+        }
+        upsert: {
+          args: Prisma.FeeSenseAgentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseAgentPayload>
+        }
+        aggregate: {
+          args: Prisma.FeeSenseAgentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateFeeSenseAgent>
+        }
+        groupBy: {
+          args: Prisma.FeeSenseAgentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FeeSenseAgentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.FeeSenseAgentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FeeSenseAgentCountAggregateOutputType> | number
+        }
+      }
+    }
+    FeeSenseExecutionLog: {
+      payload: Prisma.$FeeSenseExecutionLogPayload<ExtArgs>
+      fields: Prisma.FeeSenseExecutionLogFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.FeeSenseExecutionLogFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseExecutionLogPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.FeeSenseExecutionLogFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseExecutionLogPayload>
+        }
+        findFirst: {
+          args: Prisma.FeeSenseExecutionLogFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseExecutionLogPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.FeeSenseExecutionLogFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseExecutionLogPayload>
+        }
+        findMany: {
+          args: Prisma.FeeSenseExecutionLogFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseExecutionLogPayload>[]
+        }
+        create: {
+          args: Prisma.FeeSenseExecutionLogCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseExecutionLogPayload>
+        }
+        createMany: {
+          args: Prisma.FeeSenseExecutionLogCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.FeeSenseExecutionLogCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseExecutionLogPayload>[]
+        }
+        delete: {
+          args: Prisma.FeeSenseExecutionLogDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseExecutionLogPayload>
+        }
+        update: {
+          args: Prisma.FeeSenseExecutionLogUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseExecutionLogPayload>
+        }
+        deleteMany: {
+          args: Prisma.FeeSenseExecutionLogDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.FeeSenseExecutionLogUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.FeeSenseExecutionLogUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseExecutionLogPayload>[]
+        }
+        upsert: {
+          args: Prisma.FeeSenseExecutionLogUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseExecutionLogPayload>
+        }
+        aggregate: {
+          args: Prisma.FeeSenseExecutionLogAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateFeeSenseExecutionLog>
+        }
+        groupBy: {
+          args: Prisma.FeeSenseExecutionLogGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FeeSenseExecutionLogGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.FeeSenseExecutionLogCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FeeSenseExecutionLogCountAggregateOutputType> | number
+        }
+      }
+    }
+    FeeSenseReport: {
+      payload: Prisma.$FeeSenseReportPayload<ExtArgs>
+      fields: Prisma.FeeSenseReportFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.FeeSenseReportFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseReportPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.FeeSenseReportFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseReportPayload>
+        }
+        findFirst: {
+          args: Prisma.FeeSenseReportFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseReportPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.FeeSenseReportFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseReportPayload>
+        }
+        findMany: {
+          args: Prisma.FeeSenseReportFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseReportPayload>[]
+        }
+        create: {
+          args: Prisma.FeeSenseReportCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseReportPayload>
+        }
+        createMany: {
+          args: Prisma.FeeSenseReportCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.FeeSenseReportCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseReportPayload>[]
+        }
+        delete: {
+          args: Prisma.FeeSenseReportDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseReportPayload>
+        }
+        update: {
+          args: Prisma.FeeSenseReportUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseReportPayload>
+        }
+        deleteMany: {
+          args: Prisma.FeeSenseReportDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.FeeSenseReportUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.FeeSenseReportUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseReportPayload>[]
+        }
+        upsert: {
+          args: Prisma.FeeSenseReportUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeSenseReportPayload>
+        }
+        aggregate: {
+          args: Prisma.FeeSenseReportAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateFeeSenseReport>
+        }
+        groupBy: {
+          args: Prisma.FeeSenseReportGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FeeSenseReportGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.FeeSenseReportCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FeeSenseReportCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -3332,76 +3407,19 @@ export const OrganizationScalarFieldEnum = {
 export type OrganizationScalarFieldEnum = (typeof OrganizationScalarFieldEnum)[keyof typeof OrganizationScalarFieldEnum]
 
 
-export const FeeSenseAgentScalarFieldEnum = {
+export const NotificationSettingScalarFieldEnum = {
   id: 'id',
-  organizationId: 'organizationId',
-  name: 'name',
+  notificationType: 'notificationType',
+  label: 'label',
   description: 'description',
+  channels: 'channels',
   isActive: 'isActive',
-  capabilities: 'capabilities',
-  riskScoreLowThreshold: 'riskScoreLowThreshold',
-  riskScoreMediumThreshold: 'riskScoreMediumThreshold',
-  riskScoreHighThreshold: 'riskScoreHighThreshold',
-  maxNotificationAttempts: 'maxNotificationAttempts',
-  voiceCallThreshold: 'voiceCallThreshold',
-  enableEmailReminders: 'enableEmailReminders',
-  enableSMSReminders: 'enableSMSReminders',
-  enableVoiceCalls: 'enableVoiceCalls',
-  enableWhatsApp: 'enableWhatsApp',
-  runFrequency: 'runFrequency',
-  scheduleTime: 'scheduleTime',
-  lastRunAt: 'lastRunAt',
-  nextRunAt: 'nextRunAt',
-  totalRuns: 'totalRuns',
-  successfulRuns: 'successfulRuns',
-  failedRuns: 'failedRuns',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  organizationId: 'organizationId'
 } as const
 
-export type FeeSenseAgentScalarFieldEnum = (typeof FeeSenseAgentScalarFieldEnum)[keyof typeof FeeSenseAgentScalarFieldEnum]
-
-
-export const FeeSenseExecutionLogScalarFieldEnum = {
-  id: 'id',
-  agentId: 'agentId',
-  startedAt: 'startedAt',
-  completedAt: 'completedAt',
-  status: 'status',
-  studentsAnalyzed: 'studentsAnalyzed',
-  remindersGenerated: 'remindersGenerated',
-  emailsSent: 'emailsSent',
-  smsSent: 'smsSent',
-  voiceCallsScheduled: 'voiceCallsScheduled',
-  totalAmountOverdue: 'totalAmountOverdue',
-  errorMessage: 'errorMessage',
-  errorDetails: 'errorDetails',
-  createdAt: 'createdAt'
-} as const
-
-export type FeeSenseExecutionLogScalarFieldEnum = (typeof FeeSenseExecutionLogScalarFieldEnum)[keyof typeof FeeSenseExecutionLogScalarFieldEnum]
-
-
-export const FeeSenseReportScalarFieldEnum = {
-  id: 'id',
-  agentId: 'agentId',
-  reportDate: 'reportDate',
-  totalStudentsAtRisk: 'totalStudentsAtRisk',
-  highRiskCount: 'highRiskCount',
-  mediumRiskCount: 'mediumRiskCount',
-  lowRiskCount: 'lowRiskCount',
-  totalOverdueAmount: 'totalOverdueAmount',
-  paymentsReceived: 'paymentsReceived',
-  emailsSent: 'emailsSent',
-  smsSent: 'smsSent',
-  voiceCallsScheduled: 'voiceCallsScheduled',
-  responseRate: 'responseRate',
-  insights: 'insights',
-  sentToEmails: 'sentToEmails',
-  createdAt: 'createdAt'
-} as const
-
-export type FeeSenseReportScalarFieldEnum = (typeof FeeSenseReportScalarFieldEnum)[keyof typeof FeeSenseReportScalarFieldEnum]
+export type NotificationSettingScalarFieldEnum = (typeof NotificationSettingScalarFieldEnum)[keyof typeof NotificationSettingScalarFieldEnum]
 
 
 export const UserScalarFieldEnum = {
@@ -4025,6 +4043,78 @@ export const LeadActivityScalarFieldEnum = {
 export type LeadActivityScalarFieldEnum = (typeof LeadActivityScalarFieldEnum)[keyof typeof LeadActivityScalarFieldEnum]
 
 
+export const FeeSenseAgentScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  name: 'name',
+  description: 'description',
+  isActive: 'isActive',
+  capabilities: 'capabilities',
+  riskScoreLowThreshold: 'riskScoreLowThreshold',
+  riskScoreMediumThreshold: 'riskScoreMediumThreshold',
+  riskScoreHighThreshold: 'riskScoreHighThreshold',
+  maxNotificationAttempts: 'maxNotificationAttempts',
+  voiceCallThreshold: 'voiceCallThreshold',
+  enableEmailReminders: 'enableEmailReminders',
+  enableSMSReminders: 'enableSMSReminders',
+  enableVoiceCalls: 'enableVoiceCalls',
+  enableWhatsApp: 'enableWhatsApp',
+  runFrequency: 'runFrequency',
+  scheduleTime: 'scheduleTime',
+  lastRunAt: 'lastRunAt',
+  nextRunAt: 'nextRunAt',
+  totalRuns: 'totalRuns',
+  successfulRuns: 'successfulRuns',
+  failedRuns: 'failedRuns',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type FeeSenseAgentScalarFieldEnum = (typeof FeeSenseAgentScalarFieldEnum)[keyof typeof FeeSenseAgentScalarFieldEnum]
+
+
+export const FeeSenseExecutionLogScalarFieldEnum = {
+  id: 'id',
+  agentId: 'agentId',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt',
+  status: 'status',
+  studentsAnalyzed: 'studentsAnalyzed',
+  remindersGenerated: 'remindersGenerated',
+  emailsSent: 'emailsSent',
+  smsSent: 'smsSent',
+  voiceCallsScheduled: 'voiceCallsScheduled',
+  totalAmountOverdue: 'totalAmountOverdue',
+  errorMessage: 'errorMessage',
+  errorDetails: 'errorDetails',
+  createdAt: 'createdAt'
+} as const
+
+export type FeeSenseExecutionLogScalarFieldEnum = (typeof FeeSenseExecutionLogScalarFieldEnum)[keyof typeof FeeSenseExecutionLogScalarFieldEnum]
+
+
+export const FeeSenseReportScalarFieldEnum = {
+  id: 'id',
+  agentId: 'agentId',
+  reportDate: 'reportDate',
+  totalStudentsAtRisk: 'totalStudentsAtRisk',
+  highRiskCount: 'highRiskCount',
+  mediumRiskCount: 'mediumRiskCount',
+  lowRiskCount: 'lowRiskCount',
+  totalOverdueAmount: 'totalOverdueAmount',
+  paymentsReceived: 'paymentsReceived',
+  emailsSent: 'emailsSent',
+  smsSent: 'smsSent',
+  voiceCallsScheduled: 'voiceCallsScheduled',
+  responseRate: 'responseRate',
+  insights: 'insights',
+  sentToEmails: 'sentToEmails',
+  createdAt: 'createdAt'
+} as const
+
+export type FeeSenseReportScalarFieldEnum = (typeof FeeSenseReportScalarFieldEnum)[keyof typeof FeeSenseReportScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -4033,19 +4123,19 @@ export const SortOrder = {
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
+
 export const NullableJsonNullValueInput = {
   DbNull: DbNull,
   JsonNull: JsonNull
 } as const
 
 export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
-
-
-export const JsonNullValueInput = {
-  JsonNull: JsonNull
-} as const
-
-export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
 export const QueryMode = {
@@ -4089,18 +4179,6 @@ export const OrganizationOrderByRelevanceFieldEnum = {
 export type OrganizationOrderByRelevanceFieldEnum = (typeof OrganizationOrderByRelevanceFieldEnum)[keyof typeof OrganizationOrderByRelevanceFieldEnum]
 
 
-export const FeeSenseAgentOrderByRelevanceFieldEnum = {
-  id: 'id',
-  organizationId: 'organizationId',
-  name: 'name',
-  description: 'description',
-  capabilities: 'capabilities',
-  scheduleTime: 'scheduleTime'
-} as const
-
-export type FeeSenseAgentOrderByRelevanceFieldEnum = (typeof FeeSenseAgentOrderByRelevanceFieldEnum)[keyof typeof FeeSenseAgentOrderByRelevanceFieldEnum]
-
-
 export const JsonNullValueFilter = {
   DbNull: DbNull,
   JsonNull: JsonNull,
@@ -4110,22 +4188,14 @@ export const JsonNullValueFilter = {
 export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 
 
-export const FeeSenseExecutionLogOrderByRelevanceFieldEnum = {
+export const NotificationSettingOrderByRelevanceFieldEnum = {
   id: 'id',
-  agentId: 'agentId',
-  errorMessage: 'errorMessage'
+  label: 'label',
+  description: 'description',
+  organizationId: 'organizationId'
 } as const
 
-export type FeeSenseExecutionLogOrderByRelevanceFieldEnum = (typeof FeeSenseExecutionLogOrderByRelevanceFieldEnum)[keyof typeof FeeSenseExecutionLogOrderByRelevanceFieldEnum]
-
-
-export const FeeSenseReportOrderByRelevanceFieldEnum = {
-  id: 'id',
-  agentId: 'agentId',
-  sentToEmails: 'sentToEmails'
-} as const
-
-export type FeeSenseReportOrderByRelevanceFieldEnum = (typeof FeeSenseReportOrderByRelevanceFieldEnum)[keyof typeof FeeSenseReportOrderByRelevanceFieldEnum]
+export type NotificationSettingOrderByRelevanceFieldEnum = (typeof NotificationSettingOrderByRelevanceFieldEnum)[keyof typeof NotificationSettingOrderByRelevanceFieldEnum]
 
 
 export const UserOrderByRelevanceFieldEnum = {
@@ -4571,6 +4641,36 @@ export const LeadActivityOrderByRelevanceFieldEnum = {
 export type LeadActivityOrderByRelevanceFieldEnum = (typeof LeadActivityOrderByRelevanceFieldEnum)[keyof typeof LeadActivityOrderByRelevanceFieldEnum]
 
 
+export const FeeSenseAgentOrderByRelevanceFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  name: 'name',
+  description: 'description',
+  capabilities: 'capabilities',
+  scheduleTime: 'scheduleTime'
+} as const
+
+export type FeeSenseAgentOrderByRelevanceFieldEnum = (typeof FeeSenseAgentOrderByRelevanceFieldEnum)[keyof typeof FeeSenseAgentOrderByRelevanceFieldEnum]
+
+
+export const FeeSenseExecutionLogOrderByRelevanceFieldEnum = {
+  id: 'id',
+  agentId: 'agentId',
+  errorMessage: 'errorMessage'
+} as const
+
+export type FeeSenseExecutionLogOrderByRelevanceFieldEnum = (typeof FeeSenseExecutionLogOrderByRelevanceFieldEnum)[keyof typeof FeeSenseExecutionLogOrderByRelevanceFieldEnum]
+
+
+export const FeeSenseReportOrderByRelevanceFieldEnum = {
+  id: 'id',
+  agentId: 'agentId',
+  sentToEmails: 'sentToEmails'
+} as const
+
+export type FeeSenseReportOrderByRelevanceFieldEnum = (typeof FeeSenseReportOrderByRelevanceFieldEnum)[keyof typeof FeeSenseReportOrderByRelevanceFieldEnum]
+
+
 
 /**
  * Field references
@@ -4669,44 +4769,16 @@ export type ListEnumOrganizationTypeFieldRefInput<$PrismaModel> = FieldRefInputT
 
 
 /**
- * Reference to a field of type 'AIAgentRunFrequency'
+ * Reference to a field of type 'NotificationType'
  */
-export type EnumAIAgentRunFrequencyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AIAgentRunFrequency'>
+export type EnumNotificationTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NotificationType'>
     
 
 
 /**
- * Reference to a field of type 'AIAgentRunFrequency[]'
+ * Reference to a field of type 'NotificationType[]'
  */
-export type ListEnumAIAgentRunFrequencyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AIAgentRunFrequency[]'>
-    
-
-
-/**
- * Reference to a field of type 'AIAgentExecutionStatus'
- */
-export type EnumAIAgentExecutionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AIAgentExecutionStatus'>
-    
-
-
-/**
- * Reference to a field of type 'AIAgentExecutionStatus[]'
- */
-export type ListEnumAIAgentExecutionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AIAgentExecutionStatus[]'>
-    
-
-
-/**
- * Reference to a field of type 'Float'
- */
-export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
-    
-
-
-/**
- * Reference to a field of type 'Float[]'
- */
-export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+export type ListEnumNotificationTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NotificationType[]'>
     
 
 
@@ -4805,6 +4877,20 @@ export type EnumDocumentTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$Pri
  * Reference to a field of type 'DocumentType[]'
  */
 export type ListEnumDocumentTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DocumentType[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Float'
+ */
+export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+/**
+ * Reference to a field of type 'Float[]'
+ */
+export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
 
 
@@ -4959,20 +5045,6 @@ export type EnumNotificationStatusFieldRefInput<$PrismaModel> = FieldRefInputTyp
  * Reference to a field of type 'NotificationStatus[]'
  */
 export type ListEnumNotificationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NotificationStatus[]'>
-    
-
-
-/**
- * Reference to a field of type 'NotificationType'
- */
-export type EnumNotificationTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NotificationType'>
-    
-
-
-/**
- * Reference to a field of type 'NotificationType[]'
- */
-export type ListEnumNotificationTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NotificationType[]'>
     
 
 
@@ -5157,6 +5229,34 @@ export type EnumSentimentFieldRefInput<$PrismaModel> = FieldRefInputType<$Prisma
 export type ListEnumSentimentFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Sentiment[]'>
     
 
+
+/**
+ * Reference to a field of type 'AIAgentRunFrequency'
+ */
+export type EnumAIAgentRunFrequencyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AIAgentRunFrequency'>
+    
+
+
+/**
+ * Reference to a field of type 'AIAgentRunFrequency[]'
+ */
+export type ListEnumAIAgentRunFrequencyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AIAgentRunFrequency[]'>
+    
+
+
+/**
+ * Reference to a field of type 'AIAgentExecutionStatus'
+ */
+export type EnumAIAgentExecutionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AIAgentExecutionStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'AIAgentExecutionStatus[]'
+ */
+export type ListEnumAIAgentExecutionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AIAgentExecutionStatus[]'>
+    
+
 /**
  * Batch Payload for updateMany & deleteMany & createMany
  */
@@ -5254,9 +5354,7 @@ export type PrismaClientOptions = ({
 export type GlobalOmitConfig = {
   academicYear?: Prisma.AcademicYearOmit
   organization?: Prisma.OrganizationOmit
-  feeSenseAgent?: Prisma.FeeSenseAgentOmit
-  feeSenseExecutionLog?: Prisma.FeeSenseExecutionLogOmit
-  feeSenseReport?: Prisma.FeeSenseReportOmit
+  notificationSetting?: Prisma.NotificationSettingOmit
   user?: Prisma.UserOmit
   deviceToken?: Prisma.DeviceTokenOmit
   student?: Prisma.StudentOmit
@@ -5290,6 +5388,9 @@ export type GlobalOmitConfig = {
   leaveStatusTimeline?: Prisma.LeaveStatusTimelineOmit
   lead?: Prisma.LeadOmit
   leadActivity?: Prisma.LeadActivityOmit
+  feeSenseAgent?: Prisma.FeeSenseAgentOmit
+  feeSenseExecutionLog?: Prisma.FeeSenseExecutionLogOmit
+  feeSenseReport?: Prisma.FeeSenseReportOmit
 }
 
 /* Types for Logging */

@@ -53,9 +53,7 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   AcademicYear: 'AcademicYear',
   Organization: 'Organization',
-  FeeSenseAgent: 'FeeSenseAgent',
-  FeeSenseExecutionLog: 'FeeSenseExecutionLog',
-  FeeSenseReport: 'FeeSenseReport',
+  NotificationSetting: 'NotificationSetting',
   User: 'User',
   DeviceToken: 'DeviceToken',
   Student: 'Student',
@@ -88,7 +86,10 @@ export const ModelName = {
   Leave: 'Leave',
   LeaveStatusTimeline: 'LeaveStatusTimeline',
   Lead: 'Lead',
-  LeadActivity: 'LeadActivity'
+  LeadActivity: 'LeadActivity',
+  FeeSenseAgent: 'FeeSenseAgent',
+  FeeSenseExecutionLog: 'FeeSenseExecutionLog',
+  FeeSenseReport: 'FeeSenseReport'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -147,76 +148,19 @@ export const OrganizationScalarFieldEnum = {
 export type OrganizationScalarFieldEnum = (typeof OrganizationScalarFieldEnum)[keyof typeof OrganizationScalarFieldEnum]
 
 
-export const FeeSenseAgentScalarFieldEnum = {
+export const NotificationSettingScalarFieldEnum = {
   id: 'id',
-  organizationId: 'organizationId',
-  name: 'name',
+  notificationType: 'notificationType',
+  label: 'label',
   description: 'description',
+  channels: 'channels',
   isActive: 'isActive',
-  capabilities: 'capabilities',
-  riskScoreLowThreshold: 'riskScoreLowThreshold',
-  riskScoreMediumThreshold: 'riskScoreMediumThreshold',
-  riskScoreHighThreshold: 'riskScoreHighThreshold',
-  maxNotificationAttempts: 'maxNotificationAttempts',
-  voiceCallThreshold: 'voiceCallThreshold',
-  enableEmailReminders: 'enableEmailReminders',
-  enableSMSReminders: 'enableSMSReminders',
-  enableVoiceCalls: 'enableVoiceCalls',
-  enableWhatsApp: 'enableWhatsApp',
-  runFrequency: 'runFrequency',
-  scheduleTime: 'scheduleTime',
-  lastRunAt: 'lastRunAt',
-  nextRunAt: 'nextRunAt',
-  totalRuns: 'totalRuns',
-  successfulRuns: 'successfulRuns',
-  failedRuns: 'failedRuns',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  organizationId: 'organizationId'
 } as const
 
-export type FeeSenseAgentScalarFieldEnum = (typeof FeeSenseAgentScalarFieldEnum)[keyof typeof FeeSenseAgentScalarFieldEnum]
-
-
-export const FeeSenseExecutionLogScalarFieldEnum = {
-  id: 'id',
-  agentId: 'agentId',
-  startedAt: 'startedAt',
-  completedAt: 'completedAt',
-  status: 'status',
-  studentsAnalyzed: 'studentsAnalyzed',
-  remindersGenerated: 'remindersGenerated',
-  emailsSent: 'emailsSent',
-  smsSent: 'smsSent',
-  voiceCallsScheduled: 'voiceCallsScheduled',
-  totalAmountOverdue: 'totalAmountOverdue',
-  errorMessage: 'errorMessage',
-  errorDetails: 'errorDetails',
-  createdAt: 'createdAt'
-} as const
-
-export type FeeSenseExecutionLogScalarFieldEnum = (typeof FeeSenseExecutionLogScalarFieldEnum)[keyof typeof FeeSenseExecutionLogScalarFieldEnum]
-
-
-export const FeeSenseReportScalarFieldEnum = {
-  id: 'id',
-  agentId: 'agentId',
-  reportDate: 'reportDate',
-  totalStudentsAtRisk: 'totalStudentsAtRisk',
-  highRiskCount: 'highRiskCount',
-  mediumRiskCount: 'mediumRiskCount',
-  lowRiskCount: 'lowRiskCount',
-  totalOverdueAmount: 'totalOverdueAmount',
-  paymentsReceived: 'paymentsReceived',
-  emailsSent: 'emailsSent',
-  smsSent: 'smsSent',
-  voiceCallsScheduled: 'voiceCallsScheduled',
-  responseRate: 'responseRate',
-  insights: 'insights',
-  sentToEmails: 'sentToEmails',
-  createdAt: 'createdAt'
-} as const
-
-export type FeeSenseReportScalarFieldEnum = (typeof FeeSenseReportScalarFieldEnum)[keyof typeof FeeSenseReportScalarFieldEnum]
+export type NotificationSettingScalarFieldEnum = (typeof NotificationSettingScalarFieldEnum)[keyof typeof NotificationSettingScalarFieldEnum]
 
 
 export const UserScalarFieldEnum = {
@@ -840,6 +784,78 @@ export const LeadActivityScalarFieldEnum = {
 export type LeadActivityScalarFieldEnum = (typeof LeadActivityScalarFieldEnum)[keyof typeof LeadActivityScalarFieldEnum]
 
 
+export const FeeSenseAgentScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  name: 'name',
+  description: 'description',
+  isActive: 'isActive',
+  capabilities: 'capabilities',
+  riskScoreLowThreshold: 'riskScoreLowThreshold',
+  riskScoreMediumThreshold: 'riskScoreMediumThreshold',
+  riskScoreHighThreshold: 'riskScoreHighThreshold',
+  maxNotificationAttempts: 'maxNotificationAttempts',
+  voiceCallThreshold: 'voiceCallThreshold',
+  enableEmailReminders: 'enableEmailReminders',
+  enableSMSReminders: 'enableSMSReminders',
+  enableVoiceCalls: 'enableVoiceCalls',
+  enableWhatsApp: 'enableWhatsApp',
+  runFrequency: 'runFrequency',
+  scheduleTime: 'scheduleTime',
+  lastRunAt: 'lastRunAt',
+  nextRunAt: 'nextRunAt',
+  totalRuns: 'totalRuns',
+  successfulRuns: 'successfulRuns',
+  failedRuns: 'failedRuns',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type FeeSenseAgentScalarFieldEnum = (typeof FeeSenseAgentScalarFieldEnum)[keyof typeof FeeSenseAgentScalarFieldEnum]
+
+
+export const FeeSenseExecutionLogScalarFieldEnum = {
+  id: 'id',
+  agentId: 'agentId',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt',
+  status: 'status',
+  studentsAnalyzed: 'studentsAnalyzed',
+  remindersGenerated: 'remindersGenerated',
+  emailsSent: 'emailsSent',
+  smsSent: 'smsSent',
+  voiceCallsScheduled: 'voiceCallsScheduled',
+  totalAmountOverdue: 'totalAmountOverdue',
+  errorMessage: 'errorMessage',
+  errorDetails: 'errorDetails',
+  createdAt: 'createdAt'
+} as const
+
+export type FeeSenseExecutionLogScalarFieldEnum = (typeof FeeSenseExecutionLogScalarFieldEnum)[keyof typeof FeeSenseExecutionLogScalarFieldEnum]
+
+
+export const FeeSenseReportScalarFieldEnum = {
+  id: 'id',
+  agentId: 'agentId',
+  reportDate: 'reportDate',
+  totalStudentsAtRisk: 'totalStudentsAtRisk',
+  highRiskCount: 'highRiskCount',
+  mediumRiskCount: 'mediumRiskCount',
+  lowRiskCount: 'lowRiskCount',
+  totalOverdueAmount: 'totalOverdueAmount',
+  paymentsReceived: 'paymentsReceived',
+  emailsSent: 'emailsSent',
+  smsSent: 'smsSent',
+  voiceCallsScheduled: 'voiceCallsScheduled',
+  responseRate: 'responseRate',
+  insights: 'insights',
+  sentToEmails: 'sentToEmails',
+  createdAt: 'createdAt'
+} as const
+
+export type FeeSenseReportScalarFieldEnum = (typeof FeeSenseReportScalarFieldEnum)[keyof typeof FeeSenseReportScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -848,19 +864,19 @@ export const SortOrder = {
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
+export const JsonNullValueInput = {
+  JsonNull: 'JsonNull'
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
+
 export const NullableJsonNullValueInput = {
   DbNull: 'DbNull',
   JsonNull: 'JsonNull'
 } as const
 
 export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
-
-
-export const JsonNullValueInput = {
-  JsonNull: 'JsonNull'
-} as const
-
-export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
 export const QueryMode = {
@@ -904,18 +920,6 @@ export const OrganizationOrderByRelevanceFieldEnum = {
 export type OrganizationOrderByRelevanceFieldEnum = (typeof OrganizationOrderByRelevanceFieldEnum)[keyof typeof OrganizationOrderByRelevanceFieldEnum]
 
 
-export const FeeSenseAgentOrderByRelevanceFieldEnum = {
-  id: 'id',
-  organizationId: 'organizationId',
-  name: 'name',
-  description: 'description',
-  capabilities: 'capabilities',
-  scheduleTime: 'scheduleTime'
-} as const
-
-export type FeeSenseAgentOrderByRelevanceFieldEnum = (typeof FeeSenseAgentOrderByRelevanceFieldEnum)[keyof typeof FeeSenseAgentOrderByRelevanceFieldEnum]
-
-
 export const JsonNullValueFilter = {
   DbNull: 'DbNull',
   JsonNull: 'JsonNull',
@@ -925,22 +929,14 @@ export const JsonNullValueFilter = {
 export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 
 
-export const FeeSenseExecutionLogOrderByRelevanceFieldEnum = {
+export const NotificationSettingOrderByRelevanceFieldEnum = {
   id: 'id',
-  agentId: 'agentId',
-  errorMessage: 'errorMessage'
+  label: 'label',
+  description: 'description',
+  organizationId: 'organizationId'
 } as const
 
-export type FeeSenseExecutionLogOrderByRelevanceFieldEnum = (typeof FeeSenseExecutionLogOrderByRelevanceFieldEnum)[keyof typeof FeeSenseExecutionLogOrderByRelevanceFieldEnum]
-
-
-export const FeeSenseReportOrderByRelevanceFieldEnum = {
-  id: 'id',
-  agentId: 'agentId',
-  sentToEmails: 'sentToEmails'
-} as const
-
-export type FeeSenseReportOrderByRelevanceFieldEnum = (typeof FeeSenseReportOrderByRelevanceFieldEnum)[keyof typeof FeeSenseReportOrderByRelevanceFieldEnum]
+export type NotificationSettingOrderByRelevanceFieldEnum = (typeof NotificationSettingOrderByRelevanceFieldEnum)[keyof typeof NotificationSettingOrderByRelevanceFieldEnum]
 
 
 export const UserOrderByRelevanceFieldEnum = {
@@ -1384,4 +1380,34 @@ export const LeadActivityOrderByRelevanceFieldEnum = {
 } as const
 
 export type LeadActivityOrderByRelevanceFieldEnum = (typeof LeadActivityOrderByRelevanceFieldEnum)[keyof typeof LeadActivityOrderByRelevanceFieldEnum]
+
+
+export const FeeSenseAgentOrderByRelevanceFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  name: 'name',
+  description: 'description',
+  capabilities: 'capabilities',
+  scheduleTime: 'scheduleTime'
+} as const
+
+export type FeeSenseAgentOrderByRelevanceFieldEnum = (typeof FeeSenseAgentOrderByRelevanceFieldEnum)[keyof typeof FeeSenseAgentOrderByRelevanceFieldEnum]
+
+
+export const FeeSenseExecutionLogOrderByRelevanceFieldEnum = {
+  id: 'id',
+  agentId: 'agentId',
+  errorMessage: 'errorMessage'
+} as const
+
+export type FeeSenseExecutionLogOrderByRelevanceFieldEnum = (typeof FeeSenseExecutionLogOrderByRelevanceFieldEnum)[keyof typeof FeeSenseExecutionLogOrderByRelevanceFieldEnum]
+
+
+export const FeeSenseReportOrderByRelevanceFieldEnum = {
+  id: 'id',
+  agentId: 'agentId',
+  sentToEmails: 'sentToEmails'
+} as const
+
+export type FeeSenseReportOrderByRelevanceFieldEnum = (typeof FeeSenseReportOrderByRelevanceFieldEnum)[keyof typeof FeeSenseReportOrderByRelevanceFieldEnum]
 

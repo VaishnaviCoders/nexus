@@ -235,6 +235,53 @@ export function formatDateRange(start: Date, end: Date) {
 }
 
 /**
+ * Sleep/delay utility
+ */
+export function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+/**
+ * Split array into chunks
+ */
+export function chunkArray<T>(array: T[], size: number): T[][] {
+  const chunks: T[][] = [];
+  
+  for (let i = 0; i < array.length; i += size) {
+    chunks.push(array.slice(i, i + size));
+  }
+  
+  return chunks;
+}
+
+/**
+ * Retry a function with exponential backoff
+ */
+export async function retry<T>(
+  fn: () => Promise<T>,
+  maxRetries: number = 3,
+  delayMs: number = 1000
+): Promise<T> {
+  let lastError: Error | undefined;
+
+  for (let attempt = 0; attempt < maxRetries; attempt++) {
+    try {
+      return await fn();
+    } catch (error) {
+      lastError = error as Error;
+      
+      if (attempt < maxRetries - 1) {
+        // Wait before retry (exponential backoff)
+        const waitTime = delayMs * Math.pow(2, attempt);
+        console.log(`⏳ Retry ${attempt + 1}/${maxRetries} after ${waitTime}ms...`);
+        await sleep(waitTime);
+      }
+    }
+  }
+
+  throw lastError;
+}
+
+/**
  * Cost mapping for each notification channel (INR per unit).
  */
 const CHANNEL_COST_MAP: Record<NotificationChannel, number> = {

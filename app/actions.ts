@@ -30,8 +30,8 @@ import { getOrganizationId } from '@/lib/organization';
 import { redis } from '@/lib/redis';
 import { SupportFormData } from '@/components/websiteComp/SupportPopup';
 import { getCurrentAcademicYearId } from '@/lib/academicYear';
-import { NotificationEngine } from '@/lib/notifications/engine';
-import { formatDateIN } from '@/lib/utils';
+import { sendAttendanceAlert, sendDocumentNotification, sendNotification } from '@/lib/notifications/engine';
+import { formatDateIN, formatDateTimeIN, formatTimeIN } from '@/lib/utils';
 
 export const syncUserWithOrg = async () => {
   const { orgId, orgRole, orgSlug } = await auth();
@@ -130,8 +130,8 @@ export async function getNoticeRecipients(
   const rolesToInclude = targetAudience.includes('all')
     ? [Role.STUDENT, Role.TEACHER, Role.PARENT, Role.ADMIN]
     : targetAudience
-        .map(mapTargetAudienceToRole)
-        .filter((role): role is Role => role !== null);
+      .map(mapTargetAudienceToRole)
+      .filter((role): role is Role => role !== null);
 
   if (rolesToInclude.length === 0) return [];
 
@@ -260,7 +260,7 @@ export async function markAttendance(
         select: { name: true },
       },
       students: {
-        select: { id: true },
+        select: { id: true, firstName: true, lastName: true },
       },
     },
   });
@@ -312,102 +312,75 @@ export async function markAttendance(
     )
   );
 
-  // 2. Send Notifications for Absent Students (Async, side-effect)
-  try {
-    const absentRecords = attendanceData.filter(
-      (record) => record.status === 'ABSENT'
-    );
+  // 2. Send Notifications for Absent/Late Students (Async, non-blocking)
+  // Fire and forget - don't await to avoid blocking the response
+  setImmediate(async () => {
+    try {
+      const absentStudents = attendanceData.filter(
+        (record) => record.status === 'ABSENT'
+      );
 
-    if (absentRecords.length > 0) {
-      const organizationName = section.organization.name || 'Institute';
-      const gradeName = section.grade.grade;
-      const sectionName = section.name;
-      
+      const lateStudents = attendanceData.filter(
+        (record) => record.status === 'LATE'
+      );
 
-      // Fetch student details for absent students
-      const absentStudents = await prisma.student.findMany({
-        where: {
-          id: { in: absentRecords.map((r) => r.studentId) },
+      // Send absent notifications
+      for (const record of absentStudents) {
+        const student = section.students.find(s => s.id === record.studentId);
+        const studentName = student ? `${student.firstName} ${student.lastName}`.trim() : "Student";
+
+        await sendAttendanceAlert(
           organizationId,
-        },
-        select: {
-          id: true,
-          firstName: true,
-          lastName: true,
-          email: true,             // Added
-          phoneNumber: true,       // Added
-          whatsAppNumber: true,    // Added
-          userId: true,            // Added
-          parents: {
-            select: {
-              parent: {
-                select: {
-                  id: true,
-                  userId: true,
-                  email: true,
-                  phoneNumber: true,
-                  whatsAppNumber: true,
-                },
-              },
-            },
-          },
-        },
-      });
-
-      // Process notifications
-      const notificationPromises = absentStudents.map(async (student) => {
-        // Construct recipients list from parents AND student
-        const recipients = [
-            // Add parents
-            ...student.parents.map(({ parent }) => ({
-            userId: parent.userId || undefined,
-            parentId: parent.id,
-            email: parent.email,
-            phone: parent.phoneNumber,
-            whatsappNumber: parent.whatsAppNumber,
-          })),
-          // Add student
+          record.studentId,
+          formatDateIN(attendanceDate),
           {
-            userId: student.userId,
-            studentId: student.id,
-            email: student.email,
-            phone: student.phoneNumber,
-            whatsappNumber: student.whatsAppNumber
+            studentName,
+            organizationName: section.organization.name || "System",
+            date: formatDateIN(attendanceDate),
+            grade: section.grade.grade,
+            section: section.name,
           }
-        ].filter(
-            (r) =>
-              r.email || (r.phone && r.phone.length >= 10) || r.whatsappNumber || r.userId
-          );
+        ).catch((err) => {
+          console.error(`Failed to send absent alert for student ${record.studentId}:`, err);
+        });
+      }
 
-        if (recipients.length === 0) return;
+      // Send late arrival notifications
+      for (const record of lateStudents) {
+        const student = section.students.find(s => s.id === record.studentId);
+        const studentName = student ? `${student.firstName} ${student.lastName}`.trim() : "Student";
 
-        const studentName = [student.firstName, student.lastName]
-          .filter(Boolean)
-          .join(' ');
-
-        await NotificationEngine.send({
-          type: 'ATTENDANCE_ALERT',
-          recipients,
-          channels: ['PUSH', 'WHATSAPP'],
-          templateId: 'STUDENT_ABSENT',
+        await sendNotification({
+          templateId: 'STUDENT_LATE',
           variables: {
             studentName,
+            organizationName: section.organization.name || "System",
             date: formatDateIN(attendanceDate),
-            organizationName,
-            grade: gradeName,
-            section: sectionName,
+            time: formatTimeIN(new Date()),
+            grade: section.grade.grade,
+            section: section.name,
           },
+          recipients: [{ studentId: record.studentId }],
           organizationId,
+        }).catch((err) => {
+          console.error(`Failed to send late alert for student ${record.studentId}:`, err);
         });
-      });
+      }
 
-      // Execute all notifications
-      await Promise.allSettled(notificationPromises);
+      console.log(
+        `[ATTENDANCE] Sent ${absentStudents.length} absent and ${lateStudents.length} late notifications`
+      );
+    } catch (error) {
+      // Log error but don't fail since attendance is already marked
+      console.error('[ATTENDANCE] Failed to send attendance notifications:', error);
     }
-  } catch (error) {
-    // Log error but don't fail the request since attendance is already marked
-    console.error('Failed to send attendance notifications:', error);
-  }
+  });
+
+  return {
+    success: true,
+    message: 'Attendance marked successfully',
+    recordsUpdated: attendanceData.length,
+  };
 }
 
 export async function getPreviousDayAttendance(
@@ -539,16 +512,16 @@ export async function CustomDatesStudentAttendance(
   studentId: string,
   startDate: Date,
   endDate: Date
-) {}
+) { }
 
-export async function getSectionIdMonthlyAttendance(sectionId: string) {}
-export async function WeeklySectionAttendance(sectionId: string) {}
-export async function yearlySectionAttendance(sectionId: string) {}
+export async function getSectionIdMonthlyAttendance(sectionId: string) { }
+export async function WeeklySectionAttendance(sectionId: string) { }
+export async function yearlySectionAttendance(sectionId: string) { }
 export async function CustomDatesSectionAttendance(
   sectionId: string,
   startDate: Date,
   endDate: Date
-) {}
+) { }
 
 // Fees
 
@@ -670,23 +643,23 @@ export async function verifyStudentDocument(
     const updateData =
       data.action === 'APPROVE'
         ? {
-            verified: true,
-            verifiedBy: verifiedByOrRejectedBy || 'System',
-            verifiedAt: new Date(),
-            rejected: false,
-            rejectedBy: null,
-            rejectedAt: null,
-            note: data.note ?? null,
-          }
+          verified: true,
+          verifiedBy: verifiedByOrRejectedBy || 'System',
+          verifiedAt: new Date(),
+          rejected: false,
+          rejectedBy: null,
+          rejectedAt: null,
+          note: data.note ?? null,
+        }
         : {
-            verified: false,
-            verifiedBy: null,
-            verifiedAt: null,
-            rejected: true,
-            rejectedBy: verifiedByOrRejectedBy || 'System',
-            rejectedAt: new Date(),
-            rejectReason: data.rejectionReason,
-          };
+          verified: false,
+          verifiedBy: null,
+          verifiedAt: null,
+          rejected: true,
+          rejectedBy: verifiedByOrRejectedBy || 'System',
+          rejectedAt: new Date(),
+          rejectReason: data.rejectionReason,
+        };
 
     const result = await prisma.studentDocument.update({
       where: { id: documentId },
@@ -705,7 +678,7 @@ export async function verifyStudentDocument(
       // Send notification based on action
       const templateId =
         data.action === 'APPROVE' ? 'DOCUMENT_APPROVED' : 'DOCUMENT_REJECTED';
-      
+
       const recipient = {
         userId: result.student.userId,
         studentId: result.student.id,
@@ -713,18 +686,20 @@ export async function verifyStudentDocument(
         phone: result.student.phoneNumber,
       };
 
-      await NotificationEngine.send({
-        type: NotificationType.DOCUMENT_REQUEST,
-        recipients: [recipient],
-        templateId,
-        variables: {
-          documentType: result.type.replace(/_/g, ' '), // Request AAR_CARD -> AAR CARD
-          reason: data.rejectionReason || 'Verification failed',
-          organizationName: result.Organization?.name || 'Institute',
-          studentName: result.student.firstName,
-        },
-        organizationId: result.organizationId,
-      });
+      // await sendDocumentNotification(
+      //   result.organizationId,
+      //   studentId,
+      //   ""
+      //   {
+      //   recipients: [recipient],
+      //   templateId,
+      //   variables: {
+      //     documentType: result.type.replace(/_/g, ' '), // Request AAR_CARD -> AAR CARD
+      //     reason: data.rejectionReason || 'Verification failed',
+      //     organizationName: result.Organization?.name || 'Institute',
+      //     studentName: result.student.firstName,
+      //   },
+      // });
     }
 
     revalidatePath('/dashboard/document/verification');

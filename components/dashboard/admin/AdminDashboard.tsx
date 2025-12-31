@@ -30,7 +30,6 @@ import Link from 'next/link';
 import { getRecentAdminActivities } from '@/lib/data/admin/get-recent-activities';
 import { RecentNoticesCards } from '../notice/recent-notices-cards';
 import { getAdminNotices } from '@/lib/data/notice/get-admin-notices';
-import NotificationPanel from '../shared/notification-panel';
 import { Calendar } from 'lucide-react';
 
 const AdminDashboard = async () => {
@@ -118,7 +117,6 @@ const AdminDashboard = async () => {
       </Card>
 
 
-      <NotificationPanel />
       <AdminDashboardCards />
 
       <div className="grid gap-4 sm:gap-6 grid-cols-1 xl:grid-cols-12">

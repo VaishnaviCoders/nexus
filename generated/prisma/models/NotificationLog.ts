@@ -297,8 +297,8 @@ export type NotificationLogGroupByOutputType = {
   status: $Enums.NotificationStatus
   notificationType: $Enums.NotificationType
   noticeId: string | null
-  title: string | null
-  message: string | null
+  title: string
+  message: string
   errorMessage: string | null
   retryCount: number
   maxRetries: number
@@ -344,8 +344,8 @@ export type NotificationLogWhereInput = {
   status?: Prisma.EnumNotificationStatusFilter<"NotificationLog"> | $Enums.NotificationStatus
   notificationType?: Prisma.EnumNotificationTypeFilter<"NotificationLog"> | $Enums.NotificationType
   noticeId?: Prisma.StringNullableFilter<"NotificationLog"> | string | null
-  title?: Prisma.StringNullableFilter<"NotificationLog"> | string | null
-  message?: Prisma.StringNullableFilter<"NotificationLog"> | string | null
+  title?: Prisma.StringFilter<"NotificationLog"> | string
+  message?: Prisma.StringFilter<"NotificationLog"> | string
   errorMessage?: Prisma.StringNullableFilter<"NotificationLog"> | string | null
   retryCount?: Prisma.IntFilter<"NotificationLog"> | number
   maxRetries?: Prisma.IntFilter<"NotificationLog"> | number
@@ -373,8 +373,8 @@ export type NotificationLogOrderByWithRelationInput = {
   status?: Prisma.SortOrder
   notificationType?: Prisma.SortOrder
   noticeId?: Prisma.SortOrderInput | Prisma.SortOrder
-  title?: Prisma.SortOrderInput | Prisma.SortOrder
-  message?: Prisma.SortOrderInput | Prisma.SortOrder
+  title?: Prisma.SortOrder
+  message?: Prisma.SortOrder
   errorMessage?: Prisma.SortOrderInput | Prisma.SortOrder
   retryCount?: Prisma.SortOrder
   maxRetries?: Prisma.SortOrder
@@ -406,8 +406,8 @@ export type NotificationLogWhereUniqueInput = Prisma.AtLeast<{
   status?: Prisma.EnumNotificationStatusFilter<"NotificationLog"> | $Enums.NotificationStatus
   notificationType?: Prisma.EnumNotificationTypeFilter<"NotificationLog"> | $Enums.NotificationType
   noticeId?: Prisma.StringNullableFilter<"NotificationLog"> | string | null
-  title?: Prisma.StringNullableFilter<"NotificationLog"> | string | null
-  message?: Prisma.StringNullableFilter<"NotificationLog"> | string | null
+  title?: Prisma.StringFilter<"NotificationLog"> | string
+  message?: Prisma.StringFilter<"NotificationLog"> | string
   errorMessage?: Prisma.StringNullableFilter<"NotificationLog"> | string | null
   retryCount?: Prisma.IntFilter<"NotificationLog"> | number
   maxRetries?: Prisma.IntFilter<"NotificationLog"> | number
@@ -435,8 +435,8 @@ export type NotificationLogOrderByWithAggregationInput = {
   status?: Prisma.SortOrder
   notificationType?: Prisma.SortOrder
   noticeId?: Prisma.SortOrderInput | Prisma.SortOrder
-  title?: Prisma.SortOrderInput | Prisma.SortOrder
-  message?: Prisma.SortOrderInput | Prisma.SortOrder
+  title?: Prisma.SortOrder
+  message?: Prisma.SortOrder
   errorMessage?: Prisma.SortOrderInput | Prisma.SortOrder
   retryCount?: Prisma.SortOrder
   maxRetries?: Prisma.SortOrder
@@ -467,8 +467,8 @@ export type NotificationLogScalarWhereWithAggregatesInput = {
   status?: Prisma.EnumNotificationStatusWithAggregatesFilter<"NotificationLog"> | $Enums.NotificationStatus
   notificationType?: Prisma.EnumNotificationTypeWithAggregatesFilter<"NotificationLog"> | $Enums.NotificationType
   noticeId?: Prisma.StringNullableWithAggregatesFilter<"NotificationLog"> | string | null
-  title?: Prisma.StringNullableWithAggregatesFilter<"NotificationLog"> | string | null
-  message?: Prisma.StringNullableWithAggregatesFilter<"NotificationLog"> | string | null
+  title?: Prisma.StringWithAggregatesFilter<"NotificationLog"> | string
+  message?: Prisma.StringWithAggregatesFilter<"NotificationLog"> | string
   errorMessage?: Prisma.StringNullableWithAggregatesFilter<"NotificationLog"> | string | null
   retryCount?: Prisma.IntWithAggregatesFilter<"NotificationLog"> | number
   maxRetries?: Prisma.IntWithAggregatesFilter<"NotificationLog"> | number
@@ -486,8 +486,8 @@ export type NotificationLogCreateInput = {
   channel: $Enums.NotificationChannel
   status?: $Enums.NotificationStatus
   notificationType: $Enums.NotificationType
-  title?: string | null
-  message?: string | null
+  title: string
+  message: string
   errorMessage?: string | null
   retryCount?: number
   maxRetries?: number
@@ -515,8 +515,8 @@ export type NotificationLogUncheckedCreateInput = {
   status?: $Enums.NotificationStatus
   notificationType: $Enums.NotificationType
   noticeId?: string | null
-  title?: string | null
-  message?: string | null
+  title: string
+  message: string
   errorMessage?: string | null
   retryCount?: number
   maxRetries?: number
@@ -534,8 +534,8 @@ export type NotificationLogUpdateInput = {
   channel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
   status?: Prisma.EnumNotificationStatusFieldUpdateOperationsInput | $Enums.NotificationStatus
   notificationType?: Prisma.EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
-  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  message?: Prisma.StringFieldUpdateOperationsInput | string
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   retryCount?: Prisma.IntFieldUpdateOperationsInput | number
   maxRetries?: Prisma.IntFieldUpdateOperationsInput | number
@@ -563,8 +563,8 @@ export type NotificationLogUncheckedUpdateInput = {
   status?: Prisma.EnumNotificationStatusFieldUpdateOperationsInput | $Enums.NotificationStatus
   notificationType?: Prisma.EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
   noticeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  message?: Prisma.StringFieldUpdateOperationsInput | string
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   retryCount?: Prisma.IntFieldUpdateOperationsInput | number
   maxRetries?: Prisma.IntFieldUpdateOperationsInput | number
@@ -587,8 +587,8 @@ export type NotificationLogCreateManyInput = {
   status?: $Enums.NotificationStatus
   notificationType: $Enums.NotificationType
   noticeId?: string | null
-  title?: string | null
-  message?: string | null
+  title: string
+  message: string
   errorMessage?: string | null
   retryCount?: number
   maxRetries?: number
@@ -606,8 +606,8 @@ export type NotificationLogUpdateManyMutationInput = {
   channel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
   status?: Prisma.EnumNotificationStatusFieldUpdateOperationsInput | $Enums.NotificationStatus
   notificationType?: Prisma.EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
-  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  message?: Prisma.StringFieldUpdateOperationsInput | string
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   retryCount?: Prisma.IntFieldUpdateOperationsInput | number
   maxRetries?: Prisma.IntFieldUpdateOperationsInput | number
@@ -630,8 +630,8 @@ export type NotificationLogUncheckedUpdateManyInput = {
   status?: Prisma.EnumNotificationStatusFieldUpdateOperationsInput | $Enums.NotificationStatus
   notificationType?: Prisma.EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
   noticeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  message?: Prisma.StringFieldUpdateOperationsInput | string
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   retryCount?: Prisma.IntFieldUpdateOperationsInput | number
   maxRetries?: Prisma.IntFieldUpdateOperationsInput | number
@@ -964,17 +964,13 @@ export type EnumNotificationStatusFieldUpdateOperationsInput = {
   set?: $Enums.NotificationStatus
 }
 
-export type EnumNotificationTypeFieldUpdateOperationsInput = {
-  set?: $Enums.NotificationType
-}
-
 export type NotificationLogCreateWithoutOrganizationInput = {
   id?: string
   channel: $Enums.NotificationChannel
   status?: $Enums.NotificationStatus
   notificationType: $Enums.NotificationType
-  title?: string | null
-  message?: string | null
+  title: string
+  message: string
   errorMessage?: string | null
   retryCount?: number
   maxRetries?: number
@@ -1000,8 +996,8 @@ export type NotificationLogUncheckedCreateWithoutOrganizationInput = {
   status?: $Enums.NotificationStatus
   notificationType: $Enums.NotificationType
   noticeId?: string | null
-  title?: string | null
-  message?: string | null
+  title: string
+  message: string
   errorMessage?: string | null
   retryCount?: number
   maxRetries?: number
@@ -1053,8 +1049,8 @@ export type NotificationLogScalarWhereInput = {
   status?: Prisma.EnumNotificationStatusFilter<"NotificationLog"> | $Enums.NotificationStatus
   notificationType?: Prisma.EnumNotificationTypeFilter<"NotificationLog"> | $Enums.NotificationType
   noticeId?: Prisma.StringNullableFilter<"NotificationLog"> | string | null
-  title?: Prisma.StringNullableFilter<"NotificationLog"> | string | null
-  message?: Prisma.StringNullableFilter<"NotificationLog"> | string | null
+  title?: Prisma.StringFilter<"NotificationLog"> | string
+  message?: Prisma.StringFilter<"NotificationLog"> | string
   errorMessage?: Prisma.StringNullableFilter<"NotificationLog"> | string | null
   retryCount?: Prisma.IntFilter<"NotificationLog"> | number
   maxRetries?: Prisma.IntFilter<"NotificationLog"> | number
@@ -1072,8 +1068,8 @@ export type NotificationLogCreateWithoutUserInput = {
   channel: $Enums.NotificationChannel
   status?: $Enums.NotificationStatus
   notificationType: $Enums.NotificationType
-  title?: string | null
-  message?: string | null
+  title: string
+  message: string
   errorMessage?: string | null
   retryCount?: number
   maxRetries?: number
@@ -1099,8 +1095,8 @@ export type NotificationLogUncheckedCreateWithoutUserInput = {
   status?: $Enums.NotificationStatus
   notificationType: $Enums.NotificationType
   noticeId?: string | null
-  title?: string | null
-  message?: string | null
+  title: string
+  message: string
   errorMessage?: string | null
   retryCount?: number
   maxRetries?: number
@@ -1144,8 +1140,8 @@ export type NotificationLogCreateWithoutStudentInput = {
   channel: $Enums.NotificationChannel
   status?: $Enums.NotificationStatus
   notificationType: $Enums.NotificationType
-  title?: string | null
-  message?: string | null
+  title: string
+  message: string
   errorMessage?: string | null
   retryCount?: number
   maxRetries?: number
@@ -1171,8 +1167,8 @@ export type NotificationLogUncheckedCreateWithoutStudentInput = {
   status?: $Enums.NotificationStatus
   notificationType: $Enums.NotificationType
   noticeId?: string | null
-  title?: string | null
-  message?: string | null
+  title: string
+  message: string
   errorMessage?: string | null
   retryCount?: number
   maxRetries?: number
@@ -1216,8 +1212,8 @@ export type NotificationLogCreateWithoutParentInput = {
   channel: $Enums.NotificationChannel
   status?: $Enums.NotificationStatus
   notificationType: $Enums.NotificationType
-  title?: string | null
-  message?: string | null
+  title: string
+  message: string
   errorMessage?: string | null
   retryCount?: number
   maxRetries?: number
@@ -1243,8 +1239,8 @@ export type NotificationLogUncheckedCreateWithoutParentInput = {
   status?: $Enums.NotificationStatus
   notificationType: $Enums.NotificationType
   noticeId?: string | null
-  title?: string | null
-  message?: string | null
+  title: string
+  message: string
   errorMessage?: string | null
   retryCount?: number
   maxRetries?: number
@@ -1288,8 +1284,8 @@ export type NotificationLogCreateWithoutNoticeInput = {
   channel: $Enums.NotificationChannel
   status?: $Enums.NotificationStatus
   notificationType: $Enums.NotificationType
-  title?: string | null
-  message?: string | null
+  title: string
+  message: string
   errorMessage?: string | null
   retryCount?: number
   maxRetries?: number
@@ -1315,8 +1311,8 @@ export type NotificationLogUncheckedCreateWithoutNoticeInput = {
   channel: $Enums.NotificationChannel
   status?: $Enums.NotificationStatus
   notificationType: $Enums.NotificationType
-  title?: string | null
-  message?: string | null
+  title: string
+  message: string
   errorMessage?: string | null
   retryCount?: number
   maxRetries?: number
@@ -1364,8 +1360,8 @@ export type NotificationLogCreateManyOrganizationInput = {
   status?: $Enums.NotificationStatus
   notificationType: $Enums.NotificationType
   noticeId?: string | null
-  title?: string | null
-  message?: string | null
+  title: string
+  message: string
   errorMessage?: string | null
   retryCount?: number
   maxRetries?: number
@@ -1383,8 +1379,8 @@ export type NotificationLogUpdateWithoutOrganizationInput = {
   channel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
   status?: Prisma.EnumNotificationStatusFieldUpdateOperationsInput | $Enums.NotificationStatus
   notificationType?: Prisma.EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
-  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  message?: Prisma.StringFieldUpdateOperationsInput | string
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   retryCount?: Prisma.IntFieldUpdateOperationsInput | number
   maxRetries?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1410,8 +1406,8 @@ export type NotificationLogUncheckedUpdateWithoutOrganizationInput = {
   status?: Prisma.EnumNotificationStatusFieldUpdateOperationsInput | $Enums.NotificationStatus
   notificationType?: Prisma.EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
   noticeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  message?: Prisma.StringFieldUpdateOperationsInput | string
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   retryCount?: Prisma.IntFieldUpdateOperationsInput | number
   maxRetries?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1433,8 +1429,8 @@ export type NotificationLogUncheckedUpdateManyWithoutOrganizationInput = {
   status?: Prisma.EnumNotificationStatusFieldUpdateOperationsInput | $Enums.NotificationStatus
   notificationType?: Prisma.EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
   noticeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  message?: Prisma.StringFieldUpdateOperationsInput | string
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   retryCount?: Prisma.IntFieldUpdateOperationsInput | number
   maxRetries?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1456,8 +1452,8 @@ export type NotificationLogCreateManyUserInput = {
   status?: $Enums.NotificationStatus
   notificationType: $Enums.NotificationType
   noticeId?: string | null
-  title?: string | null
-  message?: string | null
+  title: string
+  message: string
   errorMessage?: string | null
   retryCount?: number
   maxRetries?: number
@@ -1475,8 +1471,8 @@ export type NotificationLogUpdateWithoutUserInput = {
   channel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
   status?: Prisma.EnumNotificationStatusFieldUpdateOperationsInput | $Enums.NotificationStatus
   notificationType?: Prisma.EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
-  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  message?: Prisma.StringFieldUpdateOperationsInput | string
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   retryCount?: Prisma.IntFieldUpdateOperationsInput | number
   maxRetries?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1502,8 +1498,8 @@ export type NotificationLogUncheckedUpdateWithoutUserInput = {
   status?: Prisma.EnumNotificationStatusFieldUpdateOperationsInput | $Enums.NotificationStatus
   notificationType?: Prisma.EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
   noticeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  message?: Prisma.StringFieldUpdateOperationsInput | string
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   retryCount?: Prisma.IntFieldUpdateOperationsInput | number
   maxRetries?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1525,8 +1521,8 @@ export type NotificationLogUncheckedUpdateManyWithoutUserInput = {
   status?: Prisma.EnumNotificationStatusFieldUpdateOperationsInput | $Enums.NotificationStatus
   notificationType?: Prisma.EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
   noticeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  message?: Prisma.StringFieldUpdateOperationsInput | string
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   retryCount?: Prisma.IntFieldUpdateOperationsInput | number
   maxRetries?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1548,8 +1544,8 @@ export type NotificationLogCreateManyStudentInput = {
   status?: $Enums.NotificationStatus
   notificationType: $Enums.NotificationType
   noticeId?: string | null
-  title?: string | null
-  message?: string | null
+  title: string
+  message: string
   errorMessage?: string | null
   retryCount?: number
   maxRetries?: number
@@ -1567,8 +1563,8 @@ export type NotificationLogUpdateWithoutStudentInput = {
   channel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
   status?: Prisma.EnumNotificationStatusFieldUpdateOperationsInput | $Enums.NotificationStatus
   notificationType?: Prisma.EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
-  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  message?: Prisma.StringFieldUpdateOperationsInput | string
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   retryCount?: Prisma.IntFieldUpdateOperationsInput | number
   maxRetries?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1594,8 +1590,8 @@ export type NotificationLogUncheckedUpdateWithoutStudentInput = {
   status?: Prisma.EnumNotificationStatusFieldUpdateOperationsInput | $Enums.NotificationStatus
   notificationType?: Prisma.EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
   noticeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  message?: Prisma.StringFieldUpdateOperationsInput | string
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   retryCount?: Prisma.IntFieldUpdateOperationsInput | number
   maxRetries?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1617,8 +1613,8 @@ export type NotificationLogUncheckedUpdateManyWithoutStudentInput = {
   status?: Prisma.EnumNotificationStatusFieldUpdateOperationsInput | $Enums.NotificationStatus
   notificationType?: Prisma.EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
   noticeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  message?: Prisma.StringFieldUpdateOperationsInput | string
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   retryCount?: Prisma.IntFieldUpdateOperationsInput | number
   maxRetries?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1640,8 +1636,8 @@ export type NotificationLogCreateManyParentInput = {
   status?: $Enums.NotificationStatus
   notificationType: $Enums.NotificationType
   noticeId?: string | null
-  title?: string | null
-  message?: string | null
+  title: string
+  message: string
   errorMessage?: string | null
   retryCount?: number
   maxRetries?: number
@@ -1659,8 +1655,8 @@ export type NotificationLogUpdateWithoutParentInput = {
   channel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
   status?: Prisma.EnumNotificationStatusFieldUpdateOperationsInput | $Enums.NotificationStatus
   notificationType?: Prisma.EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
-  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  message?: Prisma.StringFieldUpdateOperationsInput | string
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   retryCount?: Prisma.IntFieldUpdateOperationsInput | number
   maxRetries?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1686,8 +1682,8 @@ export type NotificationLogUncheckedUpdateWithoutParentInput = {
   status?: Prisma.EnumNotificationStatusFieldUpdateOperationsInput | $Enums.NotificationStatus
   notificationType?: Prisma.EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
   noticeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  message?: Prisma.StringFieldUpdateOperationsInput | string
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   retryCount?: Prisma.IntFieldUpdateOperationsInput | number
   maxRetries?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1709,8 +1705,8 @@ export type NotificationLogUncheckedUpdateManyWithoutParentInput = {
   status?: Prisma.EnumNotificationStatusFieldUpdateOperationsInput | $Enums.NotificationStatus
   notificationType?: Prisma.EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
   noticeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  message?: Prisma.StringFieldUpdateOperationsInput | string
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   retryCount?: Prisma.IntFieldUpdateOperationsInput | number
   maxRetries?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1732,8 +1728,8 @@ export type NotificationLogCreateManyNoticeInput = {
   channel: $Enums.NotificationChannel
   status?: $Enums.NotificationStatus
   notificationType: $Enums.NotificationType
-  title?: string | null
-  message?: string | null
+  title: string
+  message: string
   errorMessage?: string | null
   retryCount?: number
   maxRetries?: number
@@ -1751,8 +1747,8 @@ export type NotificationLogUpdateWithoutNoticeInput = {
   channel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
   status?: Prisma.EnumNotificationStatusFieldUpdateOperationsInput | $Enums.NotificationStatus
   notificationType?: Prisma.EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
-  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  message?: Prisma.StringFieldUpdateOperationsInput | string
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   retryCount?: Prisma.IntFieldUpdateOperationsInput | number
   maxRetries?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1778,8 +1774,8 @@ export type NotificationLogUncheckedUpdateWithoutNoticeInput = {
   channel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
   status?: Prisma.EnumNotificationStatusFieldUpdateOperationsInput | $Enums.NotificationStatus
   notificationType?: Prisma.EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
-  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  message?: Prisma.StringFieldUpdateOperationsInput | string
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   retryCount?: Prisma.IntFieldUpdateOperationsInput | number
   maxRetries?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1801,8 +1797,8 @@ export type NotificationLogUncheckedUpdateManyWithoutNoticeInput = {
   channel?: Prisma.EnumNotificationChannelFieldUpdateOperationsInput | $Enums.NotificationChannel
   status?: Prisma.EnumNotificationStatusFieldUpdateOperationsInput | $Enums.NotificationStatus
   notificationType?: Prisma.EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
-  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  message?: Prisma.StringFieldUpdateOperationsInput | string
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   retryCount?: Prisma.IntFieldUpdateOperationsInput | number
   maxRetries?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1970,8 +1966,8 @@ export type $NotificationLogPayload<ExtArgs extends runtime.Types.Extensions.Int
     status: $Enums.NotificationStatus
     notificationType: $Enums.NotificationType
     noticeId: string | null
-    title: string | null
-    message: string | null
+    title: string
+    message: string
     errorMessage: string | null
     retryCount: number
     maxRetries: number
