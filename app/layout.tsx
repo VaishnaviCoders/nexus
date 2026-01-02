@@ -26,9 +26,9 @@ export const viewport: Viewport = {
 };
 const appUrl = new URL('https://www.shiksha.cloud');
 export const metadata: Metadata = {
-  metadataBase: appUrl,
+  metadataBase: new URL('https://www.shiksha.cloud'),
   alternates: {
-    canonical: appUrl,
+    canonical: '/',
     languages: {
       'en': 'https://www.shiksha.cloud/',
       'x-default': 'https://www.shiksha.cloud/',

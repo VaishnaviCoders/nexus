@@ -2,5 +2,18 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "regions": ["bom1"],
   "cleanUrls": true,
-  "trailingSlash": false
+  "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "shiksha.cloud"
+        }
+      ],
+      "destination": "https://www.shiksha.cloud/:path*",
+      "permanent": true
+    }
+  ]
 }

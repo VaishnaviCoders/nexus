@@ -70,21 +70,6 @@ PWA: Progressive Web App capabilities
 
 ## Technical Implementation Notes for Next.js
 
-### Project Structure
-/app
-  /(auth)          - Authentication pages
-  /admin           - Admin dashboard & features
-  /teacher         - Teacher portal
-  /student         - Student dashboard
-  /parent          - Parent portal
-  /api             - API routes
-/lib
-  /auth            - Clerk configuration
-  /db              - Prisma client & database
-  /validations     - Zod schemas
-  /utils           - Utility functions
-/components        - Reusable UI components
-  /ui              - ShadCN components
 
 ### Key Dependencies
 - @clerk/nextjs for authentication
