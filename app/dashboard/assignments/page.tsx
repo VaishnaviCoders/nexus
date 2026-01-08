@@ -1,4 +1,4 @@
-import { EmptyState } from '@/components/EmptyState';
+import { EmptyState } from '@/components/ui/empty-state';
 import { Paperclip, School, Book } from 'lucide-react';
 import StudentAssignment from '@/components/dashboard/Student/StudentAssignment';
 

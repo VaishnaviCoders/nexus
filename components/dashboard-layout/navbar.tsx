@@ -1,4 +1,3 @@
-import { ModeToggle } from '@/components/mode-toggle';
 import { SheetMenu } from '@/components/dashboard-layout/sheet-menu';
 import { Separator } from '@/components/ui/separator';
 import {
@@ -10,13 +9,13 @@ import {
 } from '@clerk/nextjs';
 import { Suspense } from 'react';
 import { auth, currentUser } from '@clerk/nextjs/server';
-import { WelcomeMessage } from './dashboard-layout/WelcomeMessage';
+import { WelcomeMessage } from '@/components/dashboard-layout/WelcomeMessage';
 import { Bell, Building2, UserCircleIcon } from 'lucide-react';
-import { Button } from './ui/button';
-import { Badge } from './ui/badge';
-import { Skeleton } from './ui/skeleton';
+import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
 import { syncOrganizationUser, syncUser } from '@/lib/syncUser';
-import NotificationPanel from './dashboard-layout/notification-panel';
+import NotificationPanel from '@/components/dashboard-layout/notification-panel';
+import { Badge } from '@/components/ui/badge';
 
 const RoleBadge = ({ role }: { role: string }) => {
   const roleConfig = {

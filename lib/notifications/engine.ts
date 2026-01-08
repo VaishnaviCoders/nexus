@@ -18,11 +18,14 @@ import {
 } from "./template";
 import { chunkArray, retry, sleep, calculateNotificationCost } from "@/lib/utils";
 import { createHash } from "crypto";
-import { getOrganizationNotificationSettings } from "../organization-notification-settings";
+import { getOrganizationNotificationSettings } from "@/lib/organization-notification-settings"
+
 
 // ============================================
 // TYPES
 // ============================================
+
+// Todos : Queue System , Kafka Integration , Valid Email , Valid Phone , Valid Whatsapp Number
 
 interface RecipientInfo {
   userId?: string;

@@ -199,15 +199,15 @@ const AiMonthlyReport: React.FC<AiMonthlyReportProps> = ({ data }) => {
       bestMonth =
         monthlyData.length > 0
           ? monthlyData.reduce((prev, current) =>
-              prev.amount > current.amount ? prev : current
-            )
+            prev.amount > current.amount ? prev : current
+          )
           : null;
 
       worstMonth =
         monthlyData.length > 0
           ? monthlyData.reduce((prev, current) =>
-              prev.amount < current.amount ? prev : current
-            )
+            prev.amount < current.amount ? prev : current
+          )
           : null;
     } catch (error) {
       console.error('Error parsing summary:', error);
@@ -234,7 +234,6 @@ const AiMonthlyReport: React.FC<AiMonthlyReportProps> = ({ data }) => {
     data: { year: number; month: number; amount: number; count: number }[]
   ) {
     return data
-      .filter((item) => item.year === 2025)
       .map((item) => {
         const monthName = new Date(item.year, item.month - 1).toLocaleString(
           'default',
@@ -242,7 +241,7 @@ const AiMonthlyReport: React.FC<AiMonthlyReportProps> = ({ data }) => {
             month: 'long',
           }
         );
-        return `${monthName}: ₹${item.amount.toLocaleString('en-IN')} collected from ${item.count} payments`;
+        return `${monthName} ${item.year}: ₹${item.amount.toLocaleString('en-IN')} collected from ${item.count} payments`;
       })
       .join('\n');
   }
@@ -267,16 +266,16 @@ const AiMonthlyReport: React.FC<AiMonthlyReportProps> = ({ data }) => {
   const parsedData: ParsedSummary = summary
     ? parseSummary(summary)
     : {
-        monthlyData: [],
-        totalAmount: 0,
-        totalPayments: 0,
-        averagePerMonth: 0,
-        averagePerPayment: 0,
-        bestMonth: null,
-        worstMonth: null,
-        rawText: '',
-        parsingSuccess: false,
-      };
+      monthlyData: [],
+      totalAmount: 0,
+      totalPayments: 0,
+      averagePerMonth: 0,
+      averagePerPayment: 0,
+      bestMonth: null,
+      worstMonth: null,
+      rawText: '',
+      parsingSuccess: false,
+    };
 
   const getMonthColor = (index: number): string => {
     const colors = [
@@ -496,7 +495,7 @@ const AiMonthlyReport: React.FC<AiMonthlyReportProps> = ({ data }) => {
 
               {/* Monthly Breakdown */}
               {parsedData.parsingSuccess &&
-              parsedData.monthlyData.length > 0 ? (
+                parsedData.monthlyData.length > 0 ? (
                 <Card className="hover:shadow-lg transition-all duration-300">
                   <CardHeader className="space-y-3">
                     <div className="flex items-center gap-3">

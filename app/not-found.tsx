@@ -1,4 +1,4 @@
-import { EmptyState } from '@/components/EmptyState';
+import { EmptyState } from '@/components/ui/empty-state';
 import { Mail, Phone, User } from 'lucide-react';
 
 export default function NotFound() {

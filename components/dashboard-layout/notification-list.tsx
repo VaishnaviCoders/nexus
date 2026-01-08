@@ -1,6 +1,7 @@
 "use client";
 
-import { markAllAsRead, markAsRead } from "@/app/actions/notifications";
+import { markAllAsRead, markAsRead } from "@/lib/notifications";
+
 import { NotificationChannel, NotificationStatus, NotificationType } from "@/generated/prisma/enums";
 import { Bell, CheckCircle2, Clock, FileText, GraduationCap, Mail, MessageSquare, Smartphone, Trash2, User, UserX, XCircle } from "lucide-react";
 import { useState } from "react";
@@ -9,10 +10,21 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import NotificationEmptyState from "./notification-empty-state";
-import { NotificationLog } from "@/generated/prisma/client"
+
+interface InitialNotifications {
+    id: string;
+    title: string;
+    status: NotificationStatus;
+    channel: NotificationChannel;
+    notificationType: NotificationType;
+    message: string;
+    cost: number;
+    isRead: boolean;
+    sentAt: Date;
+}
 
 interface NotificationListProps {
-    initialNotifications: NotificationLog[]; // Replace 'any' with proper type from Prisma if available
+    initialNotifications: InitialNotifications[];
     className?: string;
 }
 

@@ -97,11 +97,10 @@ export function UpcomingEvents() {
                   <h4 className="font-medium text-sm">{event.title}</h4>
                   <Badge
                     variant="outline"
-                    className={`text-xs ${
-                      priorityColors[
-                        event.priority as keyof typeof priorityColors
+                    className={`text-xs ${priorityColors[
+                      event.priority as keyof typeof priorityColors
                       ]
-                    }`}
+                      }`}
                   >
                     {event.priority}
                   </Badge>
@@ -112,9 +111,8 @@ export function UpcomingEvents() {
               </div>
 
               <div
-                className={`p-1.5 rounded-lg ${
-                  typeColors[event.type as keyof typeof typeColors]
-                }`}
+                className={`p-1.5 rounded-lg ${typeColors[event.type as keyof typeof typeColors]
+                  }`}
               >
                 <Calendar className="w-3 h-3" />
               </div>

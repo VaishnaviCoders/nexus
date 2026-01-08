@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Calendar, TrendingUp, Target, Clock } from 'lucide-react';
 import { getStudentAttendanceStatsCards } from '@/lib/data/attendance/get-student-attendance-stats';
-import { DashboardFourGridsCardSkeleton } from '@/lib/skeletons/DashboardCardSkeleton';
+import { DashboardFourGridsCardSkeleton } from '@/components/skeletons/DashboardCardSkeleton';
 // import { getStudentAttendanceOverview } from "@/lib/actions/student-attendance-actions"
 
 async function AttendanceStatsCardsContent() {

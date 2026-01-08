@@ -21,7 +21,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { EmptyState } from '@/components/EmptyState';
+import { EmptyState } from '@/components/ui/empty-state';
 import { deleteAttendance } from '@/app/actions';
 import { toast } from 'sonner';
 import {

@@ -1,7 +1,6 @@
 'use client';
 
 import * as React from 'react';
-import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
@@ -10,7 +9,8 @@ import { cn, formatDateTimeIN } from '@/lib/utils';
 import type { ExamStatus, StudentExamStatus, ExamMode, EvaluationType } from '@/generated/prisma/enums';
 import { ExamResult, HallTicket } from '@/generated/prisma/client';
 import type { ExamWithRelations } from './StudentExamsPage';
-import { formatDistanceToNow, isAfter, isBefore } from 'date-fns';
+import { formatDistanceToNow, format } from 'date-fns';
+import { Calendar, Clock, MapPin, Trophy, Users } from 'lucide-react';
 
 type ExamCardProps = {
   exam: ExamWithRelations;
@@ -25,7 +25,9 @@ export function ExamCard({ exam, onJoin, onGenerateHallTicket, onViewResult, onA
   const [currentTime] = React.useState(new Date());
 
   const startDate = new Date(exam.startDate);
-  const endDate = new Date(exam.endDate);
+  const endDate = exam.endDate
+    ? new Date(exam.endDate)
+    : new Date(startDate.getTime() + (exam.durationInMinutes || 0) * 60 * 1000);
 
   // Get student's exam enrollment status
   const studentEnrollment = exam.examEnrollment?.[0];
@@ -123,7 +125,11 @@ export function ExamCard({ exam, onJoin, onGenerateHallTicket, onViewResult, onA
       <CardFooter className="pt-4 flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           {isUpcoming && (
-            <Button variant="ghost" size="sm" onClick={() => onAddToCalendar?.(exam.id)}>
+            <Button variant="ghost" size="sm" onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onAddToCalendar?.(exam.id);
+            }}>
               Add to Calendar
             </Button>
           )}
@@ -165,19 +171,25 @@ function ExamMetaInfo({ startDate, duration, mode, venue }: {
   venue?: string | null;
 }) {
   return (
-    <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-      <span>{formatDateTimeIN(startDate)}</span>
-      <span>•</span>
-      <span>{formatDuration(duration)}</span>
-      <span>•</span>
-      <span>{formatEnumValue(mode)}</span>
+    <div className="flex items-center flex-wrap gap-x-3 gap-y-1.5 text-xs text-muted-foreground/80 font-medium">
+      <div className="flex items-center gap-1.5">
+        <Calendar className="h-3.5 w-3.5 text-primary/60" />
+        {format(startDate, 'MMM d, yyyy')}
+      </div>
+      <div className="flex items-center gap-1.5">
+        <Clock className="h-3.5 w-3.5 text-primary/60" />
+        {formatDuration(duration)}
+      </div>
+      <div className="flex items-center gap-1.5">
+        <Badge variant="outline" className="h-5 px-1.5 text-[10px] font-bold border-muted-foreground/20">
+          {formatEnumValue(mode)}
+        </Badge>
+      </div>
       {mode !== 'ONLINE' && venue && (
-        <>
-          <span>•</span>
-          <span className="truncate max-w-[10rem]" title={venue}>
-            {venue}
-          </span>
-        </>
+        <div className="flex items-center gap-1.5">
+          <MapPin className="h-3.5 w-3.5 text-primary/60" />
+          <span className="truncate max-w-[120px]" title={venue}>{venue}</span>
+        </div>
       )}
     </div>
   );
@@ -215,53 +227,83 @@ function ExamDetails({ exam, examResult, hasResult }: {
   examResult?: ExamResult;
   hasResult: boolean;
 }) {
-  const marksInfo = hasResult
-    ? `${examResult?.obtainedMarks}/${exam.maxMarks}${exam.passingMarks ? ` • Pass ≥ ${exam.passingMarks}` : ''}`
-    : `${exam.maxMarks} max${exam.passingMarks ? ` • Pass ≥ ${exam.passingMarks}` : ''}`;
+  const startDate = new Date(exam.startDate);
+  const endDate = exam.endDate
+    ? new Date(exam.endDate)
+    : new Date(startDate.getTime() + (exam.durationInMinutes || 0) * 60 * 1000);
+
+  const formattedDate = format(startDate, 'dd MMM, yyyy');
+  const timeRange = `${format(startDate, 'h:mm a')} - ${format(endDate, 'h:mm a')}`;
 
   return (
-    <div className="grid grid-cols-2 gap-3 text-sm">
-      <div className="space-y-1">
-        <p className="text-muted-foreground">Marks</p>
-        <p className="font-medium">{marksInfo}</p>
-      </div>
-
-      <div className="space-y-1">
-        <p className="text-muted-foreground">Schedule</p>
-        <p className="font-medium leading-5">
-          {formatDateTimeIN(new Date(exam.startDate))}
-          <br />
-          <span className="text-muted-foreground">to</span> {formatDateTimeIN(new Date(exam.endDate))}
+    <div className="grid grid-cols-2 gap-4 text-sm">
+      {/* Schedule Section */}
+      <div className="space-y-2">
+        <p className="text-xs font-medium text-muted-foreground flex items-center gap-1.5">
+          <Calendar className="h-3.5 w-3.5" />
+          Schedule
         </p>
+        <div className="space-y-0.5">
+          <p className="font-medium text-foreground">{formattedDate}</p>
+          <p className="text-xs text-muted-foreground flex items-center gap-1">
+            <Clock className="h-3 w-3" />
+            {timeRange}
+          </p>
+        </div>
       </div>
 
-      {exam.supervisors?.length > 0 ? (
-        <div className="space-y-1">
-          <p className="text-muted-foreground">Supervisors</p>
-          <p className="font-medium truncate" title={exam.supervisors.join(', ')}>
-            {exam.supervisors.length} assigned
-          </p>
+      {/* Marks Section */}
+      <div className="space-y-2">
+        <p className="text-xs font-medium text-muted-foreground flex items-center gap-1.5">
+          <Trophy className="h-3.5 w-3.5" />
+          Marks
+        </p>
+        <div>
+          {hasResult ? (
+            <div className="space-y-0.5">
+              <p className="font-medium text-foreground text-lg leading-tight">
+                {examResult?.obtainedMarks}
+                <span className="text-muted-foreground text-xs ml-1 font-normal">/ {exam.maxMarks}</span>
+              </p>
+              {exam.passingMarks && (
+                <p className="text-[10px] text-muted-foreground">
+                  Pass ≥ {exam.passingMarks}
+                </p>
+              )}
+            </div>
+          ) : (
+            <div className="space-y-0.5">
+              <p className="font-medium text-foreground">
+                {exam.maxMarks} <span className="text-xs text-muted-foreground font-normal">Max Marks</span>
+              </p>
+              {exam.passingMarks && (
+                <p className="text-[10px] text-muted-foreground">
+                  Pass ≥ {exam.passingMarks}
+                </p>
+              )}
+            </div>
+          )}
         </div>
-      ) : (
-        <div className="space-y-1">
-          <p className="text-muted-foreground">Mode</p>
-          <p className="font-medium">{formatEnumValue(exam.mode)}</p>
-        </div>
-      )}
+      </div>
 
-      {exam.instructions ? (
-        <div className="space-y-1">
-          <p className="text-muted-foreground">Instructions</p>
-          <p className="font-medium line-clamp-2" title={exam.instructions}>
-            {exam.instructions}
-          </p>
+      {/* Footer Info (Supervisors / Venue / Instructions) */}
+      <div className="col-span-2 pt-3 border-t mt-1 flex items-center justify-between gap-4">
+        {exam.mode !== 'ONLINE' && exam.venue ? (
+          <div className="flex items-center gap-1.5 text-xs text-muted-foreground min-w-0">
+            <MapPin className="h-3.5 w-3.5 shrink-0" />
+            <span className="truncate" title={exam.venue}>{exam.venue}</span>
+          </div>
+        ) : (
+          <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            <Users className="h-3.5 w-3.5" />
+            <span>{exam.supervisors?.length || 0} Supervisors</span>
+          </div>
+        )}
+
+        <div className="bg-secondary/50 px-2 py-0.5 rounded text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
+          {formatEnumValue(exam.mode)}
         </div>
-      ) : (
-        <div className="space-y-1">
-          <p className="text-muted-foreground">Session</p>
-          <p className="font-medium">{exam.examSession?.title}</p>
-        </div>
-      )}
+      </div>
     </div>
   );
 }
@@ -335,7 +377,11 @@ function getPrimaryAction(args: {
     return {
       label: 'Enroll Now',
       variant: 'default' as const,
-      onClick: () => args.onEnroll?.(exam.id),
+      onClick: (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        args.onEnroll?.(exam.id);
+      },
     };
   }
 
@@ -344,13 +390,21 @@ function getPrimaryAction(args: {
     if (args.isResultPublished && args.hasResult) {
       return {
         label: 'View Result',
-        onClick: () => args.onViewResult?.(exam.id)
+        onClick: (e: React.MouseEvent) => {
+          e.preventDefault();
+          e.stopPropagation();
+          args.onViewResult?.(exam.id);
+        }
       };
     }
     if (args.isResultPublished) {
       return {
         label: 'View Result',
-        onClick: () => args.onViewResult?.(exam.id)
+        onClick: (e: React.MouseEvent) => {
+          e.preventDefault();
+          e.stopPropagation();
+          args.onViewResult?.(exam.id);
+        }
       };
     }
     return { label: 'Result Pending', disabled: true, variant: 'secondary' as const };
@@ -367,23 +421,30 @@ function getPrimaryAction(args: {
       };
     }
 
-    // Default: generate hall ticket for offline exams
+    // Default: Show pending state if no hall ticket (instead of download)
     return {
-      label: 'Download Hall Ticket',
-      variant: 'outline' as const,
-      onClick: () => args.onGenerateHallTicket?.(exam.id),
+      label: 'Hall Ticket Pending',
+      variant: 'secondary' as const,
+      disabled: true,
     };
   }
 
   // Handle online exams
   if (exam.mode === 'ONLINE') {
     if (args.canJoinOnline) {
-      return { label: 'Join Exam', onClick: () => args.onJoin?.(exam.id) };
+      return {
+        label: 'Join Exam',
+        onClick: (e: React.MouseEvent) => {
+          e.preventDefault();
+          e.stopPropagation();
+          args.onJoin?.(exam.id);
+        }
+      };
     }
     return { label: 'Join available at start time', disabled: true, variant: 'secondary' as const };
   }
 
-  // Handle offline exams with hall ticket
+  // Handle offline exams with hall ticket (LIVE state)
   if (args.hallTicket?.pdfUrl) {
     return {
       label: 'View Hall Ticket',
@@ -392,11 +453,11 @@ function getPrimaryAction(args: {
     };
   }
 
-  // Default: generate hall ticket for offline exams
+  // Default: Show pending state if no hall ticket
   return {
-    label: 'Download Hall Ticket',
-    variant: 'outline' as const,
-    onClick: () => args.onGenerateHallTicket?.(exam.id),
+    label: 'Hall Ticket Pending',
+    variant: 'secondary' as const,
+    disabled: true,
   };
 }
 
@@ -405,10 +466,16 @@ function renderPrimaryAction(action: any) {
 
   if (action.href) {
     return (
-      <Button asChild size="sm" variant={action.variant}>
-        <Link href={action.href} target="_blank" rel="noopener noreferrer">
-          {action.label}
-        </Link>
+      <Button
+        size="sm"
+        variant={action.variant}
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          window.open(action.href, '_blank', 'noopener,noreferrer');
+        }}
+      >
+        {action.label}
       </Button>
     );
   }

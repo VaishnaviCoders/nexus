@@ -42,6 +42,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.7,
     },
     {
+      url: `${appUrl}/features/attendance`,
+      lastModified: currentDate,
+      changeFrequency: 'daily',
+      priority: 0.7,
+    },
+    {
+      url: `${appUrl}/features/fee-management`,
+      lastModified: currentDate,
+      changeFrequency: 'daily',
+      priority: 0.7,
+    },
+    {
       url: `${appUrl}/features/holidays`,
       lastModified: currentDate,
       changeFrequency: 'daily',

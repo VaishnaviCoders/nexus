@@ -1,7 +1,15 @@
 import { BlogCard } from '@/components/websiteComp/blog/blog-card';
 import { FeaturedBlogSection } from '@/components/websiteComp/blog/featured-blog-section';
-import Footer from '@/components/websiteComp/Footer';
-import React from 'react';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Shiksha Cloud Blogs | Education Technology Insights',
+  description:
+    'Discover insights, tutorials, and stories about school management. Stay updated with the latest in education technology.',
+  alternates: {
+    canonical: 'https://www.shiksha.cloud/blogs',
+  },
+};
 
 const BlogPage = () => {
   return (

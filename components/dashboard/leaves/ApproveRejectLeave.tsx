@@ -22,7 +22,7 @@ import {
 } from '@/lib/data/leave/create-leave';
 import Image from 'next/image';
 import { Textarea } from '@/components/ui/textarea';
-import { EmptyState } from '@/components/EmptyState';
+import { EmptyState } from '@/components/ui/empty-state';
 import { toast } from 'sonner';
 
 type LeaveWithUser = Prisma.LeaveGetPayload<{

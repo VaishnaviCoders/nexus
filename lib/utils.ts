@@ -25,11 +25,10 @@ export function formatBytes(
   if (bytes === 0) return '0 Byte';
 
   const i = Math.floor(Math.log(bytes) / Math.log(1024));
-  return `${(bytes / Math.pow(1024, i)).toFixed(decimals)} ${
-    sizeType === 'accurate'
-      ? (accurateSizes[i] ?? 'Bytes')
-      : (sizes[i] ?? 'Bytes')
-  }`;
+  return `${(bytes / Math.pow(1024, i)).toFixed(decimals)} ${sizeType === 'accurate'
+    ? (accurateSizes[i] ?? 'Bytes')
+    : (sizes[i] ?? 'Bytes')
+    }`;
 }
 
 export function composeEventHandlers<E>(
@@ -228,10 +227,10 @@ export function formatDateRange(start: Date, end: Date) {
   return sameDay
     ? `${date} • ${st} – ${et}`
     : `${date} – ${e.toLocaleDateString(undefined, {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
-      })}`;
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    })}`;
 }
 
 /**
@@ -245,11 +244,11 @@ export function sleep(ms: number): Promise<void> {
  */
 export function chunkArray<T>(array: T[], size: number): T[][] {
   const chunks: T[][] = [];
-  
+
   for (let i = 0; i < array.length; i += size) {
     chunks.push(array.slice(i, i + size));
   }
-  
+
   return chunks;
 }
 
@@ -268,7 +267,7 @@ export async function retry<T>(
       return await fn();
     } catch (error) {
       lastError = error as Error;
-      
+
       if (attempt < maxRetries - 1) {
         // Wait before retry (exponential backoff)
         const waitTime = delayMs * Math.pow(2, attempt);
@@ -496,4 +495,78 @@ export function isPassingGrade(
   passingPercentage = 33
 ): boolean {
   return percentage >= passingPercentage;
+}
+
+/**
+ * Formats a date range, omitting time.
+ * - Same day: "Jan 01, 2024"
+ * - Same year: "Jan 01 - Jan 05, 2024"
+ * - Different year: "Dec 31, 2023 - Jan 04, 2024"
+ */
+export function formatDateRangeDateOnly(start: Date | string, end: Date | string) {
+  const s = new Date(start);
+  const e = new Date(end);
+  const sameYear = s.getFullYear() === e.getFullYear();
+  const sameDay = s.toDateString() === e.toDateString();
+
+  if (sameDay) {
+    return s.toLocaleDateString('en-IN', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    });
+  }
+
+  if (sameYear) {
+    const startStr = s.toLocaleDateString('en-IN', {
+      month: 'short',
+      day: 'numeric',
+    });
+    const endStr = e.toLocaleDateString('en-IN', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    });
+    return `${startStr} - ${endStr}`;
+  }
+
+  const startStr = s.toLocaleDateString('en-IN', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  });
+  const endStr = e.toLocaleDateString('en-IN', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  });
+  return `${startStr} - ${endStr}`;
+}
+
+/**
+ * Formats a time range.
+ * - Same time: "10:00 am"
+ * - Different time: "10:00 am - 11:00 am"
+ */
+export function formatTimeRange(start: Date | string, end: Date | string) {
+  const s = new Date(start);
+  const e = new Date(end);
+
+  const startStr = s.toLocaleTimeString('en-IN', {
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true,
+  });
+
+  const endStr = e.toLocaleTimeString('en-IN', {
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true,
+  });
+
+  if (startStr === endStr) {
+    return startStr;
+  }
+
+  return `${startStr} - ${endStr}`;
 }

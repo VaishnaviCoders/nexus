@@ -32,6 +32,7 @@ export async function AssignFeeToStudents(
     });
 
     revalidatePath('/dashboard/fees/admin/assign');
+    revalidatePath('/dashboard/fees/student');
     return fees;
   } catch (error) {
     console.error('Failed to assign fees to students:', error);

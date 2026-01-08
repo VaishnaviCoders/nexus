@@ -1,5 +1,14 @@
-import React from 'react';
 import SupportPage from '@/components/websiteComp/SupportPage';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Support Center | Shiksha Cloud',
+  description:
+    'Get help and support for Shiksha Cloud school management system. Contact our team or browse resources.',
+  alternates: {
+    canonical: 'https://www.shiksha.cloud/support',
+  },
+};
 
 import { getOrganizationId } from '@/lib/organization';
 import { getCurrentUserId } from '@/lib/user';

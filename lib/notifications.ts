@@ -5,14 +5,11 @@ import { getCurrentUserId } from "@/lib/user";
 import { revalidatePath } from "next/cache";
 
 export async function getUserNotifications() {
-  const userId  =await getCurrentUserId()
+  const userId = await getCurrentUserId()
 
   // We need to match Clerk userId to our User model to get the internal ID if needed, 
   // OR if we stored Clerk ID in NotificationLog.
   // NotificationLog has `userId` which is likely the internal User ID.
-  
- 
-
   const notifications = await prisma.notificationLog.findMany({
     where: {
       userId: userId,
@@ -32,8 +29,7 @@ export async function getUserNotifications() {
       sentAt: true,
       cost: true,
       isRead: true,
-      student:true,
-      parent:true,
+
       // We don't store the *content* directly in NotificationLog typically, 
       // but the model might have it?
       // Checking schema... NotificationLog has `errorMessage`, but not `body`.
@@ -58,7 +54,7 @@ export async function getUserNotifications() {
 
 export async function markAsRead(notificationId: string) {
   const userId = await getCurrentUserId();
-  
+
 
   try {
     await prisma.notificationLog.update({
@@ -72,7 +68,7 @@ export async function markAsRead(notificationId: string) {
         readAt: new Date(),
       },
     });
-    
+
     revalidatePath("/dashboard");
     return { success: true };
   } catch (error) {
@@ -95,7 +91,7 @@ export async function markAllAsRead() {
         readAt: new Date(),
       },
     });
-    
+
     revalidatePath("/dashboard");
     return { success: true };
   } catch (error) {

@@ -1,25 +1,31 @@
 'use server';
 
-import { createHash, randomUUID } from 'crypto';
+import { createHash, randomUUID, randomBytes } from 'crypto';
 
 import {
   PaymentMethod,
   PaymentStatus,
   FeeStatus,
 } from '@/generated/prisma/enums';
-import { currentUser } from '@clerk/nextjs/server';
 import prisma from '@/lib/db';
 import { getOrganizationId } from '@/lib/organization';
 import { revalidatePath } from 'next/cache';
+import { getCurrentUserId } from '@/lib/user';
 
 function generateSha256(data: string): string {
   return createHash('sha256').update(data).digest('hex');
 }
 
+export async function generateTransactionId() {
+  const date = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+  const rand = randomBytes(3).toString("hex").toUpperCase();
+  return `TXN_${date}_${rand}`;
+}
 export const phonePayInitPayment = async (feeId: string) => {
-  const user = await currentUser();
+  const userId = await getCurrentUserId();
   const organizationId = await getOrganizationId();
-  if (!user?.id) throw new Error('Unauthorized');
+  const transactionId = await generateTransactionId();
+
 
   // Validate environment variables
   const requiredEnvVars = [
@@ -54,7 +60,6 @@ export const phonePayInitPayment = async (feeId: string) => {
 
   const totalPayableAmount = pendingAmount + platformFee;
 
-  const transactionId = `TXN-${randomUUID().slice(0, 10)}`;
 
   const payload = {
     merchantId: process.env.NEXT_PUBLIC_PAYMENT_MERCHANT_ID,
@@ -120,10 +125,10 @@ export const phonePayInitPayment = async (feeId: string) => {
           receiptNumber: `REC-${randomUUID().slice(0, 8).toUpperCase()}`,
           transactionId: transactionId,
           note: 'Payment initiated via parent dashboard',
-          payerId: user.id,
+          payerId: userId,
           organizationId: organizationId,
           platformFee,
-          recordedBy: user.id,
+          recordedBy: userId,
         },
       });
 
@@ -143,13 +148,60 @@ export const phonePayInitPayment = async (feeId: string) => {
   }
 };
 
+
+export const getOnlinePaymentStatus = async (transactionId: string) => {
+  const userId = await getCurrentUserId();
+
+  const payment = await prisma.feePayment.findFirst({
+    where: {
+      transactionId,
+      payerId: userId,
+    },
+    include: {
+      fee: {
+        include: {
+          feeCategory: true,
+        },
+      },
+    },
+  });
+
+  return payment;
+};
+
+const mapPhonePePaymentMethod = (type: string | undefined): PaymentMethod => {
+  if (!type) return PaymentMethod.ONLINE;
+  const t = type.toUpperCase();
+  if (t === 'UPI') return PaymentMethod.UPI;
+  if (t === 'CARD') return PaymentMethod.CARD;
+  if (t === 'NETBANKING') return PaymentMethod.ONLINE;
+  return PaymentMethod.ONLINE;
+};
+
 export const verifyPhonePePayment = async (transactionId: string) => {
   const merchantId = process.env.NEXT_PUBLIC_PAYMENT_MERCHANT_ID!;
   const saltKey = process.env.NEXT_PUBLIC_SALT_KEY!;
   const saltIndex = process.env.NEXT_PUBLIC_SALT_INDEX!;
   const host = process.env.NEXT_PUBLIC_PHONE_PAY_HOST_URL!;
 
-  const organizationId = await getOrganizationId();
+  // 1. Fetch the payment record first to get the organizationId
+  // This allows the verification to work in server-to-server callbacks without a user session
+  const payment = await prisma.feePayment.findFirst({
+    where: { transactionId },
+    include: { fee: true },
+  });
+
+  if (!payment) {
+    console.error(`[VERIFY_PAYMENT] No matching FeePayment record for ${transactionId}`);
+    return { success: false, status: 'NOT_FOUND', message: 'Payment record not found' };
+  }
+
+  // Idempotency: skip if already completed
+  if (payment.status === PaymentStatus.COMPLETED) {
+    return { success: true, status: 'COMPLETED', message: 'Payment already verified as successful' };
+  }
+
+  const organizationId = payment.organizationId;
 
   const relativeUrl = `/pg/v1/status/${merchantId}/${transactionId}`;
   const fullUrl = `${host}${relativeUrl}`;
@@ -165,83 +217,77 @@ export const verifyPhonePePayment = async (transactionId: string) => {
     cache: 'no-store',
   });
 
-  const json = await res.json();
-  console.log('PhonePe Status Response in verifyPhonePePayment:', json);
-
   if (!res.ok) {
-    throw new Error('Failed to verify payment');
+    const errorText = await res.text();
+    console.error(`[VERIFY_PAYMENT] PhonePe Status API error: ${res.status}`, errorText);
+    return { success: false, status: 'API_ERROR', message: 'Failed to verify payment with provider' };
   }
 
-  if (json.success === false) {
-    return { success: false, status: 'FAILED' };
-  }
-
-  console.log('Payment Verification Response:', json);
+  const json = await res.json();
+  console.log('[VERIFY_PAYMENT] PhonePe Response:', JSON.stringify(json, null, 2));
 
   const state = json?.data?.state;
+  const paymentMethod = json?.data?.paymentInstrument?.type;
 
-  if (state !== 'COMPLETED') {
-    console.warn('Payment not completed yet:', state);
-    return { success: false, status: state ?? 'UNKNOWN' };
+  // STRICT SUCCESS CHECK: Only 'COMPLETED' is success
+  if (json.success && state === 'COMPLETED') {
+    await prisma.$transaction(async (tx) => {
+      // Re-verify status within transaction to be safe
+      const currentPayment = await tx.feePayment.findUnique({
+        where: { id: payment.id },
+      });
+
+      if (currentPayment?.status === PaymentStatus.COMPLETED) return;
+
+      // 2) Mark that FeePayment COMPLETED
+      await tx.feePayment.update({
+        where: { id: payment.id },
+        data: {
+          status: PaymentStatus.COMPLETED,
+          paymentMethod: mapPhonePePaymentMethod(paymentMethod),
+          paymentDate: new Date(),
+        },
+      });
+
+      // 3) Recalculate all completed payments for this fee
+      const completed = await tx.feePayment.findMany({
+        where: { feeId: payment.feeId, status: PaymentStatus.COMPLETED },
+      });
+      const paidAmount = completed.reduce((sum, p) => sum + p.amount, 0);
+      const pendingAmount = Math.max(payment.fee.totalFee - paidAmount, 0);
+
+      // 4) Update the Fee record atomically
+      await tx.fee.update({
+        where: { id: payment.feeId },
+        data: {
+          paidAmount,
+          pendingAmount,
+          status: pendingAmount === 0 ? FeeStatus.PAID : FeeStatus.UNPAID,
+        },
+      });
+    });
+
+    revalidatePath('/dashboard/fees');
+    revalidatePath('/dashboard/fees/student');
+    revalidatePath('/dashboard/fees/admin/assign');
+
+    return { success: true, status: 'COMPLETED' };
   }
 
-  if (state === 'PENDING') {
-    // Update DB to reflect pending state if not already saved
-    return {
-      success: false,
-      status: 'PENDING',
-      message: 'Payment is processing',
-    };
-  }
-  if (state === 'FAILED') {
+  // Handle FAILED state
+  if (state === 'FAILED' || json.success === false) {
+    await prisma.feePayment.updateMany({
+      where: { transactionId, status: PaymentStatus.PENDING },
+      data: { status: PaymentStatus.FAILED },
+    });
     return { success: false, status: 'FAILED' };
   }
 
-  const paymentMethod = json?.data?.paymentInstrument?.type;
-
-  await prisma.$transaction(async (tx) => {
-    // 1) Find the pending payment record
-    const payment = await tx.feePayment.findFirst({
-      where: {
-        transactionId,
-        organizationId,
-        status: PaymentStatus.PENDING,
-      },
-      include: { fee: true },
-    });
-    if (!payment) {
-      throw new Error('No matching pending FeePayment record');
-    }
-
-    // 2) Mark that FeePayment COMPLETED
-    await tx.feePayment.update({
-      where: { id: payment.id },
-      data: {
-        status: PaymentStatus.COMPLETED,
-        paymentMethod,
-        paymentDate: new Date(),
-      },
-    });
-
-    // 3) Recalculate all completed payments for this fee
-    const completed = await tx.feePayment.findMany({
-      where: { feeId: payment.feeId, status: PaymentStatus.COMPLETED },
-    });
-    const paidAmount = completed.reduce((sum, p) => sum + p.amount, 0);
-    const pendingAmount = Math.max(payment.fee.totalFee - paidAmount, 0);
-
-    // 4) Update the Fee record atomically
-    await tx.fee.update({
-      where: { id: payment.feeId },
-      data: {
-        paidAmount,
-        pendingAmount,
-        status: pendingAmount === 0 ? FeeStatus.PAID : FeeStatus.UNPAID,
-      },
-    });
-  });
-
-  revalidatePath('/dashboard/fees');
-
-  return { success: true, status: 'success' };
+  // Handle PENDING state (or any other state like PAYMENT_INITIATED)
+  // We don't update DB to FAILED yet, just return PENDING
+  return {
+    success: false,
+    status: 'PENDING',
+    message: json.message || 'Payment is still processing',
+  };
 };

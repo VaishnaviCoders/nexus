@@ -358,6 +358,7 @@ model Grade {
   students           Student[]
   section            Section[]
   TeachingAssignment TeachingAssignment[]
+  exams              Exam[]
 
   @@index([organizationId, grade])
 }
@@ -375,6 +376,7 @@ model Section {
   students           Student[] // Students in this section
   StudentAttendance  StudentAttendance[]
   TeachingAssignment TeachingAssignment[]
+  exams              Exam[]
 
   @@unique([name, gradeId])
   @@index([organizationId, name, gradeId])
@@ -979,7 +981,9 @@ model Exam {
   subjectId          String
   subject            Subject          @relation(fields: [subjectId], references: [id])
   gradeId            String
+  grade              Grade            @relation(fields: [gradeId], references: [id])
   sectionId          String
+  section            Section          @relation(fields: [sectionId], references: [id])
   // batchId           String? // Only For coaching batches (link to Batch model if exists) 
   organizationId     String
   organization       Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
@@ -1122,9 +1126,9 @@ enum ResultStatus {
 // "FeedbackCategory",         // Optional - categorize feedback (e.g., Academics, Behavior)
 // "Assignment",            // Not in schema - could be needed for academic tracking
 // "AssignmentSubmission"    // Not in schema - could be needed for academic tracking
-// Courses and Batches
-// Certificate Generator
-// Amazon Alexa  Integration
+//  Courses and Batches
+//  Certificate Generator
+//  Amazon Alexa  Integration
 
 // Teacher  : Salary / Payout, Leave Management, Assigned Leads , Profile , Write FeedBack , Give Assignments, Fill Exam Mark , Bio Attendance , 
 // Parent : View Fee Receipts , Download Receipts , Pay Fees , Parent Profile , SMS Notification , WhatsApp Notification , Setting Page 
@@ -1132,7 +1136,7 @@ enum ResultStatus {
 // Admin : ALl Reports / AI Generated  View Fee Receipts , Download Receipts , Phonepay Payment Gateway Money , Admin Profile , SMS Notification , WhatsApp Notification , Setting Page , Organization Management
 
 // Student Bulk Import 
-
+// Payroll : myhisab
 // Payout : Corporate Bank Account || IFC CODE  Branch || Verify by consorn bank || 
 
 enum LeaveStatus {

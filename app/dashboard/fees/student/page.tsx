@@ -20,10 +20,10 @@ import {
 } from 'lucide-react';
 import { ReceiptDownloadButton } from '@/components/dashboard/Fees/ReceiptDownloadButton';
 import { getCurrentUserByRole } from '@/lib/auth';
-import { EmptyState } from '@/components/EmptyState';
+import { EmptyState } from '@/components/ui/empty-state';
 import PayFeeButton from '@/components/dashboard/Fees/PayFeeButton';
 
-async function getFees(studentId: string) {
+async function getStudentFeesByStudentId(studentId: string) {
   return await prisma.fee.findMany({
     where: {
       studentId: studentId,
@@ -82,7 +82,7 @@ export default async function StudentFeePage() {
     },
   });
 
-  const fees = await getFees(currentUser.studentId);
+  const fees = await getStudentFeesByStudentId(currentUser.studentId);
 
   const totalFees = fees.reduce((acc, fee) => acc + fee.totalFee, 0);
   const paidFees = fees.reduce((acc, fee) => acc + fee.paidAmount, 0);

@@ -1,7 +1,7 @@
 import React, { Suspense } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { EmptyState } from '@/components/EmptyState';
+import { EmptyState } from '@/components/ui/empty-state';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Hash, Mail, Phone, User } from 'lucide-react';
 import Loading from '@/app/dashboard/students/loading';

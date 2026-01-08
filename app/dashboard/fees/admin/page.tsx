@@ -21,7 +21,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import StudentPaymentHistoryTable from '@/components/dashboard/Fees/StudentPaymentHistoryTable';
 
 import { getFeeRecords } from '@/lib/data/fee/get-all-students-fees';
-import { DashboardCardSkeleton } from '@/lib/skeletons/DashboardCardSkeleton';
+import { DashboardCardSkeleton } from '@/components/skeletons/DashboardCardSkeleton';
 // import PaymentReceivedAlert from '@/components/ui/payment-received-alert';
 import { getFeeCategoryDistribution } from '@/lib/data/fee/get-fee-category-distribution';
 
@@ -32,7 +32,9 @@ export const revalidate = 0;
 export default async function AdminFeeDashboard() {
   const [feeCategories, data, feeRecords] = await Promise.all([
     getFeeCategoryDistribution(),
-    getMonthlyFeeData(2025),
+    getMonthlyFeeData(
+      Array.from({ length: 5 }, (_, i) => new Date().getFullYear() - i)
+    ),
     getFeeRecords(),
   ]);
 

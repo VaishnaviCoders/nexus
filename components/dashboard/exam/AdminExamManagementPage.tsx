@@ -71,6 +71,7 @@ import type {
 import { ExamStatus } from '@/generated/prisma/enums';
 import { issueHallTicketsForExam } from '@/lib/data/exam/issue-hall-tickets-for-exam';
 import { notifyStudentsForExamEnrollment } from '@/lib/data/exam/notify-student-for-exam';
+import { enrollStudentsByAdmin } from '@/lib/data/exam/enroll-students-by-admin';
 
 export function AdminExamManagementPage({
   exam,
@@ -284,6 +285,37 @@ export function AdminExamManagementPage({
       setSelectedStudents([]);
     } catch (error) {
       toast.error('Failed to send notifications');
+    }
+  };
+
+  const handleBulkEnroll = async () => {
+    if (selectedStudents.length === 0) return;
+
+    // Filter only non-enrolled students
+    const eligibleStudents = selectedStudents.filter((id) => {
+      const student = studentsData.find((s) => s.id === id);
+      return !student?.isEnrolled;
+    });
+
+    if (eligibleStudents.length === 0) {
+      toast.info('Selected students are already enrolled');
+      return;
+    }
+
+    try {
+      toast.loading('Enrolling students...');
+      const result = await enrollStudentsByAdmin(exam.id, eligibleStudents);
+      toast.dismiss();
+
+      if (result.success) {
+        toast.success(result.message);
+        setSelectedStudents([]);
+      } else {
+        toast.error(result.error || 'Failed to enroll students');
+      }
+    } catch (error) {
+      toast.dismiss();
+      toast.error('An unexpected error occurred');
     }
   };
 
@@ -678,6 +710,17 @@ export function AdminExamManagementPage({
                         <Button
                           variant="default"
                           size="sm"
+                          onClick={handleBulkEnroll}
+                          className="gap-2 bg-green-600 hover:bg-green-700"
+                        >
+                          <CheckCircle className="h-4 w-4" />
+                          Enroll ({notEnrolledCount})
+                        </Button>
+                      )}
+                      {notEnrolledCount > 0 && (
+                        <Button
+                          variant="outline"
+                          size="sm"
                           onClick={handleNotifyEnrollment}
                           className="gap-2"
                         >
@@ -717,7 +760,7 @@ export function AdminExamManagementPage({
                         <Checkbox
                           checked={
                             selectedStudents.length ===
-                              getFilteredStudents('enrollment').length &&
+                            getFilteredStudents('enrollment').length &&
                             getFilteredStudents('enrollment').length > 0
                           }
                           onCheckedChange={() =>

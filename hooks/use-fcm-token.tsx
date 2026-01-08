@@ -6,7 +6,7 @@ import { onMessage, Unsubscribe } from "firebase/messaging";
 import { fetchToken, messaging } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { saveDeviceToken } from "@/app/actions/device-token";
+import { saveDeviceToken } from "@/lib/device-token";
 
 /**
  * Detect the platform for FCM token storage

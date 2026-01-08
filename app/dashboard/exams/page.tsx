@@ -1,12 +1,12 @@
 import { StudentExamsPage } from '@/components/dashboard/exam/StudentExamsPage';
-import { AdminExamsPage } from '@/components/dashboard/exam/AdminExamPage';
 import { getCurrentUserByRole } from '@/lib/auth';
 import prisma from '@/lib/db';
 import { getOrganizationId } from '@/lib/organization';
 import { notFound } from 'next/navigation';
 
 import { Suspense } from 'react';
-import { ExamsPageSkeleton } from '@/components/exam-skeleton';
+import { ExamsPageSkeleton } from '@/components/skeletons/exam-skeleton';
+import { AdminExamList } from '@/components/dashboard/exam/AdminExamList';
 
 export default async function ExamsPage() {
   const organizationId = await getOrganizationId();
@@ -35,9 +35,12 @@ export default async function ExamsPage() {
           hallTickets: { where: { studentId: currentUser.studentId } },
           examResult: { where: { studentId: currentUser.studentId } },
           examEnrollment: { where: { studentId: currentUser.studentId } },
+          grade: true,
+          section: true,
         },
         orderBy: { startDate: 'desc' },
       });
+
 
       return (
         <Suspense fallback={<ExamsPageSkeleton />}>
@@ -73,6 +76,8 @@ export default async function ExamsPage() {
           hallTickets: true,
           examResult: { where: { studentId: { in: childIds } } },
           examEnrollment: { where: { studentId: { in: childIds } } },
+          grade: true,
+          section: true,
         },
         orderBy: { startDate: 'desc' },
       });
@@ -92,18 +97,41 @@ export default async function ExamsPage() {
           examSession: true,
           hallTickets: true,
           examResult: true,
-          examEnrollment: true,
+          examEnrollment: {
+            include: {
+              student: {
+                include: {
+                  user: {
+                    select: {
+                      profileImage: true,
+                      firstName: true,
+                      lastName: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          grade: true,
+          section: {
+            include: {
+              _count: {
+                select: { students: true },
+              },
+            },
+          },
         },
         orderBy: { startDate: 'desc' },
       });
 
       return (
         <Suspense fallback={<ExamsPageSkeleton />}>
-          <AdminExamsPage exams={exams} userRole="TEACHER" />
+          <AdminExamList exams={exams} userRole="TEACHER" />
         </Suspense>
       );
 
     case 'ADMIN':
+
       exams = await prisma.exam.findMany({
         where: { organizationId },
         include: {
@@ -111,14 +139,37 @@ export default async function ExamsPage() {
           examSession: true,
           hallTickets: true,
           examResult: true,
-          examEnrollment: true,
+          examEnrollment: {
+            include: {
+              student: {
+                include: {
+                  user: {
+                    select: {
+                      profileImage: true,
+                      firstName: true,
+                      lastName: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          grade: true,
+          section: {
+            include: {
+              _count: {
+                select: { students: true },
+              },
+            },
+          },
         },
         orderBy: { startDate: 'desc' },
       });
 
+
       return (
         <Suspense fallback={<ExamsPageSkeleton />}>
-          <AdminExamsPage exams={exams} userRole="ADMIN" />
+          <AdminExamList exams={exams} userRole="ADMIN" />
         </Suspense>
       );
   }

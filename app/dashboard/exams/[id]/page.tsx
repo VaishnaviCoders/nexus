@@ -241,13 +241,20 @@ export default async function UnifiedExamPage({
     },
     select: {
       id: true,
+      gradeId: true,
+      sectionId: true,
     },
   });
   if (!student) {
     throw new Error('Student not found');
   }
 
-  const [enrollment, result, hallTicket, allExamResults] = await Promise.all([
+  // Security Check: Ensure student belongs to the exam's grade/section
+  if (student.gradeId !== exam.gradeId || student.sectionId !== exam.sectionId) {
+    return notFound();
+  }
+
+  const [enrollment, result, hallTicket, totalEnrolled, allExamResults] = await Promise.all([
     // Student's enrollment
     prisma.examEnrollment.findUnique({
       where: {
@@ -343,6 +350,11 @@ export default async function UnifiedExamPage({
       },
     }),
 
+    // Total enrollments for statistics
+    prisma.examEnrollment.count({
+      where: { examId },
+    }),
+
     // All results for statistics (only if results are published)
     exam.isResultsPublished
       ? prisma.examResult.findMany({
@@ -385,6 +397,7 @@ export default async function UnifiedExamPage({
       result={result}
       hallTicket={hallTicket}
       examResults={allExamResults}
+      totalEnrolled={totalEnrolled}
     />
   );
 }

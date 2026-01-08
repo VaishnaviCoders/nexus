@@ -183,6 +183,11 @@ export const roleMenus: Record<string, Group[]> = {
           icon: Users,
         },
         {
+          href: '/dashboard/exams',
+          label: 'Exam Management',
+          icon: Paperclip,
+        },
+        {
           href: '/dashboard/holidays',
           label: 'Holidays Management',
           icon: Users,

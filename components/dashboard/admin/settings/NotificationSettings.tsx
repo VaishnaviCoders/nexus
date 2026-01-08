@@ -28,9 +28,9 @@ import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { NotificationChannel, NotificationType } from "@/generated/prisma/enums"
 import { NotificationSetting } from "@/generated/prisma/client"
-import { updateNotificationSetting } from "@/actions/notification-settings"
 import { toast } from "sonner"
 import { cn, getChannelUnitCost } from "@/lib/utils"
+import { updateNotificationSetting } from "@/lib/notification-settings"
 
 // Minimalist Icon Mapping (Geist Style - Mono-color mostly)
 const ICON_MAP: Record<NotificationType, any> = {

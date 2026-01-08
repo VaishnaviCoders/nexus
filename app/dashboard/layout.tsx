@@ -1,6 +1,6 @@
-import BreadCrumbNavigation from '@/components/BreadCrumbNavigation';
+import BreadCrumbNavigation from '@/components/dashboard-layout/BreadCrumbNavigation';
 import AdminPanelLayout from '@/components/dashboard-layout/dashboard-panel-layout';
-import { Navbar } from '@/components/navbar';
+import { Navbar } from '@/components/dashboard-layout/navbar';
 import { RedirectToSignIn } from '@clerk/nextjs';
 import { auth } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';

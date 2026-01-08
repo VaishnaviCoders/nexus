@@ -20,17 +20,17 @@ import { MonthlyFeeCollection } from '@/components/dashboard/Fees/MonthlyFeeColl
 import { getMonthlyFeeData } from '@/lib/data/fee/getMonthlyFeeData';
 
 import { mockMonthlyFeeCollectionData } from '@/constants';
-import AiMonthlyReport from '@/app/components/dashboardComponents/AiMonthlyReport';
-import AdminQuickActions from '@/app/components/dashboardComponents/AdminQuickActions';
-import AdminDashboardCards from '@/app/components/dashboardComponents/AdminDashboardCards';
-import AdminRecentActivity from '@/app/components/dashboardComponents/RecentActivity';
-import { UpcomingEvents } from '@/app/components/dashboardComponents/UpcomingEvents';
+import AdminQuickActions from '@/components/dashboard/admin/AdminQuickActions';
+import AdminDashboardCards from '@/components/dashboard/admin/AdminDashboardCards';
+import AdminRecentActivity from '@/components/dashboard/admin/RecentActivity';
+import { UpcomingEvents } from '@/components/dashboard/shared/UpcomingEvents';
 import { getCurrentAcademicYear } from '@/lib/academicYear';
 import Link from 'next/link';
 import { getRecentAdminActivities } from '@/lib/data/admin/get-recent-activities';
 import { RecentNoticesCards } from '../notice/recent-notices-cards';
 import { getAdminNotices } from '@/lib/data/notice/get-admin-notices';
 import { Calendar } from 'lucide-react';
+import AiMonthlyReport from '@/components/dashboard/reports/AiMonthlyReport';
 
 const AdminDashboard = async () => {
   // Check academic year first before fetching any data
@@ -46,8 +46,8 @@ const AdminDashboard = async () => {
         <div className="space-y-2 max-w-md">
           <h2 className="text-2xl font-semibold">Welcome! Let's Get Started</h2>
           <p className="text-muted-foreground">
-            Before you can use the dashboard, we need to set up your current academic year.
-            This helps organize all your data properly.
+            Before you can use the dashboard, we need to set up your current
+            academic year. This helps organize all your data properly.
           </p>
         </div>
 
@@ -59,9 +59,7 @@ const AdminDashboard = async () => {
             </Link>
           </Button> */}
           <Button variant="outline" asChild size="lg">
-            <Link href="/dashboard/settings">
-              Set Up Academic Year
-            </Link>
+            <Link href="/dashboard/settings">Set Up Academic Year</Link>
           </Button>
         </div>
 
@@ -70,8 +68,9 @@ const AdminDashboard = async () => {
             <CardTitle className="text-sm">What is Academic Year?</CardTitle>
           </CardHeader>
           <CardContent className="text-sm text-muted-foreground text-left">
-            The academic year defines your school's session period (e.g., 2024-2025).
-            All fees, attendance, and reports are organized by academic year.
+            The academic year defines your school's session period (e.g.,
+            2024-2025). All fees, attendance, and reports are organized by
+            academic year.
           </CardContent>
         </Card>
       </div>
@@ -79,7 +78,9 @@ const AdminDashboard = async () => {
   }
 
   // Now safely fetch data since we know academic year exists
-  const data = await getMonthlyFeeData(2025);
+  const currentYear = new Date().getFullYear();
+  const yearsToFetch = Array.from({ length: 5 }, (_, i) => currentYear - i);
+  const data = await getMonthlyFeeData(yearsToFetch);
   const activities = await getRecentAdminActivities();
   const recentAdminNotices = await getAdminNotices();
 
@@ -95,7 +96,7 @@ const AdminDashboard = async () => {
         </div>
         <div className="flex justify-center items-center space-x-3">
           <div className="">
-            <AiMonthlyReport data={data} />
+            <AiMonthlyReport data={data.filter(d => d.year === currentYear)} />
           </div>
 
           <Dialog>
@@ -116,7 +117,6 @@ const AdminDashboard = async () => {
         </div>
       </Card>
 
-
       <AdminDashboardCards />
 
       <div className="grid gap-4 sm:gap-6 grid-cols-1 xl:grid-cols-12">
@@ -135,7 +135,10 @@ const AdminDashboard = async () => {
         {/* Right Column - Sidebar Info */}
         <div className="space-y-4 sm:space-y-6 xl:col-span-4">
           <Suspense fallback={<EventsSkeleton />}>
-            <RecentNoticesCards recentNotices={recentAdminNotices} className="h-screen" />
+            <RecentNoticesCards
+              recentNotices={recentAdminNotices}
+              className="h-screen"
+            />
           </Suspense>
           <Suspense fallback={<ComplaintsSkeleton />}>
             {/* <ComplaintsSummary /> */}

@@ -7,7 +7,7 @@ import { GradingSettings } from "@/components/dashboard/admin/settings/GradingSe
 import { NotificationSettings } from "@/components/dashboard/admin/settings/NotificationSettings"
 import RolesAccessSettings from "@/components/dashboard/admin/settings/RolesAccessSettings"
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { EmptyState } from "@/components/EmptyState"
+import { EmptyState } from "@/components/ui/empty-state"
 import { getBillingSummary } from "@/lib/billing"
 import BillingSettings from "./BillingSettings"
 import { getOrganizationNotificationSettings } from "@/lib/organization-notification-settings"

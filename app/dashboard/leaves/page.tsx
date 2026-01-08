@@ -2,7 +2,7 @@ import { Card, CardDescription, CardTitle } from '@/components/ui/card';
 import prisma from '@/lib/db';
 import { LeaveForm } from '@/components/dashboard/leaves/leave-form';
 import { getOrganizationId } from '@/lib/organization';
-import { EmptyState } from '@/components/EmptyState';
+import { EmptyState } from '@/components/ui/empty-state';
 import { CalendarDays, User, Volleyball } from 'lucide-react';
 import { getCurrentAcademicYearId } from '@/lib/academicYear';
 import { getCurrentUserId } from '@/lib/user';

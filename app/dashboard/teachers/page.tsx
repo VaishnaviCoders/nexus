@@ -16,7 +16,7 @@ import { getAllTeachers } from '@/lib/data/teacher/get-all-teachers';
 import {
   TableSkeleton,
   DashboardFourGridsCardSkeleton,
-} from '@/lib/skeletons/DashboardCardSkeleton';
+} from '@/components/skeletons/DashboardCardSkeleton';
 import { Suspense } from 'react';
 
 // This component will handle the data fetching for stats cards

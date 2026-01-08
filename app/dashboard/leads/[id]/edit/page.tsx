@@ -1,5 +1,5 @@
 import { EditLeadForm } from '@/components/dashboard/leads/edit-lead-form';
-import { EmptyState } from '@/components/EmptyState';
+import { EmptyState } from '@/components/ui/empty-state';
 import prisma from '@/lib/db';
 import { Phone, Mail, User } from 'lucide-react';
 

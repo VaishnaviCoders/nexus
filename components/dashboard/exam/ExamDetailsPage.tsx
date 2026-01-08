@@ -164,6 +164,7 @@ interface ExamDetailsPageProps {
   result: Result | null;
   hallTicket: HallTicket | null;
   examResults: ExamResultSummary[];
+  totalEnrolled: number;
 }
 
 export function ExamDetailsPage({
@@ -173,6 +174,7 @@ export function ExamDetailsPage({
   result,
   hallTicket,
   examResults,
+  totalEnrolled,
 }: ExamDetailsPageProps) {
   const [isEnrolling, startTransition] = useTransition();
 
@@ -214,7 +216,7 @@ export function ExamDetailsPage({
   const handleEnroll = async () => {
     startTransition(async () => {
       try {
-        const enrollResult = await enrollStudentToExam(studentId, exam.id);
+        const enrollResult = await enrollStudentToExam(exam.id);
 
         if (enrollResult.error) {
           toast.error(enrollResult.error);
@@ -237,7 +239,9 @@ export function ExamDetailsPage({
 
   // Calculate statistics
   const stats = useMemo(() => {
-    const total = examResults.length;
+    // If we have totalEnrolled passed from parent, use it.
+    // Otherwise fall back to examResults length (for backward compatibility or if not passed)
+    const total = totalEnrolled || examResults.length;
 
     if (total === 0) {
       return {
@@ -256,6 +260,30 @@ export function ExamDetailsPage({
 
     const attended = examResults.filter((r) => !r.isAbsent);
     const totalAttended = attended.length;
+    // Calculate absent based on total enrolled minus attended
+    // This handles cases where examResults might only contain results for those who took it,
+    // OR if examResults is empty but we have enrollments.
+    // However, if examResults IS empty, we can't really know who is absent/attended yet
+    // unless the exam is over.
+    // For now, if no results are published, we assume 0 attended.
+
+    // If examResults is empty but we have totalEnrolled, it means exam hasn't happened or results aren't out.
+    // So all stats based on results should be 0.
+    if (examResults.length === 0) {
+      return {
+        totalEnrolled: total,
+        totalAttended: 0,
+        totalAbsent: 0,
+        attendanceRate: 0,
+        passRate: 0,
+        averageScore: 0,
+        averagePercentage: 0,
+        topScore: 0,
+        topScorePercentage: 0,
+        passingMarks: exam.passingMarks || Math.round(exam.maxMarks * 0.4),
+      };
+    }
+
     const totalAbsent = examResults.filter((r) => r.isAbsent).length;
     const passedCount = examResults.filter((r) => r.isPassed === true).length;
 
@@ -281,7 +309,7 @@ export function ExamDetailsPage({
       topScorePercentage: topScore > 0 ? (topScore / exam.maxMarks) * 100 : 0,
       passingMarks: exam.passingMarks || Math.round(exam.maxMarks * 0.4),
     };
-  }, [examResults, exam.maxMarks, exam.passingMarks]);
+  }, [examResults, exam.maxMarks, exam.passingMarks, totalEnrolled]);
 
   return (
     <div className="space-y-4 px-2">
@@ -415,7 +443,8 @@ export function ExamDetailsPage({
           )}
 
           {enrollment &&
-            (exam.status === 'UPCOMING' || exam.status === 'LIVE') && (
+            (exam.status === 'UPCOMING' || exam.status === 'LIVE') &&
+            (hallTicket ? (
               <Card className="mt-8 border-blue-200 bg-blue-50/50">
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
@@ -435,22 +464,42 @@ export function ExamDetailsPage({
                           Download Now
                         </Button>
                       </DialogTrigger>
-                      <DialogContent>
+                      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
                         <DialogHeader>
                           <DialogTitle>Hall Ticket</DialogTitle>
                           <DialogDescription>
                             Review your hall ticket before downloading.
                           </DialogDescription>
                         </DialogHeader>
-                        <DialogContent className="max-w-7xl h-full overflow-y-auto">
-                          {hallTicket && <HallTicketUI data={hallTicket} />}
-                        </DialogContent>
+                        <div className="mt-4">
+                          <HallTicketUI data={hallTicket} />
+                        </div>
                       </DialogContent>
                     </Dialog>
                   </div>
                 </CardContent>
               </Card>
-            )}
+            ) : (
+              <Card className="mt-8 border-yellow-200 bg-yellow-50/50">
+                <CardContent className="p-6">
+                  <div className="flex items-center gap-4">
+                    <div className="h-10 w-10 rounded-full bg-yellow-100 flex items-center justify-center flex-shrink-0">
+                      <Clock className="h-5 w-5 text-yellow-600" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-yellow-900 mb-1">
+                        Hall Ticket Pending
+                      </h3>
+                      <p className="text-yellow-700 text-sm">
+                        You are enrolled for this exam, but the hall ticket has
+                        not been issued yet. It will be available closer to the
+                        exam date.
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
         </CardContent>
       </Card>
 
@@ -464,7 +513,7 @@ export function ExamDetailsPage({
         <CardContent className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {/* Participation Card */}
-            <Card className="border-0 shadow-sm bg-gradient-to-br from-blue-50 to-blue-50 dark:from-blue-950/20 dark:to-blue-900/20">
+            <Card className="shadow-sm border-blue-200 dark:border-blue-800">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
@@ -508,7 +557,8 @@ export function ExamDetailsPage({
             </Card>
 
             {/* Pass Rate Card */}
-            <Card className="border-0 shadow-sm bg-gradient-to-br from-green-50 to-green-100 dark:from-green-950/20 dark:to-green-900/20">
+            {/* /bg-gradient-to-br */}
+            <Card className="shadow-sm border-green-200 dark:border-green-800">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
@@ -559,7 +609,8 @@ export function ExamDetailsPage({
             </Card>
 
             {/* Average Performance Card */}
-            <Card className="border-0 shadow-sm bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-950/20 dark:to-orange-900/20">
+            <Card className="shadow-sm border-orange-200 dark:border-orange-800">
+
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
@@ -571,10 +622,10 @@ export function ExamDetailsPage({
                   <Badge
                     variant={
                       stats.averagePercentage >= 75
-                        ? 'default'
+                        ? 'PASS'
                         : stats.averagePercentage >= 50
-                          ? 'secondary'
-                          : 'destructive'
+                          ? 'AVERAGE'
+                          : 'ABSENT'
                     }
                     className="text-xs"
                   >
@@ -611,7 +662,8 @@ export function ExamDetailsPage({
             </Card>
 
             {/* Top Performance Card */}
-            <Card className="border-0 shadow-sm bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-950/20 dark:to-purple-900/20">
+            <Card className="shadow-sm border-purple-200 dark:border-purple-800">
+
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">

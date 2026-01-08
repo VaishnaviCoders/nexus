@@ -378,6 +378,8 @@ export type ExamWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Exam"> | Date | string
   examSession?: Prisma.XOR<Prisma.ExamSessionScalarRelationFilter, Prisma.ExamSessionWhereInput>
   subject?: Prisma.XOR<Prisma.SubjectScalarRelationFilter, Prisma.SubjectWhereInput>
+  grade?: Prisma.XOR<Prisma.GradeScalarRelationFilter, Prisma.GradeWhereInput>
+  section?: Prisma.XOR<Prisma.SectionScalarRelationFilter, Prisma.SectionWhereInput>
   organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
   hallTickets?: Prisma.HallTicketListRelationFilter
   examResult?: Prisma.ExamResultListRelationFilter
@@ -411,6 +413,8 @@ export type ExamOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   examSession?: Prisma.ExamSessionOrderByWithRelationInput
   subject?: Prisma.SubjectOrderByWithRelationInput
+  grade?: Prisma.GradeOrderByWithRelationInput
+  section?: Prisma.SectionOrderByWithRelationInput
   organization?: Prisma.OrganizationOrderByWithRelationInput
   hallTickets?: Prisma.HallTicketOrderByRelationAggregateInput
   examResult?: Prisma.ExamResultOrderByRelationAggregateInput
@@ -449,6 +453,8 @@ export type ExamWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"Exam"> | Date | string
   examSession?: Prisma.XOR<Prisma.ExamSessionScalarRelationFilter, Prisma.ExamSessionWhereInput>
   subject?: Prisma.XOR<Prisma.SubjectScalarRelationFilter, Prisma.SubjectWhereInput>
+  grade?: Prisma.XOR<Prisma.GradeScalarRelationFilter, Prisma.GradeWhereInput>
+  section?: Prisma.XOR<Prisma.SectionScalarRelationFilter, Prisma.SectionWhereInput>
   organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
   hallTickets?: Prisma.HallTicketListRelationFilter
   examResult?: Prisma.ExamResultListRelationFilter
@@ -521,8 +527,6 @@ export type ExamCreateInput = {
   id?: string
   title: string
   description?: string | null
-  gradeId: string
-  sectionId: string
   maxMarks: number
   passingMarks?: number | null
   weightage?: number | null
@@ -541,6 +545,8 @@ export type ExamCreateInput = {
   updatedAt?: Date | string
   examSession: Prisma.ExamSessionCreateNestedOneWithoutExamsInput
   subject: Prisma.SubjectCreateNestedOneWithoutExamInput
+  grade: Prisma.GradeCreateNestedOneWithoutExamsInput
+  section: Prisma.SectionCreateNestedOneWithoutExamsInput
   organization: Prisma.OrganizationCreateNestedOneWithoutExamInput
   hallTickets?: Prisma.HallTicketCreateNestedManyWithoutExamInput
   examResult?: Prisma.ExamResultCreateNestedManyWithoutExamInput
@@ -581,8 +587,6 @@ export type ExamUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  gradeId?: Prisma.StringFieldUpdateOperationsInput | string
-  sectionId?: Prisma.StringFieldUpdateOperationsInput | string
   maxMarks?: Prisma.FloatFieldUpdateOperationsInput | number
   passingMarks?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   weightage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -601,6 +605,8 @@ export type ExamUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   examSession?: Prisma.ExamSessionUpdateOneRequiredWithoutExamsNestedInput
   subject?: Prisma.SubjectUpdateOneRequiredWithoutExamNestedInput
+  grade?: Prisma.GradeUpdateOneRequiredWithoutExamsNestedInput
+  section?: Prisma.SectionUpdateOneRequiredWithoutExamsNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutExamNestedInput
   hallTickets?: Prisma.HallTicketUpdateManyWithoutExamNestedInput
   examResult?: Prisma.ExamResultUpdateManyWithoutExamNestedInput
@@ -668,8 +674,6 @@ export type ExamUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  gradeId?: Prisma.StringFieldUpdateOperationsInput | string
-  sectionId?: Prisma.StringFieldUpdateOperationsInput | string
   maxMarks?: Prisma.FloatFieldUpdateOperationsInput | number
   passingMarks?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   weightage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -884,6 +888,90 @@ export type ExamUncheckedUpdateManyWithoutOrganizationNestedInput = {
   deleteMany?: Prisma.ExamScalarWhereInput | Prisma.ExamScalarWhereInput[]
 }
 
+export type ExamCreateNestedManyWithoutGradeInput = {
+  create?: Prisma.XOR<Prisma.ExamCreateWithoutGradeInput, Prisma.ExamUncheckedCreateWithoutGradeInput> | Prisma.ExamCreateWithoutGradeInput[] | Prisma.ExamUncheckedCreateWithoutGradeInput[]
+  connectOrCreate?: Prisma.ExamCreateOrConnectWithoutGradeInput | Prisma.ExamCreateOrConnectWithoutGradeInput[]
+  createMany?: Prisma.ExamCreateManyGradeInputEnvelope
+  connect?: Prisma.ExamWhereUniqueInput | Prisma.ExamWhereUniqueInput[]
+}
+
+export type ExamUncheckedCreateNestedManyWithoutGradeInput = {
+  create?: Prisma.XOR<Prisma.ExamCreateWithoutGradeInput, Prisma.ExamUncheckedCreateWithoutGradeInput> | Prisma.ExamCreateWithoutGradeInput[] | Prisma.ExamUncheckedCreateWithoutGradeInput[]
+  connectOrCreate?: Prisma.ExamCreateOrConnectWithoutGradeInput | Prisma.ExamCreateOrConnectWithoutGradeInput[]
+  createMany?: Prisma.ExamCreateManyGradeInputEnvelope
+  connect?: Prisma.ExamWhereUniqueInput | Prisma.ExamWhereUniqueInput[]
+}
+
+export type ExamUpdateManyWithoutGradeNestedInput = {
+  create?: Prisma.XOR<Prisma.ExamCreateWithoutGradeInput, Prisma.ExamUncheckedCreateWithoutGradeInput> | Prisma.ExamCreateWithoutGradeInput[] | Prisma.ExamUncheckedCreateWithoutGradeInput[]
+  connectOrCreate?: Prisma.ExamCreateOrConnectWithoutGradeInput | Prisma.ExamCreateOrConnectWithoutGradeInput[]
+  upsert?: Prisma.ExamUpsertWithWhereUniqueWithoutGradeInput | Prisma.ExamUpsertWithWhereUniqueWithoutGradeInput[]
+  createMany?: Prisma.ExamCreateManyGradeInputEnvelope
+  set?: Prisma.ExamWhereUniqueInput | Prisma.ExamWhereUniqueInput[]
+  disconnect?: Prisma.ExamWhereUniqueInput | Prisma.ExamWhereUniqueInput[]
+  delete?: Prisma.ExamWhereUniqueInput | Prisma.ExamWhereUniqueInput[]
+  connect?: Prisma.ExamWhereUniqueInput | Prisma.ExamWhereUniqueInput[]
+  update?: Prisma.ExamUpdateWithWhereUniqueWithoutGradeInput | Prisma.ExamUpdateWithWhereUniqueWithoutGradeInput[]
+  updateMany?: Prisma.ExamUpdateManyWithWhereWithoutGradeInput | Prisma.ExamUpdateManyWithWhereWithoutGradeInput[]
+  deleteMany?: Prisma.ExamScalarWhereInput | Prisma.ExamScalarWhereInput[]
+}
+
+export type ExamUncheckedUpdateManyWithoutGradeNestedInput = {
+  create?: Prisma.XOR<Prisma.ExamCreateWithoutGradeInput, Prisma.ExamUncheckedCreateWithoutGradeInput> | Prisma.ExamCreateWithoutGradeInput[] | Prisma.ExamUncheckedCreateWithoutGradeInput[]
+  connectOrCreate?: Prisma.ExamCreateOrConnectWithoutGradeInput | Prisma.ExamCreateOrConnectWithoutGradeInput[]
+  upsert?: Prisma.ExamUpsertWithWhereUniqueWithoutGradeInput | Prisma.ExamUpsertWithWhereUniqueWithoutGradeInput[]
+  createMany?: Prisma.ExamCreateManyGradeInputEnvelope
+  set?: Prisma.ExamWhereUniqueInput | Prisma.ExamWhereUniqueInput[]
+  disconnect?: Prisma.ExamWhereUniqueInput | Prisma.ExamWhereUniqueInput[]
+  delete?: Prisma.ExamWhereUniqueInput | Prisma.ExamWhereUniqueInput[]
+  connect?: Prisma.ExamWhereUniqueInput | Prisma.ExamWhereUniqueInput[]
+  update?: Prisma.ExamUpdateWithWhereUniqueWithoutGradeInput | Prisma.ExamUpdateWithWhereUniqueWithoutGradeInput[]
+  updateMany?: Prisma.ExamUpdateManyWithWhereWithoutGradeInput | Prisma.ExamUpdateManyWithWhereWithoutGradeInput[]
+  deleteMany?: Prisma.ExamScalarWhereInput | Prisma.ExamScalarWhereInput[]
+}
+
+export type ExamCreateNestedManyWithoutSectionInput = {
+  create?: Prisma.XOR<Prisma.ExamCreateWithoutSectionInput, Prisma.ExamUncheckedCreateWithoutSectionInput> | Prisma.ExamCreateWithoutSectionInput[] | Prisma.ExamUncheckedCreateWithoutSectionInput[]
+  connectOrCreate?: Prisma.ExamCreateOrConnectWithoutSectionInput | Prisma.ExamCreateOrConnectWithoutSectionInput[]
+  createMany?: Prisma.ExamCreateManySectionInputEnvelope
+  connect?: Prisma.ExamWhereUniqueInput | Prisma.ExamWhereUniqueInput[]
+}
+
+export type ExamUncheckedCreateNestedManyWithoutSectionInput = {
+  create?: Prisma.XOR<Prisma.ExamCreateWithoutSectionInput, Prisma.ExamUncheckedCreateWithoutSectionInput> | Prisma.ExamCreateWithoutSectionInput[] | Prisma.ExamUncheckedCreateWithoutSectionInput[]
+  connectOrCreate?: Prisma.ExamCreateOrConnectWithoutSectionInput | Prisma.ExamCreateOrConnectWithoutSectionInput[]
+  createMany?: Prisma.ExamCreateManySectionInputEnvelope
+  connect?: Prisma.ExamWhereUniqueInput | Prisma.ExamWhereUniqueInput[]
+}
+
+export type ExamUpdateManyWithoutSectionNestedInput = {
+  create?: Prisma.XOR<Prisma.ExamCreateWithoutSectionInput, Prisma.ExamUncheckedCreateWithoutSectionInput> | Prisma.ExamCreateWithoutSectionInput[] | Prisma.ExamUncheckedCreateWithoutSectionInput[]
+  connectOrCreate?: Prisma.ExamCreateOrConnectWithoutSectionInput | Prisma.ExamCreateOrConnectWithoutSectionInput[]
+  upsert?: Prisma.ExamUpsertWithWhereUniqueWithoutSectionInput | Prisma.ExamUpsertWithWhereUniqueWithoutSectionInput[]
+  createMany?: Prisma.ExamCreateManySectionInputEnvelope
+  set?: Prisma.ExamWhereUniqueInput | Prisma.ExamWhereUniqueInput[]
+  disconnect?: Prisma.ExamWhereUniqueInput | Prisma.ExamWhereUniqueInput[]
+  delete?: Prisma.ExamWhereUniqueInput | Prisma.ExamWhereUniqueInput[]
+  connect?: Prisma.ExamWhereUniqueInput | Prisma.ExamWhereUniqueInput[]
+  update?: Prisma.ExamUpdateWithWhereUniqueWithoutSectionInput | Prisma.ExamUpdateWithWhereUniqueWithoutSectionInput[]
+  updateMany?: Prisma.ExamUpdateManyWithWhereWithoutSectionInput | Prisma.ExamUpdateManyWithWhereWithoutSectionInput[]
+  deleteMany?: Prisma.ExamScalarWhereInput | Prisma.ExamScalarWhereInput[]
+}
+
+export type ExamUncheckedUpdateManyWithoutSectionNestedInput = {
+  create?: Prisma.XOR<Prisma.ExamCreateWithoutSectionInput, Prisma.ExamUncheckedCreateWithoutSectionInput> | Prisma.ExamCreateWithoutSectionInput[] | Prisma.ExamUncheckedCreateWithoutSectionInput[]
+  connectOrCreate?: Prisma.ExamCreateOrConnectWithoutSectionInput | Prisma.ExamCreateOrConnectWithoutSectionInput[]
+  upsert?: Prisma.ExamUpsertWithWhereUniqueWithoutSectionInput | Prisma.ExamUpsertWithWhereUniqueWithoutSectionInput[]
+  createMany?: Prisma.ExamCreateManySectionInputEnvelope
+  set?: Prisma.ExamWhereUniqueInput | Prisma.ExamWhereUniqueInput[]
+  disconnect?: Prisma.ExamWhereUniqueInput | Prisma.ExamWhereUniqueInput[]
+  delete?: Prisma.ExamWhereUniqueInput | Prisma.ExamWhereUniqueInput[]
+  connect?: Prisma.ExamWhereUniqueInput | Prisma.ExamWhereUniqueInput[]
+  update?: Prisma.ExamUpdateWithWhereUniqueWithoutSectionInput | Prisma.ExamUpdateWithWhereUniqueWithoutSectionInput[]
+  updateMany?: Prisma.ExamUpdateManyWithWhereWithoutSectionInput | Prisma.ExamUpdateManyWithWhereWithoutSectionInput[]
+  deleteMany?: Prisma.ExamScalarWhereInput | Prisma.ExamScalarWhereInput[]
+}
+
 export type ExamCreateNestedManyWithoutSubjectInput = {
   create?: Prisma.XOR<Prisma.ExamCreateWithoutSubjectInput, Prisma.ExamUncheckedCreateWithoutSubjectInput> | Prisma.ExamCreateWithoutSubjectInput[] | Prisma.ExamUncheckedCreateWithoutSubjectInput[]
   connectOrCreate?: Prisma.ExamCreateOrConnectWithoutSubjectInput | Prisma.ExamCreateOrConnectWithoutSubjectInput[]
@@ -1037,8 +1125,6 @@ export type ExamCreateWithoutOrganizationInput = {
   id?: string
   title: string
   description?: string | null
-  gradeId: string
-  sectionId: string
   maxMarks: number
   passingMarks?: number | null
   weightage?: number | null
@@ -1057,6 +1143,8 @@ export type ExamCreateWithoutOrganizationInput = {
   updatedAt?: Date | string
   examSession: Prisma.ExamSessionCreateNestedOneWithoutExamsInput
   subject: Prisma.SubjectCreateNestedOneWithoutExamInput
+  grade: Prisma.GradeCreateNestedOneWithoutExamsInput
+  section: Prisma.SectionCreateNestedOneWithoutExamsInput
   hallTickets?: Prisma.HallTicketCreateNestedManyWithoutExamInput
   examResult?: Prisma.ExamResultCreateNestedManyWithoutExamInput
   examEnrollment?: Prisma.ExamEnrollmentCreateNestedManyWithoutExamInput
@@ -1147,12 +1235,10 @@ export type ExamScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Exam"> | Date | string
 }
 
-export type ExamCreateWithoutSubjectInput = {
+export type ExamCreateWithoutGradeInput = {
   id?: string
   title: string
   description?: string | null
-  gradeId: string
-  sectionId: string
   maxMarks: number
   passingMarks?: number | null
   weightage?: number | null
@@ -1170,6 +1256,176 @@ export type ExamCreateWithoutSubjectInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   examSession: Prisma.ExamSessionCreateNestedOneWithoutExamsInput
+  subject: Prisma.SubjectCreateNestedOneWithoutExamInput
+  section: Prisma.SectionCreateNestedOneWithoutExamsInput
+  organization: Prisma.OrganizationCreateNestedOneWithoutExamInput
+  hallTickets?: Prisma.HallTicketCreateNestedManyWithoutExamInput
+  examResult?: Prisma.ExamResultCreateNestedManyWithoutExamInput
+  examEnrollment?: Prisma.ExamEnrollmentCreateNestedManyWithoutExamInput
+}
+
+export type ExamUncheckedCreateWithoutGradeInput = {
+  id?: string
+  title: string
+  description?: string | null
+  examSessionId: string
+  subjectId: string
+  sectionId: string
+  organizationId: string
+  maxMarks: number
+  passingMarks?: number | null
+  weightage?: number | null
+  evaluationType: $Enums.EvaluationType
+  mode: $Enums.ExamMode
+  status?: $Enums.ExamStatus
+  instructions?: string | null
+  durationInMinutes?: number | null
+  venueMapUrl?: string | null
+  venue?: string | null
+  isResultsPublished?: boolean
+  supervisors?: Prisma.ExamCreatesupervisorsInput | string[]
+  startDate: Date | string
+  endDate: Date | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  hallTickets?: Prisma.HallTicketUncheckedCreateNestedManyWithoutExamInput
+  examResult?: Prisma.ExamResultUncheckedCreateNestedManyWithoutExamInput
+  examEnrollment?: Prisma.ExamEnrollmentUncheckedCreateNestedManyWithoutExamInput
+}
+
+export type ExamCreateOrConnectWithoutGradeInput = {
+  where: Prisma.ExamWhereUniqueInput
+  create: Prisma.XOR<Prisma.ExamCreateWithoutGradeInput, Prisma.ExamUncheckedCreateWithoutGradeInput>
+}
+
+export type ExamCreateManyGradeInputEnvelope = {
+  data: Prisma.ExamCreateManyGradeInput | Prisma.ExamCreateManyGradeInput[]
+  skipDuplicates?: boolean
+}
+
+export type ExamUpsertWithWhereUniqueWithoutGradeInput = {
+  where: Prisma.ExamWhereUniqueInput
+  update: Prisma.XOR<Prisma.ExamUpdateWithoutGradeInput, Prisma.ExamUncheckedUpdateWithoutGradeInput>
+  create: Prisma.XOR<Prisma.ExamCreateWithoutGradeInput, Prisma.ExamUncheckedCreateWithoutGradeInput>
+}
+
+export type ExamUpdateWithWhereUniqueWithoutGradeInput = {
+  where: Prisma.ExamWhereUniqueInput
+  data: Prisma.XOR<Prisma.ExamUpdateWithoutGradeInput, Prisma.ExamUncheckedUpdateWithoutGradeInput>
+}
+
+export type ExamUpdateManyWithWhereWithoutGradeInput = {
+  where: Prisma.ExamScalarWhereInput
+  data: Prisma.XOR<Prisma.ExamUpdateManyMutationInput, Prisma.ExamUncheckedUpdateManyWithoutGradeInput>
+}
+
+export type ExamCreateWithoutSectionInput = {
+  id?: string
+  title: string
+  description?: string | null
+  maxMarks: number
+  passingMarks?: number | null
+  weightage?: number | null
+  evaluationType: $Enums.EvaluationType
+  mode: $Enums.ExamMode
+  status?: $Enums.ExamStatus
+  instructions?: string | null
+  durationInMinutes?: number | null
+  venueMapUrl?: string | null
+  venue?: string | null
+  isResultsPublished?: boolean
+  supervisors?: Prisma.ExamCreatesupervisorsInput | string[]
+  startDate: Date | string
+  endDate: Date | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  examSession: Prisma.ExamSessionCreateNestedOneWithoutExamsInput
+  subject: Prisma.SubjectCreateNestedOneWithoutExamInput
+  grade: Prisma.GradeCreateNestedOneWithoutExamsInput
+  organization: Prisma.OrganizationCreateNestedOneWithoutExamInput
+  hallTickets?: Prisma.HallTicketCreateNestedManyWithoutExamInput
+  examResult?: Prisma.ExamResultCreateNestedManyWithoutExamInput
+  examEnrollment?: Prisma.ExamEnrollmentCreateNestedManyWithoutExamInput
+}
+
+export type ExamUncheckedCreateWithoutSectionInput = {
+  id?: string
+  title: string
+  description?: string | null
+  examSessionId: string
+  subjectId: string
+  gradeId: string
+  organizationId: string
+  maxMarks: number
+  passingMarks?: number | null
+  weightage?: number | null
+  evaluationType: $Enums.EvaluationType
+  mode: $Enums.ExamMode
+  status?: $Enums.ExamStatus
+  instructions?: string | null
+  durationInMinutes?: number | null
+  venueMapUrl?: string | null
+  venue?: string | null
+  isResultsPublished?: boolean
+  supervisors?: Prisma.ExamCreatesupervisorsInput | string[]
+  startDate: Date | string
+  endDate: Date | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  hallTickets?: Prisma.HallTicketUncheckedCreateNestedManyWithoutExamInput
+  examResult?: Prisma.ExamResultUncheckedCreateNestedManyWithoutExamInput
+  examEnrollment?: Prisma.ExamEnrollmentUncheckedCreateNestedManyWithoutExamInput
+}
+
+export type ExamCreateOrConnectWithoutSectionInput = {
+  where: Prisma.ExamWhereUniqueInput
+  create: Prisma.XOR<Prisma.ExamCreateWithoutSectionInput, Prisma.ExamUncheckedCreateWithoutSectionInput>
+}
+
+export type ExamCreateManySectionInputEnvelope = {
+  data: Prisma.ExamCreateManySectionInput | Prisma.ExamCreateManySectionInput[]
+  skipDuplicates?: boolean
+}
+
+export type ExamUpsertWithWhereUniqueWithoutSectionInput = {
+  where: Prisma.ExamWhereUniqueInput
+  update: Prisma.XOR<Prisma.ExamUpdateWithoutSectionInput, Prisma.ExamUncheckedUpdateWithoutSectionInput>
+  create: Prisma.XOR<Prisma.ExamCreateWithoutSectionInput, Prisma.ExamUncheckedCreateWithoutSectionInput>
+}
+
+export type ExamUpdateWithWhereUniqueWithoutSectionInput = {
+  where: Prisma.ExamWhereUniqueInput
+  data: Prisma.XOR<Prisma.ExamUpdateWithoutSectionInput, Prisma.ExamUncheckedUpdateWithoutSectionInput>
+}
+
+export type ExamUpdateManyWithWhereWithoutSectionInput = {
+  where: Prisma.ExamScalarWhereInput
+  data: Prisma.XOR<Prisma.ExamUpdateManyMutationInput, Prisma.ExamUncheckedUpdateManyWithoutSectionInput>
+}
+
+export type ExamCreateWithoutSubjectInput = {
+  id?: string
+  title: string
+  description?: string | null
+  maxMarks: number
+  passingMarks?: number | null
+  weightage?: number | null
+  evaluationType: $Enums.EvaluationType
+  mode: $Enums.ExamMode
+  status?: $Enums.ExamStatus
+  instructions?: string | null
+  durationInMinutes?: number | null
+  venueMapUrl?: string | null
+  venue?: string | null
+  isResultsPublished?: boolean
+  supervisors?: Prisma.ExamCreatesupervisorsInput | string[]
+  startDate: Date | string
+  endDate: Date | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  examSession: Prisma.ExamSessionCreateNestedOneWithoutExamsInput
+  grade: Prisma.GradeCreateNestedOneWithoutExamsInput
+  section: Prisma.SectionCreateNestedOneWithoutExamsInput
   organization: Prisma.OrganizationCreateNestedOneWithoutExamInput
   hallTickets?: Prisma.HallTicketCreateNestedManyWithoutExamInput
   examResult?: Prisma.ExamResultCreateNestedManyWithoutExamInput
@@ -1235,8 +1491,6 @@ export type ExamCreateWithoutExamSessionInput = {
   id?: string
   title: string
   description?: string | null
-  gradeId: string
-  sectionId: string
   maxMarks: number
   passingMarks?: number | null
   weightage?: number | null
@@ -1254,6 +1508,8 @@ export type ExamCreateWithoutExamSessionInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   subject: Prisma.SubjectCreateNestedOneWithoutExamInput
+  grade: Prisma.GradeCreateNestedOneWithoutExamsInput
+  section: Prisma.SectionCreateNestedOneWithoutExamsInput
   organization: Prisma.OrganizationCreateNestedOneWithoutExamInput
   hallTickets?: Prisma.HallTicketCreateNestedManyWithoutExamInput
   examResult?: Prisma.ExamResultCreateNestedManyWithoutExamInput
@@ -1319,8 +1575,6 @@ export type ExamCreateWithoutExamEnrollmentInput = {
   id?: string
   title: string
   description?: string | null
-  gradeId: string
-  sectionId: string
   maxMarks: number
   passingMarks?: number | null
   weightage?: number | null
@@ -1339,6 +1593,8 @@ export type ExamCreateWithoutExamEnrollmentInput = {
   updatedAt?: Date | string
   examSession: Prisma.ExamSessionCreateNestedOneWithoutExamsInput
   subject: Prisma.SubjectCreateNestedOneWithoutExamInput
+  grade: Prisma.GradeCreateNestedOneWithoutExamsInput
+  section: Prisma.SectionCreateNestedOneWithoutExamsInput
   organization: Prisma.OrganizationCreateNestedOneWithoutExamInput
   hallTickets?: Prisma.HallTicketCreateNestedManyWithoutExamInput
   examResult?: Prisma.ExamResultCreateNestedManyWithoutExamInput
@@ -1393,8 +1649,6 @@ export type ExamUpdateWithoutExamEnrollmentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  gradeId?: Prisma.StringFieldUpdateOperationsInput | string
-  sectionId?: Prisma.StringFieldUpdateOperationsInput | string
   maxMarks?: Prisma.FloatFieldUpdateOperationsInput | number
   passingMarks?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   weightage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1413,6 +1667,8 @@ export type ExamUpdateWithoutExamEnrollmentInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   examSession?: Prisma.ExamSessionUpdateOneRequiredWithoutExamsNestedInput
   subject?: Prisma.SubjectUpdateOneRequiredWithoutExamNestedInput
+  grade?: Prisma.GradeUpdateOneRequiredWithoutExamsNestedInput
+  section?: Prisma.SectionUpdateOneRequiredWithoutExamsNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutExamNestedInput
   hallTickets?: Prisma.HallTicketUpdateManyWithoutExamNestedInput
   examResult?: Prisma.ExamResultUpdateManyWithoutExamNestedInput
@@ -1451,8 +1707,6 @@ export type ExamCreateWithoutExamResultInput = {
   id?: string
   title: string
   description?: string | null
-  gradeId: string
-  sectionId: string
   maxMarks: number
   passingMarks?: number | null
   weightage?: number | null
@@ -1471,6 +1725,8 @@ export type ExamCreateWithoutExamResultInput = {
   updatedAt?: Date | string
   examSession: Prisma.ExamSessionCreateNestedOneWithoutExamsInput
   subject: Prisma.SubjectCreateNestedOneWithoutExamInput
+  grade: Prisma.GradeCreateNestedOneWithoutExamsInput
+  section: Prisma.SectionCreateNestedOneWithoutExamsInput
   organization: Prisma.OrganizationCreateNestedOneWithoutExamInput
   hallTickets?: Prisma.HallTicketCreateNestedManyWithoutExamInput
   examEnrollment?: Prisma.ExamEnrollmentCreateNestedManyWithoutExamInput
@@ -1525,8 +1781,6 @@ export type ExamUpdateWithoutExamResultInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  gradeId?: Prisma.StringFieldUpdateOperationsInput | string
-  sectionId?: Prisma.StringFieldUpdateOperationsInput | string
   maxMarks?: Prisma.FloatFieldUpdateOperationsInput | number
   passingMarks?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   weightage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1545,6 +1799,8 @@ export type ExamUpdateWithoutExamResultInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   examSession?: Prisma.ExamSessionUpdateOneRequiredWithoutExamsNestedInput
   subject?: Prisma.SubjectUpdateOneRequiredWithoutExamNestedInput
+  grade?: Prisma.GradeUpdateOneRequiredWithoutExamsNestedInput
+  section?: Prisma.SectionUpdateOneRequiredWithoutExamsNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutExamNestedInput
   hallTickets?: Prisma.HallTicketUpdateManyWithoutExamNestedInput
   examEnrollment?: Prisma.ExamEnrollmentUpdateManyWithoutExamNestedInput
@@ -1583,8 +1839,6 @@ export type ExamCreateWithoutHallTicketsInput = {
   id?: string
   title: string
   description?: string | null
-  gradeId: string
-  sectionId: string
   maxMarks: number
   passingMarks?: number | null
   weightage?: number | null
@@ -1603,6 +1857,8 @@ export type ExamCreateWithoutHallTicketsInput = {
   updatedAt?: Date | string
   examSession: Prisma.ExamSessionCreateNestedOneWithoutExamsInput
   subject: Prisma.SubjectCreateNestedOneWithoutExamInput
+  grade: Prisma.GradeCreateNestedOneWithoutExamsInput
+  section: Prisma.SectionCreateNestedOneWithoutExamsInput
   organization: Prisma.OrganizationCreateNestedOneWithoutExamInput
   examResult?: Prisma.ExamResultCreateNestedManyWithoutExamInput
   examEnrollment?: Prisma.ExamEnrollmentCreateNestedManyWithoutExamInput
@@ -1657,8 +1913,6 @@ export type ExamUpdateWithoutHallTicketsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  gradeId?: Prisma.StringFieldUpdateOperationsInput | string
-  sectionId?: Prisma.StringFieldUpdateOperationsInput | string
   maxMarks?: Prisma.FloatFieldUpdateOperationsInput | number
   passingMarks?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   weightage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1677,6 +1931,8 @@ export type ExamUpdateWithoutHallTicketsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   examSession?: Prisma.ExamSessionUpdateOneRequiredWithoutExamsNestedInput
   subject?: Prisma.SubjectUpdateOneRequiredWithoutExamNestedInput
+  grade?: Prisma.GradeUpdateOneRequiredWithoutExamsNestedInput
+  section?: Prisma.SectionUpdateOneRequiredWithoutExamsNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutExamNestedInput
   examResult?: Prisma.ExamResultUpdateManyWithoutExamNestedInput
   examEnrollment?: Prisma.ExamEnrollmentUpdateManyWithoutExamNestedInput
@@ -1741,8 +1997,6 @@ export type ExamUpdateWithoutOrganizationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  gradeId?: Prisma.StringFieldUpdateOperationsInput | string
-  sectionId?: Prisma.StringFieldUpdateOperationsInput | string
   maxMarks?: Prisma.FloatFieldUpdateOperationsInput | number
   passingMarks?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   weightage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1761,6 +2015,8 @@ export type ExamUpdateWithoutOrganizationInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   examSession?: Prisma.ExamSessionUpdateOneRequiredWithoutExamsNestedInput
   subject?: Prisma.SubjectUpdateOneRequiredWithoutExamNestedInput
+  grade?: Prisma.GradeUpdateOneRequiredWithoutExamsNestedInput
+  section?: Prisma.SectionUpdateOneRequiredWithoutExamsNestedInput
   hallTickets?: Prisma.HallTicketUpdateManyWithoutExamNestedInput
   examResult?: Prisma.ExamResultUpdateManyWithoutExamNestedInput
   examEnrollment?: Prisma.ExamEnrollmentUpdateManyWithoutExamNestedInput
@@ -1821,6 +2077,226 @@ export type ExamUncheckedUpdateManyWithoutOrganizationInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+export type ExamCreateManyGradeInput = {
+  id?: string
+  title: string
+  description?: string | null
+  examSessionId: string
+  subjectId: string
+  sectionId: string
+  organizationId: string
+  maxMarks: number
+  passingMarks?: number | null
+  weightage?: number | null
+  evaluationType: $Enums.EvaluationType
+  mode: $Enums.ExamMode
+  status?: $Enums.ExamStatus
+  instructions?: string | null
+  durationInMinutes?: number | null
+  venueMapUrl?: string | null
+  venue?: string | null
+  isResultsPublished?: boolean
+  supervisors?: Prisma.ExamCreatesupervisorsInput | string[]
+  startDate: Date | string
+  endDate: Date | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type ExamUpdateWithoutGradeInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maxMarks?: Prisma.FloatFieldUpdateOperationsInput | number
+  passingMarks?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  weightage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  evaluationType?: Prisma.EnumEvaluationTypeFieldUpdateOperationsInput | $Enums.EvaluationType
+  mode?: Prisma.EnumExamModeFieldUpdateOperationsInput | $Enums.ExamMode
+  status?: Prisma.EnumExamStatusFieldUpdateOperationsInput | $Enums.ExamStatus
+  instructions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  durationInMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  venueMapUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  venue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isResultsPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  supervisors?: Prisma.ExamUpdatesupervisorsInput | string[]
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  examSession?: Prisma.ExamSessionUpdateOneRequiredWithoutExamsNestedInput
+  subject?: Prisma.SubjectUpdateOneRequiredWithoutExamNestedInput
+  section?: Prisma.SectionUpdateOneRequiredWithoutExamsNestedInput
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutExamNestedInput
+  hallTickets?: Prisma.HallTicketUpdateManyWithoutExamNestedInput
+  examResult?: Prisma.ExamResultUpdateManyWithoutExamNestedInput
+  examEnrollment?: Prisma.ExamEnrollmentUpdateManyWithoutExamNestedInput
+}
+
+export type ExamUncheckedUpdateWithoutGradeInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  examSessionId?: Prisma.StringFieldUpdateOperationsInput | string
+  subjectId?: Prisma.StringFieldUpdateOperationsInput | string
+  sectionId?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  maxMarks?: Prisma.FloatFieldUpdateOperationsInput | number
+  passingMarks?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  weightage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  evaluationType?: Prisma.EnumEvaluationTypeFieldUpdateOperationsInput | $Enums.EvaluationType
+  mode?: Prisma.EnumExamModeFieldUpdateOperationsInput | $Enums.ExamMode
+  status?: Prisma.EnumExamStatusFieldUpdateOperationsInput | $Enums.ExamStatus
+  instructions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  durationInMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  venueMapUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  venue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isResultsPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  supervisors?: Prisma.ExamUpdatesupervisorsInput | string[]
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  hallTickets?: Prisma.HallTicketUncheckedUpdateManyWithoutExamNestedInput
+  examResult?: Prisma.ExamResultUncheckedUpdateManyWithoutExamNestedInput
+  examEnrollment?: Prisma.ExamEnrollmentUncheckedUpdateManyWithoutExamNestedInput
+}
+
+export type ExamUncheckedUpdateManyWithoutGradeInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  examSessionId?: Prisma.StringFieldUpdateOperationsInput | string
+  subjectId?: Prisma.StringFieldUpdateOperationsInput | string
+  sectionId?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  maxMarks?: Prisma.FloatFieldUpdateOperationsInput | number
+  passingMarks?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  weightage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  evaluationType?: Prisma.EnumEvaluationTypeFieldUpdateOperationsInput | $Enums.EvaluationType
+  mode?: Prisma.EnumExamModeFieldUpdateOperationsInput | $Enums.ExamMode
+  status?: Prisma.EnumExamStatusFieldUpdateOperationsInput | $Enums.ExamStatus
+  instructions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  durationInMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  venueMapUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  venue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isResultsPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  supervisors?: Prisma.ExamUpdatesupervisorsInput | string[]
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type ExamCreateManySectionInput = {
+  id?: string
+  title: string
+  description?: string | null
+  examSessionId: string
+  subjectId: string
+  gradeId: string
+  organizationId: string
+  maxMarks: number
+  passingMarks?: number | null
+  weightage?: number | null
+  evaluationType: $Enums.EvaluationType
+  mode: $Enums.ExamMode
+  status?: $Enums.ExamStatus
+  instructions?: string | null
+  durationInMinutes?: number | null
+  venueMapUrl?: string | null
+  venue?: string | null
+  isResultsPublished?: boolean
+  supervisors?: Prisma.ExamCreatesupervisorsInput | string[]
+  startDate: Date | string
+  endDate: Date | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type ExamUpdateWithoutSectionInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maxMarks?: Prisma.FloatFieldUpdateOperationsInput | number
+  passingMarks?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  weightage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  evaluationType?: Prisma.EnumEvaluationTypeFieldUpdateOperationsInput | $Enums.EvaluationType
+  mode?: Prisma.EnumExamModeFieldUpdateOperationsInput | $Enums.ExamMode
+  status?: Prisma.EnumExamStatusFieldUpdateOperationsInput | $Enums.ExamStatus
+  instructions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  durationInMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  venueMapUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  venue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isResultsPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  supervisors?: Prisma.ExamUpdatesupervisorsInput | string[]
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  examSession?: Prisma.ExamSessionUpdateOneRequiredWithoutExamsNestedInput
+  subject?: Prisma.SubjectUpdateOneRequiredWithoutExamNestedInput
+  grade?: Prisma.GradeUpdateOneRequiredWithoutExamsNestedInput
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutExamNestedInput
+  hallTickets?: Prisma.HallTicketUpdateManyWithoutExamNestedInput
+  examResult?: Prisma.ExamResultUpdateManyWithoutExamNestedInput
+  examEnrollment?: Prisma.ExamEnrollmentUpdateManyWithoutExamNestedInput
+}
+
+export type ExamUncheckedUpdateWithoutSectionInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  examSessionId?: Prisma.StringFieldUpdateOperationsInput | string
+  subjectId?: Prisma.StringFieldUpdateOperationsInput | string
+  gradeId?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  maxMarks?: Prisma.FloatFieldUpdateOperationsInput | number
+  passingMarks?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  weightage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  evaluationType?: Prisma.EnumEvaluationTypeFieldUpdateOperationsInput | $Enums.EvaluationType
+  mode?: Prisma.EnumExamModeFieldUpdateOperationsInput | $Enums.ExamMode
+  status?: Prisma.EnumExamStatusFieldUpdateOperationsInput | $Enums.ExamStatus
+  instructions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  durationInMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  venueMapUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  venue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isResultsPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  supervisors?: Prisma.ExamUpdatesupervisorsInput | string[]
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  hallTickets?: Prisma.HallTicketUncheckedUpdateManyWithoutExamNestedInput
+  examResult?: Prisma.ExamResultUncheckedUpdateManyWithoutExamNestedInput
+  examEnrollment?: Prisma.ExamEnrollmentUncheckedUpdateManyWithoutExamNestedInput
+}
+
+export type ExamUncheckedUpdateManyWithoutSectionInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  examSessionId?: Prisma.StringFieldUpdateOperationsInput | string
+  subjectId?: Prisma.StringFieldUpdateOperationsInput | string
+  gradeId?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  maxMarks?: Prisma.FloatFieldUpdateOperationsInput | number
+  passingMarks?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  weightage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  evaluationType?: Prisma.EnumEvaluationTypeFieldUpdateOperationsInput | $Enums.EvaluationType
+  mode?: Prisma.EnumExamModeFieldUpdateOperationsInput | $Enums.ExamMode
+  status?: Prisma.EnumExamStatusFieldUpdateOperationsInput | $Enums.ExamStatus
+  instructions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  durationInMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  venueMapUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  venue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isResultsPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  supervisors?: Prisma.ExamUpdatesupervisorsInput | string[]
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
 export type ExamCreateManySubjectInput = {
   id?: string
   title: string
@@ -1851,8 +2327,6 @@ export type ExamUpdateWithoutSubjectInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  gradeId?: Prisma.StringFieldUpdateOperationsInput | string
-  sectionId?: Prisma.StringFieldUpdateOperationsInput | string
   maxMarks?: Prisma.FloatFieldUpdateOperationsInput | number
   passingMarks?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   weightage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1870,6 +2344,8 @@ export type ExamUpdateWithoutSubjectInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   examSession?: Prisma.ExamSessionUpdateOneRequiredWithoutExamsNestedInput
+  grade?: Prisma.GradeUpdateOneRequiredWithoutExamsNestedInput
+  section?: Prisma.SectionUpdateOneRequiredWithoutExamsNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutExamNestedInput
   hallTickets?: Prisma.HallTicketUpdateManyWithoutExamNestedInput
   examResult?: Prisma.ExamResultUpdateManyWithoutExamNestedInput
@@ -1961,8 +2437,6 @@ export type ExamUpdateWithoutExamSessionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  gradeId?: Prisma.StringFieldUpdateOperationsInput | string
-  sectionId?: Prisma.StringFieldUpdateOperationsInput | string
   maxMarks?: Prisma.FloatFieldUpdateOperationsInput | number
   passingMarks?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   weightage?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1980,6 +2454,8 @@ export type ExamUpdateWithoutExamSessionInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   subject?: Prisma.SubjectUpdateOneRequiredWithoutExamNestedInput
+  grade?: Prisma.GradeUpdateOneRequiredWithoutExamsNestedInput
+  section?: Prisma.SectionUpdateOneRequiredWithoutExamsNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutExamNestedInput
   hallTickets?: Prisma.HallTicketUpdateManyWithoutExamNestedInput
   examResult?: Prisma.ExamResultUpdateManyWithoutExamNestedInput
@@ -2117,6 +2593,8 @@ export type ExamSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   updatedAt?: boolean
   examSession?: boolean | Prisma.ExamSessionDefaultArgs<ExtArgs>
   subject?: boolean | Prisma.SubjectDefaultArgs<ExtArgs>
+  grade?: boolean | Prisma.GradeDefaultArgs<ExtArgs>
+  section?: boolean | Prisma.SectionDefaultArgs<ExtArgs>
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   hallTickets?: boolean | Prisma.Exam$hallTicketsArgs<ExtArgs>
   examResult?: boolean | Prisma.Exam$examResultArgs<ExtArgs>
@@ -2151,6 +2629,8 @@ export type ExamSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   updatedAt?: boolean
   examSession?: boolean | Prisma.ExamSessionDefaultArgs<ExtArgs>
   subject?: boolean | Prisma.SubjectDefaultArgs<ExtArgs>
+  grade?: boolean | Prisma.GradeDefaultArgs<ExtArgs>
+  section?: boolean | Prisma.SectionDefaultArgs<ExtArgs>
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["exam"]>
 
@@ -2181,6 +2661,8 @@ export type ExamSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   updatedAt?: boolean
   examSession?: boolean | Prisma.ExamSessionDefaultArgs<ExtArgs>
   subject?: boolean | Prisma.SubjectDefaultArgs<ExtArgs>
+  grade?: boolean | Prisma.GradeDefaultArgs<ExtArgs>
+  section?: boolean | Prisma.SectionDefaultArgs<ExtArgs>
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["exam"]>
 
@@ -2215,6 +2697,8 @@ export type ExamOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = run
 export type ExamInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   examSession?: boolean | Prisma.ExamSessionDefaultArgs<ExtArgs>
   subject?: boolean | Prisma.SubjectDefaultArgs<ExtArgs>
+  grade?: boolean | Prisma.GradeDefaultArgs<ExtArgs>
+  section?: boolean | Prisma.SectionDefaultArgs<ExtArgs>
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   hallTickets?: boolean | Prisma.Exam$hallTicketsArgs<ExtArgs>
   examResult?: boolean | Prisma.Exam$examResultArgs<ExtArgs>
@@ -2224,11 +2708,15 @@ export type ExamInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
 export type ExamIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   examSession?: boolean | Prisma.ExamSessionDefaultArgs<ExtArgs>
   subject?: boolean | Prisma.SubjectDefaultArgs<ExtArgs>
+  grade?: boolean | Prisma.GradeDefaultArgs<ExtArgs>
+  section?: boolean | Prisma.SectionDefaultArgs<ExtArgs>
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
 }
 export type ExamIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   examSession?: boolean | Prisma.ExamSessionDefaultArgs<ExtArgs>
   subject?: boolean | Prisma.SubjectDefaultArgs<ExtArgs>
+  grade?: boolean | Prisma.GradeDefaultArgs<ExtArgs>
+  section?: boolean | Prisma.SectionDefaultArgs<ExtArgs>
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
 }
 
@@ -2237,6 +2725,8 @@ export type $ExamPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   objects: {
     examSession: Prisma.$ExamSessionPayload<ExtArgs>
     subject: Prisma.$SubjectPayload<ExtArgs>
+    grade: Prisma.$GradePayload<ExtArgs>
+    section: Prisma.$SectionPayload<ExtArgs>
     organization: Prisma.$OrganizationPayload<ExtArgs>
     hallTickets: Prisma.$HallTicketPayload<ExtArgs>[]
     examResult: Prisma.$ExamResultPayload<ExtArgs>[]
@@ -2663,6 +3153,8 @@ export interface Prisma__ExamClient<T, Null = never, ExtArgs extends runtime.Typ
   readonly [Symbol.toStringTag]: "PrismaPromise"
   examSession<T extends Prisma.ExamSessionDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ExamSessionDefaultArgs<ExtArgs>>): Prisma.Prisma__ExamSessionClient<runtime.Types.Result.GetResult<Prisma.$ExamSessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   subject<T extends Prisma.SubjectDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SubjectDefaultArgs<ExtArgs>>): Prisma.Prisma__SubjectClient<runtime.Types.Result.GetResult<Prisma.$SubjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  grade<T extends Prisma.GradeDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.GradeDefaultArgs<ExtArgs>>): Prisma.Prisma__GradeClient<runtime.Types.Result.GetResult<Prisma.$GradePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  section<T extends Prisma.SectionDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SectionDefaultArgs<ExtArgs>>): Prisma.Prisma__SectionClient<runtime.Types.Result.GetResult<Prisma.$SectionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   organization<T extends Prisma.OrganizationDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrganizationDefaultArgs<ExtArgs>>): Prisma.Prisma__OrganizationClient<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   hallTickets<T extends Prisma.Exam$hallTicketsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Exam$hallTicketsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$HallTicketPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   examResult<T extends Prisma.Exam$examResultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Exam$examResultArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExamResultPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>

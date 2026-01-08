@@ -24,7 +24,7 @@ import {
 import { TeacherProfileForm } from './TeacherProfileForm';
 import prisma from '@/lib/db';
 import { getCurrentUserId } from '@/lib/user';
-import { EmptyState } from '@/components/EmptyState';
+import { EmptyState } from '@/components/ui/empty-state';
 
 export async function getTeacher(userId: string) {
   const teacher = await prisma.teacher.findUnique({

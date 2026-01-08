@@ -4,7 +4,7 @@ import prisma from '@/lib/db';
 import { getCurrentUserId } from './user';
 import { getOrganizationId } from './organization';
 import { syncOrganizationUser } from './syncUser';
-import { auth } from '@clerk/nextjs/server';
+
 
 export type RoleResult =
   | { role: 'STUDENT'; studentId: string }

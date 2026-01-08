@@ -29,9 +29,6 @@ import { getCurrentAcademicYear } from '@/lib/academicYear';
 import { getCurrentUserByRole } from '@/lib/auth';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
-import { getUserNotifications } from '@/app/actions/notifications';
-
-
 
 // Enhanced fees status with better error handling and caching
 export async function getFeesStatus(studentId: string) {

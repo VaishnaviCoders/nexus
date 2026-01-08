@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
-import { DashboardCardSkeleton } from '@/lib/skeletons/DashboardCardSkeleton';
+import { DashboardCardSkeleton } from '@/components/skeletons/DashboardCardSkeleton';
 import { Calendar, Receipt, User } from 'lucide-react';
 import ParentFeeHistory from '@/components/dashboard/Fees/ParentFeeHistory';
 import GetFeesByParentId from '@/lib/data/fee/GetFeesByParentId';

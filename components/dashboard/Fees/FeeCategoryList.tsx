@@ -1,4 +1,4 @@
-import { EmptyState } from '@/components/EmptyState';
+import { EmptyState } from '@/components/ui/empty-state';
 import { FeeCategoryItem } from './FeeCategoryItem';
 import { Activity, Pin, User } from 'lucide-react';
 import { getFeeCategories } from '@/lib/data/fee/fee-categories';

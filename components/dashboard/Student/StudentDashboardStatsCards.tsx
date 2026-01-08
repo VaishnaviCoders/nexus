@@ -14,7 +14,7 @@ import {
 import { getStudentDashboardStats } from '@/lib/data/student/get-student-dashboard-stats';
 import { formatDateIN, timeUntil } from '@/lib/utils';
 import Link from 'next/link';
-import { DashboardCardSkeleton } from '@/lib/skeletons/DashboardCardSkeleton';
+import { DashboardCardSkeleton } from '@/components/skeletons/DashboardCardSkeleton';
 
 function StudentDashboardStatsCardsSkeleton() {
   return (

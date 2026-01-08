@@ -12,6 +12,9 @@ export const metadata: Metadata = {
     'women safety school management',
     'student safety reporting platform',
   ],
+  alternates: {
+    canonical: 'https://www.shiksha.cloud/features/anonymous-complaint-system',
+  },
 };
 
 

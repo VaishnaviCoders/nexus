@@ -4,7 +4,6 @@ import { GeistSans } from 'geist/font/sans';
 import './globals.css';
 import './notification-feed-overrides.css';
 
-import { ThemeProvider } from '@/components/theme-provider';
 import { ClerkProvider } from '@clerk/nextjs';
 import { Toaster } from 'sonner';
 import { NextSSRPlugin } from '@uploadthing/react/next-ssr-plugin';
@@ -45,8 +44,8 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: '/favicon.ico',
-    shortcut: '/favicon-16x16.png',
-    apple: '/apple-touch-icon.png',
+    shortcut: '/icons/clerk-16.png',
+    apple: '/apple-icon.png',
   },
   title: {
     default: 'School CRM | All-in-One School Management Platform',
@@ -55,7 +54,6 @@ export const metadata: Metadata = {
   description:
     'All-in-one school management platform to streamline students, fees, attendance, and reports. Powerful and easy-to-use for schools, colleges, and coaching institutes.',
   generator: 'Next.js',
-  manifest: '/manifest.json',
   keywords:
     'School CRM, School Management Software, Educational CRM, Student Management System, Attendance Tracker, Fee Management, School Administration Software, Coaching Institute Software',
   authors: [{ name: 'Sameer Kad', url: 'https://github.com/DevSammyKad' }],

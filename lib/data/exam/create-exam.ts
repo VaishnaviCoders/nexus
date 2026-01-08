@@ -73,10 +73,33 @@ export async function createExam(data: ExamFormData) {
       examSessionId = defaultSession.id;
     }
 
+    const sectionId = form.gradeSectionKey.split(' || ')[0];
+    const gradeId = form.gradeSectionKey.split(' || ')[1];
+    const startDate = new Date(form.startDate);
+    const endDate = new Date(form.endDate);
+
+    // Conflict Check: Check for overlapping exams in the same section
+    const conflictingExam = await prisma.exam.findFirst({
+      where: {
+        organizationId,
+        sectionId: sectionId,
+        // (StartA <= EndB) and (EndA >= StartB)
+        startDate: { lte: endDate },
+        endDate: { gte: startDate },
+      },
+      select: { title: true, startDate: true, endDate: true },
+    });
+
+    if (conflictingExam) {
+      return {
+        error: `Schedule Conflict: '${conflictingExam.title}' is already scheduled from ${conflictingExam.startDate.toLocaleTimeString()} to ${conflictingExam.endDate.toLocaleTimeString()}.`,
+      };
+    }
+
     await prisma.exam.create({
       data: {
-        startDate: new Date(form.startDate),
-        endDate: new Date(form.endDate),
+        startDate,
+        endDate,
         title: form.title,
         description: form.description,
         instructions: form.instructions,
@@ -89,8 +112,8 @@ export async function createExam(data: ExamFormData) {
         weightage: form.weightage,
         mode: form.mode as ExamMode,
         evaluationType: form.evaluationType as EvaluationType,
-        gradeId: form.gradeSectionKey.split(' || ')[1], // grade.id
-        sectionId: form.gradeSectionKey.split(' || ')[0], // section.id
+        gradeId,
+        sectionId,
         supervisors: form.supervisors,
         subjectId: form.subjectId,
         organizationId,

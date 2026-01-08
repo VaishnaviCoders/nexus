@@ -34,50 +34,63 @@ export async function getTeacherDashboardStats() {
 
   const [
     totalStudents,
-    todayAttendance,
-    thisMonthAttendance,
+    todayTotal,
+    todayPresent,
+    monthTotal,
+    monthPresent,
     pendingComplaints,
     recentNotices,
     upcomingHolidays,
     classPerformance,
   ] = await Promise.all([
+    // 1. Total Students in assigned sections
     prisma.student.count({
       where: {
-        sectionId: {
-          in: uniqueSectionIds,
-        },
+        sectionId: { in: uniqueSectionIds },
       },
     }),
 
-    prisma.studentAttendance.aggregate({
+    // 2. Today's total records marked
+    prisma.studentAttendance.count({
       where: {
-        sectionId: {
-          in: uniqueSectionIds,
-        },
+        sectionId: { in: uniqueSectionIds },
         date: today,
       },
-      _count: {
-        _all: true,
+    }),
+
+    // 3. Today's present records
+    prisma.studentAttendance.count({
+      where: {
+        sectionId: { in: uniqueSectionIds },
+        date: today,
         present: true,
       },
     }),
 
-    prisma.studentAttendance.aggregate({
+    // 4. Monthly total records
+    prisma.studentAttendance.count({
       where: {
-        sectionId: {
-          in: uniqueSectionIds,
-        },
+        sectionId: { in: uniqueSectionIds },
         date: {
           gte: new Date(today.getFullYear(), today.getMonth(), 1),
           lte: today,
         },
       },
-      _count: {
-        _all: true,
+    }),
+
+    // 5. Monthly present records
+    prisma.studentAttendance.count({
+      where: {
+        sectionId: { in: uniqueSectionIds },
+        date: {
+          gte: new Date(today.getFullYear(), today.getMonth(), 1),
+          lte: today,
+        },
         present: true,
       },
     }),
 
+    // 6. Pending Complaints
     prisma.anonymousComplaint.count({
       where: {
         academicYearId,
@@ -88,80 +101,58 @@ export async function getTeacherDashboardStats() {
       },
     }),
 
+    // 7. Recent Notices
     prisma.notice.findMany({
       where: {
         organizationId,
-        targetAudience: {
-          has: 'TEACHER',
-        },
-        endDate: {
-          gte: today,
-        },
+        targetAudience: { has: 'TEACHER' },
+        endDate: { gte: today },
       },
-      orderBy: {
-        createdAt: 'desc',
-      },
+      orderBy: { createdAt: 'desc' },
       take: 5,
     }),
 
+    // 8. Upcoming Holidays
     prisma.academicCalendar.findMany({
       where: {
         organizationId,
-        startDate: {
-          gte: today,
-        },
+        startDate: { gte: today },
       },
-      orderBy: {
-        startDate: 'asc',
-      },
+      orderBy: { startDate: 'asc' },
       take: 3,
     }),
 
+    // 9. Class Performance (Section-wise monthly attendance)
     prisma.studentAttendance.groupBy({
       by: ['sectionId'],
       where: {
-        sectionId: {
-          in: uniqueSectionIds,
-        },
-        date: {
-          gte: new Date(today.getFullYear(), today.getMonth(), 1),
-        },
+        sectionId: { in: uniqueSectionIds },
+        date: { gte: new Date(today.getFullYear(), today.getMonth(), 1) },
       },
-      _count: {
-        _all: true,
-        present: true,
-      },
+      _count: { _all: true },
     }),
   ]);
 
-  const todayAttendancePercentage = todayAttendance._count._all
-    ? Math.round(
-        ((todayAttendance._count.present || 0) / todayAttendance._count._all) *
-          100
-      )
+  const todayAttendancePercentage = todayTotal
+    ? Math.round((todayPresent / todayTotal) * 100)
     : 0;
 
-  const monthAttendancePercentage = thisMonthAttendance._count._all
-    ? Math.round(
-        ((thisMonthAttendance._count.present || 0) /
-          thisMonthAttendance._count._all) *
-          100
-      )
+  const monthAttendancePercentage = monthTotal
+    ? Math.round((monthPresent / monthTotal) * 100)
     : 0;
 
   return {
     teacher,
     totalStudents,
     todayAttendance: {
-      total: todayAttendance._count._all,
-      present: todayAttendance._count.present || 0,
-      absent:
-        todayAttendance._count._all - (todayAttendance._count.present || 0),
+      total: todayTotal,
+      present: todayPresent,
+      absent: todayTotal - todayPresent,
       percentage: todayAttendancePercentage,
     },
     monthAttendance: {
       percentage: monthAttendancePercentage,
-      totalRecords: thisMonthAttendance._count._all,
+      totalRecords: monthTotal,
     },
     pendingComplaints,
     recentNotices,

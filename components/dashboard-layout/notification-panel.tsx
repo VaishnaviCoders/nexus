@@ -1,4 +1,4 @@
-import { getUserNotifications } from "@/app/actions/notifications";
+import { getUserNotifications } from "@/lib/notifications";
 
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";

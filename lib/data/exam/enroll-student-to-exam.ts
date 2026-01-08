@@ -1,17 +1,18 @@
 'use server';
 
+import { getCurrentUserByRole } from '@/lib/auth';
 import prisma from '@/lib/db';
 import { revalidatePath } from 'next/cache';
+import { success } from 'zod/v4';
 
-export async function enrollStudentToExam(studentId: string, examId: string) {
-  // 1) Check student exists
-  const student = await prisma.student.findUnique({
-    where: { id: studentId },
-  });
+export async function enrollStudentToExam(examId: string) {
+  const currentUser = await getCurrentUserByRole();
 
-  if (!student) {
-    return { error: 'Student does not exist.' };
+  if (!currentUser || currentUser.role !== "STUDENT") {
+    throw new Error("Unauthorized: Student role required");
   }
+
+  const studentId = currentUser.studentId;
 
   // 2) Check exam exists
   const exam = await prisma.exam.findUnique({
@@ -30,9 +31,8 @@ export async function enrollStudentToExam(studentId: string, examId: string) {
   const existingEnrollment = await prisma.examEnrollment.findUnique({
     where: { studentId_examId: { studentId, examId } },
   });
-
   if (existingEnrollment) {
-    return { error: 'Student is already enrolled in this exam.' };
+    return { success: false, error: "Already enrolled in this exam." };
   }
 
   // 4) Create enrollment
@@ -46,5 +46,9 @@ export async function enrollStudentToExam(studentId: string, examId: string) {
 
   revalidatePath(`/dashboard/exams/${examId}`);
 
-  return { success: true };
+  return {
+    success: true,
+    message: "Successfully enrolled in exam"
+  };
+
 }

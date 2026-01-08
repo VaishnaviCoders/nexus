@@ -44,7 +44,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const title = `Best School Management Software in ${locationName} | Shiksha Cloud`;
   const description = `Leading cloud-based school ERP software in ${locationName}. Automate attendance, fees, communication & administration. Free plan available. Start your digital transformation today!`;
-  const canonicalUrl = `https://www.shiksha.cloud/location/school-management-software`;
+  const canonicalUrl = `https://www.shiksha.cloud/${location}/school-management-software`;
 
   return {
     title,

@@ -8,7 +8,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 
-import getAllChildrenByParentId from '@/lib/actions/my-children-action';
+import getAllChildrenByParentId from '@/lib/data/parent/get-all-children-by-parentId';
 import { ChildCard } from '@/components/dashboard/parent/ChildCard';
 import { auth } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';

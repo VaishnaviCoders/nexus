@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useMemo, useState } from 'react';
+import { Suspense, useMemo, useState, useTransition } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -27,24 +27,26 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { cn } from '@/lib/utils';
+import { cn, formatDateIN } from '@/lib/utils';
 import { BookA, Filter, Paperclip, School } from 'lucide-react';
 import Link from 'next/link';
 import type { ExamMode, ExamStatus } from '@/generated/prisma/enums';
 import { toast } from 'sonner';
-import { enrollCurrentStudentToExam } from '@/lib/data/exam/enroll-current-student-to-exam';
+import { enrollStudentToExam } from '@/lib/data/exam/enroll-student-to-exam';
 
 import { ExamCard } from './ExamCard';
 import { formatDateRange } from '@/lib/utils';
-import { ExamCardSkeleton } from '@/components/exam-skeleton';
+import { ExamCardSkeleton } from '@/components/skeletons/exam-skeleton';
 import {
   Subject,
   ExamSession,
   ExamResult,
   HallTicket,
   ExamEnrollment,
+  Grade,
+  Section,
 } from '@/generated/prisma/client';
-import { EmptyState } from '@/components/EmptyState';
+import { EmptyState } from '@/components/ui/empty-state';
 import { useRouter } from 'next/navigation';
 
 export type ExamWithRelations = {
@@ -76,7 +78,17 @@ export type ExamWithRelations = {
   examSession: ExamSession;
   hallTickets?: HallTicket[];
   examResult?: ExamResult[];
-  examEnrollment?: ExamEnrollment[];
+  examEnrollment?: (ExamEnrollment & {
+    student?: {
+      user: {
+        firstName: string;
+        lastName: string;
+        profileImage: string | null;
+      };
+    };
+  })[];
+  grade: Grade;
+  section: Section & { _count?: { students: number } };
   isResultsPublished: boolean;
 };
 
@@ -142,6 +154,7 @@ function humanize(val?: string | null) {
 export function StudentExamsPage({ exams }: { exams: ExamWithRelations[] }) {
   // Colors used: blue (primary), red (accent), amber (accent), plus neutrals (white/gray/black)
   const [isFiltersVisible, setIsFiltersVisible] = useState<boolean>(true);
+  const [isEnrolling, startTransition] = useTransition();
   const [filters, setFilters] = useState<Filters>({
     q: '',
     status: 'ALL',
@@ -160,6 +173,7 @@ export function StudentExamsPage({ exams }: { exams: ExamWithRelations[] }) {
     () => Array.from(new Set(exams.map((e) => e.examSession.title))),
     [exams]
   );
+
 
   const filtered = useMemo(() => {
     const q = filters.q.trim().toLowerCase();
@@ -227,34 +241,23 @@ export function StudentExamsPage({ exams }: { exams: ExamWithRelations[] }) {
     setIsFiltersVisible((prev) => !prev);
   };
 
-  // Add state for handling enrollment
-  const [isEnrolling, setIsEnrolling] = useState<Record<string, boolean>>({});
+  const handleEnroll = (examId: string) => {
+    startTransition(async () => {
+      try {
+        const result = await enrollStudentToExam(examId);
 
-  // Function to handle enrollment
-  const handleEnroll = async (examId: string) => {
-    setIsEnrolling(prev => ({ ...prev, [examId]: true }));
-    try {
-      // Call the server action directly
-      const result = await enrollCurrentStudentToExam(examId);
-
-      if (result && 'success' in result) {
-        toast.success('Successfully enrolled in exam!');
-        // Refresh the page to show updated enrollment status
-        window.location.reload();
-      } else {
-        toast.error(result?.error || 'Failed to enroll in exam');
+        if (result.success) {
+          toast.success(result.message ?? "Successfully enrolled in exam!");
+        } else {
+          toast.error(result.error ?? "Failed to enroll in exam");
+        }
+      } catch (error) {
+        console.error("Enrollment failed:", error);
+        toast.error("Failed to enroll. Please try again.");
       }
-    } catch (error) {
-      console.error('Enrollment failed:', error);
-      toast.error('Failed to enroll. Please try again.');
-    } finally {
-      setIsEnrolling(prev => {
-        const newState = { ...prev };
-        delete newState[examId];
-        return newState;
-      });
-    }
+    });
   };
+
 
   return (
     <section className="px-2 space-y-3">
@@ -511,7 +514,10 @@ export function StudentExamsPage({ exams }: { exams: ExamWithRelations[] }) {
                       {e.examSession.title}
                     </TableCell>
                     <TableCell className="text-sm text-muted-foreground whitespace-nowrap">
-                      {formatDateRange(e.startDate, e.endDate)}
+                      {/* {formatDateRange(e.startDate, e.endDate)} */}
+                      {/* {formatDateIN(e.startDate)} */}
+                      {/* -{formatDateIN(e.endDate)} */}
+                      {e.startDate ? new Date(e.startDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '-'}
                     </TableCell>
                     <TableCell>
                       <Badge variant={e.status} className={cn('border')}>

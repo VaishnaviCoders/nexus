@@ -4,7 +4,7 @@ import Link from 'next/link';
 import React, { Suspense } from 'react';
 import Loading from './loading';
 import { getOrganizationId } from '@/lib/organization';
-import { EmptyState } from '@/components/EmptyState';
+import { EmptyState } from '@/components/ui/empty-state';
 import { Activity, Pin, Newspaper } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { getCurrentAcademicYearId } from '@/lib/academicYear';

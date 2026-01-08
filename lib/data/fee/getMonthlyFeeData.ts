@@ -1,54 +1,56 @@
-import { getCurrentAcademicYearId } from '@/lib/academicYear';
 import prisma from '@/lib/db';
 import { getOrganizationId } from '@/lib/organization';
 
-export async function getMonthlyFeeData(year: number) {
-  const [academicYearId, organizationId] = await Promise.all([
-    getCurrentAcademicYearId(),
-    getOrganizationId(),
-  ]);
-  const payments = await prisma.feePayment.groupBy({
-    by: ['paymentDate'],
+export async function getMonthlyFeeData(years: number[]) {
+  if (years.length === 0) return [];
+  const organizationId = await getOrganizationId();
+
+  const minYear = Math.min(...years);
+  const maxYear = Math.max(...years);
+
+  const payments = await prisma.feePayment.findMany({
     where: {
       organizationId,
       status: 'COMPLETED',
-      fee: {
-        academicYearId, // Filter by current academic year
-      },
       paymentDate: {
-        gte: new Date(`${year}-01-01T00:00:00.000Z`),
-        lte: new Date(`${year}-12-31T23:59:59.999Z`),
+        gte: new Date(`${minYear}-01-01T00:00:00.000Z`),
+        lte: new Date(`${maxYear}-12-31T23:59:59.999Z`),
       },
     },
-    _sum: {
+    select: {
       amount: true,
-    },
-    _count: {
-      _all: true,
+      paymentDate: true,
     },
   });
 
-  // Aggregate by month in JS
-  const monthlyTotals = new Map<number, { amount: number; count: number }>();
+  // Aggregate by year and month in JS
+  const totals = new Map<string, { amount: number; count: number }>();
 
   payments.forEach((payment) => {
-    const month = new Date(payment.paymentDate).getMonth(); // 0-11
-    const existing = monthlyTotals.get(month) || { amount: 0, count: 0 };
+    const date = new Date(payment.paymentDate);
+    const year = date.getFullYear();
+    const month = date.getMonth(); // 0-11
+    const key = `${year}-${month}`;
+    const existing = totals.get(key) || { amount: 0, count: 0 };
 
-    monthlyTotals.set(month, {
-      amount: existing.amount + (payment._sum.amount ?? 0),
-      count: existing.count + payment._count._all,
+    totals.set(key, {
+      amount: existing.amount + (payment.amount ?? 0),
+      count: existing.count + 1,
     });
   });
 
-  // Return data for all 12 months (fill missing months with zeros)
-  return Array.from({ length: 12 }, (_, monthIndex) => {
-    const data = monthlyTotals.get(monthIndex);
-    return {
-      year,
-      month: monthIndex + 1, // 1-12 for display
-      amount: data?.amount ?? 0,
-      count: data?.count ?? 0,
-    };
-  });
+  // Return data for all months of all requested years
+  const result = [];
+  for (const year of years) {
+    for (let monthIndex = 0; monthIndex < 12; monthIndex++) {
+      const data = totals.get(`${year}-${monthIndex}`);
+      result.push({
+        year,
+        month: monthIndex + 1, // 1-12 for display
+        amount: data?.amount ?? 0,
+        count: data?.count ?? 0,
+      });
+    }
+  }
+  return result;
 }
