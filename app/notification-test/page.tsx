@@ -33,6 +33,7 @@ import {
     Search,
     Trash2,
     User,
+    ChevronDown,
 } from "lucide-react"
 
 interface TestResult {
@@ -47,8 +48,8 @@ interface TokenInfo {
     id: string
     token: string
     platform: string
-    lastUsedAt: Date
-    createdAt: Date
+    lastUsedAt: string | Date
+    createdAt: string | Date
 }
 
 interface UserTokenInfo {
@@ -94,7 +95,7 @@ export default function NotificationTestPage() {
         const info = await getNotificationTestInfo()
         if (info.success) {
             setUserInfo({
-                email: info.email,
+                email: info.email || undefined,
                 phone: info.phone,
                 whatsapp: info.whatsapp,
                 deviceCount: info.deviceCount,
@@ -111,12 +112,16 @@ export default function NotificationTestPage() {
     }
 
     const loadTokensForUser = async (userId: string) => {
+        if (!userId) return
         setLookupLoading(true)
         try {
             const result = await getUserTokens(userId)
             if (result.success && result.user) {
                 setLookupUser(result.user)
                 setLookupTokens(result.tokens)
+            } else {
+                setLookupUser(null)
+                setLookupTokens([])
             }
         } catch (error) {
             console.error("Failed to load tokens:", error)
@@ -148,25 +153,7 @@ export default function NotificationTestPage() {
             toast.error("Please enter a User ID")
             return
         }
-        setLookupLoading(true)
-        try {
-            const result = await getUserTokens(lookupUserId)
-            if (result.success && result.user) {
-                setLookupUser(result.user)
-                setLookupTokens(result.tokens)
-                if (result.tokens.length === 0) {
-                    toast.info("No tokens found for this user")
-                }
-            } else {
-                toast.error(result.error || "Failed to lookup tokens")
-                setLookupUser(null)
-                setLookupTokens([])
-            }
-        } catch (error) {
-            toast.error("Failed to lookup tokens")
-        } finally {
-            setLookupLoading(false)
-        }
+        await loadTokensForUser(lookupUserId.trim())
     }
 
     const handleDeleteToken = async (tokenId: string) => {
@@ -177,7 +164,7 @@ export default function NotificationTestPage() {
                 setLookupTokens((prev) => prev.filter((t) => t.id !== tokenId))
                 toast.success("Token deleted")
             } else {
-                toast.error(result.error || "Failed to delete token")
+                toast.error(result.error || result.message || "Failed to delete token")
             }
         } catch (error) {
             toast.error("Failed to delete token")
@@ -201,13 +188,13 @@ export default function NotificationTestPage() {
             addResult({
                 channel: "PUSH",
                 success: result.success,
-                message: result.message || (result.success ? "Push sent" : "Push failed"),
+                message: result.message,
                 error: result.error,
             })
             if (result.success) {
-                toast.success("Push notification sent!")
+                toast.success(result.message)
             } else {
-                toast.error(result.error || "Push notification failed")
+                toast.error(result.error || result.message)
             }
         } catch (error) {
             toast.error("Failed to test push notification")
@@ -227,13 +214,13 @@ export default function NotificationTestPage() {
             addResult({
                 channel: "EMAIL",
                 success: result.success,
-                message: result.message || (result.success ? "Email sent" : "Email failed"),
+                message: result.message,
                 error: result.error,
             })
             if (result.success) {
-                toast.success("Test email sent!")
+                toast.success(result.message)
             } else {
-                toast.error(result.error || "Email sending failed")
+                toast.error(result.error || result.message)
             }
         } catch (error) {
             toast.error("Failed to test email")
@@ -253,13 +240,13 @@ export default function NotificationTestPage() {
             addResult({
                 channel: "SMS",
                 success: result.success,
-                message: result.message || (result.success ? "SMS sent" : "SMS failed"),
+                message: result.message,
                 error: result.error,
             })
             if (result.success) {
-                toast.success("Test SMS sent!")
+                toast.success(result.message)
             } else {
-                toast.error("SMS sending failed")
+                toast.error(result.error || result.message)
             }
         } catch (error) {
             toast.error("Failed to test SMS")
@@ -279,13 +266,13 @@ export default function NotificationTestPage() {
             addResult({
                 channel: "WHATSAPP",
                 success: result.success,
-                message: result.message || (result.success ? "WhatsApp sent" : "WhatsApp failed"),
+                message: result.message,
                 error: result.error,
             })
             if (result.success) {
-                toast.success("Test WhatsApp sent!")
+                toast.success(result.message)
             } else {
-                toast.error(result.error || "WhatsApp sending failed")
+                toast.error(result.error || result.message)
             }
         } catch (error) {
             toast.error("Failed to test WhatsApp")
@@ -298,15 +285,19 @@ export default function NotificationTestPage() {
         setLoading("all")
         try {
             const result = await testAllChannels(customEmail || undefined, customPhone || undefined)
-            result.results.forEach((r) =>
-                addResult({
-                    channel: r.channel,
-                    success: r.success,
-                    message: r.message,
-                    error: r.error,
-                })
-            )
-            toast.success(`Tested ${result.summary.success}/${result.summary.total} channels`)
+            if (result.success) {
+                result.results.forEach((r) =>
+                    addResult({
+                        channel: r.channel,
+                        success: r.success,
+                        message: r.message,
+                        error: r.error,
+                    })
+                )
+                toast.success(`Tested ${result.summary.success}/${result.summary.total} channels`)
+            } else {
+                toast.error(result.error || "Test all failed")
+            }
         } catch (error) {
             toast.error("Failed to test all channels")
         } finally {
@@ -314,7 +305,8 @@ export default function NotificationTestPage() {
         }
     }
 
-    const formatDate = (date: Date) => {
+    const formatDate = (date: string | Date) => {
+        if (!date) return "N/A"
         return new Date(date).toLocaleDateString("en-US", {
             month: "short",
             day: "numeric",
@@ -329,184 +321,189 @@ export default function NotificationTestPage() {
                 {/* Header */}
                 <div className="mb-12">
                     <h1 className="text-2xl font-semibold text-slate-900 mb-1">Notification Testing</h1>
-                    <p className="text-slate-500 text-sm">Test all notification channels</p>
+                    <p className="text-slate-500 text-sm">Verify all notification delivery channels</p>
                 </div>
 
                 {/* Status Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-                    <div className="border border-slate-200 rounded-lg p-4">
-                        <div className="flex items-center justify-between mb-2">
-                            <span className="text-xs font-medium text-slate-500 uppercase tracking-wide">Permission</span>
-                            <div className={`w-2 h-2 rounded-full ${notificationPermissionStatus === "granted" ? "bg-green-500" : "bg-slate-300"}`} />
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                    <div className="border border-slate-200 rounded-lg p-5 bg-slate-50/30">
+                        <div className="flex items-center justify-between mb-3">
+                            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Browser Permission</span>
+                            <div className={`w-2.5 h-2.5 rounded-full ${notificationPermissionStatus === "granted" ? "bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.4)]" : "bg-slate-300"}`} />
                         </div>
-                        <p className="text-sm font-medium text-slate-900">{notificationPermissionStatus || "Unknown"}</p>
+                        <p className="text-lg font-semibold text-slate-900 capitalize">{notificationPermissionStatus || "Unknown"}</p>
                     </div>
 
-                    <div className="border border-slate-200 rounded-lg p-4">
-                        <div className="flex items-center justify-between mb-2">
-                            <span className="text-xs font-medium text-slate-500 uppercase tracking-wide">Devices</span>
-                            <Button variant="ghost" size="sm" onClick={loadUserInfo} className="h-5 w-5 p-0">
-                                <RefreshCw className="w-3 h-3" />
+                    <div className="border border-slate-200 rounded-lg p-5 bg-slate-50/30">
+                        <div className="flex items-center justify-between mb-3">
+                            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">User Devices</span>
+                            <Button variant="ghost" size="sm" onClick={loadUserInfo} className="h-6 w-6 p-0 hover:bg-slate-200">
+                                <RefreshCw className="w-3.5 h-3.5" />
                             </Button>
                         </div>
-                        <p className="text-sm font-medium text-slate-900">{userInfo.deviceCount || 0} registered</p>
+                        <p className="text-lg font-semibold text-slate-900">{userInfo.deviceCount ?? 0} <span className="text-sm font-normal text-slate-500 ml-1">registered</span></p>
                     </div>
 
-                    <div className="border border-slate-200 rounded-lg p-4">
-                        <div className="flex items-center justify-between mb-2">
-                            <span className="text-xs font-medium text-slate-500 uppercase tracking-wide">Current Token</span>
+                    <div className="border border-slate-200 rounded-lg p-5 bg-slate-50/30">
+                        <div className="flex items-center justify-between mb-3">
+                            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Current Token</span>
                             {token && (
-                                <Button variant="ghost" size="sm" onClick={copyToken} className="h-5 w-5 p-0">
-                                    {copied ? <Check className="w-3 h-3 text-green-600" /> : <Copy className="w-3 h-3" />}
+                                <Button variant="ghost" size="sm" onClick={copyToken} className="h-6 w-6 p-0 hover:bg-slate-200">
+                                    {copied ? <Check className="w-3.5 h-3.5 text-green-600" /> : <Copy className="w-3.5 h-3.5" />}
                                 </Button>
                             )}
                         </div>
-                        <p className="text-sm font-medium text-slate-900 font-mono truncate">
-                            {token ? `${token.substring(0, 20)}...` : "No token"}
+                        <p className="text-sm font-mono text-slate-900 truncate">
+                            {token ? `${token.substring(0, 24)}...` : "None"}
                         </p>
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 mb-12">
+                <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 mb-16">
                     {/* Configuration */}
-                    <div className="lg:col-span-2 space-y-6">
-                        <div>
-                            <h2 className="text-sm font-medium text-slate-900 mb-4">Configuration</h2>
+                    <div className="lg:col-span-2 space-y-8">
+                        <section>
+                            <h2 className="text-sm font-semibold text-slate-900 mb-5 flex items-center gap-2">
+                                <Activity className="w-4 h-4" />
+                                Configuration
+                            </h2>
 
-                            <div className="space-y-4">
-                                <div>
-                                    <label className="text-xs font-medium text-slate-600 mb-1.5 block">FCM Token</label>
+                            <div className="space-y-5">
+                                <div className="space-y-2">
+                                    <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block ml-1">FCM Push Token</label>
                                     <Input
-                                        placeholder="Enter FCM token to test..."
+                                        placeholder="Paste token to test specific device..."
                                         value={customFcmToken}
                                         onChange={(e) => setCustomFcmToken(e.target.value)}
-                                        className="text-sm font-mono h-9 border-slate-200"
+                                        className="text-xs font-mono h-10 border-slate-200 focus:border-slate-400 focus:ring-0 transition-colors"
                                     />
-                                    <p className="text-xs text-slate-400 mt-1">Leave empty to use your registered devices</p>
+                                    <p className="text-[10px] text-slate-400 ml-1 italic">Leave empty to use all your registered devices</p>
                                 </div>
 
-                                <div>
-                                    <label className="text-xs font-medium text-slate-600 mb-1.5 block">Email</label>
+                                <div className="space-y-2">
+                                    <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block ml-1">Email Address</label>
                                     <Input
                                         placeholder="your@email.com"
                                         value={customEmail}
                                         onChange={(e) => setCustomEmail(e.target.value)}
-                                        className="text-sm h-9 border-slate-200"
+                                        className="text-sm h-10 border-slate-200 focus:border-slate-400 focus:ring-0 transition-colors"
                                     />
                                 </div>
 
-                                <div>
-                                    <label className="text-xs font-medium text-slate-600 mb-1.5 block">Phone</label>
+                                <div className="space-y-2">
+                                    <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block ml-1">Phone Number</label>
                                     <Input
                                         placeholder="9876543210"
                                         value={customPhone}
                                         onChange={(e) => setCustomPhone(e.target.value)}
-                                        className="text-sm h-9 border-slate-200"
+                                        className="text-sm h-10 border-slate-200 focus:border-slate-400 focus:ring-0 transition-colors"
                                     />
                                 </div>
                             </div>
-                        </div>
+                        </section>
 
-                        <Separator />
+                        <section className="pt-2">
+                            <div className="grid grid-cols-2 gap-3">
+                                <Button
+                                    onClick={handleTestPush}
+                                    disabled={loading !== null || (!token && !customFcmToken)}
+                                    variant="outline"
+                                    className="justify-start h-10 border-slate-200 hover:bg-slate-50 text-xs font-medium"
+                                >
+                                    {loading === "push" ? <Loader2 className="w-3.5 h-3.5 mr-2 animate-spin" /> : <Bell className="w-3.5 h-3.5 mr-2" />}
+                                    Test Push
+                                </Button>
 
-                        <div className="space-y-2">
-                            <Button
-                                onClick={handleTestPush}
-                                disabled={loading !== null || (!token && !customFcmToken)}
-                                variant="outline"
-                                size="sm"
-                                className="w-full justify-start h-9 border-slate-200"
-                            >
-                                {loading === "push" ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Bell className="w-4 h-4 mr-2" />}
-                                Test Push
-                            </Button>
+                                <Button
+                                    onClick={handleTestEmail}
+                                    disabled={loading !== null || !customEmail}
+                                    variant="outline"
+                                    className="justify-start h-10 border-slate-200 hover:bg-slate-50 text-xs font-medium"
+                                >
+                                    {loading === "email" ? <Loader2 className="w-3.5 h-3.5 mr-2 animate-spin" /> : <Mail className="w-3.5 h-3.5 mr-2" />}
+                                    Test Email
+                                </Button>
 
-                            <Button
-                                onClick={handleTestEmail}
-                                disabled={loading !== null || !customEmail}
-                                variant="outline"
-                                size="sm"
-                                className="w-full justify-start h-9 border-slate-200"
-                            >
-                                {loading === "email" ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Mail className="w-4 h-4 mr-2" />}
-                                Test Email
-                            </Button>
+                                <Button
+                                    onClick={handleTestSMS}
+                                    disabled={loading !== null || !customPhone}
+                                    variant="outline"
+                                    className="justify-start h-10 border-slate-200 hover:bg-slate-50 text-xs font-medium"
+                                >
+                                    {loading === "sms" ? <Loader2 className="w-3.5 h-3.5 mr-2 animate-spin" /> : <Smartphone className="w-3.5 h-3.5 mr-2" />}
+                                    Test SMS
+                                </Button>
 
-                            <Button
-                                onClick={handleTestSMS}
-                                disabled={loading !== null || !customPhone}
-                                variant="outline"
-                                size="sm"
-                                className="w-full justify-start h-9 border-slate-200"
-                            >
-                                {loading === "sms" ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Smartphone className="w-4 h-4 mr-2" />}
-                                Test SMS
-                            </Button>
-
-                            <Button
-                                onClick={handleTestWhatsApp}
-                                disabled={loading !== null || !customPhone}
-                                variant="outline"
-                                size="sm"
-                                className="w-full justify-start h-9 border-slate-200"
-                            >
-                                {loading === "whatsapp" ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <MessageSquare className="w-4 h-4 mr-2" />}
-                                Test WhatsApp
-                            </Button>
-
-                            <Separator className="my-3" />
+                                <Button
+                                    onClick={handleTestWhatsApp}
+                                    disabled={loading !== null || !customPhone}
+                                    variant="outline"
+                                    className="justify-start h-10 border-slate-200 hover:bg-slate-50 text-xs font-medium"
+                                >
+                                    {loading === "whatsapp" ? <Loader2 className="w-3.5 h-3.5 mr-2 animate-spin" /> : <MessageSquare className="w-3.5 h-3.5 mr-2" />}
+                                    Test WhatsApp
+                                </Button>
+                            </div>
 
                             <Button
                                 onClick={handleTestAll}
                                 disabled={loading !== null}
-                                size="sm"
-                                className="w-full h-9 bg-slate-900 hover:bg-slate-800"
+                                className="w-full mt-4 h-11 bg-slate-900 hover:bg-slate-800 text-white font-medium shadow-sm transition-all active:scale-[0.98]"
                             >
                                 {loading === "all" ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Send className="w-4 h-4 mr-2" />}
-                                Test All Channels
+                                Run Full Test Suite
                             </Button>
-                        </div>
+                        </section>
                     </div>
 
-                    {/* Results */}
+                    {/* Results Feed */}
                     <div className="lg:col-span-3">
-                        <h2 className="text-sm font-medium text-slate-900 mb-4">
-                            Results {results.length > 0 && <span className="text-slate-400">({results.length})</span>}
-                        </h2>
+                        <div className="flex items-center justify-between mb-5">
+                            <h2 className="text-sm font-semibold text-slate-900">
+                                Activity Log
+                            </h2>
+                            {results.length > 0 && (
+                                <Button variant="ghost" size="sm" onClick={() => setResults([])} className="h-7 text-[10px] text-slate-400 hover:text-red-500 uppercase tracking-widest font-bold">
+                                    Clear Log
+                                </Button>
+                            )}
+                        </div>
 
                         {results.length === 0 ? (
-                            <div className="border border-dashed border-slate-200 rounded-lg p-12 text-center">
-                                <Activity className="w-8 h-8 text-slate-300 mx-auto mb-3" />
-                                <p className="text-sm text-slate-500">No tests run yet</p>
+                            <div className="border border-dashed border-slate-200 rounded-xl p-16 text-center bg-slate-50/50">
+                                <Activity className="w-10 h-10 text-slate-200 mx-auto mb-4" />
+                                <p className="text-sm text-slate-400 font-medium tracking-tight">Listening for test results...</p>
                             </div>
                         ) : (
-                            <div className="space-y-2">
+                            <div className="space-y-3">
                                 {results.map((result, index) => (
                                     <div
                                         key={index}
-                                        className={`border rounded-lg p-3 flex items-start gap-3 ${result.success
-                                            ? "border-green-200 bg-green-50/50"
-                                            : "border-red-200 bg-red-50/50"
+                                        className={`border rounded-xl p-4 flex items-start gap-4 transition-all animate-in fade-in slide-in-from-top-2 duration-300 ${result.success
+                                            ? "border-green-100 bg-green-50/30"
+                                            : "border-red-100 bg-red-50/30"
                                             }`}
                                     >
-                                        {result.success ? (
-                                            <CheckCircle2 className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-                                        ) : (
-                                            <XCircle className="w-4 h-4 text-red-600 mt-0.5 flex-shrink-0" />
-                                        )}
+                                        <div className={`mt-0.5 p-1.5 rounded-full ${result.success ? "bg-green-100 text-green-600" : "bg-red-100 text-red-600"}`}>
+                                            {result.success ? (
+                                                <CheckCircle2 className="w-3.5 h-3.5" />
+                                            ) : (
+                                                <XCircle className="w-3.5 h-3.5" />
+                                            )}
+                                        </div>
                                         <div className="flex-1 min-w-0">
-                                            <div className="flex items-center gap-2 mb-0.5">
-                                                <span className={`text-xs font-medium px-1.5 py-0.5 rounded ${result.success ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
-                                                    }`}>
+                                            <div className="flex items-center gap-3 mb-1">
+                                                <span className={`text-[10px] font-bold tracking-widest uppercase px-2 py-0.5 rounded-md ${result.success ? "bg-white text-green-700" : "bg-white text-red-700"
+                                                    } shadow-sm border border-slate-100`}>
                                                     {result.channel}
                                                 </span>
-                                                <span className="text-xs text-slate-400">
-                                                    {result.timestamp.toLocaleTimeString()}
+                                                <span className="text-[10px] font-medium text-slate-400">
+                                                    {result.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
                                                 </span>
                                             </div>
-                                            <p className="text-sm text-slate-700">{result.message}</p>
+                                            <p className="text-sm text-slate-700 font-medium leading-relaxed">{result.message}</p>
                                             {result.error && (
-                                                <p className="text-xs text-slate-500 mt-0.5">{result.error}</p>
+                                                <p className="text-xs text-red-500/80 mt-1.5 font-medium italic">Err: {result.error}</p>
                                             )}
                                         </div>
                                     </div>
@@ -516,119 +513,151 @@ export default function NotificationTestPage() {
                     </div>
                 </div>
 
-                <Separator className="my-8" />
+                <div className="relative py-8">
+                    <Separator />
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white px-4">
+                        <ChevronDown className="w-5 h-5 text-slate-200" />
+                    </div>
+                </div>
 
                 {/* Token Lookup Section */}
-                <div>
-                    <h2 className="text-sm font-medium text-slate-900 mb-4">Token Lookup</h2>
-                    <p className="text-xs text-slate-500 mb-4">Look up registered device tokens by User ID</p>
+                <section>
+                    <div className="flex items-center justify-between mb-6">
+                        <div>
+                            <h2 className="text-sm font-semibold text-slate-900 mb-1">Database Token Lookup</h2>
+                            <p className="text-xs text-slate-500">Inspect and manage registered device tokens for any user</p>
+                        </div>
+                    </div>
 
-                    <div className="flex gap-2 mb-6">
-                        <Input
-                            placeholder="Enter User ID..."
-                            value={lookupUserId}
-                            onChange={(e) => setLookupUserId(e.target.value)}
-                            className="text-sm h-9 border-slate-200 max-w-md font-mono"
-                            onKeyDown={(e) => e.key === "Enter" && handleLookupTokens()}
-                        />
+                    <div className="flex gap-3 mb-8">
+                        <div className="relative flex-1 max-w-md">
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                            <Input
+                                placeholder="Enter User ID (clerk_xxx...)"
+                                value={lookupUserId}
+                                onChange={(e) => setLookupUserId(e.target.value)}
+                                className="pl-10 text-sm h-10 border-slate-200 focus:border-slate-400 focus:ring-0 transition-colors bg-white font-mono"
+                                onKeyDown={(e) => e.key === "Enter" && handleLookupTokens()}
+                            />
+                        </div>
                         <Button
                             onClick={handleLookupTokens}
                             disabled={lookupLoading || !lookupUserId.trim()}
-                            size="sm"
-                            className="h-9"
+                            className="h-10 px-6 bg-slate-900 hover:bg-slate-800 text-white font-medium"
                         >
-                            {lookupLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
+                            {lookupLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Lookup Tokens"}
                         </Button>
                     </div>
 
                     {lookupUser && (
-                        <div className="border border-slate-200 rounded-lg overflow-hidden">
+                        <div className="border border-slate-200 rounded-xl overflow-hidden shadow-sm animate-in fade-in slide-in-from-bottom-2 duration-400 bg-white">
                             {/* User Info Header */}
-                            <div className="bg-slate-50 px-4 py-3 border-b border-slate-200">
-                                <div className="flex items-center gap-2">
-                                    <User className="w-4 h-4 text-slate-500" />
-                                    <span className="text-sm font-medium text-slate-900">{lookupUser.name}</span>
-                                    {lookupUser.email && (
-                                        <span className="text-xs text-slate-500">({lookupUser.email})</span>
-                                    )}
+                            <div className="bg-slate-50/50 px-6 py-4 border-b border-slate-200 flex items-center justify-between">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-600">
+                                        <User className="w-4 h-4" />
+                                    </div>
+                                    <div>
+                                        <span className="text-sm font-bold text-slate-900 block">{lookupUser.name}</span>
+                                        {lookupUser.email && (
+                                            <span className="text-[11px] text-slate-500 font-medium">{lookupUser.email}</span>
+                                        )}
+                                    </div>
                                 </div>
+                                <Badge variant="secondary" className="bg-white text-[10px] border-slate-200 font-mono py-1">
+                                    {lookupUser.id}
+                                </Badge>
                             </div>
 
                             {/* Token Table */}
                             {lookupTokens.length > 0 ? (
-                                <table className="w-full">
-                                    <thead>
-                                        <tr className="border-b border-slate-200 text-left">
-                                            <th className="px-4 py-2 text-xs font-medium text-slate-500 uppercase">Device</th>
-                                            <th className="px-4 py-2 text-xs font-medium text-slate-500 uppercase">Last Used</th>
-                                            <th className="px-4 py-2 text-xs font-medium text-slate-500 uppercase text-right">Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {lookupTokens.map((tokenInfo) => (
-                                            <tr key={tokenInfo.id} className="border-b border-slate-100 last:border-0">
-                                                <td className="px-4 py-3">
-                                                    <div className="flex items-center gap-2">
-                                                        <Smartphone className="w-4 h-4 text-slate-400" />
-                                                        <span className="text-sm text-slate-900 capitalize">{tokenInfo.platform}</span>
-                                                    </div>
-                                                    <p className="text-xs text-slate-400 font-mono mt-0.5 truncate max-w-[200px]">
-                                                        {tokenInfo.token.substring(0, 24)}...
-                                                    </p>
-                                                </td>
-                                                <td className="px-4 py-3 text-sm text-slate-600">
-                                                    {formatDate(tokenInfo.lastUsedAt)}
-                                                </td>
-                                                <td className="px-4 py-3 text-right">
-                                                    <div className="flex items-center justify-end gap-1">
-                                                        <Button
-                                                            variant="ghost"
-                                                            size="sm"
-                                                            onClick={() => copyLookupToken(tokenInfo.token)}
-                                                            className="h-7 w-7 p-0"
-                                                            title="Copy token"
-                                                        >
-                                                            <Copy className="w-3.5 h-3.5" />
-                                                        </Button>
-                                                        <Button
-                                                            variant="ghost"
-                                                            size="sm"
-                                                            onClick={() => handleUseToken(tokenInfo.token)}
-                                                            className="h-7 w-7 p-0"
-                                                            title="Use for testing"
-                                                        >
-                                                            <Send className="w-3.5 h-3.5" />
-                                                        </Button>
-                                                        <Button
-                                                            variant="ghost"
-                                                            size="sm"
-                                                            onClick={() => handleDeleteToken(tokenInfo.id)}
-                                                            disabled={deletingToken === tokenInfo.id}
-                                                            className="h-7 w-7 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
-                                                            title="Delete token"
-                                                        >
-                                                            {deletingToken === tokenInfo.id ? (
-                                                                <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                                                            ) : (
-                                                                <Trash2 className="w-3.5 h-3.5" />
-                                                            )}
-                                                        </Button>
-                                                    </div>
-                                                </td>
+                                <div className="overflow-x-auto">
+                                    <table className="w-full">
+                                        <thead>
+                                            <tr className="bg-slate-50/30 text-left">
+                                                <th className="px-6 py-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Device Platform</th>
+                                                <th className="px-6 py-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Last Activity</th>
+                                                <th className="px-6 py-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest text-right">Actions</th>
                                             </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
+                                        </thead>
+                                        <tbody className="divide-y divide-slate-100">
+                                            {lookupTokens.map((tokenInfo) => (
+                                                <tr key={tokenInfo.id} className="hover:bg-slate-50/30 transition-colors">
+                                                    <td className="px-6 py-4">
+                                                        <div className="flex items-center gap-3">
+                                                            <div className={`p-1.5 rounded-md ${tokenInfo.platform === "android" ? "bg-green-50 text-green-600" : tokenInfo.platform === "ios" ? "bg-blue-50 text-blue-600" : "bg-orange-50 text-orange-600"}`}>
+                                                                <Smartphone className="w-4 h-4" />
+                                                            </div>
+                                                            <div>
+                                                                <span className="text-sm font-semibold text-slate-900 capitalize">{tokenInfo.platform}</span>
+                                                                <p className="text-[10px] text-slate-400 font-mono mt-0.5 truncate max-w-[200px]">
+                                                                    {tokenInfo.token.substring(0, 32)}...
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td className="px-6 py-4">
+                                                        <span className="text-[13px] text-slate-600 font-medium">{formatDate(tokenInfo.lastUsedAt)}</span>
+                                                    </td>
+                                                    <td className="px-6 py-4 text-right">
+                                                        <div className="flex items-center justify-end gap-2">
+                                                            <Button
+                                                                variant="ghost"
+                                                                size="sm"
+                                                                onClick={() => copyLookupToken(tokenInfo.token)}
+                                                                className="h-8 w-8 p-0 hover:bg-slate-100"
+                                                                title="Copy full token"
+                                                            >
+                                                                <Copy className="w-4 h-4 text-slate-500" />
+                                                            </Button>
+                                                            <Button
+                                                                variant="ghost"
+                                                                size="sm"
+                                                                onClick={() => handleUseToken(tokenInfo.token)}
+                                                                className="h-8 w-8 p-0 hover:bg-slate-100"
+                                                                title="Test this device"
+                                                            >
+                                                                <Send className="w-4 h-4 text-slate-500" />
+                                                            </Button>
+                                                            <Button
+                                                                variant="ghost"
+                                                                size="sm"
+                                                                onClick={() => handleDeleteToken(tokenInfo.id)}
+                                                                disabled={deletingToken === tokenInfo.id}
+                                                                className="h-8 w-8 p-0 hover:bg-red-50 hover:text-red-600"
+                                                                title="Revoke session"
+                                                            >
+                                                                {deletingToken === tokenInfo.id ? (
+                                                                    <Loader2 className="w-4 h-4 animate-spin" />
+                                                                ) : (
+                                                                    <Trash2 className="w-4 h-4" />
+                                                                )}
+                                                            </Button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
                             ) : (
-                                <div className="p-8 text-center">
-                                    <Smartphone className="w-8 h-8 text-slate-300 mx-auto mb-2" />
-                                    <p className="text-sm text-slate-500">No device tokens registered</p>
+                                <div className="px-6 py-12 text-center">
+                                    <Smartphone className="w-12 h-12 text-slate-100 mx-auto mb-4" />
+                                    <p className="text-sm text-slate-400 font-medium">No active device sessions found for this user.</p>
                                 </div>
                             )}
                         </div>
                     )}
-                </div>
+                </section>
             </div>
         </main>
+    )
+}
+
+function Badge({ children, variant, className }: { children: React.ReactNode, variant?: string, className?: string }) {
+    return (
+        <span className={`px-2 py-1 rounded inline-flex items-center text-xs font-semibold ${variant === 'secondary' ? 'bg-slate-100 text-slate-800' : 'bg-slate-900 text-white'} ${className}`}>
+            {children}
+        </span>
     )
 }

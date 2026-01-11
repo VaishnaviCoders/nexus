@@ -11,14 +11,20 @@ import {
 } from "@/lib/notifications/engine"
 import { ChannelFactory } from "@/lib/notifications/channels"
 
+export interface ActionResponse {
+    success: boolean
+    message: string
+    error?: string
+}
+
 /**
  * Test push notification for the current user
  */
-export async function testPushNotification() {
+export async function testPushNotification(): Promise<ActionResponse> {
     try {
         const userId = await getCurrentUserId()
         if (!userId) {
-            return { success: false, message: "Not authenticated", error: "Not authenticated" }
+            return { success: false, message: "Not authenticated" }
         }
 
         const result = await sendTestPushNotification(
@@ -27,7 +33,11 @@ export async function testPushNotification() {
             "If you're seeing this, push notifications are working!"
         )
 
-        return result
+        return {
+            success: result.success,
+            message: result.message,
+            error: result.error,
+        }
     } catch (error) {
         console.error("Test push error:", error)
         return { success: false, message: "Push failed", error: (error as Error).message }
@@ -37,15 +47,15 @@ export async function testPushNotification() {
 /**
  * Test push notification with a custom FCM token
  */
-export async function testPushWithToken(fcmToken: string) {
+export async function testPushWithToken(fcmToken: string): Promise<ActionResponse> {
     try {
         const userId = await getCurrentUserId()
         if (!userId) {
-            return { success: false, message: "Not authenticated", error: "Not authenticated" }
+            return { success: false, message: "Not authenticated" }
         }
 
         if (!fcmToken || fcmToken.trim() === "") {
-            return { success: false, message: "No token provided", error: "FCM token is required" }
+            return { success: false, message: "FCM token is required" }
         }
 
         console.log(`[TEST] 🔔 Sending test push to custom token: ${fcmToken.substring(0, 20)}...`)
@@ -58,18 +68,10 @@ export async function testPushWithToken(fcmToken: string) {
             { link: "/dashboard", test: "true" }
         )
 
-        if (result.success) {
-            return {
-                success: true,
-                message: "Push sent to custom token",
-                messageId: result.messageId,
-            }
-        } else {
-            return {
-                success: false,
-                message: "Push to custom token failed",
-                error: result.error,
-            }
+        return {
+            success: result.success,
+            message: result.success ? "Push sent to custom token" : "Push to custom token failed",
+            error: result.error,
         }
     } catch (error) {
         console.error("Test push with token error:", error)
@@ -80,11 +82,11 @@ export async function testPushWithToken(fcmToken: string) {
 /**
  * Test email notification
  */
-export async function testEmailNotification(email: string) {
+export async function testEmailNotification(email: string): Promise<ActionResponse> {
     try {
         const userId = await getCurrentUserId();
         if (!userId) {
-            return { success: false, error: "Not authenticated" };
+            return { success: false, message: "Not authenticated" };
         }
 
         const result = await sendTestEmailNotification(
@@ -93,55 +95,74 @@ export async function testEmailNotification(email: string) {
             "If you received this email, email notifications are working correctly!"
         );
 
-        return result;
+        return {
+            success: result.success,
+            message: result.message,
+            error: result.error
+        };
     } catch (error) {
         console.error("Test email error:", error);
-        return { success: false, error: (error as Error).message };
+        return { success: false, message: "Email failed", error: (error as Error).message };
     }
 }
 
 /**
  * Test SMS notification
  */
-export async function testSMSNotification(phone: string) {
+export async function testSMSNotification(phone: string): Promise<ActionResponse> {
     try {
         const userId = await getCurrentUserId();
         if (!userId) {
-            return { success: false, error: "Not authenticated" };
+            return { success: false, message: "Not authenticated" };
         }
 
         const result = await sendTestSMSNotification(phone);
 
-        return result;
+        return {
+            success: result.success,
+            message: result.message,
+            error: result.error
+        };
     } catch (error) {
         console.error("Test SMS error:", error);
-        return { success: false, error: (error as Error).message };
+        return { success: false, message: "SMS failed", error: (error as Error).message };
     }
 }
 
 /**
  * Test WhatsApp notification
  */
-export async function testWhatsAppNotification(phone: string) {
+export async function testWhatsAppNotification(phone: string): Promise<ActionResponse> {
     try {
         const userId = await getCurrentUserId();
         if (!userId) {
-            return { success: false, error: "Not authenticated" };
+            return { success: false, message: "Not authenticated" };
         }
 
         const result = await sendTestWhatsAppNotification(phone);
 
-        return result;
+        return {
+            success: result.success,
+            message: result.message,
+            error: result.error
+        };
     } catch (error) {
         console.error("Test WhatsApp error:", error);
-        return { success: false, error: (error as Error).message };
+        return { success: false, message: "WhatsApp failed", error: (error as Error).message };
     }
+}
+
+export interface TestAllResponse {
+    success: boolean
+    error?: string
+    results: any[]
+    summary: { total: number; success: number; failed: number }
 }
 
 /**
  * Test all channels for the current user
  */
-export async function testAllChannels(email?: string, phone?: string) {
+export async function testAllChannels(email?: string, phone?: string): Promise<TestAllResponse> {
     try {
         const userId = await getCurrentUserId();
         if (!userId) {
@@ -157,14 +178,24 @@ export async function testAllChannels(email?: string, phone?: string) {
     }
 }
 
+export interface UserInfoResponse {
+    success: boolean
+    userId: string | null
+    email: string | null
+    phone?: string
+    whatsapp?: string
+    deviceCount: number
+    error?: string
+}
+
 /**
  * Get current user's notification info (device count, email, etc.)
  */
-export async function getNotificationTestInfo() {
+export async function getNotificationTestInfo(): Promise<UserInfoResponse> {
     try {
         const userId = await getCurrentUserId();
         if (!userId) {
-            return { success: false, error: "Not authenticated" };
+            return { success: false, userId: null, email: null, deviceCount: 0, error: "Not authenticated" };
         }
 
         const user = await prisma.user.findUnique({
@@ -173,15 +204,12 @@ export async function getNotificationTestInfo() {
                 email: true,
                 student: { select: { phoneNumber: true, whatsAppNumber: true } },
                 parent: { select: { phoneNumber: true, whatsAppNumber: true } },
-                deviceTokens: {
-                    select: { id: true, platform: true, lastUsedAt: true },
-                    orderBy: { lastUsedAt: "desc" },
-                },
+                deviceTokens: true
             },
         });
 
         if (!user) {
-            return { success: false, error: "User not found" };
+            return { success: false, userId, email: null, deviceCount: 0, error: "User not found" };
         }
 
         const phone = user.student?.phoneNumber || user.parent?.phoneNumber;
@@ -191,17 +219,13 @@ export async function getNotificationTestInfo() {
             success: true,
             userId,
             email: user.email,
-            phone,
-            whatsapp,
+            phone: phone || undefined,
+            whatsapp: whatsapp || undefined,
             deviceCount: user.deviceTokens.length,
-            devices: user.deviceTokens.map((d) => ({
-                platform: d.platform,
-                lastUsed: d.lastUsedAt,
-            })),
         };
     } catch (error) {
         console.error("Get notification info error:", error);
-        return { success: false, error: (error as Error).message };
+        return { success: false, userId: null, email: null, deviceCount: 0, error: (error as Error).message };
     }
 }
 
@@ -212,11 +236,11 @@ export async function getUserTokens(userId: string) {
     try {
         const currentUserId = await getCurrentUserId()
         if (!currentUserId) {
-            return { success: false, error: "Not authenticated", tokens: [] }
+            return { success: false, error: "Not authenticated", tokens: [], user: null }
         }
 
         if (!userId || userId.trim() === "") {
-            return { success: false, error: "User ID is required", tokens: [] }
+            return { success: false, error: "User ID is required", tokens: [], user: null }
         }
 
         const user = await prisma.user.findUnique({
@@ -240,47 +264,47 @@ export async function getUserTokens(userId: string) {
         })
 
         if (!user) {
-            return { success: false, error: "User not found", tokens: [] }
+            return { success: false, error: "User not found", tokens: [], user: null }
         }
 
         return {
             success: true,
             user: {
                 id: user.id,
-                name: `${user.firstName} ${user.lastName}`,
+                name: `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.email || 'Unknown',
                 email: user.email,
             },
             tokens: user.deviceTokens.map((t) => ({
                 id: t.id,
                 token: t.token,
                 platform: t.platform,
-                lastUsedAt: t.lastUsedAt,
-                createdAt: t.createdAt,
+                lastUsedAt: t.lastUsedAt.toISOString(),
+                createdAt: t.createdAt.toISOString(),
             })),
         }
     } catch (error) {
         console.error("Get user tokens error:", error)
-        return { success: false, error: (error as Error).message, tokens: [] }
+        return { success: false, error: (error as Error).message, tokens: [], user: null }
     }
 }
 
 /**
  * Delete a specific device token
  */
-export async function deleteDeviceToken(tokenId: string) {
+export async function deleteDeviceToken(tokenId: string): Promise<ActionResponse> {
     try {
         const currentUserId = await getCurrentUserId()
         if (!currentUserId) {
-            return { success: false, error: "Not authenticated" }
+            return { success: false, message: "Not authenticated" }
         }
 
         await prisma.deviceToken.delete({
             where: { id: tokenId },
         })
 
-        return { success: true }
+        return { success: true, message: "Token deleted" }
     } catch (error) {
         console.error("Delete token error:", error)
-        return { success: false, error: (error as Error).message }
+        return { success: false, message: "Delete failed", error: (error as Error).message }
     }
 }

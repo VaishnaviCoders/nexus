@@ -290,7 +290,7 @@ export async function executeReminders(
           ]
             .filter(Boolean)
             .join('\n'),
-          PORTAL_LINK: 'https://www.shiksha.cloud/dashboard/',
+          PORTAL_LINK: 'https://shiksha.cloud/dashboard/',
           // REMOVE THIS: message: validated.message,
         };
 
@@ -325,7 +325,7 @@ export async function executeReminders(
               maximumFractionDigits: 0,
             })
           )
-          .replace(/{PORTAL_LINK}/g, 'https://www.shiksha.cloud/dashboard/')
+          .replace(/{PORTAL_LINK}/g, 'https://shiksha.cloud/dashboard/')
           .replace(
             /{ORGANIZATION_NAME}/g,
             recipient.organizationName || 'School Administration'
