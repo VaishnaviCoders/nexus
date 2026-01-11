@@ -114,6 +114,8 @@ export const updateNoticeApprovalStatus = async (
             data: recipients.map((recipient) => {
               const channel = notifications[index].type.toUpperCase() as NotificationChannel;
               return {
+                title: "Notice",
+                message: "Notice sent successfully",
                 organizationId: notice.organizationId,
                 noticeId: notice.id,
                 userId: recipient.id,

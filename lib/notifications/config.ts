@@ -1,28 +1,5 @@
 
 
-// lib/notifications/utils.ts
-/**
- * Replace {{variable}} in template with actual values
- * Example: "Hello {{name}}" + {name: "John"} = "Hello John"
- */
-export function replaceTemplateVariables(
-  template: string,
-  variables: Record<string, any>
-): string {
-  let result = template;
-
-  // Replace each variable
-  Object.entries(variables).forEach(([key, value]) => {
-    const placeholder = `{{${key}}}`;
-    result = result.replaceAll(placeholder, String(value ?? ""));
-  });
-
-  // Remove any unreplaced variables
-  result = result.replace(/{{[^}]+}}/g, "");
-
-  return result;
-}
-
 /**
  * Validate email format
  */
@@ -53,8 +30,6 @@ export function sanitizePhone(phone: string): string {
 
   return cleaned;
 }
-
-
 
 /**
  * Calculate days between two dates

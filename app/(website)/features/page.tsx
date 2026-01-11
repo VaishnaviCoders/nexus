@@ -2,7 +2,7 @@ import { CallToAction } from '@/components/websiteComp/cta';
 import FeaturesList from '@/components/websiteComp/FeaturesList';
 import { Metadata } from 'next';
 
-const appUrl = new URL('https://www.shiksha.cloud');
+const appUrl = new URL('https://shiksha.cloud');
 
 export const metadata: Metadata = {
   title:
@@ -88,7 +88,7 @@ export const metadata: Metadata = {
       publisher: {
         '@type': 'Organization',
         name: 'Shiksha.cloud',
-        url: 'https://www.shiksha.cloud',
+        url: 'https://shiksha.cloud',
         logo: `${appUrl}logo.png`,
       },
       mainEntity: {

@@ -121,17 +121,17 @@ const sendSMS = async (recipientPhone: string, message: string) => {
 const sendWhatsApp = async (recipientPhone: string, message: string) => {
   console.log('Sending WhatsApp to:', recipientPhone, message);
   await sendWhatsAppMessage({
-    messaging_product:"whatsapp",
-    type:'template',
-    template:{
-      name:"hello_world",
-      language:{
-        code:"en_US",
-        policy:"deterministic",
+    messaging_product: "whatsapp",
+    type: 'template',
+    template: {
+      name: "hello_world",
+      language: {
+        code: "en_US",
+        policy: "deterministic",
       }
 
     },
-    
+
     // template:{
     //   name:"friendly_fee_reminder",
     //   language:{
@@ -146,8 +146,8 @@ const sendWhatsApp = async (recipientPhone: string, message: string) => {
     //     }]
     //   }]
     // },
-    recipient_type:"individual",
-    to:'+918459324821'
+    recipient_type: "individual",
+    to: '+918459324821'
   })
   return { success: true };
 };
@@ -284,9 +284,9 @@ export async function executeReminders(
           ORGANIZATION_CONTACT_INFO: [
             recipient.organizationName,
             recipient.organizationEmail &&
-              `Email: ${recipient.organizationEmail}`,
+            `Email: ${recipient.organizationEmail}`,
             recipient.organizationPhone &&
-              `Phone: ${recipient.organizationPhone}`,
+            `Phone: ${recipient.organizationPhone}`,
           ]
             .filter(Boolean)
             .join('\n'),
@@ -352,8 +352,8 @@ export async function executeReminders(
         } else if (channel === 'whatsapp') {
           await sendWhatsApp(
             recipient.parentWhatsAppNumber ||
-              recipient.studentWhatsappNumber ||
-              '',
+            recipient.studentWhatsappNumber ||
+            '',
             personalizedMessage
           );
         }
@@ -361,6 +361,8 @@ export async function executeReminders(
         // Log successful notification
         await prisma.notificationLog.create({
           data: {
+            title: "Fee Reminder",
+            message: "Fee reminder sent successfully",
             organizationId,
             userId: recipient.parentUserId ?? null,
             studentId: recipient.studentId,
@@ -384,6 +386,8 @@ export async function executeReminders(
         // Log failed notification
         await prisma.notificationLog.create({
           data: {
+            title: "Fee Reminder",
+            message: "Failed to send fee reminder to parent",
             organizationId,
             userId: recipient.parentUserId ?? null,
             studentId: recipient.studentId,

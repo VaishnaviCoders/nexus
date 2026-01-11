@@ -353,7 +353,7 @@ export type StudentDocumentWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"StudentDocument"> | Date | string
   organizationId?: Prisma.StringFilter<"StudentDocument"> | string
   student?: Prisma.XOR<Prisma.StudentScalarRelationFilter, Prisma.StudentWhereInput>
-  Organization?: Prisma.XOR<Prisma.OrganizationNullableScalarRelationFilter, Prisma.OrganizationWhereInput> | null
+  organization?: Prisma.XOR<Prisma.OrganizationNullableScalarRelationFilter, Prisma.OrganizationWhereInput> | null
 }
 
 export type StudentDocumentOrderByWithRelationInput = {
@@ -380,7 +380,7 @@ export type StudentDocumentOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
   student?: Prisma.StudentOrderByWithRelationInput
-  Organization?: Prisma.OrganizationOrderByWithRelationInput
+  organization?: Prisma.OrganizationOrderByWithRelationInput
   _relevance?: Prisma.StudentDocumentOrderByRelevanceInput
 }
 
@@ -411,7 +411,7 @@ export type StudentDocumentWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"StudentDocument"> | Date | string
   organizationId?: Prisma.StringFilter<"StudentDocument"> | string
   student?: Prisma.XOR<Prisma.StudentScalarRelationFilter, Prisma.StudentWhereInput>
-  Organization?: Prisma.XOR<Prisma.OrganizationNullableScalarRelationFilter, Prisma.OrganizationWhereInput> | null
+  organization?: Prisma.XOR<Prisma.OrganizationNullableScalarRelationFilter, Prisma.OrganizationWhereInput> | null
 }, "id">
 
 export type StudentDocumentOrderByWithAggregationInput = {
@@ -494,7 +494,7 @@ export type StudentDocumentCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   student: Prisma.StudentCreateNestedOneWithoutStudentDocumentInput
-  Organization?: Prisma.OrganizationCreateNestedOneWithoutStudentDocumentInput
+  organization?: Prisma.OrganizationCreateNestedOneWithoutStudentDocumentInput
 }
 
 export type StudentDocumentUncheckedCreateInput = {
@@ -544,7 +544,7 @@ export type StudentDocumentUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   student?: Prisma.StudentUpdateOneRequiredWithoutStudentDocumentNestedInput
-  Organization?: Prisma.OrganizationUpdateOneWithoutStudentDocumentNestedInput
+  organization?: Prisma.OrganizationUpdateOneWithoutStudentDocumentNestedInput
 }
 
 export type StudentDocumentUncheckedUpdateInput = {
@@ -955,7 +955,7 @@ export type StudentDocumentCreateWithoutStudentInput = {
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  Organization?: Prisma.OrganizationCreateNestedOneWithoutStudentDocumentInput
+  organization?: Prisma.OrganizationCreateNestedOneWithoutStudentDocumentInput
 }
 
 export type StudentDocumentUncheckedCreateWithoutStudentInput = {
@@ -1149,7 +1149,7 @@ export type StudentDocumentUpdateWithoutStudentInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  Organization?: Prisma.OrganizationUpdateOneWithoutStudentDocumentNestedInput
+  organization?: Prisma.OrganizationUpdateOneWithoutStudentDocumentNestedInput
 }
 
 export type StudentDocumentUncheckedUpdateWithoutStudentInput = {
@@ -1226,7 +1226,7 @@ export type StudentDocumentSelect<ExtArgs extends runtime.Types.Extensions.Inter
   updatedAt?: boolean
   organizationId?: boolean
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
-  Organization?: boolean | Prisma.StudentDocument$OrganizationArgs<ExtArgs>
+  organization?: boolean | Prisma.StudentDocument$organizationArgs<ExtArgs>
 }, ExtArgs["result"]["studentDocument"]>
 
 export type StudentDocumentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1253,7 +1253,7 @@ export type StudentDocumentSelectCreateManyAndReturn<ExtArgs extends runtime.Typ
   updatedAt?: boolean
   organizationId?: boolean
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
-  Organization?: boolean | Prisma.StudentDocument$OrganizationArgs<ExtArgs>
+  organization?: boolean | Prisma.StudentDocument$organizationArgs<ExtArgs>
 }, ExtArgs["result"]["studentDocument"]>
 
 export type StudentDocumentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1280,7 +1280,7 @@ export type StudentDocumentSelectUpdateManyAndReturn<ExtArgs extends runtime.Typ
   updatedAt?: boolean
   organizationId?: boolean
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
-  Organization?: boolean | Prisma.StudentDocument$OrganizationArgs<ExtArgs>
+  organization?: boolean | Prisma.StudentDocument$organizationArgs<ExtArgs>
 }, ExtArgs["result"]["studentDocument"]>
 
 export type StudentDocumentSelectScalar = {
@@ -1311,22 +1311,22 @@ export type StudentDocumentSelectScalar = {
 export type StudentDocumentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "type" | "fileName" | "fileSize" | "fileType" | "documentUrl" | "studentId" | "verified" | "verifiedBy" | "verifiedAt" | "rejected" | "rejectedBy" | "rejectedAt" | "rejectReason" | "uploadedBy" | "uploadedAt" | "note" | "isDeleted" | "deletedAt" | "createdAt" | "updatedAt" | "organizationId", ExtArgs["result"]["studentDocument"]>
 export type StudentDocumentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
-  Organization?: boolean | Prisma.StudentDocument$OrganizationArgs<ExtArgs>
+  organization?: boolean | Prisma.StudentDocument$organizationArgs<ExtArgs>
 }
 export type StudentDocumentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
-  Organization?: boolean | Prisma.StudentDocument$OrganizationArgs<ExtArgs>
+  organization?: boolean | Prisma.StudentDocument$organizationArgs<ExtArgs>
 }
 export type StudentDocumentIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
-  Organization?: boolean | Prisma.StudentDocument$OrganizationArgs<ExtArgs>
+  organization?: boolean | Prisma.StudentDocument$organizationArgs<ExtArgs>
 }
 
 export type $StudentDocumentPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "StudentDocument"
   objects: {
     student: Prisma.$StudentPayload<ExtArgs>
-    Organization: Prisma.$OrganizationPayload<ExtArgs> | null
+    organization: Prisma.$OrganizationPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1746,7 +1746,7 @@ readonly fields: StudentDocumentFieldRefs;
 export interface Prisma__StudentDocumentClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   student<T extends Prisma.StudentDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StudentDefaultArgs<ExtArgs>>): Prisma.Prisma__StudentClient<runtime.Types.Result.GetResult<Prisma.$StudentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  Organization<T extends Prisma.StudentDocument$OrganizationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StudentDocument$OrganizationArgs<ExtArgs>>): Prisma.Prisma__OrganizationClient<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  organization<T extends Prisma.StudentDocument$organizationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StudentDocument$organizationArgs<ExtArgs>>): Prisma.Prisma__OrganizationClient<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2194,9 +2194,9 @@ export type StudentDocumentDeleteManyArgs<ExtArgs extends runtime.Types.Extensio
 }
 
 /**
- * StudentDocument.Organization
+ * StudentDocument.organization
  */
-export type StudentDocument$OrganizationArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type StudentDocument$organizationArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
    * Select specific fields to fetch from the Organization
    */

@@ -4,6 +4,7 @@ import { NotificationChannel } from "@/generated/prisma/enums";
 import admin from "firebase-admin";
 import { Message } from "firebase-admin/messaging";
 import { Resend } from "resend";
+import { NotificationBody } from "./template";
 
 // ============================================
 // CHANNEL PROVIDER INTERFACE
@@ -12,7 +13,7 @@ export interface ChannelProvider {
   send(
     to: string,
     subject: string | undefined,
-    body: string,
+    body: NotificationBody,
     data?: { link?: string;[key: string]: any }
   ): Promise<{
     success: boolean;
@@ -26,7 +27,7 @@ export interface ChannelProvider {
 // EMAIL PROVIDER (using Resend)
 // ============================================
 class EmailProvider implements ChannelProvider {
-  async send(to: string, subject: string, body: string) {
+  async send(to: string, subject: string, body: NotificationBody) {
     try {
 
       const resend = new Resend(process.env.RESEND_API_KEY!);
@@ -50,7 +51,7 @@ class EmailProvider implements ChannelProvider {
 // SMS PROVIDER (using Fast2SMS)
 // ============================================
 class SMSProvider implements ChannelProvider {
-  async send(to: string, _subject: string | undefined, body: string) {
+  async send(to: string, _subject: string | undefined, body: NotificationBody) {
     try {
       const apiKey = process.env.FAST2SMS_API_KEY;
 
@@ -96,7 +97,7 @@ class SMSProvider implements ChannelProvider {
 // WHATSAPP PROVIDER (using Meta Business API)
 // ============================================
 class WhatsAppProvider implements ChannelProvider {
-  async send(to: string, _subject: string | undefined, body: string) {
+  async send(to: string, _subject: string | undefined, body: NotificationBody) {
     try {
       const payload = {
         messaging_product: "whatsapp",
@@ -152,7 +153,7 @@ class PushProvider implements ChannelProvider {
   async send(
     fcmToken: string,
     subject: string | undefined,
-    body: string,
+    body: NotificationBody,
     data?: { link?: string;[key: string]: any }
   ) {
     try {
@@ -169,7 +170,7 @@ class PushProvider implements ChannelProvider {
         token: fcmToken,
         notification: {
           title: subject || "Notification",
-          body: body,
+          body: typeof body === "string" ? body : "Notification Detail",
         },
         // Add link if provided
         webpush: data?.link

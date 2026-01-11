@@ -112,7 +112,7 @@ export default function AdvancedProfilePage() {
             asChild
             className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 border-0"
           >
-            <Link href={'https://www.shiksha.cloud/'} target="_blank">
+            <Link href={'https://shiksha.cloud/'} target="_blank">
               <Globe className="w-4 h-4 mr-2" />
               Shiksha.cloud
             </Link>
@@ -149,7 +149,7 @@ export default function AdvancedProfilePage() {
               As a software developer, I've always been passionate about
               building things that make people's lives easier. Currently
               building{' '}
-              <Link href={'https://www.shiksha.cloud/'} target="_blank">
+              <Link href={'https://shiksha.cloud/'} target="_blank">
                 <span className="text-transparent bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text font-semibold">
                   Shiksha.cloud
                 </span>{' '}
@@ -186,7 +186,7 @@ export default function AdvancedProfilePage() {
                 asChild
                 className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white border-0 px-8 py-3"
               >
-                <Link href={'https://www.shiksha.cloud/'}>
+                <Link href={'https://shiksha.cloud/'}>
                   <Rocket className="w-5 h-5 mr-2" />
                   Explore Shiksha.cloud
                 </Link>
@@ -683,22 +683,20 @@ export default function AdvancedProfilePage() {
                       >
                         <div className="flex items-center justify-between mb-3">
                           <goal.icon
-                            className={`w-5 h-5 ${
-                              goal.status === 'completed'
+                            className={`w-5 h-5 ${goal.status === 'completed'
                                 ? 'text-green-400'
                                 : goal.status === 'in-progress'
                                   ? 'text-yellow-400'
                                   : 'text-gray-400'
-                            }`}
+                              }`}
                           />
                           <div
-                            className={`px-2 py-1 rounded-full text-xs font-medium ${
-                              goal.status === 'completed'
+                            className={`px-2 py-1 rounded-full text-xs font-medium ${goal.status === 'completed'
                                 ? 'bg-green-500/20 text-green-300'
                                 : goal.status === 'in-progress'
                                   ? 'bg-yellow-500/20 text-yellow-300'
                                   : 'bg-gray-500/20 text-gray-300'
-                            }`}
+                              }`}
                           >
                             {goal.status === 'completed'
                               ? 'DONE'
@@ -787,22 +785,20 @@ export default function AdvancedProfilePage() {
                       >
                         <div className="flex items-center justify-between mb-3">
                           <goal.icon
-                            className={`w-5 h-5 ${
-                              goal.status === 'completed'
+                            className={`w-5 h-5 ${goal.status === 'completed'
                                 ? 'text-blue-400'
                                 : goal.status === 'in-progress'
                                   ? 'text-yellow-400'
                                   : 'text-gray-400'
-                            }`}
+                              }`}
                           />
                           <div
-                            className={`px-2 py-1 rounded-full text-xs font-medium ${
-                              goal.status === 'completed'
+                            className={`px-2 py-1 rounded-full text-xs font-medium ${goal.status === 'completed'
                                 ? 'bg-blue-500/20 text-blue-300'
                                 : goal.status === 'in-progress'
                                   ? 'bg-yellow-500/20 text-yellow-300'
                                   : 'bg-gray-500/20 text-gray-300'
-                            }`}
+                              }`}
                           >
                             {goal.status === 'completed'
                               ? 'DONE'

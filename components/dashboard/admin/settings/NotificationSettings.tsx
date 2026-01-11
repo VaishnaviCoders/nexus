@@ -162,7 +162,7 @@ export function NotificationSettings({ notificationSettings }: NotificationSetti
             <CardHeader className="mx-auto max-w-7xl px-4 bg-muted/20 border-b border-border/40">
                 <div className="flex flex-col sm:flex-row items-start justify-between gap-4 py-2">
                     <div>
-                        <CardTitle className="text-balance tracking-tight text-xl">Notification Settings</CardTitle>
+                        <CardTitle className="text-balance tracking-tight">Notification Settings</CardTitle>
                         <CardDescription className="mt-2 text-pretty text-muted-foreground leading-relaxed max-w-3xl">
                             Manage notification delivery across channels. Keep only essential notifications enabled to reduce costs.
                         </CardDescription>

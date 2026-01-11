@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     'student safety reporting platform',
   ],
   alternates: {
-    canonical: 'https://www.shiksha.cloud/features/anonymous-complaint-system',
+    canonical: 'https://shiksha.cloud/features/anonymous-complaint-system',
   },
 };
 

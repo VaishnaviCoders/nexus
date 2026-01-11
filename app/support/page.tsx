@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description:
     'Get help and support for Shiksha Cloud school management system. Contact our team or browse resources.',
   alternates: {
-    canonical: 'https://www.shiksha.cloud/support',
+    canonical: 'https://shiksha.cloud/support',
   },
 };
 

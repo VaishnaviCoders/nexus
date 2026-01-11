@@ -80,7 +80,7 @@ enum YearType {
 
 model Organization {
   id   String  @id @default(cuid())
-  name String?
+  name String
   slug String  @unique
   logo String?
 
@@ -491,7 +491,7 @@ model StudentDocument {
 
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
-  Organization   Organization? @relation(fields: [organizationId], references: [id])
+  organization   Organization? @relation(fields: [organizationId], references: [id])
   organizationId String
 
   @@index([organizationId])

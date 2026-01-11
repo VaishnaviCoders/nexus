@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const appUrl = 'https://www.shiksha.cloud';
+  const appUrl = 'https://shiksha.cloud';
   const currentDate = new Date();
   return [
     // Homepage

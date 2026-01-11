@@ -1,4 +1,5 @@
 import { NotificationType } from "@/generated/prisma/enums";
+import React from "react";
 
 export interface SMSTemplate {
   body: string;
@@ -24,6 +25,8 @@ export interface NotificationTemplates {
   EMAIL?: EmailTemplate;
   PUSH?: PushTemplate;
 }
+
+export type NotificationBody = string | React.ReactElement;
 
 export interface NotificationTemplate {
   id: string;
@@ -78,10 +81,19 @@ export interface LeaveVariables extends BaseVariables {
 }
 
 export interface DocumentVariables extends BaseVariables {
-  studentName: string;
+  recipientName: string;
   documentType: string;
-  uploadUrl?: string;
-  reason?: string;
+  documentName: string;
+  rejectReason: string;
+  documentUrl: string;
+  organizationName: string;
+  supportEmail: string;
+  supportPhone: string;
+  fileSize?: string;
+  uploadedOn?: Date;
+  rejectedOn?: string;
+  rejectedBy?: string;
+  address?: string;
 }
 
 export interface AcademicVariables extends BaseVariables {
@@ -556,15 +568,15 @@ export const NOTIFICATION_TEMPLATES: Record<string, NotificationTemplate> = {
         body: "Document verified: {{documentType}} approved for {{studentName}}. - {{organizationName}}",
       },
       WHATSAPP: {
-        body: "✅ *Document Approved*\n\nDocument: {{documentType}}\nStudent: {{studentName}}\nStatus: Verified\n\n- {{organizationName}}",
+        body: "✅ *Document Approved*\n\nDocument: {{documentType}}\nStudent: {{recipientName}}\nStatus: Verified\n\n- {{organizationName}}",
       },
       EMAIL: {
         subject: "Document Approved - {{documentType}}",
-        body: "Dear Parent,\n\n{{documentType}} for {{studentName}} has been successfully verified.\n\nRegards,\n{{organizationName}}",
+        body: "Dear {{recipientName}},\n\n{{documentType}} for {{recipientName}} has been successfully verified.\n\nRegards,\n{{organizationName}}",
       },
       PUSH: {
         subject: "Document Approved",
-        body: "{{documentType}} for {{studentName}} has been approved",
+        body: "{{documentType}} for {{recipientName}} has been approved",
       },
     },
   },
@@ -575,18 +587,18 @@ export const NOTIFICATION_TEMPLATES: Record<string, NotificationTemplate> = {
     subKey: "document_rejected",
     templates: {
       SMS: {
-        body: "Document rejected: {{documentType}} for {{studentName}}. Reason: {{reason}} - {{organizationName}}",
+        body: "Document rejected: {{documentType}} for {{recipientName}}. Reason: {{rejectReason}} - {{organizationName}}",
       },
       WHATSAPP: {
-        body: "❌ *Document Rejected*\n\nDocument: {{documentType}}\nStudent: {{studentName}}\nReason: {{reason}}\n\nRe-upload: {{uploadUrl}}",
+        body: "❌ *Document Rejected*\n\nDocument: {{documentType}}\nStudent: {{recipientName}}\nReason: {{rejectReason}}\n\nRe-upload: {{documentUrl}}",
       },
       EMAIL: {
         subject: "Document Rejected - {{documentType}}",
-        body: "Dear Parent,\n\n{{documentType}} for {{studentName}} has been rejected.\nReason: {{reason}}\n\nPlease re-upload: {{uploadUrl}}\n\nRegards,\n{{organizationName}}",
+        body: "Dear {{recipientName}},\n\n{{documentType}} for {{recipientName}} has been rejected.\nReason: {{rejectReason}}\n\nPlease re-upload: {{documentUrl}}\n\nRegards,\n{{organizationName}}",
       },
       PUSH: {
         subject: "Document Rejected",
-        body: "{{documentType}} for {{studentName}} was rejected",
+        body: "{{documentType}} for {{recipientName}} was rejected",
       },
     },
   },

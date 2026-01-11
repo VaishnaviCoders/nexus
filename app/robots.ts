@@ -9,7 +9,7 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/api/', '/dashboard/'],
       },
     ],
-    sitemap: 'https://www.shiksha.cloud/sitemap.xml',
-    host: 'https://www.shiksha.cloud',
+    sitemap: 'https://shiksha.cloud/sitemap.xml',
+    host: 'https://shiksha.cloud',
   };
 }

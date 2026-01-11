@@ -53,7 +53,6 @@ export type DocumentWithStudent = {
   };
 };
 
-export type DocumentVerificationAction = 'APPROVE' | 'REJECT';
 
 export const DOCUMENT_TYPE_LABELS: Record<DocumentType, string> = {
   AADHAAR: 'Aadhaar Card',

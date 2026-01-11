@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   description:
     'Discover insights, tutorials, and stories about school management. Stay updated with the latest in education technology.',
   alternates: {
-    canonical: 'https://www.shiksha.cloud/blogs',
+    canonical: 'https://shiksha.cloud/blogs',
   },
 };
 

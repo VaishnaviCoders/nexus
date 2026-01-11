@@ -38,7 +38,7 @@ import FeatureHoverDots from '@/components/websiteComp/feature-hover-dots';
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://www.shiksha.cloud'),
+  metadataBase: new URL('https://shiksha.cloud'),
   alternates: {
     canonical: '/',
   },

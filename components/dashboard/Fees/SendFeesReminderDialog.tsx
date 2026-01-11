@@ -312,7 +312,7 @@ export function SendFeesReminderDialog({
           maximumFractionDigits: 0,
         })
       )
-      .replace('{PORTAL_LINK}', 'https://www.shiksha.cloud/dashboard/')
+      .replace('{PORTAL_LINK}', 'https://shiksha.cloud/dashboard/')
       .replace(
         '{ORGANIZATION_NAME}',
         recipient.organizationName || 'School Administration'

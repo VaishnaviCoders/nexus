@@ -5,7 +5,7 @@ import ContactForm from "@/components/websiteComp/shared/contact-form";
 import { Badge } from "@/components/ui/badge";
 
 export const metadata: Metadata = {
-    metadataBase: new URL('https://www.shiksha.cloud'),
+    metadataBase: new URL('https://shiksha.cloud'),
     title: 'Contact Us - Shiksha.cloud',
     description: 'Get in touch with Shiksha.cloud for demos, onboarding assistance, or product inquiries',
     keywords: [

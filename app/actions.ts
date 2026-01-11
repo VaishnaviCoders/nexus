@@ -23,14 +23,12 @@ import FilterStudents from '@/lib/data/student/FilterStudents';
 import { endOfDay, startOfDay, subDays } from 'date-fns';
 import { AttendanceStatus, Role, NotificationType } from '@/generated/prisma/enums';
 import { getCurrentUser, getCurrentUserId } from '@/lib/user';
-import { DocumentVerificationAction } from '@/types/document';
 import prisma from '@/lib/db';
-
 import { getOrganizationId } from '@/lib/organization';
 import { redis } from '@/lib/redis';
 import { SupportFormData } from '@/components/websiteComp/SupportPopup';
 import { getCurrentAcademicYearId } from '@/lib/academicYear';
-import { sendAttendanceAlert, sendDocumentNotification, sendNotification } from '@/lib/notifications/engine';
+import { sendAttendanceAlert, sendDocumentNotification, sendDocumentRejectionNotification, sendNotification } from '@/lib/notifications/engine';
 import { formatDateIN, formatDateTimeIN, formatTimeIN } from '@/lib/utils';
 
 export const syncUserWithOrg = async () => {
@@ -73,6 +71,7 @@ export const syncUserWithOrg = async () => {
     },
     create: {
       id: orgId,
+      name: orgSlug,
       slug: orgSlug,
       isActive: true,
       isPaid: false,
@@ -611,108 +610,137 @@ export async function studentDocumentsDelete(documentId: string) {
   return deletedDocument;
 }
 
-interface VerifyDocumentData {
-  action: DocumentVerificationAction;
-  note?: string;
-  rejectionReason?: string;
-}
-export async function verifyStudentDocument(
+export async function verifyDocument(
   documentId: string,
-  data: VerifyDocumentData
+  note: string | null
 ) {
   try {
-    const user = await currentUser();
-    if (!user) throw new Error('User Not Found Please Logout And Log In');
+    const user = await getCurrentUser();
+    const organizationId = await getOrganizationId();
 
-    const verifiedByOrRejectedBy =
-      [user.firstName, user.lastName].filter(Boolean).join(' ') || 'Unknown';
-    // const organizationId = await getOrganizationId();
-
-    // const document = await prisma.studentDocument.findFirst({
-    //   where: {
-    //     id: documentId,
-    //     student: { organizationId },
-    //     isDeleted: false,
-    //   },
-    // });
-
-    // if (!document) {
-    //   return { success: false, error: 'Document not found' };
-    // }
-
-    const updateData =
-      data.action === 'APPROVE'
-        ? {
-          verified: true,
-          verifiedBy: verifiedByOrRejectedBy || 'System',
-          verifiedAt: new Date(),
-          rejected: false,
-          rejectedBy: null,
-          rejectedAt: null,
-          note: data.note ?? null,
-        }
-        : {
-          verified: false,
-          verifiedBy: null,
-          verifiedAt: null,
-          rejected: true,
-          rejectedBy: verifiedByOrRejectedBy || 'System',
-          rejectedAt: new Date(),
-          rejectReason: data.rejectionReason,
-        };
-
-    const result = await prisma.studentDocument.update({
-      where: { id: documentId },
-      data: updateData,
-      include: {
-        student: {
-          include: {
-            user: true,
-          },
-        },
-        Organization: true,
+    const document = await prisma.studentDocument.update({
+      where: { id: documentId, organizationId },
+      data: {
+        verified: true,
+        verifiedBy:
+          [user.firstName, user.lastName].filter(Boolean).join(' ') ||
+          'Verified By System',
+        verifiedAt: new Date(),
+        rejected: false,
+        rejectedBy: null,
+        rejectedAt: null,
+        note: note,
+      },
+      select: {
+        id: true,
+        fileName: true,
       },
     });
 
-    if (result && result.student) {
-      // Send notification based on action
-      const templateId =
-        data.action === 'APPROVE' ? 'DOCUMENT_APPROVED' : 'DOCUMENT_REJECTED';
-
-      const recipient = {
-        userId: result.student.userId,
-        studentId: result.student.id,
-        email: result.student.email,
-        phone: result.student.phoneNumber,
-      };
-
-      // await sendDocumentNotification(
-      //   result.organizationId,
-      //   studentId,
-      //   ""
-      //   {
-      //   recipients: [recipient],
-      //   templateId,
-      //   variables: {
-      //     documentType: result.type.replace(/_/g, ' '), // Request AAR_CARD -> AAR CARD
-      //     reason: data.rejectionReason || 'Verification failed',
-      //     organizationName: result.Organization?.name || 'Institute',
-      //     studentName: result.student.firstName,
-      //   },
-      // });
-    }
-
+    revalidatePath('/dashboard/documents');
     revalidatePath('/dashboard/document/verification');
 
     return {
       success: true,
-      message: `Document ${data.action === 'APPROVE' ? 'approved' : 'rejected'} successfully`,
+      message: `Document ${document.fileName || 'unnamed'} verified successfully.`,
     };
   } catch (error) {
     console.error('Error verifying document:', error);
     return {
       success: false,
       error: 'Something went wrong while verifying the document.',
+    };
+  }
+}
+
+export async function rejectDocument(
+  documentId: string,
+  rejectionReason: string
+) {
+  try {
+    const organizationId = await getOrganizationId();
+    const user = await getCurrentUser();
+    const adminName = [user.firstName, user.lastName].filter(Boolean).join(' ') || 'Administrator';
+
+    const document = await prisma.studentDocument.update({
+      where: { id: documentId, organizationId },
+      data: {
+        rejected: true,
+        rejectedBy:
+          [user.firstName, user.lastName].filter(Boolean).join(' ') ||
+          'Rejected By System',
+        rejectedAt: new Date(),
+        rejectReason: rejectionReason,
+        verified: false,
+        verifiedBy: null,
+        verifiedAt: null,
+      },
+      select: {
+        id: true,
+        fileName: true,
+        type: true,
+        documentUrl: true,
+        fileSize: true,
+        uploadedAt: true,
+        rejectedAt: true,
+        rejectedBy: true,
+        rejectReason: true,
+
+        student: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+          },
+        },
+        organization: {
+          select: {
+            name: true,
+            contactPhone: true,
+            contactEmail: true,
+          },
+        },
+      },
+    });
+
+    const studentName =
+      document.student.firstName + ' ' + document.student.lastName;
+
+    // Send notification
+    await sendDocumentRejectionNotification({
+      organizationId,
+      studentId: document.student.id,
+      variables: {
+        documentName: document.fileName || "Unnamed Document",
+        documentType: document.type,
+        rejectReason: rejectionReason || "System Rejected",
+        organizationName: document.organization?.name || "Shiksha Cloud",
+        recipientName: studentName,
+        documentUrl: document.documentUrl,
+        supportEmail:
+          document.organization?.contactEmail || "support@shiksha.cloud",
+        supportPhone:
+          document.organization?.contactPhone || "+91 8459324821",
+        uploadedOn: document.uploadedAt,
+
+      },
+    }).catch((err) => {
+      console.error("Failed to send rejection notification:", err);
+    });
+
+
+    revalidatePath('/dashboard/documents');
+    revalidatePath('/dashboard/document/verification');
+
+    return {
+      success: true,
+      message: `Document rejected and student notified.`,
+    };
+  } catch (error) {
+    console.error('Error rejecting document:', error);
+    return {
+      success: false,
+      error: 'Something went wrong while rejecting the document.',
     };
   }
 }

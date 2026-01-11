@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-    metadataBase: new URL('https://www.shiksha.cloud'),
+    metadataBase: new URL('https://shiksha.cloud'),
 
     title: 'Refund Policy - Shiksha.cloud',
     description: 'Refund policy for Shiksha.cloud subscription and payment services',

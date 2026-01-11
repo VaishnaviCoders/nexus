@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-const APP_URL = 'https://www.shiksha.cloud/';
+const APP_URL = 'https://shiksha.cloud/';
 
 const links = [
   {

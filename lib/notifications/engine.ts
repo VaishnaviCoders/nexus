@@ -15,17 +15,23 @@ import {
   DocumentVariables,
   AcademicVariables,
   GreetingVariables,
+  NotificationBody,
 } from "./template";
+import React from "react";
+import DocumentRejectionEmail from "@/components/templates/email-templates/documents/documentRejectedMail";
 import { chunkArray, retry, sleep, calculateNotificationCost } from "@/lib/utils";
 import { createHash } from "crypto";
 import { getOrganizationNotificationSettings } from "@/lib/organization-notification-settings"
 
-
-// ============================================
-// TYPES
-// ============================================
-
 // Todos : Queue System , Kafka Integration , Valid Email , Valid Phone , Valid Whatsapp Number
+
+// Batch configuration for handling high loads
+const BATCH_SIZE = 100; // Recipients per batch
+const MAX_CONCURRENT_RECIPIENTS = 10; // Parallel recipients within a batch
+const INTER_BATCH_DELAY_MS = 500; // Delay between batches
+const INTER_RECIPIENT_DELAY_MS = 50; // Small delay to avoid rate limits
+
+// Todos : Kafka Integration for future scaling
 
 interface RecipientInfo {
   userId?: string;
@@ -66,7 +72,9 @@ interface NotificationResult {
   }[];
 }
 
-
+const REACT_EMAIL_TEMPLATES: Partial<Record<NotificationTemplateId, React.ComponentType<any>>> = {
+  DOCUMENT_REJECTED: DocumentRejectionEmail,
+};
 
 // ============================================
 // IDEMPOTENCY KEY GENERATION
@@ -262,15 +270,11 @@ function replaceTemplateVariables(template: string, variables: any): string {
 // SEND VIA SINGLE CHANNEL
 // ============================================
 
-// ============================================
-// SEND VIA SINGLE CHANNEL
-// ============================================
-
 async function sendViaChannel(
   channel: NotificationChannel,
   recipient: RecipientInfo,
   subject: string | undefined,
-  body: string,
+  body: NotificationBody,
   idempotencyKey: string,
   organizationId: string,
   variables?: NotificationVariables
@@ -284,7 +288,7 @@ async function sendViaChannel(
         parentId: recipient.parentId,
         studentId: recipient.studentId,
         channel,
-        title: subject || body.substring(0, 100),
+        title: subject || (typeof body === "string" ? body.substring(0, 100) : "Notification"),
         createdAt: {
           gte: new Date(Date.now() - 5 * 60 * 1000), // Last 5 minutes
         },
@@ -454,7 +458,10 @@ async function sendViaChannel(
     // Log what we're about to send (for non-PUSH channels)
     console.log(`[${channel}] 📤 Sending to: ${to}`);
     console.log(`  └─ Subject: ${subject || "N/A"}`);
-    console.log(`  └─ Body: ${body.substring(0, 100)}${body.length > 100 ? "..." : ""}`);
+    const bodyLog = typeof body === "string"
+      ? `${body.substring(0, 100)}${body.length > 100 ? "..." : ""}`
+      : "[React Component]";
+    console.log(`  └─ Body: ${bodyLog}`);
 
     // Send notification with retry logic
     const provider = ChannelFactory.getProvider(channel);
@@ -521,11 +528,17 @@ async function sendViaChannels(
       }
 
       let subject: string | undefined;
-      let body: string;
+      let body: NotificationBody;
 
       if ("subject" in channelTemplate) {
         subject = replaceTemplateVariables(channelTemplate.subject, variables);
-        body = replaceTemplateVariables(channelTemplate.body, variables);
+        // Use React template for email if available
+        if (channel === "EMAIL" && REACT_EMAIL_TEMPLATES[templateId]) {
+          const ReactTemplate = REACT_EMAIL_TEMPLATES[templateId]!;
+          body = React.createElement(ReactTemplate, variables);
+        } else {
+          body = replaceTemplateVariables(channelTemplate.body, variables);
+        }
       } else {
         body = replaceTemplateVariables(channelTemplate.body, variables);
       }
@@ -572,17 +585,25 @@ async function logNotification<T extends NotificationTemplateId>(
     let title: string;
     let message: string;
 
+    const body = channelTemplate ? (
+      "subject" in channelTemplate && channelResult.channel === "EMAIL" && REACT_EMAIL_TEMPLATES[templateId]
+        ? React.createElement(REACT_EMAIL_TEMPLATES[templateId]!, variables)
+        : replaceTemplateVariables(channelTemplate.body, variables)
+    ) : "No template available";
+
+    const displayMessage = typeof body === "string" ? body : "Email Template Sent";
+
     if (channelTemplate && "subject" in channelTemplate) {
       title = replaceTemplateVariables(channelTemplate.subject, variables);
-      message = replaceTemplateVariables(channelTemplate.body, variables);
+      message = displayMessage;
     } else if (channelTemplate) {
       // Use type-safe field access or fallback
       const vars = variables as any;
       title = vars.title || vars.examName || vars.documentType || "Notification";
-      message = replaceTemplateVariables(channelTemplate.body, variables);
+      message = displayMessage;
     } else {
       title = "Notification";
-      message = "No template available";
+      message = displayMessage;
     }
 
     await prisma.notificationLog.create({
@@ -610,9 +631,53 @@ async function logNotification<T extends NotificationTemplateId>(
 }
 
 // ============================================
-// BATCH PROCESSING
+// BATCH PROCESSING (Parallel Execution)
 // ============================================
 
+/**
+ * Process a single recipient - sends to all enabled channels
+ */
+async function processRecipient<T extends NotificationTemplateId>(
+  recipient: RecipientInfo,
+  enabledChannels: NotificationChannel[],
+  templateId: T,
+  variables: TemplateVariablesMap[T],
+  organizationId: string,
+  timestamp: string,
+  noticeId?: string
+): Promise<NotificationResult["results"][0]> {
+  try {
+    const channelResults = await sendViaChannels(
+      enabledChannels,
+      recipient,
+      templateId,
+      variables,
+      organizationId,
+      timestamp
+    );
+
+    // Log each channel result (non-blocking)
+    Promise.allSettled(
+      channelResults.map((cr) => logNotification(organizationId, recipient, templateId, variables, cr, noticeId))
+    ).catch(() => { }); // Fire and forget logging
+
+    return {
+      recipient,
+      channels: channelResults,
+    };
+  } catch (error) {
+    console.error(`[BATCH] ❌ Error processing recipient:`, error);
+    return {
+      recipient,
+      channels: [],
+    };
+  }
+}
+
+/**
+ * Process a batch of recipients with parallel execution
+ * Uses chunked concurrency to avoid overwhelming providers
+ */
 async function processBatch<T extends NotificationTemplateId>(
   recipients: RecipientInfo[],
   enabledChannels: NotificationChannel[],
@@ -624,40 +689,37 @@ async function processBatch<T extends NotificationTemplateId>(
 ): Promise<NotificationResult["results"]> {
   const batchResults: NotificationResult["results"] = [];
 
-  for (const recipient of recipients) {
-    try {
-      const recipientLabel = recipient.userId || recipient.email || recipient.studentId || "unknown";
-      // console.group(`[NOTIF] Recipient: ${recipientLabel}`);
+  // Process recipients in parallel chunks for better throughput
+  const recipientChunks = chunkArray(recipients, MAX_CONCURRENT_RECIPIENTS);
 
-      const channelResults = await sendViaChannels(
-        enabledChannels,
+  for (const chunk of recipientChunks) {
+    // Process all recipients in this chunk in parallel
+    const chunkPromises = chunk.map((recipient) =>
+      processRecipient(
         recipient,
+        enabledChannels,
         templateId,
         variables,
         organizationId,
-        timestamp
-      );
+        timestamp,
+        noticeId
+      )
+    );
 
-      // Log each channel result
-      await Promise.allSettled(
-        channelResults.map((cr) => logNotification(organizationId, recipient, templateId, variables, cr, noticeId))
-      );
+    const chunkResults = await Promise.allSettled(chunkPromises);
 
-      batchResults.push({
-        recipient,
-        channels: channelResults,
-      });
+    // Collect results
+    for (const result of chunkResults) {
+      if (result.status === "fulfilled") {
+        batchResults.push(result.value);
+      } else {
+        console.error(`[BATCH] ❌ Recipient processing failed:`, result.reason);
+      }
+    }
 
-      // console.groupEnd();
-
-      // Rate limiting between recipients
-      await sleep(200);
-    } catch (error) {
-      console.error(`[BATCH] ❌ Error processing recipient:`, error);
-      batchResults.push({
-        recipient,
-        channels: [],
-      });
+    // Small delay between chunks to avoid rate limits
+    if (chunk !== recipientChunks[recipientChunks.length - 1]) {
+      await sleep(INTER_RECIPIENT_DELAY_MS);
     }
   }
 
@@ -745,13 +807,14 @@ export async function sendNotification<T extends NotificationTemplateId>(
 
     console.log(`[ENGINE] 📨 Sending to ${uniqueRecipients.length} unique recipients via: ${enabledChannels.join(", ")}`);
 
-    // 4. Batch processing
-    const BATCH_SIZE = 50;
+    // 4. Batch processing with parallel execution
     const batches = chunkArray(uniqueRecipients, BATCH_SIZE);
     const allResults: NotificationResult["results"] = [];
 
+    console.log(`[ENGINE] 📦 Processing ${batches.length} batch(es) of up to ${BATCH_SIZE} recipients each`);
+
     for (let i = 0; i < batches.length; i++) {
-      if (batches.length > 1) console.log(`[ENGINE] 📦 Processing batch ${i + 1}/${batches.length}`);
+      if (batches.length > 1) console.log(`[ENGINE] 📦 Processing batch ${i + 1}/${batches.length} (${batches[i].length} recipients)`);
 
       const batchResults = await processBatch(
         batches[i],
@@ -765,7 +828,8 @@ export async function sendNotification<T extends NotificationTemplateId>(
 
       allResults.push(...batchResults);
 
-      if (i < batches.length - 1) await sleep(1000);
+      // Delay between batches to avoid overwhelming providers
+      if (i < batches.length - 1) await sleep(INTER_BATCH_DELAY_MS);
     }
 
     // 5. Calculate statistics
@@ -808,9 +872,7 @@ export async function sendNotification<T extends NotificationTemplateId>(
   }
 }
 
-// ============================================
 // CONVENIENCE FUNCTIONS
-// ============================================
 
 /**
  * Send attendance alert for absent student
@@ -823,6 +885,23 @@ export async function sendAttendanceAlert(
 ) {
   return sendNotification({
     templateId: "STUDENT_ABSENT",
+    variables,
+    recipients: [{ studentId }],
+    organizationId,
+  });
+}
+
+export async function sendDocumentRejectionNotification({
+  organizationId,
+  studentId,
+  variables,
+}: {
+  organizationId: string;
+  studentId: string;
+  variables: DocumentVariables;
+}) {
+  return sendNotification({
+    templateId: "DOCUMENT_REJECTED",
     variables,
     recipients: [{ studentId }],
     organizationId,
@@ -910,4 +989,260 @@ export async function sendGreetingNotification(
     recipients: [{ studentId }],
     organizationId,
   });
+}
+
+// ============================================
+// TEST NOTIFICATION FUNCTIONS
+// ============================================
+
+interface TestNotificationResult {
+  channel: NotificationChannel;
+  success: boolean;
+  message: string;
+  messageId?: string;
+  error?: string;
+}
+
+/**
+ * Send a test push notification directly to a user's devices
+ * Bypasses organization settings for testing purposes
+ */
+export async function sendTestPushNotification(
+  userId: string,
+  title: string = "🔔 Test Notification",
+  body: string = "This is a test push notification from Nexus"
+): Promise<TestNotificationResult> {
+  try {
+    // Get user's device tokens
+    const deviceTokens = await prisma.deviceToken.findMany({
+      where: { userId },
+      orderBy: { lastUsedAt: "desc" },
+    });
+
+    if (deviceTokens.length === 0) {
+      return {
+        channel: "PUSH",
+        success: false,
+        message: "No device tokens found for user",
+        error: "User has no registered devices",
+      };
+    }
+
+    console.log(`[TEST] 🔔 Sending test push to ${deviceTokens.length} device(s)`);
+
+    const provider = ChannelFactory.getProvider("PUSH");
+    let successCount = 0;
+    let lastError = "";
+
+    // Send to all devices (deduplicated by token)
+    const seenTokens = new Set<string>();
+    for (const tokenRecord of deviceTokens) {
+      if (seenTokens.has(tokenRecord.token)) continue;
+      seenTokens.add(tokenRecord.token);
+
+      const result = await provider.send(tokenRecord.token, title, body, {
+        link: "/dashboard",
+        test: "true",
+      });
+
+      if (result.success) {
+        successCount++;
+        console.log(`[TEST] ✅ Push sent to ${tokenRecord.platform} device`);
+      } else {
+        lastError = result.error || "Unknown error";
+        console.log(`[TEST] ❌ Push failed: ${lastError}`);
+
+        // Clean up invalid tokens
+        if (
+          result.error?.includes("not-registered") ||
+          result.error?.includes("invalid-registration-token")
+        ) {
+          await prisma.deviceToken.delete({ where: { id: tokenRecord.id } }).catch(() => { });
+        }
+      }
+    }
+
+    return {
+      channel: "PUSH",
+      success: successCount > 0,
+      message: `Sent to ${successCount}/${seenTokens.size} device(s)`,
+      messageId: `${successCount} devices`,
+      error: successCount === 0 ? lastError : undefined,
+    };
+  } catch (error) {
+    console.error("[TEST] Push notification error:", error);
+    return {
+      channel: "PUSH",
+      success: false,
+      message: "Push notification failed",
+      error: (error as Error).message,
+    };
+  }
+}
+
+/**
+ * Send a test email notification
+ */
+export async function sendTestEmailNotification(
+  email: string,
+  subject: string = "🔔 Test Email from Nexus",
+  body: string = "This is a test email notification. If you received this, email notifications are working correctly!"
+): Promise<TestNotificationResult> {
+  try {
+    console.log(`[TEST] 📧 Sending test email to ${email}`);
+
+    const provider = ChannelFactory.getProvider("EMAIL");
+    const result = await provider.send(email, subject, body);
+
+    return {
+      channel: "EMAIL",
+      success: result.success,
+      message: result.success ? `Email sent to ${email}` : "Email failed",
+      messageId: result.messageId,
+      error: result.error,
+    };
+  } catch (error) {
+    console.error("[TEST] Email notification error:", error);
+    return {
+      channel: "EMAIL",
+      success: false,
+      message: "Email notification failed",
+      error: (error as Error).message,
+    };
+  }
+}
+
+/**
+ * Send a test SMS notification
+ */
+export async function sendTestSMSNotification(
+  phone: string,
+  message: string = "🔔 Test SMS from Nexus - If you received this, SMS notifications are working correctly!"
+): Promise<TestNotificationResult> {
+  try {
+    // Normalize phone number (remove +91 if present)
+    const normalizedPhone = phone.replace(/^\+?91/, "").replace(/\D/g, "");
+
+    console.log(`[TEST] 📱 Sending test SMS to ${normalizedPhone}`);
+
+    const provider = ChannelFactory.getProvider("SMS");
+    const result = await provider.send(normalizedPhone, undefined, message);
+
+    return {
+      channel: "SMS",
+      success: result.success,
+      message: result.success ? `SMS sent to ${normalizedPhone}` : "SMS failed",
+      messageId: result.messageId,
+      error: result.error,
+    };
+  } catch (error) {
+    console.error("[TEST] SMS notification error:", error);
+    return {
+      channel: "SMS",
+      success: false,
+      message: "SMS notification failed",
+      error: (error as Error).message,
+    };
+  }
+}
+
+/**
+ * Send a test WhatsApp notification
+ */
+export async function sendTestWhatsAppNotification(
+  phone: string,
+  message: string = "🔔 Test WhatsApp from Nexus - If you received this, WhatsApp notifications are working correctly!"
+): Promise<TestNotificationResult> {
+  try {
+    // Normalize phone number (remove +91 if present)
+    const normalizedPhone = phone.replace(/^\+?91/, "").replace(/\D/g, "");
+
+    console.log(`[TEST] 💬 Sending test WhatsApp to ${normalizedPhone}`);
+
+    const provider = ChannelFactory.getProvider("WHATSAPP");
+    const result = await provider.send(normalizedPhone, undefined, message);
+
+    return {
+      channel: "WHATSAPP",
+      success: result.success,
+      message: result.success ? `WhatsApp sent to ${normalizedPhone}` : "WhatsApp failed",
+      messageId: result.messageId,
+      error: result.error,
+    };
+  } catch (error) {
+    console.error("[TEST] WhatsApp notification error:", error);
+    return {
+      channel: "WHATSAPP",
+      success: false,
+      message: "WhatsApp notification failed",
+      error: (error as Error).message,
+    };
+  }
+}
+
+/**
+ * Send test notifications to all channels for a user
+ * Returns results for each channel
+ */
+export async function sendTestAllChannels(
+  userId: string,
+  email?: string,
+  phone?: string
+): Promise<{
+  results: TestNotificationResult[];
+  summary: { total: number; success: number; failed: number };
+}> {
+  console.log(`[TEST] 🧪 Testing all notification channels for user ${userId}`);
+
+  const results: TestNotificationResult[] = [];
+
+  // 1. Test Push (always if user has devices)
+  const pushResult = await sendTestPushNotification(userId);
+  results.push(pushResult);
+
+  // 2. Test Email (if provided)
+  if (email) {
+    const emailResult = await sendTestEmailNotification(email);
+    results.push(emailResult);
+  } else {
+    results.push({
+      channel: "EMAIL",
+      success: false,
+      message: "Skipped - no email provided",
+    });
+  }
+
+  // 3. Test SMS (if provided)
+  if (phone) {
+    const smsResult = await sendTestSMSNotification(phone);
+    results.push(smsResult);
+  } else {
+    results.push({
+      channel: "SMS",
+      success: false,
+      message: "Skipped - no phone provided",
+    });
+  }
+
+  // 4. Test WhatsApp (if provided)
+  if (phone) {
+    const whatsappResult = await sendTestWhatsAppNotification(phone);
+    results.push(whatsappResult);
+  } else {
+    results.push({
+      channel: "WHATSAPP",
+      success: false,
+      message: "Skipped - no phone provided",
+    });
+  }
+
+  const summary = {
+    total: results.length,
+    success: results.filter((r) => r.success).length,
+    failed: results.filter((r) => !r.success).length,
+  };
+
+  console.log(`[TEST] 📊 Test complete: ${summary.success}/${summary.total} channels succeeded`);
+
+  return { results, summary };
 }

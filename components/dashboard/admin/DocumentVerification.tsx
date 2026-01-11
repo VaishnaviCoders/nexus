@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useOptimistic, useState, useTransition } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -47,11 +47,10 @@ import { toast } from 'sonner';
 import { formatBytes, formatDateIN } from '@/lib/utils';
 import {
   DOCUMENT_TYPE_LABELS,
-  type DocumentVerificationAction,
   type DocumentWithStudent,
 } from '@/types/document';
 import { DocumentVerificationDialog } from './DocumentVerificationDialog';
-import { verifyStudentDocument } from '@/app/actions';
+import { verifyDocument, rejectDocument } from '@/app/actions';
 
 interface Props {
   documents: DocumentWithStudent[];
@@ -70,9 +69,39 @@ export default function DocumentVerificationPage({ documents }: Props) {
   const [verificationNote, setVerificationNote] = useState('');
   const [rejectionReason, setRejectionReason] = useState('');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [pendingAction, setPendingAction] =
-    useState<DocumentVerificationAction | null>(null);
-  const [isPending, startTransition] = useTransition();
+  const [isApprovePending, startApproveTransition] = useTransition();
+  const [isRejectPending, startRejectTransition] = useTransition();
+
+  // Optimistic updates for document verification
+  // This provides instant UI feedback while server actions process
+  const [optimisticDocuments, setOptimisticDocuments] = useOptimistic(
+    documents,
+    (
+      currentDocuments: DocumentWithStudent[],
+      action: { type: 'approve' | 'reject'; documentId: string; rejectionReason?: string }
+    ) => {
+      return currentDocuments.map((doc) => {
+        if (doc.id !== action.documentId) return doc;
+
+        if (action.type === 'approve') {
+          return {
+            ...doc,
+            verified: true,
+            rejected: false,
+            verifiedAt: new Date(),
+          };
+        } else {
+          return {
+            ...doc,
+            verified: false,
+            rejected: true,
+            rejectedAt: new Date(),
+            rejectReason: action.rejectionReason,
+          };
+        }
+      });
+    }
+  );
 
   // Helper functions
   const getDocumentStatus = (
@@ -122,7 +151,8 @@ export default function DocumentVerificationPage({ documents }: Props) {
   };
 
   // Filter documents
-  const filteredDocuments = documents.filter((doc) => {
+  // Use optimistic documents for filtering to show instant UI updates
+  const filteredDocuments = optimisticDocuments.filter((doc) => {
     const matchesSearch =
       doc.student.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       doc.student.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -147,44 +177,62 @@ export default function DocumentVerificationPage({ documents }: Props) {
     return matchesSearch && matchesType && matchesStatus;
   });
 
-  // Calculate stats
+  // Calculate stats from optimistic documents for instant UI feedback
   const stats = {
-    total: documents.length,
-    pending: documents.filter((doc) => !doc.verified && !doc.rejected).length,
-    approved: documents.filter((doc) => doc.verified).length,
-    rejected: documents.filter((doc) => doc.rejected).length,
+    total: optimisticDocuments.length,
+    pending: optimisticDocuments.filter((doc) => !doc.verified && !doc.rejected).length,
+    approved: optimisticDocuments.filter((doc) => doc.verified).length,
+    rejected: optimisticDocuments.filter((doc) => doc.rejected).length,
   };
 
   // Calculate approval rate
   const approvalRate =
     stats.total > 0 ? Math.round((stats.approved / stats.total) * 100) : 0;
 
-  // Handle verification
-  const handleVerifyDocument = async (
-    documentId: string,
-    action: DocumentVerificationAction
-  ) => {
-    setPendingAction(action);
-    startTransition(async () => {
+
+  const handleApproveDocument = async (documentId: string) => {
+    // Apply optimistic update immediately for instant UI feedback
+    setOptimisticDocuments({ type: 'approve', documentId });
+
+    startApproveTransition(async () => {
       try {
-        const result = await verifyStudentDocument(documentId, {
-          action,
-          note: action === 'APPROVE' ? verificationNote : undefined,
-          rejectionReason: action === 'REJECT' ? rejectionReason : undefined,
-        });
+        const result = await verifyDocument(documentId, verificationNote || null);
         if (result.success) {
           toast.success(result.message);
-          setVerificationNote('');
-          setRejectionReason('');
           setIsDialogOpen(false);
           setSelectedDocument(null);
+          setVerificationNote('');
         } else {
-          toast.error(result.error);
+          toast.error(result.error || 'Failed to verify');
         }
       } catch (error) {
-        toast.error('Something went wrong. Please try again.');
-      } finally {
-        setPendingAction(null);
+        toast.error('Something went wrong');
+      }
+    });
+  };
+
+  const handleRejectDocument = async (documentId: string) => {
+    if (!rejectionReason.trim()) {
+      toast.error('Rejection reason is required');
+      return;
+    }
+
+    // Apply optimistic update immediately for instant UI feedback
+    setOptimisticDocuments({ type: 'reject', documentId, rejectionReason });
+
+    startRejectTransition(async () => {
+      try {
+        const result = await rejectDocument(documentId, rejectionReason);
+        if (result.success) {
+          toast.success(result.message);
+          setIsDialogOpen(false);
+          setSelectedDocument(null);
+          setRejectionReason('');
+        } else {
+          toast.error(result.error || 'Failed to reject');
+        }
+      } catch (error) {
+        toast.error('Something went wrong');
       }
     });
   };
@@ -487,9 +535,10 @@ export default function DocumentVerificationPage({ documents }: Props) {
                             setVerificationNote={setVerificationNote}
                             rejectionReason={rejectionReason}
                             setRejectionReason={setRejectionReason}
-                            onVerify={handleVerifyDocument}
-                            isPending={isPending}
-                            pendingAction={pendingAction}
+                            onApprove={handleApproveDocument}
+                            onReject={handleRejectDocument}
+                            isApprovePending={isApprovePending}
+                            isRejectPending={isRejectPending}
                           />
                         </Dialog>
                       </TableCell>
@@ -623,9 +672,10 @@ export default function DocumentVerificationPage({ documents }: Props) {
                         setVerificationNote={setVerificationNote}
                         rejectionReason={rejectionReason}
                         setRejectionReason={setRejectionReason}
-                        onVerify={handleVerifyDocument}
-                        isPending={isPending}
-                        pendingAction={pendingAction}
+                        onApprove={handleApproveDocument}
+                        onReject={handleRejectDocument}
+                        isApprovePending={isApprovePending}
+                        isRejectPending={isRejectPending}
                       />
                     </Dialog>
                   </div>

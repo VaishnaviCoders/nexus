@@ -34,7 +34,6 @@ import { Badge } from '@/components/ui/badge';
 import { formatBytes, formatDateIN } from '@/lib/utils';
 import {
   DOCUMENT_TYPE_LABELS,
-  DocumentVerificationAction,
   DocumentWithStudent,
 } from '@/types/document';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -46,12 +45,10 @@ interface DocumentVerificationDialogProps {
   setVerificationNote: (note: string) => void;
   rejectionReason: string;
   setRejectionReason: (reason: string) => void;
-  onVerify: (
-    documentId: string,
-    action: DocumentVerificationAction
-  ) => Promise<void>;
-  isPending: boolean;
-  pendingAction: DocumentVerificationAction | null;
+  onApprove: (documentId: string) => Promise<void>;
+  onReject: (documentId: string) => Promise<void>;
+  isApprovePending: boolean;
+  isRejectPending: boolean;
 }
 
 export function DocumentVerificationDialog({
@@ -60,13 +57,17 @@ export function DocumentVerificationDialog({
   setVerificationNote,
   rejectionReason,
   setRejectionReason,
-  onVerify,
-  isPending,
-  pendingAction,
+  onApprove,
+  onReject,
+  isApprovePending,
+  isRejectPending,
 }: DocumentVerificationDialogProps) {
   const [previewLoading, setPreviewLoading] = useState(true);
 
   if (!doc) return null;
+
+  const handleApprove = () => onApprove(doc.id);
+  const handleReject = () => onReject(doc.id);
 
   const getDocumentStatus = (
     doc: DocumentWithStudent
@@ -94,203 +95,6 @@ export function DocumentVerificationDialog({
     document.body.removeChild(link);
   };
 
-  const renderVerificationActions = () => {
-    if (!isPendingStatus) {
-      return (
-        <div
-          className={`rounded-lg p-4 border-2 ${
-            status === 'APPROVED'
-              ? 'bg-green-50 dark:bg-green-950/20 border-green-200 dark:border-green-800'
-              : 'bg-red-50 dark:bg-red-950/20 border-red-200 dark:border-red-800'
-          }`}
-        >
-          <div className="flex items-start gap-3 mb-4">
-            {status === 'APPROVED' ? (
-              <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-0.5" />
-            ) : (
-              <XCircle className="w-6 h-6 text-red-600 flex-shrink-0 mt-0.5" />
-            )}
-            <div className="flex-1 min-w-0">
-              <h3
-                className={`font-semibold text-lg ${
-                  status === 'APPROVED'
-                    ? 'text-green-800 dark:text-green-200'
-                    : 'text-red-800 dark:text-red-200'
-                }`}
-              >
-                Document {status === 'APPROVED' ? 'Approved' : 'Rejected'}
-              </h3>
-              <div className="space-y-2 mt-2 text-sm">
-                <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4">
-                  <span className="text-muted-foreground">
-                    {status === 'APPROVED' ? 'Verified' : 'Rejected'} by:
-                  </span>
-                  <span className="font-medium">
-                    {doc.verifiedBy || doc.rejectedBy || 'N/A'}
-                  </span>
-                </div>
-                <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4">
-                  <span className="text-muted-foreground">Date:</span>
-                  <span className="font-medium">
-                    {formatDateIN(doc.verifiedAt || doc.rejectedAt || 'N/A')}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Show rejection reason if document was rejected */}
-          {status === 'REJECTED' && doc.rejectReason && (
-            <Alert className="border-red-200 dark:border-red-800">
-              <AlertCircle className="h-4 w-4" />
-              <AlertDescription>
-                <div className="space-y-1">
-                  <p className="font-medium text-sm">Rejection Reason:</p>
-                  <p className="text-sm whitespace-pre-wrap">
-                    {doc.rejectReason}
-                  </p>
-                </div>
-              </AlertDescription>
-            </Alert>
-          )}
-
-          {/* Show verification note if available */}
-          {doc.note && (
-            <Alert className="mt-3 border-blue-200 dark:border-blue-800">
-              <Info className="h-4 w-4" />
-              <AlertDescription>
-                <div className="space-y-1">
-                  <p className="font-medium text-sm">Verification Notes:</p>
-                  <p className="text-sm whitespace-pre-wrap">{doc.note}</p>
-                </div>
-              </AlertDescription>
-            </Alert>
-          )}
-        </div>
-      );
-    }
-
-    return (
-      <div className="bg-yellow-50 dark:bg-yellow-950/20 border-2 border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
-        <div className="flex items-center gap-2 mb-4">
-          <Clock className="w-5 h-5 text-yellow-600" />
-          <h3 className="font-semibold text-yellow-800 dark:text-yellow-200">
-            Pending Verification
-          </h3>
-        </div>
-
-        <div className="space-y-4">
-          <div>
-            <Label
-              htmlFor="verification-note"
-              className="text-sm font-medium flex items-center gap-2"
-            >
-              <MessageSquare className="w-4 h-4" />
-              Notes (Optional)
-            </Label>
-            <Textarea
-              id="verification-note"
-              placeholder="Add notes about the document verification (e.g., document quality, completeness, etc.)"
-              value={verificationNote}
-              onChange={(e) => setVerificationNote(e.target.value)}
-              className="mt-2 min-h-[80px] resize-none"
-              disabled={isPending}
-            />
-          </div>
-
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <Label
-                htmlFor="rejection-reason"
-                className="text-sm font-medium flex items-center gap-2"
-              >
-                <AlertCircle className="w-4 h-4 text-red-500" />
-                Rejection Reason <span className="text-red-500">*</span>
-              </Label>
-
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => {
-                  const suggestion = generateRejectReasonSuggestion(doc.type);
-                  setRejectionReason(suggestion);
-                }}
-                className="text-xs gap-1"
-              >
-                <Lightbulb className="w-4 h-4" />
-                Suggest Reason
-              </Button>
-            </div>
-
-            <Textarea
-              id="rejection-reason"
-              placeholder="e.g., Document is unclear or does not match student information."
-              value={rejectionReason}
-              onChange={(e) => setRejectionReason(e.target.value)}
-              className="min-h-[80px] resize-none"
-              disabled={isPending}
-            />
-
-            <p className="text-xs text-muted-foreground">
-              Required when rejecting a document. This will be shown to the
-              student.
-            </p>
-          </div>
-
-          <Separator />
-
-          <div className="flex gap-3 pt-2">
-            <Button
-              onClick={() => onVerify(doc.id, 'APPROVE')}
-              disabled={isPending}
-              className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2.5"
-            >
-              {isPending && pendingAction === 'APPROVE' ? (
-                <div className="flex items-center gap-2">
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  Approving Document...
-                </div>
-              ) : (
-                <>
-                  <CheckCircle className="w-4 h-4 mr-2" />
-                  Approve Document
-                </>
-              )}
-            </Button>
-
-            <Button
-              variant="destructive"
-              onClick={() => onVerify(doc.id, 'REJECT')}
-              disabled={isPending || !rejectionReason.trim()}
-              className="w-full font-medium py-2.5"
-            >
-              {isPending && pendingAction === 'REJECT' ? (
-                <div className="flex items-center gap-2">
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  Rejecting Document...
-                </div>
-              ) : (
-                <>
-                  <XCircle className="w-4 h-4 mr-2" />
-                  Reject Document
-                </>
-              )}
-            </Button>
-          </div>
-
-          {!rejectionReason.trim() && (
-            <Alert>
-              <Info className="h-4 w-4" />
-              <AlertDescription className="text-sm">
-                Please provide a rejection reason to enable the reject button.
-              </AlertDescription>
-            </Alert>
-          )}
-        </div>
-      </div>
-    );
-  };
 
   const handleOpenInNewTab = () => {
     window.open(doc.documentUrl, '_blank', 'noopener,noreferrer');
@@ -508,7 +312,171 @@ export function DocumentVerificationDialog({
 
                     {/* Verification Actions */}
                     <div className="space-y-4">
-                      {renderVerificationActions()}
+                      {!isPendingStatus ? (
+                        <div
+                          className={`rounded-lg p-4 border-2 ${status === 'APPROVED'
+                            ? 'bg-green-50 dark:bg-green-950/20 border-green-200 dark:border-green-800'
+                            : 'bg-red-50 dark:bg-red-950/20 border-red-200 dark:border-red-800'
+                            }`}
+                        >
+                          <div className="flex items-start gap-3 mb-4">
+                            {status === 'APPROVED' ? (
+                              <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-0.5" />
+                            ) : (
+                              <XCircle className="w-6 h-6 text-red-600 flex-shrink-0 mt-0.5" />
+                            )}
+                            <div className="flex-1 min-w-0">
+                              <h3
+                                className={`font-semibold text-lg ${status === 'APPROVED'
+                                  ? 'text-green-800 dark:text-green-200'
+                                  : 'text-red-800 dark:text-red-200'
+                                  }`}
+                              >
+                                Document {status === 'APPROVED' ? 'Approved' : 'Rejected'}
+                              </h3>
+                              <div className="space-y-2 mt-2 text-sm">
+                                <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4">
+                                  <span className="text-muted-foreground">
+                                    {status === 'APPROVED' ? 'Verified' : 'Rejected'} by:
+                                  </span>
+                                  <span className="font-medium">
+                                    {doc.verifiedBy || doc.rejectedBy || 'N/A'}
+                                  </span>
+                                </div>
+                                <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4">
+                                  <span className="text-muted-foreground">Date:</span>
+                                  <span className="font-medium">
+                                    {formatDateIN(doc.verifiedAt || doc.rejectedAt || 'N/A')}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Show rejection reason if document was rejected */}
+                          {status === 'REJECTED' && doc.rejectReason && (
+                            <Alert className="border-red-200 dark:border-red-800">
+                              <AlertCircle className="h-4 w-4" />
+                              <AlertDescription>
+                                <div className="space-y-1">
+                                  <p className="font-medium text-sm">Rejection Reason:</p>
+                                  <p className="text-sm whitespace-pre-wrap">
+                                    {doc.rejectReason}
+                                  </p>
+                                </div>
+                              </AlertDescription>
+                            </Alert>
+                          )}
+
+                          {/* Show verification note if available */}
+                          {doc.note && (
+                            <Alert className="mt-3 border-blue-200 dark:border-blue-800">
+                              <Info className="h-4 w-4" />
+                              <AlertDescription>
+                                <div className="space-y-1">
+                                  <p className="font-medium text-sm">Verification Notes:</p>
+                                  <p className="text-sm whitespace-pre-wrap">{doc.note}</p>
+                                </div>
+                              </AlertDescription>
+                            </Alert>
+                          )}
+                        </div>
+                      ) : (
+                        <div className="bg-yellow-50 dark:bg-yellow-950/20 border-2 border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
+                          <div className="flex items-center gap-2 mb-4">
+                            <Clock className="w-5 h-5 text-yellow-600" />
+                            <h3 className="font-semibold text-yellow-800 dark:text-yellow-200">
+                              Pending Verification
+                            </h3>
+                          </div>
+
+                          <div className="space-y-4">
+                            <div>
+                              <Label
+                                htmlFor="verification-note"
+                                className="text-sm font-medium flex items-center gap-2"
+                              >
+                                <MessageSquare className="w-4 h-4" />
+                                Notes (Optional)
+                              </Label>
+                              <Textarea
+                                id="verification-note"
+                                placeholder="Add notes about the document verification"
+                                value={verificationNote}
+                                onChange={(e) => setVerificationNote(e.target.value)}
+                                className="mt-2 min-h-[80px] resize-none"
+                                disabled={isApprovePending || isRejectPending}
+                              />
+                            </div>
+
+                            <div className="space-y-2">
+                              <div className="flex items-center justify-between">
+                                <Label
+                                  htmlFor="rejection-reason"
+                                  className="text-sm font-medium flex items-center gap-2"
+                                >
+                                  <AlertCircle className="w-4 h-4 text-red-500" />
+                                  Rejection Reason <span className="text-red-500">*</span>
+                                </Label>
+
+                                <Button
+                                  type="button"
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => {
+                                    const suggestion = generateRejectReasonSuggestion(doc.type);
+                                    setRejectionReason(suggestion);
+                                  }}
+                                  className="text-xs gap-1"
+                                >
+                                  <Lightbulb className="w-4 h-4" />
+                                  Suggest Reason
+                                </Button>
+                              </div>
+
+                              <Textarea
+                                id="rejection-reason"
+                                placeholder="Reason for rejection..."
+                                value={rejectionReason}
+                                onChange={(e) => setRejectionReason(e.target.value)}
+                                className="min-h-[80px] resize-none"
+                                disabled={isApprovePending || isRejectPending}
+                              />
+                            </div>
+
+                            <Separator />
+
+                            <div className="flex gap-3 pt-2">
+                              <Button
+                                onClick={handleApprove}
+                                disabled={isApprovePending || isRejectPending || rejectionReason.trim().length > 0}
+                                className="w-full bg-green-600 hover:bg-green-700 text-white font-medium"
+                              >
+                                {isApprovePending ? (
+                                  <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                                ) : (
+                                  <CheckCircle className="w-4 h-4 mr-2" />
+                                )}
+                                Approve
+                              </Button>
+
+                              <Button
+                                variant="destructive"
+                                onClick={handleReject}
+                                disabled={isApprovePending || isRejectPending || !rejectionReason.trim()}
+                                className="w-full font-medium"
+                              >
+                                {isRejectPending ? (
+                                  <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                                ) : (
+                                  <XCircle className="w-4 h-4 mr-2" />
+                                )}
+                                Reject
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>

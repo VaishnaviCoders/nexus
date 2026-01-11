@@ -21,7 +21,7 @@ export const metadata: Metadata = {
       'Discover why principals trust Shiksha.cloud. Cut costs by 60%, automate fee collection, and ensure bank-grade security. Setup in 24 hours. Join 50+ schools today.',
   },
   alternates: {
-    canonical: 'https://www.shiksha.cloud/why-us',
+    canonical: 'https://shiksha.cloud/why-us',
   },
 };
 

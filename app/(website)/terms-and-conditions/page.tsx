@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-    metadataBase: new URL('https://www.shiksha.cloud'),
+    metadataBase: new URL('https://shiksha.cloud'),
 
     title: 'Terms and Conditions - Shiksha.cloud',
     description: 'Terms and Conditions for Shiksha.cloud school management platform.',

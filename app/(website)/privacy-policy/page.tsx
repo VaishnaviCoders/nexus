@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-    metadataBase: new URL('https://www.shiksha.cloud'),
+    metadataBase: new URL('https://shiksha.cloud'),
 
     title: 'Privacy Policy - Shiksha.cloud',
     description: 'Privacy policy for Shiksha.cloud - how we collect, use, and protect your data',

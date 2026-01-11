@@ -13,13 +13,24 @@ import {
   Hr,
 } from '@react-email/components';
 
-const DocumentRejectionEmail = (props: any) => {
+interface DocumentRejectionEmailProps {
+  recipientName: string;
+  documentType: string;
+  documentName: string;
+  rejectReason: string;
+  documentUrl: string;
+  organizationName: string;
+  supportEmail: string;
+  supportPhone: string;
+}
+
+const DocumentRejectionEmail = (props: DocumentRejectionEmailProps) => {
   const {
     recipientName = 'Student/Parent',
     documentType = 'Aadhaar Card',
     documentName = 'student_aadhaar.pdf',
     rejectReason = "The uploaded document appears to be a parent's document instead of the student's document",
-    uploadUrl = 'https://portal.school.edu/upload-documents',
+    documentUrl = 'https://portal.school.edu/upload-documents',
     organizationName = 'ABC International School',
     supportEmail = 'support@school.edu',
     supportPhone = '+91-20-1234-5678',
@@ -96,7 +107,7 @@ const DocumentRejectionEmail = (props: any) => {
               </Text>
 
               <Link
-                href={uploadUrl}
+                href={documentUrl}
                 className="bg-blue-600 text-white px-[24px] py-[12px] rounded-[6px] text-[16px] font-medium no-underline inline-block box-border"
               >
                 Upload Correct Document
@@ -186,7 +197,7 @@ DocumentRejectionEmail.PreviewProps = {
   documentName: 'student_aadhaar.pdf',
   rejectReason:
     "The uploaded document appears to be a parent's Aadhaar card instead of the student's Aadhaar card. Please upload the student's Aadhaar card.",
-  uploadUrl: 'https://portal.school.edu/upload-documents',
+  documentUrl: 'https://portal.school.edu/upload-documents',
   organizationName: 'ABC International School',
   supportEmail: 'support@school.edu',
   supportPhone: '+91-20-1234-5678',

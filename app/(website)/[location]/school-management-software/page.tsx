@@ -34,7 +34,7 @@ interface Props {
 //     description: `Leading school management system in ${locationName}. Cloud-based ERP for schools, colleges, and institutes with powerful automation tools. Try free today!`,
 //     keywords: `school management software ${locationName}, school ERP ${locationName}, school automation ${locationName}, best school management system`,
 //     alternates: {
-//       canonical: `https://www.shiksha.cloud/${location}/school-management-software`,
+//       canonical: `https://shiksha.cloud/${location}/school-management-software`,
 //     },
 //   };
 // }
@@ -44,7 +44,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const title = `Best School Management Software in ${locationName} | Shiksha Cloud`;
   const description = `Leading cloud-based school ERP software in ${locationName}. Automate attendance, fees, communication & administration. Free plan available. Start your digital transformation today!`;
-  const canonicalUrl = `https://www.shiksha.cloud/${location}/school-management-software`;
+  const canonicalUrl = `https://shiksha.cloud/${location}/school-management-software`;
 
   return {
     title,
@@ -119,8 +119,8 @@ function generateLocalBusinessStructuredData(locationName: string) {
     '@type': 'EducationalOrganization',
     name: `Shiksha Cloud - School Management Software in ${locationName}`,
     description: `Cloud-based school management software serving educational institutions in ${locationName}. Digital transformation for schools, colleges, and coaching centers.`,
-    url: 'https://www.shiksha.cloud',
-    logo: 'https://www.shiksha.cloud/logo.png',
+    url: 'https://shiksha.cloud',
+    logo: 'https://shiksha.cloud/logo.png',
     address: {
       '@type': 'PostalAddress',
       addressLocality: locationName,
@@ -174,7 +174,7 @@ function generateProductStructuredData() {
       'Document Management',
       'Analytics & Reporting',
     ],
-    screenshot: 'https://www.shiksha.cloud/screenshot.jpg',
+    screenshot: 'https://shiksha.cloud/screenshot.jpg',
   };
 }
 
@@ -560,7 +560,7 @@ export default async function LocationPage({
                   className="bg-green-500 hover:bg-green-600 text-white font-medium px-6 py-2 rounded-lg transition-colors shadow-md hover:shadow-lg"
                   asChild
                 >
-                  <Link href={'https://www.shiksha.cloud/why-us'}>Why Us</Link>
+                  <Link href={'https://shiksha.cloud/why-us'}>Why Us</Link>
                 </Button>
               </div>
             </div>
